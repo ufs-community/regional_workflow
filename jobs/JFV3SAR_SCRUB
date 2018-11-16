@@ -1,0 +1,103 @@
+#!/bin/ksh
+ 
+set -x
+
+# HOMEdir set in qsub job
+
+. $HOMEdir/jobs/JFV3SAR_ENVIR
+
+. /usrx/local/prod/lmod/lmod/init/ksh
+module load prod_util/1.1.0
+
+##############################################
+# Working directories
+##############################################
+mkdir -p /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+cd /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+
+export BASEDIR=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly
+
+##############################################
+# Obtain unique process id(pid) and determine job output name on system
+##############################################
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+##############################################
+# Initialize PDY variables
+##############################################
+cp /gpfs/dell1/nco/ops/com/date/t${cyc}z ncepdate
+export CYCLE=`cut -c 7-16 ncepdate`
+export PDY=`cut -c 7-14 ncepdate`
+
+# this is the 1st job in the 00z cycle so save date file
+# for all other j-jobs
+cp ncepdate $DATEdir/t${cyc}z
+
+##############################################
+# Define COM directories
+##############################################
+#COMROOT and GESROOT are the same dirs
+mkdir -p $COMROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+export COMOUT=$COMROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $GESROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+export NWGES=$GESROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+
+# delete 5-day old com
+
+if [ $cyc -eq 00 ] ; then
+  datetm120=`$NDATE -120 $CYCLE`
+  PDYm5=`echo $datetm120 | cut -c 1-8`
+  cd $COMROOT/${RUN}/${envir}
+  set +x
+  rm -rf ${RUN}.${PDYm5}
+  set -x
+  cd $DATA
+fi
+
+# If for any reason the tm00 forecast directory from the last run did not get
+# deleted, delete it now
+
+if [ -d $BASEDIR/forecast.tm00_${cyc} ] ; then
+  cd $BASEDIR
+  rm -r forecast.tm00_${cyc}
+  rm -r post_manager_tm00_${cyc}
+  cd $DATA
+fi 
+
+# send satbias stuff to nwges on prod machine
+
+hostname > hname
+hl=`cut -c 1-1 hname`
+
+hostname > hname
+hl=`cut -c 1-1 hname`
+
+if [ $hl = v ] ; then
+  ops=mxfer
+  opsmach=mars
+fi
+if [ $hl = m ] ; then
+  ops=vxfer
+  opsmach=venus
+fi
+
+
+export NWGES_HOLD=/gpfs/dell2/ptmp/${LOGNAME}/nwges/${RUN}.hold
+cd $NWGES_HOLD
+ssh -l Eric.Rogers ${ops}.ncep.noaa.gov "mkdir -p $NWGES_HOLD"
+scp radstat.nam Eric.Rogers@${ops}.ncep.noaa.gov:$NWGES_HOLD/.
+scp satbias_in Eric.Rogers@${ops}.ncep.noaa.gov:$NWGES_HOLD/.
+scp satbias_pc Eric.Rogers@${ops}.ncep.noaa.gov:$NWGES_HOLD/.
+scp gdas.airbias Eric.Rogers@${ops}.ncep.noaa.gov:$NWGES_HOLD/.
+cd $DATA
+
+cat err 
+cat out
+
+if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
+
+date
+
+exit

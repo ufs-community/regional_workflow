@@ -1,0 +1,78 @@
+#!/bin/ksh
+ 
+set -x
+
+# HOMEdir set in qsub job
+
+. $HOMEdir/jobs/JFV3SAR_ENVIR
+
+. /usrx/local/prod/lmod/lmod/init/sh
+
+module purge
+module use ${HOMEgfs}/sorc/fv3gfs.fd/modulefiles/wcoss_dell_p3
+module load fv3
+module load prod_util/1.1.0
+module list
+
+##############################################
+# Specify Execution Areas
+##############################################
+export EXECfv3=${HOMEgfs}/exec
+
+# CONFIGdir, FIX_AM, FIXDIR set in JFV3SAR_ENVIR
+export CO2DIR=${FIX_AM}/fix_co2_proj
+
+##############################################
+# Working directories
+##############################################
+mkdir -p /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+cd /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+
+##############################################
+# Obtain unique process id (pid) and determine job output name on system
+##############################################
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+##############################################
+# Initialize PDY variables
+##############################################
+# Get my date file; cyc is tm00 date, comes from qsub script
+cp $DATEdir/t${cyc}z ncepdate
+
+###cp /com/date/t${cyc}z ncepdate
+export CYCLE=`cut -c 7-16 ncepdate`
+export PDY=`cut -c 7-14 ncepdate`
+export CYCLEtm12=`$NDATE -12 $CYCLE`
+export CYCLEtm06=`$NDATE -06 $CYCLE`
+export PDYtm06=`echo $CYCLEtm06 | cut -c 1-8`
+export CYCtm06=`echo $CYCLEtm06 | cut -c 9-10`
+
+##############################################
+# Define COM directories
+##############################################
+#COMROOT and GESROOT are the same dirs
+mkdir -p $COMROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+export COMOUT=$COMROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $GESROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+export NWGES=$GESROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+
+mkdir -p $COMOUT/guess.tm06
+mkdir -p $COMOUT/anl.tm06
+export GUESSdir=$COMOUT/guess.tm06
+export ANLdir=$COMOUT/anl.tm06
+
+##############################################
+# Execute the script.
+##############################################
+${SCRIPTdir}/exfv3sar_fcst_firstguess.sh
+
+cat err
+cat $pgmout
+
+if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
+
+date
+
+exit

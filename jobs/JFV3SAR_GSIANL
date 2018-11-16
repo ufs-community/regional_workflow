@@ -1,0 +1,117 @@
+#!/bin/ksh
+ 
+set -x
+
+# HOMEdir set in qsub job
+
+. $HOMEdir/jobs/JFV3SAR_ENVIR
+
+export machine=DELL
+
+. /usrx/local/prod/lmod/lmod/init/ksh
+module load prod_util/1.1.0            
+
+##############################################
+# Working directories
+##############################################
+mkdir -p /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+cd /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+
+##############################################
+# Obtain unique process id (pid) and determine job output name on system
+##############################################
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+##############################################
+# Initialize PDY variables
+##############################################
+# Get my date file; cyc is tm00 date, comes from qsub script
+cp $DATEdir/t${cyc}z ncepdate
+
+###cp /com/date/t${cyc}z ncepdate
+export CYCLE=`cut -c 7-16 ncepdate`
+export PDY=`cut -c 7-14 ncepdate`
+
+export vlddate=`$NDATE -${offset} $CYCLE`
+export SDATE=$vlddate
+export cyc=`echo $vlddate | cut -c 9-10`
+export cya=`echo $vlddate | cut -c 9-10`
+export CYC=`echo $vlddate | cut -c 9-10`
+export PDY=`echo $vlddate | cut -c 1-8`
+export PDYrun=`echo $CYCLE | cut -c 1-8`
+export PDYa=`echo $vlddate | cut -c 1-8`
+export CYCrun=`echo $CYCLE | cut -c 9-10`
+
+##############################################
+# Define COM directories
+##############################################
+#COMROOT and GESROOT are the same dirs
+mkdir -p $COMROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+export COMOUT=$COMROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $GESROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+export NWGES=$GESROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+
+mkdir -p $COMOUT/guess.${tmmark}
+mkdir -p $COMOUT/anl.${tmmark}
+export GUESSdir=$COMOUT/guess.${tmmark}
+export ANLdir=$COMOUT/anl.${tmmark}
+
+##############################################
+# Specify Execution Areas
+##############################################
+export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
+export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
+
+# Set path/file for gsi executable
+
+if [ $machine = THEIA ] ; then
+  export UTIL=/scratch4/NCEPDEV/meso/save/${USER}/run_it_regional/exec
+  export gsiexec=/scratch4/NCEPDEV/meso/noscrub/Wanshu.Wu/build/bin/gsi.x
+  export fixgsi=/scratch4/NCEPDEV/meso/save/Wanshu.Wu/Code/ProdGSI/fix
+  export fixcrtm=/scratch4/NCEPDEV/da/save/Michael.Lueken/nwprod/lib/crtm/2.2.3/fix_update
+elif [ $machine = WCOSS ] ; then
+  export USH=$HOMEdir/ush
+  export gsiexec=/meso/save/${USER}/fv3reg_aug2018/fv3gsi_reg/build/bin/gsi.x
+  export fixgsi=/meso/save/${USER}/fv3reg_aug2018/fv3gsi_reg/ProdGSI/fix
+  export fixcrtm=/da/save/Michael.Lueken/CRTM_REL-2.2.3/crtm_v2.2.3/fix_update
+elif [ $machine = DELL ] ; then
+  export USH=$HOMEdir/ush
+  export gsiexec=${HOMEgfs}/sorc/gsi.fd/build/bin/gsi.x
+  export fixgsi=${HOMEgfs}/sorc/gsi.fd/fix
+  export fixcrtm=/gpfs/dell1/nco/ops/nwprod/lib/crtm/v2.2.6/fix
+fi
+
+# setup ensemble filelist03
+
+if [ $machine = THEIA ] ; then
+   COMINgfs=/scratch4/NCEPDEV/rstprod/com/gfs/prod
+   COMINnam=/scratch4/NCEPDEV/rstprod/com/nam/prod
+   COMINrtma=/scratch4/NCEPDEV/rstprod/com/rtma2p5/prod
+   # bias correction files from prev cycle
+   COMINbias=$COMOUT
+fi
+if [ $machine = WCOSS_C -o $machine = WCOSS -o $machine = DELL ] ; then
+   COMINgfs=/gpfs/hps/nco/ops/com/gfs/prod
+   # This is the FV3GDAS enkf I mirror to dev
+   COMINgfspll=/gpfs/gp2/ptmp/${USER}/prfv3rt1
+   COMINnam=/gpfs/gp2/nco/ops/com/nam/prod
+   COMINrap=/gpfs/hps/nco/ops/com/rap/prod
+   COMINbias=$COMOUT
+   COMINrtma=/gpfs/gp2/nco/ops/com/rtma/prod
+fi
+
+##############################################
+# Execute the script.
+##############################################
+${SCRIPTdir}/exfv3sar_gsianl.sh
+
+cat $pgmout
+cat stderr
+
+if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
+
+date
+
+exit

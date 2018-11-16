@@ -1,0 +1,129 @@
+#!/bin/ksh
+ 
+set -x
+
+# HOMEdir set in qsub job
+
+. $HOMEdir/jobs/JFV3SAR_ENVIR
+
+##############################################
+# Initialize PDY variables
+##############################################
+# this is the 1st job in the 06/18z cycle so save date file
+# for all other J-jobs
+if [ $cyc -eq 06 -o $cyc -eq 18 ] ; then
+  cp /gpfs/dell1/nco/ops/com/date/t${cyc}z ncepdate
+  cp ncepdate $DATEdir/t${cyc}z
+else
+# for 00z/12z the scrub job runs first so it saves the ncepdate file in $DATEdir
+  cp $DATEdir/t${cyc}z ncepdate
+fi
+
+export CYCLE=`cut -c 7-16 ncepdate`
+export PDY=`cut -c 7-14 ncepdate`
+export CYCLEguess=`$NDATE -12 $CYCLE`
+export CDATE=$CYCLEguess
+export ymd=`echo $CDATE | cut -c 1-8`
+export hhcyc=`echo $CDATE | cut -c 9-10`
+
+# this is the 1st job in the 06/18z cycle so save date file
+# for all other J-jobs
+cp ncepdate $DATEdir/t${cyc}z
+
+##############################################
+# Environment settings and module loading
+##############################################
+export machine=DELL                # WCOSS_C,WCOSS,THEIA
+export OMP_NUM_THREADS_CH=24       # default for openMP threads
+export ictype=pfv3gfs              # opsgfs for q3fy17 gfs with new land datasets; oldgfs for q2fy16 gfs.
+
+if [ $machine = WCOSS_C ]; then
+  . $MODULESHOME/init/sh 2>>/dev/null
+  module load PrgEnv-intel prod_envir 2>>/dev/null
+  module list
+  export KMP_AFFINITY=disabled
+  export FIXgsm=/gpfs/hps/emc/global/noscrub/emc.glopara/svn/fv3gfs/fix/fix_am
+  export DATA=/gpfs/hps/ptmp/${LOGNAME}/wrk.chgres
+  export APRUNC="aprun -n 1 -N 1 -j 1 -d $OMP_NUM_THREADS_CH -cc depth"
+  export INIDIR=/gpfs/hps/nco/ops/com/gfs/prod/gfs.$ymd
+  export HOMEgfs=$LS_SUBCWD/..
+elif [ $machine = WCOSS ]; then
+  . /usrx/local/Modules/default/init/sh 2>>/dev/null
+  module purge
+  module use ${HOMEgfs}/sorc/fv3gfs.fd/modulefiles/wcoss_phase2
+  module load fv3
+  module list
+  export APRUNC="time"
+  export INIDIR=/ptmpp2/${USER}/prfv3rt1/gfs.$ymd/$hhcyc
+elif [ $machine = DELL ]; then
+  set +x
+  . /usrx/local/prod/lmod/lmod/init/sh
+  module load EnvVars/1.0.2 lmod/7.7 settarg/7.7 lsf/10.1 prod_envir/1.0.2
+  module load ips/18.0.1.163
+  module load impi/18.0.1
+  module load NetCDF/4.5.0
+  module load HDF5-serial/1.10.1
+  module load CFP/2.0.1
+  module load prod_util/1.1.0
+  module list
+  set -x
+  export APRUNC="time"
+  export KMP_AFFINITY=disabled
+  if [ $ictype = pfv3gfs ]; then
+    hour=`echo $CDATE | cut -c 9-10`
+# export INIDIR=/ptmpp2/${USER}/prfv3rt1/gfs.$ymd/$hhcyc
+    export INIDIR=/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/prfv3rt1/gfs.$ymd/$hhcyc
+  else
+    export INIDIR=/gpfs/hps/nco/ops/com/gfs/prod/gfs.$ymd
+  fi
+elif [ $machine = THEIA ]; then
+  . /apps/lmod/lmod/init/sh
+  module use -a /scratch3/NCEPDEV/nwprod/lib/modulefiles
+  module load netcdf/4.3.0 hdf5/1.8.14 2>>/dev/null
+  module list
+  export CDUMP=${CDUMP:-gdas}                   # gfs or gdas
+  export APRUNC="time"
+  COMROOTp2=/scratch4/NCEPDEV/rstprod/com
+  export INIDIR=$COMROOTp2/gfs/prod/${CDUMP}.$ymd
+  ulimit -a
+  ulimit -s unlimited
+else
+  echo "$machine not supported, exit"
+  exit
+fi
+
+##############################################
+# Working directories
+##############################################
+mkdir -p /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+cd /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+
+##############################################
+# Obtain unique process id (pid) and determine job output name on system
+##############################################
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+##############################################
+# Define COM directories
+##############################################
+#COMROOT and GESROOT are the same dirs
+mkdir -p $COMROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+export COMOUT=$COMROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $GESROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+export NWGES=$GESROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
+
+mkdir -p $COMOUT/gfsanl.tm12
+export INPdir=$COMOUT/gfsanl.tm12
+
+##############################################
+# Execute the script.
+##############################################
+${SCRIPTdir}/exfv3sar_chgres_firstguess.sh
+
+if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
+
+date
+
+exit
