@@ -49,7 +49,7 @@ fi
 #
 #execute the chgres driver
 #
-$HOMEgfs/ush/global_chgres_driver.sh
+$USHdir/global_chgres_driver.sh
 
 export res=768            #-- FV3 equivalent to 13-km global resolution
 export RES=C$res
@@ -68,7 +68,7 @@ export REGIONAL=2
 hour=3
 end_hour=$NHRSguess
 while (test "$hour" -le "$end_hour")
-  do
+ do
   if [ $hour -lt 10 ]; then
     hour_name='00'$hour
   elif [ $hour -lt 100 ]; then
@@ -92,7 +92,7 @@ while (test "$hour" -le "$end_hour")
     export REGIONAL=2
     export HALO=4
     export bchour=$hour_name
-    $USH/global_chgres_driver_dacycle_hourly.sh
+    $USHdir/global_chgres_driver_dacycle_hourly.sh
     mv $OUTDIR/gfs_bndy.tile7.${bchour}.nc $INPdir/.
     err=$?
     if [ $err -ne 0 ] ; then

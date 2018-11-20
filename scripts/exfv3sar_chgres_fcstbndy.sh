@@ -19,6 +19,10 @@ export NODES=1
 #
 # the following exports can all be set or just will default to what is in global_chgres_driver.sh
 #
+if [ $tmmark != tm00 ] ; then
+  export OMP_NUM_THREADS_CH=24	   # default for openMP threads
+fi
+
 export CASE=C768                   # resolution of tile: 48, 96, 192, 384, 768, 1152, 3072
 export LEVS=65
 export LSOIL=4
@@ -84,14 +88,17 @@ while (test "$hour" -le "$end_hour")
 #
     BC_DATA=/gpfs/hps3/ptmp/${LOGNAME}/wrk.chgres.$hour_name
     echo "env REGIONAL=2 bchour=$hour_name DATA=$BC_DATA $BASE_GSM/ush/global_chgres_driver_hourly.sh >&out.chgres.$hour_name" >>bcfile.input
-  elif [ $machine = THEIA -o $machine = WCOSS -o $machine = DELL ]; then
+  elif [ $machine = DELL -a $tmmark = tm00 ]; then
+    BC_DATA=$DATA/wrk.chgres.$hour_name
+    echo "env REGIONAL=2 HALO=4 bchour=$hour_name DATA=$BC_DATA $USHdir/global_chgres_driver_dacycle_hourly.sh >&out.chgres.$hour_name" >>bcfile.input
+  elif [ $machine = THEIA -o $machine = WCOSS -o $tmmark != tm00 ]; then
 #
 #for now on theia run the BC creation sequentially
 #
     export REGIONAL=2
     export HALO=4
     export bchour=$hour_name
-    $USH/global_chgres_driver_dacycle_hourly.sh
+    $USHdir/global_chgres_driver_dacycle_hourly.sh
     mv $OUTDIR/gfs_bndy.tile7.${bchour}.nc $INPdir/.
     err=$?
     if [ $err -ne 0 ] ; then
@@ -102,7 +109,7 @@ while (test "$hour" -le "$end_hour")
   hour=`expr $hour + $hour_inc`
 done
 #
-# for WCOSS_C we now run BC creation for all hours simultaneously
+# for WCOSS_C and Dell we now run BC creation for all hours simultaneously
 #
 if [ $machine = WCOSS_C ]; then
   export APRUNC=time
@@ -110,6 +117,9 @@ if [ $machine = WCOSS_C ]; then
   aprun -j 1 -n 28 -N 1 -d 24 -cc depth cfp bcfile.input
   export err=$?;err_chk
   rm bcfile.input
+elif [ $machine = DELL -a $tmmark = tm00 ]; then
+  mpirun cfp bcfile.input
+  rm -f bcfile.input
 fi
 
 exit

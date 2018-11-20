@@ -93,15 +93,12 @@ else
 fi
 
 ##############################################
-# Working directories
+# Obtain unique process id (pid) and make temp directory
 ##############################################
-mkdir -p /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
 export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
-cd /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+mkdir -p $DATA
+cd $DATA
 
-##############################################
-# Obtain unique process id (pid) and determine job output name on system
-##############################################
 export pid=$$
 export pgmout="OUTPUT.${pid}"
 

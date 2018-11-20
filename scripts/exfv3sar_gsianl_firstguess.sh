@@ -33,7 +33,7 @@ export nens=81
 export nhr_assimilation=03
 ##typeset -Z2 nhr_assimilation
 
-python $USH/getbest_EnKF_FV3GDAS.py -v $vlddate --exact=no --minsize=${nens} -d ${COMINgfspll}/enkf.gdas -o filelist${nhr_assimilation} --o3fname=gfs_sigf${nhr_assimilation} --gfs_nemsio=yes
+python $UTIL/getbest_EnKF_FV3GDAS.py -v $vlddate --exact=no --minsize=${nens} -d ${COMINgfspll}/enkf.gdas -o filelist${nhr_assimilation} --o3fname=gfs_sigf${nhr_assimilation} --gfs_nemsio=yes
 
 #Check to see if ensembles were found 
 numfiles=`cat filelist03 | wc -l`
@@ -44,7 +44,7 @@ if [ $numfiles -ne 81 ]; then
 else
   # we have 81 files, figure out if they are all the right size
   # if not, set HYB_ENS=false
-  . $USH/check_enkf_size.sh
+  . $UTIL/check_enkf_size.sh
 fi
 
 echo "HYB_ENS=$HYB_ENS" > $COMOUT/${RUN}.t${CYCrun}z.hybens.tm06

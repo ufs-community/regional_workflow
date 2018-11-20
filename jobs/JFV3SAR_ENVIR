@@ -22,6 +22,7 @@ export DATEdir=$HOMEdir/date
 mkdir -p $DATEdir
 export PARMdir=$HOMEdir/parm
 export SCRIPTdir=$HOMEdir/scripts
+export USHdir=$HOMEdir/ush
 
 export CONFIGdir=$PARMdir
 

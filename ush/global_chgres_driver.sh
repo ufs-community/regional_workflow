@@ -37,10 +37,6 @@ export FIXfv3=${FIXfv3:-$HOMEgfs/fix/fix_fv3_gmted2010}
 export FIXam=${FIXam:-$HOMEgfs/fix/fix_am}
 export CHGRESEXEC=$HOMEgfs/exec/global_chgres
 export CHGRESSH=$HOMEgfs/ush/global_chgres.sh
-export GETGES=$HOMEdir/util/ush/getges_linkges_hourlypgrb_new.sh
-
-export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
-export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
 
 # Location of initial conditions for GFS (before chgres) and FV3 (after chgres)
 export INIDIR=${INIDIR:-$pwd}
@@ -257,61 +253,7 @@ if [ $REGIONAL -ne 2 ]; then           # REGIONAL -ne 2 is for uniform and regio
 else # REGIONAL = 2, just generate boundary data
 
   export CHGRESVARS="use_ufo=.false.,nst_anl=$nst_anl,idvc=2,idvt=21,idsl=1,IDVM=0,nopdpvv=$nopdpvv"
-
-  export GESROOT=/gpfs/dell2/ptmp/Eric.Rogers/nwges
-  export GETGES_NWG=/gpfs/dell2/ptmp/Eric.Rogers/nwges
-  # for ops GFS
-  # for FV3GFS
-  export COMINgfs=/gpfs/gp2/ptmp/Eric.Rogers/prfv3rt1
-  export COMINgdas=/gpfs/gp2/ptmp/Eric.Rogers/prfv3rt1
-# export GBCOMINgfs=/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/prfv3rt1
-  export GBCOMINgfs=/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/vefyarch/prfv3rt1
-  # CDATE is valid time forecast starts
-  export VDATE=`${NDATE} ${bchour} ${CDATE}`
-  export PDY=`echo $VDATE | cut -c 1-8`
-  echo $tmmark
-
-#force tm00 to get ontime FV3GFS run
-  if [ $tmmark != tm00 ] ; then
-    $GETGES -t natcur -v $VDATE -e prod atmf${bchour}.nemsio
-  else
-    export PDYgfs=`echo $CDATE | cut -c 1-8`
-    export CYCgfs=`echo $CDATE | cut -c 9-10`
-    cp $COMINgfs/gfs.${PDYgfs}/${CYCgfs}/gfs.t${CYCgfs}z.atmf${bchour}.nemsio atmf${bchour}.nemsio
-    FV3GFSfile=$COMINgfs/gfs.${PDYgfs}/${CYCgfs}/gfs.t${CYCgfs}z.atmf${bchour}.nemsio
-    if [ -s atmf${bchour}.nemsio ] ; then
-      echo "$cyc FV3GFS at $bchour hour is available, check file size"
-      export sizefile=`du -b atmf${bchour}.nemsio | cut -c 1-11`
-      if [ $sizefile = 16986972692 ] ; then
-        echo "file size OK"
-        echo $FV3GFSfile >> $OUTDIR/filelist.ges${bchour}
-      else
-        cp $GBCOMINgfs/gfs.${PDYgfs}/${CYCgfs}/gfs.t${CYCgfs}z.atmf${bchour}.nemsio atmf${bchour}.nemsio
-        FV3GFSfile=$GBCOMINgfs/gfs.${PDYgfs}/${CYCgfs}/gfs.t${CYCgfs}z.atmf${bchour}.nemsio
-        export sizefile=`du -b atmf${bchour}.nemsio | cut -c 1-11`
-        if [ $sizefile = 16986972692 ] ; then
-          echo "file size OK"
-          echo "$cyc FV3GFS at $bchour hour is available from FV3GFS location"
-          echo $FV3GFSfile >> $OUTDIR/filelist.ges${bchour}
-        else
-          $GETGES -t natcur -v $VDATE -e prod atmf${bchour}.nemsio
-          mv filelist.ges $OUTDIR/filelist.ges${bchour}
-        fi
-      fi
-    else
-      cp $GBCOMINgfs/gfs.${PDYgfs}/${CYCgfs}/gfs.t${CYCgfs}z.atmf${bchour}.nemsio atmf${bchour}.nemsio
-      FV3GFSfile=$GBCOMINgfs/gfs.${PDYgfs}/${CYCgfs}/gfs.t${CYCgfs}z.atmf${bchour}.nemsio
-      if [ -s atmf${bchour}.nemsio ] ; then
-        echo "$cyc FV3GFS at $bchour hour is available from FV3GFS location"
-        echo $FV3GFSfile >> $OUTDIR/filelist.ges${bchour}
-      else
-        $GETGES -t natcur -v $VDATE -e prod atmf${bchour}.nemsio
-        mv filelist.ges $OUTDIR/filelist.ges${bchour}
-      fi
-    fi
-  fi
-
-  export ATMANL=atmf${bchour}.nemsio
+  export ATMANL=$INIDIR/${CDUMP}.t${cyc}z.atmf${bchour}.nemsio
   export SIGINP=$ATMANL
   export SFCINP=NULL
   export NSTINP=NULL

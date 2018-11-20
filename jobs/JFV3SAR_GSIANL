@@ -7,22 +7,11 @@ set -x
 . $HOMEdir/jobs/JFV3SAR_ENVIR
 
 export machine=DELL
+export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
+export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
 
 . /usrx/local/prod/lmod/lmod/init/ksh
 module load prod_util/1.1.0            
-
-##############################################
-# Working directories
-##############################################
-mkdir -p /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
-export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
-cd /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
-
-##############################################
-# Obtain unique process id (pid) and determine job output name on system
-##############################################
-export pid=$$
-export pgmout="OUTPUT.${pid}"
 
 ##############################################
 # Initialize PDY variables
@@ -45,6 +34,16 @@ export PDYa=`echo $vlddate | cut -c 1-8`
 export CYCrun=`echo $CYCLE | cut -c 9-10`
 
 ##############################################
+# Obtain unique process id (pid) and make temp directory
+##############################################
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+mkdir -p $DATA
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+##############################################
 # Define COM directories
 ##############################################
 #COMROOT and GESROOT are the same dirs
@@ -61,9 +60,6 @@ export ANLdir=$COMOUT/anl.${tmmark}
 ##############################################
 # Specify Execution Areas
 ##############################################
-export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
-export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
-
 # Set path/file for gsi executable
 
 if [ $machine = THEIA ] ; then
@@ -72,12 +68,12 @@ if [ $machine = THEIA ] ; then
   export fixgsi=/scratch4/NCEPDEV/meso/save/Wanshu.Wu/Code/ProdGSI/fix
   export fixcrtm=/scratch4/NCEPDEV/da/save/Michael.Lueken/nwprod/lib/crtm/2.2.3/fix_update
 elif [ $machine = WCOSS ] ; then
-  export USH=$HOMEdir/ush
+  export UTIL=$HOMEdir/util/ush
   export gsiexec=/meso/save/${USER}/fv3reg_aug2018/fv3gsi_reg/build/bin/gsi.x
   export fixgsi=/meso/save/${USER}/fv3reg_aug2018/fv3gsi_reg/ProdGSI/fix
   export fixcrtm=/da/save/Michael.Lueken/CRTM_REL-2.2.3/crtm_v2.2.3/fix_update
 elif [ $machine = DELL ] ; then
-  export USH=$HOMEdir/ush
+  export UTIL=$HOMEdir/util/ush
   export gsiexec=${HOMEgfs}/sorc/gsi.fd/build/bin/gsi.x
   export fixgsi=${HOMEgfs}/sorc/gsi.fd/fix
   export fixcrtm=/gpfs/dell1/nco/ops/nwprod/lib/crtm/v2.2.6/fix

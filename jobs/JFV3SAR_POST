@@ -14,29 +14,6 @@ module load prod_util/1.1.0
 module list
 
 ##############################################
-# Specify Execution Areas
-##############################################
-export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
-export WGRIB2=/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3reg_da_hourly/exec/wgrib2new
-
-export EXECfv3=${HOMEgfs}/exec
-
-##############################################
-# Working directories
-##############################################
-mkdir -p /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}
-export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}
-cd /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}
-
-export FCSTDIR=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/forecast.tm00_${cyc}
-
-##############################################
-# Obtain unique process id (pid) and determine job output name on system
-##############################################
-export pid=$$
-export pgmout="OUTPUT.${pid}"
-
-##############################################
 # Initialize PDY variables
 ##############################################
 # Get my date file; cyc is tm00 date, comes from qsub script
@@ -47,6 +24,25 @@ export CYCLE=`cut -c 7-16 ncepdate`
 export PDY=`cut -c 7-14 ncepdate`
 
 # fhr and cyc set in jobname in LSF script
+
+##############################################
+# Obtain unique process id (pid) and make temp directory
+##############################################
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}
+mkdir -p $DATA
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+##############################################
+# Specify Execution Areas
+##############################################
+export EXECfv3=${HOMEgfs}/exec
+export FCSTDIR=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/forecast.tm00_${cyc}
+
+export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
+export WGRIB2=/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3reg_da_hourly/exec/wgrib2new
 
 ##############################################
 # Define COM directories

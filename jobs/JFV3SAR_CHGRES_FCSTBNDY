@@ -87,15 +87,12 @@ else
 fi
 
 ##############################################
-# Working directories
+# Obtain unique process id (pid) and make temp directory
 ##############################################
-mkdir -p /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
 export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
-cd /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+mkdir -p $DATA
+cd $DATA
 
-##############################################
-# Obtain unique process id (pid) and determine job output name on system
-##############################################
 export pid=$$
 export pgmout="OUTPUT.${pid}"
 
@@ -116,7 +113,14 @@ export INPdir=$COMOUT/anl.${tmmark}
 ##############################################
 rm filelist.ges
 ${SCRIPTdir}/exfv3sar_chgres_fcstbndy.sh
-cp filelist.ges $COMOUT/filelist.bndy.${tmmark}
+
+if [ $tmmark = tm00 ] ; then
+  cd $BNDYdir
+  cat filelist.ges* > $COMOUT/filelist.bndy.${tmmark}
+  cp gfs_bndy.tile7.*.nc $INPdir/.
+else
+  cp filelist.ges $COMOUT/filelist.bndy.${tmmark}
+fi
 
 if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
 

@@ -15,27 +15,6 @@ module load prod_util/1.1.0
 module list
 
 ##############################################
-# Specify Execution Areas
-##############################################
-export EXECfv3=${HOMEgfs}/exec
-
-# CONFIGdir, FIX_AM, FIXDIR set in JFV3SAR_ENVIR
-export CO2DIR=${FIX_AM}/fix_co2_proj
-
-##############################################
-# Working directories
-##############################################
-mkdir -p /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
-export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
-cd /gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
-
-##############################################
-# Obtain unique process id (pid) and determine job output name on system
-##############################################
-export pid=$$
-export pgmout="OUTPUT.${pid}"
-
-##############################################
 # Initialize PDY variables
 ##############################################
 # Get my date file; cyc is tm00 date, comes from qsub script
@@ -48,6 +27,24 @@ export PDY=`cut -c 7-14 ncepdate`
 #get valid time of IC's
 offset=`echo $tmmark | cut -c 3-4`
 export CYCLEanl=`$NDATE -${offset} $CYCLE`
+
+##############################################
+# Obtain unique process id (pid) and make temp directory
+##############################################
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+mkdir -p $DATA
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+##############################################
+# Specify Execution Areas
+##############################################
+export EXECfv3=${HOMEgfs}/exec
+
+# CONFIGdir, FIX_AM, FIXDIR set in JFV3SAR_ENVIR
+export CO2DIR=${FIX_AM}/fix_co2_proj
 
 ##############################################
 # Define COM directories
