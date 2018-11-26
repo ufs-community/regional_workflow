@@ -17,8 +17,13 @@
 
 set -x
 
-export NEWDATE=`${NDATE} +${fhr} $CYCLE`
-
+if [ $tmmark = tm00 ] ; then
+  export NEWDATE=`${NDATE} +${fhr} $CYCLE`
+else
+  offset=`echo $tmmark | cut -c 3-4`
+  export vlddate=`${NDATE} - ${offset} $CYCLE`
+  export NEWDATE=`${NDATE} + ${fhr} $vlddate`
+fi
 export YY=`echo $NEWDATE | cut -c1-4`
 export MM=`echo $NEWDATE | cut -c5-6`
 export DD=`echo $NEWDATE | cut -c7-8`
@@ -59,27 +64,25 @@ domain=conus
 gridspecs="lambert:262.5:38.5:38.5 237.280:1799:3000 21.138:1059:3000"
 compress_type=c3
 
-####export tmmark=tm00
-
 if [ $fhr -eq 00 ] ; then
 
-$WGRIB2 BGDAWP${fhr}.tm00 | grep -F -f $PARMdir/nam_nests.hiresf_inst.txt | grep ':anl:' | $WGRIB2 -i -grib inputs.grib${domain}_inst BGDAWP${fhr}.tm00
+$WGRIB2 BGDAWP${fhr}.${tmmark} | grep -F -f $PARMdir/nam_nests.hiresf_inst.txt | grep ':anl:' | $WGRIB2 -i -grib inputs.grib${domain}_inst BGDAWP${fhr}.${tmmark}
 $WGRIB2 inputs.grib${domain}_inst -set_bitmap 1 -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_vectors "UGRD:VGRD:USTM:VSTM" \
      -new_grid_interpolation neighbor \
      -new_grid ${gridspecs} ${domain}fv3.hiresf${fhr}.${tmmark}.inst
 
 else
 
-$WGRIB2 BGDAWP${fhr}.tm00 | grep -F -f $PARMdir/nam_nests.hiresf_inst.txt | grep 'hour fcst' | $WGRIB2 -i -grib inputs.grib${domain}_inst BGDAWP${fhr}.tm00
+$WGRIB2 BGDAWP${fhr}.${tmmark} | grep -F -f $PARMdir/nam_nests.hiresf_inst.txt | grep 'hour fcst' | $WGRIB2 -i -grib inputs.grib${domain}_inst BGDAWP${fhr}.${tmmark}
 $WGRIB2 inputs.grib${domain}_inst -set_bitmap 1 -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_vectors "UGRD:VGRD:USTM:VSTM" \
      -new_grid_interpolation neighbor \
      -new_grid ${gridspecs} ${domain}fv3.hiresf${fhr}.${tmmark}.inst
 
 fi
 
-$WGRIB2 BGDAWP${fhr}.tm00 | grep -F -f $PARMdir/nam_nests.hiresf_nn.txt | $WGRIB2 -i -grib inputs.grib${domain} BGDAWP${fhr}.tm00
+$WGRIB2 BGDAWP${fhr}.${tmmark} | grep -F -f $PARMdir/nam_nests.hiresf_nn.txt | $WGRIB2 -i -grib inputs.grib${domain} BGDAWP${fhr}.${tmmark}
 $WGRIB2 inputs.grib${domain} -new_grid_vectors "UGRD:VGRD:USTM:VSTM" -submsg_uv inputs.grib${domain}.uv
-$WGRIB2 BGDAWP${fhr}.tm00 -match ":(APCP|WEASD|SNOD):" -grib inputs.grib${domain}.uv_budget
+$WGRIB2 BGDAWP${fhr}.${tmmark} -match ":(APCP|WEASD|SNOD):" -grib inputs.grib${domain}.uv_budget
 
 $WGRIB2 inputs.grib${domain}.uv -set_bitmap 1 -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_interpolation neighbor -new_grid_vectors "UGRD:VGRD:USTM:VSTM" -new_grid ${gridspecs} ${domain}fv3.hiresf${fhr}.${tmmark}.uv
 $WGRIB2 ${domain}fv3.hiresf${fhr}.${tmmark}.uv -new_grid_vectors "UGRD:VGRD:USTM:VSTM" -submsg_uv ${domain}fv3.hiresf${fhr}.${tmmark}.nn
@@ -89,9 +92,15 @@ cat ${domain}fv3.hiresf${fhr}.${tmmark}.nn ${domain}fv3.hiresf${fhr}.${tmmark}.b
 
 #####$WGRIB2 ${domain}fv3.hiresf${fhr}.${tmmark} -s > ${domain}fv3.hiresf${fhr}.${tmmark}.idx
 
-mv ${domain}fv3.hiresf${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.f${fhr}.grib2
-mv BGDAWP${fhr}.tm00 $COMOUT/${RUN}.t${cyc}z.conus.natprs.f${fhr}.grib2
-mv BGRD3D${fhr}.tm00 $COMOUT/${RUN}.t${cyc}z.conus.natlev.f${fhr}.grib2
+if [ $tmmark = tm00 ] ; then
+  mv ${domain}fv3.hiresf${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.f${fhr}.grib2
+  mv BGDAWP${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.natprs.f${fhr}.grib2
+  mv BGRD3D${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.natlev.f${fhr}.grib2
+else
+  mv ${domain}fv3.hiresf${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.f${fhr}.${tmmark}.grib2
+  mv BGDAWP${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.natprs.f${fhr}.${tmmark}.grib2
+  mv BGRD3D${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.natlev.f${fhr}.${tmmark}.grib2
+fi
 
 echo done > $FCSTDIR/postdone${fhr}.${tmmark}
 
