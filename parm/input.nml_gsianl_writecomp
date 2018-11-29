@@ -63,7 +63,7 @@
        a_imp = 1.
        p_fac = 0.1
        k_split  = 5
-       n_split  = 5
+       n_split  = 6
        nwat = 6
        na_init = 0
        d_ext = 0.0

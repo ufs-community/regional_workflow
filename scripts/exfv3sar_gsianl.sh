@@ -44,7 +44,7 @@ export nens=81
 export nhr_assimilation=03
 ##typeset -Z2 nhr_assimilation
 
-python $UTIL/getbest_EnKF_FV3GDAS.py -v $vlddate --exact=no --minsize=${nens} -d ${COMINgfspll}/enkf.gdas -o filelist${nhr_assimilation} --o3fname=gfs_sigf${nhr_assimilation} --gfs_nemsio=yes
+python $UTIL/getbest_EnKF_FV3GDAS.py -v $vlddate --exact=no --minsize=${nens} -d ${COMINgfspll}/enkfgdas -o filelist${nhr_assimilation} --o3fname=gfs_sigf${nhr_assimilation} --gfs_nemsio=yes
 
 #Check to see if ensembles were found 
 numfiles=`cat filelist03 | wc -l`
