@@ -1,0 +1,855 @@
+<?xml version="1.0"?>
+<!DOCTYPE workflow
+[
+
+<!ENTITY STARTYEAR "2019">
+<!ENTITY STARTMONTH "02">
+<!ENTITY STARTDAY "05">
+<!ENTITY STARTHOUR "12">
+
+<!ENTITY ENDYEAR "2019">
+<!ENTITY ENDMONTH "12">
+<!ENTITY ENDDAY "31">
+<!ENTITY ENDHOUR "12">
+
+<!ENTITY USER "Eric.Rogers">
+<!ENTITY ACCOUNT "NAM-T2O">
+
+<!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/fv3reg_da_hourly_rocoto">
+<!ENTITY JOBS "&HOMEfv3;/jobs">
+<!ENTITY SCRIPTS "&HOMEfv3;/scripts">
+<!ENTITY HOMEgfs "/gpfs/dell2/emc/modeling/noscrub/&USER;/fv3reg_oct2018/fv3gfs">
+<!ENTITY COMgfs "/gpfs/gp2/ptmp/Eric.Rogers/prfv3rt1">
+<!ENTITY OUTDIR "/gpfs/dell2/ptmp/&USER;">
+<!ENTITY DATAROOT "/gpfs/dell2/ptmp/&USER;/tmpnwprd_hourly">
+
+<!ENTITY RESERVATION '<queue>dev</queue><account>&ACCOUNT;</account>'>
+<!ENTITY RESERVATION_ANL '<queue>debug</queue><account>&ACCOUNT;</account>'>
+<!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
+
+<!ENTITY SCRUB_RESOURCES '<walltime>00:10:00</walltime><memory>1G</memory><native>-R affinity[core]</native>'>
+<!ENTITY SENDINIBC_RESOURCES '<walltime>00:30:00</walltime><memory>1G</memory><native>-R affinity[core]</native>'>
+<!ENTITY CHGRES_IC_RESOURCES '<walltime>00:30:00</walltime><native>-R affinity[core]</native>'>
+<!ENTITY CHGRES_BC_RESOURCES '<walltime>00:20:00</walltime><native>-R affinity[core]</native>'>
+<!ENTITY FCST_RESOURCES_GUESS '<walltime>00:20:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>'>
+<!ENTITY FCST_RESOURCES_DA '<walltime>00:10:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>'>
+<!ENTITY FCST_RESOURCES '<walltime>01:45:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>'>
+<!ENTITY POST_RESOURCES '<walltime>00:20:00</walltime><native>-R affinity[core]</native>'>
+<!ENTITY ANL_RESOURCES '<walltime>00:30:00</walltime><native>-R affinity[core]</native>'>
+<!ENTITY HIST_RESOURCES '<walltime>00:30:00</walltime><memory>5G</memory><native>-R affinity[core]</native>'>
+
+]>
+
+
+<!--  ************************************************************* -->
+<!--  ******************* STARTING THE WORKFLOW ******************* -->
+
+<!-- <workflow realtime="F" scheduler="lsf" taskthrottle="11"> -->
+<workflow realtime="T" scheduler="lsf" taskthrottle="60" cyclethrottle="2" cyclelifespan="00:24:00:00">
+
+  <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
+
+  <log>
+    <cyclestr>&OUTDIR;/testlogs_hourly_rocoto/workflow_regional_@Y@m@d@H.log</cyclestr>
+  </log>
+
+
+<!--  **********************************************************************  -->
+<!--  ******************************* Scrubbing ****************************  -->
+
+  <task name="scrub" cycledefs="regional" maxtries="3">
+  &RESERVATION_TRANSFER;
+  &SCRUB_RESOURCES;
+  <cores>1</cores>
+    <command>&JOBS;/JFV3SAR_SCRUB</command>
+    <jobname><cyclestr>scrub_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/scrub_@H.log</cyclestr></join>
+
+    <envar>
+      <name>HOMEdir</name>
+      <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+      <name>job</name>
+      <value>scrub</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+    <dependency>
+      <timedep><cyclestr offset="00:09:30:00">@Y@m@d@H@M@S</cyclestr></timedep>
+    </dependency>
+
+  </task>
+
+<!--  **********************************************************************  -->
+<!--  **************************** Run chgres ******************************  -->
+
+<!-- Create the initial conditions at tm12 and boundary condition from tm12-tm06 from the FV3GFS -->
+
+  <task name="chgres_firstguess" cycledefs="regional" maxtries="5">
+  &RESERVATION;
+  &CHGRES_IC_RESOURCES;
+  <cores>1</cores>
+    <command>&JOBS;/JFV3SAR_CHGRES_FIRSTGUESS</command>
+    <jobname><cyclestr>chgres_firstguess_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/chgres_firstguess_@H.log</cyclestr></join>
+
+    <envar>
+      <name>HOMEdir</name>
+      <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+      <name>job</name>
+      <value>chgres_firstguess</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <dependency>
+        <taskdep task="scrub"/>
+    </dependency>
+
+  </task>
+
+<!--  ***********************************************************************  -->
+<!--  ********** Run the 6-h forecast from tm12 to tm06 *********************  -->
+
+  <task name="forecast_firstguess" cycledefs="regional" maxtries="4">
+  &RESERVATION;
+  &FCST_RESOURCES_GUESS;
+  <nodes>54:ppn=12</nodes>
+    <command>&JOBS;/JFV3SAR_FCST_FIRSTGUESS</command>
+    <jobname><cyclestr>forecast_firstguess_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/forecast_firstguess_@H.log</cyclestr></join>
+
+    <envar>
+      <name>HOMEdir</name>
+      <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+      <name>job</name>
+      <value>forecast_firstguess</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <dependency>
+        <taskdep task="chgres_firstguess"/>
+    </dependency>
+
+  </task>
+
+<!--  ***********************************************************************  -->
+<!--  ********** Run the post job for the 6-h forecast valid at tm06*********  -->
+
+  <metatask>
+    <var name="fhr">06</var>
+    <task name="post#fhr#_firstguess" cycledefs="regional" maxtries="2">
+    &RESERVATION;
+    &POST_RESOURCES;
+    <nodes>3:ppn=8</nodes>
+      <command>&JOBS;/JFV3SAR_POST_FIRSTGUESS</command>
+      <jobname><cyclestr>post_firstguess_@H</cyclestr></jobname>
+      <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/post_firstguess_@H.log</cyclestr></join>
+
+      <envar>
+        <name>HOMEdir</name>
+        <value>&HOMEfv3;</value>
+      </envar>
+      <envar>
+        <name>job</name>
+        <value>post_firstguess</value>
+      </envar>
+      <envar>
+       <name>tmmark</name>
+       <value>tm12</value>
+      </envar>
+      <envar>
+        <name>USER</name>
+        <value>&USER;</value>
+      </envar>
+      <envar>
+        <name>CYCLE</name>
+        <value><cyclestr>@Y@m@d@H</cyclestr></value>
+      </envar>
+      <envar>
+        <name>PDY</name>
+        <value><cyclestr>@Y@m@d</cyclestr></value>
+      </envar>
+      <envar>
+        <name>cyc</name>
+        <value><cyclestr>@H</cyclestr></value>
+      </envar>
+      <envar>
+        <name>fhr</name>
+        <value>#fhr#</value>
+      </envar>
+
+      <dependency>
+        <taskdep task="forecast_firstguess"/>
+      </dependency>
+    </task>
+  </metatask>
+
+<!-- Create the boundary conditions from tm06-tm01 -->
+
+  <metatask name="chgres_fcstbndy_da">
+    <var name="mark">01 02 03 04 05 06</var>
+    <task name="chgres_fcstbndy_tm#mark#" cycledefs="regional" maxtries="2">
+    &RESERVATION;
+    &CHGRES_BC_RESOURCES;
+    <nodes>1:ppn=24</nodes>
+    <command>&JOBS;/JFV3SAR_CHGRES_FCSTBNDY</command>
+    <jobname><cyclestr>chgres_fcstbndy_tm#mark#_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/chgres_fcstbndy_tm#mark#_@H.log</cyclestr></join>
+
+    <envar>
+      <name>HOMEdir</name>
+      <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+      <name>job</name>
+      <value>chgres_fcstbndy_tm#mark#</value>
+    </envar>
+    <envar>
+     <name>tmmark</name>
+     <value>tm#mark#</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <dependency>
+        <taskdep task="forecast_firstguess"/>
+    </dependency>
+
+    </task>
+   </metatask>
+
+
+<!--  ***********************************************************************  -->
+<!--  ********** Run the tm06 analysis **************************************  -->
+
+  <task name="analysis_tm06" cycledefs="regional" maxtries="2">
+  &RESERVATION_ANL;
+  &ANL_RESOURCES;
+  <nodes>10:ppn=24</nodes>
+    <command>&JOBS;/JFV3SAR_GSIANL_FIRSTGUESS</command>
+    <jobname><cyclestr>gsianl_tm06_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/gsianl_firstguess_tm06_@H.log</cyclestr></join>
+
+    <envar>
+      <name>HOMEdir</name>
+      <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+      <name>job</name>
+      <value>gsianl_tm06</value>
+    </envar>
+    <envar>
+      <name>tmmark</name>
+      <value>tm06</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <dependency>
+        <taskdep task="chgres_fcstbndy_tm06"/>
+    </dependency>
+
+  </task>
+
+<!--  ***********************************************************************  -->
+<!--  ********** Run the tm06 fcst - tm01 analysis as a metatask*************  -->
+<!--  ***********************************************************************  -->
+
+  <metatask name="da_fcst_analysis_set">
+    <var name="mark">06 05 04 03 02</var>
+    <var name="next_mark">05 04 03 02 01</var>
+
+    <task name="forecast_tm#mark#" cycledefs="regional" maxtries="2">
+     &RESERVATION;
+     &FCST_RESOURCES_DA;
+     <nodes>54:ppn=12</nodes>
+     <command>&JOBS;/JFV3SAR_FCST</command>
+     <jobname><cyclestr>forecast_tm#mark#_@H</cyclestr></jobname>
+     <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/forecast_tm#mark#_@H.log</cyclestr></join>
+
+     <envar>
+      <name>HOMEdir</name>
+      <value>&HOMEfv3;</value>
+     </envar>
+     <envar>
+      <name>job</name>
+      <value>forecast_tm#mark#</value>
+     </envar>
+     <envar>
+      <name>tmmark</name>
+      <value>tm#mark#</value>
+     </envar>
+     <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+     </envar>
+     <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+     </envar>
+     <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+     </envar>
+     <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+     </envar>
+
+     <dependency>
+      <and>
+       <taskdep task="analysis_tm#mark#"/>
+       <taskdep task="chgres_fcstbndy_tm#mark#"/>
+      </and>
+     </dependency>
+
+  </task>
+
+  <task name="analysis_tm#next_mark#" cycledefs="regional" maxtries="4">
+  &RESERVATION_ANL;
+  &ANL_RESOURCES;
+  <nodes>10:ppn=24</nodes>
+    <command>&JOBS;/JFV3SAR_GSIANL</command>
+    <jobname><cyclestr>gsianl_tm#next_mark#_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/gsianl_tm#next_mark#_@H.log</cyclestr></join>
+
+    <envar>
+      <name>HOMEdir</name>
+      <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+      <name>job</name>
+      <value>gsianl_tm#next_mark#</value>
+    </envar>
+    <envar>
+      <name>tmmark</name>
+      <value>tm#next_mark#</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <dependency>
+        <taskdep task="forecast_tm#mark#"/>
+    </dependency>
+   </task>
+  </metatask>
+
+<!--  ***********************************************************************  -->
+<!--  ********** Run the post jobs for tm06-tm01 *****************************  -->
+<!--  ***********************************************************************  -->
+
+  <metatask>
+   <var name="mark">06 05 04 03 02 01</var>
+   <metatask>
+    <var name="fhr">00 01</var>
+    <task name="post_f#fhr#_tm#mark#" cycledefs="regional" maxtries="2">
+    &RESERVATION;
+    &POST_RESOURCES;
+    <nodes>3:ppn=8</nodes>
+      <command>&JOBS;/JFV3SAR_POST</command>
+      <jobname><cyclestr>post_f#fhr#_tm#mark#_@H</cyclestr></jobname>
+      <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/post_f#fhr#_tm#mark#_@H.log</cyclestr></join>
+
+      <envar>
+        <name>HOMEdir</name>
+        <value>&HOMEfv3;</value>
+      </envar>
+      <envar>
+        <name>job</name>
+        <value>post_f#fhr#_tm#mark#</value>
+      </envar>
+      <envar>
+        <name>USER</name>
+        <value>&USER;</value>
+      </envar>
+      <envar>
+        <name>CYCLE</name>
+        <value><cyclestr>@Y@m@d@H</cyclestr></value>
+      </envar>
+      <envar>
+        <name>PDY</name>
+        <value><cyclestr>@Y@m@d</cyclestr></value>
+      </envar>
+      <envar>
+        <name>cyc</name>
+        <value><cyclestr>@H</cyclestr></value>
+      </envar>
+      <envar>
+        <name>fhr</name>
+        <value>#fhr#</value>
+      </envar>
+      <envar>
+        <name>tmmark</name>
+        <value>tm#mark#</value>
+      </envar>
+
+      <dependency>
+        <datadep age="00:00:05:00"><cyclestr>&DATAROOT;/forecast_tm#mark#_@H/logf0#fhr#</cyclestr></datadep>
+      </dependency>
+    </task>
+   </metatask>
+  </metatask>
+
+<!--  ***********************************************************************  -->
+<!--  ********** Run the tm01 fcst - tm00 analysis as a metatask*************  -->
+<!--  ***********************************************************************  -->
+
+  <metatask name="fcsttm01_anltm00">
+    <var name="mark">01</var>
+    <var name="next_mark">00</var>
+
+    <task name="forecast_tm#mark#" cycledefs="regional" maxtries="2">
+     &RESERVATION;
+     &FCST_RESOURCES_DA;
+     <nodes>54:ppn=12</nodes>
+     <command>&JOBS;/JFV3SAR_FCST</command>
+     <jobname><cyclestr>forecast_tm#mark#_@H</cyclestr></jobname>
+     <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/forecast_tm#mark#_@H.log</cyclestr></join>
+
+     <envar>
+      <name>HOMEdir</name>
+      <value>&HOMEfv3;</value>
+     </envar>
+     <envar>
+      <name>job</name>
+      <value>forecast_tm#mark#</value>
+     </envar>
+     <envar>
+      <name>tmmark</name>
+      <value>tm#mark#</value>
+     </envar>
+     <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+     </envar>
+     <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+     </envar>
+     <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+     </envar>
+     <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+     </envar>
+
+     <dependency>
+      <and>
+       <taskdep task="analysis_tm#mark#"/>
+       <taskdep task="chgres_fcstbndy_tm#mark#"/>
+      </and>
+     </dependency>
+
+  </task>
+
+  <task name="analysis_tm#next_mark#" cycledefs="regional" maxtries="2">
+  &RESERVATION_ANL;
+  &ANL_RESOURCES;
+  <nodes>10:ppn=24</nodes>
+    <command>&JOBS;/JFV3SAR_GSIANL</command>
+    <jobname><cyclestr>gsianl_tm#next_mark#_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/gsianl_tm#next_mark#_@H.log</cyclestr></join>
+
+    <envar>
+     <name>HOMEdir</name>
+     <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+     <name>job</name>
+     <value>gsianl_tm#next_mark#</value>
+    </envar>
+    <envar>
+      <name>tmmark</name>
+      <value>tm#next_mark#</value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <dependency>
+        <taskdep task="forecast_tm#mark#"/>
+    </dependency>
+   </task>
+  </metatask>
+
+<!-- Create the boundary conditions for the 60-h forecast -->
+
+  <task name="chgres_fcstbndy_tm00" cycledefs="regional" maxtries="2">
+  &RESERVATION;
+  &CHGRES_BC_RESOURCES;
+  <nodes>21:ppn=1</nodes>
+    <command>&JOBS;/JFV3SAR_CHGRES_FCSTBNDY</command>
+    <jobname><cyclestr> chgres_fcstbndy_tm00_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/chgres_fcstbndy.tm00_@H.log</cyclestr></join>
+
+    <envar>
+     <name>HOMEdir</name>
+     <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+     <name>job</name>
+     <value>chgres_fcstbndy_tm00</value>
+    </envar>
+    <envar>
+      <name>tmmark</name>
+      <value>tm00</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <dependency>
+       <taskdep task="analysis_tm00"/>
+    </dependency>
+
+  </task>
+
+<!-- Send tm00 IC/BC to FTP Server -->
+
+  <task name="sendinibc" cycledefs="regional" maxtries="2">
+  &RESERVATION_TRANSFER;
+  &SENDINIBC_RESOURCES;
+  <cores>1</cores>
+    <command>&JOBS;/JFV3SAR_SENDINIBC</command>
+    <jobname><cyclestr> sendinibc_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/sendinibc_@H.log</cyclestr></join>
+
+    <envar>
+     <name>HOMEdir</name>
+     <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+     <name>job</name>
+     <value>sendinibc</value>
+    </envar>
+    <envar>
+      <name>tmmark</name>
+      <value>tm00</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <dependency>
+      <and>
+       <taskdep task="analysis_tm00"/>
+       <taskdep task="chgres_fcstbndy_tm00"/>
+      </and>
+    </dependency>
+
+  </task>
+
+<!--  ***********************************************************************  -->
+<!--  ************************* Run the 60-h forecast ***********************  -->
+
+  <task name="forecast_tm00" cycledefs="regional" maxtries="3">
+  &RESERVATION;
+  &FCST_RESOURCES;
+  <nodes>114:ppn=12</nodes>
+    <command>&JOBS;/JFV3SAR_FCST</command>
+    <jobname><cyclestr>forecast_tm00_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/forecast_tm00_@H.log</cyclestr></join>
+
+    <envar>
+     <name>HOMEdir</name>
+     <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+     <name>job</name>
+     <value>forecast_tm00</value>
+    </envar>
+    <envar>
+      <name>tmmark</name>
+      <value>tm00</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <dependency>
+      <and>
+        <taskdep task="analysis_tm00"/>
+        <taskdep task="chgres_fcstbndy_tm00"/>
+      </and>
+    </dependency>
+
+  </task>
+
+<!--  *******************************************************************  -->
+<!--  ********************** Run the post processor *********************  -->
+
+  <metatask name="post_tm00">
+    <var name="fhr">00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60</var>
+    <task name="post#fhr#" cycledefs="regional" maxtries="3">
+    &RESERVATION;
+    &POST_RESOURCES;
+    <nodes>3:ppn=8</nodes>
+      <command>&JOBS;/JFV3SAR_POST</command>
+      <jobname><cyclestr>fv3_postf#fhr#_@H</cyclestr></jobname>
+      <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/post_f#fhr#_@H_tm00.log</cyclestr></join>
+   
+      <envar>
+       <name>HOMEdir</name>
+       <value>&HOMEfv3;</value>
+      </envar>
+      <envar>
+       <name>job</name>
+       <value>fv3_postf#fhr#</value>
+      </envar>
+      <envar>
+        <name>tmmark</name>
+        <value>tm00</value>
+      </envar>
+      <envar>
+        <name>USER</name>
+        <value>&USER;</value>
+      </envar>
+      <envar>
+        <name>CYCLE</name>
+        <value><cyclestr>@Y@m@d@H</cyclestr></value>
+      </envar>
+      <envar>
+        <name>PDY</name>
+        <value><cyclestr>@Y@m@d</cyclestr></value>
+      </envar>
+      <envar>
+        <name>cyc</name>
+        <value><cyclestr>@H</cyclestr></value>
+      </envar>
+      <envar>
+        <name>fhr</name>
+        <value>#fhr#</value>
+      </envar>
+
+      <dependency>
+        <datadep age="00:00:05:00"><cyclestr>&DATAROOT;/forecast_tm00_@H/logf0#fhr#</cyclestr></datadep>
+      </dependency>
+    </task>
+  </metatask>
+
+<!--  **********************************************************************  -->
+<!--  ******************************* Cleanup ******************************  -->
+
+  <task name="cleanup" cycledefs="regional" maxtries="3">
+  &RESERVATION_TRANSFER;
+  &SCRUB_RESOURCES;
+  <cores>1</cores>
+    <command>&JOBS;/JFV3SAR_CLEANUP</command>
+    <jobname><cyclestr>cleanup_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/cleanup_@H.log</cyclestr></join>
+
+    <envar>
+     <name>HOMEdir</name>
+     <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+     <name>job</name>
+     <value>cleanup</value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+    <dependency>
+       <metataskdep metatask="post_tm00"/>
+    </dependency>
+  </task>
+
+<!--  **********************************************************************  -->
+<!--  ******************************* Archive job **************************  -->
+
+  <task name="rhist" cycledefs="regional" maxtries="5">
+  &RESERVATION_TRANSFER;
+  &HIST_RESOURCES;
+  <cores>1</cores>
+    <command>&JOBS;/JFV3SAR_RHIST</command>
+    <jobname><cyclestr>run_history_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/rhist_@H.log</cyclestr></join>
+
+    <envar>
+     <name>HOMEdir</name>
+     <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+     <name>job</name>
+     <value><cyclestr>jrun_history@H_fv3sar</cyclestr></value>
+    </envar>
+    <envar>
+      <name>CYCLE</name>
+      <value><cyclestr>@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+    <dependency>
+       <metataskdep metatask="post_tm00"/>
+    </dependency>
+  </task>
+
+</workflow>
