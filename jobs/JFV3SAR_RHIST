@@ -17,10 +17,12 @@ cp $DATEdir/t${cyc}z ncepdate
 export CYCLE=`cut -c 7-16 ncepdate`
 export PDY=`cut -c 7-14 ncepdate`
 
+echo "DATEXX${CYCLE}" > ncepdate
+
 ##############################################
 # Obtain unique process id (pid) and make temp directory
 ##############################################
-export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${job}_${cyc}
 mkdir -p $DATA
 cd $DATA
 

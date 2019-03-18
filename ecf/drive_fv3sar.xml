@@ -3,9 +3,9 @@
 [
 
 <!ENTITY STARTYEAR "2019">
-<!ENTITY STARTMONTH "02">
-<!ENTITY STARTDAY "05">
-<!ENTITY STARTHOUR "12">
+<!ENTITY STARTMONTH "03">
+<!ENTITY STARTDAY "16">
+<!ENTITY STARTHOUR "00">
 
 <!ENTITY ENDYEAR "2019">
 <!ENTITY ENDMONTH "12">
@@ -19,7 +19,7 @@
 <!ENTITY JOBS "&HOMEfv3;/jobs">
 <!ENTITY SCRIPTS "&HOMEfv3;/scripts">
 <!ENTITY HOMEgfs "/gpfs/dell2/emc/modeling/noscrub/&USER;/fv3reg_oct2018/fv3gfs">
-<!ENTITY COMgfs "/gpfs/gp2/ptmp/Eric.Rogers/prfv3rt1">
+<!ENTITY COMgfs "/gpfs/dell1/nco/ops/com/gfs/para">
 <!ENTITY OUTDIR "/gpfs/dell2/ptmp/&USER;">
 <!ENTITY DATAROOT "/gpfs/dell2/ptmp/&USER;/tmpnwprd_hourly">
 
@@ -57,7 +57,7 @@
 <!--  **********************************************************************  -->
 <!--  ******************************* Scrubbing ****************************  -->
 
-  <task name="scrub" cycledefs="regional" maxtries="3">
+  <task name="scrub" cycledefs="regional" maxtries="6">
   &RESERVATION_TRANSFER;
   &SCRUB_RESOURCES;
   <cores>1</cores>
@@ -90,7 +90,7 @@
       <value><cyclestr>@H</cyclestr></value>
     </envar>
     <dependency>
-      <timedep><cyclestr offset="00:09:30:00">@Y@m@d@H@M@S</cyclestr></timedep>
+      <timedep><cyclestr offset="00:07:30:00">@Y@m@d@H@M@S</cyclestr></timedep>
     </dependency>
 
   </task>
@@ -100,7 +100,7 @@
 
 <!-- Create the initial conditions at tm12 and boundary condition from tm12-tm06 from the FV3GFS -->
 
-  <task name="chgres_firstguess" cycledefs="regional" maxtries="5">
+  <task name="chgres_firstguess" cycledefs="regional" maxtries="6">
   &RESERVATION;
   &CHGRES_IC_RESOURCES;
   <cores>1</cores>
@@ -129,6 +129,10 @@
       <value><cyclestr>@Y@m@d</cyclestr></value>
     </envar>
     <envar>
+      <name>tmmark</name>
+      <value>tm12</value>
+    </envar>
+    <envar>
       <name>cyc</name>
       <value><cyclestr>@H</cyclestr></value>
     </envar>
@@ -142,7 +146,7 @@
 <!--  ***********************************************************************  -->
 <!--  ********** Run the 6-h forecast from tm12 to tm06 *********************  -->
 
-  <task name="forecast_firstguess" cycledefs="regional" maxtries="4">
+  <task name="forecast_firstguess" cycledefs="regional" maxtries="6">
   &RESERVATION;
   &FCST_RESOURCES_GUESS;
   <nodes>54:ppn=12</nodes>
@@ -186,7 +190,7 @@
 
   <metatask>
     <var name="fhr">06</var>
-    <task name="post#fhr#_firstguess" cycledefs="regional" maxtries="2">
+    <task name="post#fhr#_firstguess" cycledefs="regional" maxtries="6">
     &RESERVATION;
     &POST_RESOURCES;
     <nodes>3:ppn=8</nodes>
@@ -237,7 +241,7 @@
 
   <metatask name="chgres_fcstbndy_da">
     <var name="mark">01 02 03 04 05 06</var>
-    <task name="chgres_fcstbndy_tm#mark#" cycledefs="regional" maxtries="2">
+    <task name="chgres_fcstbndy_tm#mark#" cycledefs="regional" maxtries="6">
     &RESERVATION;
     &CHGRES_BC_RESOURCES;
     <nodes>1:ppn=24</nodes>
@@ -285,7 +289,7 @@
 <!--  ***********************************************************************  -->
 <!--  ********** Run the tm06 analysis **************************************  -->
 
-  <task name="analysis_tm06" cycledefs="regional" maxtries="2">
+  <task name="analysis_tm06" cycledefs="regional" maxtries="6">
   &RESERVATION_ANL;
   &ANL_RESOURCES;
   <nodes>10:ppn=24</nodes>
@@ -336,7 +340,7 @@
     <var name="mark">06 05 04 03 02</var>
     <var name="next_mark">05 04 03 02 01</var>
 
-    <task name="forecast_tm#mark#" cycledefs="regional" maxtries="2">
+    <task name="forecast_tm#mark#" cycledefs="regional" maxtries="6">
      &RESERVATION;
      &FCST_RESOURCES_DA;
      <nodes>54:ppn=12</nodes>
@@ -382,7 +386,7 @@
 
   </task>
 
-  <task name="analysis_tm#next_mark#" cycledefs="regional" maxtries="4">
+  <task name="analysis_tm#next_mark#" cycledefs="regional" maxtries="6">
   &RESERVATION_ANL;
   &ANL_RESOURCES;
   <nodes>10:ppn=24</nodes>
@@ -433,7 +437,7 @@
    <var name="mark">06 05 04 03 02 01</var>
    <metatask>
     <var name="fhr">00 01</var>
-    <task name="post_f#fhr#_tm#mark#" cycledefs="regional" maxtries="2">
+    <task name="post_f#fhr#_tm#mark#" cycledefs="regional" maxtries="6">
     &RESERVATION;
     &POST_RESOURCES;
     <nodes>3:ppn=8</nodes>
@@ -489,7 +493,7 @@
     <var name="mark">01</var>
     <var name="next_mark">00</var>
 
-    <task name="forecast_tm#mark#" cycledefs="regional" maxtries="2">
+    <task name="forecast_tm#mark#" cycledefs="regional" maxtries="6">
      &RESERVATION;
      &FCST_RESOURCES_DA;
      <nodes>54:ppn=12</nodes>
@@ -535,7 +539,7 @@
 
   </task>
 
-  <task name="analysis_tm#next_mark#" cycledefs="regional" maxtries="2">
+  <task name="analysis_tm#next_mark#" cycledefs="regional" maxtries="6">
   &RESERVATION_ANL;
   &ANL_RESOURCES;
   <nodes>10:ppn=24</nodes>
@@ -580,7 +584,7 @@
 
 <!-- Create the boundary conditions for the 60-h forecast -->
 
-  <task name="chgres_fcstbndy_tm00" cycledefs="regional" maxtries="2">
+  <task name="chgres_fcstbndy_tm00" cycledefs="regional" maxtries="6">
   &RESERVATION;
   &CHGRES_BC_RESOURCES;
   <nodes>21:ppn=1</nodes>
@@ -625,7 +629,7 @@
 
 <!-- Send tm00 IC/BC to FTP Server -->
 
-  <task name="sendinibc" cycledefs="regional" maxtries="2">
+  <task name="sendinibc" cycledefs="regional" maxtries="6">
   &RESERVATION_TRANSFER;
   &SENDINIBC_RESOURCES;
   <cores>1</cores>
@@ -674,7 +678,7 @@
 <!--  ***********************************************************************  -->
 <!--  ************************* Run the 60-h forecast ***********************  -->
 
-  <task name="forecast_tm00" cycledefs="regional" maxtries="3">
+  <task name="forecast_tm00" cycledefs="regional" maxtries="6">
   &RESERVATION;
   &FCST_RESOURCES;
   <nodes>114:ppn=12</nodes>
@@ -725,7 +729,7 @@
 
   <metatask name="post_tm00">
     <var name="fhr">00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60</var>
-    <task name="post#fhr#" cycledefs="regional" maxtries="3">
+    <task name="post#fhr#" cycledefs="regional" maxtries="6">
     &RESERVATION;
     &POST_RESOURCES;
     <nodes>3:ppn=8</nodes>
@@ -775,7 +779,7 @@
 <!--  **********************************************************************  -->
 <!--  ******************************* Cleanup ******************************  -->
 
-  <task name="cleanup" cycledefs="regional" maxtries="3">
+  <task name="cleanup" cycledefs="regional" maxtries="6">
   &RESERVATION_TRANSFER;
   &SCRUB_RESOURCES;
   <cores>1</cores>
@@ -814,8 +818,11 @@
 
 <!--  **********************************************************************  -->
 <!--  ******************************* Archive job **************************  -->
+<!--  *Commented out, archive job runs after the plot job (which changes the GRIB files)  -->
 
-  <task name="rhist" cycledefs="regional" maxtries="5">
+<!--
+
+  <task name="rhist" cycledefs="regional" maxtries="6">
   &RESERVATION_TRANSFER;
   &HIST_RESOURCES;
   <cores>1</cores>
@@ -851,5 +858,7 @@
        <metataskdep metatask="post_tm00"/>
     </dependency>
   </task>
+
+-->
 
 </workflow>

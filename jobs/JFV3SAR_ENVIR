@@ -5,29 +5,31 @@ export envir=para
 export delldir=dell2
 export tmpdir=ptmp
 
-export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ndate
-export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/nhour
+export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
+export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
 
 export res=768           #-- FV3 equivalent to 13-km global resolution
 export RES=C$res
 export RUNTYPE=regional  # grid type = uniform, stretch, nest, or regional
 export gtype=${RUNTYPE}
 
-export BASEDIR=/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3reg_oct2018/fv3gfs   #- Source code location
+export BASEDIR=/gpfs/dell2/emc/modeling/noscrub/$USER/fv3reg_oct2018/fv3gfs   #- Source code location
 export HOMEgfs=${BASEDIR}
 export BASE_GSM=${BASEDIR}
 
-export HOMEdir=/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3reg_da_hourly
+export HOMEdir=/gpfs/dell2/emc/modeling/noscrub/$USER/fv3reg_da_hourly_rocoto
 export DATEdir=$HOMEdir/date
 mkdir -p $DATEdir
 export PARMdir=$HOMEdir/parm
 export SCRIPTdir=$HOMEdir/scripts
 export USHdir=$HOMEdir/ush
 
+export FIXnew=/gpfs/dell2/emc/modeling/noscrub/$USER/fv3reg_da_hourly_rocoto/fix
+
 export CONFIGdir=$PARMdir
 
-export FIXgsm=/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3reg_oct2018/fv3gfs/fix/fix_am
-export FIX_AM=/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3reg_oct2018/fv3gfs/fix/fix_am
+export FIXgsm=/gpfs/dell2/emc/modeling/noscrub/$USER/fv3reg_oct2018/fv3gfs/fix/fix_am
+export FIX_AM=/gpfs/dell2/emc/modeling/noscrub/$USER/fv3reg_oct2018/fv3gfs/fix/fix_am
 export FIXfv3=${BASEDIR}/fix/fix_fv3
 export FIXDIR=${FIXfv3}
 
@@ -40,4 +42,4 @@ export NHRSguess=06     #-- Forecast length for 1st guess generation
 export NHRSda=01        #-- Forecast length for cycled DA
 export NHRS=60          #-- Forecast length for free fcst
 
-export jlogfile=/gpfs/dell2/ptmp/${USER}/jlogfile.fv3sar.jlog
+export jlogfile=/gpfs/dell2/ptmp/$USER/jlogfile.fv3sar.jlog

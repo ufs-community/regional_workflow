@@ -258,7 +258,8 @@ emiscoef_VISwater=$fixcrtm/NPOESS.VISwater.EmisCoeff.bin
 emiscoef_MWwater=$fixcrtm/FASTEM6.MWwater.EmisCoeff.bin
 aercoef=$fixcrtm/AerosolCoeff.bin
 cldcoef=$fixcrtm/CloudCoeff.bin
-satinfo=$fixgsi/nam_regional_satinfo.txt
+#satinfo=$fixgsi/nam_regional_satinfo.txt
+satinfo=$PARMdir/fv3sar_satinfo.txt
 scaninfo=$fixgsi/global_scaninfo.txt
 satangl=$fixgsi/nam_global_satangbias.txt
 atmsbeamdat=$fixgsi/atms_beamwidth.txt
@@ -318,7 +319,7 @@ $ncp $nmmb_nems_obs/rap.t${cya}z.1bamua.tm00.bufr_d ./amsuabufr
 $ncp $nmmb_nems_obs/rap.t${cya}z.esamua.tm00.bufr_d ./amsuabufrears
 $ncp $nmmb_nems_obs/rap.t${cya}z.1bamub.tm00.bufr_d ./amsubbufr
 $ncp $nmmb_nems_obs/rap.t${cya}z.1bmhs.tm00.bufr_d  ./mhsbufr
-$ncp $nmmb_nems_obs/rap.t${cya}z.goesfv.tm00.bufr_d ./gsnd1bufr
+$ncp $nmmb_nems_obs/rap.t${cya}z.goesnd.tm00.bufr_d ./gsnd1bufr
 $ncp $nmmb_nems_obs/rap.t${cya}z.airsev.tm00.bufr_d ./airsbufr
 $ncp $nmmb_nems_obs/rap.t${cya}z.cris.tm00.bufr_d ./crisbufr
 $ncp $nmmb_nems_obs/rap.t${cya}z.atms.tm00.bufr_d ./atmsbufr
@@ -424,6 +425,7 @@ cp satbias_pc.out $GESROOT_HOLD/satbias_pc
 cp satbias_pc.out $COMOUT/${RUN}.t${CYCrun}z.satbias_pc.${tmmark}
 
 cp aircftbias_out $COMOUT/${RUN}.t${CYCrun}z.abias_air.${tmmark}
+cp aircftbias_out $GESROOT_HOLD/gdas.airbias
 
 RADSTAT=${COMOUT}/${RUN}.t${CYCrun}z.radstat.${tmmark}
 CNVSTAT=${COMOUT}/${RUN}.t${CYCrun}z.cnvstat.${tmmark}

@@ -7,8 +7,16 @@ set -x
 . $HOMEdir/jobs/JFV3SAR_ENVIR
 
 export machine=DELL
-export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
-export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
+
+hostname > hname
+hl=`cut -c 1-1 hname`
+
+if [ $hl = m ] ; then
+  wcoss=tp
+fi
+if [ $hl = v ] ; then
+  wcoss=gp
+fi
 
 . /usrx/local/prod/lmod/lmod/init/ksh
 module load prod_util/1.1.0
@@ -16,12 +24,9 @@ module load prod_util/1.1.0
 ##############################################
 # Initialize PDY variables
 ##############################################
-# Get my date file; cyc is tm00 date, comes from qsub script
-cp $DATEdir/t${cyc}z ncepdate
+# CYCLE and PDY now come from rocoto script
+echo "DATEXX${CYCLE}" > ncepdate
 
-###cp /com/date/t${cyc}z ncepdate
-export CYCLE=`cut -c 7-16 ncepdate`
-export PDY=`cut -c 7-14 ncepdate`
 export CYCLEtm12=`$NDATE -12 $CYCLE`
 export CYCLEtm06=`$NDATE -06 $CYCLE`
 export PDYtm06=`echo $CYCLEtm06 | cut -c 1-8`
@@ -40,7 +45,7 @@ export CYCrun=`echo $CYCLE | cut -c 9-10`
 ##############################################
 # Obtain unique process id (pid) and make temp directory
 ##############################################
-export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${job}_${cyc}
 mkdir -p $DATA
 cd $DATA
 
@@ -97,14 +102,13 @@ if [ $machine = THEIA ] ; then
 fi
 if [ $machine = WCOSS_C -o $machine = WCOSS -o $machine = DELL ] ; then
    COMINgfs=/gpfs/hps/nco/ops/com/gfs/prod
-   # This is the FV3GDAS enkf I mirror to dev
-   COMINgfspll=/gpfs/gp2/ptmp/${USER}/prfv3rt1
-   COMINnam=/gpfs/gp2/nco/ops/com/nam/prod
+   COMINgfspll=/gpfs/dell1/nco/ops/com/gfs/para
+   COMINnam=/gpfs/${wcoss}2/nco/ops/com/nam/prod
    COMINrap=/gpfs/hps/nco/ops/com/rap/prod
    COMINbias=$COMOUTtm06
-   COMINrtma=/gpfs/gp2/nco/ops/com/rtma/prod
+   COMINrtma=/gpfs/${wcoss}2/nco/ops/com/rtma/prod
    MYGDASpll=$COMINgfspll/gdas.${PDYa}/${cya}
-   GBGDASpll=/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/prfv3rt1/gdas.${PDYa}/${cya}
+   GBGDASpll=/gpfs/dell1/nco/ops/com/gfs/para/gdas.${PDYa}/${cya}
 fi
 
 ##############################################

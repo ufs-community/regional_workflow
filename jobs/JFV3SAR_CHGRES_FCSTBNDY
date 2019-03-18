@@ -6,19 +6,20 @@ set -x
 
 . $HOMEdir/jobs/JFV3SAR_ENVIR
 
+. /usrx/local/prod/lmod/lmod/init/sh
+module load prod_util/1.1.0
+
 ##############################################
 # Initialize PDY variables
 ##############################################
-# Get my date file; cyc is tm00 date, comes from qsub script
-cp $DATEdir/t${cyc}z ncepdate
+# CYCLE and PDY now come from rocoto script
+echo "DATEXX${CYCLE}" > ncepdate
 
-###cp /com/date/t${cyc}z ncepdate
-export CYCLE=`cut -c 7-16 ncepdate`
-export PDY=`cut -c 7-14 ncepdate`
 offset=`echo $tmmark | cut -c 3-4`
 export CYCLEguess=`$NDATE -${offset} $CYCLE`
 export CDATE=$CYCLEguess
 export ymd=`echo $CDATE | cut -c 1-8`
+export hhcyc=`echo $CDATE | cut -c 9-10`
 
 ##############################################
 # Environment settings and module loading
@@ -54,15 +55,13 @@ elif [ $machine = DELL ]; then
   module load NetCDF/4.5.0
   module load HDF5-serial/1.10.1
   module load CFP/2.0.1
-  module load prod_util/1.1.0
   module list
   set -x
   export APRUNC="time"
   export KMP_AFFINITY=disabled
   if [ $ictype = pfv3gfs ]; then
     hour=`echo $CDATE | cut -c 9-10`
-# export INIDIR=/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/prfv3rt1/gfs.$ymd
-    export INIDIR=/gpfs/gp2/ptmp/${USER}/prfv3rt1/gfs.$ymd
+    export INIDIR=/gpfs/dell1/nco/ops/com/gfs/para/gfs.$ymd
   else
     export INIDIR=/gpfs/hps/nco/ops/com/gfs/prod/gfs.$ymd
   fi
@@ -89,9 +88,10 @@ fi
 ##############################################
 # Obtain unique process id (pid) and make temp directory
 ##############################################
-export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${job}_${cyc}
 mkdir -p $DATA
 cd $DATA
+export BNDYdir=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${job}_${cyc}
 
 export pid=$$
 export pgmout="OUTPUT.${pid}"
@@ -118,6 +118,15 @@ if [ $tmmark = tm00 ] ; then
   cd $BNDYdir
   cat filelist.ges* > $COMOUT/filelist.bndy.${tmmark}
   cp gfs_bndy.tile7.*.nc $INPdir/.
+  hr=00
+  while [ $hr -le 60 ] ; do
+    cat out.chgres.0${hr}
+    cd wrk.chgres.0${hr}
+    cat $pgmout
+    cd $BNDYdir
+    let "hr=hr+3"
+    typeset -Z2 hr
+  done
 else
   cp filelist.ges $COMOUT/filelist.bndy.${tmmark}
 fi

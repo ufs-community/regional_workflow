@@ -11,11 +11,13 @@
 #
 # Script history log:
 # 2018-10-30  Eric Rogers - Modified based on original post script
-# 2018-11-09  Ben Blake   - Moved various settings into J-job script
+# 2018-11-09  Ben Blake   - Special version for tm06 first guess
 #
 ###############################################################################
 
 set -x
+
+# First guess at tm06 is a 6-h FV3 fcst from tm12
 
 if [ $tmmark = tm00 ] ; then
   export NEWDATE=`${NDATE} +${fhr} $CYCLE`
@@ -92,16 +94,8 @@ cat ${domain}fv3.hiresf${fhr}.${tmmark}.nn ${domain}fv3.hiresf${fhr}.${tmmark}.b
 
 #####$WGRIB2 ${domain}fv3.hiresf${fhr}.${tmmark} -s > ${domain}fv3.hiresf${fhr}.${tmmark}.idx
 
-if [ $tmmark = tm00 ] ; then
-  mv ${domain}fv3.hiresf${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.f${fhr}.grib2
-  mv BGDAWP${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.natprs.f${fhr}.grib2
-  mv BGRD3D${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.natlev.f${fhr}.grib2
-else
-  mv ${domain}fv3.hiresf${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.f${fhr}.${tmmark}.grib2
-  mv BGDAWP${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.natprs.f${fhr}.${tmmark}.grib2
-  mv BGRD3D${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.natlev.f${fhr}.${tmmark}.grib2
-fi
-
-echo done > $FCSTDIR/postdone${fhr}.${tmmark}
+mv ${domain}fv3.hiresf${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.tm06ges.grib2
+mv BGDAWP${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.natprs.tm06ges.grib2
+mv BGRD3D${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conus.natlev.tm06ges.grib2
 
 exit

@@ -17,12 +17,8 @@ module list
 ##############################################
 # Initialize PDY variables
 ##############################################
-# Get my date file; cyc is tm00 date, comes from qsub script
-cp $DATEdir/t${cyc}z ncepdate
-
-###cp /com/date/t${cyc}z ncepdate
-export CYCLE=`cut -c 7-16 ncepdate`
-export PDY=`cut -c 7-14 ncepdate`
+# CYCLE and PDY not come from rocoto script
+echo "DATEXX${CYCLE}" > ncepdate
 
 #get valid time of IC's
 offset=`echo $tmmark | cut -c 3-4`
@@ -31,7 +27,7 @@ export CYCLEanl=`$NDATE -${offset} $CYCLE`
 ##############################################
 # Obtain unique process id (pid) and make temp directory
 ##############################################
-export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${job}_${cyc}
 mkdir -p $DATA
 cd $DATA
 
@@ -93,9 +89,9 @@ ${SCRIPTdir}/exfv3sar_fcst.sh
 cat err 
 cat $pgmout
 
-if [ $tmmark != tm00 ] ; then
-  if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
-fi
+#if [ $tmmark != tm00 ] ; then
+#  if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
+#fi
 
 date
 

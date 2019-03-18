@@ -20,8 +20,8 @@ debug_affinity:          .true.
 restart_interval:        NRESTART
 
 quilting:                .true.
-write_groups:            3
-write_tasks_per_group:   72
+write_groups:            2
+write_tasks_per_group:   36
 num_files:               2
 filename_base:           'dyn''phy'
 output_file:             'netcdf'

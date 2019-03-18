@@ -35,7 +35,7 @@ export pgmout="OUTPUT.${pid}"
 # Specify Execution Areas
 ##############################################
 export EXECfv3=${HOMEgfs}/exec
-export FCSTDIR=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/forecast_${tmmark}_${cyc}
+export FCSTDIR=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/forecast_firstguess_${cyc}
 
 export WGRIB2=/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3reg_da_hourly/exec/wgrib2new
 
@@ -51,12 +51,12 @@ export NWGES=$GESROOT/${RUN}/${envir}/${RUN}.${PDY}/${cyc}
 ##############################################
 # Execute the script.
 ##############################################
-${SCRIPTdir}/exfv3sar_post.sh
+${SCRIPTdir}/exfv3sar_post_firstguess.sh
 
 cat err 
 cat $pgmout
 
-###if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $FCSTDIR ; fi
+if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $FCSTDIR ; fi
 if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
 
 date

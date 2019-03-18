@@ -36,33 +36,34 @@ if [ $numbndy -ne 3 ] ; then
   err_exit "Don't have all 3 BC files, abort run"
 fi
 
-cp $FIX_AM/global_solarconstant_noaa_an.txt  solarconstant_noaa_an.txt
+cp $FIX_AM/global_solarconstant_noaa_an.txt            solarconstant_noaa_an.txt
 cp $FIX_AM/ozprdlos_2015_new_sbuvO3_tclm15_nuchem.f77  INPUT/global_o3prdlos.f77
 cp $FIX_AM/global_h2o_pltc.f77                         INPUT/global_h2oprdlos.f77
 cp $FIX_AM/ozprdlos_2015_new_sbuvO3_tclm15_nuchem.f77  global_o3prdlos.f77
 cp $FIX_AM/global_h2o_pltc.f77                         global_h2oprdlos.f77
-cp $FIX_AM/global_sfc_emissivity_idx.txt 	sfc_emissivity_idx.txt
-cp $FIX_AM/global_co2historicaldata_glob.txt co2historicaldata_glob.txt
-cp $FIX_AM/co2monthlycyc.txt             	co2monthlycyc.txt
-cp $FIX_AM/global_climaeropac_global.txt 	aerosol.dat
+cp $FIX_AM/global_sfc_emissivity_idx.txt 	       sfc_emissivity_idx.txt
+cp $FIX_AM/global_co2historicaldata_glob.txt           co2historicaldata_glob.txt
+cp $FIX_AM/co2monthlycyc.txt             	       co2monthlycyc.txt
+cp $FIX_AM/global_climaeropac_global.txt 	       aerosol.dat
 
 cp $FIX_AM/global_glacier.2x2.grb .
 cp $FIX_AM/global_maxice.2x2.grb .
 cp $FIX_AM/RTGSST.1982.2012.monthly.clim.grb .
 cp $FIX_AM/global_snoclim.1.875.grb .
-cp $FIX_AM/global_snowfree_albedo.bosu.t126.384.190.rg.grb .
-cp $FIX_AM/global_albedo4.1x1.grb .
 cp $FIX_AM/CFSR.SEAICE.1982.2012.monthly.clim.grb .
-cp $FIX_AM/global_tg3clim.2.6x1.5.grb .
-cp $FIX_AM/global_vegfrac.0.144.decpercent.grb .
-cp $FIX_AM/global_vegtype.igbp.t126.384.190.rg.grb .
-cp $FIX_AM/global_soiltype.statsgo.t126.384.190.rg.grb .
-cp $FIX_AM/global_soilmgldas.t126.384.190.grb .
+cp $FIX_AM/global_soilmgldas.t1534.3072.1536.grb .
 cp $FIX_AM/seaice_newland.grb .
 cp $FIX_AM/global_shdmin.0.144x0.144.grb .
 cp $FIX_AM/global_shdmax.0.144x0.144.grb .
-cp $FIX_AM/global_slope.1x1.grb .
-cp $FIX_AM/global_mxsnoalb.uariz.t126.384.190.rg.grb .
+
+ln -sf $FIXnew/C768.maximum_snow_albedo.tile7.nc C768.maximum_snow_albedo.tile1.nc
+ln -sf $FIXnew/C768.snowfree_albedo.tile7.nc C768.snowfree_albedo.tile1.nc
+ln -sf $FIXnew/C768.slope_type.tile7.nc C768.slope_type.tile1.nc
+ln -sf $FIXnew/C768.soil_type.tile7.nc C768.soil_type.tile1.nc
+ln -sf $FIXnew/C768.vegetation_type.tile7.nc C768.vegetation_type.tile1.nc
+ln -sf $FIXnew/C768.vegetation_greenness.tile7.nc C768.vegetation_greenness.tile1.nc
+ln -sf $FIXnew/C768.substrate_temperature.tile7.nc C768.substrate_temperature.tile1.nc
+ln -sf $FIXnew/C768.facsf.tile7.nc C768.facsf.tile1.nc
 #
 for file in `ls $CO2DIR/global_co2historicaldata* ` ; do
   cp $file $(echo $(basename $file) |sed -e "s/global_//g")
@@ -95,18 +96,16 @@ cd ..
 # Copy or set up files data_table, diag_table, field_table,
 # input.nml, input_nest02.nml, model_configure, and nems.configure
 #
-cp ${CONFIGdir}/diag_table_firstguess.tmp diag_table_mp.tmp
+cp ${CONFIGdir}/diag_table_tmp diag_table_mp.tmp
 cp ${CONFIGdir}/data_table .
 cp ${CONFIGdir}/field_table .
-cp ${CONFIGdir}/input.nml_firstguess input.nml
-cp ${CONFIGdir}/model_configure_firstguess.tmp .
+cp ${CONFIGdir}/input.nml_firstguess_writecomp input.nml
+cp ${CONFIGdir}/model_configure_firstguess.tmp_writecomp model_configure_firstguess.tmp
 cp ${CONFIGdir}/nems.configure .
 
-NODES=40
+export NODES=54
 ncnode=12    #-- 12 tasks per node on Cray
-
 let nctsk=ncnode/OMP_NUM_THREADS
-##let ntasks=NODES*nctsk
 let ntasks=NODES*ncnode
 echo nctsk = $nctsk and ntasks = $ntasks
 
@@ -128,11 +127,11 @@ cat model_configure_firstguess.tmp | sed s/NTASKS/$ntasks/ | sed s/YR/$yr/ | \
     sed s/NCNODE/$ncnode/  >  model_configure
 
 
-export pgm=global_fv3gfs.x
+export pgm=global_fv3gfs_maxhourly.x
 . prep_step
 
 startmsg
-mpirun -l -n ${ntasks} $EXECfv3/global_fv3gfs.x >$pgmout 2>err
+mpirun -l -n ${ntasks} $EXECfv3/global_fv3gfs_maxhourly.x >$pgmout 2>err
 export err=$?;err_chk
 
 # Copy files needed for tm06 analysis

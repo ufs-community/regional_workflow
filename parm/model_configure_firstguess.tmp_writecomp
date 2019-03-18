@@ -10,18 +10,18 @@ nhours_fcst:             NHRS
 RUN_CONTINUE:            .false.
 ENS_SPS:                 .false.
 dt_atmos:                90
-cpl:                     .false.
 calendar:                'julian'
 memuse_verbose:          .false.
 atmos_nthreads:          NTHRD
 use_hyper_thread:        .false.
 ncores_per_node:         NCNODE
 debug_affinity:          .true.
-restart_interval:        NRESTART
+restart_interval:        06
+cpl:                     .false.
 
 quilting:                .true.
-write_groups:            3
-write_tasks_per_group:   72
+write_groups:            2
+write_tasks_per_group:   36
 num_files:               2
 filename_base:           'dyn''phy'
 output_file:             'netcdf'

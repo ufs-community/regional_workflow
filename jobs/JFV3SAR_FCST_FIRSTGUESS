@@ -17,12 +17,9 @@ module list
 ##############################################
 # Initialize PDY variables
 ##############################################
-# Get my date file; cyc is tm00 date, comes from qsub script
-cp $DATEdir/t${cyc}z ncepdate
+# CYCLE and PDY now come from rocoto script
+echo "DATEXX${CYCLE}" > ncepdate
 
-###cp /com/date/t${cyc}z ncepdate
-export CYCLE=`cut -c 7-16 ncepdate`
-export PDY=`cut -c 7-14 ncepdate`
 export CYCLEtm12=`$NDATE -12 $CYCLE`
 export CYCLEtm06=`$NDATE -06 $CYCLE`
 export PDYtm06=`echo $CYCLEtm06 | cut -c 1-8`
@@ -31,7 +28,7 @@ export CYCtm06=`echo $CYCLEtm06 | cut -c 9-10`
 ##############################################
 # Obtain unique process id (pid) and make temp directory
 ##############################################
-export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${jobname}_${cyc}
+export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd_hourly/${job}_${cyc}
 mkdir -p $DATA
 cd $DATA
 
@@ -68,7 +65,8 @@ ${SCRIPTdir}/exfv3sar_fcst_firstguess.sh
 cat err
 cat $pgmout
 
-if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
+# FCSTDIR removed at end of post job
+#if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
 
 date
 

@@ -45,33 +45,35 @@ else
   fi
 fi
 
-cp $FIX_AM/global_solarconstant_noaa_an.txt  solarconstant_noaa_an.txt
+cp $FIX_AM/global_solarconstant_noaa_an.txt            solarconstant_noaa_an.txt
 cp $FIX_AM/ozprdlos_2015_new_sbuvO3_tclm15_nuchem.f77  INPUT/global_o3prdlos.f77
 cp $FIX_AM/global_h2o_pltc.f77                         INPUT/global_h2oprdlos.f77
 cp $FIX_AM/ozprdlos_2015_new_sbuvO3_tclm15_nuchem.f77  global_o3prdlos.f77
 cp $FIX_AM/global_h2o_pltc.f77                         global_h2oprdlos.f77
-cp $FIX_AM/global_sfc_emissivity_idx.txt 	sfc_emissivity_idx.txt
-cp $FIX_AM/global_co2historicaldata_glob.txt co2historicaldata_glob.txt
-cp $FIX_AM/co2monthlycyc.txt             	co2monthlycyc.txt
-cp $FIX_AM/global_climaeropac_global.txt 	aerosol.dat
+cp $FIX_AM/global_sfc_emissivity_idx.txt 	       sfc_emissivity_idx.txt
+cp $FIX_AM/global_co2historicaldata_glob.txt           co2historicaldata_glob.txt
+cp $FIX_AM/co2monthlycyc.txt             	       co2monthlycyc.txt
+cp $FIX_AM/global_climaeropac_global.txt 	       aerosol.dat
 
 cp $FIX_AM/global_glacier.2x2.grb .
 cp $FIX_AM/global_maxice.2x2.grb .
 cp $FIX_AM/RTGSST.1982.2012.monthly.clim.grb .
 cp $FIX_AM/global_snoclim.1.875.grb .
-cp $FIX_AM/global_snowfree_albedo.bosu.t126.384.190.rg.grb .
-cp $FIX_AM/global_albedo4.1x1.grb .
 cp $FIX_AM/CFSR.SEAICE.1982.2012.monthly.clim.grb .
-cp $FIX_AM/global_tg3clim.2.6x1.5.grb .
-cp $FIX_AM/global_vegfrac.0.144.decpercent.grb .
-cp $FIX_AM/global_vegtype.igbp.t126.384.190.rg.grb .
-cp $FIX_AM/global_soiltype.statsgo.t126.384.190.rg.grb .
-cp $FIX_AM/global_soilmgldas.t126.384.190.grb .
+cp $FIX_AM/global_soilmgldas.t1534.3072.1536.grb .
 cp $FIX_AM/seaice_newland.grb .
 cp $FIX_AM/global_shdmin.0.144x0.144.grb .
 cp $FIX_AM/global_shdmax.0.144x0.144.grb .
-cp $FIX_AM/global_slope.1x1.grb .
-cp $FIX_AM/global_mxsnoalb.uariz.t126.384.190.rg.grb .
+
+ln -sf $FIXnew/C768.maximum_snow_albedo.tile7.nc C768.maximum_snow_albedo.tile1.nc
+ln -sf $FIXnew/C768.snowfree_albedo.tile7.nc C768.snowfree_albedo.tile1.nc
+ln -sf $FIXnew/C768.slope_type.tile7.nc C768.slope_type.tile1.nc
+ln -sf $FIXnew/C768.soil_type.tile7.nc C768.soil_type.tile1.nc
+ln -sf $FIXnew/C768.vegetation_type.tile7.nc C768.vegetation_type.tile1.nc
+ln -sf $FIXnew/C768.vegetation_greenness.tile7.nc C768.vegetation_greenness.tile1.nc
+ln -sf $FIXnew/C768.substrate_temperature.tile7.nc C768.substrate_temperature.tile1.nc
+ln -sf $FIXnew/C768.facsf.tile7.nc C768.facsf.tile1.nc
+
 #
 for file in `ls $CO2DIR/global_co2historicaldata* ` ; do
   cp $file $(echo $(basename $file) |sed -e "s/global_//g")
@@ -108,27 +110,24 @@ rm logf* postdone* phyf*.nc dynf*.nc
 # input.nml, input_nest02.nml, model_configure, and nems.configure
 #
 if [ $tmmark = tm00 ] ; then
-  cp ${CONFIGdir}/diag_table.tmp diag_table_mp.tmp
+  cp ${CONFIGdir}/diag_table_tmp diag_table_mp.tmp
   cp ${CONFIGdir}/input.nml_gsianl_writecomp input.nml
   cp ${CONFIGdir}/model_configure.tmp_writecomp model_configure.tmp
-#  export NODES=100
   export NODES=114
   ncnode=24    #-- 12 tasks per node on Cray
-# export LSB_PJL_TASK_GEOMETRY="`/usrx/local/bin/mktjv 1152/12 24/24`"
   let nctsk=ncnode/OMP_NUM_THREADS
-# let ntasks=NODES*ncnode
   let ntasks=1368
   echo nctsk = $nctsk and ntasks = $ntasks
 # Submit post manager here
-  bsub < $HOMEdir/ecf/run${cyc}_post_manager.sh 
+# bsub < $HOMEdir/ecf/run${cyc}_post_manager.sh 
 else
-  cp ${CONFIGdir}/diag_table_da_hourly.tmp diag_table_mp.tmp
-  cp ${CONFIGdir}/input.nml_gsianl_da_hourly input.nml
-  cp ${CONFIGdir}/model_configure.tmp .
-  export NODES=40
+  cp ${CONFIGdir}/diag_table_tmp diag_table_mp.tmp
+  cp ${CONFIGdir}/input.nml_gsianl_da_hourly_writecomp input.nml
+  cp ${CONFIGdir}/model_configure.tmp_writecomp_hourly model_configure.tmp
+  export NODES=54
   ncnode=12    #-- 12 tasks per node on Cray
   let nctsk=ncnode/OMP_NUM_THREADS
-  let ntasks=NODES*ncnode
+  let ntasks=648
   echo nctsk = $nctsk and ntasks = $ntasks
 fi
 
@@ -162,11 +161,11 @@ cat model_configure.tmp | sed s/NTASKS/$ntasks/ | sed s/YR/$yr/ | \
     sed s/NCNODE/$ncnode/ | sed s/NRESTART/$NRST/  >  model_configure
 
 
-export pgm=global_fv3gfs.x
+export pgm=global_fv3gfs_maxhourly.x
 . prep_step
 
 startmsg
-mpirun -l -n ${ntasks} $EXECfv3/global_fv3gfs.x >$pgmout 2>err
+mpirun -l -n ${ntasks} $EXECfv3/global_fv3gfs_maxhourly.x >$pgmout 2>err
 export err=$?;err_chk
 
 # Copy files needed for next analysis
