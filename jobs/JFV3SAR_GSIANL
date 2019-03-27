@@ -21,6 +21,10 @@ fi
 . /usrx/local/prod/lmod/lmod/init/ksh
 module load prod_util/1.1.0            
 
+# Run gsi under Parallel Operating Environment (poe) on NCEP IBM
+
+. $HOMEgfs/ush/load_fv3gfs_modules.sh
+
 ##############################################
 # Initialize PDY variables
 ##############################################

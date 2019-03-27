@@ -11,7 +11,7 @@
 #
 # Script history log:
 # 2018-10-30  Eric Rogers - Modified based on original post script
-# 2018-11-09  Ben Blake   - Special version for tm06 first guess
+# 2018-11-16  Eric Rogers - Special version for tm06 first guess
 #
 ###############################################################################
 

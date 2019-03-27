@@ -26,8 +26,8 @@ cp ncepdate $DATEdir/t${cyc}z
 ##############################################
 # Environment settings and module loading
 ##############################################
-export machine=DELL                # WCOSS_C,WCOSS,THEIA
 export OMP_NUM_THREADS_CH=24       # default for openMP threads
+export machine=DELL                # WCOSS_C,WCOSS,THEIA
 export ictype=pfv3gfs              # opsgfs for q3fy17 gfs with new land datasets; oldgfs for q2fy16 gfs.
 
 if [ $machine = WCOSS_C ]; then
@@ -92,20 +92,6 @@ cd $DATA
 
 export pid=$$
 export pgmout="OUTPUT.${pid}"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ##############################################
 # Define COM directories

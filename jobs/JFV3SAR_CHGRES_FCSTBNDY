@@ -24,8 +24,10 @@ export hhcyc=`echo $CDATE | cut -c 9-10`
 ##############################################
 # Environment settings and module loading
 ##############################################
-export machine=DELL		# WCOSS_C,WCOSS,THEIA,DELL
+if [ $tmmark != tm00 ] ; then
 export OMP_NUM_THREADS_CH=24	# default for openMP threads
+fi
+export machine=DELL		# WCOSS_C,WCOSS,THEIA,DELL
 export ictype=pfv3gfs		# opsgfs for q3fy17 gfs with new land datasets; oldgfs for q2fy16 gfs.
 
 if [ $machine = WCOSS_C ]; then
