@@ -1,0 +1,50 @@
+#!/bin/ksh
+set -xa
+
+export NHOURS=60
+export CASE=C768
+export CRES=`echo $CASE | cut -c 2-`
+
+export machine=DELL
+export RUN_ENVIR=${RUN_ENVIR:-prod}
+export RUN=fv3nest
+
+export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
+
+export DATA=/gpfs/dell1/ptmp/${USER}/com/${RUN}/para/${RUN}.${PDY}/${cyc}
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+FTPdir=/home/ftp/emc/mmb/mmbpll/${RUN}/${RUN}.${PDY}/${cyc}
+ssh -l bblake emcrzdm.ncep.noaa.gov "mkdir -p $FTPdir" 
+
+posthr=00
+while [ $posthr -le 61 ] ; do
+  scp ${RUN}.t${cyc}z.conus.ffair.f${posthr}.grib2 bblake@emcrzdm.ncep.noaa.gov:$FTPdir/.
+  let "posthr=posthr+1"
+  typeset -Z2 posthr
+done
+
+
+# delete 3-day old com on emcrzdm
+# This is done during the GOES post transfer
+
+#if [ $cyc -eq 00 ] ; then
+
+#TM72=`$NDATE -72 $CDATE`
+#PDYm72=`echo $TM72 | cut -c 1-8`
+#FTPTM72=/home/ftp/emc/mmb/mmbpll/${RUN}/${RUN}.${PDYm72}
+#ssh -l bblake emcrzdm.ncep.noaa.gov "rm -r ${FTPTM72}"
+
+#fi
+
+echo "I am done" > donefile.post.${CDATE}
+scp donefile.post.${CDATE} bblake@emcrzdm.ncep.noaa.gov:$FTPdir/.
+
+# if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
+
+date
+
+exit

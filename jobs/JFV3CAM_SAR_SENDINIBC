@@ -1,0 +1,45 @@
+#!/bin/ksh
+set -x
+
+. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+
+# We will need to redefine this path once we figure out where everything is written out to now
+export DATA=/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}/INPUT
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+FTPdir=/home/ftp/emc/mmb/mmbpll/${RUN}/${RUN}.${PDY}/${cyc}
+ssh -l bblake emcrzdm.ncep.noaa.gov "mkdir -p $FTPdir" 
+
+bchr=00
+while [ $bchr -le 60 ] ; do
+  scp gfs_bndy.tile7.0${bchr}.nc bblake@emcrzdm.ncep.noaa.gov:$FTPdir/.
+  let "bchr=bchr+3"
+  typeset -Z2 bchr
+done
+
+scp gfs_ctrl.nc bblake@emcrzdm.ncep.noaa.gov:$FTPdir/.
+scp gfs_data.tile7.nc bblake@emcrzdm.ncep.noaa.gov:$FTPdir/.
+scp sfc_data.tile7.nc bblake@emcrzdm.ncep.noaa.gov:$FTPdir/.
+
+# delete 3-day old com on emcrzdm
+
+if [ $cyc -eq 00 ] ; then
+
+TM72=`$NDATE -72 $CDATE`
+PDYm72=`echo $TM72 | cut -c 1-8`
+FTPTM72=/home/ftp/emc/mmb/mmbpll/${RUN}/${RUN}.${PDYm72}
+ssh -l bblake emcrzdm.ncep.noaa.gov "rm -r ${FTPTM72}"
+
+fi
+
+echo "I am done" > donefile.${CDATE}
+scp donefile.${CDATE} bblake@emcrzdm.ncep.noaa.gov:$FTPdir/.
+
+# if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
+
+date
+
+exit

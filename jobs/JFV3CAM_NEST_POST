@@ -1,0 +1,61 @@
+#!/bin/ksh -l
+set -x
+
+. $HOMEfv3/jobs/JFV3CAM_NEST_ENVIR
+
+module load grib_util/1.0.6
+
+####################################
+# SENDCOM - Copy files to /com directory
+####################################
+export SENDCOM=${SENDCOM:-YES}
+
+####################################
+# Specify Execution Areas
+####################################
+export POSTGPEXEC=${EXECfv3}/ncep_post
+export WGRIB2=${EXECfv3}/wgrib2new
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+# PDY and CDATE are passed in through Rocoto xml
+#setpdy.sh
+#. ./PDY
+
+#####################################
+# Working directories
+#####################################
+export INPUT_DATA=${INPUT_DATA:-/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd_nest/forecast_${tmmark}_${cyc}}
+export DATA=${DATA:-/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd_nest/${job}_${cyc}}
+if [ -d $DATA ]; then
+  rm -rf $DATA
+fi
+mkdir -p $DATA
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+#####################################
+# Define COM directories
+#####################################
+export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $COMOUT
+export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $NWGES
+
+#####################################
+# WCOSS environment settings
+#####################################
+export OMP_NUM_THREADS=1
+
+env
+
+#####################################
+# Execute the script.
+${HOMEfv3}/scripts/exfv3cam_post.sh
+export err=$?
+#####################################
+
+exit $err

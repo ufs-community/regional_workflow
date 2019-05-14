@@ -26,7 +26,7 @@ set -x
 
 if [ $# -ne 2 ]
 then
-  echo "Usage: rhist_savefv3sar.sh Directory Date(YYYYMMDDHH format) "
+  echo "Usage: rhist_savefv3nest.sh Directory Date(YYYYMMDDHH format) "
   exit 1
 fi 
 
@@ -38,7 +38,7 @@ fi
 dir=$1
 if [ ! -d $dir ]
 then
-  echo "rhist_savefv3sar.sh:  Directory $dir does not exist."
+  echo "rhist_savefv3nest.sh:  Directory $dir does not exist."
   exit 2
 fi 
 
@@ -53,9 +53,9 @@ yrmoday=`echo $2 | cut -c 1-8`
 rhcyc=`echo $2 | cut -c 9-10`
 rhcycle=t${rhcyc}z
 
-hpssdir0=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3sar/rh${year}/${yearmo}/$yrmoday
-hpssdir1=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3sar/rh${year}/${yearmo}/$yrmoday
-hpssdir2=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3sar/rh${year}/${yearmo}/$yrmoday
+hpssdir0=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3nest/rh${year}/${yearmo}/$yrmoday
+hpssdir1=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3nest/rh${year}/${yearmo}/$yrmoday
+hpssdir2=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3nest/rh${year}/${yearmo}/$yrmoday
 
 #
 #   Get a listing of all files in the directory to be tarred
@@ -93,7 +93,7 @@ do
 
    tarfile=`echo $PWD | cut -c 2- | tr "/" "_"`
    tarfile=${tarfile}${rhcyc}.${file}.tar
-   tarfile=fv3sar.${yrmoday}${rhcyc}.${file}.tar
+   tarfile=fv3nest.${yrmoday}${rhcyc}.${file}.tar
 
    #
    #   Check if the tarfile index exists.  If it does, assume that
@@ -114,7 +114,7 @@ do
    err=$?
    if [ $err -ne 0 ]
    then
-     echo "rhist_savefv3sar.sh:  File $tarfile was not successfully created."
+     echo "rhist_savefv3nest.sh:  File $tarfile was not successfully created."
      exit 3
    fi
    date
@@ -127,7 +127,7 @@ do
    err=$?
    if [ $err -ne 0 ]
    then
-     echo "rhist_savefv3sar.sh:  Tar file $tarfile was not successfully read to"
+     echo "rhist_savefv3nest.sh:  Tar file $tarfile was not successfully read to"
      echo "             generate a list of the files."
      exit 4
    fi

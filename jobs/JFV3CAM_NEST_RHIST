@@ -1,0 +1,42 @@
+#!/bin/ksh -l
+set -x
+
+. $HOMEfv3/jobs/JFV3CAM_NEST_ENVIR
+
+module load HPSS/5.0.2.5
+
+##################################
+# Run setpdy and initialize PDY variables
+##################################
+# PDY is passed in through Rocoto xml
+#setpdy.sh
+#. ./PDY
+
+##################################
+# Working directories
+##################################
+export DATA=${DATA:-/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+mkdir -p $DATA
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+##################################
+# Define COM directories
+##################################
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}}
+mkdir -p $COMOUT
+export NWGES=${NWGES:-${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}}
+
+##################################
+# Execute the script.
+${HOMEfv3}/scripts/exfv3cam_rhist.sh
+export err=$?
+##################################
+
+if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
+
+date
+
+exit

@@ -10,7 +10,7 @@
 #
 #  This script breaks up the nam data directory into five separate
 #  tar files ( that is, five tar files per cycle ).
-#  The data files are broken up as proposed by Benjamin.Blake, EMC/MMB.
+#  The data files are broken up as proposed by Eric Rogers, EMC/MMB.
 #
 #  Nam restart files are also copied from /nwges/prod/nam.YYYMMDD to
 #  the appropriate /hsmprod/runhistory directory.
@@ -53,9 +53,9 @@ yrmoday=`echo $2 | cut -c 1-8`
 rhcyc=`echo $2 | cut -c 9-10`
 rhcycle=t${rhcyc}z
 
-hpssdir0=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3sar/rh${year}/${yearmo}/$yrmoday
-hpssdir1=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3sar/rh${year}/${yearmo}/$yrmoday
-hpssdir2=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3sar/rh${year}/${yearmo}/$yrmoday
+hpssdir0=/NCEPDEV/emc-meso/2year/Eric.Rogers/rh${year}/${yearmo}/$yrmoday
+hpssdir1=/NCEPDEV/emc-meso/2year/Eric.Rogers/rh${year}/${yearmo}/$yrmoday
+hpssdir2=/NCEPDEV/emc-meso/2year/Eric.Rogers/rh${year}/${yearmo}/$yrmoday
 
 #
 #   Get a listing of all files in the directory to be tarred
@@ -66,20 +66,20 @@ hpssdir2=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3sar/rh${year}/${yearmo}/$yrmo
 
 cd $DATA
 ls -1 $dir | grep ${rhcycle} | awk '
-            /conus.f/ { print "./"$0 > "conus" ; next }
+            /conus.f/ { print "./"$0 > "conusfv3sar" ; next }
             { print "./"$0 > "therest" ; next } '
 cd $dir
 
 #  Now create a tar file for each group of files
 
-for file in conus
+for file in conusfv3sar
 do
 
    # 
    #   Pick 1year, 2year, or permanent archive.
    #
    case $file in
-      conus)  hpssdir=$hpssdir0
+      conusfv3sar)  hpssdir=$hpssdir0
               rhistdir=$rhistdir0;;
       *)      hpssdir=$hpssdir0
               rhistdir=$rhistdir0;;
@@ -135,7 +135,7 @@ do
    #
    #  Restrict tar file, if it contains restricted data.
    #
-    ${USHdir}/rhist_restrict.sh ${hpssdir}/$tarfile
+    ${USHrhist}/rhist_restrict.sh ${hpssdir}/$tarfile
  
    rm ${DATA}/$file
    
@@ -143,4 +143,4 @@ done
 
 cd $DATA
 
-echo done with FV3 archive
+echo done with NAM archive
