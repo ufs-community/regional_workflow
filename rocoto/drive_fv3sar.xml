@@ -3,8 +3,8 @@
 [
 
 <!ENTITY STARTYEAR "2019">
-<!ENTITY STARTMONTH "05">
-<!ENTITY STARTDAY "09">
+<!ENTITY STARTMONTH "06">
+<!ENTITY STARTDAY "13">
 <!ENTITY STARTHOUR "00">
 
 <!ENTITY ENDYEAR "2019">
@@ -12,22 +12,22 @@
 <!ENTITY ENDDAY "31">
 <!ENTITY ENDHOUR "12">
 
-<!ENTITY USER "emc.campara">
+<!ENTITY USER "Benjamin.Blake">
 <!ENTITY machine "DELL">
 <!ENTITY ACCOUNT "FV3GFS-T2O">
 
-<!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/fv3cam_workflow">
+<!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/fv3sar_workflow">
 <!ENTITY JOBS "&HOMEfv3;/jobs">
 <!ENTITY SCRIPTS "&HOMEfv3;/scripts">
-<!ENTITY COMgfs "/gpfs/dell1/nco/ops/com/gfs/para">
+<!ENTITY COMgfs "/gpfs/dell1/nco/ops/com/gfs/prod">
 <!ENTITY COMgfs2 "/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/prfv3rt3/vrfyarch">
 <!ENTITY OUTDIR "/gpfs/dell1/ptmp/&USER;">
-<!ENTITY DATAROOT "/gpfs/dell1/ptmp/&USER;/tmpnwprd">
+<!ENTITY DATAROOT "/gpfs/dell1/stmp/&USER;/tmpnwprd">
 
 <!ENTITY RESERVATION '<queue>dev</queue><account>&ACCOUNT;</account>'>
 <!ENTITY RESERVATION_TRANSFER '<queue>dev_transfer</queue><account>&ACCOUNT;</account>'>
 
-<!ENTITY SCRUB_RESOURCES '<walltime>00:10:00</walltime>'>
+<!ENTITY CLEANUP_RESOURCES '<walltime>00:10:00</walltime>'>
 <!ENTITY CHGRES_IC_RESOURCES '<walltime>00:15:00</walltime><native>-R affinity[core]</native>'>
 <!ENTITY CHGRES_BC_RESOURCES '<walltime>00:12:00</walltime><native>-R affinity[core]</native>'>
 <!ENTITY FCST_RESOURCES '<walltime>01:20:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>'>
@@ -50,48 +50,6 @@
     <cyclestr>&OUTDIR;/logfiles_sar/workflow_regional_@Y@m@d@H.log</cyclestr>
   </log>
 
-
-<!--  **********************************************************************  -->
-<!--  ******************************* Scrubbing ****************************  -->
-
-<!--  <task name="scrub" cycledefs="regional" maxtries="2">
-  &RESERVATION;
-  &SCRUB_RESOURCES;
-  <cores>1</cores>
-    <command>&JOBS;/launch.ksh &JOBS;/JFV3CAM_SAR_CLEANUP</command>
-    <jobname><cyclestr>scrub_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_sar/scrub_@H.log</cyclestr></join>
-
-    <envar>
-      <name>HOMEfv3</name>
-      <value>&HOMEfv3;</value>
-    </envar>
-    <envar>
-      <name>job</name>
-      <value>scrub</value>
-    </envar>
-    <envar>
-      <name>machine</name>
-      <value>&machine;</value>
-    </envar>
-    <envar>
-      <name>USER</name>
-      <value>&USER;</value>
-    </envar>
-    <envar>
-      <name>CDATEm2</name>
-      <value><cyclestr offset="-00:48:00:00">@Y@m@d@H</cyclestr></value>
-    </envar>
-    <envar>
-      <name>PDY</name>
-      <value><cyclestr>@Y@m@d</cyclestr></value>
-    </envar>
-    <envar>
-      <name>cyc</name>
-      <value><cyclestr>@H</cyclestr></value>
-    </envar>
-
-  </task> -->
 
 <!--  **********************************************************************  -->
 <!--  **************************** Run chgres ******************************  -->
@@ -235,7 +193,7 @@
     </envar>
     <envar>
       <name>job</name>
-      <value>forecast_tm00</value>
+      <value><cyclestr>forecast_tm00_@Y@m@d</cyclestr></value>
     </envar>
     <envar>
       <name>machine</name>
@@ -323,7 +281,7 @@
 
       <dependency>
         <and>
-          <datadep age="05:00"><cyclestr>&DATAROOT;/forecast_tm00_@H/logf0#fhr#</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&DATAROOT;/forecast_tm00_@Y@m@d_@H/logf0#fhr#</cyclestr></datadep>
         </and>
       </dependency>
     </task>
@@ -378,7 +336,7 @@
 
       <dependency>
         <and>
-          <datadep age="05:00"><cyclestr>&DATAROOT;/forecast_tm00_@H/logf0#fhr#</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&DATAROOT;/forecast_tm00_@Y@m@d_@H/logf0#fhr#</cyclestr></datadep>
         </and>
       </dependency>
     </task>
@@ -388,7 +346,7 @@
 <!-- *********************************************************************** -->
 <!-- ***************************** Archive job ***************************** -->
 
-  <task name="rhist" cycledefs="regional" maxtries="2">
+<!--  <task name="rhist" cycledefs="regional" maxtries="2">
   &RESERVATION_TRANSFER;
   &HIST_RESOURCES;
   <cores>1</cores>
@@ -434,13 +392,13 @@
         <taskdep task="post60"/>
       </and>
     </dependency>
-  </task>
+  </task> -->
 
 
 <!-- ******************************************************************* -->
 <!-- ************************* FTP transfers *************************** -->
 
-  <task name="sendinibc" cycledefs="regional" maxtries="1">
+<!--  <task name="sendinibc" cycledefs="regional" maxtries="1">
   &RESERVATION_TRANSFER;
   &HIST_RESOURCES;
   <cores>1</cores>
@@ -583,7 +541,56 @@
         <taskdep task="postgoes60"/>
       </and>
     </dependency>
-  </task>
+  </task> -->
+
+<!--  **********************************************************************  -->
+<!--  ******************************* Cleanup ******************************  -->
+
+<!--  <task name="cleanup" cycledefs="regional" maxtries="2">
+  &RESERVATION;
+  &CLEANUP_RESOURCES;
+  <cores>1</cores>
+    <command>&JOBS;/launch.ksh &JOBS;/JFV3CAM_SAR_CLEANUP</command>
+    <jobname><cyclestr>cleanup_@H</cyclestr></jobname>
+    <join><cyclestr>&OUTDIR;/logfiles_sar/cleanup_@H.log</cyclestr></join>
+
+    <envar>
+      <name>HOMEfv3</name>
+      <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+      <name>job</name>
+      <value>cleanup</value>
+    </envar>
+    <envar>
+      <name>machine</name>
+      <value>&machine;</value>
+    </envar>
+    <envar>
+      <name>USER</name>
+      <value>&USER;</value>
+    </envar>
+    <envar>
+      <name>CDATEm2</name>
+      <value><cyclestr offset="-00:48:00:00">@Y@m@d@H</cyclestr></value>
+    </envar>
+    <envar>
+      <name>PDY</name>
+      <value><cyclestr>@Y@m@d</cyclestr></value>
+    </envar>
+    <envar>
+      <name>cyc</name>
+      <value><cyclestr>@H</cyclestr></value>
+    </envar>
+
+    <dependency>
+      <and>
+        <taskdep task="post60"/>
+        <taskdep task="postgoes60"/>
+      </and>
+    </dependency>
+
+  </task> -->
 
 
 </workflow>

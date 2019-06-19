@@ -1,4 +1,3 @@
-#!/bin/ksh
 set -ex
 
 #--make symbolic links for EMC installation and hardcopies for NCO delivery
@@ -37,6 +36,7 @@ elif [ $machine = "dell" ]; then
 elif [ $machine = "theia" ]; then
     FIX_DIR="/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix"
 fi
+mkdir -p ${pwd}/../fix
 cd ${pwd}/../fix                ||exit 8
 for dir in fix_am fix_nest fix_sar ; do
     [[ -d $dir ]] && rm -rf $dir
@@ -54,6 +54,8 @@ cp ../sorc/fv3gfs.fd/NEMS/exe/fv3_gfs.x .
 [[ -s ncep_post ]] && rm -f ncep_post
 cp ../sorc/ncep_post.fd/exec/ncep_post .
 
+[[ -s global_chgres ]] && rm -f global_chgres
+cp ../sorc/ufs_utils/exec/global_chgres .
 
 
 #for gsiexe in  global_gsi.x global_enkf.x calc_increment_ens.x  getsfcensmeanp.x  getsigensmeanp_smooth.x  getsigensstatp.x  recentersigp.x oznmon_horiz.x oznmon_time.x radmon_angle radmon_bcoef radmon_bcor radmon_time ;do

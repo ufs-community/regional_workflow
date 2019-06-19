@@ -4,6 +4,15 @@ set -xu
 topdir=$(pwd)
 echo $topdir
 
+echo ufsutils checkout ...
+if [[ ! -d ufs_utils ]] ; then
+    rm -f ${topdir}/checkout-ufsutils.log
+    git clone --recursive gerrit:UFS_UTILS ufs_utils >> ${topdir}/checkout-ufsutils.log 2>&1
+    mkdir ufs_utils/exec
+else
+    echo 'Skip.  Directory ufs_utils.fd already exists.'
+fi
+
 echo fv3gfs checkout ...
 if [[ ! -d fv3gfs.fd ]] ; then
     rm -f ${topdir}/checkout-fv3gfs.log
@@ -24,6 +33,7 @@ if [[ ! -d gsi.fd ]] ; then
 #    git checkout fv3da.v1.0.37
 #    git submodule update
 #    cd ${topdir}
+    cp ../parm/anavinfo_fv3_64 gsi.fd/fix
 else
     echo 'Skip.  Directory gsi.fd already exists.'
 fi

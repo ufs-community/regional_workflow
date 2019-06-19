@@ -40,8 +40,8 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<!-- <workflow realtime="F" scheduler="lsf" taskthrottle="11"> -->
-<workflow realtime="T" scheduler="lsf" taskthrottle="60" cyclethrottle="1" cyclelifespan="00:24:00:00">
+<workflow realtime="F" scheduler="lsf" taskthrottle="60">
+<!-- <workflow realtime="T" scheduler="lsf" taskthrottle="60" cyclethrottle="1" cyclelifespan="00:24:00:00"> -->
 
   <cycledef group="nest">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 24:00:00</cycledef>
 
@@ -333,55 +333,7 @@
 <!-- ****************************************************************** -->
 <!-- ************************ FTP transfers *************************** -->
 
-<!--  <task name="sendpostffair" cycledefs="nest" maxtries="1">
-  &RESERVATION_TRANSFER;
-  &HIST_RESOURCES;
-  <cores>1</cores>
-    <command>&JOBS;/launch.ksh &JOBS;/JFV3CAM_NEST_SENDPOST_FFAIR</command>
-    <jobname><cyclestr>sendpostffair_@H</cyclestr></jobname>
-    <join><cyclestr>&OUTDIR;/logfiles_nest/sendpostffair_@H.log</cyclestr></join>
-
-    <envar>
-      <name>HOMEfv3</name>
-      <value>&HOMEfv3;</value>
-    </envar>
-    <envar>
-      <name>job</name>
-      <value>sendpostffair</value>
-    </envar>
-    <envar>
-      <name>machine</name>
-      <value>&machine;</value>
-    </envar>
-    <envar>
-      <name>USER</name>
-      <value>&USER;</value>
-    </envar>
-    <envar>
-      <name>CDATE</name>
-      <value><cyclestr>@Y@m@d@H</cyclestr></value>
-    </envar>
-    <envar>
-      <name>PDY</name>
-      <value><cyclestr>@Y@m@d</cyclestr></value>
-    </envar>
-    <envar>
-      <name>cyc</name>
-      <value><cyclestr>@H</cyclestr></value>
-    </envar>
-    <envar>
-      <name>tmmark</name>
-      <value>tm00</value>
-    </envar>
-
-    <dependency>
-      <and>
-        <taskdep task="post60"/>
-      </and>
-    </dependency>
-  </task>
-
-  <task name="sendpostgoes" cycledefs="nest" maxtries="1">
+<!--  <task name="sendpostgoes" cycledefs="nest" maxtries="1">
   &RESERVATION_TRANSFER;
   &HIST_RESOURCES;
   <cores>1</cores>
@@ -433,7 +385,7 @@
 <!--  **********************************************************************  -->
 <!--  ******************************* Cleanup ******************************  -->
 
-<!--  <task name="cleanup" cycledefs="nest" maxtries="2">
+  <task name="cleanup" cycledefs="nest" maxtries="2">
   &RESERVATION;
   &CLEANUP_RESOURCES;
   <cores>1</cores>
@@ -477,7 +429,7 @@
       </and>
     </dependency>
 
-  </task> -->
+  </task>
 
 
 </workflow>

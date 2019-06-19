@@ -3,8 +3,7 @@ set -x
 
 . $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
 
-# We will need to redefine this path once we figure out where everything is written out to now
-export DATA=/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}/INPUT
+export DATA=${mainroot}/${comdir}/${USER}/com/${NET}/${envir}/${RUN}.${PDY}/${cyc}/anl.tm00
 cd $DATA
 
 export pid=$$

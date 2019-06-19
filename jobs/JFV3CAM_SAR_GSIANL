@@ -35,7 +35,7 @@ export CYCrun=`echo $CDATE | cut -c 9-10`
 ##############################################
 # Obtain unique process id (pid) and make temp directory
 ##############################################
-export DATA=/gpfs/${delldir}/${tmpdir}/${LOGNAME}/tmpnwprd/${job}_${CYCrun}
+export DATA=${mainroot}/${tmpdir}/${LOGNAME}/tmpnwprd/${job}_${CYCrun}
 mkdir -p $DATA
 cd $DATA
 
@@ -87,8 +87,7 @@ if [ $machine = THEIA ] ; then
    export COMINbias=$COMOUT
 fi
 if [ $machine = WCOSS_C -o $machine = WCOSS -o $machine = DELL ] ; then
-   export COMINgfs=/gpfs/hps/nco/ops/com/gfs/prod
-   export COMINgfspll=/gpfs/dell1/nco/ops/com/gfs/para
+   export COMINgfs=/gpfs/dell1/nco/ops/com/gfs/prod
    export COMINnam=/gpfs/${wcoss}2/nco/ops/com/nam/prod
    export COMINrap=/gpfs/hps/nco/ops/com/rap/prod
    export COMINbias=$COMOUT

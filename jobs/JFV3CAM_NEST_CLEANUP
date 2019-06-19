@@ -13,8 +13,8 @@ set -x
 #####################################
 # Working directories
 #####################################
-export PTMPDIR=${PTMPDIR:-/gpfs/${delldir}/ptmp/${USER}}
-export STMPDIR=${STMPDIR:-/gpfs/${delldir}/stmp/${USER}}
+export PTMPDIR=${PTMPDIR:-${mainroot}/ptmp/${USER}}
+export STMPDIR=${STMPDIR:-${mainroot}/stmp/${USER}}
 
 #####################################
 # Execute the script.

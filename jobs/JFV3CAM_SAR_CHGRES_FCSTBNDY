@@ -28,7 +28,7 @@ export hhcyc=`echo $CDATE | cut -c 9-10`
 #####################################
 # Obtain unique process id (pid) and make temp directory
 #####################################
-export DATA=${DATA:-/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
 mkdir -p $DATA
 cd $DATA
 export BNDYdir=$DATA
@@ -42,10 +42,10 @@ export pgmout="OUTPUT.${pid}"
 #####################################
 # Define COM directories
 #####################################
-export COMINgdas=${COMINgdas:-/gpfs/dell1/nco/ops/com/gfs/para}
-export GBCOMINgfs=${GBCOMINgfs:-/gpfs/dell1/nco/ops/com/gfs/para}
-export COMINgfs=${COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/para}
-export COMgfs=${COMgfs:-/gpfs/dell1/nco/ops/com/gfs/para}
+export COMINgdas=${COMINgdas:-/gpfs/dell1/nco/ops/com/gfs/prod}
+export GBCOMINgfs=${GBCOMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
+export COMINgfs=${COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
+export COMgfs=${COMgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
 export INIDIR=${COMgfs}/gfs.$PDY/$cyc
 
 export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}

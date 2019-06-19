@@ -26,7 +26,7 @@ export hhcyc=`echo $CDATE | cut -c 9-10`
 #####################################
 # Working directories
 #####################################
-export DATA=${DATA:-/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
 mkdir -p $DATA
 cd $DATA
 
@@ -39,10 +39,10 @@ export pgmout="OUTPUT.${pid}"
 #####################################
 # Define COM directories
 #####################################
-export COMINgdas=${COMINgdas:-/gpfs/dell1/nco/ops/com/gfs/para}
-export GBCOMINgfs=${GBCOMINgfs:-/gpfs/dell1/nco/ops/com/gfs/para}
-export COMINgfs=${COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/para}
-export COMgfs=${COMgfs:-/gpfs/dell1/nco/ops/com/gfs/para}
+export COMINgdas=${COMINgdas:-/gpfs/dell1/nco/ops/com/gfs/prod}
+export GBCOMINgfs=${GBCOMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
+export COMINgfs=${COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
+export COMgfs=${COMgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
 export INIDIR=${COMgfs}/gfs.$PDY/$cyc
 
 export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
@@ -60,11 +60,7 @@ mkdir -p $INPdir
 #####################################
 # WCOSS environment settings
 #####################################
-if [ $tmmark = tm00 ] ; then
-  export CDUMP=gfs
-else
-  export CDUMP=gdas
-fi
+export CDUMP=gfs
 export CDAS=gfs
 export LEVS=65
 export LSOIL=4
@@ -86,8 +82,8 @@ env
 # set the links to use the 4 halo grid and orog files
 # these are necessary for creating the boundary data
 #
-ln -sf $FIXfv3/$CASE/${CASE}_grid.tile7.halo4.nc $FIXfv3/$CASE/${CASE}_grid.tile7.nc
-ln -sf $FIXfv3/$CASE/${CASE}_oro_data.tile7.halo4.nc $FIXfv3/$CASE/${CASE}_oro_data.tile7.nc
+ln -sf $FIXsar/${CASE}_grid.tile7.halo4.nc $FIXsar/${CASE}_grid.tile7.nc
+ln -sf $FIXsar/${CASE}_oro_data.tile7.halo4.nc $FIXsar/${CASE}_oro_data.tile7.nc
 
 #####################################
 # Execute the script.

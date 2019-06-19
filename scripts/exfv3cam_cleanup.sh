@@ -8,11 +8,17 @@
 #############################################################################
 set -x
 
-# Remove input and forecast directories that are 2 days old 
-# We aew going to need to remake this script!!!
-cd ${PTMPDIR}
-rm -rf INPUT/${CASE}_${RUN}_${CDATEm2}
-rm -rf ${CASE}_${RUN}_${CDATEm2}_${NHRS}h
+# Remove temporary working directories
+cd ${STMPDIR}
+if [ $RUN = fv3sar ]; then
+  cd tmpnwprd
+elif [ $RUN = fv3nest ]; then
+  cd tmpnwprd_nest
+fi
+
+rm -rf chgres*
+rm -rf forecast*
+rm -rf post*
 
 # Delete images and other files from stmp directory
 #cd ${STMPDIR}/${cyc}

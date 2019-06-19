@@ -1,17 +1,9 @@
 #!/bin/ksh
 set -xa
 
-export NHOURS=60
-export CASE=C768
-export CRES=`echo $CASE | cut -c 2-`
+. $HOMEfv3/jobs/JFV3CAM_NEST_ENVIR
 
-export machine=DELL
-export RUN_ENVIR=${RUN_ENVIR:-prod}
-export RUN=fv3nest
-
-export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
-
-export DATA=/gpfs/dell1/ptmp/${USER}/com/${RUN}/para/${RUN}.${PDY}/${cyc}
+export DATA=/gpfs/dell1/ptmp/${USER}/com/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 cd $DATA
 
 export pid=$$

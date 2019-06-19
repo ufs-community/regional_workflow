@@ -362,10 +362,10 @@ fi
 # Aircraft bias correction ; get from GDAS for tm06, cycle through FV3DA
 # Try my GDAS dir first
 
-$ncp $MYGDASpll/gdas.t${cya}z.abias_air ./aircftbias_in
+$ncp $MYGDAS/gdas.t${cya}z.abias_air ./aircftbias_in
 err4=$?
 if [ $err4 -ne 0 ] ; then
-  $ncp $GBGDASpll/gdas.t${cya}z.abias_air ./aircftbias_in
+  $ncp $GBGDAS/gdas.t${cya}z.abias_air ./aircftbias_in
 fi
 
 #if we don't find aircraft bias file from FV3GDAS dirs, get best available one

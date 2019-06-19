@@ -15,7 +15,7 @@ module load HPSS/5.0.2.5
 ##################################
 # Working directories
 ##################################
-export DATA=${DATA:-/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
 mkdir -p $DATA
 cd $DATA
 

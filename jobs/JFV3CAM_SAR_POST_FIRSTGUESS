@@ -20,8 +20,8 @@ export SENDCOM=${SENDCOM:-YES}
 ##############################################
 # Obtain unique process id (pid) and make temp directory
 ##############################################
-export INPUT_DATA=/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd/forecast_firstguess_${cyc}
-export DATA=/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}
+export INPUT_DATA=${mainroot}/${tmpdir}/${USER}/tmpnwprd/forecast_firstguess_${cyc}
+export DATA=${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}
 mkdir -p $DATA
 cd $DATA
 

@@ -31,14 +31,14 @@ errsum=0
 
    jrun_history00_${RUN})
 
-      $USHdir/rhist_save${model}.sh ${COMOUT} ${PDY}00
-      export err=$?;let errsum=errsum+err;$USHdir/rhist_errchk.sh fv3 00
+      $USHfv3/rhist_save${model}.sh ${COMOUT} ${PDY}00
+      export err=$?;let errsum=errsum+err;$USHfv3/rhist_errchk.sh fv3 00
       ;;
 
 #   jrun_history12_fv3sar)
 
-#      $USHdir/rhist_savefv3sar.sh /gpfs/dell2/ptmp/Eric.Rogers/com/fv3sar/para/fv3sar.${PDY}/12 ${PDY}12
-#      export err=$?;let errsum=errsum+err;$USHdir/rhist_errchk.sh fv3 12     
+#      $USHfv3/rhist_savefv3sar.sh /gpfs/dell2/ptmp/Eric.Rogers/com/fv3sar/para/fv3sar.${PDY}/12 ${PDY}12
+#      export err=$?;let errsum=errsum+err;$USHfv3/rhist_errchk.sh fv3 12     
 #      ;;
 
    *)

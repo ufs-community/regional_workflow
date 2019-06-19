@@ -44,8 +44,8 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<!-- <workflow realtime="F" scheduler="lsf" taskthrottle="11"> -->
-<workflow realtime="T" scheduler="lsf" taskthrottle="60" cyclethrottle="2" cyclelifespan="00:18:00:00">
+<workflow realtime="F" scheduler="lsf" taskthrottle="60">
+<!-- <workflow realtime="T" scheduler="lsf" taskthrottle="60" cyclethrottle="2" cyclelifespan="00:18:00:00"> -->
 
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
 

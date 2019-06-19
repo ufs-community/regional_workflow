@@ -5,8 +5,9 @@ export envir=para
 export NET=fv3cam
 export RUN=fv3sar
 export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
-export delldir=dell1
-export tmpdir=ptmp
+export mainroot=/gpfs/dell1
+export tmpdir=stmp
+export comdir=ptmp
 
 export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
 export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
@@ -15,7 +16,7 @@ export CRES=768          #-- FV3 equivalent to 13-km global resolution
 export CASE=C${CRES}
 export gtype=regional    # grid type = uniform, stretch, nest, or regional
 
-export HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/$USER/fv3cam_workflow
+export HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/$USER/fv3sar_workflow
 export PARMfv3=$HOMEfv3/parm
 export EXECfv3=$HOMEfv3/exec
 export USHfv3=$HOMEfv3/ush
@@ -25,13 +26,13 @@ export FIXsar=$FIXfv3/fix_sar
 export FIXam=$FIXfv3/fix_am
 export FIXco2=$FIXam/fix_co2_proj
 
-export COMROOT=/gpfs/${delldir}/${tmpdir}/${USER}/com
-export GESROOT=/gpfs/${delldir}/${tmpdir}/${USER}/com
-export GESROOT_HOLD=/gpfs/${delldir}/${tmpdir}/${USER}/nwges/${RUN}.hold
+export COMROOT=${mainroot}/${comdir}/${USER}/com
+export GESROOT=${mainroot}/${comdir}/${USER}/com
+export GESROOT_HOLD=${mainroot}/${comdir}/${USER}/nwges/${RUN}.hold
 mkdir -p $GESROOT_HOLD
 
 export NHRSguess=06	#-- Forecast length for 1st guess generation
 export NHRSda=01	#-- Forecast length for cycled DA
 export NHRS=60          #-- Forecast length for free fcst
 
-export jlogfile=/gpfs/${delldir}/${tmpdir}/${USER}/jlogfile.${RUN}.jlog
+export jlogfile=${mainroot}/${tmpdir}/${USER}/jlogfile.${RUN}.jlog

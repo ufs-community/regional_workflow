@@ -26,8 +26,8 @@ export WGRIB2=${EXECfv3}/wgrib2new
 #####################################
 # Working directories
 #####################################
-export INPUT_DATA=${INPUT_DATA:-/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd/forecast_${tmmark}_${cyc}}
-export DATA=${DATA:-/gpfs/${delldir}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+export INPUT_DATA=${INPUT_DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/forecast_${tmmark}_${PDY}_${cyc}}
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
 if [ -d $DATA ]; then
   rm -rf $DATA
 fi

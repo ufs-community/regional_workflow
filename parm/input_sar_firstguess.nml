@@ -175,7 +175,7 @@
        ivegsrc        = 1
        isot           = 1
        debug          = .false.
-       nstf_name      = 2,1,1,0,5
+       nstf_name      = 2,0,0,0,0
        iau_delthrs    = 6
        iaufhrs        = 30
        iau_inc_files  = ''

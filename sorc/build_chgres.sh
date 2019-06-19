@@ -25,7 +25,7 @@ fi
 #
 # --- Chgres part
 #
-cd global_chgres.fd
+cd ufs_utils/sorc/global_chgres.fd
 
 export FCMP=${FCMP:-ifort}
 export FCMP95=$FCMP

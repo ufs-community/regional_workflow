@@ -53,9 +53,9 @@ yrmoday=`echo $2 | cut -c 1-8`
 rhcyc=`echo $2 | cut -c 9-10`
 rhcycle=t${rhcyc}z
 
-hpssdir0=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3nest/rh${year}/${yearmo}/$yrmoday
-hpssdir1=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3nest/rh${year}/${yearmo}/$yrmoday
-hpssdir2=/NCEPDEV/emc-meso/2year/Benjamin.Blake/fv3nest/rh${year}/${yearmo}/$yrmoday
+hpssdir0=/NCEPDEV/emc-meso/2year/${USER}/fv3nest/rh${year}/${yearmo}/$yrmoday
+hpssdir1=/NCEPDEV/emc-meso/2year/${USER}/fv3nest/rh${year}/${yearmo}/$yrmoday
+hpssdir2=/NCEPDEV/emc-meso/2year/${USER}/fv3nest/rh${year}/${yearmo}/$yrmoday
 
 #
 #   Get a listing of all files in the directory to be tarred
