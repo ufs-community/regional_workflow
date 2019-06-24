@@ -16,7 +16,7 @@
 <!ENTITY machine "DELL">
 <!ENTITY ACCOUNT "NAM-T2O">
 
-<!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/fv3sar_workflow">
+<!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/fv3cam_workflow">
 <!ENTITY JOBS "&HOMEfv3;/jobs">
 <!ENTITY SCRIPTS "&HOMEfv3;/scripts">
 <!ENTITY COMgfs "/gpfs/dell1/nco/ops/com/gfs/prod">
