@@ -6,7 +6,7 @@ COMMAND=$1
 # load modulefile and set up the environment for job runnning
 #############################################################
 
-MODULEFILES=${MODULEFILES:-/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3sar_workflow/modulefiles}
+MODULEFILES=${MODULEFILES:-/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3cam_workflow/modulefiles}
 
 if [ "$machine" = "DELL" ] ; then
   . /usrx/local/prod/lmod/lmod/init/sh

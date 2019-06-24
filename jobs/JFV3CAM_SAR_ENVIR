@@ -16,7 +16,7 @@ export CRES=768          #-- FV3 equivalent to 13-km global resolution
 export CASE=C${CRES}
 export gtype=regional    # grid type = uniform, stretch, nest, or regional
 
-export HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/$USER/fv3sar_workflow
+export HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/$USER/fv3cam_workflow
 export PARMfv3=$HOMEfv3/parm
 export EXECfv3=$HOMEfv3/exec
 export USHfv3=$HOMEfv3/ush
