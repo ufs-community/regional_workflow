@@ -1,0 +1,34 @@
+set -x
+
+export RUN_ENVIR=emc
+export envir=para
+export NET=fv3cam
+export RUN=fv3nest
+export model=fv3nest
+export mainroot=/gpfs/dell1
+export tmpdir=stmp
+export comdir=ptmp
+
+export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
+export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
+
+export CRES=768          #-- FV3 equivalent to 13-km global resolution
+export CASE=C${CRES}
+export gtype=nest        # grid type = uniform, stretch, nest, or regional
+
+export HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/$USER/fv3sar_workflow
+export PARMfv3=$HOMEfv3/parm
+export EXECfv3=$HOMEfv3/exec
+export USHfv3=$HOMEfv3/ush
+
+export FIXfv3=$HOMEfv3/fix
+export FIXnest=$FIXfv3/fix_nest
+export FIXam=$FIXfv3/fix_am
+export FIXco2=$FIXam/fix_co2_proj
+
+export COMROOT=${mainroot}/${comdir}/${USER}/com
+export GESROOT=${mainroot}/${comdir}/${USER}/com
+
+export NHRS=60          #-- Forecast length for free fcst
+
+export jlogfile=${mainroot}/${tmpdir}/${USER}/jlogfile.${RUN}.jlog

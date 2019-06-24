@@ -1,0 +1,68 @@
+#!/bin/ksh -l
+set -x
+
+. $HOMEfv3/jobs/JFV3CAM_NEST_ENVIR
+
+####################################
+# Specify Execution Areas
+####################################
+export CHGRESEXEC=$EXECfv3/global_chgres
+export CHGRESSH=$USHfv3/global_chgres.sh
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+# PDY, CDATE, and tmmark are passed in through Rocoto xml
+#setpdy.sh
+#. ./PDY
+
+#####################################
+# Working directories
+#####################################
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd_nest/${job}_${cyc}}
+mkdir -p $DATA
+cd $DATA
+
+export OUTDIR=$DATA/INPUT
+mkdir -p $OUTDIR
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+#####################################
+# Define COM directories
+#####################################
+export COMgfs=${COMgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
+export INIDIR=${COMgfs}/gfs.$PDY/$cyc
+
+export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $COMOUT
+export NWGES=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $NWGES
+
+export INPdir=$COMOUT/guess.$tmmark
+mkdir -p $INPdir
+
+#####################################
+# WCOSS environment settings
+#####################################
+export CDUMP=gfs
+export LEVS=65
+export LSOIL=4
+export REGIONAL=0		# REGIONAL=0 - uniform, stretch, or nest
+				# REGIONAL=1 - generate data and boundary (for regional case)
+				# REGIONAL=2 - generate boundaries only (for regional case)
+export ictype=pfv3gfs
+export nst_anl=.false.		# false or true to include NST analysis
+export KMP_AFFINITY=disabled
+export NTRAC=7			# output all gfdl mp tracers
+
+env
+
+#####################################
+# Execute the script.
+${HOMEfv3}/scripts/exfv3cam_nest_chgres.sh
+export err=$?
+#####################################
+
+exit $err

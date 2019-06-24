@@ -1,0 +1,60 @@
+#!/bin/ksh -l
+set -x
+
+. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+# PDY, CYCLE, and tmmark are passed in through Rocoto xml
+#setpdy.sh
+#. ./PDY
+
+export CYCLEtm12=`$NDATE -12 $CDATE`
+export CYCLEtm06=`$NDATE -06 $CDATE`
+export PDYtm06=`echo $CYCLEtm06 | cut -c 1-8`
+export CYCtm06=`echo $CYCLEtm06 | cut -c 9-10`
+
+#####################################
+# Working directories
+#####################################
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+if [ -d $DATA ]; then
+  rm -rf $DATA
+fi
+mkdir -p $DATA
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+#####################################
+# Define COM directories
+#####################################
+export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $COMOUT
+export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $NWGES
+
+export GUESSdir=$COMOUT/guess.tm06
+mkdir -p $GUESSdir
+export ANLdir=$COMOUT/anl.tm06
+mkdir -p $ANLdir
+
+#####################################
+# WCOSS environment settings
+#####################################
+export KMP_AFFINITY=scatter
+export OMP_NUM_THREADS=2
+export OMP_STACKSIZE=1024m
+export SENDECF=NO
+
+env
+
+#####################################
+# Execute the script.
+${HOMEfv3}/scripts/exfv3cam_sar_fcst_firstguess.sh
+export err=$?
+#####################################
+
+exit $err

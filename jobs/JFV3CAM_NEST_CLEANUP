@@ -1,0 +1,25 @@
+#!/bin/bash
+set -x
+
+. $HOMEfv3/jobs/JFV3CAM_NEST_ENVIR
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+# PDY is passed in through Rocoto xml
+#setpdy.sh
+#. ./PDY
+
+#####################################
+# Working directories
+#####################################
+export PTMPDIR=${PTMPDIR:-${mainroot}/ptmp/${USER}}
+export STMPDIR=${STMPDIR:-${mainroot}/stmp/${USER}}
+
+#####################################
+# Execute the script.
+${HOMEfv3}/scripts/exfv3cam_cleanup.sh
+export err=$?
+#####################################
+
+exit $err

@@ -1,0 +1,51 @@
+#!/bin/ksh -l
+set -x
+
+. $HOMEfv3/jobs/JFV3CAM_NEST_ENVIR
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+# PDY, CDATE, and tmmark are passed in through Rocoto xml
+#setpdy.sh
+#. ./PDY
+
+#####################################
+# Working directories
+#####################################
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd_nest/${job}_${cyc}}
+if [ -d $DATA ]; then
+  rm -rf $DATA
+fi
+mkdir -p $DATA
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+#####################################
+# Define COM directories
+#####################################
+export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $COMOUT
+export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $NWGES
+
+export GUESSdir=$COMOUT/guess.${tmmark}
+mkdir -p $GUESSdir
+
+#####################################
+# WCOSS environment settings
+#####################################
+export OMP_NUM_THREADS=2
+export KMP_STACKSIZE=1024m
+
+env
+
+#####################################
+# Execute the script.
+${HOMEfv3}/scripts/exfv3cam_nest_fcst.sh
+export err=$?
+#####################################
+
+exit $err

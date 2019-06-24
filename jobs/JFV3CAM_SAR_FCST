@@ -1,0 +1,83 @@
+#!/bin/ksh -l
+set -x
+
+. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+# PDY, CDATE, and tmmark are passed in through Rocoto xml
+#setpdy.sh
+#. ./PDY
+
+offset=`echo $tmmark | cut -c 3-4`
+export CYCLEanl=`$NDATE -${offset} $CDATE`
+
+#####################################
+# Working directories
+#####################################
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+if [ -d $DATA ]; then
+  rm -rf $DATA
+fi
+mkdir -p $DATA
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+
+#####################################
+# Define COM directories
+#####################################
+export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $COMOUT
+export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $NWGES
+
+if [ $tmmark = tm06 ] ; then
+  export tmmark_next=tm05
+fi
+if [ $tmmark = tm05 ] ; then
+  export tmmark_next=tm04
+fi
+if [ $tmmark = tm04 ] ; then
+  export tmmark_next=tm03
+fi
+if [ $tmmark = tm03 ] ; then
+  export tmmark_next=tm02
+fi
+if [ $tmmark = tm02 ] ; then
+  export tmmark_next=tm01
+fi
+if [ $tmmark = tm01 -o $tmmark = tm00 ] ; then
+  export tmmark_next=tm00
+fi
+
+# get valid time of forecast
+offset_fcst=`echo $tmmark_next | cut -c 3-4`
+export CYCLEfcst=`$NDATE -${offset_fcst} $CDATE`
+export PDYfcst=`echo $CYCLEfcst | cut -c 1-8`
+export CYCfcst=`echo $CYCLEfcst | cut -c 9-10`
+
+export GUESSdir=$COMOUT/guess.${tmmark_next}
+mkdir -p $GUESSdir
+export ANLdir=$COMOUT/anl.${tmmark_next}
+mkdir -p $ANLdir
+
+#####################################
+# WCOSS environment settings
+#####################################
+export KMP_AFFINITY=scatter
+export OMP_NUM_THREADS=2
+export OMP_STACKSIZE=1024m
+export SENDECF=NO
+
+env
+
+#####################################
+# Execute the script.
+${HOMEfv3}/scripts/exfv3cam_sar_fcst.sh
+export err=$?
+#####################################
+
+exit $err

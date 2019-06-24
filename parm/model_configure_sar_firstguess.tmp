@@ -1,0 +1,45 @@
+total_member:            1
+PE_MEMBER01:             NTASKS
+start_year:              YR
+start_month:             MN
+start_day:               DY
+start_hour:              H_R
+start_minute:            0
+start_second:            0
+nhours_fcst:             NHRS
+RUN_CONTINUE:            .false.
+ENS_SPS:                 .false.
+dt_atmos:                90
+calendar:                'julian'
+memuse_verbose:          .false.
+atmos_nthreads:          NTHRD
+use_hyper_thread:        .false.
+ncores_per_node:         NCNODE
+debug_affinity:          .true.
+restart_interval:        06
+cpl:                     .false.
+
+quilting:                .true.
+write_groups:            2
+write_tasks_per_group:   36
+num_files:               2
+filename_base:           'dyn''phy'
+output_file:             'netcdf'
+write_nemsioflip:        .false.
+write_fsyncflag:         .false.
+
+output_grid:             'rotated_latlon'
+cen_lon:                 -97.5  # central longitude
+cen_lat:                 38.5   # central latitude
+lon1:                    -25.0  # longitude of lower-left point in rotated coordinate system (in degrees)
+lat1:                    -15.0  # latitude of lower-left ...
+lon2:                    25.0   # longitude of upper-right ...
+lat2:                    15.0   # latitude of upper-right ...
+dlon:                    0.02
+dlat:                    0.02
+
+nfhout:                  1
+nfhmax_hf:               60
+nfhout_hf:               1
+nsout:                   -1
+
