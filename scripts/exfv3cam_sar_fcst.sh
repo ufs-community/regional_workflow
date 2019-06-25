@@ -111,7 +111,7 @@ if [ $tmmark = tm00 ] ; then
     cp ${PARMfv3}/input_sar.nml input.nml
   fi
   cp ${PARMfv3}/model_configure_sar.tmp model_configure.tmp
-  nodes=114  
+  nodes=76  
   ncnode=24
   let nctsk=ncnode/OMP_NUM_THREADS    # 12 tasks per node with 2 threads 
   let ntasks=nodes*nctsk
