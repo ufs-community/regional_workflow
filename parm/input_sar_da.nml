@@ -36,7 +36,7 @@
 /
 
  &fv_core_nml
-       layout   = 16,72
+       layout   = 16,48
        io_layout = 1,1
        npx      = 1921
        npy      = 1297
