@@ -33,7 +33,7 @@
 <!ENTITY CHGRES_BC_RESOURCES '<walltime>00:20:00</walltime><native>-R affinity[core]</native>'>
 <!ENTITY FCST_RESOURCES_GUESS '<walltime>00:20:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>'>
 <!ENTITY FCST_RESOURCES_DA '<walltime>00:10:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>'>
-<!ENTITY FCST_RESOURCES '<walltime>01:35:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>'>
+<!ENTITY FCST_RESOURCES '<walltime>01:40:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>'>
 <!ENTITY POST_RESOURCES '<walltime>00:20:00</walltime><native>-R affinity[core]</native>'>
 <!ENTITY ANL_RESOURCES '<walltime>00:30:00</walltime><native>-R affinity[core]</native>'>
 <!ENTITY HIST_RESOURCES '<walltime>00:30:00</walltime><memory>5G</memory><native>-R affinity[core]</native>'>
@@ -688,7 +688,7 @@
   <task name="forecast_tm00" cycledefs="regional" maxtries="6">
   &RESERVATION;
   &FCST_RESOURCES;
-  <nodes>114:ppn=12</nodes>
+  <nodes>76:ppn=12</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JFV3CAM_SAR_FCST</command>
     <jobname><cyclestr>forecast_tm00_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/testlogs_hourly_rocoto/forecast_tm00_@H.log</cyclestr></join>
