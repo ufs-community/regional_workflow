@@ -53,7 +53,7 @@ mkdir -p $NWGES
 if [ $tmmark = tm12 ] ; then	# SAR-DA
   export INPdir=$COMOUT/gfsanl.$tmmark
 elif [ $tmmark = tm00 ] ; then	# SAR without DA
-  export INPdir=$COMOUT/anl.$tmmark
+  export INPdir=$COMOUT/anl.${dom}.$tmmark
 fi
 mkdir -p $INPdir
 

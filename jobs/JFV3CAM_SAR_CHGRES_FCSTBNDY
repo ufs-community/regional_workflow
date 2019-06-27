@@ -53,7 +53,7 @@ mkdir -p $COMOUT
 export NWGES=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 mkdir -p $NWGES
 
-export INPdir=${COMOUT}/anl.${tmmark}
+export INPdir=${COMOUT}/anl.${dom}.${tmmark}
 mkdir -p ${INPdir}
 
 #####################################

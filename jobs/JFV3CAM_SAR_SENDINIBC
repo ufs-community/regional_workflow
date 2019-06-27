@@ -3,7 +3,7 @@ set -x
 
 . $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
 
-export DATA=${mainroot}/${comdir}/${USER}/com/${NET}/${envir}/${RUN}.${PDY}/${cyc}/anl.tm00
+export DATA=${mainroot}/${comdir}/${USER}/com/${NET}/${envir}/${RUN}.${PDY}/${cyc}/anl.${dom}.tm00
 cd $DATA
 
 export pid=$$
