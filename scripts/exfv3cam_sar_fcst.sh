@@ -117,7 +117,7 @@ if [ $tmmark = tm00 ] ; then
 
 if [ $dom = "conus" ]
 then
-  nodes=114  
+  nodes=76 
 elif [ $dom = "ak" ]
 then
   nodes=68

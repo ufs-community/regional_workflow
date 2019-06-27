@@ -192,7 +192,7 @@
   <task name="forecast_tm00" cycledefs="regional" maxtries="1">
   &RESERVATION;
   &FCST_RESOURCES;
-  <nodes>114:ppn=12</nodes>
+  <nodes>76:ppn=12</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JFV3CAM_SAR_FCST</command>
     <jobname><cyclestr>forecast_tm00_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_sar/forecast_tm00_&domain;_@H.log</cyclestr></join>
