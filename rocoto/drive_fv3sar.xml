@@ -18,6 +18,7 @@
 
 <!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/fv3cam_workflow">
 <!ENTITY JOBS "&HOMEfv3;/jobs">
+<!ENTITY domain "conus">
 <!ENTITY SCRIPTS "&HOMEfv3;/scripts">
 <!ENTITY COMgfs "/gpfs/dell1/nco/ops/com/gfs/prod">
 <!ENTITY COMgfs2 "/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/prfv3rt3/vrfyarch">
