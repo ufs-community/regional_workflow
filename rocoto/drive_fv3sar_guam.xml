@@ -16,7 +16,7 @@
 <!ENTITY machine "DELL">
 <!ENTITY ACCOUNT "FV3GFS-T2O">
 
-<!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/fv3sar_workflow">
+<!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/regional_workflow">
 <!ENTITY domain "guam">
 <!ENTITY JOBS "&HOMEfv3;/jobs">
 <!ENTITY SCRIPTS "&HOMEfv3;/scripts">

@@ -12,7 +12,7 @@ module load ruby/2.5.1 rocoto/1.2.4
 doms="hi pr"
 
 
-dir="/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3sar_workflow_mybranch/rocoto"
+dir="/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3sar_regional/rocoto"
 
 for dom in $doms
 do
