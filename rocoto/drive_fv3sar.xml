@@ -16,7 +16,7 @@
 <!ENTITY machine "DELL">
 <!ENTITY ACCOUNT "FV3GFS-T2O">
 
-<!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/fv3cam_workflow">
+<!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/regional_workflow">
 <!ENTITY JOBS "&HOMEfv3;/jobs">
 <!ENTITY domain "conus">
 <!ENTITY SCRIPTS "&HOMEfv3;/scripts">
@@ -68,6 +68,10 @@
     <envar>
       <name>HOMEfv3</name>
       <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+     <name>dom</name>
+     <value>&domain;</value>
     </envar>
     <envar>
       <name>job</name>
@@ -129,6 +133,10 @@
     <envar>
       <name>HOMEfv3</name>
       <value>&HOMEfv3;</value>
+    </envar>
+    <envar>
+     <name>dom</name>
+     <value>&domain;</value>
     </envar>
     <envar>
       <name>job</name>
@@ -193,6 +201,10 @@
       <value>&HOMEfv3;</value>
     </envar>
     <envar>
+     <name>dom</name>
+     <value>&domain;</value>
+    </envar>
+    <envar>
       <name>job</name>
       <value><cyclestr>forecast_tm00_@Y@m@d</cyclestr></value>
     </envar>
@@ -248,6 +260,10 @@
         <value>&HOMEfv3;</value>
       </envar>
       <envar>
+       <name>dom</name>
+       <value>&domain;</value>
+      </envar>
+      <envar>
         <name>job</name>
         <value>postf#fhr#</value>
       </envar>
@@ -301,6 +317,10 @@
       <envar>
         <name>HOMEfv3</name>
         <value>&HOMEfv3;</value>
+      </envar>
+      <envar>
+       <name>dom</name>
+       <value>&domain;</value>
       </envar>
       <envar>
         <name>job</name>
