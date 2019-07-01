@@ -30,7 +30,7 @@
 
 <!ENTITY CLEANUP_RESOURCES '<walltime>00:10:00</walltime>'>
 <!ENTITY CHGRES_IC_RESOURCES '<walltime>00:15:00</walltime><native>-R affinity[core]</native>'>
-<!ENTITY CHGRES_BC_RESOURCES '<walltime>00:12:00</walltime><native>-R affinity[core]</native>'>
+<!ENTITY CHGRES_BC_RESOURCES '<walltime>00:15:00</walltime><native>-R affinity[core]</native>'>
 <!ENTITY FCST_RESOURCES '<walltime>01:40:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>'>
 <!ENTITY POST_RESOURCES '<walltime>00:20:00</walltime><native>-R affinity[core]</native>'>
 <!ENTITY POSTGOES_RESOURCES '<walltime>00:10:00</walltime><native>-R affinity[core]</native>'>
@@ -125,7 +125,7 @@
   <task name="chgres_fcstbndy" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &CHGRES_BC_RESOURCES;
-  <nodes>20:ppn=1</nodes>
+  <nodes>11:ppn=1</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JFV3CAM_SAR_CHGRES_FCSTBNDY</command>
     <jobname><cyclestr>chgres_fcstbndy_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_sar/chgres_fcstbndy_@H.log</cyclestr></join>
@@ -193,7 +193,7 @@
   &FCST_RESOURCES;
   <nodes>76:ppn=12</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JFV3CAM_SAR_FCST</command>
-    <jobname><cyclestr>forecast_tm00_@H</cyclestr></jobname>
+    <jobname><cyclestr>forecast_tm00_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_sar/forecast_tm00_@H.log</cyclestr></join>
 
     <envar>
@@ -206,7 +206,7 @@
     </envar>
     <envar>
       <name>job</name>
-      <value><cyclestr>forecast_tm00_@Y@m@d</cyclestr></value>
+      <value><cyclestr>forecast_tm00_&domain;_@Y@m@d</cyclestr></value>
     </envar>
     <envar>
       <name>machine</name>
