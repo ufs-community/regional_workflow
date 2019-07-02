@@ -14,6 +14,8 @@ bcnodes=11
 postnodes=2
 goespostnodes=15
 goespostthrottle=3
+sh=00
+eh=12
 
 elif [ $dom == 'ak' ]
 then
@@ -22,6 +24,8 @@ bcnodes=11
 postnodes=2
 goespostnodes=5
 goespostthrottle=6
+sh=06
+eh=18
 
 elif [ $dom == 'hi' ]
 then
@@ -30,6 +34,8 @@ bcnodes=11
 postnodes=1
 goespostnodes=1
 goespostthrottle=9
+sh=00
+eh=12
 
 elif [ $dom == 'pr' ]
 then
@@ -38,6 +44,8 @@ bcnodes=11
 postnodes=1
 goespostnodes=1
 goespostthrottle=9
+sh=06
+eh=18
 
 elif [ $dom == 'guam' ]
 then
@@ -46,6 +54,8 @@ bcnodes=11
 postnodes=1
 goespostnodes=1
 goespostthrottle=9
+sh=00
+eh=12
 
 
 else
@@ -61,6 +71,8 @@ echo username is $username
 cat drive_fv3sar_template.xml \
     | sed s:_USER_:${username}:g \
     | sed s:_DOMAIN_:${dom}:g \
+    | sed s:_SH_:${sh}:g \
+    | sed s:_EH_:${eh}:g \
     | sed s:_BCNODES_:${bcnodes}:g \
     | sed s:_FCSTNODES_:${fcstnodes}:g \
     | sed s:_POSTNODES_:${postnodes}:g \
