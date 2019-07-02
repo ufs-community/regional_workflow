@@ -5,19 +5,19 @@
 <!ENTITY STARTYEAR "2019">
 <!ENTITY STARTMONTH "06">
 <!ENTITY STARTDAY "19">
-<!ENTITY STARTHOUR "06">
+<!ENTITY STARTHOUR "00">
 
-<!ENTITY ENDYEAR "2020">
+<!ENTITY ENDYEAR "2019">
 <!ENTITY ENDMONTH "12">
 <!ENTITY ENDDAY "31">
-<!ENTITY ENDHOUR "18">
+<!ENTITY ENDHOUR "12">
 
-<!ENTITY USER "Matthew.Pyle">
+<!ENTITY USER "_USER_">
 <!ENTITY machine "DELL">
 <!ENTITY ACCOUNT "FV3GFS-T2O">
 
 <!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/regional_workflow">
-<!ENTITY domain "pr">
+<!ENTITY domain "_DOMAIN_">
 <!ENTITY JOBS "&HOMEfv3;/jobs">
 <!ENTITY SCRIPTS "&HOMEfv3;/scripts">
 <!ENTITY COMgfs "/gpfs/dell1/nco/ops/com/gfs/prod">
@@ -31,7 +31,7 @@
 <!ENTITY CLEANUP_RESOURCES '<walltime>00:10:00</walltime>'>
 <!ENTITY CHGRES_IC_RESOURCES '<walltime>00:15:00</walltime><native>-R affinity[core]</native>'>
 <!ENTITY CHGRES_BC_RESOURCES '<walltime>00:12:00</walltime><native>-R affinity[core]</native>'>
-<!ENTITY FCST_RESOURCES '<walltime>01:20:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>'>
+<!ENTITY FCST_RESOURCES '<walltime>01:40:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>'>
 <!ENTITY POST_RESOURCES '<walltime>00:20:00</walltime><native>-R affinity[core]</native>'>
 <!ENTITY POSTGOES_RESOURCES '<walltime>00:10:00</walltime><native>-R affinity[core]</native>'>
 <!ENTITY HIST_RESOURCES '<walltime>00:30:00</walltime><memory>5G</memory><native>-R affinity[core]</native>'>
@@ -126,7 +126,7 @@
   <task name="chgres_fcstbndy" cycledefs="regional" maxtries="3">
   &RESERVATION;
   &CHGRES_BC_RESOURCES;
-  <nodes>20:ppn=1</nodes>
+  <nodes>_BCNODES_:ppn=1</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JFV3CAM_SAR_CHGRES_FCSTBNDY</command>
     <jobname><cyclestr>chgres_fcstbndy_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_sar/chgres_fcstbndy_&domain;_@H.log</cyclestr></join>
@@ -192,7 +192,7 @@
   <task name="forecast_tm00" cycledefs="regional" maxtries="1">
   &RESERVATION;
   &FCST_RESOURCES;
-  <nodes>10:ppn=12</nodes>
+  <nodes>_FCSTNODES_:ppn=12</nodes>
     <command>&JOBS;/launch.ksh &JOBS;/JFV3CAM_SAR_FCST</command>
     <jobname><cyclestr>forecast_tm00_&domain;_@H</cyclestr></jobname>
     <join><cyclestr>&OUTDIR;/logfiles_sar/forecast_tm00_&domain;_@H.log</cyclestr></join>
@@ -251,7 +251,7 @@
     <task name="post#fhr#" cycledefs="regional" maxtries="2">
     &RESERVATION;
     &POST_RESOURCES;
-    <nodes>1:ppn=14</nodes>
+    <nodes>_POSTNODES_:ppn=14</nodes>
       <command>&JOBS;/launch.ksh &JOBS;/JFV3CAM_SAR_POST</command>
       <jobname><cyclestr>fv3_post_&domain;_f#fhr#_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_sar/post_&domain;_f#fhr#_@H_tm00.log</cyclestr></join>
@@ -299,18 +299,18 @@
 
       <dependency>
         <and>
-          <datadep age="03:00"><cyclestr>&DATAROOT;/forecast_tm00_&domain;_@Y@m@d_@H/logf0#fhr#</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&DATAROOT;/forecast_tm00_&domain;_@Y@m@d_@H/logf0#fhr#</cyclestr></datadep>
         </and>
       </dependency>
     </task>
   </metatask>
 
-  <metatask name="postgoes" throttle="9">
+  <metatask name="postgoes" throttle="_GOESPOSTTHROTTLE_">
     <var name="fhr">00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60</var>
     <task name="postgoes#fhr#" cycledefs="regional" maxtries="1">
     &RESERVATION;
     &POSTGOES_RESOURCES;
-    <nodes>1:ppn=14</nodes>
+    <nodes>_GOESPOSTNODES_:ppn=14</nodes>
       <command>&JOBS;/launch.ksh &JOBS;/JFV3CAM_SAR_POST_GOES</command>
       <jobname><cyclestr>fv3_postgoes_&domain;_f#fhr#_@Hz</cyclestr></jobname>
       <join><cyclestr>&OUTDIR;/logfiles_sar/postgoes_&domain;_f#fhr#_@H_tm00.log</cyclestr></join>
@@ -358,7 +358,7 @@
 
       <dependency>
         <and>
-          <datadep age="03:00"><cyclestr>&DATAROOT;/forecast_tm00_&domain;_@Y@m@d_@H/logf0#fhr#</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&DATAROOT;/forecast_tm00_&domain;_@Y@m@d_@H/logf0#fhr#</cyclestr></datadep>
         </and>
       </dependency>
     </task>
