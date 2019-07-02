@@ -12,10 +12,10 @@ module load ruby/2.5.1 rocoto/1.2.4
 doms="hi pr"
 
 
-dir="/gpfs/dell2/emc/modeling/noscrub/${USER}/fv3sar_regional/rocoto"
+dir="/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow/rocoto"
 
 for dom in $doms
 do
 rocotorun -v 10 -w ${dir}/drive_fv3sar_${dom}.xml -d ${dir}/drive_fv3sar_${dom}.db
-sleep 60
+sleep 30
 done
