@@ -8,6 +8,7 @@ export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
 export mainroot=/gpfs/dell1
 export tmpdir=stmp
 export comdir=ptmp
+export rzdmuser=bblake
 
 export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
 export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
