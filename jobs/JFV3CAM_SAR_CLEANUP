@@ -22,4 +22,7 @@ ${HOMEfv3}/scripts/exfv3cam_cleanup.sh
 export err=$?
 #####################################
 
+cat err
+cat $pgmout
+
 exit $err

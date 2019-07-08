@@ -80,4 +80,7 @@ ${HOMEfv3}/scripts/exfv3cam_sar_fcst.sh
 export err=$?
 #####################################
 
+cat err
+cat $pgmout
+
 exit $err

@@ -127,4 +127,7 @@ if [ $tmmark = tm12 ] ; then
   done
 fi
 
+cat err
+cat $pgmout
+
 exit $err

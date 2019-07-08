@@ -48,4 +48,7 @@ ${HOMEfv3}/scripts/exfv3cam_nest_fcst.sh
 export err=$?
 #####################################
 
+cat err
+cat $pgmout
+
 exit $err
