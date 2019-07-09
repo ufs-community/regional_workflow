@@ -67,4 +67,5 @@ export err=$?
 
 cat err
 cat $pgmout
+
 exit $err
