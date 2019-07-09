@@ -16,15 +16,20 @@
 #    You will be asked to enter your Github username: enter it and hit "return".
 # 4. If all went well, you should see one of two different messages at the end:
 #    - If your fork is already up-to-date, you should see "Already up-to-date."
-#    - If your fork is not up-to-date, this script initiates a fast-forward merge to bring your fork up-to-date with the
-#      master of the main repository (https://github.com/NOAA-EMC/regional_workflow). Near the end git will print a line of statistics
-#      describing what changed, which will look something like this:
+#    - If your fork is not up-to-date, this script initiates a fast-forward merge to bring your fork 
+#      up to date with the master of the main repository (https://github.com/NOAA-EMC/regional_workflow). 
+#      Near the end git will print a line of statistics describing what changed, which will look 
+#      something like this:
+#
 #         19 files changed, 27 insertions(+), 27 deletions(-)
+#
 #      followed by a few more lines and this final message:
+#
 #         Branch master set up to track remote branch master from origin.
 
 # Notes:
-# - This is a preliminary version of what will hopefully be a more detailed script in the future. This one only performs fast-forward merges.
+# - This is a preliminary version of what will hopefully be a more detailed script in the future. 
+#   This one only performs fast-forward merges.
 
 use strict;
 
