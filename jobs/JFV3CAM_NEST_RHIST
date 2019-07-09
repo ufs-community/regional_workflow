@@ -35,6 +35,9 @@ ${HOMEfv3}/scripts/exfv3cam_rhist.sh
 export err=$?
 ##################################
 
+cat err
+cat $pgmout
+
 if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
 
 date

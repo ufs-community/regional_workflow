@@ -65,4 +65,6 @@ ${HOMEfv3}/scripts/exfv3cam_nest_chgres.sh
 export err=$?
 #####################################
 
+cat err
+cat $pgmout
 exit $err

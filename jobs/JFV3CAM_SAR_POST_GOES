@@ -58,4 +58,7 @@ ${HOMEfv3}/scripts/exfv3cam_post_goes.sh
 export err=$?
 #####################################
 
+cat err
+cat $pgmout
+
 exit $err

@@ -10,11 +10,11 @@ export pid=$$
 export pgmout="OUTPUT.${pid}"
 
 FTPdir=/home/ftp/emc/mmb/mmbpll/${RUN}/${RUN}.${PDY}/${cyc}
-ssh -l bblake emcrzdm.ncep.noaa.gov "mkdir -p $FTPdir" 
+ssh -l ${rzdmuser} emcrzdm.ncep.noaa.gov "mkdir -p $FTPdir" 
 
 posthr=00
 while [ $posthr -le 61 ] ; do
-  scp ${RUN}.t${cyc}z.conus.ffair.f${posthr}.grib2 bblake@emcrzdm.ncep.noaa.gov:$FTPdir/.
+  scp ${RUN}.t${cyc}z.conus.ffair.f${posthr}.grib2 ${rzdmuser}@emcrzdm.ncep.noaa.gov:$FTPdir/.
   let "posthr=posthr+1"
   typeset -Z2 posthr
 done
@@ -28,12 +28,12 @@ done
 #TM72=`$NDATE -72 $CDATE`
 #PDYm72=`echo $TM72 | cut -c 1-8`
 #FTPTM72=/home/ftp/emc/mmb/mmbpll/${RUN}/${RUN}.${PDYm72}
-#ssh -l bblake emcrzdm.ncep.noaa.gov "rm -r ${FTPTM72}"
+#ssh -l ${rzdmuser} emcrzdm.ncep.noaa.gov "rm -r ${FTPTM72}"
 
 #fi
 
 echo "I am done" > donefile.post.${CDATE}
-scp donefile.post.${CDATE} bblake@emcrzdm.ncep.noaa.gov:$FTPdir/.
+scp donefile.post.${CDATE} ${rzdmuser}@emcrzdm.ncep.noaa.gov:$FTPdir/.
 
 # if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
 

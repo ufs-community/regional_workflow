@@ -102,9 +102,6 @@ cd ..
 #   input.nml, input_nest02.nml, model_configure, and nems.configure
 #-------------------------------------------------------------------
 
-
-echo in fcst script we know that dom is $dom
-
 if [ $tmmark = tm00 ] ; then
 # Free forecast with DA (warm start)
   if [ $model = fv3sar_da ] ; then

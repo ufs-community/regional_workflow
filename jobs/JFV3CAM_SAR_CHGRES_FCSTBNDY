@@ -149,4 +149,7 @@ fi
 
 date
 
+cat err
+cat $pgmout
+
 exit $err
