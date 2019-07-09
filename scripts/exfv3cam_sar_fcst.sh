@@ -19,7 +19,7 @@ ulimit -s unlimited
 ulimit -a
 
 mkdir -p INPUT RESTART
-cp ${NWGES}/anl.${tmmark}/*.nc INPUT
+cp ${NWGES}/anl.${dom}.${tmmark}/*.nc INPUT
 
 numbndy=`ls -l INPUT/gfs_bndy.tile7*.nc | wc -l`
 let "numbndy_check=$NHRS/3+1"
@@ -108,14 +108,32 @@ if [ $tmmark = tm00 ] ; then
     cp ${PARMfv3}/input_sar_da.nml input.nml 
 # Free forecast without DA (cold start)
   elif [ $model = fv3sar ] ; then 
-    cp ${PARMfv3}/input_sar.nml input.nml
+    cp ${PARMfv3}/input_sar_${dom}.nml input.nml
   fi
-  cp ${PARMfv3}/model_configure_sar.tmp model_configure.tmp
-  nodes=76  
-  ncnode=24
-  let nctsk=ncnode/OMP_NUM_THREADS    # 12 tasks per node with 2 threads 
-  let ntasks=nodes*nctsk
-  echo nctsk = $nctsk and ntasks = $ntasks
+  cp ${PARMfv3}/model_configure_sar.tmp_${dom} model_configure.tmp
+
+if [ $dom = "conus" ]
+then
+  nodes=76 
+elif [ $dom = "ak" ]
+then
+  nodes=68
+elif [ $dom = "pr" ]
+then
+  nodes=10
+elif [ $dom = "hi" ]
+then
+  nodes=7
+elif [ $dom = "guam" ]
+then
+  nodes=7
+fi
+
+ncnode=24
+let nctsk=ncnode/OMP_NUM_THREADS    # 12 tasks per node with 2 threads 
+let ntasks=nodes*nctsk
+echo nctsk = $nctsk and ntasks = $ntasks
+
 # Submit post manager here
 
 else

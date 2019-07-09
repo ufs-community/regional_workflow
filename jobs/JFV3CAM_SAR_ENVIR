@@ -23,7 +23,7 @@ export EXECfv3=$HOMEfv3/exec
 export USHfv3=$HOMEfv3/ush
 
 export FIXfv3=$HOMEfv3/fix
-export FIXsar=$FIXfv3/fix_sar
+export FIXsar=$FIXfv3/fix_sar/${dom}
 export FIXam=$FIXfv3/fix_am
 export FIXco2=$FIXam/fix_co2_proj
 

@@ -61,7 +61,7 @@ export CYCfcst=`echo $CYCLEfcst | cut -c 9-10`
 
 export GUESSdir=$COMOUT/guess.${tmmark_next}
 mkdir -p $GUESSdir
-export ANLdir=$COMOUT/anl.${tmmark_next}
+export ANLdir=$COMOUT/anl.${dom}.${tmmark_next}
 mkdir -p $ANLdir
 
 #####################################

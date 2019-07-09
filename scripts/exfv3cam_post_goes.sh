@@ -74,15 +74,32 @@ mpirun ${POSTGPEXEC} < itag > $pgmout 2>err
 export err=$?; err_chk
 
 # RUN wgrib2
-domain=conus
+domain=${dom}
+
+if [ $domain = "conus" ]
+then
 gridspecs="lambert:262.5:38.5:38.5 237.280:1799:3000 21.138:1059:3000"
+elif [ $domain = "ak" ]
+then
+gridspecs="nps:210:60 185.5:825:5000 44.8:603:5000"
+elif [ $domain = "pr" ]
+then
+gridspecs="latlon 283.41:340:.045 13.5:208:.045"
+elif [ $domain = "hi" ]
+then
+gridspecs="latlon 197.65:223:.045 16.4:170:.045"
+elif [ $domain = guam  ]
+then
+gridspecs="latlon 141.0:223:.045 11.7:170:.045"
+fi
+
 compress_type=c3
 
 $WGRIB2 BGGOES${fhr}.${tmmark} -set_bitmap 1 -set_grib_type ${compress_type} -new_grid_winds grid -new_grid_vectors "UGRD:VGRD:USTM:VSTM" \
      -new_grid_interpolation neighbor \
      -new_grid ${gridspecs} ${domain}fv3.goestb${fhr}.${tmmark}
 
-mv ${domain}fv3.goestb${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.conusgoestb.f${fhr}.grib2
+mv ${domain}fv3.goestb${fhr}.${tmmark} $COMOUT/${RUN}.t${cyc}z.${dom}goestb.f${fhr}.grib2
 
 echo done > ${INPUT_DATA}/postgoestbdone${fhr}.${tmmark}
 
