@@ -215,7 +215,7 @@ cat ../parm/input_sar.nml_template \
     | sed s:_NX_:${npx}:g \
     | sed s:_NY_:${npy}:g \
     | sed s:_TARG_LAT_:${target_lat}:g \
-    | sed s:_TARG_LON_:${target_lon}:g  > ../parm/input_sar.nml_${dom}_test
+    | sed s:_TARG_LON_:${target_lon}:g  > ../parm/input_sar_${dom}.nml
    
 
 cat ../parm/model_configure_sar.tmp_template \
@@ -228,4 +228,5 @@ cat ../parm/model_configure_sar.tmp_template \
     | sed s:_LON2_:${lon2}:g \
     | sed s:_LAT2_:${lat2}:g \
     | sed s:_DLON_:${dlon}:g \
-    | sed s:_DLAT_:${dlat}:g  > ../parm/model_configure_sar.tmp_${dom}_test
+    | sed s:_DLAT_:${dlat}:g  > ../parm/model_configure_sar.tmp_${dom}
+
