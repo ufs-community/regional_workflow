@@ -6,10 +6,10 @@ COMMAND=$1
 # load modulefile and set up the environment for job runnning
 #############################################################
 
-MODULEFILES=${MODULEFILES:-/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow/modulefiles}
 
 if [ "$machine" = "DELL" ] ; then
   . /usrx/local/prod/lmod/lmod/init/sh
+  MODULEFILES=${MODULEFILES:-/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow/modulefiles}
   module use ${MODULEFILES}/wcoss_dell_p3
   module load fv3
   module load prod_util/1.1.0
