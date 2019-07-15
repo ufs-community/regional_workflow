@@ -2,9 +2,9 @@
 
 COMMAND=$1
 
-#############################################################
-# load modulefile and set up the environment for job runnning
-#############################################################
+############################################################
+# load modulefile and set up the environment for job running
+############################################################
 
 
 if [ "$machine" = "DELL" ] ; then
