@@ -1,4 +1,4 @@
-#!/bin/ksh -l
+#!/bin/ksh
 ############################################################################
 # Script name:		exfv3cam_nest_fcst.sh
 # Script description:	Run the 3-km FV3 nest forecast over the CONUS

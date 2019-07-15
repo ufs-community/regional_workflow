@@ -1,4 +1,4 @@
-#!/bin/ksh -l
+#!/bin/ksh
 set -x
 
 . $HOMEfv3/jobs/JFV3CAM_NEST_ENVIR
