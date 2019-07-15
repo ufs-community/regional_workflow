@@ -1,4 +1,4 @@
-#!/bin/ksh -l
+#!/bin/ksh
 
 COMMAND=$1
 
@@ -13,6 +13,9 @@ if [ "$machine" = "DELL" ] ; then
   module use ${MODULEFILES}/wcoss_dell_p3
   module load fv3
   module load prod_util/1.1.0
+  module load grib_util/1.0.6
+  module load CFP/2.0.1
+  module load HPSS/5.0.2.5
 
 else
   echo "launch.ksh: modulefile is not set up yet for this machine-->${machine}."

@@ -3,8 +3,6 @@ set -x
 
 . $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
 
-module load CFP/2.0.1
-
 ####################################
 # Specify Execution Areas
 ####################################
