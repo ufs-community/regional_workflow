@@ -3,9 +3,6 @@ set -x
 
 . $HOMEfv3/jobs/JFV3CAM_NEST_ENVIR
 
-. /usrx/local/prod/lmod/lmod/init/sh
-module load HPSS/5.0.2.5
-
 ##################################
 # Run setpdy and initialize PDY variables
 ##################################

@@ -3,9 +3,6 @@ set -x
 
 . $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
 
-. /usrx/local/prod/lmod/lmod/init/sh
-module load CFP/2.0.1
-
 ####################################
 # Specify Execution Areas
 ####################################
