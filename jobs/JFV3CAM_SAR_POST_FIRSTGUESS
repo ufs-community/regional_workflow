@@ -3,6 +3,7 @@
 
 . $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
 
+. /usrx/local/prod/lmod/lmod/init/sh
 module load grib_util/1.0.6
 
 ##############################################

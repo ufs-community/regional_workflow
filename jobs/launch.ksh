@@ -1,4 +1,4 @@
-#!/bin/ksh -l
+#!/bin/ksh
 
 COMMAND=$1
 
