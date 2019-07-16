@@ -5,12 +5,12 @@
 <!ENTITY STARTYEAR "2019">
 <!ENTITY STARTMONTH "06">
 <!ENTITY STARTDAY "19">
-<!ENTITY STARTHOUR "_SH_">
+<!ENTITY STARTHOUR "00">
 
 <!ENTITY ENDYEAR "2020">
 <!ENTITY ENDMONTH "12">
 <!ENTITY ENDDAY "31">
-<!ENTITY ENDHOUR "_EH_">
+<!ENTITY ENDHOUR "00">
 
 <!ENTITY USER "_USER_">
 <!ENTITY machine "DELL">
@@ -36,11 +36,10 @@
 <!ENTITY POSTGOES_RESOURCES '<walltime>00:10:00</walltime><native>-R affinity[core]</native>'>
 <!ENTITY HIST_RESOURCES '<walltime>00:30:00</walltime><memory>5G</memory><native>-R affinity[core]</native>'>
 
-<!ENTITY ACCOUNT          "FV3GFS-T2O">
-<!ENTITY QUEUE_DEFAULT    "dev">
+<!ENTITY QUEUE_DEFAULT            "dev">
 <!ENTITY PROC_MAKE_SFC_CLIMO      "1:ppn=24">
 <!ENTITY RSRC_MAKE_SFC_CLIMO      "<walltime>01:00:00</walltime>">
-<!ENTITY RSRV_DEFAULT    "<queue>&QUEUE_DEFAULT;</queue><account>&ACCOUNT;</account>">
+<!ENTITY RSRV_DEFAULT             "<queue>&QUEUE_DEFAULT;</queue><account>&ACCOUNT;</account>">
 
 ]>
 
@@ -51,8 +50,7 @@
 <!-- <workflow realtime="F" scheduler="lsf" taskthrottle="11"> -->
 <workflow realtime="T" scheduler="lsf" taskthrottle="60" cyclethrottle="1" cyclelifespan="00:24:00:00">
 
-<!--  <cycledef group="at_start">00 &HH_FIRST_CYCL; &DD_FIRST_CYCL; &MM_FIRST_CYCL; &YYYY_FIRST_CYCL; *</cycledef> -->
-  <cycledef group="at_start">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 00:00:00</cycledef>
+  <cycledef group="at_start">00 &STARTHOUR; &STARTDAY; &STARTMONTH; &STARTYEAR; *</cycledef>
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
 
   <log>
@@ -74,18 +72,18 @@
     <nodes>&PROC_MAKE_SFC_CLIMO;</nodes>
     <jobname>make_sfc_climo</jobname>
     <join><cyclestr>&OUTDIR;/logfiles_sar/make_sfc_climo.log</cyclestr></join>
-<!--    <join><cyclestr>&OUTDIR;/logfiles_sar/chgres_firstguess_&domain;_@H.log</cyclestr></join> -->
 
     <envar><name>machine</name><value>&machine;</value></envar>
     <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
     <envar><name>dom</name><value>&domain;</value></envar>
 
+<!--
     <dependency>
       <taskdep task="make_grid_orog"/>
     </dependency>
+-->
 
   </task>
-
 
 <!--  **********************************************************************  -->
 <!--  **************************** Run chgres ******************************  -->
@@ -340,7 +338,7 @@
     </task>
   </metatask>
 
-  <metatask name="postgoes" throttle="_GOESPOSTTHROTTLE_">
+  <metatask name="postgoes" throttle="3">
     <var name="fhr">00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60</var>
     <task name="postgoes#fhr#" cycledefs="regional" maxtries="1">
     &RESERVATION;
