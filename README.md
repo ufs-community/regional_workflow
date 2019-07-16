@@ -17,5 +17,5 @@ cd sorc
 
 4. Link the fix files:
 
-./link_all.sh
+./link_fix.sh
 
