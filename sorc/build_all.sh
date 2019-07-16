@@ -50,14 +50,6 @@ echo " .... Building forecast .... "
 }
 
 #------------------------------------
-# build gsi
-#------------------------------------
-$Build_gsi && {
-echo " .... Building gsi .... "
-./build_gsi.sh > $logs_dir/build_gsi.log 2>&1
-}
-
-#------------------------------------
 # build post
 #------------------------------------
 $Build_post && {
@@ -71,6 +63,14 @@ echo " .... Building post .... "
 $Build_utils && {
 echo " .... Building utils .... "
 ./build_utils.sh > $logs_dir/build_utils.log 2>&1
+}
+
+#------------------------------------
+# build gsi
+#------------------------------------
+$Build_gsi && {
+echo " .... Building gsi .... "
+./build_gsi.sh > $logs_dir/build_gsi.log 2>&1
 }
 
 echo;echo " .... Build system finished .... "

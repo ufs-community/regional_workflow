@@ -29,6 +29,18 @@ else
     echo 'Skip.  Directory regional_forecast.fd already exists.'
 fi
 
+echo EMC_post checkout ...
+if [[ ! -d regional_post.fd ]] ; then
+    rm -f ${topdir}/checkout-post.log
+    git clone --recursive gerrit:EMC_post regional_post.fd >> ${topdir}/checkout-post.log 2>&1
+    cd regional_post.fd
+#    git checkout ncep_post.v8.0.27
+    git checkout regional
+    cd ${topdir}
+else
+    echo 'Skip.  Directory regional_post.fd already exists.'
+fi
+
 echo ProdGSI checkout ...
 if [[ ! -d regional_gsi.fd ]] ; then
     rm -f ${topdir}/checkout-gsi.log
@@ -40,18 +52,6 @@ if [[ ! -d regional_gsi.fd ]] ; then
     cp ../parm/anavinfo_fv3_64 regional_gsi.fd/fix
 else
     echo 'Skip.  Directory regional_gsi.fd already exists.'
-fi
-
-echo EMC_post checkout ...
-if [[ ! -d regional_post.fd ]] ; then
-    rm -f ${topdir}/checkout-post.log
-    git clone --recursive gerrit:EMC_post regional_post.fd >> ${topdir}/checkout-post.log 2>&1
-    cd regional_post.fd
-#    git checkout ncep_post.v8.0.27
-    git checkout regional
-    cd ${topdir}
-else
-    echo 'Skip.  Directory regional_post.fd already exists.'
 fi
 
 exit 0

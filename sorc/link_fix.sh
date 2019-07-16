@@ -1,9 +1,12 @@
 #!/bin/sh
-set -x
+set -xeu
 
 source ./machine-setup.sh > /dev/null 2>&1
 
 pwd=$(pwd -P)
+
+LINK="ln -sf"
+#LINK="cp -rp"
 
 if [ ${target} == "wcoss_cray" ]; then
     FIX_DIR="/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix"
@@ -23,6 +26,7 @@ cd ${pwd}/../fix                ||exit 8
 for dir in fix_am fix_nest fix_sar ; do
     [[ -d $dir ]] && rm -rf $dir
 done
-ln -sf $FIX_DIR/* .
+
+${LINK} $FIX_DIR/* .
 
 exit
