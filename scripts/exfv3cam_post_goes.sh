@@ -64,7 +64,7 @@ for what in  ${CRTM_FIX}/*Emis* ; do
 done
 
 # Run the post processor
-export pgm=ncep_post
+export pgm=regional_post
 . prep_step
 
 #export APRUN="mpirun -l -n 240"

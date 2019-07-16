@@ -79,7 +79,7 @@ if [ $machine = WCOSS ] ; then
 fi
 if [ $machine = DELL ] ; then
   export UTIL=${HOMEfv3}/util/ush
-  export gsiexec=${EXECfv3}/gsi.x
+  export gsiexec=${EXECfv3}/regional_gsi.x
   export fixgsi=${HOMEfv3}/sorc/gsi.fd/fix
   export fixcrtm=/gpfs/dell1/nco/ops/nwprod/lib/crtm/v2.2.6/fix
 fi

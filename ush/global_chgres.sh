@@ -267,7 +267,7 @@ FIXam=${FIXam:-$FIXfv3/fix_am}
 
 DATA=${DATA:-$(pwd)}
 #  Filenames.
-CHGRESEXEC=${CHGRESEXEC:-${EXECgfs}/global_chgres$XC}
+CHGRESEXEC=${CHGRESEXEC:-${EXECgfs}/regional_chgres.x}
 #
 
 CRES=$(echo $CASE | cut -c2-)

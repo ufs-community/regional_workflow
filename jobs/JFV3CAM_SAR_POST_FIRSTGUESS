@@ -29,7 +29,7 @@ export pgmout="OUTPUT.${pid}"
 ##############################################
 # Specify Execution Areas
 ##############################################
-export POSTGPEXEC=${EXECfv3}/ncep_post
+export POSTGPEXEC=${EXECfv3}/regional_post
 export WGRIB2=${EXECfv3}/wgrib2new
 
 ##############################################
