@@ -3,10 +3,14 @@ set -xeu
 
 source ./machine-setup.sh > /dev/null 2>&1
 
-pwd=$(pwd -P)
-
 LINK="ln -sf"
-#LINK="cp -rp"
+if [[ $# -ge 1 ]]; then
+  if [[ $1 = "nco" ]]; then
+    LINK="cp -rp"
+  fi
+fi
+
+pwd=$(pwd -P)
 
 if [ ${target} == "wcoss_cray" ]; then
     FIX_DIR="/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix"

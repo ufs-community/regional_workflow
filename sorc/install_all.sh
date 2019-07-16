@@ -53,9 +53,6 @@ fi
  ${CP} regional_gsi.fd/exec/global_gsi.x               ../exec/regional_gsi.x
  ${CP} regional_gsi.fd/exec/global_enkf.x              ../exec/regional_enkf.x
 
-#${CP} regional_gsi.fd/exec/global_gsi.x               ../exec/regional_global_gsi.x
-#${CP} regional_gsi.fd/exec/global_enkf.x              ../exec/regional_global_enkf.x
-
  ${CP} regional_gsi.fd/exec/adderrspec.x               ../exec/regional_adderrspec.x
  ${CP} regional_gsi.fd/exec/adjustps.x                 ../exec/regional_adjustps.x
  ${CP} regional_gsi.fd/exec/calc_increment_ens.x       ../exec/regional_calc_increment_ens.x

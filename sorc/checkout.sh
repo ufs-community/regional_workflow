@@ -30,11 +30,11 @@ echo NEMSfv3gfs checkout ...
 if [[ ! -d regional_forecast.fd ]] ; then
     rm -f ${topdir}/checkout-forecast.log
     git clone --recursive gerrit:NEMSfv3gfs regional_forecast.fd >> ${topdir}/checkout-forecast.log 2>&1
-    cd regional_forecast.fd
+#    cd regional_forecast.fd
 #    git checkout nemsfv3gfs_beta_v1.0.12
-    git checkout regional
-    git submodule update --init --recursive
-    cd ${topdir}
+#    git checkout regional
+#    git submodule update --init --recursive
+#    cd ${topdir}
 else
     echo 'Skip.  Directory regional_forecast.fd already exists.'
 fi
