@@ -5,7 +5,9 @@ set -u -x
 machine="THEIA"
 preexisting_dir_method="delete"
 WORKDIR_GRID="abc"
-#SFC_CLIMO_INPUT_DIR="def"
+WORKDIR_SHVE="ghi"
+SFC_CLIMO_INPUT_DIR="def"
+nh4_T7=4
 #
 #-----------------------------------------------------------------------
 #
