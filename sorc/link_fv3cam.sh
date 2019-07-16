@@ -7,16 +7,16 @@ machine=${2}
 
 if [ $# -lt 2 ]; then
     echo '***ERROR*** must specify two arguements: (1) RUN_ENVIR, (2) machine'
-    echo ' Syntax: link_fv3gfs.sh ( nco | emc ) ( cray | dell | theia )'
+    echo ' Syntax: link_fv3gfs.sh ( nco | dev ) ( cray | dell | theia )'
     exit 1
 fi
 
-if [ $RUN_ENVIR != emc -a $RUN_ENVIR != nco ]; then
-    echo 'Syntax: link_fv3gfs.sh ( nco | emc ) ( cray | dell | theia )'
+if [ $RUN_ENVIR != dev -a $RUN_ENVIR != nco ]; then
+    echo 'Syntax: link_fv3gfs.sh ( nco | dev ) ( cray | dell | theia )'
     exit 1
 fi
 if [ $machine != cray -a $machine != theia -a $machine != dell ]; then
-    echo 'Syntax: link_fv3gfs.sh ( nco | emc ) ( cray | dell | theia )'
+    echo 'Syntax: link_fv3gfs.sh ( nco | dev ) ( cray | dell | theia )'
     exit 1
 fi
 

@@ -1,7 +1,7 @@
 set -x
 
-export RUN_ENVIR=emc
 export envir=para
+export RUN_ENVIR=dev
 export NET=fv3cam
 export RUN=fv3sar
 export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
@@ -28,7 +28,7 @@ export FIXam=$FIXfv3/fix_am
 export FIXco2=$FIXam/fix_co2_proj
 
 export COMROOT=${mainroot}/${comdir}/${USER}/com
-export GESROOT=${mainroot}/${comdir}/${USER}/com
+export GESROOT=${mainroot}/${comdir}/${USER}/nwges
 export GESROOT_HOLD=${mainroot}/${comdir}/${USER}/nwges/${RUN}.hold
 mkdir -p $GESROOT_HOLD
 
