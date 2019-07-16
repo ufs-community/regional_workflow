@@ -16,5 +16,5 @@ if [ ! -d "../exec" ]; then
   mkdir ../exec
 fi
 
-cd ncep_post.fd/sorc
+cd regional_post.fd/sorc
 sh build_ncep_post.sh

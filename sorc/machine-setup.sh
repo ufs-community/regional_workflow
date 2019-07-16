@@ -61,8 +61,8 @@ elif [[ -d /gpfs/hps && -e /etc/SuSE-release ]] ; then
     module purge > /dev/null 2>&1
 
     # Workaround until module issues are fixed:
-    #unset _LMFILES_
-    #unset LOADEDMODULES
+    unset _LMFILES_
+    unset LOADEDMODULES
     echo y 2> /dev/null | module clear > /dev/null 2>&1
 
     module use /usrx/local/prod/modulefiles
@@ -82,7 +82,6 @@ elif [[ -L /usrx && "$( readlink /usrx 2> /dev/null )" =~ dell ]] ; then
     fi
     target=wcoss_dell_p3
     module purge 
-    module use /usrx/local/dev/modulefiles
 
 elif [[ -d /dcom && -d /hwrf ]] ; then
     # We are on NOAA Tide or Gyre

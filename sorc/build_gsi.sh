@@ -19,8 +19,8 @@ if [ ! -d "../exec" ]; then
   mkdir ../exec
 fi
 
-cd gsi.fd/ush/
-./build_all_cmake.sh "PRODUCTION" "$cwd/gsi.fd"
+cd regional_gsi.fd/ush/
+./build_all_cmake.sh "PRODUCTION" "$cwd/regional_gsi.fd"
 
 exit
 
