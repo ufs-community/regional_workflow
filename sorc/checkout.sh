@@ -1,20 +1,30 @@
 #!/bin/sh
 set -xu
 
+echo "INFO: Checking out the regional_workflow external components."
+echo "INFO: If the directory of an external component already exist, this checkout.sh script will do nothing for that component."
+
+if [[ $# -ge 1 ]]; then
+  if [[ $1 = "-c" ]]; then
+    echo "WARNING: You are using the '-c' commandline option."
+    echo "WARNING: This will conduct a fresh checkout of all the workflow external components."
+    echo "WARNING: This will delete all the existing regional_*.fd directores for the workflow external components."
+    echo "WARNING: Any local changes in these regional_*.fd directores will be deleted."
+    read -p "WARNING: Do you really want to proceed? [Y/N]" yn
+    if [[ $yn = "Y" ]]; then
+      rm -rf regional_utils.fd
+      rm -rf regional_forecast.fd
+      rm -rf regional_post.fd
+      rm -rf regional_gsi.fd
+    else
+      echo "Do nothing, exiting ..."
+      exit
+    fi
+  fi
+fi
+
 topdir=$(pwd)
 echo $topdir
-
-echo UFS_UTILS checkout ...
-if [[ ! -d regional_utils.fd ]] ; then
-    rm -f ${topdir}/checkout-utils.log
-    git clone --recursive gerrit:UFS_UTILS regional_utils.fd >> ${topdir}/checkout-utils.log 2>&1
-	cd regional_utils.fd
-#	git checkout develop
-	git checkout feature/HAFS
-    cd ${topdir}
-else
-    echo 'Skip.  Directory regional_utils.fd already exists.'
-fi
 
 echo NEMSfv3gfs checkout ...
 if [[ ! -d regional_forecast.fd ]] ; then
@@ -39,6 +49,18 @@ if [[ ! -d regional_post.fd ]] ; then
     cd ${topdir}
 else
     echo 'Skip.  Directory regional_post.fd already exists.'
+fi
+
+echo UFS_UTILS checkout ...
+if [[ ! -d regional_utils.fd ]] ; then
+    rm -f ${topdir}/checkout-utils.log
+    git clone --recursive gerrit:UFS_UTILS regional_utils.fd >> ${topdir}/checkout-utils.log 2>&1
+	cd regional_utils.fd
+#	git checkout develop
+	git checkout feature/HAFS
+    cd ${topdir}
+else
+    echo 'Skip.  Directory regional_utils.fd already exists.'
 fi
 
 echo ProdGSI checkout ...

@@ -50,17 +50,20 @@ $LINK $FIX_DIR/* .
 #------------------------------
 
 cd $pwd/../exec
-[[ -s regional_forecast.x ]] && rm -f regional_forecast.x
-cp -p ../sorc/regional_forecast.fd/NEMS/exe/fv3_gfs.x ./regional_forecast.x
+#[[ -s regional_forecast.x ]] && rm -f regional_forecast.x
+#cp -p ../sorc/regional_forecast.fd/NEMS/exe/fv3_gfs.x ./regional_forecast.x
+[[ -s regional_forecast.x ]] && rm -f fv3_gfs.x
+cp -p ../sorc/regional_forecast.fd/NEMS/exe/fv3_gfs.x ./fv3_gfs.x
 
-[[ -s regional_post.x ]] && rm -f regional_post.x
-cp -p ../sorc/regional_post.fd/exec/ncep_post ./regional_post.x
+#[[ -s regional_post.x ]] && rm -f regional_post.x
+#cp -p ../sorc/regional_post.fd/exec/ncep_post ./regional_post.x
+[[ -s regional_post.x ]] && rm -f ncep_post
+cp -p ../sorc/regional_post.fd/exec/ncep_post ./ncep_post
 
-[[ -s regional_global_chgres.x ]] && rm -f regional_global_chgres.x
-cp -p ../sorc/regional_utils.fd/exec/global_chgres ./regional_global_chgres.x
-
-[[ -s regional_chgres_cube.x ]] && rm -f regional_chgres_cube.x
-cp -p ../sorc/regional_utils.fd/exec/chgres_cube ./regional_chgres_cube.x
+#[[ -s regional_global_chgres.x ]] && rm -f regional_global_chgres.x
+#cp -p ../sorc/regional_utils.fd/exec/global_chgres ./regional_global_chgres.x
+[[ -s regional_global_chgres.x ]] && rm -f global_chgres
+cp -p ../sorc/regional_utils.fd/exec/global_chgres ./global_chgres
 
 #for gsiexe in  global_gsi.x global_enkf.x calc_increment_ens.x  getsfcensmeanp.x  getsigensmeanp_smooth.x  getsigensstatp.x  recentersigp.x oznmon_horiz.x oznmon_time.x radmon_angle radmon_bcoef radmon_bcor radmon_time ;do
 #    [[ -s $gsiexe ]] && rm -f $gsiexe
