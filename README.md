@@ -1,12 +1,21 @@
 # regional_workflow
 
 # Build and install the regional workflow
+1. Check out the regional workflow external components:
+
+./manage_externals/checkout_externals
+
 cd sorc
-Check out the regional workflow external components:
-./checkout.sh
-Build the regional workflow system:
+
+2. Build the regional workflow system:
+
 ./build_all.sh
-Install the executables:
+
+3. Install the executables:
+
 ./install_all.sh
-Link the fix files:
-./link_all.sh
+
+4. Link the fix files:
+
+./link_fix.sh
+
