@@ -11,7 +11,7 @@ export SENDCOM=${SENDCOM:-YES}
 ####################################
 # Specify Execution Areas
 ####################################
-export POSTGPEXEC=${EXECfv3}/ncep_post
+export POSTGPEXEC=${EXECfv3}/regional_post.x
 export WGRIB2=${EXECfv3}/wgrib2new
 
 ####################################

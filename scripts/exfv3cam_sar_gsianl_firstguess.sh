@@ -271,7 +271,7 @@ mesonetuselist=$fixgsi/nam_mesonet_uselist.txt
 stnuselist=$fixgsi/nam_mesonet_stnuselist.txt
 
 # Copy executable and fixed files to $DATA
-$ncp $gsiexec ./gsi.x
+$ncp $gsiexec ./regional_gsi.x
 
 $ncp $anavinfo ./anavinfo
 $ncp $berror   ./berror_stats
@@ -398,11 +398,11 @@ cp $fv3_case/${PDY}.${CYC}0000.fv_tracer.res.tile1.nc fv3_tracer
 cp $fv3_case/${PDY}.${CYC}0000.sfc_data.nc fv3_sfcdata
 
 # Run gsi under Parallel Operating Environment (poe) on NCEP IBM
-export pgm=gsi.x
+export pgm=regional_gsi.x
 . prep_step
 
 startmsg
-mpirun -l -n 240 ./gsi.x < gsiparm.anl > $pgmout 2> stderr
+mpirun -l -n 240 ./regional_gsi.x < gsiparm.anl > $pgmout 2> stderr
 export err=$?;err_chk
 
 mv fort.201 fit_p1

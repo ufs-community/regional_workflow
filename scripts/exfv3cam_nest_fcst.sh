@@ -117,11 +117,11 @@ cat model_configure.tmp | sed s/NTASKS/$ntasks/ | sed s/YR/$yr/ | \
 #----------------------------------------- 
 # Run the forecast
 #-----------------------------------------
-export pgm=fv3_gfs.x
+export pgm=regional_forecast.x
 . prep_step
 
 startmsg
-mpirun -l -n ${ntasks} $EXECfv3/fv3_gfs.x >$pgmout 2>err
+mpirun -l -n ${ntasks} $EXECfv3/regional_forecast.x >$pgmout 2>err
 export err=$?;err_chk
 
 exit

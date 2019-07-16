@@ -6,7 +6,7 @@ set -x
 ####################################
 # Specify Execution Areas
 ####################################
-export CHGRESEXEC=$EXECfv3/global_chgres
+export CHGRESEXEC=$EXECfv3/regional_chgres.x
 export CHGRESSH=$USHfv3/global_chgres.sh
 export GETGES=$HOMEfv3/util/ush/getges_linkges_hourlypgrb_new.sh
 
