@@ -8,7 +8,7 @@ echo UFS_UTILS checkout ...
 if [[ ! -d regional_utils.fd ]] ; then
     rm -f ${topdir}/checkout-utils.log
     git clone --recursive gerrit:UFS_UTILS regional_utils.fd >> ${topdir}/checkout-utils.log 2>&1
-	cd regional_forecast.fd
+	cd regional_utils.fd
 #	git checkout develop
 	git checkout feature/HAFS
     cd ${topdir}
