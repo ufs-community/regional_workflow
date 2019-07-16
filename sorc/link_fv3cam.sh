@@ -1,3 +1,5 @@
+#!/bin/sh
+
 set -ex
 
 #--make symbolic links for EMC installation and hardcopies for NCO delivery
@@ -48,15 +50,17 @@ $LINK $FIX_DIR/* .
 #------------------------------
 
 cd $pwd/../exec
-[[ -s fv3_gfs.x ]] && rm -f fv3_gfs.x
-cp ../sorc/fv3gfs.fd/NEMS/exe/fv3_gfs.x .
+[[ -s regional_forecast.x ]] && rm -f regional_forecast.x
+cp -p ../sorc/regional_forecast.fd/NEMS/exe/fv3_gfs.x ./regional_forecast.x
 
-[[ -s ncep_post ]] && rm -f ncep_post
-cp ../sorc/ncep_post.fd/exec/ncep_post .
+[[ -s regional_post.x ]] && rm -f regional_post.x
+cp -p ../sorc/regional_post.fd/exec/ncep_post ./regional_post.x
 
-[[ -s global_chgres ]] && rm -f global_chgres
-cp ../sorc/ufs_utils/exec/global_chgres .
+[[ -s regional_global_chgres.x ]] && rm -f regional_global_chgres.x
+cp -p ../sorc/regional_utils.fd/exec/global_chgres ./regional_global_chgres.x
 
+[[ -s regional_chgres_cube.x ]] && rm -f regional_chgres_cube.x
+cp -p ../sorc/regional_utils.fd/exec/chgres_cube ./regional_chgres_cube.x
 
 #for gsiexe in  global_gsi.x global_enkf.x calc_increment_ens.x  getsfcensmeanp.x  getsigensmeanp_smooth.x  getsigensstatp.x  recentersigp.x oznmon_horiz.x oznmon_time.x radmon_angle radmon_bcoef radmon_bcor radmon_time ;do
 #    [[ -s $gsiexe ]] && rm -f $gsiexe

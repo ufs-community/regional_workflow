@@ -4,50 +4,54 @@ set -xu
 topdir=$(pwd)
 echo $topdir
 
-echo ufsutils checkout ...
-if [[ ! -d ufs_utils ]] ; then
-    rm -f ${topdir}/checkout-ufsutils.log
-    git clone --recursive gerrit:UFS_UTILS ufs_utils >> ${topdir}/checkout-ufsutils.log 2>&1
-    mkdir ufs_utils/exec
+echo UFS_UTILS checkout ...
+if [[ ! -d regional_utils.fd ]] ; then
+    rm -f ${topdir}/checkout-utils.log
+    git clone --recursive gerrit:UFS_UTILS regional_utils.fd >> ${topdir}/checkout-utils.log 2>&1
+	cd regional_forecast.fd
+#	git checkout develop
+	git checkout feature/HAFS
+    cd ${topdir}
 else
-    echo 'Skip.  Directory ufs_utils.fd already exists.'
+    echo 'Skip.  Directory regional_utils.fd already exists.'
 fi
 
-echo fv3gfs checkout ...
-if [[ ! -d fv3gfs.fd ]] ; then
-    rm -f ${topdir}/checkout-fv3gfs.log
-    git clone --recursive gerrit:NEMSfv3gfs fv3gfs.fd >> ${topdir}/checkout-fv3gfs.log 2>&1
-#    cd fv3gfs.fd
+echo NEMSfv3gfs checkout ...
+if [[ ! -d regional_forecast.fd ]] ; then
+    rm -f ${topdir}/checkout-forecast.log
+    git clone --recursive gerrit:NEMSfv3gfs regional_forecast.fd >> ${topdir}/checkout-forecast.log 2>&1
+    cd regional_forecast.fd
 #    git checkout nemsfv3gfs_beta_v1.0.12
-#    git submodule update --init --recursive
-#    cd ${topdir}
+    git checkout regional
+    git submodule update --init --recursive
+    cd ${topdir}
 else
-    echo 'Skip.  Directory fv3gfs.fd already exists.'
+    echo 'Skip.  Directory regional_forecast.fd already exists.'
 fi
 
-echo gsi checkout ...
-if [[ ! -d gsi.fd ]] ; then
+echo ProdGSI checkout ...
+if [[ ! -d regional_gsi.fd ]] ; then
     rm -f ${topdir}/checkout-gsi.log
-    git clone --recursive gerrit:ProdGSI gsi.fd >> ${topdir}/checkout-gsi.fd.log 2>&1
-#    cd gsi.fd
+    git clone --recursive gerrit:ProdGSI regional_gsi.fd >> ${topdir}/checkout-gsi.log 2>&1
+#    cd regional_gsi.fd
 #    git checkout fv3da.v1.0.37
 #    git submodule update
 #    cd ${topdir}
-    cp ../parm/anavinfo_fv3_64 gsi.fd/fix
+    cp ../parm/anavinfo_fv3_64 regional_gsi.fd/fix
 else
-    echo 'Skip.  Directory gsi.fd already exists.'
+    echo 'Skip.  Directory regional_gsi.fd already exists.'
 fi
 
 echo EMC_post checkout ...
-if [[ ! -d ncep_post.fd ]] ; then
-    rm -f ${topdir}/checkout-ncep_post.log
-    git clone --recursive gerrit:EMC_post ncep_post.fd >> ${topdir}/checkout-ncep_post.log 2>&1
-#    cd ncep_post.fd
+if [[ ! -d regional_post.fd ]] ; then
+    rm -f ${topdir}/checkout-post.log
+    git clone --recursive gerrit:EMC_post regional_post.fd >> ${topdir}/checkout-post.log 2>&1
+    cd regional_post.fd
 #    git checkout ncep_post.v8.0.27
-#    cd ${topdir}
+    git checkout regional
+    cd ${topdir}
 else
-    echo 'Skip.  Directory ncep_post.fd already exists.'
+    echo 'Skip.  Directory regional_post.fd already exists.'
 fi
-
 
 exit 0
