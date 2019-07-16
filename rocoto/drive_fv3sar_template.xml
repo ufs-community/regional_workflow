@@ -72,6 +72,7 @@
     <join><cyclestr>&LOG_DIR;/logfiles_sar/make_sfc_climo.log</cyclestr></join>
 <!--    <join><cyclestr>&OUTDIR;/logfiles_sar/chgres_firstguess_&domain;_@H.log</cyclestr></join> -->
 
+    <envar><name>machine</name><value>&machine;</value></envar>
     <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
     <envar><name>dom</name><value>&domain;</value></envar>
 

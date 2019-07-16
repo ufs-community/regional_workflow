@@ -1,7 +1,11 @@
-#!/bin/ksh
+#!/bin/bash
 set -u -x
 
 . $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+machine="THEIA"
+preexisting_dir_method="delete"
+WORKDIR_GRID="abc"
+#SFC_CLIMO_INPUT_DIR="def"
 #
 #-----------------------------------------------------------------------
 #
@@ -72,7 +76,7 @@ orog_fns=( "${orog_fns[@]/%/$suffix}" )
 #
 mosaic_file="${WORKDIR_GRID}/${CRES}_mosaic.nc"
 
-cat << EOF > ./fort.41
+{ cat << EOF > ./fort.41
 &config
 input_facsf_file="${SFC_CLIMO_INPUT_DIR}/facsf.1.0.nc"
 input_substrate_temperature_file="${SFC_CLIMO_INPUT_DIR}/substrate_temperature.2.6x1.5.nc"
@@ -91,6 +95,56 @@ snowfree_albedo_method="bilinear"
 vegetation_greenness_method="bilinear"
 /
 EOF
+} || print_err_msg_exit "\
+\"cat\" command to create a namelist file for make_sfc_climo to generate
+climatological fields on the FV3SAR native grid returned with nonzero 
+status."
+
+#-----------------------------------------------------------------------
+#
+# Set the machine-dependent run command.
+#
+#-----------------------------------------------------------------------
+#
+case $machine in
+
+"WCOSS_C")
+# This could be wrong.  Just a guess since I don't have access to this machine.
+  APRUN_SFC=${APRUN_SFC:-"aprun -j 1 -n 6 -N 6"}
+  ;;
+
+"WCOSS")
+# This could be wrong.  Just a guess since I don't have access to this machine.
+  APRUN_SFC=${APRUN_SFC:-"aprun -j 1 -n 6 -N 6"}
+  ;;
+
+"THEIA")
+# Need to load intel/15.1.133.  This and all other module loads should go into a module file.
+module load intel/15.1.133
+module list
+  APRUN_SFC="mpirun -np ${SLURM_NTASKS}"
+  ;;
+
+*)
+  print_err_msg_exit "\
+Run command has not been specified for this machine:
+  machine = \"$machine\"
+  APRUN_SFC = \"$APRUN_SFC\"
+"
+
+esac
+#
+#-----------------------------------------------------------------------
+#
+# Run the code.
+#
+#-----------------------------------------------------------------------
+#
+$APRUN_SFC ${EXECDIR}/sfc_climo_gen || print_err_msg_exit "\
+Call to executable that generates surface climatology files returned 
+with nonzero exit code.
+"
+
 
 #
 #-----------------------------------------------------------------------
