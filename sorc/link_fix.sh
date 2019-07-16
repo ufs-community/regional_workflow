@@ -17,7 +17,7 @@ if [ ${target} == "wcoss_cray" ]; then
 elif [[ ${target} == "wcoss_dell_p3" || ${target} == "wcoss" ]]; then
     FIX_DIR="/gpfs/dell2/emc/modeling/noscrub/emc.campara/fix_fv3cam"
 elif [ ${target} == "theia" ]; then
-    FIX_DIR="/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix"
+    FIX_DIR="/scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/fix_fv3cam"
 elif [ ${target} == "jet" ]; then
     FIX_DIR="/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix"
 else
