@@ -73,6 +73,7 @@
 <!--    <join><cyclestr>&OUTDIR;/logfiles_sar/chgres_firstguess_&domain;_@H.log</cyclestr></join> -->
 
     <envar><name>HOMEfv3</name><value>&HOMEfv3;</value></envar>
+    <envar><name>dom</name><value>&domain;</value></envar>
 
     <dependency>
       <taskdep task="make_grid_orog"/>
