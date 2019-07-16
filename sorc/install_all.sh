@@ -12,6 +12,12 @@ if [ ! -d "../exec" ]; then
 fi
 
 #------------------------------------
+# INCLUDE PARTIAL BUILD 
+#------------------------------------
+
+. ./partial_build.sh
+
+#------------------------------------
 # install forecast
 #------------------------------------
  ${CP} regional_forecast.fd/NEMS/exe/NEMS.x            ../exec/regional_forecast.x
@@ -50,9 +56,9 @@ fi
 #------------------------------------
 # install gsi
 #------------------------------------
+$Build_gsi && {
  ${CP} regional_gsi.fd/exec/global_gsi.x               ../exec/regional_gsi.x
  ${CP} regional_gsi.fd/exec/global_enkf.x              ../exec/regional_enkf.x
-
  ${CP} regional_gsi.fd/exec/adderrspec.x               ../exec/regional_adderrspec.x
  ${CP} regional_gsi.fd/exec/adjustps.x                 ../exec/regional_adjustps.x
  ${CP} regional_gsi.fd/exec/calc_increment_ens.x       ../exec/regional_calc_increment_ens.x
@@ -74,6 +80,7 @@ fi
  ${CP} regional_gsi.fd/exec/recenternemsiop_hybgain.x  ../exec/regional_recenternemsiop_hybgain.x
  ${CP} regional_gsi.fd/exec/recentersigp.x             ../exec/regional_recentersigp.x
  ${CP} regional_gsi.fd/exec/test_nc_unlimdims.x        ../exec/regional_test_nc_unlimdims.x
+}
 
 echo;echo " .... Install system finished .... "
 
