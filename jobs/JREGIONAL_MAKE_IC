@@ -1,7 +1,7 @@
 #!/bin/ksh
 set -x
 
-. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
 
 ####################################
 # Specify Execution Areas
@@ -17,25 +17,23 @@ export GETGES=$HOMEfv3/util/ush/getges_linkges_hourlypgrb_new.sh
 #setpdy.sh
 #. ./PDY
 
-offset=`echo $tmmark | cut -c 3-4`
-export CYCLEGUESS=`$NDATE -${offset} $CDATE`
-export CDATE=$CYCLEGUESS
+export CYCLEguess=`$NDATE -12 $CDATE`
 export ymd=`echo $CDATE | cut -c 1-8`
 export hhcyc=`echo $CDATE | cut -c 9-10`
 
 #####################################
-# Obtain unique process id (pid) and make temp directory
+# Working directories
 #####################################
 export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
 mkdir -p $DATA
 cd $DATA
-export BNDYdir=$DATA
 
 export OUTDIR=$DATA/INPUT
 mkdir -p $OUTDIR
 
 export pid=$$
 export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
 
 #####################################
 # Define COM directories
@@ -51,23 +49,24 @@ mkdir -p $COMOUT
 export NWGES=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 mkdir -p $NWGES
 
-export INPdir=${COMOUT}/anl.${dom}.${tmmark}
-mkdir -p ${INPdir}
+if [ $tmmark = tm12 ] ; then	# SAR-DA
+  export INPdir=$COMOUT/gfsanl.$tmmark
+elif [ $tmmark = tm00 ] ; then	# SAR without DA
+  export INPdir=$COMOUT/anl.${dom}.$tmmark
+fi
+mkdir -p $INPdir
 
 #####################################
 # WCOSS environment settings
 #####################################
-if [ $tmmark = tm00 ] ; then
-  export CDUMP=gfs
-else
-  export CDUMP=gdas
-fi
+export CDUMP=gfs
 export CDAS=gfs
 export LEVS=65
 export LSOIL=4
-export REGIONAL=2		# REGIONAL=0 - uniform, stretch, or nest
+export REGIONAL=1		# REGIONAL=0 - uniform, stretch, or nest
 				# REGIONAL=1 - generate data and boundary (for regional case)
 				# REGIONAL=2 - generate boundaries only (for regional case)
+export HALO=4
 export ictype=pfv3gfs
 export nst_anl=.false.		# false or true to include NST analysis
 export KMP_AFFINITY=disabled
@@ -76,86 +75,58 @@ export NTRAC=7			# output all gfdl mp tracers
 env
 
 #####################################
-# Generate the BCs
+# Generate the ICs and BC hour 0
 #####################################
-if [ -e bcfile.input ]; then
-  rm -f bcfile.input
-fi
+#
+# set the links to use the 4 halo grid and orog files
+# these are necessary for creating the boundary data
+#
+ln -sf $FIXsar/${CASE}_grid.tile7.halo4.nc $FIXsar/${CASE}_grid.tile7.nc
+ln -sf $FIXsar/${CASE}_oro_data.tile7.halo4.nc $FIXsar/${CASE}_oro_data.tile7.nc
 
-# NHRS = length of free forecast
-# NHRSda = length of DA cycle forecast (always 1-h)
-if [ $tmmark = tm00 ] ; then
+#####################################
+# Execute the script.
+${HOMEfv3}/scripts/exfv3cam_sar_chgres.sh
+export err=$?
+#####################################
+
+mv $OUTDIR/gfs*nc $INPdir/.
+mv $OUTDIR/sfc*nc $INPdir/.
+
+#####################################
+# Generate BCs for NHRSguess for SAR-DA
+#####################################
+if [ $tmmark = tm12 ] ; then
+  export REGIONAL=2
+
+# NHRSguess comes from JREGIONAL_ENVIR
   hour=3
-  end_hour=$NHRS
-  hour_inc=3
-else
-  hour=0
-  end_hour=$NHRSda
-  hour_inc=1
-fi
-
-while (test "$hour" -le "$end_hour")
+  end_hour=$NHRSguess
+  while (test "$hour" -le "$end_hour")
   do
-  if [ $hour -lt 10 ]; then
-    hour_name='00'$hour
-  elif [ $hour -lt 100 ]; then
-    hour_name='0'$hour
-  else
-    hour_name=$hour
-  fi
+    if [ $hour -lt 10 ] ; then
+      hour_name='00'$hour
+    elif [ $hour -lt 100 ] ; then
+      hour_name='0'$hour
+    else
+      hour_name=$hour
+    fi
 
-#
-# create input file for cfp in order to run multiple copies of exfv3cam_sar_chgres.sh simultaneously
-# since we are going to run simultaneously, we want different working directories for each hour
-#
-
-  if [ $tmmark = tm00 ] ; then
-    BC_DATA=${DATA}/wrk.chgres.$hour_name
-    rm -rf $BC_DATA
-    mkdir -p $BC_DATA
-    echo "env REGIONAL=2 HALO=4 bchour=$hour_name DATA=$BC_DATA $HOMEfv3/scripts/exfv3cam_sar_chgres.sh >&out.chgres.$hour_name" >> bcfile.input
-  elif [ $tmmark != tm00 ] ; then
-# Run the BC creation sequentially
-    export HALO=4
     export bchour=$hour_name
-    $HOMEfv3/scripts/exfv3cam_sar_chgres.sh
+    ${HOMEfv3}/scripts/exfv3cam_sar_chgres.sh
+
     mv $OUTDIR/gfs_bndy.tile7.${bchour}.nc $INPdir/.
+
     err=$?
     if [ $err -ne 0 ] ; then
       echo "bndy file not created, abort"
-      err_exit
+      exit 10
     fi
-  fi
-  hour=`expr $hour + $hour_inc`
-done
-
-# for tm00 we now run BC creation for all hours simultaneously
-if [ $tmmark = tm00 ] ; then
-  mpirun cfp bcfile.input
-  rm -f bcfile.input
-
-  cd $OUTDIR
-  cat filelist.ges* > $COMOUT/filelist.bndy.${tmmark}
-  cp gfs_bndy.tile7.*.nc $INPdir/.
-  cd $BNDYdir
-  hr=03
-  while [ $hr -le $NHRS ] ; do
-    cat out.chgres.0${hr}
-    cd wrk.chgres.0${hr}
-    cat $pgmout
-    cd $BNDYdir
-    let "hr=hr+3"
-    typeset -Z2 hr
+    hour=`expr $hour + 3`
   done
-else
-  cp filelist.ges $COMOUT/filelist.bndy.${tmmark}
 fi
 
-date
-
-if [ -e err ]; then
-  cat err
-  cat $pgmout
-fi
+cat $pgmerr
+cat $pgmout
 
 exit $err

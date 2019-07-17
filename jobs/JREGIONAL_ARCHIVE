@@ -1,7 +1,7 @@
 #!/bin/ksh
 set -x
 
-. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
 
 ##################################
 # Run setpdy and initialize PDY variables
@@ -19,6 +19,7 @@ cd $DATA
 
 export pid=$$
 export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
 
 ##################################
 # Define COM directories
@@ -33,7 +34,7 @@ ${HOMEfv3}/scripts/exfv3cam_rhist.sh
 export err=$?
 ##################################
 
-cat err
+cat $pgmerr
 cat $pgmout
 
 if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
