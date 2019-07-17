@@ -8,6 +8,7 @@ export model=fv3nest
 export mainroot=/gpfs/dell1
 export tmpdir=stmp
 export comdir=ptmp
+export gesdir=ptmp
 export rzdmuser=bblake
 
 export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
@@ -28,7 +29,7 @@ export FIXam=$FIXfv3/fix_am
 export FIXco2=$FIXam/fix_co2_proj
 
 export COMROOT=${mainroot}/${comdir}/${USER}/com
-export GESROOT=${mainroot}/${comdir}/${USER}/com
+export GESROOT=${mainroot}/${gesdir}/${USER}/nwges
 
 export NHRS=60          #-- Forecast length for free fcst
 
