@@ -12,12 +12,12 @@
 <!ENTITY ENDDAY "31">
 <!ENTITY ENDHOUR "00">
 
-<!ENTITY USER "_USER_">
+<!ENTITY USER "Benjamin.Blake">
 <!ENTITY machine "DELL">
 <!ENTITY ACCOUNT "FV3GFS-T2O">
 
 <!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/regional_workflow">
-<!ENTITY domain "_DOMAIN_">
+<!ENTITY domain "conus">
 <!ENTITY JOBS "&HOMEfv3;/jobs">
 <!ENTITY SCRIPTS "&HOMEfv3;/scripts">
 <!ENTITY COMgfs "/gpfs/dell1/nco/ops/com/gfs/prod">
@@ -47,8 +47,8 @@
 <!--  ************************************************************* -->
 <!--  ******************* STARTING THE WORKFLOW ******************* -->
 
-<!-- <workflow realtime="F" scheduler="lsf" taskthrottle="11"> -->
-<workflow realtime="T" scheduler="lsf" taskthrottle="60" cyclethrottle="1" cyclelifespan="00:24:00:00">
+<workflow realtime="F" scheduler="lsf" taskthrottle="11">
+<!-- <workflow realtime="T" scheduler="lsf" taskthrottle="60" cyclethrottle="1" cyclelifespan="00:24:00:00"> -->
 
   <cycledef group="at_start">00 &STARTHOUR; &STARTDAY; &STARTMONTH; &STARTYEAR; *</cycledef>
   <cycledef group="regional">&STARTYEAR;&STARTMONTH;&STARTDAY;&STARTHOUR;00 &ENDYEAR;&ENDMONTH;&ENDDAY;&ENDHOUR;00 12:00:00</cycledef>
