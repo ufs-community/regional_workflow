@@ -6,7 +6,7 @@ set -x
 ####################################
 # Specify Execution Areas
 ####################################
-export CHGRESEXEC=$EXECfv3/global_chgres
+export CHGRESEXEC=$EXECfv3/regional_chgres.x
 export CHGRESSH=$USHfv3/global_chgres.sh
 export GETGES=$HOMEfv3/util/ush/getges_linkges_hourlypgrb_new.sh
 
@@ -78,13 +78,18 @@ env
 #####################################
 # Generate the BCs
 #####################################
-hour=0
+if [ -e bcfile.input ]; then
+  rm -f bcfile.input
+fi
+
 # NHRS = length of free forecast
 # NHRSda = length of DA cycle forecast (always 1-h)
 if [ $tmmark = tm00 ] ; then
+  hour=3
   end_hour=$NHRS
   hour_inc=3
 else
+  hour=0
   end_hour=$NHRSda
   hour_inc=1
 fi
@@ -103,6 +108,7 @@ while (test "$hour" -le "$end_hour")
 # create input file for cfp in order to run multiple copies of exfv3cam_sar_chgres.sh simultaneously
 # since we are going to run simultaneously, we want different working directories for each hour
 #
+
   if [ $tmmark = tm00 ] ; then
     BC_DATA=${DATA}/wrk.chgres.$hour_name
     rm -rf $BC_DATA
@@ -132,7 +138,7 @@ if [ $tmmark = tm00 ] ; then
   cat filelist.ges* > $COMOUT/filelist.bndy.${tmmark}
   cp gfs_bndy.tile7.*.nc $INPdir/.
   cd $BNDYdir
-  hr=00
+  hr=03
   while [ $hr -le $NHRS ] ; do
     cat out.chgres.0${hr}
     cd wrk.chgres.0${hr}
@@ -147,7 +153,9 @@ fi
 
 date
 
-cat err
-cat $pgmout
+if [ -e err ]; then
+  cat err
+  cat $pgmout
+fi
 
 exit $err

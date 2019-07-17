@@ -1,8 +1,8 @@
 #
 # define the array of the name of build program
 #
- declare -a Build_prg=("Build_fv3gfs" "Build_gsi" \
-                       "Build_ncep_post" "Build_chgres" \
+ declare -a Build_prg=("Build_libs" "Build_forecast" "Build_gsi" \
+                       "Build_post" "Build_utils" "Build_chgres" "Build_chgres_cube" \
                        "Build_orog" "Build_nctools")
 
 #
@@ -152,7 +152,7 @@
 #
 # set default values for partial build
 #
-   parse_cfg 1 "config=fv3cam_build.cfg" ${Build_prg[@]}
+   parse_cfg 1 "config=regional_build.cfg" ${Build_prg[@]}
  else
 
 #
