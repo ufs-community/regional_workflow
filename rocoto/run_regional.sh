@@ -2,10 +2,9 @@
 
 set -x
 
-cd /gpfs/dell2/emc/modeling/noscrub/${USER}/save/regional_clean/rocoto
+cd /gpfs/dell2/emc/modeling/noscrub/${USER}/save/regional_workflow/rocoto
 
-EXPT=regional_workflow
-SUBEXPT=fv3sar
+EXPT=fv3sar
 GTYPE=regional
 DOMAIN=conus
 CYCLE_YMDH_BEG="2019071700"
@@ -15,8 +14,7 @@ SITE_FILE="sites/wcoss_dell_p3.ent"
 CPU_ACCOUNT="HUR-T2O"
 
 USER=${USER}
-NOSCRUB=/gpfs/dell2/emc/modeling/noscrub
-HOMEfv3=${NOSCRUB}/${USER}/${EXPT}
+HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/${EXPT}
 PTMP=/gpfs/dell1/ptmp
 STMP=/gpfs/dell1/stmp
 
@@ -24,14 +22,13 @@ FETCH_INPUT=NO
 COMgfs=/gpfs/dell1/nco/ops/com/gfs/prod
 COMgfs2=/gpfs/dell3/ptmp/emc.glopara/ROTDIRs/prfv3rt3/vrfyarch
 
-expxml=${SUBEXPT}_${CYCLE_YMDH_BEG}.xml
-expdb=${SUBEXPT}_${CYCLE_YMDH_BEG}.db
+expxml=${EXPT}_${CYCLE_YMDH_BEG}.xml
+expdb=${EXPT}_${CYCLE_YMDH_BEG}.db
 
 sed -e "s|@\[USER.*\]|${USER}|g" \
     -e "s|@\[CPU_ACCOUNT.*\]|${CPU_ACCOUNT}|g" \
     -e "s|@\[SITE_FILE.*\]|${SITE_FILE}|g" \
     -e "s|@\[EXPT.*\]|${EXPT}|g" \
-    -e "s|@\[SUBEXPT.*\]|${SUBEXPT}|g" \
     -e "s|@\[FETCH_INPUT.*\]|${FETCH_INPUT}|g" \
     -e "s|@\[GTYPE.*\]|${GTYPE}|g" \
     -e "s|@\[DOMAIN.*\]|${DOMAIN}|g" \

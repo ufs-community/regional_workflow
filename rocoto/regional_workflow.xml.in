@@ -23,9 +23,7 @@
   <!ENTITY CYCLE_INTERVAL "&CYCLE_INT_HH;:00:00">
 
   <!-- Variables to set up the experiment -->
-  <!--  <!ENTITY EXPT "regional_workflow"> -->
-  <!ENTITY EXPT "@[EXPT:-regional_workflow]">
-  <!ENTITY SUBEXPT "@[SUBEXPT:-&EXPT;]">
+  <!ENTITY EXPT "@[EXPT:-regional]">
   <!ENTITY DOMAIN "@[DOMAIN:-conus]">
   <!ENTITY FHRS "00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60">
 
@@ -37,16 +35,15 @@
 
   <!ENTITY COMgfs "@[COMgfs:-/gpfs/dell1/nco/ops/com/gfs/prod]">
   <!ENTITY COMgfs2 "@[COMgfs2:-/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/prfv3rt3/vrfyarch]">
-  <!ENTITY NOSCRUB "@[NOSCRUB:-/gpfs/dell2/emc/modeling/noscrub]/&USER;">
-  <!ENTITY SCRUBPTMP "@[PTMP:-/gpfs/dell1/ptmp]/&USER;">
-  <!ENTITY SCRUBSTMP "@[STMP:-/gpfs/dell1/stmp]/&USER;">
+  <!ENTITY PTMP "@[PTMP:-/gpfs/dell1/ptmp]/&USER;">
+  <!ENTITY STMP "@[STMP:-/gpfs/dell1/stmp]/&USER;">
 
-  <!ENTITY HOMEfv3 "&NOSCRUB;/&EXPT;">
+  <!ENTITY HOMEfv3 "@[HOMEfv3:-/gpfs/dell2/emc/modeling/noscrub/&USER/regional_workflow;]">
   <!ENTITY JOBS "&HOMEfv3;/jobs">
   <!ENTITY SCRIPTS "&HOMEfv3;/scripts">
-  <!ENTITY COMDIR "&SCRUBPTMP;/&SUBEXPT;/com">
-  <!ENTITY LOGDIR "&SCRUBPTMP;/&SUBEXPT;/log">
-  <!ENTITY DATAROOT "&SCRUBSTMP;/&SUBEXPT;/tmpnwprd">
+  <!ENTITY COMDIR "&PTMP;/&EXPT;/com">
+  <!ENTITY LOGDIR "&PTMP;/&EXPT;/log">
+  <!ENTITY DATAROOT "&STMP;/&EXPT;/tmpnwprd">
   <!ENTITY PRE "&HOMEfv3;/rocoto/rocoto_pre_job.ksh">
 
   <!-- Site that we are currently running on -->
