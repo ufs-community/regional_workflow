@@ -6,7 +6,11 @@
 #-----------------------------------------------------------------------
 #
 #FUNCS_DIR=${USHfv3:-"."}
-FUNCS_DIR=${FUNCS_DIR:-${USHfv3:-"."}}
+#FUNCS_DIR=${FUNCS_DIR:-${USHfv3:-"."}}
+FUNCS_DIR=${FUNCS_DIR:-${USHDIR:-"."}}
+#echo "USHDIR = $USHDIR"
+#echo "FUNCS_DIR = $FUNCS_DIR"
+#cd ../ush
 #
 #-----------------------------------------------------------------------
 #
@@ -75,3 +79,4 @@ FUNCS_DIR=${FUNCS_DIR:-${USHfv3:-"."}}
 #
 . ${FUNCS_DIR}/interpol_to_arbit_CRES.sh
 
+#cd -

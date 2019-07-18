@@ -21,16 +21,9 @@
 #
 #-----------------------------------------------------------------------
 #
-#. $USHDIR/source_funcs.sh
-echo "AAAAAAA"
-echo "pwd = $(pwd)"
-cd ../ush
-echo "BBBBBBB"
-echo "pwd = $(pwd)"
-. ./source_funcs.sh
-cd -
-echo "CCCCCCC"
-echo "pwd = $(pwd)"
+#cd ../ush
+#. ./source_funcs.sh
+#cd_vrfy -
 #
 #-----------------------------------------------------------------------
 #

@@ -12,6 +12,16 @@
 #
 #-----------------------------------------------------------------------
 #
+# Source function definition files.
+#
+#-----------------------------------------------------------------------
+#
+cd ../ush
+. ./source_funcs.sh
+cd_vrfy -
+#
+#-----------------------------------------------------------------------
+#
 # Source the setup script.  Note that this in turn sources the configu-
 # ration file/script (config.sh) in the current directory.  It also cre-
 # ates the run and work directories, the INPUT and RESTART subdirecto-
@@ -29,10 +39,9 @@
 #
 #-----------------------------------------------------------------------
 #
-#. $USHDIR/source_funcs.sh
-cd ../ush
-. ./source_funcs.sh
-cd -
+#cd ../ush
+#. ./source_funcs.sh
+#cd_vrfy -
 #
 #-----------------------------------------------------------------------
 #
