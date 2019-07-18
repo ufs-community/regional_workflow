@@ -4,8 +4,8 @@ set -x
 
 cd /gpfs/dell2/emc/modeling/noscrub/${USER}/save/regional_clean/rocoto
 
-EXPT=regional_clean
-SUBEXPT=fv3sar_testdummy
+EXPT=regional_workflow
+SUBEXPT=fv3sar
 GTYPE=regional
 DOMAIN=conus
 CYCLE_YMDH_BEG="2019071700"

@@ -2,9 +2,9 @@
 
 set -x
 
-cd /gpfs/dell2/emc/modeling/noscrub/${USER}/save/regional_clean/rocoto
+cd /gpfs/dell2/emc/modeling/noscrub/${USER}/save/regional_workflow/rocoto
 
-rocotorun -v 10 -w fv3sar_testdummy_2019071700.xml -d fv3sar_testdummy_2019071700.db
+rocotorun -v 10 -w fv3sar_2019071700.xml -d fv3sar_2019071700.db
 
 echo 'job done'
 
