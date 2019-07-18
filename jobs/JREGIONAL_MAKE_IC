@@ -11,14 +11,6 @@ export CHGRESSH=$USHfv3/regional_chgres.sh
 export GETGES=$HOMEfv3/util/ush/getges_linkges_hourlypgrb_new.sh
 
 ####################################
-# Load Modules if Needed
-####################################
-export MACHINE=${MACHINE:-wcoss_dell_p3} # platforms: wcoss_cray, wcoss_dell_p3, theia, jet
-module use ${HOMEfv3}/modulefiles/${MACHINE}
-module load regional
-module list
-
-####################################
 # Run setpdy and initialize PDY variables
 ####################################
 # PDY, CDATE, and tmmark are passed in through Rocoto xml
