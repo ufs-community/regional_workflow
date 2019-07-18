@@ -7,7 +7,7 @@ set -x
 # Specify Execution Areas
 ####################################
 export CHGRESEXEC=$EXECfv3/regional_chgres.x
-export CHGRESSH=$USHfv3/global_chgres.sh
+export CHGRESSH=$USHfv3/regional_chgres.sh
 export GETGES=$HOMEfv3/util/ush/getges_linkges_hourlypgrb_new.sh
 
 ####################################
@@ -86,7 +86,7 @@ ln -sf $FIXsar/${CASE}_oro_data.tile7.halo4.nc $FIXsar/${CASE}_oro_data.tile7.nc
 
 #####################################
 # Execute the script.
-${HOMEfv3}/scripts/exfv3cam_sar_chgres.sh
+${HOMEfv3}/scripts/exregional_make_ic_bc.sh
 export err=$?
 #####################################
 
@@ -113,7 +113,7 @@ if [ $tmmark = tm12 ] ; then
     fi
 
     export bchour=$hour_name
-    ${HOMEfv3}/scripts/exfv3cam_sar_chgres.sh
+    ${HOMEfv3}/scripts/exregional_make_ic_bc.sh
 
     mv $OUTDIR/gfs_bndy.tile7.${bchour}.nc $INPdir/.
 

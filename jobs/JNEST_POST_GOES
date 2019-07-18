@@ -1,7 +1,7 @@
 #!/bin/ksh
 set -x
 
-. $HOMEfv3/jobs/JFV3CAM_NEST_ENVIR
+. $HOMEfv3/jobs/JNEST_ENVIR
 
 ####################################
 # SENDCOM - Copy files to /com directory
@@ -52,7 +52,7 @@ env
 
 #####################################
 # Execute the script.
-${HOMEfv3}/scripts/exfv3cam_post_goes.sh
+${HOMEfv3}/scripts/exregional_post_goes.sh
 export err=$?
 #####################################
 

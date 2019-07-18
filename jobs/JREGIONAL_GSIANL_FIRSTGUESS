@@ -107,7 +107,7 @@ fi
 ##############################################
 # Execute the script.
 ##############################################
-${HOMEfv3}/scripts/exfv3cam_sar_gsianl_firstguess.sh
+${HOMEfv3}/scripts/exregional_gsianl_firstguess.sh
 
 cat $pgmout
 cat $pgmerr

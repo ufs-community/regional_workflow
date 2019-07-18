@@ -1,13 +1,13 @@
 #!/bin/ksh
 set -x
 
-. $HOMEfv3/jobs/JFV3CAM_NEST_ENVIR
+. $HOMEfv3/jobs/JNEST_ENVIR
 
 ####################################
 # Specify Execution Areas
 ####################################
 export CHGRESEXEC=$EXECfv3/regional_chgres.x
-export CHGRESSH=$USHfv3/global_chgres.sh
+export CHGRESSH=$USHfv3/regional_chgres.sh
 
 ####################################
 # Run setpdy and initialize PDY variables
@@ -61,7 +61,7 @@ env
 
 #####################################
 # Execute the script.
-${HOMEfv3}/scripts/exfv3cam_nest_chgres.sh
+${HOMEfv3}/scripts/exnest_make_ic.sh
 export err=$?
 #####################################
 

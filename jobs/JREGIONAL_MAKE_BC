@@ -7,7 +7,7 @@ set -x
 # Specify Execution Areas
 ####################################
 export CHGRESEXEC=$EXECfv3/regional_chgres.x
-export CHGRESSH=$USHfv3/global_chgres.sh
+export CHGRESSH=$USHfv3/regional_chgres.sh
 export GETGES=$HOMEfv3/util/ush/getges_linkges_hourlypgrb_new.sh
 
 ####################################
@@ -114,12 +114,12 @@ while (test "$hour" -le "$end_hour")
     BC_DATA=${DATA}/wrk.chgres.$hour_name
     rm -rf $BC_DATA
     mkdir -p $BC_DATA
-    echo "env REGIONAL=2 HALO=4 bchour=$hour_name DATA=$BC_DATA $HOMEfv3/scripts/exfv3cam_sar_chgres.sh >&out.chgres.$hour_name" >> bcfile.input
+    echo "env REGIONAL=2 HALO=4 bchour=$hour_name DATA=$BC_DATA $HOMEfv3/scripts/exregional_make_ic_bc.sh >&out.chgres.$hour_name" >> bcfile.input
   elif [ $tmmark != tm00 ] ; then
 # Run the BC creation sequentially
     export HALO=4
     export bchour=$hour_name
-    $HOMEfv3/scripts/exfv3cam_sar_chgres.sh
+    $HOMEfv3/scripts/exregional_make_ic_bc.sh
     mv $OUTDIR/gfs_bndy.tile7.${bchour}.nc $INPdir/.
     err=$?
     if [ $err -ne 0 ] ; then

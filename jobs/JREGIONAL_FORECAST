@@ -77,7 +77,7 @@ env
 
 #####################################
 # Execute the script.
-${HOMEfv3}/scripts/exfv3cam_sar_fcst.sh
+${HOMEfv3}/scripts/exregional_forecast.sh
 export err=$?
 #####################################
 
