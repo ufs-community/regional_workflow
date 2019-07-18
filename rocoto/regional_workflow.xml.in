@@ -38,7 +38,7 @@
   <!ENTITY PTMP "@[PTMP:-/gpfs/dell1/ptmp]/&USER;">
   <!ENTITY STMP "@[STMP:-/gpfs/dell1/stmp]/&USER;">
 
-  <!ENTITY HOMEfv3 "@[HOMEfv3:-/gpfs/dell2/emc/modeling/noscrub/&USER/regional_workflow;]">
+  <!ENTITY HOMEfv3 "@[HOMEfv3:-/gpfs/dell2/emc/modeling/noscrub/&USER;/regional_workflow;]">
   <!ENTITY JOBS "&HOMEfv3;/jobs">
   <!ENTITY SCRIPTS "&HOMEfv3;/scripts">
   <!ENTITY COMDIR "&PTMP;/&EXPT;/com">
