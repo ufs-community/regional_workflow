@@ -11,7 +11,8 @@ CYCLE_YMDH_BEG="2019071700"
 CYCLE_YMDH_END="2019071900"
 CYCLE_INT_HH="06"
 SITE_FILE="sites/wcoss_dell_p3.ent"
-CPU_ACCOUNT="HUR-T2O"
+#CPU_ACCOUNT="HUR-T2O"
+CPU_ACCOUNT="HREF-T2O"
 
 USER=${USER}
 HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/${EXPT}
@@ -37,7 +38,7 @@ sed -e "s|@\[USER.*\]|${USER}|g" \
     -e "s|@\[CYCLE_INT_HH.*\]|${CYCLE_INT_HH}|g" \
     -e "s|@\[COMgfs.*\]|${COMgfs}|g" \
     -e "s|@\[COMgfs2.*\]|${COMgfs2}|g" \
-    -e "s|@\[NOSCRUB.*\]|${NOSCRUB}|g" \
+    -e "s|@\[HOMEfv3.*\]|${HOMEfv3}|g" \
     -e "s|@\[PTMP.*\]|${PTMP}|g" \
     -e "s|@\[STMP.*\]|${STMP}|g" \
     regional_workflow.xml.in \
