@@ -1,0 +1,40 @@
+  <!-- Site specific entities for wcoss_dell_p3 -->
+  <!ENTITY SCHEDULER       "lsf">
+  <!ENTITY ACCOUNT         "&CPU_ACCOUNT;">
+  <!ENTITY QUEUE_PE        "dev"> <!-- queue for PE (parallel environment) jobs --> 
+  <!ENTITY PE_EXTRA        "">
+  <!ENTITY QUEUE_SERIAL    "dev"> <!-- queue for serial jobs -->
+  <!ENTITY SERIAL_EXTRA    "">
+  <!ENTITY QUEUE_SHARED    "dev_shared">
+  <!ENTITY SHARED_EXTRA    "">
+  <!ENTITY QUEUE_SERVICE   "dev_transfer">
+  <!ENTITY SERVICE_EXTRA   "<native>-R affinity[core\(1\)]</native>">
+  <!ENTITY CORES_EXTRA     "">
+  <!ENTITY NODES_EXTRA     "">
+  <!ENTITY PURE_OPENMP     "<nodes>1:ppn=1:tpp=24</nodes>">
+  <!ENTITY RESERVATION     "">
+  <!ENTITY MEMORY          "<memory>1G</memory>">
+  <!ENTITY THREADS         "24">
+  <!ENTITY REQUEST_THREADS "<envar><name>PURE_OPENMP_THREADS</name><value>&THREADS;</value></envar><envar><name>OMP_NUM_THREADS</name><value>&THREADS;</value></envar><envar><name>KMP_NUM_THREADS</name><value>&THREADS;</value></envar>">
+
+  <!ENTITY MAKE_GRID_OROG_RESOURCES "<nodes>1:ppn=4</nodes><envar><name>TOTAL_TASKS</name><value>4</value></envar><envar><name>OMP_THREADS</name><value>6</value></envar><native>-R affinity[core\(6\):distribute=balance]</native><walltime>00:30:00</walltime>">
+
+  <!ENTITY MAKE_SFC_CLIMO_RESOURCES "<nodes>1:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>1</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><native>-R affinity[core]</native><walltime>00:30:00</walltime>">
+
+  <!ENTITY GET_INPUT_RESOURCES "<cores>1</cores><walltime>03:00:00</walltime><native>-R affinity[core]</native>">
+
+  <!ENTITY MAKE_IC_RESOURCES "<nodes>1:ppn=1:tpp=24</nodes><envar><name>TOTAL_TASKS</name><value>24</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:30:00</walltime><native>-R affinity[core]</native>">
+
+  <!ENTITY MAKE_BC_RESOURCES "<nodes>20:ppn=1:tpp=24</nodes><envar><name>TOTAL_TASKS</name><value>480</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:30:00</walltime><native>-R affinity[core]</native>">
+
+  <!ENTITY FORECAST_EXTRA "<envar><name>OMP_THREADS</name><value>2</value></envar><walltime>02:40:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>">
+  <!ENTITY FORECAST_TM00_RESOURCES "<nodes>76:ppn=12:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>912</value></envar>&FORECAST_EXTRA;">
+
+  <!ENTITY POST_RESOURCES "<nodes>2:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>28</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
+
+  <!ENTITY POST_GOES_RESOURCES "<nodes>15:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>210</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
+
+  <!ENTITY ARCHIVE_RESOURCES "<cores>1</cores><memory>5G</memory><walltime>03:00:00</walltime><native>-R affinity[core]</native>">
+
+  <!ENTITY CLEANUP_RESOURCES "<cores>1</cores><walltime>00:10:00</walltime><native>-R affinity[core]</native>">
+
