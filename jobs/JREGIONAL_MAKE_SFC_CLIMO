@@ -2,7 +2,7 @@
 set -u -x
 
 . $HOMEfv3/jobs/JREGIONAL_ENVIR
-machine="THEIA"
+MACHINE="THEIA"
 preexisting_dir_method="delete"
 WORKDIR_GRID="abc"
 WORKDIR_SHVE="ghi"
@@ -104,19 +104,19 @@ status."
 
 #-----------------------------------------------------------------------
 #
-# Set the machine-dependent run command.
+# Set the MACHINE-dependent run command.
 #
 #-----------------------------------------------------------------------
 #
-case $machine in
+case $MACHINE in
 
 "WCOSS_C")
-# This could be wrong.  Just a guess since I don't have access to this machine.
+# This could be wrong.  Just a guess since I don't have access to this MACHINE.
   APRUN_SFC=${APRUN_SFC:-"aprun -j 1 -n 6 -N 6"}
   ;;
 
 "WCOSS")
-# This could be wrong.  Just a guess since I don't have access to this machine.
+# This could be wrong.  Just a guess since I don't have access to this MACHINE.
   APRUN_SFC=${APRUN_SFC:-"aprun -j 1 -n 6 -N 6"}
   ;;
 
@@ -129,8 +129,8 @@ module list
 
 *)
   print_err_msg_exit "\
-Run command has not been specified for this machine:
-  machine = \"$machine\"
+Run command has not been specified for this MACHINE:
+  MACHINE = \"$MACHINE\"
   APRUN_SFC = \"$APRUN_SFC\"
 "
 

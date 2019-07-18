@@ -66,19 +66,19 @@ mkdir -p $ANLdir
 ##############################################
 # Set path/file for gsi executable
 
-if [ $machine = THEIA ] ; then
+if [ $MACHINE = THEIA ] ; then
   export UTIL=/scratch4/NCEPDEV/meso/save/${USER}/run_it_regional/exec
   export gsiexec=/scratch4/NCEPDEV/meso/noscrub/Wanshu.Wu/build/bin/gsi.x
   export fixgsi=/scratch4/NCEPDEV/meso/save/Wanshu.Wu/Code/ProdGSI/fix
   export fixcrtm=/scratch4/NCEPDEV/da/save/Michael.Lueken/nwprod/lib/crtm/2.2.3/fix_update
 fi
-if [ $machine = WCOSS ] ; then
+if [ $MACHINE = WCOSS ] ; then
   export UTIL=$HOMEdir/util/ush
   export gsiexec=/meso/save/${USER}/fv3reg_aug2018/fv3gsi_reg/build/bin/gsi.x
   export fixgsi=/meso/save/${USER}/fv3reg_aug2018/fv3gsi_reg/ProdGSI/fix
   export fixcrtm=/da/save/Michael.Lueken/CRTM_REL-2.2.3/crtm_v2.2.3/fix_update
 fi
-if [ $machine = DELL ] ; then
+if [ $MACHINE = DELL ] ; then
   export UTIL=${HOMEfv3}/util/ush
   export gsiexec=${EXECfv3}/regional_gsi.x
   export fixgsi=${HOMEfv3}/sorc/gsi.fd/fix
@@ -87,14 +87,14 @@ fi
 
 # setup ensemble filelist03
 
-if [ $machine = THEIA ] ; then
+if [ $MACHINE = THEIA ] ; then
    export COMINgfs=/scratch4/NCEPDEV/rstprod/com/gfs/prod
    export COMINnam=/scratch4/NCEPDEV/rstprod/com/nam/prod
    export COMINrtma=/scratch4/NCEPDEV/rstprod/com/rtma2p5/prod
    # bias correction files from prev cycle
    export COMINbias=$COMOUTtm06
 fi
-if [ $machine = WCOSS_C -o $machine = WCOSS -o $machine = DELL ] ; then
+if [ $MACHINE = WCOSS_C -o $MACHINE = WCOSS -o $MACHINE = DELL ] ; then
    export COMINgfs=/gpfs/dell1/nco/ops/com/gfs/prod
    export COMINnam=/gpfs/${wcoss}2/nco/ops/com/nam/prod
    export COMINrap=/gpfs/hps/nco/ops/com/rap/prod
