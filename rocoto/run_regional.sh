@@ -2,20 +2,18 @@
 
 set -x
 
-cd /gpfs/dell2/emc/modeling/noscrub/${USER}/save/regional_workflow/rocoto
+cd /gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow/rocoto
 
-EXPT=fv3sar
+EXPT=fv3sartest
 GTYPE=regional
 DOMAIN=conus
 CYCLE_YMDH_BEG="2019071700"
-CYCLE_YMDH_END="2019071900"
+CYCLE_YMDH_END="2019071706"
 CYCLE_INT_HH="06"
 SITE_FILE="sites/wcoss_dell_p3.ent"
-#CPU_ACCOUNT="HUR-T2O"
 CPU_ACCOUNT="HREF-T2O"
 
-USER=${USER}
-HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/${EXPT}
+HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow
 PTMP=/gpfs/dell1/ptmp
 STMP=/gpfs/dell1/stmp
 
