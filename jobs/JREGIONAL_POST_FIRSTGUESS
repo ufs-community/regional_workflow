@@ -1,7 +1,7 @@
 #!/bin/ksh
  set -x
 
-. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
 
 ##############################################
 # SENDCOM - COpy files to /com directory
@@ -25,6 +25,7 @@ cd $DATA
 
 export pid=$$
 export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
 
 ##############################################
 # Specify Execution Areas
@@ -45,7 +46,7 @@ mkdir -p $NWGES
 ##############################################
 ${HOMEfv3}/scripts/exfv3cam_post_firstguess.sh
 
-cat err 
+cat $pgmerr
 cat $pgmout
 
 if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $INPUT_DATA ; fi

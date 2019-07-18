@@ -1,7 +1,7 @@
 #!/bin/ksh
 set -x
 
-. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
 
 # Determine which WCOSS platform we are on
 hostname > hname
@@ -41,6 +41,7 @@ cd $DATA
 
 export pid=$$
 export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
 
 ##############################################
 # Define COM directories
@@ -100,7 +101,7 @@ fi
 ${HOMEfv3}/scripts/exfv3cam_sar_gsianl.sh
 
 cat $pgmout
-cat stderr
+cat $pgmerr
 
 if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
 

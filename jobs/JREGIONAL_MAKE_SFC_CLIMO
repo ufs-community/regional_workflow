@@ -1,7 +1,7 @@
 #!/bin/bash
 set -u -x
 
-. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
 machine="THEIA"
 preexisting_dir_method="delete"
 WORKDIR_GRID="abc"
@@ -167,7 +167,7 @@ exit
 
 
 
-. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
 
 ####################################
 # Specify Execution Areas
@@ -199,6 +199,7 @@ mkdir -p $OUTDIR
 
 export pid=$$
 export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
 
 #####################################
 # Define COM directories
@@ -264,7 +265,7 @@ mv $OUTDIR/sfc*nc $INPdir/.
 if [ $tmmark = tm12 ] ; then
   export REGIONAL=2
 
-# NHRSguess comes from JFV3CAM_SAR_ENVIR
+# NHRSguess comes from JREGIONAL_ENVIR
   hour=3
   end_hour=$NHRSguess
   while (test "$hour" -le "$end_hour")
@@ -291,7 +292,7 @@ if [ $tmmark = tm12 ] ; then
   done
 fi
 
-cat err
+cat $pgmerr
 cat $pgmout
 
 exit $err

@@ -1,7 +1,10 @@
 #!/bin/bash
 set -x
 
-. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
+
+export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
 
 ####################################
 # Run setpdy and initialize PDY variables
@@ -22,7 +25,7 @@ ${HOMEfv3}/scripts/exfv3cam_cleanup.sh
 export err=$?
 #####################################
 
-cat err
+cat $pgmerr
 cat $pgmout
 
 exit $err
