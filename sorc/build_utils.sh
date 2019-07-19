@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eu
+set -eux
 
 export USE_PREINST_LIBS="true"
 
@@ -64,4 +64,4 @@ echo " .... Building sfc_climo_gen .... "
 
 cd $build_dir
 
-echo 'building regional_utils done'
+echo 'Building utils done'
