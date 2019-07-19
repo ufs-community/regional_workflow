@@ -2,39 +2,20 @@
 
 set -x
 
-cd /gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow/rocoto
+# Home directory of the regional_workflow package
+HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow
+
+cd ${HOMEfv3}/rocoto
+
+MACHINE=wcoss_dell_p3 
+source ./config.workflow.${MACHINE}
 
 # Experiment name
 EXPT=fv3sartest
-# Grid type
-GTYPE=regional
-# Model domain name
-DOMAIN=conus
 # First, last, and interval of the workflow cycles
 CYCLE_YMDH_BEG="2019071700"
 CYCLE_YMDH_END="2019071706"
 CYCLE_INT_HH="06"
-
-# The platform the workflow will be run: wcoss_dell_p3, wcoss_cray, theia, jet
-MACHINE=wcoss_dell_p3 
-# The corresponding site file to use for the workflow
-SITE_FILE="sites/${MACHINE}.ent"
-# The project to use for submitting the jobs/tasks
-CPU_ACCOUNT="HREF-T2O"
-
-# Home directory of the regional_workflow package
-HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow
-# Temporary directory root for the WORK (where the jobs/tasks will be run) directories
-STMP=/gpfs/dell1/stmp
-# Temporary directory root for the COM (where the products will be delivered) and LOG (where job log files will be) directories
-PTMP=/gpfs/dell1/ptmp
-
-# Run the get_input task or not: YES|NO
-GET_INPUT=NO
-# Directory of the GFS input files
-COMgfs=/gpfs/dell1/nco/ops/com/gfs/prod
-# An alternative location for COMgfs
-COMgfs2=/gpfs/dell3/ptmp/emc.glopara/ROTDIRs/prfv3rt3/vrfyarch
 
 # The workflow files of the experiment
 expxml=${EXPT}_${CYCLE_YMDH_BEG}.xml
