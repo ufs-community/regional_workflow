@@ -57,11 +57,11 @@ echo " .... Building fre-nctools .... "
 #------------------------------------
 # build sfc_climo_gen
 #------------------------------------
-$Build_nctools && {
+$Build_sfc_climo_gen && {
 echo " .... Building sfc_climo_gen .... "
 ./build_sfc_climo_gen.sh > $logs_dir/build_sfc_climo_gen.log 2>&1
 }
 
 cd $build_dir
 
-echo 'building hafs_utils done'
+echo 'building regional_utils done'
