@@ -21,7 +21,7 @@ CYCLE_INT_HH="06"
 expxml=${EXPT}_${CYCLE_YMDH_BEG}.xml
 expdb=${EXPT}_${CYCLE_YMDH_BEG}.db
 
-# Parsing the workflow definition file for the experiment from regional_workflow.xml.in
+# Generate the workflow definition file by parsing regional_workflow.xml.in
 sed -e "s|@\[EXPT.*\]|${EXPT}|g" \
     -e "s|@\[GTYPE.*\]|${GTYPE}|g" \
     -e "s|@\[DOMAIN.*\]|${DOMAIN}|g" \
@@ -40,7 +40,7 @@ sed -e "s|@\[EXPT.*\]|${EXPT}|g" \
     regional_workflow.xml.in \
     > ${expxml}
 
-# Run the workflow
+# Run the workflow for the experiment
 rocotorun -v 10 -w ${expxml} -d ${expdb}
 
 echo 'job done'
