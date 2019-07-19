@@ -1,4 +1,4 @@
-#! /bin/sh --login
+#!/bin/sh --login
 set -x -u -e
 date
 
