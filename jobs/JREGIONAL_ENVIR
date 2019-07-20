@@ -8,6 +8,7 @@ export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
 export mainroot=/gpfs/dell1
 export tmpdir=stmp
 export comdir=ptmp
+export gesdir=ptmp
 export rzdmuser=bblake
 
 export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
@@ -28,8 +29,8 @@ export FIXam=$FIXfv3/fix_am
 export FIXco2=$FIXam/fix_co2_proj
 
 export COMROOT=${mainroot}/${comdir}/${USER}/com
-export GESROOT=${mainroot}/${comdir}/${USER}/nwges
-export GESROOT_HOLD=${mainroot}/${comdir}/${USER}/nwges/${RUN}.hold
+export GESROOT=${mainroot}/${gesdir}/${USER}/nwges
+export GESROOT_HOLD=${mainroot}/${gesdir}/${USER}/nwges/${RUN}.hold
 mkdir -p $GESROOT_HOLD
 
 export NHRSguess=06	#-- Forecast length for 1st guess generation
