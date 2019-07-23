@@ -3,8 +3,6 @@
 
 . $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
 
-module load grib_util/1.0.6
-
 ##############################################
 # SENDCOM - COpy files to /com directory
 ##############################################
@@ -31,7 +29,7 @@ export pgmout="OUTPUT.${pid}"
 ##############################################
 # Specify Execution Areas
 ##############################################
-export POSTGPEXEC=${EXECfv3}/ncep_post
+export POSTGPEXEC=${EXECfv3}/regional_post.x
 export WGRIB2=${EXECfv3}/wgrib2new
 
 ##############################################

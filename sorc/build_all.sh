@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eu
+set -eux
 #------------------------------------
 # USER DEFINED STUFF:
 #
@@ -35,18 +35,34 @@ fi
 #------------------------------------
 # build libraries first
 #------------------------------------
-#$Build_libs && {
+$Build_libs && {
 echo " .... Library build not currently supported .... "
 #echo " .... Building libraries .... "
 #./build_libs.sh > $logs_dir/build_libs.log 2>&1
-#}
+}
 
 #------------------------------------
-# build fv3
+# build forecast
 #------------------------------------
-$Build_fv3gfs && {
-echo " .... Building fv3 .... "
-./build_fv3.sh > $logs_dir/build_fv3.log 2>&1
+$Build_forecast && {
+echo " .... Building forecast .... "
+./build_forecast.sh > $logs_dir/build_forecast.log 2>&1
+}
+
+#------------------------------------
+# build post
+#------------------------------------
+$Build_post && {
+echo " .... Building post .... "
+./build_post.sh > $logs_dir/build_post.log 2>&1
+}
+
+#------------------------------------
+# build utils
+#------------------------------------
+$Build_utils && {
+echo " .... Building utils .... "
+./build_utils.sh > $logs_dir/build_utils.log 2>&1
 }
 
 #------------------------------------
@@ -56,39 +72,6 @@ $Build_gsi && {
 echo " .... Building gsi .... "
 ./build_gsi.sh > $logs_dir/build_gsi.log 2>&1
 }
-
-#------------------------------------
-# build ncep_post
-#------------------------------------
-$Build_ncep_post && {
-echo " .... Building ncep_post .... "
-./build_ncep_post.sh > $logs_dir/build_ncep_post.log 2>&1
-}
-
-#------------------------------------
-# build chgres
-#------------------------------------
-$Build_chgres && {
-echo " .... Building chgres .... "
-./build_chgres.sh > $logs_dir/build_chgres.log 2>&1
-}
-
-#------------------------------------
-# build orog
-#------------------------------------
-$Build_orog && {
-echo " .... Building orog .... "
-./build_orog.sh > $logs_dir/build_orog.log 2>&1
-}
-
-#------------------------------------
-# build fre-nctools
-#------------------------------------
-$Build_nctools && {
-echo " .... Building fre-nctools .... "
-./build_fre-nctools.sh > $logs_dir/build_fre-nctools.log 2>&1
-}
-
 
 echo;echo " .... Build system finished .... "
 

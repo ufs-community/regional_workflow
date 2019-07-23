@@ -3,12 +3,10 @@ set -x
 
 . $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
 
-module load CFP/2.0.1
-
 ####################################
 # Specify Execution Areas
 ####################################
-export CHGRESEXEC=$EXECfv3/global_chgres
+export CHGRESEXEC=$EXECfv3/regional_chgres.x
 export CHGRESSH=$USHfv3/global_chgres.sh
 export GETGES=$HOMEfv3/util/ush/getges_linkges_hourlypgrb_new.sh
 

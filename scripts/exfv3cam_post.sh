@@ -44,7 +44,7 @@ cp ${PARMfv3}/postxconfig-NT-fv3sar.txt ./postxconfig-NT.txt
 cp ${PARMfv3}/params_grib2_tbl_new      ./params_grib2_tbl_new
 
 # Run the post processor
-export pgm=ncep_post
+export pgm=regional_post.x
 . prep_step
 
 startmsg
