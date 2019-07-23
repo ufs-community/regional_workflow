@@ -108,8 +108,8 @@ dy=`echo $CYCLEtm12 | cut -c7-8`
 hr=`echo $CYCLEtm12 | cut -c9-10`
 
 cat > temp << !
-${yr}${mn}${dy}.${cyc}Z.${CASE}.32bit.non-hydro
-$yr $mn $dy $cyc 0 0
+${yr}${mn}${dy}.${hr}Z.${CASE}.32bit.non-hydro
+$yr $mn $dy $hr 0 0
 !
 
 cat temp diag_table.tmp > diag_table
