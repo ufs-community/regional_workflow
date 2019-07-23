@@ -18,9 +18,16 @@ echo "creating standalone regional ICs"
 export ntiles=1
 export TILE_NUM=7
 
-# input data is FV3GFS (ictype is 'pfv3gfs')
-export ATMANL=$INIDIR/${CDUMP}.t${cyc}z.atmanl.nemsio
-export SFCANL=$INIDIR/${CDUMP}.t${cyc}z.sfcanl.nemsio
+if [ $tmmark = tm00 ] ; then
+  # input data is FV3GFS (ictype is 'pfv3gfs')
+  export ATMANL=$INIDIR/${CDUMP}.t${cyc}z.atmanl.nemsio
+  export SFCANL=$INIDIR/${CDUMP}.t${cyc}z.sfcanl.nemsio
+fi
+if [ $tmmark = tm12 ] ; then
+  # input data is FV3GFS (ictype is 'pfv3gfs')
+  export ATMANL=$INIDIRtm12/${CDUMP}.t${cycguess}z.atmanl.nemsio
+  export SFCANL=$INIDIRtm12/${CDUMP}.t${cycguess}z.sfcanl.nemsio
+fi
 
 export NSTANL="NULL"
 export SOILTYPE_INP=statsgo
