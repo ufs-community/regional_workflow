@@ -9,6 +9,8 @@ export mainroot=/gpfs/dell1
 export tmpdir=stmp
 export comdir=ptmp
 export gesdir=ptmp
+export CCPP=false
+export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
 export rzdmuser=bblake
 
 export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate

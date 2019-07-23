@@ -101,14 +101,21 @@ cd ..
 # Copy or set up files data_table, diag_table, field_table,
 #   input.nml, input_nest02.nml, model_configure, and nems.configure
 #-------------------------------------------------------------------
-
+CCPP=${CCPP:-"false"}
+CCPP_SUITE=${CCPP_SUITE:-"FV3_GFS_2017_gfdlmp_regional"}
 if [ $tmmark = tm00 ] ; then
 # Free forecast with DA (warm start)
   if [ $model = fv3sar_da ] ; then
     cp ${PARMfv3}/input_sar_da.nml input.nml 
 # Free forecast without DA (cold start)
   elif [ $model = fv3sar ] ; then 
-    cp ${PARMfv3}/input_sar_${dom}.nml input.nml
+    if [ $CCPP  = true ] || [ $CCPP = TRUE ] ; then
+      cp ${PARMfv3}/input_sar_${dom}_ccpp.nml input.nml.tmp
+      cat input.nml.tmp | sed s/CCPP_SUITE/\'$CCPP_SUITE\'/ >  input.nml
+      cp ${PARMfv3}/suite_${CCPP_SUITE}.xml suite_${CCPP_SUITE}.xml
+    else
+      cp ${PARMfv3}/input_sar_${dom}.nml input.nml
+    fi
   fi
   cp ${PARMfv3}/model_configure_sar.tmp_${dom} model_configure.tmp
 
@@ -149,6 +156,11 @@ fi
 cp ${PARMfv3}/d* .
 cp ${PARMfv3}/field_table .
 cp ${PARMfv3}/nems.configure .
+if [ $CCPP  = true ] || [ $CCPP = TRUE ] ; then
+   if [ -f "${PARMfv3}/field_table_ccpp" ] ; then
+    cp -f ${PARMfv3}/field_table_ccpp field_table
+   fi
+fi
 
 yr=`echo $CYCLEanl | cut -c1-4`
 mn=`echo $CYCLEanl | cut -c5-6`
