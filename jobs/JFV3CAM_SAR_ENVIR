@@ -9,6 +9,8 @@ export mainroot=/gpfs/dell1
 export tmpdir=stmp
 export comdir=ptmp
 export gesdir=ptmp
+export CCPP=false
+export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
 export rzdmuser=bblake
 
 export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
@@ -22,6 +24,7 @@ export HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/$USER/regional_workflow
 export PARMfv3=$HOMEfv3/parm
 export EXECfv3=$HOMEfv3/exec
 export USHfv3=$HOMEfv3/ush
+export LD_LIBRARY_PATH="${PARMfv3}/../sorc/fv3gfs.fd/ccpp/lib/${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 export FIXfv3=$HOMEfv3/fix
 export FIXsar=$FIXfv3/fix_sar/${dom}
