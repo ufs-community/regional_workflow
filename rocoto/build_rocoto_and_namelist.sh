@@ -1,6 +1,14 @@
 #! /bin/sh
 
 dom=${1}
+machine=${2}
+
+
+if [ $# -ne 2 ]
+then
+echo "need domain (conus, ak, pr, hi)  and machine (theia, dell, ...)"
+exit
+fi
 
 username=$USER
 
@@ -197,7 +205,15 @@ fi
 
 echo username is $username
 
-cat drive_fv3sar_template.xml \
+if [ ! -e drive_fv3sar_template_${machine}.xml ]
+then
+echo DO NOT HAVE NEEDED xml template file drive_fv3sar_template_${machine}.xml
+echo ERROR EXIT
+exit
+fi
+
+
+cat drive_fv3sar_template_${machine}.xml \
     | sed s:_USER_:${username}:g \
     | sed s:_DOMAIN_:${dom}:g \
     | sed s:_SH_:${sh}:g \

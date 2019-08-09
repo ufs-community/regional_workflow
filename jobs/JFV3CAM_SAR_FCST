@@ -2,6 +2,7 @@
 set -x
 
 . $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $HOMEfv3/jobs/JFV3CAM_GEN_PARA
 
 ####################################
 # Run setpdy and initialize PDY variables
