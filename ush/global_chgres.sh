@@ -260,10 +260,6 @@ gfs_ver=${gfs_ver:-v15.0.0}
 BASEDIR=${BASEDIR:-${NWROOT:-/nwprod2}}
 HOMEgfs=${HOMEgfs:-$BASEDIR/gfs.${gfs_ver}}
 EXECgfs=${EXECgfs:-$HOMEgfs/exec}
-FIXfv3=${FIXfv3:-/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow/fix}
-FIXsar=${FIXsar:-$FIXfv3/fix_sar}
-FIXnest=${FIXnest:-$FIXfv3/fix_nest}
-FIXam=${FIXam:-$FIXfv3/fix_am}
 
 DATA=${DATA:-$(pwd)}
 #  Filenames.

@@ -176,8 +176,8 @@ else
 fi
 
 cat > temp << !
-${yr}${mn}${dy}.${cyc}Z.${CASE}.32bit.non-hydro
-$yr $mn $dy $cyc 0 0
+${yr}${mn}${dy}.${hr}Z.${CASE}.32bit.non-hydro
+$yr $mn $dy $hr 0 0
 !
 
 cat temp diag_table.tmp > diag_table
