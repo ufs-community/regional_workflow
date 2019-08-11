@@ -1,9 +1,9 @@
 #
 # define the array of the name of build program
 #
- declare -a Build_prg=("Build_libs" "Build_forecast" "Build_gsi" \
+ declare -a Build_prg=("Build_libs" "Build_forecast" "Build_forecast_ccpp" "Build_gsi" \
                        "Build_post" "Build_utils" "Build_chgres" "Build_chgres_cube" \
-                       "Build_orog" "Build_sfc_climo_gen" "Build_nctools")
+                       "Build_orog" "Build_sfc_climo_gen" "Build_regional_grid" "Build_nctools")
 
 #
 # function parse_cfg: read config file and retrieve the values

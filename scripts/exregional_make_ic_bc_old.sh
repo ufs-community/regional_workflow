@@ -26,7 +26,7 @@ fi
 if [ $tmmark = tm12 ] ; then
   # input data is FV3GFS (ictype is 'pfv3gfs')
   export ATMANL=$INIDIRtm12/${CDUMP}.t${cycguess}z.atmanl.nemsio
-  export SFCANL=$INIDIRtm12/${CDUMP}.t${cycguess}z.atmanl.nemsio
+  export SFCANL=$INIDIRtm12/${CDUMP}.t${cycguess}z.sfcanl.nemsio
 fi
 
 export NSTANL="NULL"
