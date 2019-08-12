@@ -1,5 +1,5 @@
 #!/bin/ksh
-set -x
+set -xe
 
 . $HOMEfv3/jobs/JREGIONAL_ENVIR
 

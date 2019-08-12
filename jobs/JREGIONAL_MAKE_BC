@@ -1,5 +1,5 @@
 #!/bin/ksh -l
-set -x
+set -xe
 
 . $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
 . $USHfv3/run_commands_bc.sh

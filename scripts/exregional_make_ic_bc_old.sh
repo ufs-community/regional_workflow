@@ -11,7 +11,7 @@
 #			Created exfv3cam_sar_chgres.sh script
 #			from global_chgres_driver.sh
 ############################################################################
-set -x
+set -xe
 
 # gtype = regional
 echo "creating standalone regional ICs"
