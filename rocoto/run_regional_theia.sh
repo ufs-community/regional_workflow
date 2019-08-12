@@ -8,6 +8,9 @@ HOMEfv3=/scratch4/NCEPDEV/fv3-cam/noscrub/Matthew.Pyle/regional_workflow
 
 cd ${HOMEfv3}/rocoto
 
+source ./config.workflow.defaults
+
+# Machine and project account
 machine=theia
 CPU_ACCOUNT=fv3-cam
 GET_INPUT=NO
@@ -24,6 +27,12 @@ EXPT=fv3sartest
 CYCLE_YMDH_BEG="2019050200"
 CYCLE_YMDH_END="2019050200"
 CYCLE_INT_HH="06"
+
+GET_INPUT=NO
+COMgfs=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
+COMgfs2=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
+STMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
+PTMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
 
 #
 # The workflow files of the experiment

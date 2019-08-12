@@ -7,8 +7,9 @@ HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow
 
 cd ${HOMEfv3}/rocoto
 
+source ./config.workflow.defaults
+
 machine=wcoss_dell_p3 
-source ./config.workflow.${machine}
 
 # Experiment name
 EXPT=fv3sartest
