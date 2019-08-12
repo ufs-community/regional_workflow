@@ -10,6 +10,8 @@ then
 export NET=fv3cam
 export RUN=fv3sar
 export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
+export CCPP=false
+export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
 export mainroot=/gpfs/dell1
 export tmpdir=stmp
 export comdir=ptmp
@@ -53,6 +55,7 @@ export gtype=regional    # grid type = uniform, stretch, nest, or regional
 export PARMfv3=$HOMEfv3/parm
 export EXECfv3=$HOMEfv3/exec
 export USHfv3=$HOMEfv3/ush
+export LD_LIBRARY_PATH="${PARMfv3}/../sorc/fv3gfs.fd/ccpp/lib/${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 export FIXfv3=$HOMEfv3/fix
 export FIXsar=$FIXfv3/fix_sar/${dom}

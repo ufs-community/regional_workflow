@@ -116,9 +116,9 @@ while (test "$hour" -le "$end_hour")
     mkdir -p $BC_DATA
     echo "env REGIONAL=2 HALO=4 bchour=$hour_name DATA=$BC_DATA $HOMEfv3/scripts/exfv3cam_sar_chgres.sh >&out.chgres.$hour_name" >>  chgres_bc_f${hour_name}.sh
     chmod u+x chgres_bc_f${hour_name}.sh
-#tmp    echo "${APRUNO} chgres_bc_f${hour_name}.sh > out.chgres.$hour_name 2>&1 ${BACKGROUND}" >> bcfile.input
     echo APRUNO is $APRUNO
-    echo "${APRUNO} chgres_bc_f${hour_name}.sh > out.chgres.$hour_name 2>&1" >> bcfile.input
+    echo "${APRUNO} chgres_bc_f${hour_name}.sh > out.chgres.$hour_name 2>&1 ${BACKGROUND}" >> bcfile.input
+#wasplayingwith    echo "${APRUNO} chgres_bc_f${hour_name}.sh > out.chgres.$hour_name 2>&1" >> bcfile.input
   elif [ $tmmark != tm00 ] ; then
 # Run the BC creation sequentially
     export HALO=4
@@ -136,6 +136,23 @@ done
 
 # for tm00 we now run BC creation for all hours simultaneously
 if [ $tmmark = tm00 ] ; then
+
+
+if [ "$machine" = theia ] || [ "$machine" = jet ]; then
+  rm -f bcfile.input_new
+  nline=0
+  while [ "$nline" -lt "$nhour" ];
+  do
+    # Take the first $TOTAL_TASKS lines from bcfile.input
+    sed -n -e "1,${TOTAL_TASKS}p" bcfile.input >> bcfile.input_new
+    echo 'wait' >> bcfile.input_new
+    sed -i -e "1,${TOTAL_TASKS}d" bcfile.input
+    nline=`expr $nline + $TOTAL_TASKS`
+  done
+  cp bcfile.input_new bcfile.input
+  #rm -f bcfile.input_new
+fi
+
 #  mpirun cfp bcfile.input
    chmod u+x bcfile.input
    echo APRUNF is $APRUNF
