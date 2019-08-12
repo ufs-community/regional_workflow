@@ -14,7 +14,7 @@
 
 <!ENTITY USER "_USER_">
 <!ENTITY machine "DELL">
-<!ENTITY ACCOUNT "HREF-T2O">
+<!ENTITY ACCOUNT "_ACCT_">
 
 <!ENTITY HOMEfv3 "/gpfs/dell2/emc/modeling/noscrub/&USER;/regional_workflow">
 <!ENTITY domain "_DOMAIN_">

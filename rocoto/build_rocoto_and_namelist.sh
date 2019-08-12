@@ -12,6 +12,22 @@ fi
 
 username=$USER
 
+
+#############################
+
+### job submission account
+
+# theia
+account="fv3-cam"
+
+
+# WCOSS
+# account="HREF-T2O"
+
+#############################
+
+## NOTE:
+
 # bcnodes = 21 if want to run all simultaneously
 # bcnodes = 11 should get in queue faster and still run pretty quickly
 
@@ -218,6 +234,7 @@ cat drive_fv3sar_template_${machine}.xml \
     | sed s:_DOMAIN_:${dom}:g \
     | sed s:_SH_:${sh}:g \
     | sed s:_EH_:${eh}:g \
+    | sed s:_ACCT_:${account}:g \
     | sed s:_BCNODES_:${bcnodes}:g \
     | sed s:_FCSTNODES_:${fcstnodes}:g \
     | sed s:_POSTNODES_:${postnodes}:g \
