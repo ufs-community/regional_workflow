@@ -18,7 +18,7 @@ export rzdmuser=bblake
 
 export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
 export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
-export HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/$USER/regional_workflow
+export HOMEfv3=${HOMEfv3:-/gpfs/dell2/emc/modeling/noscrub/$USER/regional_workflow}
 
 elif [ ${machine} = "theia" ]
 then
@@ -36,7 +36,7 @@ export rzdmuser=mpyle
 
 export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate
 export NHOUR=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/nhour
-export HOMEfv3=/scratch4/NCEPDEV/fv3-cam/noscrub/$USER/regional_workflow
+export HOMEfv3=${HOMEfv3:-/scratch4/NCEPDEV/fv3-cam/noscrub/$USER/regional_workflow}
 
 else
 
