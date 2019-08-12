@@ -10,10 +10,8 @@ export RUN=fv3sar
 export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
 export CCPP=false
 export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
-export mainroot=/gpfs/dell1
-export tmpdir=stmp
-export comdir=ptmp
-export gesdir=ptmp
+export PTMP=${PTMP:-/gpfs/dell1/ptmp/${USER}}
+export STMP=${STMP:-/gpfs/dell1/stmp/${USER}}
 export rzdmuser=bblake
 
 export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
@@ -23,15 +21,13 @@ export HOMEfv3=${HOMEfv3:-/gpfs/dell2/emc/modeling/noscrub/$USER/regional_workfl
 elif [ ${machine} = "theia" ]
 then
 
-echo defining theia stuff
-
 export NET=fv3cam
 export RUN=fv3sar
 export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
-export mainroot=/scratch4/NCEPDEV
-export tmpdir=stmp3
-export comdir=stmp3
-export gesdir=stmp3
+export CCPP=false
+export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
+export PTMP=${PTMP:-/scratch4/NCEPDEV/stmp3/${USER}}
+export STMP=${STMP:-/scratch4/NCEPDEV/stmp3/${USER}}
 export rzdmuser=mpyle
 
 export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate
@@ -61,13 +57,13 @@ export FIXsar=$FIXfv3/fix_sar/${dom}
 export FIXam=$FIXfv3/fix_am
 export FIXco2=$FIXam/fix_co2_proj
 
-export COMROOT=${mainroot}/${comdir}/${USER}/com
-export GESROOT=${mainroot}/${gesdir}/${USER}/nwges
-export GESROOT_HOLD=${mainroot}/${gesdir}/${USER}/nwges/${RUN}.hold
+export COMROOT=${PTMP}/com
+export GESROOT=${PTMP}/nwges
+export GESROOT_HOLD=${PTMP}/nwges/${RUN}.hold
 mkdir -p $GESROOT_HOLD
 
 export NHRSguess=06	#-- Forecast length for 1st guess generation
 export NHRSda=01	#-- Forecast length for cycled DA
 export NHRS=60          #-- Forecast length for free fcst
 
-export jlogfile=${mainroot}/${tmpdir}/${USER}/jlogfile.${RUN}.jlog
+export jlogfile=${STMP}/jlogfile.${RUN}.jlog

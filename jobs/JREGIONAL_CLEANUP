@@ -16,8 +16,8 @@ export pgmerr=errfile
 #####################################
 # Working directories
 #####################################
-export PTMPDIR=${PTMPDIR:-${mainroot}/ptmp/${USER}}
-export STMPDIR=${STMPDIR:-${mainroot}/stmp/${USER}}
+export PTMP=${PTMP:-""}
+export STMP=${STMP:-""}
 
 #####################################
 # Execute the script.

@@ -17,7 +17,7 @@ export CYCLEanl=`$NDATE -${offset} $CDATE`
 #####################################
 # Working directories
 #####################################
-export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}}
+export DATA=${DATA:-${STMP}/tmpnwprd/${job}}
 if [ -d $DATA ]; then
   rm -rf $DATA
 fi
