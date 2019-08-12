@@ -1,7 +1,8 @@
-#!/bin/ksh
+#!/bin/ksh -l
 set -x
 
-. $HOMEfv3/jobs/JREGIONAL_ENVIR
+. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $USHfv3/run_commands_bc.sh
 
 ####################################
 # Specify Execution Areas
@@ -56,7 +57,7 @@ export INPdir=${NWGES}/anl.${dom}.${tmmark}
 mkdir -p ${INPdir}
 
 #####################################
-# WCOSS environment settings
+# wcoss environment settings
 #####################################
 if [ $tmmark = tm00 ] ; then
   export CDUMP=gfs
@@ -109,12 +110,16 @@ while (test "$hour" -le "$end_hour")
 # create input file for cfp in order to run multiple copies of exfv3cam_sar_chgres.sh simultaneously
 # since we are going to run simultaneously, we want different working directories for each hour
 #
-
   if [ $tmmark = tm00 ] ; then
+    echo "#! /bin/sh " > chgres_bc_f${hour_name}.sh
     BC_DATA=${DATA}/wrk.chgres.$hour_name
     rm -rf $BC_DATA
     mkdir -p $BC_DATA
     echo "env REGIONAL=2 HALO=4 bchour=$hour_name DATA=$BC_DATA $HOMEfv3/scripts/exregional_make_ic_bc.sh >&out.chgres.$hour_name" >> bcfile.input
+    chmod u+x chgres_bc_f${hour_name}.sh
+    echo APRUNO is $APRUNO
+    echo "${APRUNO} chgres_bc_f${hour_name}.sh > out.chgres.$hour_name 2>&1 ${BACKGROUND}" >> bcfile.input
+#wasplayingwith    echo "${APRUNO} chgres_bc_f${hour_name}.sh > out.chgres.$hour_name 2>&1" >> bcfile.input
   elif [ $tmmark != tm00 ] ; then
 # Run the BC creation sequentially
     export HALO=4
@@ -132,8 +137,30 @@ done
 
 # for tm00 we now run BC creation for all hours simultaneously
 if [ $tmmark = tm00 ] ; then
-  mpirun cfp bcfile.input
-  rm -f bcfile.input
+
+
+if [ "$machine" = theia ] || [ "$machine" = jet ]; then
+  rm -f bcfile.input_new
+  nline=0
+  while [ "$nline" -lt "$nhour" ];
+  do
+    # Take the first $TOTAL_TASKS lines from bcfile.input
+    sed -n -e "1,${TOTAL_TASKS}p" bcfile.input >> bcfile.input_new
+    echo 'wait' >> bcfile.input_new
+    sed -i -e "1,${TOTAL_TASKS}d" bcfile.input
+    nline=`expr $nline + $TOTAL_TASKS`
+  done
+  cp bcfile.input_new bcfile.input
+  #rm -f bcfile.input_new
+fi
+
+#  mpirun cfp bcfile.input
+   chmod u+x bcfile.input
+   echo APRUNF is $APRUNF
+   ls -l bcfile.input
+  ${APRUNF} bcfile.input
+  wait
+#tmp  rm -f bcfile.input
 
   cd $OUTDIR
   cat filelist.ges* > $COMOUT/filelist.bndy.${tmmark}

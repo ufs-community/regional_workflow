@@ -3,7 +3,7 @@ set -x
 
 . $HOMEfv3/jobs/JREGIONAL_ENVIR
 
-# Determine which WCOSS platform we are on
+# Determine which wcoss platform we are on
 hostname > hname
 hl=`cut -c 1-1 hname`
 
@@ -61,17 +61,17 @@ mkdir -p $ANLdir
 ##############################################
 # Set path/file for gsi executable
 
-if [ $MACHINE = THEIA ] ; then
+if [ $machine = theia ] ; then
   export UTIL=/scratch4/NCEPDEV/meso/save/${USER}/run_it_regional/exec
   export gsiexec=/scratch4/NCEPDEV/meso/noscrub/Wanshu.Wu/build/bin/gsi.x
   export fixgsi=/scratch4/NCEPDEV/meso/save/Wanshu.Wu/Code/ProdGSI/fix
   export fixcrtm=/scratch4/NCEPDEV/da/save/Michael.Lueken/nwprod/lib/crtm/2.2.3/fix_update
-elif [ $MACHINE = WCOSS ] ; then
+elif [ $machine = wcoss ] ; then
   export UTIL=$HOMEdir/util/ush
   export gsiexec=/meso/save/${USER}/fv3reg_aug2018/fv3gsi_reg/build/bin/gsi.x
   export fixgsi=/meso/save/${USER}/fv3reg_aug2018/fv3gsi_reg/ProdGSI/fix
   export fixcrtm=/da/save/Michael.Lueken/CRTM_REL-2.2.3/crtm_v2.2.3/fix_update
-elif [ $MACHINE = DELL ] ; then
+elif [ $machine = wcoss_dell_p3 ] ; then
   export UTIL=${HOMEfv3}/util/ush
   export gsiexec=${EXECfv3}/regional_gsi.x
   export fixgsi=${HOMEfv3}/sorc/gsi.fd/fix
@@ -80,14 +80,14 @@ fi
 
 # setup ensemble filelist03
 
-if [ $MACHINE = THEIA ] ; then
+if [ $machine = theia ] ; then
    export COMINgfs=/scratch4/NCEPDEV/rstprod/com/gfs/prod
    export COMINnam=/scratch4/NCEPDEV/rstprod/com/nam/prod
    export COMINrtma=/scratch4/NCEPDEV/rstprod/com/rtma2p5/prod
    # bias correction files from prev cycle
    export COMINbias=$COMOUT
 fi
-if [ $MACHINE = WCOSS_C -o $MACHINE = WCOSS -o $MACHINE = DELL ] ; then
+if [ $machine = wcoss_cray -o $machine = wcoss -o $machine = wcoss_dell_p3 ] ; then
    export COMINgfs=/gpfs/dell1/nco/ops/com/gfs/prod
    export COMINnam=/gpfs/${wcoss}2/nco/ops/com/nam/prod
    export COMINrap=/gpfs/hps/nco/ops/com/rap/prod

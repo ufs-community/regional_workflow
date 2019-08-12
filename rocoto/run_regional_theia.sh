@@ -3,20 +3,28 @@
 set -x
 
 # Home directory of the regional_workflow package
-HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow
+HOMEfv3=/scratch3/NCEPDEV/hwrf/save/${USER}/regional_merge/
 
 cd ${HOMEfv3}/rocoto
 
-machine=wcoss_dell_p3 
+machine=theia
+CPU_ACCOUNT=hurricane
+GET_INPUT=NO
+COMgfs=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
+COMgfs2=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
+STMP=/scratch3/NCEPDEV/hwrf/scrub/${USER}
+PTMP=/scratch3/NCEPDEV/hwrf/scrub/${USER}
+
 source ./config.workflow.${machine}
 
 # Experiment name
 EXPT=fv3sartest
 # First, last, and interval of the workflow cycles
-CYCLE_YMDH_BEG="2019071700"
-CYCLE_YMDH_END="2019071706"
+CYCLE_YMDH_BEG="2019050200"
+CYCLE_YMDH_END="2019050200"
 CYCLE_INT_HH="06"
 
+#
 # The workflow files of the experiment
 expxml=${EXPT}_${CYCLE_YMDH_BEG}.xml
 expdb=${EXPT}_${CYCLE_YMDH_BEG}.db

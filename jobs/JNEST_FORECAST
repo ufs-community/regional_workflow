@@ -35,7 +35,7 @@ export GUESSdir=$NWGES/guess.${tmmark}
 mkdir -p $GUESSdir
 
 #####################################
-# WCOSS environment settings
+# wcoss environment settings
 #####################################
 export OMP_NUM_THREADS=2
 export KMP_STACKSIZE=1024m

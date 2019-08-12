@@ -1,8 +1,32 @@
 #! /bin/sh
 
 dom=${1}
+machine=${2}
+
+
+if [ $# -ne 2 ]
+then
+echo "need domain (conus, ak, pr, hi)  and machine (theia, dell, ...)"
+exit
+fi
 
 username=$USER
+
+
+#############################
+
+### job submission account
+
+# theia
+account="fv3-cam"
+
+
+# WCOSS
+# account="HREF-T2O"
+
+#############################
+
+## NOTE:
 
 # bcnodes = 21 if want to run all simultaneously
 # bcnodes = 11 should get in queue faster and still run pretty quickly
@@ -197,11 +221,20 @@ fi
 
 echo username is $username
 
-cat drive_fv3sar_template.xml \
+if [ ! -e drive_fv3sar_template_${machine}.xml ]
+then
+echo DO NOT HAVE NEEDED xml template file drive_fv3sar_template_${machine}.xml
+echo ERROR EXIT
+exit
+fi
+
+
+cat drive_fv3sar_template_${machine}.xml \
     | sed s:_USER_:${username}:g \
     | sed s:_DOMAIN_:${dom}:g \
     | sed s:_SH_:${sh}:g \
     | sed s:_EH_:${eh}:g \
+    | sed s:_ACCT_:${account}:g \
     | sed s:_BCNODES_:${bcnodes}:g \
     | sed s:_FCSTNODES_:${fcstnodes}:g \
     | sed s:_POSTNODES_:${postnodes}:g \

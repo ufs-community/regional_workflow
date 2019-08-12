@@ -2,7 +2,7 @@
 set -u -x
 
 . $HOMEfv3/jobs/JREGIONAL_ENVIR
-MACHINE="THEIA"
+machine="theia"
 preexisting_dir_method="delete"
 WORKDIR_GRID="abc"
 WORKDIR_SHVE="ghi"
@@ -104,23 +104,23 @@ status."
 
 #-----------------------------------------------------------------------
 #
-# Set the MACHINE-dependent run command.
+# Set the machine-dependent run command.
 #
 #-----------------------------------------------------------------------
 #
-case $MACHINE in
+case $machine in
 
-"WCOSS_C")
-# This could be wrong.  Just a guess since I don't have access to this MACHINE.
+"wcoss_cray")
+# This could be wrong.  Just a guess since I don't have access to this machine.
   APRUN_SFC=${APRUN_SFC:-"aprun -j 1 -n 6 -N 6"}
   ;;
 
-"WCOSS")
-# This could be wrong.  Just a guess since I don't have access to this MACHINE.
+"wcoss")
+# This could be wrong.  Just a guess since I don't have access to this machine.
   APRUN_SFC=${APRUN_SFC:-"aprun -j 1 -n 6 -N 6"}
   ;;
 
-"THEIA")
+"theia")
 # Need to load intel/15.1.133.  This and all other module loads should go into a module file.
 module load intel/15.1.133
 module list
@@ -129,8 +129,8 @@ module list
 
 *)
   print_err_msg_exit "\
-Run command has not been specified for this MACHINE:
-  MACHINE = \"$MACHINE\"
+Run command has not been specified for this machine:
+  machine = \"$machine\"
   APRUN_SFC = \"$APRUN_SFC\"
 "
 

@@ -103,6 +103,7 @@ cd ..
 #-------------------------------------------------------------------
 CCPP=${CCPP:-"false"}
 CCPP_SUITE=${CCPP_SUITE:-"FV3_GFS_2017_gfdlmp_regional"}
+
 if [ $tmmark = tm00 ] ; then
 # Free forecast with DA (warm start)
   if [ $model = fv3sar_da ] ; then
@@ -156,6 +157,7 @@ fi
 cp ${PARMfv3}/d* .
 cp ${PARMfv3}/field_table .
 cp ${PARMfv3}/nems.configure .
+
 if [ $CCPP  = true ] || [ $CCPP = TRUE ] ; then
    if [ -f "${PARMfv3}/field_table_ccpp" ] ; then
     cp -f ${PARMfv3}/field_table_ccpp field_table
@@ -194,7 +196,7 @@ export pgm=regional_forecast.x
 . prep_step
 
 startmsg
-mpirun -l -n ${ntasks} $EXECfv3/regional_forecast.x >$pgmout 2>err
+${APRUNC} $EXECfv3/regional_forecast.x >$pgmout 2>err
 export err=$?;err_chk
 
 # Copy files needed for next analysis

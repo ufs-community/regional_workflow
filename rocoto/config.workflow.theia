@@ -12,9 +12,9 @@ CYCLE_YMDH_END=${CYCLE_YMDH_END:-2019071706}
 CYCLE_INT_HH=${CYCLE_INT_HH:-06}
 
 # The platform the workflow will be run: wcoss_dell_p3, wcoss_cray, theia, jet
-MACHINE=${MACHINE:-theia} 
+machine=${machine:-theia} 
 # The corresponding site file to use for the workflow
-SITE_FILE="sites/${MACHINE}.ent"
+SITE_FILE="sites/${machine}.ent"
 # The project to use for submitting the jobs/tasks
 CPU_ACCOUNT=${CPU_ACCOUNT:-HREF-T2O}
 

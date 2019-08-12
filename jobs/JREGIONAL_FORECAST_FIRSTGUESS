@@ -43,7 +43,7 @@ export ANLdir=$NWGES/anl.tm06
 mkdir -p $ANLdir
 
 #####################################
-# WCOSS environment settings
+# wcoss environment settings
 #####################################
 export KMP_AFFINITY=scatter
 export OMP_NUM_THREADS=2

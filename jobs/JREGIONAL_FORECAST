@@ -1,7 +1,8 @@
 #!/bin/ksh
 set -x
 
-. $HOMEfv3/jobs/JREGIONAL_ENVIR
+. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $USHfv3/run_commands_forecast.sh
 
 ####################################
 # Run setpdy and initialize PDY variables
@@ -66,7 +67,7 @@ export ANLdir=$NWGES/anl.${dom}.${tmmark_next}
 mkdir -p $ANLdir
 
 #####################################
-# WCOSS environment settings
+# wcoss environment settings
 #####################################
 export KMP_AFFINITY=scatter
 export OMP_NUM_THREADS=2

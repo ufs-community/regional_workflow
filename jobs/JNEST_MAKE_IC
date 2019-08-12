@@ -44,7 +44,7 @@ export INPdir=$NWGES/guess.$tmmark
 mkdir -p $INPdir
 
 #####################################
-# WCOSS environment settings
+# wcoss environment settings
 #####################################
 export CDUMP=gfs
 export LEVS=65

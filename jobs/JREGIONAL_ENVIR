@@ -1,20 +1,50 @@
 set -x
 
-export envir=para
 export RUN_ENVIR=dev
+
+if [ ${machine} = "wcoss_dell_p3" ]
+then
+
 export NET=fv3cam
 export RUN=fv3sar
 export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
+export CCPP=false
+export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
 export mainroot=/gpfs/dell1
 export tmpdir=stmp
 export comdir=ptmp
 export gesdir=ptmp
-export CCPP=false
-export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
 export rzdmuser=bblake
 
 export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
 export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
+export HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/$USER/regional_workflow
+
+elif [ ${machine} = "theia" ]
+then
+
+echo defining theia stuff
+
+export NET=fv3cam
+export RUN=fv3sar
+export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
+export mainroot=/scratch4/NCEPDEV
+export tmpdir=stmp3
+export comdir=stmp3
+export gesdir=stmp3
+export rzdmuser=mpyle
+
+export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate
+export NHOUR=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/nhour
+export HOMEfv3=/scratch4/NCEPDEV/fv3-cam/noscrub/$USER/regional_workflow
+
+else
+
+echo UNDEFINED ENVIRONMENT
+exit 77
+
+fi
+
 
 export CRES=768          #-- FV3 equivalent to 13-km global resolution
 export CASE=C${CRES}

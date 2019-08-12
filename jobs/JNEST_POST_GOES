@@ -44,7 +44,7 @@ export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 mkdir -p $NWGES
 
 #####################################
-# WCOSS environment settings
+# wcoss environment settings
 #####################################
 export OMP_NUM_THREADS=1
 

@@ -60,7 +60,7 @@ fi
 mkdir -p $INPdir
 
 #####################################
-# WCOSS environment settings
+# wcoss environment settings
 #####################################
 export CDUMP=gfs
 export CDAS=gfs
