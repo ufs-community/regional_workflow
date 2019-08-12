@@ -3,19 +3,16 @@
 set -x
 
 # Home directory of the regional_workflow package
-HOMEfv3=/scratch3/NCEPDEV/hwrf/save/${USER}/regional_merge/
+HOMEfv3=/scratch3/NCEPDEV/hwrf/save/${USER}/regional_merge
 
 cd ${HOMEfv3}/rocoto
 
-machine=theia
-CPU_ACCOUNT=hurricane
-GET_INPUT=NO
-COMgfs=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
-COMgfs2=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
-STMP=/scratch3/NCEPDEV/hwrf/scrub/${USER}
-PTMP=/scratch3/NCEPDEV/hwrf/scrub/${USER}
+source ./config.workflow.defaults
 
-source ./config.workflow.${machine}
+# Machine and project account
+machine=theia
+SITE_FILE="sites/${machine}.ent"
+CPU_ACCOUNT=hurricane
 
 # Experiment name
 EXPT=fv3sartest
@@ -23,6 +20,12 @@ EXPT=fv3sartest
 CYCLE_YMDH_BEG="2019050200"
 CYCLE_YMDH_END="2019050200"
 CYCLE_INT_HH="06"
+
+GET_INPUT=NO
+COMgfs=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
+COMgfs2=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
+STMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
+PTMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
 
 #
 # The workflow files of the experiment

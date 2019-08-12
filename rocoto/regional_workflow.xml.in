@@ -35,11 +35,11 @@
   <!ENTITY HOMEfv3 "@[HOMEfv3:-/gpfs/dell2/emc/modeling/noscrub/&USER;/regional_workflow;]">
   <!ENTITY JOBS "&HOMEfv3;/jobs">
   <!ENTITY SCRIPTS "&HOMEfv3;/scripts">
-  <!ENTITY PTMP "@[PTMP:-/gpfs/dell1/ptmp/&USER;]">
-  <!ENTITY STMP "@[STMP:-/gpfs/dell1/stmp/&USER;]">
-  <!ENTITY COMDIR "&PTMP;/&EXPT;/com">
-  <!ENTITY LOGDIR "&PTMP;/&EXPT;/log">
-  <!ENTITY DATAROOT "&STMP;/&EXPT;/tmpnwprd">
+  <!ENTITY PTMP "@[PTMP:-/gpfs/dell1/ptmp/&USER;/&EXPT;]">
+  <!ENTITY STMP "@[STMP:-/gpfs/dell1/stmp/&USER;/&EXPT;]">
+  <!ENTITY COMDIR "&PTMP;/com">
+  <!ENTITY LOGDIR "&PTMP;/log">
+  <!ENTITY DATAROOT "&STMP;/tmpnwprd">
 
   <!ENTITY COMgfs "@[COMgfs:-/gpfs/dell1/nco/ops/com/gfs/prod]">
   <!ENTITY COMgfs2 "@[COMgfs2:-/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/prfv3rt3/vrfyarch]">

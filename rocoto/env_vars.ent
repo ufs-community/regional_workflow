@@ -8,6 +8,15 @@
    <name>USER</name><value>&USER;</value>
  </envar>
  <envar>
+   <name>COMgfs</name><value>&COMgfs;</value>
+ </envar>
+ <envar>
+   <name>PTMP</name><value>&PTMP;</value>
+ </envar>
+ <envar>
+   <name>STMP</name><value>&STMP;</value>
+ </envar>
+ <envar>
    <name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value>
  </envar>
  <envar>

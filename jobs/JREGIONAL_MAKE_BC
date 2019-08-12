@@ -1,7 +1,7 @@
 #!/bin/ksh -l
 set -xe
 
-. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
 . $USHfv3/run_commands_bc.sh
 
 ####################################
@@ -111,11 +111,12 @@ while (test "$hour" -le "$end_hour")
 # since we are going to run simultaneously, we want different working directories for each hour
 #
   if [ $tmmark = tm00 ] ; then
-    echo "#! /bin/sh " > chgres_bc_f${hour_name}.sh
     BC_DATA=${DATA}/wrk.chgres.$hour_name
     rm -rf $BC_DATA
     mkdir -p $BC_DATA
-    echo "env REGIONAL=2 HALO=4 bchour=$hour_name DATA=$BC_DATA $HOMEfv3/scripts/exregional_make_ic_bc.sh >&out.chgres.$hour_name" >> bcfile.input
+    rm -f chgres_bc_f${hour_name}.sh
+    echo "#! /bin/sh " > chgres_bc_f${hour_name}.sh
+    echo "env REGIONAL=2 HALO=4 bchour=$hour_name DATA=$BC_DATA $HOMEfv3/scripts/exregional_make_ic_bc.sh" >> chgres_bc_f${hour_name}.sh
     chmod u+x chgres_bc_f${hour_name}.sh
     echo APRUNO is $APRUNO
     echo "${APRUNO} chgres_bc_f${hour_name}.sh > out.chgres.$hour_name 2>&1 ${BACKGROUND}" >> bcfile.input
@@ -133,11 +134,14 @@ while (test "$hour" -le "$end_hour")
     fi
   fi
   hour=`expr $hour + $hour_inc`
+  nhour=`expr $nhour + 1`
 done
 
 # for tm00 we now run BC creation for all hours simultaneously
 if [ $tmmark = tm00 ] ; then
 
+export APRUNC="time"
+export OMP_NUM_THREADS_CH=${OMP_NUM_THREADS:-24}
 
 if [ "$machine" = theia ] || [ "$machine" = jet ]; then
   rm -f bcfile.input_new
@@ -154,11 +158,11 @@ if [ "$machine" = theia ] || [ "$machine" = jet ]; then
   #rm -f bcfile.input_new
 fi
 
-#  mpirun cfp bcfile.input
-   chmod u+x bcfile.input
-   echo APRUNF is $APRUNF
-   ls -l bcfile.input
-  ${APRUNF} bcfile.input
+# mpirun cfp bcfile.input
+  chmod u+x bcfile.input
+  echo APRUNF is $APRUNF
+  ls -l bcfile.input
+  ${APRUNF} ./bcfile.input
   wait
 #tmp  rm -f bcfile.input
 
