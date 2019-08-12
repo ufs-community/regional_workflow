@@ -26,7 +26,7 @@ export cycguess=`echo $CYCLEguess | cut -c 9-10`
 #####################################
 # Working directories
 #####################################
-export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}}
 mkdir -p $DATA
 cd $DATA
 
@@ -49,13 +49,13 @@ export INIDIRtm12=${COMgfs}/gfs.$PDYtm12/$cycguess
 
 export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 mkdir -p $COMOUT
-export NWGES=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 mkdir -p $NWGES
 
 if [ $tmmark = tm12 ] ; then	# SAR-DA
-  export INPdir=$COMOUT/gfsanl.$tmmark
+  export INPdir=$NWGES/gfsanl.$tmmark
 elif [ $tmmark = tm00 ] ; then	# SAR without DA
-  export INPdir=$COMOUT/anl.${dom}.$tmmark
+  export INPdir=$NWGES/anl.${dom}.$tmmark
 fi
 mkdir -p $INPdir
 

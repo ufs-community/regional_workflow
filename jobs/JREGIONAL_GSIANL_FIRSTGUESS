@@ -56,9 +56,9 @@ export COMOUTtm06=${COMROOT}/${NET}/${envir}/${RUN}.${PDYtm06}/${cyctm06}
 export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDYrun}/${CYCrun}
 mkdir -p $NWGES
 
-export GUESSdir=$COMOUT/guess.${tmmark}
+export GUESSdir=$NWGES/guess.${tmmark}
 mkdir -p $GUESSdir
-export ANLdir=$COMOUT/anl.${tmmark}
+export ANLdir=$NWGES/anl.${tmmark}
 mkdir -p $ANLdir
 
 ##############################################

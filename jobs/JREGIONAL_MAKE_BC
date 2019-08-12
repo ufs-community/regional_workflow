@@ -26,7 +26,7 @@ export hhcyc=`echo $CDATE | cut -c 9-10`
 #####################################
 # Obtain unique process id (pid) and make temp directory
 #####################################
-export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}}
 mkdir -p $DATA
 cd $DATA
 export BNDYdir=$DATA
@@ -49,10 +49,10 @@ export INIDIR=${COMgfs}/gfs.$PDY/$cyc
 
 export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 mkdir -p $COMOUT
-export NWGES=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 mkdir -p $NWGES
 
-export INPdir=${COMOUT}/anl.${dom}.${tmmark}
+export INPdir=${NWGES}/anl.${dom}.${tmmark}
 mkdir -p ${INPdir}
 
 #####################################

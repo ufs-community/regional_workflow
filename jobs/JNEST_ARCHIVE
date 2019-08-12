@@ -13,7 +13,7 @@ set -x
 ##################################
 # Working directories
 ##################################
-export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}}
 mkdir -p $DATA
 cd $DATA
 

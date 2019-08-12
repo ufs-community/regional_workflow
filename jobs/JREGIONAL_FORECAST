@@ -16,7 +16,7 @@ export CYCLEanl=`$NDATE -${offset} $CDATE`
 #####################################
 # Working directories
 #####################################
-export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}}
 if [ -d $DATA ]; then
   rm -rf $DATA
 fi
@@ -62,7 +62,7 @@ export CYCfcst=`echo $CYCLEfcst | cut -c 9-10`
 
 export GUESSdir=$COMOUT/guess.${tmmark_next}
 mkdir -p $GUESSdir
-export ANLdir=$COMOUT/anl.${dom}.${tmmark_next}
+export ANLdir=$NWGES/anl.${dom}.${tmmark_next}
 mkdir -p $ANLdir
 
 #####################################

@@ -39,7 +39,7 @@ mkdir -p $NWGES
 
 export GUESSdir=$COMOUT/guess.tm06
 mkdir -p $GUESSdir
-export ANLdir=$COMOUT/anl.tm06
+export ANLdir=$NWGES/anl.tm06
 mkdir -p $ANLdir
 
 #####################################

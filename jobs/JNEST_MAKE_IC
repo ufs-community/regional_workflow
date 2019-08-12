@@ -19,7 +19,7 @@ export CHGRESSH=$USHfv3/regional_chgres.sh
 #####################################
 # Working directories
 #####################################
-export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd_nest/${job}_${cyc}}
+export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd_nest/${job}}
 mkdir -p $DATA
 cd $DATA
 
@@ -37,10 +37,10 @@ export INIDIR=${COMgfs}/gfs.$PDY/$cyc
 
 export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 mkdir -p $COMOUT
-export NWGES=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 mkdir -p $NWGES
 
-export INPdir=$COMOUT/guess.$tmmark
+export INPdir=$NWGES/guess.$tmmark
 mkdir -p $INPdir
 
 #####################################
