@@ -1,7 +1,7 @@
 #!/bin/ksh -l
 set -x
 
-. $HOMEfv3/jobs/JFV3CAM_SAR_ENVIR
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
 . $USHfv3/run_commands_bc.sh
 
 ####################################
