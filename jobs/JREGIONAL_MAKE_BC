@@ -142,7 +142,7 @@ if [ $tmmark = tm00 ] ; then
 if [ "$machine" = theia ] || [ "$machine" = jet ]; then
   rm -f bcfile.input_new
   nline=0
-  while [ "$nline" -lt "$nhour" ];
+  while [ "$nline" -lt "$hour" ];
   do
     # Take the first $TOTAL_TASKS lines from bcfile.input
     sed -n -e "1,${TOTAL_TASKS}p" bcfile.input >> bcfile.input_new
@@ -154,10 +154,9 @@ if [ "$machine" = theia ] || [ "$machine" = jet ]; then
   #rm -f bcfile.input_new
 fi
 
-#  mpirun cfp bcfile.input
-   chmod u+x bcfile.input
-   echo APRUNF is $APRUNF
-   ls -l bcfile.input
+  chmod u+x bcfile.input
+  echo APRUNF is $APRUNF
+  ls -l bcfile.input
   ${APRUNF} bcfile.input
   wait
 #tmp  rm -f bcfile.input
