@@ -52,7 +52,7 @@ export pgm=regional_post.x
 . prep_step
 
 startmsg
-mpirun ${POSTGPEXEC} < itag > $pgmout 2> err
+${APRUNC_POST} ${POSTGPEXEC} < itag > $pgmout 2> err
 export err=$?;err_chk
 
 # Run wgrib2

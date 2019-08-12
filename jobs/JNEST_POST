@@ -2,6 +2,7 @@
 set -x
 
 . $HOMEfv3/jobs/JNEST_ENVIR
+. $USHfv3/run_commands_forecast.sh
 
 ####################################
 # SENDCOM - Copy files to /com directory

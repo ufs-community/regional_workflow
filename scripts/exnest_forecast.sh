@@ -85,10 +85,6 @@ cd ..
 # Copy or set up files data_table, diag_table, field_table,
 #   input.nml, input_nest02.nml, model_configure, and nems.configure
 #-------------------------------------------------------------------
-nodes=108			    
-ncnode=24			    
-let nctsk=ncnode/OMP_NUM_THREADS    # 12 tasks per node with 2 threads 
-let ntasks=nodes*nctsk
 
 cp ${PARMfv3}/data_table .
 cp ${PARMfv3}/diag_table.tmp .
@@ -109,10 +105,10 @@ $yr $mn $dy $cyc 0 0
 
 cat temp diag_table.tmp > diag_table
 
-cat model_configure.tmp | sed s/NTASKS/$ntasks/ | sed s/YR/$yr/ | \
+cat model_configure.tmp | sed s/NTASKS/$TOTAL_TASKS/ | sed s/YR/$yr/ | \
     sed s/MN/$mn/ | sed s/DY/$dy/ | sed s/H_R/$cyc/ | \
     sed s/NHRS/$NHRS/ | sed s/NTHRD/$OMP_NUM_THREADS/ | \
-    sed s/NCNODE/$ncnode/  >  model_configure
+    sed s/NCNODE/$NCNODE/  >  model_configure
 
 #----------------------------------------- 
 # Run the forecast
@@ -121,7 +117,7 @@ export pgm=regional_forecast.x
 . prep_step
 
 startmsg
-mpirun -l -n ${ntasks} $EXECfv3/regional_forecast.x >$pgmout 2>err
+${APRUNC} $EXECfv3/regional_forecast.x >$pgmout 2>err
 export err=$?;err_chk
 
 exit

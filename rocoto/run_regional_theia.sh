@@ -3,17 +3,18 @@
 set -x
 
 # Home directory of the regional_workflow package
-HOMEfv3=/scratch3/NCEPDEV/hwrf/save/${USER}/regional_merge/
+
+HOMEfv3=/scratch4/NCEPDEV/fv3-cam/noscrub/Matthew.Pyle/regional_workflow
 
 cd ${HOMEfv3}/rocoto
 
 machine=theia
-CPU_ACCOUNT=hurricane
+CPU_ACCOUNT=fv3-cam
 GET_INPUT=NO
 COMgfs=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
 COMgfs2=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
-STMP=/scratch3/NCEPDEV/hwrf/scrub/${USER}
-PTMP=/scratch3/NCEPDEV/hwrf/scrub/${USER}
+STMP=/scratch4/NCEPDEV/stmp3/Matthew.Pyle
+PTMP=/scratch4/NCEPDEV/stmp3/Matthew.Pyle
 
 source ./config.workflow.${machine}
 

@@ -67,10 +67,8 @@ done
 export pgm=regional_post.x
 . prep_step
 
-#export APRUN="mpirun -l -n 240"
 startmsg
-mpirun ${POSTGPEXEC} < itag > $pgmout 2>err
-#${APRUN} ${POSTGPEXEC} < itag > $pgmout 2>err
+${APRUNC_POSTGOES} ${POSTGPEXEC} < itag > $pgmout 2>err
 export err=$?; err_chk
 
 # RUN wgrib2
