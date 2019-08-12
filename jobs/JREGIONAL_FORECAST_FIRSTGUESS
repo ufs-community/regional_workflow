@@ -18,7 +18,7 @@ export CYCtm06=`echo $CYCLEtm06 | cut -c 9-10`
 #####################################
 # Working directories
 #####################################
-export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd/${job}_${cyc}}
+export DATA=${DATA:-${STMP}/tmpnwprd/${job}_${cyc}}
 if [ -d $DATA ]; then
   rm -rf $DATA
 fi

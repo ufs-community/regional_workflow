@@ -13,7 +13,7 @@ set -x
 #####################################
 # Working directories
 #####################################
-export DATA=${DATA:-${mainroot}/${tmpdir}/${USER}/tmpnwprd_nest/${job}}
+export DATA=${DATA:-${STMP}/tmpnwprd_nest/${job}}
 if [ -d $DATA ]; then
   rm -rf $DATA
 fi

@@ -9,7 +9,7 @@
 set -x
 
 # Remove temporary working directories
-cd ${STMPDIR}
+cd ${STMP}
 if [ $RUN = fv3sar ]; then
   cd tmpnwprd
 elif [ $RUN = fv3nest ]; then
@@ -21,7 +21,7 @@ rm -rf forecast*
 rm -rf post*
 
 # Delete images and other files from stmp directory
-#cd ${STMPDIR}/${cyc}
+#cd ${STMP}/${cyc}
 #rm -f *gif
 #rm -f *html
 #rm -f holddate*

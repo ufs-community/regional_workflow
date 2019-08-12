@@ -1,14 +1,12 @@
 set -x
 
-export RUN_ENVIR=emc
+export RUN_ENVIR=dev
 export envir=para
 export NET=fv3cam
 export RUN=fv3nest
 export model=fv3nest
-export mainroot=/gpfs/dell1
-export tmpdir=stmp
-export comdir=ptmp
-export gesdir=ptmp
+export PTMP=${PTMP:-/gpfs/dell1/ptmp/${USER}}
+export STMP=${STMP:-/gpfs/dell1/stmp/${USER}}
 export rzdmuser=bblake
 
 export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
@@ -28,9 +26,9 @@ export FIXnest=$FIXfv3/fix_nest
 export FIXam=$FIXfv3/fix_am
 export FIXco2=$FIXam/fix_co2_proj
 
-export COMROOT=${mainroot}/${comdir}/${USER}/com
-export GESROOT=${mainroot}/${gesdir}/${USER}/nwges
+export COMROOT=${PTMP}/com
+export GESROOT=${PTMP}/nwges
 
 export NHRS=60          #-- Forecast length for free fcst
 
-export jlogfile=${mainroot}/${tmpdir}/${USER}/jlogfile.${RUN}.jlog
+export jlogfile=${STMP}/jlogfile.${RUN}.jlog
