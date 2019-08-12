@@ -122,36 +122,38 @@ if [ $tmmark = tm00 ] ; then
 
 if [ $dom = "conus" ]
 then
-  nodes=76 
+  APRUNC=${APRUNC}
+  TOTAL_TASKS=${TOTAL_TASKS}
 elif [ $dom = "ak" ]
 then
-  nodes=68
+  APRUNC=${APRUNC_AK}
+  TOTAL_TASKS=${TOTAL_TASKS_AK}
 elif [ $dom = "pr" ]
 then
-  nodes=10
+  APRUNC=${APRUNC_PR}
+  TOTAL_TASKS=${TOTAL_TASKS_PR}
 elif [ $dom = "hi" ]
 then
-  nodes=7
+  APRUNC=${APRUNC_HI}
+  TOTAL_TASKS=${TOTAL_TASKS_HI}
 elif [ $dom = "guam" ]
 then
-  nodes=7
+  APRUNC=${APRUNC_GUAM}
+  TOTAL_TASKS=${TOTAL_TASKS_GUAM}
 fi
 
-ncnode=24
-let nctsk=ncnode/OMP_NUM_THREADS    # 12 tasks per node with 2 threads 
-let ntasks=nodes*nctsk
-echo nctsk = $nctsk and ntasks = $ntasks
+# ncnode=24
+# let nctsk=ncnode/OMP_NUM_THREADS    # 12 tasks per node with 2 threads 
+# let ntasks=nodes*nctsk
+# echo nctsk = $nctsk and ntasks = $ntasks
 
 # Submit post manager here
 
 else
   cp ${PARMfv3}/input_sar_da_hourly.nml input.nml
   cp ${PARMfv3}/model_configure_sar_da_hourly.tmp model_configure.tmp
-  nodes=54
-  ncnode=24
-  let nctsk=ncnode/OMP_NUM_THREADS
-  let ntasks=nodes*nctsk
-  echo nctsk = $nctsk and ntasks = $ntasks
+  APRUNC=${APRUNC_FG}
+  TOTAL_TASKS=${TOTAL_TASKS_FG}
 fi
 
 cp ${PARMfv3}/d* .
@@ -184,10 +186,10 @@ $yr $mn $dy $hr 0 0
 
 cat temp diag_table.tmp > diag_table
 
-cat model_configure.tmp | sed s/NTASKS/$ntasks/ | sed s/YR/$yr/ | \
+cat model_configure.tmp | sed s/NTASKS/$TOTAL_TASKS/ | sed s/YR/$yr/ | \
     sed s/MN/$mn/ | sed s/DY/$dy/ | sed s/H_R/$hr/ | \
     sed s/NHRS/$NFCSTHRS/ | sed s/NTHRD/$OMP_NUM_THREADS/ | \
-    sed s/NCNODE/$ncnode/ | sed s/NRESTART/$NRST/  >  model_configure
+    sed s/NCNODE/$NCNODE/ | sed s/NRESTART/$NRST/  >  model_configure
 
 #----------------------------------------- 
 # Run the forecast

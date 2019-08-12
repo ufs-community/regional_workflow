@@ -96,11 +96,7 @@ cp ${PARMfv3}/d* .
 cp ${PARMfv3}/field_table .
 cp ${PARMfv3}/nems.configure .
 
-nodes=54
-ncnode=24
-let nctsk=ncnode/OMP_NUM_THREADS
-let ntasks=nodes*nctsk
-echo nctsk = $nctsk and ntasks = $ntasks
+TOTAL_TASKS=${TOTAL_TASKS_FG}
 
 yr=`echo $CYCLEtm12 | cut -c1-4`
 mn=`echo $CYCLEtm12 | cut -c5-6`
@@ -114,10 +110,10 @@ $yr $mn $dy $hr 0 0
 
 cat temp diag_table.tmp > diag_table
 
-cat model_configure.tmp | sed s/NTASKS/$ntasks/ | sed s/YR/$yr/ | \
+cat model_configure.tmp | sed s/NTASKS/$TOTAL_TASKS/ | sed s/YR/$yr/ | \
     sed s/MN/$mn/ | sed s/DY/$dy/ | sed s/H_R/$hr/ | \
     sed s/NHRS/$NHRSguess/ | sed s/NTHRD/$OMP_NUM_THREADS/ | \
-    sed s/NCNODE/$ncnode/  >  model_configure
+    sed s/NCNODE/$NCNODE/  >  model_configure
 
 #----------------------------------------- 
 # Run the forecast
@@ -126,7 +122,7 @@ export pgm=regional_forecast.x
 . prep_step
 
 startmsg
-mpirun -l -n ${ntasks} $EXECfv3/regional_forecast.x >$pgmout 2>err
+${APRUNC_FG} $EXECfv3/regional_forecast.x >$pgmout 2>err
 export err=$?;err_chk
 
 # Copy files needed for tm06 analysis
