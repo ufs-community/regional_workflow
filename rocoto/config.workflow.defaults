@@ -25,6 +25,10 @@ STMP=${STMP:-/gpfs/dell1/stmp/${USER}/${EXPT}}
 # Temporary directory root for the COM (where the products will be delivered) and LOG (where job log files will be) directories
 PTMP=${PTMP:-/gpfs/dell1/ptmp/${USER}/${EXPT}}
 
+# Run the make_grid_orog task or not: YES|NO
+MAKE_GRID_OROG=${MAKE_GRID_OROG:-NO}
+# Run the make_sfc_climo task or not: YES|NO
+MAKE_SFC_CLIMO=${MAKE_SFC_CLIMO:-NO}
 # Run the get_input task or not: YES|NO
 GET_INPUT=${GET_INPT:-NO}
 # Directory of the GFS input files

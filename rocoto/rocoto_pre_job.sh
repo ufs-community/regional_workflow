@@ -17,7 +17,7 @@ fi
 
 module use ${HOMEfv3}/modulefiles/${machine}
 jobpre=$(echo ${job} | cut -c1-17)
-if [[ "$jobpre" -eq "regional_forecast" ]]; then
+if [ "${jobpre}" = "regional_forecast" ]; then
   module load fv3
 else
   module load regional

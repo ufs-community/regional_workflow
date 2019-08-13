@@ -12,6 +12,8 @@
   <!ENTITY MAX_TRIES "3"> <!-- everything else -->
 
   <!-- Enabling or disabling parts of the workflow: -->
+  <!ENTITY MAKE_GRID_OROG "@[MAKE_GRID_OROG:-YES]">
+  <!ENTITY MAKE_SFC_CLIMO "@[MAKE_SFC_CLIMO:-YES]">
   <!ENTITY GET_INPUT "@[GET_INPUT:-YES]">
   <!ENTITY GTYPE "@[GTYPE:-regional]">
   <!ENTITY RUN_DA "NO"> <!-- place holder currently -->
@@ -83,7 +85,8 @@
 
     <dependency>
       <and>
-       <!-- Cycling dependency: do not start until the prior cycle's
+        <streq><left>&MAKE_GRID_OROG;</left><right>YES</right></streq>
+        <!-- Cycling dependency: do not start until the prior cycle's
         make_grid_orog job is done, unless there is no prior cycle. -->
         <or>
           <taskdep task="make_grid_orog" cycle_offset="-&CYCLE_INTERVAL;"/>
@@ -115,9 +118,13 @@
     <envar><name>job</name><value>regional_make_sfc_climo_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
 
     <dependency>
-      <or>
-        <taskdep task="make_grid_orog"/>
-      </or>
+      <and>
+        <streq><left>&MAKE_SFC_CLIMO;</left><right>YES</right></streq>
+        <or>
+          <taskdep task="make_grid_orog"/>
+          <strneq><left>&MAKE_GRID_OROG;</left><right>YES</right></strneq>
+        </or>
+      </and>
     </dependency>
   </task> 
 
@@ -138,8 +145,11 @@
 
     <dependency>
       <and>
-        <taskdep task="make_grid_orog"/>
         <streq><left>&GET_INPUT;</left><right>YES</right></streq>
+        <or>
+          <strneq><left>&MAKE_GRID_OROG;</left><right>YES</right></strneq>
+          <taskdep task="make_grid_orog"/>
+        </or>
       </and>
     </dependency>
   </task> 
@@ -162,7 +172,14 @@
 
     <dependency>
       <and>
-        <taskdep task="make_sfc_climo"/> 
+        <or>
+          <strneq><left>&MAKE_GRID_OROG;</left><right>YES</right></strneq>
+          <taskdep task="make_grid_orog"/>
+        </or>
+        <or>
+          <strneq><left>&MAKE_SFC_CLIMO;</left><right>YES</right></strneq>
+          <taskdep task="make_sfc_climo"/> 
+        </or>
         <or>
           <strneq><left>&GET_INPUT;</left><right>YES</right></strneq>
           <taskdep task="get_input"/>
@@ -203,7 +220,14 @@
       <and>
         <!-- Only need to make_bc for regional configuration -->
         <streq><left>&GTYPE;</left><right>regional</right></streq>
-        <taskdep task="make_sfc_climo"/> 
+        <or>
+          <strneq><left>&MAKE_GRID_OROG;</left><right>YES</right></strneq>
+          <taskdep task="make_grid_orog"/>
+        </or>
+        <or>
+          <strneq><left>&MAKE_SFC_CLIMO;</left><right>YES</right></strneq>
+          <taskdep task="make_sfc_climo"/> 
+        </or>
         <or>
           <strneq><left>&GET_INPUT;</left><right>YES</right></strneq>
           <taskdep task="get_input"/>

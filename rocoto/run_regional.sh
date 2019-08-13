@@ -35,6 +35,8 @@ sed -e "s|@\[EXPT.*\]|${EXPT}|g" \
     -e "s|@\[HOMEfv3.*\]|${HOMEfv3}|g" \
     -e "s|@\[PTMP.*\]|${PTMP}|g" \
     -e "s|@\[STMP.*\]|${STMP}|g" \
+    -e "s|@\[MAKE_GRID_OROG.*\]|${MAKE_GRID_OROG}|g" \
+    -e "s|@\[MAKE_SFC_CLIMO.*\]|${MAKE_SFC_CLIMO}|g" \
     -e "s|@\[GET_INPUT.*\]|${GET_INPUT}|g" \
     -e "s|@\[COMgfs.*\]|${COMgfs}|g" \
     -e "s|@\[COMgfs2.*\]|${COMgfs2}|g" \
