@@ -12,14 +12,8 @@ source ./config.workflow.defaults
 
 # Machine and project account
 machine=theia
+SITE_FILE="sites/${machine}.ent"
 CPU_ACCOUNT=fv3-cam
-GET_INPUT=NO
-COMgfs=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
-COMgfs2=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
-STMP=/scratch4/NCEPDEV/stmp3/Matthew.Pyle
-PTMP=/scratch4/NCEPDEV/stmp3/Matthew.Pyle
-
-source ./config.workflow.${machine}
 
 # Experiment name
 EXPT=fv3sartest
@@ -33,6 +27,8 @@ COMgfs=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
 COMgfs2=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
 STMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
 PTMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
+
+
 
 #
 # The workflow files of the experiment

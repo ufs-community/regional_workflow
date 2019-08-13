@@ -184,7 +184,12 @@ fi
 
 date
 
+if [ -e $pgmerr ]  ; then
 cat $pgmerr
+fi
+
+if [ -e $pgmout ]  ; then
 cat $pgmout
+fi
 
 exit $err
