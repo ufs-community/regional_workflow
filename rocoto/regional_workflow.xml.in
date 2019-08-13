@@ -226,7 +226,7 @@
 <!--  ********************** forecast_tm00  *****************************  -->
 
   <task name="forecast_tm00" maxtries="&MAX_TRIES_BIG_JOBS;">
-    <command>&PRE; &JOBS;/JREGIONAL_FORECAST_TM00</command>
+    <command>&PRE; &JOBS;/JREGIONAL_FORECAST</command>
     <jobname>regional_forecast_tm00_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></jobname>
     <join><cyclestr>&LOGDIR;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H.log</cyclestr></join>
     <account>&ACCOUNT;</account>
