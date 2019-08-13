@@ -16,7 +16,12 @@ elif [ "$machine" = "jet" ] ; then
 fi
 
 module use ${HOMEfv3}/modulefiles/${machine}
-module load regional
+jobpre=$(echo ${job} | cut -c1-17)
+if [[ "$jobpre" -eq "regional_forecast" ]]; then
+  module load fv3
+else
+  module load regional
+fi
 module list
 
 exec "$@"
