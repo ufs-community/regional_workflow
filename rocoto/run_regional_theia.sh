@@ -8,6 +8,8 @@ HOMEfv3=/scratch4/NCEPDEV/fv3-cam/noscrub/Matthew.Pyle/regional_workflow
 
 cd ${HOMEfv3}/rocoto
 
+export DOMAIN=hi
+
 source ./config.workflow.defaults
 
 # Machine and project account
@@ -39,6 +41,7 @@ expdb=${EXPT}_${CYCLE_YMDH_BEG}.db
 sed -e "s|@\[EXPT.*\]|${EXPT}|g" \
     -e "s|@\[GTYPE.*\]|${GTYPE}|g" \
     -e "s|@\[DOMAIN.*\]|${DOMAIN}|g" \
+    -e "s|_DOMAIN_|${DOMAIN}|g" \
     -e "s|@\[CYCLE_YMDH_BEG.*\]|${CYCLE_YMDH_BEG}|g" \
     -e "s|@\[CYCLE_YMDH_END.*\]|${CYCLE_YMDH_END}|g" \
     -e "s|@\[CYCLE_INT_HH.*\]|${CYCLE_INT_HH}|g" \
