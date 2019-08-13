@@ -80,14 +80,6 @@ env
 #####################################
 # Generate the ICs and BC hour 0
 #####################################
-#
-# set the links to use the 4 halo grid and orog files
-# these are necessary for creating the boundary data
-#
-#tst ln -sf $FIXsar/${CASE}_grid.tile7.halo4.nc $FIXsar/${CASE}_grid.tile7.nc
-#tst ln -sf $FIXsar/${CASE}_oro_data.tile7.halo4.nc $FIXsar/${CASE}_oro_data.tile7.nc
-
-#####################################
 # Execute the script.
 ${HOMEfv3}/scripts/exregional_make_ic_bc.sh
 export err=$?
