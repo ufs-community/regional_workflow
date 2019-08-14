@@ -43,15 +43,6 @@ cp ${PARMfv3}/nam_micro_lookup.dat      ./eta_micro_lookup.dat
 cp ${PARMfv3}/postxconfig-NT-fv3sar.txt ./postxconfig-NT.txt
 cp ${PARMfv3}/params_grib2_tbl_new      ./params_grib2_tbl_new
 
-
-# Get special post resources if AK/HI/PR/GUAM
-
-if [ $dom = ak ] ; then
-  APRUNC_POST=$APRUNC_POST_AK
-elif [ $dom = hi -o $dom = pr -o $dom = guam ] ; then
-  APRUNC_POST=$APRUNC_POST_SMALL
-fi
-
 # Run the post processor
 export pgm=regional_post.x
 . prep_step

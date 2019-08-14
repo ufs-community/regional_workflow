@@ -96,8 +96,6 @@ cp ${PARMfv3}/d* .
 cp ${PARMfv3}/field_table .
 cp ${PARMfv3}/nems.configure .
 
-TOTAL_TASKS=${TOTAL_TASKS_FG}
-
 yr=`echo $CYCLEtm12 | cut -c1-4`
 mn=`echo $CYCLEtm12 | cut -c5-6`
 dy=`echo $CYCLEtm12 | cut -c7-8`
@@ -122,7 +120,7 @@ export pgm=regional_forecast.x
 . prep_step
 
 startmsg
-${APRUNC_FG} $EXECfv3/regional_forecast.x >$pgmout 2>err
+${APRUNC} $EXECfv3/regional_forecast.x >$pgmout 2>err
 export err=$?;err_chk
 
 # Copy files needed for tm06 analysis

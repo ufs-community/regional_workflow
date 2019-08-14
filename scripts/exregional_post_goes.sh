@@ -64,15 +64,6 @@ for what in  ${CRTM_FIX}/*Emis* ; do
    ln -s $what .
 done
 
-# Get special post resources if AK/HI/PR/GUAM
-
-if [ $dom = ak ] ; then
-  APRUNC_POSTGOES=$APRUNC_POSTGOES_AK
-elif [ $dom = hi -o $dom = pr -o $dom = guam ] ; then
-  APRUNC_POSTGOES=$APRUNC_POSTGOES_SMALL
-fi
-
-
 # 
 # Run the post processor
 export pgm=regional_post.x

@@ -257,7 +257,7 @@
     <queue>&QUEUE_PE;</queue>
     &PE_EXTRA;
     &RESERVATION;
-    &FORECAST_TM00_RESOURCES__DOMAIN_;
+    &FORECAST_TM00_RESOURCES_@[DOMAIN:-conus];
     &ENV_VARS;
     <envar><name>tmmark</name><value>tm00</value></envar>
     <envar><name>job</name><value>regional_forecast_tm00_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
@@ -283,7 +283,7 @@
       <queue>&QUEUE_PE;</queue>
       &PE_EXTRA;
       &RESERVATION;
-      &POST_RESOURCES__DOMAIN_;
+      &POST_RESOURCES_@[DOMAIN:-conus];
       &ENV_VARS;
       <envar><name>fhr</name><value>#fhr#</value></envar>
       <envar><name>tmmark</name><value>tm00</value></envar>
@@ -310,7 +310,7 @@
       <queue>&QUEUE_PE;</queue>
       &PE_EXTRA;
       &RESERVATION;
-      &POST_GOES_RESOURCES__DOMAIN_;
+      &POST_GOES_RESOURCES_@[DOMAIN:-conus];
       &ENV_VARS;
       <envar><name>fhr</name><value>#fhr#</value></envar>
       <envar><name>tmmark</name><value>tm00</value></envar>

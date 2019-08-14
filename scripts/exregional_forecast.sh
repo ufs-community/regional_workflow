@@ -120,40 +120,9 @@ if [ $tmmark = tm00 ] ; then
   fi
   cp ${PARMfv3}/model_configure_sar.tmp_${dom} model_configure.tmp
 
-if [ $dom = "conus" ]
-then
-  APRUNC=${APRUNC}
-  TOTAL_TASKS=${TOTAL_TASKS}
-elif [ $dom = "ak" ]
-then
-  APRUNC=${APRUNC_AK}
-  TOTAL_TASKS=${TOTAL_TASKS_AK}
-elif [ $dom = "pr" ]
-then
-  APRUNC=${APRUNC_PR}
-  TOTAL_TASKS=${TOTAL_TASKS_PR}
-elif [ $dom = "hi" ]
-then
-  APRUNC=${APRUNC_HI}
-  TOTAL_TASKS=${TOTAL_TASKS_HI}
-elif [ $dom = "guam" ]
-then
-  APRUNC=${APRUNC_GUAM}
-  TOTAL_TASKS=${TOTAL_TASKS_GUAM}
-fi
-
-# ncnode=24
-# let nctsk=ncnode/OMP_NUM_THREADS    # 12 tasks per node with 2 threads 
-# let ntasks=nodes*nctsk
-# echo nctsk = $nctsk and ntasks = $ntasks
-
-# Submit post manager here
-
 else
   cp ${PARMfv3}/input_sar_da_hourly.nml input.nml
   cp ${PARMfv3}/model_configure_sar_da_hourly.tmp model_configure.tmp
-  APRUNC=${APRUNC_FG}
-  TOTAL_TASKS=${TOTAL_TASKS_FG}
 fi
 
 cp ${PARMfv3}/d* .
