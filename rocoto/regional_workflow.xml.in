@@ -291,6 +291,11 @@
 
       <dependency>
         <and>
+          <!-- Start the post if the forecast is running or if it has already completed. -->
+          <or>
+           <taskdep task="forecast_tm00" state="RUNNING"/>
+           <taskdep task="forecast_tm00"/>
+          </or>
           <datadep age="05:00"><cyclestr>&DATAROOT;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H/logf0#fhr#</cyclestr></datadep>
         </and>
       </dependency>
@@ -318,6 +323,11 @@
 
       <dependency>
         <and>
+          <!-- Start the post if the forecast is running or if it has already completed. -->
+          <or>
+           <taskdep task="forecast_tm00" state="RUNNING"/>
+           <taskdep task="forecast_tm00"/>
+          </or>
           <datadep age="05:00"><cyclestr>&DATAROOT;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H/logf0#fhr#</cyclestr></datadep>
         </and>
       </dependency>
