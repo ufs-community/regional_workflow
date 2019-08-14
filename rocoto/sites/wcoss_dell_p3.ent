@@ -27,24 +27,25 @@
 
   <!ENTITY MAKE_BC_RESOURCES "<nodes>20:ppn=1</nodes><envar><name>TOTAL_TASKS</name><value>480</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:30:00</walltime><native>-R affinity[core]</native>">
 
-  <!ENTITY FORECAST_EXTRA "<envar><name>OMP_THREADS</name><value>2</value></envar><walltime>00:30:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>">
+  <!ENTITY FORECAST_EXTRA "<envar><name>NCTSK</name><value>12</value></envar><envar><name>OMP_THREADS</name><value>2</value></envar><walltime>00:30:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>">
   <!ENTITY FORECAST_TM00_RESOURCES_conus "<nodes>76:ppn=12:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>912</value></envar>&FORECAST_EXTRA;">
   <!ENTITY FORECAST_TM00_RESOURCES_ak "<nodes>68:ppn=12:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>816</value></envar>&FORECAST_EXTRA;">
   <!ENTITY FORECAST_TM00_RESOURCES_hi "<nodes>7:ppn=12:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>84</value></envar>&FORECAST_EXTRA;">
   <!ENTITY FORECAST_TM00_RESOURCES_pr "<nodes>10:ppn=12:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>120</value></envar>&FORECAST_EXTRA;">
   <!ENTITY FORECAST_TM00_RESOURCES_guam "<nodes>7:ppn=12:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>84</value></envar>&FORECAST_EXTRA;">
 
-  <!ENTITY POST_RESOURCES_conus "<nodes>2:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>28</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
-  <!ENTITY POST_RESOURCES_ak "<nodes>2:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>28</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
-  <!ENTITY POST_RESOURCES_hi "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
-  <!ENTITY POST_RESOURCES_pr "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
-  <!ENTITY POST_RESOURCES_guam "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
+  <!ENTITY POST_EXTRA "<envar><name>NCTSK</name><value>14</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
+  <!ENTITY POST_RESOURCES_conus "<nodes>2:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>28</value></envar>&POST_EXTRA">
+  <!ENTITY POST_RESOURCES_ak "<nodes>2:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>28</value></envar>&POST_EXTRA;">
+  <!ENTITY POST_RESOURCES_hi "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar>&POST_EXTRA;">
+  <!ENTITY POST_RESOURCES_pr "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar>&POST_EXTRA;">
+  <!ENTITY POST_RESOURCES_guam "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar>&POST_EXTRA;">
 
-  <!ENTITY POST_GOES_RESOURCES_conus "<nodes>15:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>210</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
-  <!ENTITY POST_GOES_RESOURCES_ak "<nodes>5:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>70</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
-  <!ENTITY POST_GOES_RESOURCES_hi "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
-  <!ENTITY POST_GOES_RESOURCES_pr "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
-  <!ENTITY POST_GOES_RESOURCES_guam "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime><native>-R affinity[core]</native>">
+  <!ENTITY POST_GOES_RESOURCES_conus "<nodes>15:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>210</value></envar>&POST_EXTRA;">
+  <!ENTITY POST_GOES_RESOURCES_ak "<nodes>5:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>70</value></envar>&POST_EXTRA;">
+  <!ENTITY POST_GOES_RESOURCES_hi "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar>&POST_EXTRA;">
+  <!ENTITY POST_GOES_RESOURCES_pr "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar>&POST_EXTRA;">
+  <!ENTITY POST_GOES_RESOURCES_guam "<nodes>1:ppn=14</nodes><envar><name>TOTAL_TASKS</name><value>14</value></envar>&POST_EXTRA;">
 
   <!ENTITY ARCHIVE_RESOURCES "<cores>1</cores><memory>5G</memory><walltime>03:00:00</walltime><native>-R affinity[core]</native>">
 
