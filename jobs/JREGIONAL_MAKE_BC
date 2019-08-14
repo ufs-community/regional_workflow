@@ -145,7 +145,7 @@ export OMP_NUM_THREADS_CH=${OMP_NUM_THREADS:-24}
 if [ "$machine" = theia ] || [ "$machine" = jet ]; then
   rm -f bcfile.input_new
   nline=0
-  while [ "$nline" -lt "$hour" ];
+  while [ "$nline" -lt "$nhour" ];
   do
     # Take the first $TOTAL_TASKS lines from bcfile.input
     sed -n -e "1,${TOTAL_TASKS}p" bcfile.input >> bcfile.input_new

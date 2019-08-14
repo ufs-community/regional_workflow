@@ -45,9 +45,7 @@ cp $PARMfv3/postxconfig-NT-fv3sar_goes.txt ./postxconfig-NT.txt
 cp $PARMfv3/params_grib2_tbl_new           ./params_grib2_tbl_new
 
 #get crtm fix file
-#CRTM_FIX from loaded crtm/2.2.5 module
-
-echo "we have CRTM_FIX as" $CRTM_FIX
+#CRTM_FIX from loaded crtm/2.2.x module
 
 for what in "amsre_aqua" "imgr_g11" "imgr_g12" "imgr_g13" \
     "imgr_g15" "imgr_mt1r" "imgr_mt2" "seviri_m10" \

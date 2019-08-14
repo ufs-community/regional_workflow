@@ -353,9 +353,6 @@ export PGM=$CHGRESEXEC
 export pgm=$PGM
 $LOGSCRIPT
 rm -f NULL
-
-echo here with SIGINP as $SIGINP
-
 ln -sf $SIGINP        chgres.inp.sig
 ln -sf $SIGLEVEL      chgres.inp.siglevel
 ln -sf $SFCINP        chgres.inp.sfc
