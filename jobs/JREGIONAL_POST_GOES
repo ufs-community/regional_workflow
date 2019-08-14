@@ -2,6 +2,7 @@
 set -x
 
 . $HOMEfv3/jobs/JREGIONAL_ENVIR
+. $USHfv3/run_commands_forecast.sh
 
 ####################################
 # SENDCOM - Copy files to /com directory
@@ -12,7 +13,7 @@ export SENDCOM=${SENDCOM:-YES}
 # Specify Execution Areas
 ####################################
 export POSTGPEXEC=${EXECfv3}/regional_post.x
-export WGRIB2=${EXECfv3}/wgrib2new
+export WGRIB2=${WGRIB2:-${EXECfv3}/wgrib2new}
 
 ####################################
 # Run setpdy and initialize PDY variables

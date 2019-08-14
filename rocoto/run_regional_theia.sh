@@ -3,16 +3,21 @@
 set -x
 
 # Home directory of the regional_workflow package
-HOMEfv3=/scratch3/NCEPDEV/hwrf/save/${USER}/regional_merge
+
+HOMEfv3=/scratch4/NCEPDEV/fv3-cam/noscrub/Matthew.Pyle/regional_workflow
 
 cd ${HOMEfv3}/rocoto
+
+# if want a non-CONUS domain, export DOMAIN here
+
+# export DOMAIN=pr
 
 source ./config.workflow.defaults
 
 # Machine and project account
 machine=theia
 SITE_FILE="sites/${machine}.ent"
-CPU_ACCOUNT=hurricane
+CPU_ACCOUNT=fv3-cam
 
 # Experiment name
 EXPT=fv3sartest
@@ -26,6 +31,8 @@ COMgfs=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
 COMgfs2=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
 STMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
 PTMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
+
+
 
 #
 # The workflow files of the experiment

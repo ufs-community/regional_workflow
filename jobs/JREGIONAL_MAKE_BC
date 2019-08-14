@@ -120,7 +120,6 @@ while (test "$hour" -le "$end_hour")
     chmod u+x chgres_bc_f${hour_name}.sh
     echo APRUNO is $APRUNO
     echo "${APRUNO} chgres_bc_f${hour_name}.sh > out.chgres.$hour_name 2>&1 ${BACKGROUND}" >> bcfile.input
-#wasplayingwith    echo "${APRUNO} chgres_bc_f${hour_name}.sh > out.chgres.$hour_name 2>&1" >> bcfile.input
   elif [ $tmmark != tm00 ] ; then
 # Run the BC creation sequentially
     export HALO=4

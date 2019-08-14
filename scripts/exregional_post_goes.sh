@@ -45,7 +45,8 @@ cp $PARMfv3/postxconfig-NT-fv3sar_goes.txt ./postxconfig-NT.txt
 cp $PARMfv3/params_grib2_tbl_new           ./params_grib2_tbl_new
 
 #get crtm fix file
-#CRTM_FIX from loaded crtm/2.2.5 module
+#CRTM_FIX from loaded crtm/2.2.x module
+
 for what in "amsre_aqua" "imgr_g11" "imgr_g12" "imgr_g13" \
     "imgr_g15" "imgr_mt1r" "imgr_mt2" "seviri_m10" \
     "ssmi_f13" "ssmi_f14" "ssmi_f15" "ssmis_f16" \
@@ -63,14 +64,13 @@ for what in  ${CRTM_FIX}/*Emis* ; do
    ln -s $what .
 done
 
+# 
 # Run the post processor
 export pgm=regional_post.x
 . prep_step
 
-#export APRUN="mpirun -l -n 240"
 startmsg
-mpirun ${POSTGPEXEC} < itag > $pgmout 2>err
-#${APRUN} ${POSTGPEXEC} < itag > $pgmout 2>err
+${APRUNC_POSTGOES} ${POSTGPEXEC} < itag > $pgmout 2>err
 export err=$?; err_chk
 
 # RUN wgrib2
