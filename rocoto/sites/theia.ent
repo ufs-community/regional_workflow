@@ -36,9 +36,17 @@
   <!ENTITY FORECAST_TM00_RESOURCES_pr "<nodes>10:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>120</value></envar>&FORECAST_EXTRA;">
   <!ENTITY FORECAST_TM00_RESOURCES_guam "<nodes>7:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>84</value></envar>&FORECAST_EXTRA;">
 
-  <!ENTITY POST_RESOURCES "<nodes>2:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>48</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
+  <!ENTITY POST_RESOURCES_conus "<nodes>2:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>48</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
+  <!ENTITY POST_RESOURCES_ak "<nodes>2:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>48</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
+  <!ENTITY POST_RESOURCES_hi "<nodes>1:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>24</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
+  <!ENTITY POST_RESOURCES_pr "<nodes>1:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>24</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
+  <!ENTITY POST_RESOURCES_guam "<nodes>1:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>24</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
 
-  <!ENTITY POST_GOES_RESOURCES "<nodes>15:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>360</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
+  <!ENTITY POST_GOES_RESOURCES_conus "<nodes>15:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>360</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
+  <!ENTITY POST_GOES_RESOURCES_ak "<nodes>5:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>120</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
+  <!ENTITY POST_GOES_RESOURCES_hi "<nodes>2:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>48</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
+  <!ENTITY POST_GOES_RESOURCES_pr "<nodes>2:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>48</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
+  <!ENTITY POST_GOES_RESOURCES_guam "<nodes>2:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>48</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
 
   <!ENTITY ARCHIVE_RESOURCES "<cores>1</cores><memory>5G</memory><walltime>03:00:00</walltime>">
 

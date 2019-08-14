@@ -42,5 +42,6 @@ setenv WGRIB2 /home/Wesley.Ebisuzaki/bin/wgrib.v2.0.8b3
 setenv GRB2INDEX /scratch3/NCEPDEV/hwrf/save/Bin.Liu/hwrftrunk2019/nwport/util/exec/grb2index
 
 module load rocoto/1.3.1
+module load crtm/v2.2.3
 
 module list

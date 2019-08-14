@@ -283,7 +283,7 @@
       <queue>&QUEUE_PE;</queue>
       &PE_EXTRA;
       &RESERVATION;
-      &POST_RESOURCES;
+      &POST_RESOURCES__DOMAIN_;
       &ENV_VARS;
       <envar><name>fhr</name><value>#fhr#</value></envar>
       <envar><name>tmmark</name><value>tm00</value></envar>
@@ -291,7 +291,7 @@
 
       <dependency>
         <and>
-          <datadep age="05:00"><cyclestr>&DATAROOT;/forecast_tm00_&DOMAIN;_@Y@m@d_@H/logf0#fhr#</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&DATAROOT;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H/logf0#fhr#</cyclestr></datadep>
         </and>
       </dependency>
     </task>
@@ -300,7 +300,7 @@
 <!--  **********************************************************************  -->
 <!--  ********************** Run the post_goes processor *******************  -->
 
-  <metatask name="post_goes" throttle="3">
+  <metatask name="post_goes" throttle="5">
     <var name="fhr">&FHRS;</var>
     <task name="post_goes#fhr#" maxtries="&MAX_TRIES;">
       <command>&PRE; &JOBS;/JREGIONAL_POST_GOES</command>
@@ -310,7 +310,7 @@
       <queue>&QUEUE_PE;</queue>
       &PE_EXTRA;
       &RESERVATION;
-      &POST_RESOURCES;
+      &POST_GOES_RESOURCES__DOMAIN_;
       &ENV_VARS;
       <envar><name>fhr</name><value>#fhr#</value></envar>
       <envar><name>tmmark</name><value>tm00</value></envar>
@@ -318,7 +318,7 @@
 
       <dependency>
         <and>
-          <datadep age="05:00"><cyclestr>&DATAROOT;/forecast_tm00_&DOMAIN;_@Y@m@d_@H/logf0#fhr#</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&DATAROOT;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H/logf0#fhr#</cyclestr></datadep>
         </and>
       </dependency>
     </task>

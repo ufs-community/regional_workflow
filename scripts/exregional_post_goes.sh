@@ -46,6 +46,9 @@ cp $PARMfv3/params_grib2_tbl_new           ./params_grib2_tbl_new
 
 #get crtm fix file
 #CRTM_FIX from loaded crtm/2.2.5 module
+
+echo "we have CRTM_FIX as" $CRTM_FIX
+
 for what in "amsre_aqua" "imgr_g11" "imgr_g12" "imgr_g13" \
     "imgr_g15" "imgr_mt1r" "imgr_mt2" "seviri_m10" \
     "ssmi_f13" "ssmi_f14" "ssmi_f15" "ssmis_f16" \
@@ -63,6 +66,16 @@ for what in  ${CRTM_FIX}/*Emis* ; do
    ln -s $what .
 done
 
+# Get special post resources if AK/HI/PR/GUAM
+
+if [ $dom = ak ] ; then
+  APRUNC_POSTGOES=$APRUNC_POSTGOES_AK
+elif [ $dom = hi -o $dom = pr -o $dom = guam ] ; then
+  APRUNC_POSTGOES=$APRUNC_POSTGOES_SMALL
+fi
+
+
+# 
 # Run the post processor
 export pgm=regional_post.x
 . prep_step
