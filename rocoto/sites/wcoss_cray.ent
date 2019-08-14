@@ -36,7 +36,7 @@
   <!ENTITY FORECAST_TM00_RESOURCES_guam "<nodes>7:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>84</value></envar>&FORECAST_EXTRA;">
 
   <!ENTITY POST_EXTRA "<envar><name>NCTSK</name><value>24</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
-  <!ENTITY POST_RESOURCES_conus "<nodes>2:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>48</value></envar>&POST_EXTRA">
+  <!ENTITY POST_RESOURCES_conus "<nodes>2:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>48</value></envar>&POST_EXTRA;">
   <!ENTITY POST_RESOURCES_ak "<nodes>2:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>48</value></envar>&POST_EXTRA;">
   <!ENTITY POST_RESOURCES_hi "<nodes>1:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>24</value></envar>&POST_EXTRA;">
   <!ENTITY POST_RESOURCES_pr "<nodes>1:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>24</value></envar>&POST_EXTRA;">
