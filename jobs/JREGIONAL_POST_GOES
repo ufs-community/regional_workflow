@@ -58,7 +58,12 @@ ${HOMEfv3}/scripts/exregional_post_goes.sh
 export err=$?
 #####################################
 
+if [ -e $pgmerr ] ; then
 cat $pgmerr
+fi
+
+if [ -e $pgmout ] ; then
 cat $pgmout
+fi
 
 exit $err

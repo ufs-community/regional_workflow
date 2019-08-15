@@ -16,14 +16,10 @@ elif [ $RUN = fv3nest ]; then
   cd tmpnwprd_nest
 fi
 
-rm -rf chgres*
-rm -rf forecast*
-rm -rf post*
-
-# Delete images and other files from stmp directory
-#cd ${STMP}/${cyc}
-#rm -f *gif
-#rm -f *html
-#rm -f holddate*
+rm -rf regional_make_bc_${dom}_${CDATE}
+rm -rf regional_make_ic_${dom}_${CDATE}
+rm -rf regional_forecast_tm00_${dom}_${CDATE}
+rm -rf regional_post_${dom}_f*_${CDATE}
+rm -rf regional_post_goes_${dom}_f*_${CDATE}
 
 exit

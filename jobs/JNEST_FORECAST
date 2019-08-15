@@ -22,6 +22,7 @@ cd $DATA
 
 export pid=$$
 export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
 
 #####################################
 # Define COM directories
@@ -48,7 +49,12 @@ ${HOMEfv3}/scripts/exnest_forecast.sh
 export err=$?
 #####################################
 
-cat err
+if [ -e $pgmerr ] ; then
+cat $pgmerr
+fi
+
+if [ -e $pgmout ] ; then
 cat $pgmout
+fi
 
 exit $err

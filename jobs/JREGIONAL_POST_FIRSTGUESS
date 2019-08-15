@@ -47,8 +47,13 @@ mkdir -p $NWGES
 ##############################################
 ${HOMEfv3}/scripts/exregional_post_firstguess.sh
 
+if [ -e $pgmerr ] ; then
 cat $pgmerr
+fi
+
+if [ -e $pgmout ] ; then
 cat $pgmout
+fi
 
 if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $INPUT_DATA ; fi
 if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi

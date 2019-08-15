@@ -1,7 +1,11 @@
-#!/bin/bash
+#!/bin/ksh -l
 set -x
 
 . $HOMEfv3/jobs/JNEST_ENVIR
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
 
 ####################################
 # Run setpdy and initialize PDY variables
@@ -22,7 +26,12 @@ ${HOMEfv3}/scripts/exregional_cleanup.sh
 export err=$?
 #####################################
 
-cat err
+if [ -e $pgmerr ] ; then
+cat $pgmerr
+fi
+
+if [ -e $pgmout ] ; then
 cat $pgmout
+fi
 
 exit $err

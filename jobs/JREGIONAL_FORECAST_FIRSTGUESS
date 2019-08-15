@@ -58,7 +58,12 @@ ${HOMEfv3}/scripts/exregional_forecast_firstguess.sh
 export err=$?
 #####################################
 
+if [ -e $pgmerr ] ; then
 cat $pgmerr
+fi
+
+if [ -e $pgmout ] ; then
 cat $pgmout
+fi
 
 exit $err

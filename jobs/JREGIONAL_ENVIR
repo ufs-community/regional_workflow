@@ -1,6 +1,7 @@
 set -x
 
 export RUN_ENVIR=dev
+export envir=para
 
 if [ ${machine} = "wcoss_dell_p3" ]
 then

@@ -34,8 +34,13 @@ ${HOMEfv3}/scripts/exregional_archive.sh
 export err=$?
 ##################################
 
+if [ -e $pgmerr ] ; then
 cat $pgmerr
+fi
+
+if [ -e $pgmout ] ; then
 cat $pgmout
+fi
 
 if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
 

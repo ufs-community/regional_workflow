@@ -19,6 +19,7 @@ cd $DATA
 
 export pid=$$
 export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
 
 ##################################
 # Define COM directories
@@ -33,8 +34,13 @@ ${HOMEfv3}/scripts/exregional_archive.sh
 export err=$?
 ##################################
 
-cat err
+if [ -e $pgmerr ] ; then
+cat $pgmerr
+fi
+
+if [ -e $pgmout ] ; then
 cat $pgmout
+fi
 
 if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
 

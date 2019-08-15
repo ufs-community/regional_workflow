@@ -28,6 +28,7 @@ mkdir -p $OUTDIR
 
 export pid=$$
 export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
 
 #####################################
 # Define COM directories
@@ -65,7 +66,12 @@ ${HOMEfv3}/scripts/exnest_make_ic.sh
 export err=$?
 #####################################
 
-cat err
+if [ -e $pgmerr ] ; then
+cat $pgmerr
+fi
+
+if [ -e $pgmout ] ; then
 cat $pgmout
+fi
 
 exit $err
