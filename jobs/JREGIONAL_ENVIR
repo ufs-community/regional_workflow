@@ -15,7 +15,6 @@ export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
 export COMINgdas=${COMINgdas:-/gpfs/dell1/nco/ops/com/gfs/prod}
 export GBCOMINgfs=${GBCOMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
 export COMINgfs=${COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
-export COMgfs=${COMgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
 
 export PTMP=${PTMP:-/gpfs/dell1/ptmp/${USER}}
 export STMP=${STMP:-/gpfs/dell1/stmp/${USER}}
@@ -37,7 +36,6 @@ export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
 export COMINgdas=${COMINgdas:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
 export GBCOMINgfs=${GBCOMINgfs:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
 export COMINgfs=${COMINgfs:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
-export COMgfs=${COMgfs:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
    
 export PTMP=${PTMP:-/scratch4/NCEPDEV/stmp3/${USER}}
 export STMP=${STMP:-/scratch4/NCEPDEV/stmp3/${USER}}

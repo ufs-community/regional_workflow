@@ -43,9 +43,8 @@ export pgmerr=errfile
 export COMINgdas=${COMINgdas:-/gpfs/dell1/nco/ops/com/gfs/prod}
 export GBCOMINgfs=${GBCOMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
 export COMINgfs=${COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
-export COMgfs=${COMgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
-export INIDIR=${COMgfs}/gfs.$PDY/$cyc
-export INIDIRtm12=${COMgfs}/gfs.$PDYtm12/$cycguess
+export INIDIR=${COMINgfs}/gfs.$PDY/$cyc
+export INIDIRtm12=${COMINgfs}/gfs.$PDYtm12/$cycguess
 
 export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 mkdir -p $COMOUT

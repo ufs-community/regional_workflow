@@ -8,7 +8,7 @@
    <name>USER</name><value>&USER;</value>
  </envar>
  <envar>
-   <name>COMgfs</name><value>&COMgfs;</value>
+   <name>COMINgfs</name><value>&COMINgfs;</value>
  </envar>
  <envar>
    <name>PTMP</name><value>&PTMP;</value>

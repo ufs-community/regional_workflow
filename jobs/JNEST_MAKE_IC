@@ -33,8 +33,8 @@ export pgmerr=errfile
 #####################################
 # Define COM directories
 #####################################
-export COMgfs=${COMgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
-export INIDIR=${COMgfs}/gfs.$PDY/$cyc
+export COMINgfs=${COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
+export INIDIR=${COMINgfs}/gfs.$PDY/$cyc
 
 export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
 mkdir -p $COMOUT

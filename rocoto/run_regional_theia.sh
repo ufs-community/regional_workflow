@@ -27,8 +27,7 @@ CYCLE_YMDH_END="2019050200"
 CYCLE_INT_HH="06"
 
 GET_INPUT=NO
-COMgfs=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
-COMgfs2=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
+COMINgfs=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
 STMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
 PTMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
 
@@ -52,8 +51,7 @@ sed -e "s|@\[EXPT.*\]|${EXPT}|g" \
     -e "s|@\[MAKE_GRID_OROG.*\]|${MAKE_GRID_OROG}|g" \
     -e "s|@\[MAKE_SFC_CLIMO.*\]|${MAKE_SFC_CLIMO}|g" \
     -e "s|@\[GET_INPUT.*\]|${GET_INPUT}|g" \
-    -e "s|@\[COMgfs.*\]|${COMgfs}|g" \
-    -e "s|@\[COMgfs2.*\]|${COMgfs2}|g" \
+    -e "s|@\[COMINgfs.*\]|${COMINgfs}|g" \
     regional_workflow.xml.in \
     > ${expxml}
 

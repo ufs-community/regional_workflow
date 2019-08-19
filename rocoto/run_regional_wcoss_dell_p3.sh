@@ -21,8 +21,7 @@ CYCLE_YMDH_END="2019081600"
 CYCLE_INT_HH="06"
 
 GET_INPUT=NO
-COMgfs=/gpfs/dell1/nco/ops/com/gfs/prod
-COMgfs2=/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/prfv3rt3/vrfyarch
+COMINgfs=/gpfs/dell1/nco/ops/com/gfs/prod
 STMP=/gpfs/dell1/stmp/${USER}/${EXPT}
 PTMP=/gpfs/dell1/ptmp/${USER}/${EXPT}
 
@@ -46,8 +45,7 @@ sed -e "s|@\[EXPT.*\]|${EXPT}|g" \
     -e "s|@\[MAKE_GRID_OROG.*\]|${MAKE_GRID_OROG}|g" \
     -e "s|@\[MAKE_SFC_CLIMO.*\]|${MAKE_SFC_CLIMO}|g" \
     -e "s|@\[GET_INPUT.*\]|${GET_INPUT}|g" \
-    -e "s|@\[COMgfs.*\]|${COMgfs}|g" \
-    -e "s|@\[COMgfs2.*\]|${COMgfs2}|g" \
+    -e "s|@\[COMINgfs.*\]|${COMINgfs}|g" \
     regional_workflow.xml.in \
     > ${expxml}
 

@@ -32,7 +32,5 @@ MAKE_SFC_CLIMO=${MAKE_SFC_CLIMO:-NO}
 # Run the get_input task or not: YES|NO
 GET_INPUT=${GET_INPT:-NO}
 # Directory of the GFS input files
-COMgfs=${COMgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
-# An alternative location for COMgfs
-COMgfs2=${COMgfs2:-/gpfs/dell3/ptmp/emc.glopara/ROTDIRs/prfv3rt3/vrfyarch}
+COMINgfs=${COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
 

@@ -43,8 +43,7 @@
   <!ENTITY LOGDIR "&PTMP;/log">
   <!ENTITY DATAROOT "&STMP;/tmpnwprd">
 
-  <!ENTITY COMgfs "@[COMgfs:-/gpfs/dell1/nco/ops/com/gfs/prod]">
-  <!ENTITY COMgfs2 "@[COMgfs2:-/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/prfv3rt3/vrfyarch]">
+  <!ENTITY COMINgfs "@[COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod]">
 
   <!-- rocoto pre command to launch the jobs -->
   <!ENTITY PRE "&HOMEfv3;/rocoto/rocoto_pre_job.sh">
@@ -184,18 +183,11 @@
           <strneq><left>&GET_INPUT;</left><right>YES</right></strneq>
           <taskdep task="get_input"/>
         </or>
-        <or>
-          <and>
-            <datadep age="10:00" minsize="16986972692"><cyclestr>&COMgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf000.nemsio</cyclestr></datadep>
-            <datadep age="10:00" minsize="15779010324"><cyclestr>&COMgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmanl.nemsio</cyclestr></datadep>
-            <datadep age="10:00" minsize="1170221688"><cyclestr>&COMgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.sfcanl.nemsio</cyclestr></datadep>
-          </and>
-          <and>
-            <datadep age="10:00" minsize="16986972692"><cyclestr>&COMgfs2;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf000.nemsio</cyclestr></datadep>
-            <datadep age="10:00" minsize="15779010324"><cyclestr>&COMgfs2;/gfs.@Y@m@d/@H/gfs.t@Hz.atmanl.nemsio</cyclestr></datadep>
-            <datadep age="10:00" minsize="1170221688"><cyclestr>&COMgfs2;/gfs.@Y@m@d/@H/gfs.t@Hz.sfcanl.nemsio</cyclestr></datadep>
-          </and>
-        </or>
+        <and>
+          <datadep age="10:00" minsize="16986972692"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf000.nemsio</cyclestr></datadep>
+          <datadep age="10:00" minsize="15779010324"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmanl.nemsio</cyclestr></datadep>
+          <datadep age="10:00" minsize="1170221688"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.sfcanl.nemsio</cyclestr></datadep>
+        </and>
       </and>
     </dependency>
   </task> 
@@ -232,16 +224,10 @@
           <strneq><left>&GET_INPUT;</left><right>YES</right></strneq>
           <taskdep task="get_input"/>
         </or>
-        <or>
-          <and>
-            <datadep age="05:00" minsize="16986972692"><cyclestr>&COMgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf057.nemsio</cyclestr></datadep>
-            <datadep age="05:00" minsize="16986972692"><cyclestr>&COMgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf060.nemsio</cyclestr></datadep>
-          </and>
-          <and>
-            <datadep age="05:00" minsize="16986972692"><cyclestr>&COMgfs2;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf063.nemsio</cyclestr></datadep>
-            <datadep age="05:00" minsize="16986972692"><cyclestr>&COMgfs2;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf066.nemsio</cyclestr></datadep>
-          </and>
-        </or>
+        <and>
+          <datadep age="05:00" minsize="16986972692"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf057.nemsio</cyclestr></datadep>
+          <datadep age="05:00" minsize="16986972692"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf060.nemsio</cyclestr></datadep> 
+        </and>
       </and>
     </dependency>
   </task>
