@@ -32,9 +32,6 @@ COMgfs2=/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS
 STMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
 PTMP=/scratch4/NCEPDEV/stmp3/${USER}/${EXPT}
 
-
-
-#
 # The workflow files of the experiment
 expxml=${EXPT}_${CYCLE_YMDH_BEG}.xml
 expdb=${EXPT}_${CYCLE_YMDH_BEG}.db

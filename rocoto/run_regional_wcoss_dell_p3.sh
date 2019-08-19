@@ -3,20 +3,28 @@
 set -x
 
 # Home directory of the regional_workflow package
-HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow
+HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow_merge
 
 cd ${HOMEfv3}/rocoto
 
 source ./config.workflow.defaults
 
 machine=wcoss_dell_p3 
+SITE_FILE="sites/${machine}.ent"
+CPU_ACCOUNT=HREF-T2O
 
 # Experiment name
 EXPT=fv3sartest
 # First, last, and interval of the workflow cycles
-CYCLE_YMDH_BEG="2019071700"
-CYCLE_YMDH_END="2019071706"
+CYCLE_YMDH_BEG="2019081600"
+CYCLE_YMDH_END="2019081600"
 CYCLE_INT_HH="06"
+
+GET_INPUT=NO
+COMgfs=/gpfs/dell1/nco/ops/com/gfs/prod
+COMgfs2=/gpfs/dell3/ptmp/emc.glopara/ROTDIRS/prfv3rt3/vrfyarch
+STMP=/gpfs/dell1/stmp/${USER}/${EXPT}
+PTMP=/gpfs/dell1/ptmp/${USER}/${EXPT}
 
 # The workflow files of the experiment
 expxml=${EXPT}_${CYCLE_YMDH_BEG}.xml
