@@ -43,7 +43,7 @@ cd $tmpDir
 #
 set +x
 module list
-module use ../../../modulefiles/fv3sar_workflow
+module use ../../../modulefiles/regional_workflow
 module load ${package_name}.${target}
 module list
 set -x
