@@ -24,9 +24,12 @@ if [ "$platform" = "no_platform_specified" ]; then
     if [[ -d /lfs3 ]] ; then
         # We are on NOAA Jet
         platform=jet
-    elif [[ -d /scratch3 ]] ; then
+    elif [[ ! -d /scratch2/BMC/det ]] ; then
         # We are on NOAA Theia
         platform=theia
+    elif [[ -d /scratch2/BMC/det ]] ; then
+        # We are on NOAA Hera
+        platform=hera
     elif [[ -d /gpfs/hps && -e /etc/SuSE-release ]] ; then
         # We are on NOAA Luna or Surge
         platform=wcoss_cray
@@ -67,8 +70,8 @@ if [ "$target" = "jet" ] ; then
     export NCEPLIBS=/mnt/lfs3/projects/hfv3gfs/gwv/ljtjet/lib
     echo NCEPLIBS HARD SET to  $NCEPLIBS in `pwd`/module_setup.sh.inc
     module use $NCEPLIBS/modulefiles
-elif [ "$target" = "theia" ] ; then
-    # We are on NOAA Theia
+elif [ "$target" = "theia" || "$target" = "hera" ] ; then
+    # We are on NOAA Theia or Hera
     if ( ! eval module help > /dev/null 2>&1 ) ; then
 	echo load the module command 1>&2
         source /apps/lmod/lmod/init/$__ms_shell
