@@ -24,12 +24,12 @@ if [ "$platform" = "no_platform_specified" ]; then
     if [[ -d /lfs3 ]] ; then
         # We are on NOAA Jet
         platform=jet
-    elif [[ ! -d /scratch2/BMC/det ]] ; then
-        # We are on NOAA Theia
-        platform=theia
     elif [[ -d /scratch2/BMC/det ]] ; then
         # We are on NOAA Hera
         platform=hera
+    elif [[ -d /scratch3/BMC/det ]] ; then
+        # We are on NOAA Theia
+        platform=theia
     elif [[ -d /gpfs/hps && -e /etc/SuSE-release ]] ; then
         # We are on NOAA Luna or Surge
         platform=wcoss_cray
