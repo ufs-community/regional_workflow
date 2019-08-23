@@ -1,0 +1,163 @@
+#!/bin/bash
+set -u -x
+
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
+machine="theia"
+preexisting_dir_method="delete"
+WORKDIR_GRID="abc"
+WORKDIR_SHVE="ghi"
+SFC_CLIMO_INPUT_DIR="def"
+nh4_T7=4
+#
+#-----------------------------------------------------------------------
+#
+# Source function definition files.
+#
+#-----------------------------------------------------------------------
+#
+. $USHfv3/source_funcs.sh
+#
+#-----------------------------------------------------------------------
+#
+# Create the work(??) directory for the surface climatology files.  If   <<-- Should call this "work" directory, since there is a subdirectory that's the true work directory.  Should rename WORKDIR_SFC_CLIMO (and also WORKDIR_GRID, WORKDIR_SHVE, etc).
+# it already exists, deal with it as specified by the variable pre-
+# existing_dir_method.
+#
+#-----------------------------------------------------------------------
+#
+WORKDIR_SFC_CLIMO=${COMROOT}/sfc_climo
+check_for_preexist_dir ${WORKDIR_SFC_CLIMO} ${preexisting_dir_method}
+mkdir_vrfy -p "${WORKDIR_SFC_CLIMO}"
+#
+#-----------------------------------------------------------------------
+#
+# Create a (true) work directory.  If it already exists, delete it.
+#
+#-----------------------------------------------------------------------
+#
+WORKDIR_LOCAL="${WORKDIR_SFC_CLIMO}/tmp"
+check_for_preexist_dir ${WORKDIR_LOCAL} "delete"
+mkdir_vrfy ${WORKDIR_LOCAL}
+#
+#-----------------------------------------------------------------------
+#
+# Change location to the temporary directory.
+#
+#-----------------------------------------------------------------------
+#
+cd_vrfy ${WORKDIR_LOCAL}
+#
+#-----------------------------------------------------------------------
+#
+# Set the tile number(s).  The stand-alone regional and global nest are 
+# assumed to be tile 7.
+#
+#-----------------------------------------------------------------------
+#
+if [[ "$gtype" == "regional" ]]; then
+  tiles=("7")
+elif [[ "$gtype" == "nest" ]]; then
+  tiles=("1" "2" "3" "4" "5" "6" "7")
+else
+  tiles=("1" "2" "3" "4" "5" "6")
+fi
+
+prefix="\"${CRES}_oro_data.tile"
+#prefix="\"${CRES}.oro_data.tile"
+orog_fns=( "${tiles[@]/#/$prefix}" )
+suffix=".nc\""
+orog_fns=( "${orog_fns[@]/%/$suffix}" )
+#
+#-----------------------------------------------------------------------
+#
+# Create the namelist that the sfc_climo_gen code will read in.
+#
+# Question: Should this instead be created from a template file?
+#
+#-----------------------------------------------------------------------
+#
+mosaic_file="${WORKDIR_GRID}/${CRES}_mosaic.nc"
+
+{ cat << EOF > ./fort.41
+&config
+input_facsf_file="${SFC_CLIMO_INPUT_DIR}/facsf.1.0.nc"
+input_substrate_temperature_file="${SFC_CLIMO_INPUT_DIR}/substrate_temperature.2.6x1.5.nc"
+input_maximum_snow_albedo_file="${SFC_CLIMO_INPUT_DIR}/maximum_snow_albedo.0.05.nc"
+input_snowfree_albedo_file="${SFC_CLIMO_INPUT_DIR}/snowfree_albedo.4comp.0.05.nc"
+input_slope_type_file="${SFC_CLIMO_INPUT_DIR}/slope_type.1.0.nc"
+input_soil_type_file="${SFC_CLIMO_INPUT_DIR}/soil_type.statsgo.0.05.nc"
+input_vegetation_type_file="${SFC_CLIMO_INPUT_DIR}/vegetation_type.igbp.0.05.nc"
+input_vegetation_greenness_file="${SFC_CLIMO_INPUT_DIR}/vegetation_greenness.0.144.nc"
+mosaic_file_mdl="${mosaic_file}"
+orog_dir_mdl="${WORKDIR_SHVE}"
+orog_files_mdl=${orog_fns}
+halo=${nh4_T7}
+maximum_snow_albedo_method="bilinear"
+snowfree_albedo_method="bilinear"
+vegetation_greenness_method="bilinear"
+/
+EOF
+} || print_err_msg_exit "\
+\"cat\" command to create a namelist file for make_sfc_climo to generate
+climatological fields on the FV3SAR native grid returned with nonzero 
+status."
+
+#-----------------------------------------------------------------------
+#
+# Set the machine-dependent run command.
+#
+#-----------------------------------------------------------------------
+#
+case $machine in
+
+"wcoss_cray")
+# This could be wrong.  Just a guess since I don't have access to this machine.
+  APRUN_SFC=${APRUN_SFC:-"aprun -j 1 -n 6 -N 6"}
+  ;;
+
+"wcoss")
+# This could be wrong.  Just a guess since I don't have access to this machine.
+  APRUN_SFC=${APRUN_SFC:-"aprun -j 1 -n 6 -N 6"}
+  ;;
+
+"theia")
+# Need to load intel/15.1.133.  This and all other module loads should go into a module file.
+module load intel/15.1.133
+module list
+  APRUN_SFC="mpirun -np ${SLURM_NTASKS}"
+  ;;
+
+*)
+  print_err_msg_exit "\
+Run command has not been specified for this machine:
+  machine = \"$machine\"
+  APRUN_SFC = \"$APRUN_SFC\"
+"
+
+esac
+#
+#-----------------------------------------------------------------------
+#
+# Run the code.
+#
+#-----------------------------------------------------------------------
+#
+$APRUN_SFC ${EXECDIR}/sfc_climo_gen || print_err_msg_exit "\
+Call to executable that generates surface climatology files returned 
+with nonzero exit code.
+"
+
+
+#
+#-----------------------------------------------------------------------
+#
+# Print message indicating successful completion of script.
+#
+#-----------------------------------------------------------------------
+#
+print_info_msg "\
+
+========================================================================
+All surface climatology files generated successfully!!!
+========================================================================"
+

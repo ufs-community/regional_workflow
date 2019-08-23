@@ -1,0 +1,37 @@
+#!/bin/ksh -l
+set -x
+
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+# PDY is passed in through Rocoto xml
+#setpdy.sh
+#. ./PDY
+
+#####################################
+# Working directories
+#####################################
+export PTMP=${PTMP:-""}
+export STMP=${STMP:-""}
+
+#####################################
+# Execute the script.
+${HOMEfv3}/scripts/exregional_cleanup.sh
+export err=$?
+#####################################
+
+if [ -e $pgmerr ] ; then
+cat $pgmerr
+fi
+
+if [ -e $pgmout ] ; then
+cat $pgmout
+fi
+
+exit $err

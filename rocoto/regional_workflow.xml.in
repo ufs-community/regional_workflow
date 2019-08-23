@@ -1,0 +1,368 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE workflow [
+
+  <!-- Set some variables for use later: -->
+  <!ENTITY CYCLE_THROTTLE "4">
+  <!ENTITY TASK_THROTTLE "80">
+
+  <!-- Maximum number of times to try various jobs -->
+  <!ENTITY MAX_TRIES_TRANSFER "3"> <!-- pulling data over network -->
+  <!ENTITY MAX_TRIES_BIG_JOBS "2"> <!-- forecast or other huge jobs -->
+  <!ENTITY MAX_TRIES "3"> <!-- everything else -->
+
+  <!-- Enabling or disabling parts of the workflow: -->
+  <!ENTITY MAKE_GRID_OROG "@[MAKE_GRID_OROG:-YES]">
+  <!ENTITY MAKE_SFC_CLIMO "@[MAKE_SFC_CLIMO:-YES]">
+  <!ENTITY GET_INPUT "@[GET_INPUT:-YES]">
+  <!ENTITY GTYPE "@[GTYPE:-regional]">
+  <!ENTITY RUN_DA "NO"> <!-- place holder currently -->
+
+  <!-- Variables for cycle definition -->
+  <!ENTITY CYCLE_YMDH_BEG "@[CYCLE_YMDH_BEG:-2019070100]">
+  <!ENTITY CYCLE_YMDH_END "@[CYCLE_YMDH_END:-2019070212]">
+  <!ENTITY CYCLE_INT_HH "@[CYCLE_INT_HH:-12]">
+  <!ENTITY CYCLE_INTERVAL "&CYCLE_INT_HH;:00:00">
+
+  <!-- Variables to set up the experiment -->
+  <!ENTITY EXPT "@[EXPT:-regional]">
+  <!ENTITY DOMAIN "@[DOMAIN:-conus]">
+  <!ENTITY FHRS "00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60">
+
+  <!ENTITY USER "@[USER]">
+  <!-- Project account to use for submitting jobs/tasks -->
+  <!ENTITY CPU_ACCOUNT "@[CPU_ACCOUNT:-HREF-T2O]">
+
+  <!-- Variables for directories -->
+  <!ENTITY HOMEfv3 "@[HOMEfv3:-/gpfs/dell2/emc/modeling/noscrub/&USER;/regional_workflow;]">
+  <!ENTITY JOBS "&HOMEfv3;/jobs">
+  <!ENTITY SCRIPTS "&HOMEfv3;/scripts">
+  <!ENTITY PTMP "@[PTMP:-/gpfs/dell1/ptmp/&USER;/&EXPT;]">
+  <!ENTITY STMP "@[STMP:-/gpfs/dell1/stmp/&USER;/&EXPT;]">
+  <!ENTITY COMDIR "&PTMP;/com">
+  <!ENTITY LOGDIR "&PTMP;/log">
+  <!ENTITY DATAROOT "&STMP;/tmpnwprd">
+
+  <!ENTITY COMINgfs "@[COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod]">
+
+  <!-- rocoto pre command to launch the jobs -->
+  <!ENTITY PRE "&HOMEfv3;/rocoto/rocoto_pre_job.sh">
+
+  <!-- Site to run the workflow -->
+  <!ENTITY % CUSTOM_SITE SYSTEM "@[SITE_FILE:-sites/wcoss_dell_p3.ent]">
+  %CUSTOM_SITE;
+
+  <!-- Load the env_vars.ent into ENV_VARS so we can set variables
+  common to all jobs. -->
+  <!ENTITY ENV_VARS SYSTEM "env_vars.ent"> 
+
+]>
+
+<!--  *******************************************************************  -->
+<!--  *********************** Workflow starts here **********************  -->
+
+<workflow realtime="F" cyclethrottle="&CYCLE_THROTTLE;" scheduler="&SCHEDULER;" taskthrottle="&TASK_THROTTLE;">
+
+  <cycledef>&CYCLE_YMDH_BEG;00 &CYCLE_YMDH_END;00 &CYCLE_INTERVAL;</cycledef>
+
+  <log><cyclestr>&LOGDIR;/workflow_regional_&DOMAIN;_@Y@m@d@H.log</cyclestr></log>
+
+<!--  *******************************************************************  -->
+<!--  ************************* make_grid_orog  *************************  -->
+
+  <task name="make_grid_orog" maxtries="&MAX_TRIES;">
+    <command>&PRE; &JOBS;/JREGIONAL_MAKE_GRID_OROG</command>
+    <jobname>regional_make_grid_orog_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></jobname>
+    <join><cyclestr>&LOGDIR;/regional_make_grid_orog_&DOMAIN;_@Y@m@d@H.log</cyclestr></join>
+    <account>&ACCOUNT;</account>
+    <queue>&QUEUE_PE;</queue>
+    &PE_EXTRA;
+    &RESERVATION;
+    &MAKE_GRID_OROG_RESOURCES;
+    &ENV_VARS;
+    <envar><name>job</name><value>regional_make_grid_orog_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+    <dependency>
+      <and>
+        <streq><left>&MAKE_GRID_OROG;</left><right>YES</right></streq>
+        <!-- Cycling dependency: do not start until the prior cycle's
+        make_grid_orog job is done, unless there is no prior cycle. -->
+        <or>
+          <taskdep task="make_grid_orog" cycle_offset="-&CYCLE_INTERVAL;"/>
+          <not>
+            <cycleexistdep cycle_offset="-&CYCLE_INTERVAL;"/>
+          </not>
+        </or>
+        <!-- AND... don't start until 3:20 past the synoptic time.  The
+        GFS does not start until then, so there is little point to
+        starting earlier. -->
+        <timedep><cyclestr offset="3:20:00">@Y@m@d@H@M@S</cyclestr></timedep>
+      </and>
+    </dependency>
+  </task> 
+
+<!--  *******************************************************************  -->
+<!--  ************************* make_sfc_climo  *************************  -->
+
+  <task name="make_sfc_climo" maxtries="&MAX_TRIES;">
+    <command>&PRE; &JOBS;/JREGIONAL_MAKE_SFC_CLIMO</command>
+    <jobname>regional_make_sfc_climo_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></jobname>
+    <join><cyclestr>&LOGDIR;/regional_make_sfc_climo_&DOMAIN;_@Y@m@d@H.log</cyclestr></join>
+    <account>&ACCOUNT;</account>
+    <queue>&QUEUE_PE;</queue>
+    &PE_EXTRA;
+    &RESERVATION;
+    &MAKE_SFC_CLIMO_RESOURCES;
+    &ENV_VARS;
+    <envar><name>job</name><value>regional_make_sfc_climo_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+    <dependency>
+      <and>
+        <streq><left>&MAKE_SFC_CLIMO;</left><right>YES</right></streq>
+        <or>
+          <taskdep task="make_grid_orog"/>
+          <strneq><left>&MAKE_GRID_OROG;</left><right>YES</right></strneq>
+        </or>
+      </and>
+    </dependency>
+  </task> 
+
+<!--  *******************************************************************  -->
+<!--  **************************** get_input  ***************************  -->
+
+  <task name="get_input" maxtries="&MAX_TRIES_TRANSFER;">
+    <command>&PRE; &JOBS;/JREGIONAL_GET_INPUT</command>
+    <jobname>regional_get_input_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></jobname>
+    <join><cyclestr>&LOGDIR;/regional_get_input_&DOMAIN;_@Y@m@d@H.log</cyclestr></join>
+    <account>&ACCOUNT;</account>
+    <queue>&QUEUE_SERVICE;</queue>
+    &SERVICE_EXTRA;
+    &RESERVATION;
+    &GET_INPUT_RESOURCES;
+    &ENV_VARS;
+    <envar><name>job</name><value>regional_get_input_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+    <dependency>
+      <and>
+        <streq><left>&GET_INPUT;</left><right>YES</right></streq>
+        <or>
+          <strneq><left>&MAKE_GRID_OROG;</left><right>YES</right></strneq>
+          <taskdep task="make_grid_orog"/>
+        </or>
+      </and>
+    </dependency>
+  </task> 
+
+<!--  *******************************************************************  -->
+<!--  **************************** make_ic  *****************************  -->
+
+  <task name="make_ic" maxtries="&MAX_TRIES;">
+    <command>&PRE; &JOBS;/JREGIONAL_MAKE_IC</command>
+    <jobname>regional_make_ic_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></jobname>
+    <join><cyclestr>&LOGDIR;/regional_make_ic_&DOMAIN;_@Y@m@d@H.log</cyclestr></join>
+    <account>&ACCOUNT;</account>
+    <queue>&QUEUE_PE;</queue>
+    &PE_EXTRA;
+    &RESERVATION;
+    &MAKE_IC_RESOURCES;
+    &ENV_VARS;
+    <envar><name>tmmark</name><value>tm00</value></envar>
+    <envar><name>job</name><value>regional_make_ic_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+    <dependency>
+      <and>
+        <or>
+          <strneq><left>&MAKE_GRID_OROG;</left><right>YES</right></strneq>
+          <taskdep task="make_grid_orog"/>
+        </or>
+        <or>
+          <strneq><left>&MAKE_SFC_CLIMO;</left><right>YES</right></strneq>
+          <taskdep task="make_sfc_climo"/> 
+        </or>
+        <or>
+          <strneq><left>&GET_INPUT;</left><right>YES</right></strneq>
+          <taskdep task="get_input"/>
+        </or>
+        <and>
+          <datadep age="10:00" minsize="16986972692"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf000.nemsio</cyclestr></datadep>
+          <datadep age="10:00" minsize="15779010324"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmanl.nemsio</cyclestr></datadep>
+          <datadep age="10:00" minsize="1170221688"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.sfcanl.nemsio</cyclestr></datadep>
+        </and>
+      </and>
+    </dependency>
+  </task> 
+
+<!--  *******************************************************************  -->
+<!--  **************************** make_bc  *****************************  -->
+
+  <task name="make_bc" maxtries="&MAX_TRIES;">
+    <command>&PRE; &JOBS;/JREGIONAL_MAKE_BC</command>
+    <jobname>regional_make_bc_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></jobname>
+    <join><cyclestr>&LOGDIR;/regional_make_bc_&DOMAIN;_@Y@m@d@H.log</cyclestr></join>
+    <account>&ACCOUNT;</account>
+    <queue>&QUEUE_PE;</queue>
+    &PE_EXTRA;
+    &RESERVATION;
+    &MAKE_BC_RESOURCES;
+    &ENV_VARS;
+    <envar><name>tmmark</name><value>tm00</value></envar>
+    <envar><name>job</name><value>regional_make_bc_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+    <dependency>
+      <and>
+        <!-- Only need to make_bc for regional configuration -->
+        <streq><left>&GTYPE;</left><right>regional</right></streq>
+        <or>
+          <strneq><left>&MAKE_GRID_OROG;</left><right>YES</right></strneq>
+          <taskdep task="make_grid_orog"/>
+        </or>
+        <or>
+          <strneq><left>&MAKE_SFC_CLIMO;</left><right>YES</right></strneq>
+          <taskdep task="make_sfc_climo"/> 
+        </or>
+        <or>
+          <strneq><left>&GET_INPUT;</left><right>YES</right></strneq>
+          <taskdep task="get_input"/>
+        </or>
+        <and>
+          <datadep age="05:00" minsize="16986972692"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf057.nemsio</cyclestr></datadep>
+          <datadep age="05:00" minsize="16986972692"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf060.nemsio</cyclestr></datadep> 
+        </and>
+      </and>
+    </dependency>
+  </task>
+
+<!--  *******************************************************************  -->
+<!--  ********************** forecast_tm00  *****************************  -->
+
+  <task name="forecast_tm00" maxtries="&MAX_TRIES_BIG_JOBS;">
+    <command>&PRE; &JOBS;/JREGIONAL_FORECAST</command>
+    <jobname>regional_forecast_tm00_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></jobname>
+    <join><cyclestr>&LOGDIR;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H.log</cyclestr></join>
+    <account>&ACCOUNT;</account>
+    <queue>&QUEUE_PE;</queue>
+    &PE_EXTRA;
+    &RESERVATION;
+    &FORECAST_TM00_RESOURCES_@[DOMAIN:-conus];
+    &ENV_VARS;
+    <envar><name>tmmark</name><value>tm00</value></envar>
+    <envar><name>job</name><value>regional_forecast_tm00_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+    <dependency>
+      <and>
+        <taskdep task="make_ic"/> 
+        <taskdep task="make_bc"/> 
+      </and>
+    </dependency>
+  </task>
+
+<!--  *******************************************************************  -->
+<!--  ********************** Run the post processor *********************  -->
+
+  <metatask name="post">
+    <var name="fhr">&FHRS;</var>
+    <task name="post#fhr#" maxtries="&MAX_TRIES;">
+      <command>&PRE; &JOBS;/JREGIONAL_POST</command>
+      <jobname>regional_post_&DOMAIN;_f#fhr#_<cyclestr>@Y@m@d@H</cyclestr></jobname>
+      <join><cyclestr>&LOGDIR;/regional_post_&DOMAIN;_f#fhr#_@Y@m@d@H.log</cyclestr></join>
+      <account>&ACCOUNT;</account>
+      <queue>&QUEUE_PE;</queue>
+      &PE_EXTRA;
+      &RESERVATION;
+      &POST_RESOURCES_@[DOMAIN:-conus];
+      &ENV_VARS;
+      <envar><name>fhr</name><value>#fhr#</value></envar>
+      <envar><name>tmmark</name><value>tm00</value></envar>
+      <envar><name>job</name><value>regional_post_&DOMAIN;_f#fhr#_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+      <dependency>
+        <and>
+          <!-- Start the post if the forecast is running or if it has already completed. -->
+          <or>
+           <taskdep task="forecast_tm00" state="RUNNING"/>
+           <taskdep task="forecast_tm00"/>
+          </or>
+          <datadep age="05:00"><cyclestr>&DATAROOT;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H/logf0#fhr#</cyclestr></datadep>
+        </and>
+      </dependency>
+    </task>
+  </metatask>
+
+<!--  **********************************************************************  -->
+<!--  ********************** Run the post_goes processor *******************  -->
+
+  <metatask name="post_goes" throttle="5">
+    <var name="fhr">&FHRS;</var>
+    <task name="post_goes#fhr#" maxtries="&MAX_TRIES;">
+      <command>&PRE; &JOBS;/JREGIONAL_POST_GOES</command>
+      <jobname>regional_post_goes_&DOMAIN;_f#fhr#_<cyclestr>@Y@m@d@H</cyclestr></jobname>
+      <join><cyclestr>&LOGDIR;/regional_post_goes_&DOMAIN;_f#fhr#_@Y@m@d@H.log</cyclestr></join>
+      <account>&ACCOUNT;</account>
+      <queue>&QUEUE_PE;</queue>
+      &PE_EXTRA;
+      &RESERVATION;
+      &POST_GOES_RESOURCES_@[DOMAIN:-conus];
+      &ENV_VARS;
+      <envar><name>fhr</name><value>#fhr#</value></envar>
+      <envar><name>tmmark</name><value>tm00</value></envar>
+      <envar><name>job</name><value>regional_post_goes_&DOMAIN;_f#fhr#_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+      <dependency>
+        <and>
+          <!-- Start the post if the forecast is running or if it has already completed. -->
+          <or>
+           <taskdep task="forecast_tm00" state="RUNNING"/>
+           <taskdep task="forecast_tm00"/>
+          </or>
+          <datadep age="05:00"><cyclestr>&DATAROOT;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H/logf0#fhr#</cyclestr></datadep>
+        </and>
+      </dependency>
+    </task>
+  </metatask>
+
+<!-- *********************************************************************** -->
+<!-- ***************************** Archive job ***************************** -->
+
+  <task name="archive" maxtries="&MAX_TRIES_TRANSFER;">
+    <command>&PRE; &JOBS;/JREGIONAL_ARCHIVE</command>
+    <jobname>regional_archive_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></jobname>
+    <join><cyclestr>&LOGDIR;/regional_archive_&DOMAIN;_@Y@m@d@H.log</cyclestr></join>
+    <account>&ACCOUNT;</account>
+    <queue>&QUEUE_SERVICE;</queue>
+    &SERVICE_EXTRA;
+    &RESERVATION;
+    &ARCHIVE_RESOURCES;
+    &ENV_VARS;
+    <envar><name>job</name><value>regional_archive_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+    <dependency>
+      <and>
+        <metataskdep metatask="post"/>
+        <metataskdep metatask="post_goes"/>
+      </and>
+    </dependency>
+  </task>
+
+<!--  **********************************************************************  -->
+<!--  ******************************* Cleanup ******************************  -->
+
+  <task name="cleanup" maxtries="&MAX_TRIES;">
+    <command>&PRE; &JOBS;/JREGIONAL_CLEANUP</command>
+    <jobname>regional_cleanup_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></jobname>
+    <join><cyclestr>&LOGDIR;/regional_cleanup_&DOMAIN;_@Y@m@d@H.log</cyclestr></join>
+    <account>&ACCOUNT;</account>
+    <queue>&QUEUE_SERVICE;</queue>
+    &SERVICE_EXTRA;
+    &RESERVATION;
+    &ARCHIVE_RESOURCES;
+    &ENV_VARS;
+    <envar><name>job</name><value>regional_cleanup_&DOMAIN;_<cyclestr>@Y@m@d@H</cyclestr></value></envar>
+
+    <dependency>
+      <and>
+        <taskdep task="archive"/>
+      </and>
+    </dependency>
+  </task>
+
+</workflow>

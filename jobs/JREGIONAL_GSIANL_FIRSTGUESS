@@ -1,0 +1,124 @@
+#!/bin/ksh
+ set -x
+
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
+
+hostname > hname
+hl=`cut -c 1-1 hname`
+
+if [ $hl = m ] ; then
+  wcoss=tp
+fi
+if [ $hl = v ] ; then
+  wcoss=gp
+fi
+
+##############################################
+# Initialize PDY variables
+##############################################
+# PDY, CDATE, and tmmark are passed in through Rocoto xml
+#setpdy.sh
+#. ./PDY
+
+export CYCLEtm12=`$NDATE -12 $CDATE`
+export CYCLEtm06=`$NDATE -06 $CDATE`
+export PDYtm06=`echo $CYCLEtm06 | cut -c 1-8`
+export cyctm06=`echo $CYCLEtm06 | cut -c 9-10`
+export PDYa=$PDYtm06
+export cya=$cyctm06
+
+export vlddate=$CYCLEtm06
+export SDATE=$CYCLEtm06
+export cyc=`echo $CYCLEtm06 | cut -c 9-10`
+export CYC=$cyc
+export PDY=`echo $CYCLEtm06 | cut -c 1-8`
+
+export PDYrun=`echo $CDATE | cut -c 1-8`
+export CYCrun=`echo $CDATE | cut -c 9-10`
+
+##############################################
+# Obtain unique process id (pid) and make temp directory
+##############################################
+export DATA=${STMP}/tmpnwprd/${job}_${CYCrun}
+mkdir -p $DATA
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
+
+##############################################
+# Define COM directories
+##############################################
+export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDYrun}/${CYCrun}
+mkdir -p $COMOUT
+export COMOUTtm06=${COMROOT}/${NET}/${envir}/${RUN}.${PDYtm06}/${cyctm06}
+export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDYrun}/${CYCrun}
+mkdir -p $NWGES
+
+export GUESSdir=$NWGES/guess.${tmmark}
+mkdir -p $GUESSdir
+export ANLdir=$NWGES/anl.${tmmark}
+mkdir -p $ANLdir
+
+##############################################
+# Specify Execution Areas
+##############################################
+# Set path/file for gsi executable
+
+if [ $machine = theia ] ; then
+  export UTIL=/scratch4/NCEPDEV/meso/save/${USER}/run_it_regional/exec
+  export gsiexec=/scratch4/NCEPDEV/meso/noscrub/Wanshu.Wu/build/bin/gsi.x
+  export fixgsi=/scratch4/NCEPDEV/meso/save/Wanshu.Wu/Code/ProdGSI/fix
+  export fixcrtm=/scratch4/NCEPDEV/da/save/Michael.Lueken/nwprod/lib/crtm/2.2.3/fix_update
+fi
+if [ $machine = wcoss ] ; then
+  export UTIL=$HOMEdir/util/ush
+  export gsiexec=/meso/save/${USER}/fv3reg_aug2018/fv3gsi_reg/build/bin/gsi.x
+  export fixgsi=/meso/save/${USER}/fv3reg_aug2018/fv3gsi_reg/ProdGSI/fix
+  export fixcrtm=/da/save/Michael.Lueken/CRTM_REL-2.2.3/crtm_v2.2.3/fix_update
+fi
+if [ $machine = wcoss_dell_p3 ] ; then
+  export UTIL=${HOMEfv3}/util/ush
+  export gsiexec=${EXECfv3}/regional_gsi.x
+  export fixgsi=${HOMEfv3}/sorc/gsi.fd/fix
+  export fixcrtm=/gpfs/dell1/nco/ops/nwprod/lib/crtm/v2.2.6/fix
+fi
+
+# setup ensemble filelist03
+
+if [ $machine = theia ] ; then
+   export COMINgfs=/scratch4/NCEPDEV/rstprod/com/gfs/prod
+   export COMINnam=/scratch4/NCEPDEV/rstprod/com/nam/prod
+   export COMINrtma=/scratch4/NCEPDEV/rstprod/com/rtma2p5/prod
+   # bias correction files from prev cycle
+   export COMINbias=$COMOUTtm06
+fi
+if [ $machine = wcoss_cray -o $machine = wcoss -o $machine = wcoss_dell_p3 ] ; then
+   export COMINgfs=/gpfs/dell1/nco/ops/com/gfs/prod
+   export COMINnam=/gpfs/${wcoss}2/nco/ops/com/nam/prod
+   export COMINrap=/gpfs/hps/nco/ops/com/rap/prod
+   export COMINbias=$COMOUTtm06
+   export COMINrtma=/gpfs/${wcoss}2/nco/ops/com/rtma/prod
+   export MYGDAS=$COMINgfs/gdas.${PDYa}/${cya}
+   export GBGDAS=$COMINgfs/gdas.${PDYa}/${cya}
+fi
+
+##############################################
+# Execute the script.
+##############################################
+${HOMEfv3}/scripts/exregional_gsianl_firstguess.sh
+
+if [ -e $pgmout ] ; then
+cat $pgmout
+fi
+
+if [ -e $pgmerr ] ; then
+cat $pgmerr
+fi
+
+if [ ${RM_TMPDIR:-YES} = YES ] ; then rm -rf $DATA ; fi
+
+date
+
+exit

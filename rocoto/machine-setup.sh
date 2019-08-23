@@ -1,0 +1,1 @@
+../sorc/machine-setup.sh

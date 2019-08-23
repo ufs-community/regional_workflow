@@ -1,0 +1,69 @@
+#!/bin/ksh
+set -x
+
+. $HOMEfv3/jobs/JREGIONAL_ENVIR
+. $USHfv3/run_commands_forecast.sh
+
+####################################
+# SENDCOM - Copy files to /com directory
+####################################
+export SENDCOM=${SENDCOM:-YES}
+
+####################################
+# Specify Execution Areas
+####################################
+export POSTGPEXEC=${EXECfv3}/regional_post.x
+export WGRIB2=${WGRIB2:-${EXECfv3}/wgrib2new}
+
+####################################
+# Run setpdy and initialize PDY variables
+####################################
+# PDY and CDATE are passed in through Rocoto xml
+#setpdy.sh
+#. ./PDY
+
+#####################################
+# Working directories
+#####################################
+export INPUT_DATA=${INPUT_DATA:-${STMP}/tmpnwprd/regional_forecast_${tmmark}_${dom}_${PDY}${cyc}}
+export DATA=${DATA:-${STMP}/tmpnwprd/${job}}
+if [ -d $DATA ]; then
+  rm -rf $DATA
+fi
+mkdir -p $DATA
+cd $DATA
+
+export pid=$$
+export pgmout="OUTPUT.${pid}"
+export pgmerr=errfile
+
+#####################################
+# Define COM directories
+#####################################
+export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $COMOUT
+export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+mkdir -p $NWGES
+
+#####################################
+# wcoss environment settings
+#####################################
+export OMP_NUM_THREADS=1
+
+env
+
+#####################################
+# Execute the script.
+${HOMEfv3}/scripts/exregional_post.sh
+export err=$?
+#####################################
+
+if [ -e $pgmerr ] ; then
+cat $pgmerr
+fi
+
+if [ -e $pgmout ] ; then
+cat $pgmout
+fi
+
+exit $err
