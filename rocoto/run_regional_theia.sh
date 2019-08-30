@@ -10,7 +10,7 @@ cd ${HOMEfv3}/rocoto
 
 # if want a non-CONUS domain, export DOMAIN here
 
-# export DOMAIN=pr
+export DOMAIN=pr
 
 source ./config.workflow.defaults
 

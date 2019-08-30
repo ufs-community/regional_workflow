@@ -116,6 +116,9 @@ if [ $tmmark = tm00 ] ; then
       cp ${PARMfv3}/suite_${CCPP_SUITE}.xml suite_${CCPP_SUITE}.xml
     else
       cp ${PARMfv3}/input_sar_${dom}.nml input.nml
+      if [ ! -e input.nml ] ; then
+         echo "FATAL ERROR: no input_sar_${dom}.nml in PARMfv3 directory.  Create one!"
+      fi
     fi
   fi
   cp ${PARMfv3}/model_configure_sar.tmp_${dom} model_configure.tmp
