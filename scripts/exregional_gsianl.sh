@@ -313,7 +313,6 @@ for file in `awk '{if($1!~"!"){print $1}}' ./satinfo | sort | uniq` ;do
     $ncp $fixcrtm/${file}.TauCoeff.bin ./
 done
 
-###export nmmb_nems_obs=${COMINnam}/nam.${PDYrun}
 export nmmb_nems_obs=${COMINrap}/rap.${PDYa}
 export nmmb_nems_bias=${COMINbias}
 

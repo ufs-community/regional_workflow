@@ -89,17 +89,17 @@ fi
 
 if [ $machine = theia ] ; then
    export COMINgfs=/scratch4/NCEPDEV/rstprod/com/gfs/prod
-   export COMINnam=/scratch4/NCEPDEV/rstprod/com/nam/prod
+   export COMINrap=/scratch4/NCEPDEV/rstprod/com/rap/prod
    export COMINrtma=/scratch4/NCEPDEV/rstprod/com/rtma2p5/prod
    # bias correction files from prev cycle
    export COMINbias=$COMOUTtm06
 fi
 if [ $machine = wcoss_cray -o $machine = wcoss -o $machine = wcoss_dell_p3 ] ; then
    export COMINgfs=/gpfs/dell1/nco/ops/com/gfs/prod
-   export COMINnam=/gpfs/${wcoss}2/nco/ops/com/nam/prod
    export COMINrap=/gpfs/hps/nco/ops/com/rap/prod
+   export COMINrtma=/gpfs/dell2/nco/ops/com/rtma/prod
+   # bias correction files from prev cycle
    export COMINbias=$COMOUTtm06
-   export COMINrtma=/gpfs/${wcoss}2/nco/ops/com/rtma/prod
    export MYGDAS=$COMINgfs/gdas.${PDYa}/${cya}
    export GBGDAS=$COMINgfs/gdas.${PDYa}/${cya}
 fi
