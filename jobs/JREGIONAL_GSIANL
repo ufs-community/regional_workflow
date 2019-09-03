@@ -89,10 +89,10 @@ if [ $machine = theia ] ; then
 fi
 if [ $machine = wcoss_cray -o $machine = wcoss -o $machine = wcoss_dell_p3 ] ; then
    export COMINgfs=/gpfs/dell1/nco/ops/com/gfs/prod
-   export COMINnam=/gpfs/${wcoss}2/nco/ops/com/nam/prod
+   export COMINnam=/gpfs/dell1/nco/ops/com/nam/prod
    export COMINrap=/gpfs/hps/nco/ops/com/rap/prod
    export COMINbias=$COMOUT
-   export COMINrtma=/gpfs/${wcoss}2/nco/ops/com/rtma/prod
+   export COMINrtma=/gpfs/dell2/nco/ops/com/rtma/prod
 fi
 
 ##############################################
