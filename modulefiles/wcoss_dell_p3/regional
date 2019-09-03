@@ -23,6 +23,8 @@ module load grib_util/1.1.0
 setenv WGRIB2 /gpfs/dell2/emc/modeling/noscrub/emc.hurpara/local/bin/wgrib2.v2.0.8
 module load HPSS/5.0.2.5
 
+module load NetCDF/4.5.0
+
 module use /gpfs/dell2/emc/modeling/noscrub/emc.nemspara/soft/modulefiles
 module load esmf/8.0.0bs21
 

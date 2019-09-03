@@ -30,7 +30,7 @@ SITE_FILE="sites/${machine}.ent"
 CPU_ACCOUNT=HREF-T2O
 
 # Experiment name
-EXPT=fv3sartest
+EXPT=oconus
 # First, last, and interval of the workflow cycles
 CYCLE_YMDH_BEG="2019083012"
 CYCLE_YMDH_END="2019103112"
@@ -38,8 +38,8 @@ CYCLE_INT_HH="12"
 
 GET_INPUT=NO
 COMINgfs=/gpfs/dell1/nco/ops/com/gfs/prod
-STMP=/gpfs/dell1/stmp/${USER}/${EXPT}_${DOMAIN}
-PTMP=/gpfs/dell1/ptmp/${USER}/${EXPT}_${DOMAIN}
+STMP=/gpfs/dell1/stmp/${USER}/${EXPT}
+PTMP=/gpfs/dell1/ptmp/${USER}/${EXPT}
 
 if [ ! -e ${PTMP} ] ; then
   mkdir -p $PTMP
