@@ -3,7 +3,7 @@
 <!DOCTYPE workflow [
 
   <!-- Set some variables for use later: -->
-  <!ENTITY CYCLE_THROTTLE "3">
+  <!ENTITY CYCLE_THROTTLE "9">
   <!ENTITY TASK_THROTTLE "60">
 
   <!-- Maximum number of times to try various jobs -->
