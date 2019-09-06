@@ -3,14 +3,15 @@ set -x
 export RUN_ENVIR=dev
 export envir=para
 
-if [ ${machine} = "wcoss_dell_p3" ]
-then
-
 export NET=fv3cam
 export RUN=fv3sar
 export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
 export CCPP=false
 export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
+
+if [ ${machine} = "wcoss_dell_p3" ]
+then
+
 
 export COMINgdas=${COMINgdas:-/gpfs/dell1/nco/ops/com/gfs/prod}
 export GBCOMINgfs=${GBCOMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
@@ -27,11 +28,6 @@ export HOMEfv3=${HOMEfv3:-/gpfs/dell2/emc/modeling/noscrub/$USER/regional_workfl
 elif [ ${machine} = "theia" ]
 then
 
-export NET=fv3cam
-export RUN=fv3sar
-export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
-export CCPP=false
-export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
 
 export COMINgdas=${COMINgdas:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
 export GBCOMINgfs=${GBCOMINgfs:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
@@ -44,6 +40,21 @@ export rzdmuser=mpyle
 export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate
 export NHOUR=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/nhour
 export HOMEfv3=${HOMEfv3:-/scratch4/NCEPDEV/fv3-cam/noscrub/$USER/regional_workflow}
+
+elif [ ${machine} = "wcoss_cray" ]
+then
+
+export COMINgdas=${COMINgdas:-/gpfs/dell1/nco/ops/com/gfs/prod}
+export GBCOMINgfs=${GBCOMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
+export COMINgfs=${COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
+
+export PTMP=${PTMP:-/gpfs/hps3/ptmp/${USER}}
+export STMP=${STMP:-/gpfs/hps3/stmp/${USER}}
+export rzdmuser=mpyle
+
+export HOMEfv3=${HOMEfv3:-/gpfs/hps3/emc/meso/noscrub/$USER/regional_workflow}
+export NDATE=/gpfs/hps/nco/ops/nwprod/prod_util.v1.1.0/exec/ndate
+export NHOUR=/gpfs/hps/nco/ops/nwprod/prod_util.v1.1.0/exec/nhour
 
 else
 

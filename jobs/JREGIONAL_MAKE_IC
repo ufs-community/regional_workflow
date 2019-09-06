@@ -2,6 +2,7 @@
 set -xe
 
 . $HOMEfv3/jobs/JREGIONAL_ENVIR
+. $USHfv3/run_commands_forecast.sh
 
 ####################################
 # Specify Execution Areas
