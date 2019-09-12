@@ -12,6 +12,7 @@
        chksum_debug = .false.
        dycore_only = .false.
        fdiag = 1
+       avg_max_length = 3600.
        ccpp_suite = CCPP_SUITE
 /
 
@@ -42,17 +43,17 @@
        npy      = 1297
        ntiles   = 1,
        npz    = 64
-       !grid_type = -1
+!       grid_type = -1
        make_nh = .T.
        fv_debug = .F.
-       range_warn = .T.
+       range_warn = .F.
        reset_eta = .F.
        n_sponge = 24
-       nudge_qv = .T.
-       tau = 3.0
-       rf_cutoff = 10.e2
-       d2_bg_k1 = 0.16
-       d2_bg_k2 = 0.02
+       nudge_qv = .F.
+       tau = 5.0
+       rf_cutoff = 20.e2
+       d2_bg_k1 = 0.20
+       d2_bg_k2 = 0.04
        kord_tm = -11
        kord_mt =  11
        kord_wz =  11
@@ -63,8 +64,8 @@
        beta = 0.
        a_imp = 1.
        p_fac = 0.1
-       k_split  = 4
-       n_split  = 5
+       k_split  = 6
+       n_split  = 6
        nwat = 6
        na_init = 1
        d_ext = 0.0
@@ -92,6 +93,7 @@
        hord_tr = 8
        adjust_dry_mass = .F.
        consv_te = 0.
+       do_sat_adj = .T.
        consv_am = .F.
        fill = .T.
        dwind_2d = .F.
@@ -106,10 +108,23 @@
        target_lat = 38.5
        target_lon = -97.5
        stretch_fac = 1.5
-!!     nord_zs_filter = 4
+!      nord_zs_filter = 4
        n_zs_filter = 0
+       full_zs_filter = .F.
        regional = .true.
        bc_update_interval = 3
+       agrid_vel_rst = .false.
+/
+
+&surf_map_nml
+    zero_ocean = .F.
+    cd4 = 0.12
+    cd2 = -1
+    n_del2_strong = 0
+    n_del2_weak = 2
+    n_del4 = 1
+    max_slope = 0.4
+    peak_fac = 1.
 /
 
  &external_ic_nml
@@ -123,6 +138,9 @@
  &gfs_physics_nml
        fhzero         = 1.
        ldiag3d        = .false.
+       lradar         = .true.
+       avg_max_length = 3600.
+       h2o_phys       = .true.
        fhcyc          = 24.
        nst_anl        = .true.
        use_ufo        = .true.
@@ -174,11 +192,14 @@
        debug          = .false.
        oz_phys        = .F.
        oz_phys_2015   = .T.
-       nstf_name      = 1,1,1,0,5
+       nstf_name      = 2,0,0,0,0
        cplflx         = .F.
        iau_delthrs    = 6
        iaufhrs        = 30
        iau_inc_files  = ''
+       do_deep        = .false.
+       lgfdlmprad     = .true.
+       effr_in        = .true.
        do_sppt        = .F.
        do_shum        = .F.
        do_skeb        = .F.

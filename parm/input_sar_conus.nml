@@ -49,7 +49,7 @@
        reset_eta = .F.
        n_sponge = 24
        nudge_qv = .F.
-       tau = 5.
+       tau = 5.0
        rf_cutoff = 20.e2
        d2_bg_k1 = 0.20
        d2_bg_k2 = 0.04
@@ -107,14 +107,12 @@
        target_lat = 38.5
        target_lon = -97.5
        stretch_fac = 1.5
+!      nord_zs_filter = 4
+       n_zs_filter = 0
+       full_zs_filter = .F.
        regional = .true.
        bc_update_interval = 3
        agrid_vel_rst = .false.
-
-       full_zs_filter = .F. !unreleased feature
-
-       nord_zs_filter = 4
-       n_zs_filter = 0 ! safety
 /
 
 &surf_map_nml
@@ -161,6 +159,7 @@
        lwhtr          = .true.
        swhtr          = .true.
        cnvgwd         = .false.
+       shal_cnv       = .false.
        cal_pre        = .false.
        redrag         = .true.
        dspheat        = .true.
@@ -179,7 +178,6 @@
        iau_delthrs    = 6
        iaufhrs        = 30
        iau_inc_files  = ''
-       shal_cnv = .false. !Shallow convection
        do_deep = .false.
        lgfdlmprad = .true.
        effr_in = .true.
