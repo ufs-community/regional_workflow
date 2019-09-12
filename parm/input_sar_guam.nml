@@ -36,10 +36,10 @@
 /
 
  &fv_core_nml
-       layout   = 14,48
+       layout   = 6,10
        io_layout = 1,1
-       npx      = 1345
-       npy      = 1153
+       npx      = 433
+       npy      = 361
        ntiles   = 1,
        npz    = 64
 !       grid_type = -1
@@ -104,8 +104,8 @@
        res_latlon_dynamics = "fv3_increment.nc"
 
        do_schmidt = .true.
-       target_lat = 61.0
-       target_lon = -153.0
+       target_lat = 15.0
+       target_lon = 146.0
        stretch_fac = 1.5
        regional = .true.
        bc_update_interval = 3
