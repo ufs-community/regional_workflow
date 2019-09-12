@@ -23,7 +23,7 @@ FV3=$( pwd -P )/FV3
 CCPP=${CCPP:-"false"}
 cd tests/
 if [ $CCPP  = true ] || [ $CCPP = TRUE ] ; then
-  ./compile.sh "$FV3" "$target" "NCEP64LEV=Y HYDRO=N 32BIT=Y CCPP=Y" 1
+  ./compile.sh "$FV3" "$target" "NCEP64LEV=Y HYDRO=N 32BIT=Y CCPP=Y STATIC=Y SUITES=FV3_GFS_2017_gfdlmp_regional" 1
 else
   ./compile.sh "$FV3" "$target" "NCEP64LEV=Y HYDRO=N 32BIT=Y" 1
 fi
