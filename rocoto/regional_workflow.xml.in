@@ -3,8 +3,8 @@
 <!DOCTYPE workflow [
 
   <!-- Set some variables for use later: -->
-  <!ENTITY CYCLE_THROTTLE "9">
-  <!ENTITY TASK_THROTTLE "60">
+  <!ENTITY CYCLE_THROTTLE "4">
+  <!ENTITY TASK_THROTTLE "80">
 
   <!-- Maximum number of times to try various jobs -->
   <!ENTITY MAX_TRIES_TRANSFER "3"> <!-- pulling data over network -->
@@ -282,7 +282,7 @@
            <taskdep task="forecast_tm00" state="RUNNING"/>
            <taskdep task="forecast_tm00"/>
           </or>
-          <datadep age="03:00"><cyclestr>&DATAROOT;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H/logf0#fhr#</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&DATAROOT;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H/logf0#fhr#</cyclestr></datadep>
         </and>
       </dependency>
     </task>
@@ -314,7 +314,7 @@
            <taskdep task="forecast_tm00" state="RUNNING"/>
            <taskdep task="forecast_tm00"/>
           </or>
-          <datadep age="03:00"><cyclestr>&DATAROOT;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H/logf0#fhr#</cyclestr></datadep>
+          <datadep age="05:00"><cyclestr>&DATAROOT;/regional_forecast_tm00_&DOMAIN;_@Y@m@d@H/logf0#fhr#</cyclestr></datadep>
         </and>
       </dependency>
     </task>

@@ -128,8 +128,6 @@ else # REGIONAL = 2, just generate boundary data
 
   cd $DATA
 
-  pwd
-
   # VDATE here needs to be valid date of GFS BC file
   if [ $tmmark = tm12 ] ; then
     export VDATE=`${NDATE} ${bchour} ${CYCLEGUESS}`
