@@ -5,20 +5,12 @@ set -x
 # Home directory of the regional_workflow package
 HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow
 
-module load lsf/10.1
-module load NetCDF/4.5.0
-module use -a /gpfs/dell3/usrx/local/dev/emc_rocoto/modulefiles/
-module load ruby/2.5.1 rocoto/1.2.4
-
-
 # if want a non-CONUS domain, export DOMAIN here
 doms="hi"
 
-
-for DOMAIN in $doms
-do
-
-export DOMAIN
+# for DOMAIN in $doms
+# do
+# export DOMAIN
 
 
 cd ${HOMEfv3}/rocoto
@@ -38,8 +30,8 @@ CYCLE_INT_HH="12"
 
 GET_INPUT=NO
 COMINgfs=/gpfs/dell1/nco/ops/com/gfs/prod
-STMP=/gpfs/dell1/stmp/${USER}/${EXPT}_${DOMAIN}
-PTMP=/gpfs/dell1/ptmp/${USER}/${EXPT}_${DOMAIN}
+STMP=/gpfs/dell1/stmp/${USER}/${EXPT}
+PTMP=/gpfs/dell1/ptmp/${USER}/${EXPT}
 
 if [ ! -e ${PTMP} ] ; then
   mkdir -p $PTMP
@@ -50,8 +42,8 @@ if [ ! -e ${STMP} ] ; then
 fi
 
 # The workflow files of the experiment
-expxml=${EXPT}_${CYCLE_YMDH_BEG}_${DOMAIN}.xml
-expdb=${EXPT}_${CYCLE_YMDH_BEG}_${DOMAIN}.db
+expxml=${EXPT}_${CYCLE_YMDH_BEG}.xml
+expdb=${EXPT}_${CYCLE_YMDH_BEG}.db
 
 # Generate the workflow definition file by parsing regional_workflow.xml.in
 sed -e "s|@\[EXPT.*\]|${EXPT}|g" \
@@ -78,6 +70,4 @@ rocotorun -v 10 -w ${expxml} -d ${expdb}
 
 echo 'job done'
 
-sleep 2
-
-done
+# done
