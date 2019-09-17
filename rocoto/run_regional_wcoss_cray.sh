@@ -3,26 +3,35 @@
 set -x
 
 # Home directory of the regional_workflow package
-HOMEfv3=/gpfs/dell2/emc/modeling/noscrub/${USER}/regional_workflow
+HOMEfv3=/gpfs/hps3/emc/meso/noscrub/${USER}/regional_workflow
+
+module load xt-lsfhpc/9.1.3
+module load NetCDF-intel-haswell/4.2
+module use -a /usrx/local/emc_rocoto/modulefiles
+module load rocoto/1.2.4
+
 
 # if want a non-CONUS domain, export DOMAIN here
-doms="hi"
+doms="hi guam"
 
-# for DOMAIN in $doms
-# do
-# export DOMAIN
+
+for DOMAIN in $doms
+do
+
+export DOMAIN
 
 
 cd ${HOMEfv3}/rocoto
 
 source ./config.workflow.defaults
 
-machine=wcoss_dell_p3 
+export machine=wcoss_cray
+
 SITE_FILE="sites/${machine}.ent"
 CPU_ACCOUNT=HREF-T2O
 
 # Experiment name
-EXPT=fv3sartest
+EXPT=oconus
 # First, last, and interval of the workflow cycles
 CYCLE_YMDH_BEG="2019083012"
 CYCLE_YMDH_END="2019103112"
@@ -30,8 +39,8 @@ CYCLE_INT_HH="12"
 
 GET_INPUT=NO
 COMINgfs=/gpfs/dell1/nco/ops/com/gfs/prod
-STMP=/gpfs/dell1/stmp/${USER}/${EXPT}
-PTMP=/gpfs/dell1/ptmp/${USER}/${EXPT}
+STMP=/gpfs/hps2/stmp/${USER}/${EXPT}
+PTMP=/gpfs/hps2/ptmp/${USER}/${EXPT}
 
 if [ ! -e ${PTMP} ] ; then
   mkdir -p $PTMP
@@ -42,8 +51,8 @@ if [ ! -e ${STMP} ] ; then
 fi
 
 # The workflow files of the experiment
-expxml=${EXPT}_${CYCLE_YMDH_BEG}.xml
-expdb=${EXPT}_${CYCLE_YMDH_BEG}.db
+expxml=${EXPT}_${DOMAIN}.xml
+expdb=${EXPT}_${DOMAIN}.db
 
 # Generate the workflow definition file by parsing regional_workflow.xml.in
 sed -e "s|@\[EXPT.*\]|${EXPT}|g" \
@@ -70,4 +79,6 @@ rocotorun -v 10 -w ${expxml} -d ${expdb}
 
 echo 'job done'
 
-# done
+sleep 2
+
+done

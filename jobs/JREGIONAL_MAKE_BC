@@ -118,7 +118,7 @@ while (test "$hour" -le "$end_hour")
     echo "env REGIONAL=2 HALO=4 bchour=$hour_name DATA=$BC_DATA $HOMEfv3/scripts/exregional_make_ic_bc.sh" >> chgres_bc_f${hour_name}.sh
     chmod u+x chgres_bc_f${hour_name}.sh
     echo APRUNO is $APRUNO
-    echo "${APRUNO} chgres_bc_f${hour_name}.sh > out.chgres.$hour_name 2>&1 ${BACKGROUND}" >> bcfile.input
+    echo "${APRUNO} ./chgres_bc_f${hour_name}.sh > out.chgres.$hour_name 2>&1 ${BACKGROUND}" >> bcfile.input
   elif [ $tmmark != tm00 ] ; then
 # Run the BC creation sequentially
     export HALO=4

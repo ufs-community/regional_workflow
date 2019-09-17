@@ -126,6 +126,8 @@ else # REGIONAL = 2, just generate boundary data
 
   export CHGRESVARS="use_ufo=.false.,nst_anl=$nst_anl,idvc=2,nvcoord=2,idvt=21,idsl=1,IDVM=0,nopdpvv=$nopdpvv"
 
+  cd $DATA
+
   # VDATE here needs to be valid date of GFS BC file
   if [ $tmmark = tm12 ] ; then
     export VDATE=`${NDATE} ${bchour} ${CYCLEGUESS}`
