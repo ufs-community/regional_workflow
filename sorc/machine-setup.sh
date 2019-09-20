@@ -99,7 +99,7 @@ elif [[ -d /dcom && -d /hwrf ]] ; then
 	echo load the module command 1>&2
         source /usrx/local/Modules/default/init/$__ms_shell
     fi
-    target=wcoss_phase2
+    target=wcoss
     module purge
 elif [[ -d /glade ]] ; then
     # We are on NCAR Yellowstone
