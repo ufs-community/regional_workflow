@@ -12,7 +12,6 @@ export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
 if [ ${machine} = "wcoss_dell_p3" ]
 then
 
-
 export COMINgdas=${COMINgdas:-/gpfs/dell1/nco/ops/com/gfs/prod}
 export GBCOMINgfs=${GBCOMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
 export COMINgfs=${COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
@@ -24,22 +23,6 @@ export rzdmuser=bblake
 export NDATE=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/ndate
 export NHOUR=/gpfs/dell1/nco/ops/nwprod/prod_util.v1.1.0/exec/ips/nhour
 export HOMEfv3=${HOMEfv3:-/gpfs/dell2/emc/modeling/noscrub/$USER/regional_workflow}
-
-elif [ ${machine} = "theia" ]
-then
-
-
-export COMINgdas=${COMINgdas:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
-export GBCOMINgfs=${GBCOMINgfs:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
-export COMINgfs=${COMINgfs:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
-   
-export PTMP=${PTMP:-/scratch4/NCEPDEV/stmp3/${USER}}
-export STMP=${STMP:-/scratch4/NCEPDEV/stmp3/${USER}}
-export rzdmuser=mpyle
-
-export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate
-export NHOUR=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/nhour
-export HOMEfv3=${HOMEfv3:-/scratch4/NCEPDEV/fv3-cam/noscrub/$USER/regional_workflow}
 
 elif [ ${machine} = "wcoss_cray" ]
 then
@@ -56,6 +39,36 @@ export HOMEfv3=${HOMEfv3:-/gpfs/hps3/emc/meso/noscrub/$USER/regional_workflow}
 export NDATE=/gpfs/hps/nco/ops/nwprod/prod_util.v1.1.0/exec/ndate
 export NHOUR=/gpfs/hps/nco/ops/nwprod/prod_util.v1.1.0/exec/nhour
 
+elif [ ${machine} = "hera" ]
+then
+
+export COMINgdas=${COMINgdas:-/scratch2/NCEPDEV/fv3-cam/emc.campara/fv3-input/COMGFS}
+export GBCOMINgfs=${GBCOMINgfs:-/scratch2/NCEPDEV/fv3-cam/emc.campara/fv3-input/COMGFS}
+export COMINgfs=${COMINgfs:-/scratch2/NCEPDEV/fv3-cam/emc.campara/fv3-input/COMGFS}
+   
+export PTMP=${PTMP:-/scratch2/NCEPDEV/stmp3/${USER}}
+export STMP=${STMP:-/scratch2/NCEPDEV/stmp3/${USER}}
+export rzdmuser=mpyle
+
+export NDATE=/scratch2/NCEPDEV/nwprod/NCEPLIBS/util/prod_util.v1.1.0/exec/ndate
+export NHOUR=/scratch2/NCEPDEV/nwprod/NCEPLIBS/util/prod_util.v1.1.0/exec/nhour
+export HOMEfv3=${HOMEfv3:-/scratch2/NCEPDEV/fv3-cam/$USER/regional_workflow}
+
+elif [ ${machine} = "theia" ]
+then
+
+export COMINgdas=${COMINgdas:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
+export GBCOMINgfs=${GBCOMINgfs:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
+export COMINgfs=${COMINgfs:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
+   
+export PTMP=${PTMP:-/scratch4/NCEPDEV/stmp3/${USER}}
+export STMP=${STMP:-/scratch4/NCEPDEV/stmp3/${USER}}
+export rzdmuser=mpyle
+
+export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate
+export NHOUR=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/nhour
+export HOMEfv3=${HOMEfv3:-/scratch4/NCEPDEV/fv3-cam/noscrub/$USER/regional_workflow}
+
 else
 
 echo UNDEFINED ENVIRONMENT
@@ -68,11 +81,10 @@ export CRES=768          #-- FV3 equivalent to 13-km global resolution
 export CASE=C${CRES}
 export gtype=regional    # grid type = uniform, stretch, nest, or regional
 
-export HOMEfv3=${HOMEfv3:-/gpfs/dell2/emc/modeling/noscrub/$USER/regional_workflow}
 export PARMfv3=$HOMEfv3/parm
 export EXECfv3=$HOMEfv3/exec
 export USHfv3=$HOMEfv3/ush
-export LD_LIBRARY_PATH="${PARMfv3}/../sorc/fv3gfs.fd/ccpp/lib/${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="${PARMfv3}/../sorc/regional_forecast.fd/ccpp/lib/${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 export FIXfv3=$HOMEfv3/fix
 export FIXsar=$FIXfv3/fix_sar/${dom}
