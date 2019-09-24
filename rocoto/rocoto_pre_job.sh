@@ -9,6 +9,8 @@ if [ "$machine" = "wcoss_dell_p3" ] ; then
   . /usrx/local/prod/lmod/lmod/init/sh
 elif [ "$machine" = "wcoss_cray" ] ; then
   . /opt/modules/default/init/sh
+elif [ "$machine" = "hera" ] ; then
+  . /apps/lmod/lmod/init/sh
 elif [ "$machine" = "theia" ] ; then
   . /apps/lmod/lmod/init/sh
 elif [ "$machine" = "jet" ] ; then

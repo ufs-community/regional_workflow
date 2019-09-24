@@ -17,6 +17,8 @@ pwd=$(pwd -P)
 
 if [[ ${target} == "wcoss_dell_p3" || ${target} == "wcoss" ||  ${target} == "wcoss_cray" ]]; then
     FIX_DIR="/gpfs/dell2/emc/modeling/noscrub/emc.campara/fix_fv3cam"
+elif [ ${target} == "hera" ]; then
+    FIX_DIR="/scratch2/NCEPDEV/fv3-cam/emc.campara/fix_fv3cam"
 elif [ ${target} == "theia" ]; then
     FIX_DIR="/scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/fix_fv3cam"
 elif [ ${target} == "jet" ]; then
