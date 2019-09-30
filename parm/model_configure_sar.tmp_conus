@@ -22,8 +22,8 @@ restart_interval:        12
 output_1st_tstep_rst:    .false.
 
 quilting:                .true.
-write_groups:            3
-write_tasks_per_group:   48
+write_groups:            _WG_
+write_tasks_per_group:   _WTPG_
 num_files:               2
 filename_base:           'dyn''phy'
 output_file:             'netcdf'

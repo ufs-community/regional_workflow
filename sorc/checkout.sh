@@ -42,22 +42,22 @@ fi
 
 echo EMC_post checkout ...
 if [[ ! -d regional_post.fd ]] ; then
-    git clone -b feature/regional https://github.com/hafs-community/EMC_post.git regional_post.fd
+    git clone -b support/regional https://github.com/hafs-community/EMC_post.git regional_post.fd
 else
     echo 'Directory regional_post.fd already exists. Pull the latest updates from the corresponding branch.'
     cd regional_post.fd
-    git checkout feature/regional
+    git checkout support/regional
     git pull
     cd ${topdir}
 fi
 
 echo UFS_UTILS checkout ...
 if [[ ! -d regional_utils.fd ]] ; then
-    git clone -b feature/HAFS https://github.com/hafs-community/UFS_UTILS.git regional_utils.fd
+    git clone -b support/regional https://github.com/hafs-community/UFS_UTILS.git regional_utils.fd
 else
     echo 'Directory regional_utils.fd already exists. Pull the latest updates from the corresponding branch.'
     cd regional_utils.fd
-    git checkout feature/HAFS
+    git checkout support/regional
     git pull
     cd ${topdir}
 fi

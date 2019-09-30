@@ -22,12 +22,12 @@ CPU_ACCOUNT=fv3-cam
 # Experiment name
 EXPT=fv3sartest
 # First, last, and interval of the workflow cycles
-CYCLE_YMDH_BEG="2019082700"
-CYCLE_YMDH_END="2019082700"
+CYCLE_YMDH_BEG="2019093000"
+CYCLE_YMDH_END="2019093000"
 CYCLE_INT_HH="06"
 
 GET_INPUT=NO
-COMINgfs=/scratch2/NCEPDEV/fv3-cam/emc.campara/fv3-input/COMGFS
+COMINgfs=/scratch2/NCEPDEV/fv3-cam/noscrub/Eric.Rogers/prfv3rt1
 STMP=/scratch2/NCEPDEV/stmp3/${USER}/${EXPT}
 PTMP=/scratch2/NCEPDEV/stmp3/${USER}/${EXPT}
 
