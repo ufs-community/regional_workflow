@@ -36,10 +36,10 @@
 /
 
  &fv_core_nml
-       layout   = _TASK_X_,_TASK_Y_
+       layout   = 14,48
        io_layout = 1,1
-       npx      = 1921
-       npy      = 1297
+       npx      = 1345
+       npy      = 1153
        ntiles   = 1,
        npz    = 64
 !       grid_type = -1
@@ -49,7 +49,7 @@
        reset_eta = .F.
        n_sponge = 24
        nudge_qv = .F.
-       tau = 5.0
+       tau = 5.
        rf_cutoff = 20.e2
        d2_bg_k1 = 0.20
        d2_bg_k2 = 0.04
@@ -104,15 +104,17 @@
        res_latlon_dynamics = "fv3_increment.nc"
 
        do_schmidt = .true.
-       target_lat = 38.5
-       target_lon = -97.5
+       target_lat = 61.0
+       target_lon = -153.0
        stretch_fac = 1.5
-!      nord_zs_filter = 4
-       n_zs_filter = 0
-       full_zs_filter = .F.
        regional = .true.
        bc_update_interval = 3
        agrid_vel_rst = .false.
+
+       full_zs_filter = .F. !unreleased feature
+
+       nord_zs_filter = 4
+       n_zs_filter = 0 ! safety
 /
 
 &surf_map_nml
@@ -159,7 +161,6 @@
        lwhtr          = .true.
        swhtr          = .true.
        cnvgwd         = .false.
-       shal_cnv       = .false.
        cal_pre        = .false.
        redrag         = .true.
        dspheat        = .true.
@@ -178,6 +179,7 @@
        iau_delthrs    = 6
        iaufhrs        = 30
        iau_inc_files  = ''
+       shal_cnv = .false. !Shallow convection
        do_deep = .false.
        lgfdlmprad = .true.
        effr_in = .true.

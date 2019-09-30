@@ -116,7 +116,11 @@ if [ $tmmark = tm00 ] ; then
       cp ${PARMfv3}/suite_${CCPP_SUITE}.xml suite_${CCPP_SUITE}.xml
     else
       cp ${PARMfv3}/input_sar_${dom}.nml input.nml
-      if [ ! -e input.nml ] ; then
+      if [ $dom = conus ] ; then
+        mv input.nml input.nml.tmp
+        cat input.nml.tmp | \
+            sed s/_TASK_X_/${TASK_X}/ | sed s/_TASK_Y_/${TASK_Y}/  >  input.nml
+      elif [ ! -e input.nml ] ; then
          echo "FATAL ERROR: no input_sar_${dom}.nml in PARMfv3 directory.  Create one!"
       fi
     fi
@@ -161,7 +165,8 @@ cat temp diag_table.tmp > diag_table
 cat model_configure.tmp | sed s/NTASKS/$TOTAL_TASKS/ | sed s/YR/$yr/ | \
     sed s/MN/$mn/ | sed s/DY/$dy/ | sed s/H_R/$hr/ | \
     sed s/NHRS/$NFCSTHRS/ | sed s/NTHRD/$OMP_NUM_THREADS/ | \
-    sed s/NCNODE/$NCNODE/ | sed s/NRESTART/$NRST/  >  model_configure
+    sed s/NCNODE/$NCNODE/ | sed s/NRESTART/$NRST/ | \
+    sed s/_WG_/${WG}/ | sed s/_WTPG_/${WTPG}/  >  model_configure
 
 #----------------------------------------- 
 # Run the forecast

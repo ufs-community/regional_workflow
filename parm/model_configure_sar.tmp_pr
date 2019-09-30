@@ -22,8 +22,8 @@ restart_interval:        12
 output_1st_tstep_rst:    .false.
 
 quilting:                .true.
-write_groups:            _WG_
-write_tasks_per_group:   _WTPG_
+write_groups:            1
+write_tasks_per_group:   12
 num_files:               2
 filename_base:           'dyn''phy'
 output_file:             'netcdf'
@@ -31,14 +31,14 @@ write_nemsioflip:        .false.
 write_fsyncflag:         .false.
 
 output_grid:             'rotated_latlon'
-cen_lon:                 -97.5  # central longitude
-cen_lat:                 38.5   # central latitude
-lon1:                    -25.0  # longitude of lower-left point in rotated coordinate system (in degrees)
-lat1:                    -15.0  # latitude of lower-left ...
-lon2:                    25.0   # longitude of upper-right ...
-lat2:                    15.0   # latitude of upper-right ...
-dlon:                    0.02
-dlat:                    0.02
+cen_lon:                 -69.0  # central longitude
+cen_lat:                 18.0   # central latitude
+lon1:                    -7.8  # longitude of lower-left point in rotated coordinate system (in degrees)
+lat1:                    -5.2  # latitude of lower-left ...
+lon2:                    7.8   # longitude of upper-right ...
+lat2:                    5.2   # latitude of upper-right ...
+dlon:                    0.025
+dlat:                    0.025
 
 #output_grid:		 'lambert_conformal'
 #cen_lon:		 -97.5	 # central longitude

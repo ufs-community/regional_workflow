@@ -184,7 +184,6 @@
           <taskdep task="get_input"/>
         </or>
         <and>
-          <datadep age="10:00" minsize="16986972692"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmf000.nemsio</cyclestr></datadep>
           <datadep age="10:00" minsize="15779010324"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.atmanl.nemsio</cyclestr></datadep>
           <datadep age="10:00" minsize="1170221688"><cyclestr>&COMINgfs;/gfs.@Y@m@d/@H/gfs.t@Hz.sfcanl.nemsio</cyclestr></datadep>
         </and>

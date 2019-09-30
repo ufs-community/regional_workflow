@@ -11,8 +11,6 @@ elif [ "$machine" = "wcoss_cray" ] ; then
   . /opt/modules/default/init/sh
 elif [ "$machine" = "hera" ] ; then
   . /apps/lmod/lmod/init/sh
-elif [ "$machine" = "theia" ] ; then
-  . /apps/lmod/lmod/init/sh
 elif [ "$machine" = "jet" ] ; then
   . /apps/lmod/lmod/init/sh
 fi

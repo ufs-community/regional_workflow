@@ -17,7 +17,6 @@ if [ ! -d "../exec" ]; then
 fi
 
 if [ $target = hera ]; then target=hera.intel ; fi
-if [ $target = theia ]; then target=theia.intel ; fi
 
 cd regional_forecast.fd/
 FV3=$( pwd -P )/FV3

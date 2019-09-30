@@ -2,14 +2,12 @@
 set -xe
 
 . $HOMEfv3/jobs/JREGIONAL_ENVIR
-. $USHfv3/run_commands_forecast.sh
+. $USHfv3/run_commands_bc.sh
 
 ####################################
 # Specify Execution Areas
 ####################################
-export CHGRESEXEC=$EXECfv3/regional_chgres.x
-export CHGRESSH=$USHfv3/regional_chgres.sh
-export GETGES=$HOMEfv3/util/ush/getges_linkges_hourlypgrb_new.sh
+export CHGRESEXEC=$EXECfv3/regional_chgres_cube.x
 
 ####################################
 # Run setpdy and initialize PDY variables
@@ -17,6 +15,9 @@ export GETGES=$HOMEfv3/util/ush/getges_linkges_hourlypgrb_new.sh
 # PDY, CDATE, and tmmark are passed in through Rocoto xml
 #setpdy.sh
 #. ./PDY
+
+export month=`echo $CDATE | cut -c 5-6`
+export day=`echo $CDATE | cut -c 7-8`
 
 export CYCLEguess=`$NDATE -12 $CDATE`
 export ymd=`echo $CDATE | cut -c 1-8`
@@ -30,9 +31,6 @@ export cycguess=`echo $CYCLEguess | cut -c 9-10`
 export DATA=${DATA:-${STMP}/tmpnwprd/${job}}
 mkdir -p $DATA
 cd $DATA
-
-export OUTDIR=$DATA/INPUT
-mkdir -p $OUTDIR
 
 export pid=$$
 export pgmout="OUTPUT.${pid}"
@@ -73,7 +71,6 @@ export HALO=4
 export ictype=pfv3gfs
 export nst_anl=.false.		# false or true to include NST analysis
 export KMP_AFFINITY=disabled
-export NTRAC=7			# output all gfdl mp tracers
 
 env
 
@@ -81,12 +78,10 @@ env
 # Generate the ICs and BC hour 0
 #####################################
 # Execute the script.
-${HOMEfv3}/scripts/exregional_make_ic_bc.sh
+${HOMEfv3}/scripts/exregional_make_ic.sh
 export err=$?
 #####################################
 
-mv $OUTDIR/gfs*nc $INPdir/.
-mv $OUTDIR/sfc*nc $INPdir/.
 
 #####################################
 # Generate BCs for NHRSguess for SAR-DA
@@ -108,9 +103,7 @@ if [ $tmmark = tm12 ] ; then
     fi
 
     export bchour=$hour_name
-    ${HOMEfv3}/scripts/exregional_make_ic_bc.sh
-
-    mv $OUTDIR/gfs_bndy.tile7.${bchour}.nc $INPdir/.
+    ${HOMEfv3}/scripts/exregional_make_ic.sh
 
     err=$?
     if [ $err -ne 0 ] ; then
