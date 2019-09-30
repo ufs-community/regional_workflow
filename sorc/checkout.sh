@@ -28,15 +28,13 @@ echo $topdir
 
 echo NEMSfv3gfs checkout ...
 if [[ ! -d regional_forecast.fd ]] ; then
-    git clone -b regional --recursive gerrit:NEMSfv3gfs regional_forecast.fd
-    #cd regional_forecast.fd
-    #git checkout regional
-    #git submodule update --init --recursive
-    #cd ${topdir}
+    git clone --recursive gerrit:NEMSfv3gfs regional_forecast.fd
+    cd regional_forecast.fd
+    git submodule update --init --recursive
+    cd ${topdir}
 else
     echo 'Directory regional_forecast.fd already exists. Pull the latest updates from the corresponding branch.'
     cd regional_forecast.fd
-    git checkout regional
     git pull
     git submodule update --init --recursive
     cd ${topdir}
@@ -44,45 +42,37 @@ fi
 
 echo EMC_post checkout ...
 if [[ ! -d regional_post.fd ]] ; then
-    git clone -b regional  --recursive gerrit:EMC_post regional_post.fd
-    #cd regional_post.fd
-    #git checkout regional
-    #cd ${topdir}
+    git clone -b feature/regional https://github.com/hafs-community/EMC_post.git regional_post.fd
 else
     echo 'Directory regional_post.fd already exists. Pull the latest updates from the corresponding branch.'
     cd regional_post.fd
-    git checkout regional
+    git checkout feature/regional
     git pull
     cd ${topdir}
 fi
 
 echo UFS_UTILS checkout ...
 if [[ ! -d regional_utils.fd ]] ; then
-    git clone -b feature/HAFS --recursive gerrit:UFS_UTILS regional_utils.fd
-	#cd regional_utils.fd
-	#git checkout feature/HAFS
-    #cd ${topdir}
+    git clone -b feature/HAFS https://github.com/hafs-community/UFS_UTILS.git regional_utils.fd
 else
     echo 'Directory regional_utils.fd already exists. Pull the latest updates from the corresponding branch.'
-	cd regional_utils.fd
-	git checkout feature/HAFS
-	git pull
+    cd regional_utils.fd
+    git checkout feature/HAFS
+    git pull
     cd ${topdir}
 fi
 
 echo ProdGSI checkout ...
 if [[ ! -d regional_gsi.fd ]] ; then
     git clone -b regional --recursive gerrit:ProdGSI regional_gsi.fd
-    #cd regional_gsi.fd
-    #git checkout regional
-    #git submodule update --init --recursive
-    #cd ${topdir}
+    cd regional_gsi.fd
+    git submodule update --init --recursive
+    cd ${topdir}
 else
     echo 'Directory regional_gsi.fd already exists. Pull the latest updates from the corresponding branch.'
     cd regional_gsi.fd
-    git checkout regional
     git submodule update --init --recursive
-	git pull
+    git pull
     cd ${topdir}
 fi
 
