@@ -87,7 +87,7 @@ cat <<EOF >fort.41
 /
 EOF
 
-  time ${APRUNC} -l ./regional_chgres_cube.x
+  time ${APRUNC} ./regional_chgres_cube.x
   hour=`expr $hour + $hour_inc`
 
 #
