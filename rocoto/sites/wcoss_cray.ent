@@ -23,17 +23,17 @@
 
   <!ENTITY GET_INPUT_RESOURCES "<cores>1</cores><walltime>03:00:00</walltime>">
 
-  <!ENTITY MAKE_IC_RESOURCES "<nodes>1:ppn=1:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>1</value></envar><envar><name>NCTSK</name><value>1</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:15:00</walltime>">
+  <!ENTITY MAKE_IC_RESOURCES "<nodes>4:ppn=4:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>16</value></envar><envar><name>NCTSK</name><value>4</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:15:00</walltime>">
 
-  <!ENTITY MAKE_BC_RESOURCES "<nodes>20:ppn=1:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>20</value></envar><envar><name>NCTSK</name><value>1</value></envar><envar><name>OMP_THREADS</name><value>24</value></envar><walltime>00:30:00</walltime>">
+  <!ENTITY MAKE_BC_RESOURCES "<nodes>4:ppn=4:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>16</value></envar><envar><name>NCTSK</name><value>4</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:50:00</walltime>">
 
 <!-- some of these are domain specific -->
   <!ENTITY FORECAST_EXTRA "<envar><name>NCTSK</name><value>12</value></envar><envar><name>OMP_THREADS</name><value>2</value></envar><walltime>02:40:00</walltime>">
-  <!ENTITY FORECAST_TM00_RESOURCES_hi "<nodes>6:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>72</value></envar>&FORECAST_EXTRA;">
+  <!ENTITY FORECAST_TM00_RESOURCES_hi "<nodes>6:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>72</value></envar><envar><name>TASK_X</name><value>6</value></envar><envar><name>TASK_Y</name><value>10</value></envar><envar><name>WG</name><value>1</value></envar><envar><name>WTPG</name><value>12</value></envar>&FORECAST_EXTRA;">
   <!ENTITY FORECAST_TM00_RESOURCES_conus "<nodes>76:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>912</value></envar><envar><name>TASK_X</name><value>16</value></envar><envar><name>TASK_Y</name><value>48</value></envar><envar><name>WG</name><value>3</value></envar><envar><name>WTPG</name><value>48</value></envar>&FORECAST_EXTRA;">
-  <!ENTITY FORECAST_TM00_RESOURCES_ak "<nodes>60:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>720</value></envar>&FORECAST_EXTRA;">
-  <!ENTITY FORECAST_TM00_RESOURCES_pr "<nodes>9:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>108</value></envar>&FORECAST_EXTRA;">
-  <!ENTITY FORECAST_TM00_RESOURCES_guam "<nodes>6:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>72</value></envar>&FORECAST_EXTRA;">
+  <!ENTITY FORECAST_TM00_RESOURCES_ak "<nodes>60:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>720</value></envar><envar><name>TASK_X</name><value>14</value></envar><envar><name>TASK_Y</name><value>48</value></envar><envar><name>WG</name><value>2</value></envar><envar><name>WTPG</name><value>24</value></envar>&FORECAST_EXTRA;">
+  <!ENTITY FORECAST_TM00_RESOURCES_pr "<nodes>9:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>108</value></envar><envar><name>TASK_X</name><value>8</value></envar><envar><name>TASK_Y</name><value>12</value></envar><envar><name>WG</name><value>1</value></envar><envar><name>WTPG</name><value>12</value></envar>&FORECAST_EXTRA;">
+  <!ENTITY FORECAST_TM00_RESOURCES_guam "<nodes>6:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>72</value></envar> <envar><name>TASK_X</name><value>6</value></envar><envar><name>TASK_Y</name><value>10</value></envar><envar><name>WG</name><value>1</value></envar><envar><name>WTPG</name><value>12</value></envar>&FORECAST_EXTRA;">
 
   <!ENTITY POST_EXTRA "<envar><name>NCTSK</name><value>24</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
   <!ENTITY POST_RESOURCES_conus "<nodes>3:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>72</value></envar>&POST_EXTRA;">

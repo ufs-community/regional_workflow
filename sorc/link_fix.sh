@@ -3,12 +3,7 @@ set -xeu
 
 source ./machine-setup.sh > /dev/null 2>&1
 
-LINK="ln -sf"
-if [[ $# -ge 1 ]]; then
-  if [[ $1 = "nco" ]]; then
-    LINK="cp -rp"
-  fi
-fi
+LINK="cp -rp"
 
 pwd=$(pwd -P)
 
