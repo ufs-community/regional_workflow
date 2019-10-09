@@ -50,8 +50,8 @@ export PTMP=${PTMP:-/scratch2/NCEPDEV/stmp3/${USER}}
 export STMP=${STMP:-/scratch2/NCEPDEV/stmp3/${USER}}
 export rzdmuser=mpyle
 
-export NDATE=/scratch2/NCEPDEV/nwprod/NCEPLIBS/util/prod_util.v1.1.0/exec/ndate
-export NHOUR=/scratch2/NCEPDEV/nwprod/NCEPLIBS/util/prod_util.v1.1.0/exec/nhour
+export NDATE=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate
+export NHOUR=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/nhour
 export HOMEfv3=${HOMEfv3:-/scratch2/NCEPDEV/fv3-cam/$USER/regional_workflow}
 
 elif [ ${machine} = "theia" ]
