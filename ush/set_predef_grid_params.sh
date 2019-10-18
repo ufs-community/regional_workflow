@@ -679,8 +679,8 @@ predefined domain:
       WRTCMP_stdlat1="${lat_rgnl_ctr}"
       WRTCMP_stdlat2="${lat_rgnl_ctr}"
 #Write component grid must always be <= compute grid (without haloes)
-      WRTCMP_nx="191"
-      WRTCMP_ny="97"
+      WRTCMP_nx="1340"
+      WRTCMP_ny="1132"
 #Lower left latlon (southwest corner)
       WRTCMP_lon_lwr_left="-121.587"
       WRTCMP_lat_lwr_left="24.360"
@@ -764,8 +764,8 @@ predefined domain:
       WRTCMP_stdlat1="${lat_rgnl_ctr}"
       WRTCMP_stdlat2="${lat_rgnl_ctr}"
 #Write component grid must always be <= compute grid (without haloes)
-      WRTCMP_nx="191"
-      WRTCMP_ny="97"
+      WRTCMP_nx="871"
+      WRTCMP_ny="724"
 #Lower left latlon (southwest corner)
       WRTCMP_lon_lwr_left="-150.587"
       WRTCMP_lat_lwr_left="14.623"
@@ -833,7 +833,7 @@ predefined domain:
 #This integer must be small enough to fit into a processor's cache, so it is machine-dependent magic
 # For Theia, must be ~40 or less
 # Check setup.sh for more details
-    blocksize="32"
+    blocksize="22"
 
 #This section is all for the write component, which you need for output during model integration
     if [ "$QUILTING" = "TRUE" ]; then
@@ -849,8 +849,8 @@ predefined domain:
       WRTCMP_stdlat1="${lat_rgnl_ctr}"
       WRTCMP_stdlat2="${lat_rgnl_ctr}"
 #Write component grid must always be <= compute grid (without haloes)
-      WRTCMP_nx="191"
-      WRTCMP_ny="97"
+      WRTCMP_nx="1162"
+      WRTCMP_ny="864"
 #Lower left latlon (southwest corner)
       WRTCMP_lon_lwr_left="-77.846"
       WRTCMP_lat_lwr_left="12.341"
@@ -910,13 +910,13 @@ predefined domain:
     dt_atmos="18"
 
 #Factors for MPI decomposition. nx_T7 must be divisible by layout_x, ny_T7 must be divisible by layout_y
-    layout_x="16"
-    layout_y="10"
+    layout_x="10"
+    layout_y="16"
 #Take number of points on a tile (nx/lx*ny/ly), must divide by block size to get an integer.
 #This integer must be small enough to fit into a processor's cache, so it is machine-dependent magic
 # For Theia, must be ~40 or less
 # Check setup.sh for more details
-    blocksize="32"
+    blocksize="23"
 
 #This section is all for the write component, which you need for output during model integration
     if [ "$QUILTING" = "TRUE" ]; then
@@ -932,8 +932,8 @@ predefined domain:
       WRTCMP_stdlat1="${lat_rgnl_ctr}"
       WRTCMP_stdlat2="${lat_rgnl_ctr}"
 #Write component grid must always be <= compute grid (without haloes)
-      WRTCMP_nx="191"
-      WRTCMP_ny="97"
+      WRTCMP_nx="871"
+      WRTCMP_ny="724"
 #Lower left latlon (southwest corner)
       WRTCMP_lon_lwr_left="138.941"
       WRTCMP_lat_lwr_left="9.658"
