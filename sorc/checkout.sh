@@ -28,7 +28,7 @@ echo $topdir
 
 echo NEMSfv3gfs checkout ...
 if [[ ! -d regional_forecast.fd ]] ; then
-    git clone --recursive gerrit:NEMSfv3gfs regional_forecast.fd
+    git clone https://github.com/ufs-community/ufs-weather-model.git regional_forecast.fd
     cd regional_forecast.fd
     git submodule update --init --recursive
     cd ${topdir}
@@ -64,7 +64,7 @@ fi
 
 echo ProdGSI checkout ...
 if [[ ! -d regional_gsi.fd ]] ; then
-    git clone -b regional --recursive gerrit:ProdGSI regional_gsi.fd
+    git clone --recursive gerrit:ProdGSI regional_gsi.fd
     cd regional_gsi.fd
     git submodule update --init --recursive
     cd ${topdir}
