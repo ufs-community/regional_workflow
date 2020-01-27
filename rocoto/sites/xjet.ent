@@ -29,11 +29,11 @@
 
 <!-- some of these are domain specific -->
   <!ENTITY FORECAST_EXTRA "<envar><name>NCTSK</name><value>12</value></envar><envar><name>OMP_THREADS</name><value>2</value></envar><walltime>02:40:00</walltime>">
-  <!ENTITY FORECAST_TM00_RESOURCES_hi "<nodes>7:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>84</value></envar>&FORECAST_EXTRA;">
-  <!ENTITY FORECAST_TM00_RESOURCES_conus "<nodes>76:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>912</value></envar>&FORECAST_EXTRA;">
-  <!ENTITY FORECAST_TM00_RESOURCES_ak "<nodes>68:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>816</value></envar>&FORECAST_EXTRA;">
-  <!ENTITY FORECAST_TM00_RESOURCES_pr "<nodes>10:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>120</value></envar>&FORECAST_EXTRA;">
-  <!ENTITY FORECAST_TM00_RESOURCES_guam "<nodes>7:ppn=12:tpp=2</nodes><envar><name>TOTAL_TASKS</name><value>84</value></envar>&FORECAST_EXTRA;">
+  <!ENTITY FORECAST_TM00_RESOURCES_hi "<nodes>7:ppn=12</nodes><envar><name>TOTAL_TASKS</name><value>84</value></envar>&FORECAST_EXTRA;">
+  <!ENTITY FORECAST_TM00_RESOURCES_conus "<nodes>76:ppn=12</nodes><envar><name>TOTAL_TASKS</name><value>912</value></envar>&FORECAST_EXTRA;">
+  <!ENTITY FORECAST_TM00_RESOURCES_ak "<nodes>68:ppn=12</nodes><envar><name>TOTAL_TASKS</name><value>816</value></envar>&FORECAST_EXTRA;">
+  <!ENTITY FORECAST_TM00_RESOURCES_pr "<nodes>10:ppn=12</nodes><envar><name>TOTAL_TASKS</name><value>120</value></envar>&FORECAST_EXTRA;">
+  <!ENTITY FORECAST_TM00_RESOURCES_guam "<nodes>7:ppn=12</nodes><envar><name>TOTAL_TASKS</name><value>84</value></envar>&FORECAST_EXTRA;">
 
   <!ENTITY POST_EXTRA "<envar><name>NCTSK</name><value>24</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:20:00</walltime>">
   <!ENTITY POST_RESOURCES_conus "<nodes>3:ppn=24</nodes><envar><name>TOTAL_TASKS</name><value>72</value></envar>&POST_EXTRA;">
