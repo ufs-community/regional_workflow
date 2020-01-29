@@ -112,7 +112,9 @@ if [ $tmmark = tm00 ] ; then
   elif [ $model = fv3sar ] ; then 
     if [ $CCPP  = true ] || [ $CCPP = TRUE ] ; then
       cp ${PARMfv3}/input_sar_${dom}_ccpp.nml input.nml.tmp
-      cat input.nml.tmp | sed s/CCPP_SUITE/\'$CCPP_SUITE\'/ >  input.nml
+      cat input.nml.tmp | \
+          sed s/CCPP_SUITE/\'$CCPP_SUITE\'/ | \
+          sed s/_TASK_X_/${TASK_X}/ | sed s/_TASK_Y_/${TASK_Y}/  >  input.nml
       cp ${PARMfv3}/suite_${CCPP_SUITE}.xml suite_${CCPP_SUITE}.xml
     else
       cp ${PARMfv3}/input_sar_${dom}.nml input.nml
