@@ -61,7 +61,7 @@
 <!--  *******************************************************************  -->
 <!--  *********************** Workflow starts here **********************  -->
 
-<workflow realtime="T" cyclethrottle="&CYCLE_THROTTLE;" scheduler="&SCHEDULER;" taskthrottle="&TASK_THROTTLE;" cyclelifespan="00:23:30:00">
+<workflow realtime="F" cyclethrottle="&CYCLE_THROTTLE;" scheduler="&SCHEDULER;" taskthrottle="&TASK_THROTTLE;" cyclelifespan="00:23:30:00">
 
   <cycledef>&CYCLE_YMDH_BEG;00 &CYCLE_YMDH_END;00 &CYCLE_INTERVAL;</cycledef>
 

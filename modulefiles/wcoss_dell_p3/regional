@@ -25,9 +25,6 @@ module load HPSS/5.0.2.5
 
 module load NetCDF/4.5.0
 
-module use /gpfs/dell2/emc/modeling/noscrub/emc.nemspara/soft/modulefiles
-module load esmf/8.0.0bs21
-
 module load jasper/1.900.1
 module load libpng/1.2.59
 module load zlib/1.2.11
