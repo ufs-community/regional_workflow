@@ -6,7 +6,7 @@ export envir=para
 export NET=fv3cam
 export RUN=fv3sar
 export model=fv3sar	# fv3sar (cold start) or fv3sar_da (with DA)
-export CCPP=false
+export CCPP=true
 export CCPP_SUITE=FV3_GFS_2017_gfdlmp_regional
 
 if [ ${machine} = "wcoss_dell_p3" ]
