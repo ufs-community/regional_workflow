@@ -19,8 +19,8 @@ sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'FV3SAR'
-copyright = '2019, '
+project = 'FV3SAR Community Workflow'
+copyright = '2020, '
 author = ' '
 
 # The short X.Y version
