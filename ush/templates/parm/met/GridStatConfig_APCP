@@ -28,7 +28,7 @@ obtype = "${OBTYPE}";
 // Verification grid
 //
 regrid = {
-   to_grid    = "${GRID_STAT_REGRID_TO_GRID}";
+   to_grid    = ${REGRID_TO_GRID};
    vld_thresh = 0.5;
    method     = BUDGET;
    width      = 2;
@@ -81,7 +81,7 @@ climo_mean = {
 //
 mask = {
    grid = [];
-   poly = [ "${polydir}/CONUS.nc"];
+   poly = [ "${polydir}/CONUS.poly"];
    sid = [];
 }
 
@@ -170,7 +170,7 @@ nc_pairs_flag   = {
 
 rank_corr_flag = FALSE;
 tmp_dir        = "/tmp";
-output_prefix  = "${MODEL}_APCP01_CCPA_F${LEAD_SEQ}";
-version        = "V8.0";
+output_prefix  = "${OUTPUT_PREFIX}";
+version        = "V9.0";
 
 ////////////////////////////////////////////////////////////////////////////////
