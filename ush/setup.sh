@@ -779,6 +779,7 @@ MAKE_ICS_TN="make_ics"
 MAKE_LBCS_TN="make_lbcs"
 RUN_FCST_TN="run_fcst"
 RUN_POST_TN="run_post"
+VX_GRIDSTAT_TN="run_gridstatvx"
 #
 #-----------------------------------------------------------------------
 #
@@ -2286,6 +2287,7 @@ MAKE_ICS_TN="${MAKE_ICS_TN}"
 MAKE_LBCS_TN="${MAKE_LBCS_TN}"
 RUN_FCST_TN="${RUN_FCST_TN}"
 RUN_POST_TN="${RUN_POST_TN}"
+VX_GRIDSTAT_TN="${VX_GRIDSTAT_TN}"
 #
 #-----------------------------------------------------------------------
 #

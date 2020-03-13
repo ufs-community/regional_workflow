@@ -192,6 +192,7 @@ set_file_param "${WFLOW_XML_FP}" "MAKE_ICS_TN" "${MAKE_ICS_TN}"
 set_file_param "${WFLOW_XML_FP}" "MAKE_LBCS_TN" "${MAKE_LBCS_TN}"
 set_file_param "${WFLOW_XML_FP}" "RUN_FCST_TN" "${RUN_FCST_TN}"
 set_file_param "${WFLOW_XML_FP}" "RUN_POST_TN" "${RUN_POST_TN}"
+set_file_param "${WFLOW_XML_FP}" "VX_GRIDSTAT_TN" "${VX_GRIDSTAT_TN}"
 #
 # Flags that determine whether or not certain tasks are launched.
 #
