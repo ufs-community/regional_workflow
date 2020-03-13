@@ -43,8 +43,8 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the ex-script for the task that runs the post-processor (UPP) on
-the output files corresponding to a specified forecast hour.
+This is the ex-script for the task that runs METplus for grid-stat on
+the UPP output files by initialization time for all forecast hours.
 ========================================================================"
 
 #
@@ -57,7 +57,7 @@ the output files corresponding to a specified forecast hour.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "cycle_dir" "postprd_dir" "fhr_dir" "fhr" )
+valid_args=( "cycle_dir" "postprd_dir" "vx_dir" "gridstat_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -207,7 +207,7 @@ export ccpapath=/scratch2/BMC/det/harrold/data_pull/ccpa/reorg
 export polydir=/contrib/met/9.0_beta3/share/met/poly
 
 # Run CCPA organization script
-/scratch2/BMC/det/jwolff/HIWT/add_metplus/regional_workflow/scripts/exregional_get_ccpa_files.ksh
+/scratch2/BMC/det/jwolff/HIWT/add_metplus/regional_workflow/scripts/exregional_get_ccpa_files.sh
 
 export acc="01h" # for stats output prefix in GridStatConfig
 
