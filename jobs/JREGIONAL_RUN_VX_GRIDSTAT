@@ -3,8 +3,8 @@
 #
 #-----------------------------------------------------------------------
 #
-# This script runs the post-processor (UPP) on the NetCDF output files
-# of the write component of the FV3SAR model.
+# This script runs METplus for grid-stat on the UPP output files by 
+# initialization time for all forecast hours.
 #
 #-----------------------------------------------------------------------
 #
@@ -51,30 +51,26 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the J-job script for the task that runs the post-processor (UPP)
-on the output files corresponding to a specified forecast hour.
+This is the J-job script for the task that runs METplus for grid-stat
+by initialitation time for all forecast hours.
 ========================================================================"
 #
 #-----------------------------------------------------------------------
 #
-# If it doesn't already exist, create the directory (postprd_dir) in 
-# which to store post-processing output.  (Note that postprd_dir may al-
-# ready have been created by this post-processing script run for a dif-
-# ferent forecast hour.)  Also, create a temporary work directory (FHR_-
-# DIR) for the current forecast hour being processed.  fhr_dir will be 
-# deleted later after the processing for the current forecast hour is 
-# complete.  Then change location to fhr_dir.
+# If it doesn't already exist, create the directory (vx_dir) in 
+# which to store grid-stat output. 
 #
-# Note that there may be a preexisting version of fhr_dir from previous 
-# runs of this script for the current forecast hour (e.g. from the work-
-# flow task that runs this script failing and then being called again).  
-# Thus, we first make sure preexisting versions are deleted.
+# Note that there may be a preexisting version of vx_dir from previous 
+# runs of this script (e.g. from the workflow task that runs this script 
+# failing and then being called again). Thus, we first make sure 
+# preexisting versions are deleted.
 #
 #-----------------------------------------------------------------------
 #
+
 if [ "${RUN_ENVIR}" = "nco" ]; then
   COMOUT="$COMROOT/$NET/$envir/$RUN.$PDY/$cyc"
-  vx_dir="$COMOUT"
+  postprd_dir="$COMOUT"
 else
   postprd_dir="${CYCLE_DIR}/postprd"
 fi

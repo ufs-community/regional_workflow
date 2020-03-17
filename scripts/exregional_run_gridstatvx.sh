@@ -81,7 +81,6 @@ print_info_msg "$VERBOSE" "Starting grid-stat verification"
 
 case $MACHINE in
 
-
 "WCOSS_C" | "WCOSS" )
 #  { save_shell_opts; set +x; } > /dev/null 2>&1
   module purge
@@ -123,7 +122,6 @@ case $MACHINE in
 
 
 "HERA")
-#  export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate
   APRUN="srun"
   ;;
 
@@ -174,9 +172,6 @@ case $MACHINE in
 
 esac
 
-export METPLUS_PATH=/contrib/METplus/METplus-3.0-beta3
-export METPLUS_CONF=/scratch2/BMC/det/jwolff/HIWT/add_metplus/regional_workflow/ush/templates/parm/metplus
-
 #
 #-----------------------------------------------------------------------
 #
@@ -203,18 +198,31 @@ cyc=$hh
 INIT=${CDATE}
 export INIT
 
-export ccpapath=/scratch2/BMC/det/harrold/data_pull/ccpa/reorg
-export polydir=/contrib/met/9.0_beta3/share/met/poly
+#
+#-----------------------------------------------------------------------
+#
+# Run exregional_get_ccpa_files.sh script to reorganize the files into
+# a more intuitive structure for this purpose.
+#
+#-----------------------------------------------------------------------
+#
+${SCRIPTSDIR}/exregional_get_ccpa_files.sh
 
-# Run CCPA organization script
-/scratch2/BMC/det/jwolff/HIWT/add_metplus/regional_workflow/scripts/exregional_get_ccpa_files.sh
+#
+#-----------------------------------------------------------------------
+#
+# Export some environment variables passed in by the XML and run METplus 
+#
+#-----------------------------------------------------------------------
+#
+export METPLUS_PATH
+export METPLUS_CONF
+export POLYDIR
+export acc="${ACCUM}h" # for stats output prefix in GridStatConfig
+export MODEL
 
-export acc="01h" # for stats output prefix in GridStatConfig
-
-# 1h ctc/sl1l2 scores:
-
-export MODEL="FV3_GSD_SAR_GSD_HRRR3km"
 export modpath=${postprd_dir}
+
 ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common_hera.conf \
   -c ${METPLUS_CONF}/APCP_${acc}.conf
