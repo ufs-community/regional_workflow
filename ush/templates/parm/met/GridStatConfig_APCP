@@ -81,7 +81,7 @@ climo_mean = {
 //
 mask = {
    grid = [];
-   poly = [ "${POLYDIR}/CONUS.poly"];
+   poly = [ ${VERIF_MASK} ];
    sid = [];
 }
 

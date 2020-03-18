@@ -76,7 +76,6 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-
 print_info_msg "$VERBOSE" "Starting grid-stat verification"
 
 case $MACHINE in
@@ -122,6 +121,7 @@ case $MACHINE in
 
 
 "HERA")
+#  export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate
   APRUN="srun"
   ;;
 
@@ -169,10 +169,8 @@ case $MACHINE in
   APRUN="srun -n 1"
   ;;
 
-
 esac
 
-#
 #-----------------------------------------------------------------------
 #
 # Remove any files from previous runs and stage necessary files in gridstat_dir.
@@ -217,7 +215,6 @@ ${SCRIPTSDIR}/exregional_get_ccpa_files.sh
 #
 export METPLUS_PATH
 export METPLUS_CONF
-export POLYDIR
 export acc="${ACCUM}h" # for stats output prefix in GridStatConfig
 export MODEL
 
@@ -227,3 +224,26 @@ ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common_hera.conf \
   -c ${METPLUS_CONF}/APCP_${acc}.conf
 
+#
+#-----------------------------------------------------------------------
+#
+# Print message indicating successful completion of script.
+#
+#-----------------------------------------------------------------------
+#
+print_info_msg "
+========================================================================
+METplus grid-stat completed successfully.
+
+Exiting script:  \"${scrfunc_fn}\"
+In directory:    \"${scrfunc_dir}\"
+========================================================================"
+#
+#-----------------------------------------------------------------------
+#
+# Restore the shell options saved at the beginning of this script/func-
+# tion.
+#
+#-----------------------------------------------------------------------
+#
+{ restore_shell_opts; } > /dev/null 2>&1
