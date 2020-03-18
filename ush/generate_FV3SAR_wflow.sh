@@ -156,6 +156,7 @@ set_file_param "${WFLOW_XML_FP}" "PROC_RUN_FCST" "${PROC_RUN_FCST}"
 #
 set_file_param "${WFLOW_XML_FP}" "USHDIR" "$USHDIR"
 set_file_param "${WFLOW_XML_FP}" "JOBSDIR" "$JOBSDIR"
+set_file_param "${WFLOW_XML_FP}" "SCRIPTSDIR" "$SCRIPTSDIR"
 set_file_param "${WFLOW_XML_FP}" "EXPTDIR" "$EXPTDIR"
 set_file_param "${WFLOW_XML_FP}" "LOGDIR" "$LOGDIR"
 set_file_param "${WFLOW_XML_FP}" "CYCLE_DIR" "${CYCLE_DIR}"
@@ -180,6 +181,11 @@ set_file_param "${WFLOW_XML_FP}" "MM_FIRST_CYCL" "${MM_FIRST_CYCL}"
 set_file_param "${WFLOW_XML_FP}" "DD_FIRST_CYCL" "${DD_FIRST_CYCL}"
 set_file_param "${WFLOW_XML_FP}" "HH_FIRST_CYCL" "${HH_FIRST_CYCL}"
 set_file_param "${WFLOW_XML_FP}" "FHR" "$FHR"
+#
+# METPlus-specific information
+#
+set_file_param "${WFLOW_XML_FP}" "METPLUS_PATH" "$METPLUS_PATH"
+set_file_param "${WFLOW_XML_FP}" "METPLUS_CONF" "$METPLUS_CONF"
 #
 # Rocoto workflow task names.
 #

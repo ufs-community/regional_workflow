@@ -717,6 +717,12 @@ PREEXISTING_DIR_METHOD="delete"
 VERBOSE="TRUE"
 #
 #-----------------------------------------------------------------------
+# Set paths for METplus variables.
+#
+#-----------------------------------------------------------------------
+METPLUS_PATH=""
+METPLUS_CONF="${USHDIR}/templates/parm/metplus"
+#-----------------------------------------------------------------------
 #
 # Set flags (and related directories) that determine whether the grid, 
 # orography, and/or surface climatology file generation tasks should be
