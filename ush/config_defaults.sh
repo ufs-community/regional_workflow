@@ -721,7 +721,7 @@ VERBOSE="TRUE"
 #
 #-----------------------------------------------------------------------
 METPLUS_PATH=""
-METPLUS_CONF="${USHDIR}/templates/parm/metplus"
+METPLUS_CONF=""
 #-----------------------------------------------------------------------
 #
 # Set flags (and related directories) that determine whether the grid, 
