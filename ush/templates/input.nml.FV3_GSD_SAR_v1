@@ -158,8 +158,8 @@
      isol           = 2
      lwhtr          = .true.
      swhtr          = .true.
-     cnvgwd         = .true.
-     shal_cnv       = .true.
+     cnvgwd         = .false.
+     shal_cnv       = .false.
      cal_pre        = .false.
      redrag         = .true.
      dspheat        = .true.
@@ -170,9 +170,9 @@
      do_mynnsfclay  = .false.
      random_clds    = .false.
      trans_trac     = .true.
-     cnvcld         = .true.
-     imfshalcnv     = 3
-     imfdeepcnv     = 3
+     cnvcld         = .false.
+     imfshalcnv     = 0
+     imfdeepcnv     = 0
      cdmbgwd        = 3.5,0.25
      prslrd0        = 0.
      ivegsrc        = 1
@@ -189,9 +189,20 @@
      do_shum        = .F.
      do_skeb        = .F.
      do_sfcperts    = .F.
-     lsm            = 3
-     lsoil          = <lsoil>
-     lsoil_lsm      = 9
+     lsm            = 1
+     lsoil          = 4
+     iopt_dveg      = 2
+     iopt_crs       = 1
+     iopt_btr       = 1
+     iopt_run       = 1
+     iopt_sfc       = 1
+     iopt_frz       = 1
+     iopt_inf       = 1
+     iopt_rad       = 1
+     iopt_alb       = 2
+     iopt_snf       = 4
+     iopt_tbot      = 2
+     iopt_stc       = 1
      icloud_bl         = 1
      bl_mynn_tkeadvect = .true.
      bl_mynn_edmf      = 1
@@ -260,27 +271,26 @@
 /
 
 &nam_stochy
-     new_lscale=.true.,
-     sppt=1.0,
-     sppt_tau = 2.16E4,
-     sppt_lscale=150.E3,
-     USE_ZMTNBLCK=.FALSE.,
-     SPPT_LOGIT=.TRUE.,
-     SPPT_SFCLIMIT=.FALSE.,
-     ISEED_SPPT=1,
-     SHUM=0.006,
-     SHUM_TAU=21600,
-     SHUM_LSCALE=150.E3,
-     ISEED_SHUM=2,
+     lon_s=768,
+     lat_s=384, 
+     ntrunc=382,
      SKEBNORM=1,
-     SKEB=0.5,
-     SKEB_VDOF=10,
-     SKEB_TAU=21600.,
-     SKEB_LSCALE=150.E3,
-     ISEED_SKEB=3,
-     skebint=3600,
-     spptint=3600,
-     shumint=3600,
+     SKEB_NPASS=30,
+     SKEB_VDOF=5,
+     SKEB=@[SKEB],
+     SKEB_TAU=2.16E4,
+     SKEB_LSCALE=1000.E3,
+     SHUM=@[SHUM],
+     SHUM_TAU=21600,
+     SHUM_LSCALE=500000,
+     SPPT=@[SPPT],
+     SPPT_TAU=21600,
+     SPPT_LSCALE=500000,
+     SPPT_LOGIT=.TRUE.,
+     SPPT_SFCLIMIT=.TRUE.,
+     ISEED_SHUM=1,
+     ISEED_SKEB=2,
+     ISEED_SPPT=3,
 /
 
 &nam_sfcperts

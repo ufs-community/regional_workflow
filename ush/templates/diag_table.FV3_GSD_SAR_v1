@@ -197,29 +197,14 @@
 "gfs_sfc",     "soilt2",      "soilt2"     "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "soilt3",      "soilt3"     "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "soilt4",      "soilt4"     "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "soilt5",      "soilt5"     "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "soilt6",      "soilt6"     "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "soilt7",      "soilt7"     "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "soilt8",      "soilt8"     "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "soilt9",      "soilt9"     "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "soilw1",      "soilw1"     "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "soilw2",      "soilw2"     "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "soilw3",      "soilw3"     "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "soilw4",      "soilw4"     "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "soilw5",      "soilw5"     "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "soilw6",      "soilw6"     "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "soilw7",      "soilw7"     "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "soilw8",      "soilw8"     "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "soilw9",      "soilw9"     "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "slc_1",       "soill1",    "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "slc_2",       "soill2",    "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "slc_3",       "soill3",    "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "slc_4",       "soill4",    "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "slc_5",       "soill5",    "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "slc_6",       "soill6",    "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "slc_7",       "soill7",    "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "slc_8",       "soill8",    "fv3_history2d",  "all",  .false.,  "none",  2
-"gfs_sfc",     "slc_9",       "soill9",    "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "slope",       "sltyp",     "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "alnsf",       "alnsf",     "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "alnwf",       "alnwf",     "fv3_history2d",  "all",  .false.,  "none",  2
@@ -319,12 +304,6 @@
 # Prognostic/diagnostic variables from RUC LSM
 "gfs_sfc",     "snowfall_acc",     "snowfall_acc",     "fv3_history2d",  "all",  .false.,  "none",  2
 "gfs_sfc",     "swe_snowfall_acc", "swe_snowfall_acc", "fv3_history2d",  "all",  .false.,  "none",  2
-# Stochastic physics
-"gfs_phys",    "sppt_wts",      "sppt_wts",      "fv3_history",  "all", .false., "none", 2
-"gfs_phys",    "skebu_wts",     "skebu_wts",     "fv3_history",  "all", .false., "none", 2
-"gfs_phys",    "skebv_wts",     "skebv_wts",     "fv3_history",  "all", .false., "none", 2
-"dynamics",    "diss_est",      "diss_est",      "fv3_history",  "all", .false., "none", 2
-"gfs_phys",    "shum_wts",      "shum_wts",      "fv3_history",  "all", .false., "none", 2
 
 #=============================================================================================
 #
