@@ -305,6 +305,9 @@ cat "${MAKE_LBCS_TN}.local" >> "${MAKE_LBCS_TN}"
 ln_vrfy -fs "${UFS_WTHR_MDL_DIR}/NEMS/src/conf/modules.nems" \
             "${RUN_FCST_TN}"
 
+ln_vrfy -fs "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" \
+            "${RUN_POST_TN}"
+
 cd_vrfy -
 #
 #-----------------------------------------------------------------------
@@ -454,6 +457,7 @@ the forecast model directory sturcture to the experiment directory..."
 # Thompson microphysics parameterization to the experiment directory.
 #
   if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
     print_info_msg "$VERBOSE" "
 Copying the fixed file containing cloud condensation nuclei (CCN) data 
