@@ -101,7 +101,7 @@ case "${CCPP_PHYS_SUITE}" in
   phys_suite="GFS"
   ;;
 
-"FV3_GSD_v0" | "FV3_GSD_SAR")
+"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" )
   phys_suite="GSD"
   ;;
 "FV3_CPT_v0")
@@ -297,6 +297,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
          [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ] ; then
         tracers="\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\""
       elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+           [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
            [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
 # For GSD physics, add three additional tracers (the ice, rain and water
 # number concentrations) that are required for Thompson microphysics.
@@ -350,6 +351,7 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
 
   if [ "${USE_CCPP}" = "TRUE" ]; then
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ] ; then
@@ -359,8 +361,13 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
       numsoil_out="9"
     fi
   fi
-  
-  geogrid_file_input_grid="/scratch2/BMC/det/beck/SAR-FV3/geo_em.d01.nc_HRRRX"  # Maybe make this a fix file?
+ 
+  if [ "${MACHINE}" = "HERA" ]; then
+   geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-SAR/geo_em.d01.nc_HRRRX"  # Maybe make this a fix file?
+  elif [ "${MACHINE}" = "JET" ]; then
+   geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
+  fi
+
   replace_vgtyp=".false."
   replace_sotyp=".false."
   replace_vgfrc=".false."
@@ -378,8 +385,9 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
   internal_GSD=".false."
 
   if [ "${USE_CCPP}" = "TRUE" ]; then
-    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+   if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ] ; then
       numsoil_out="4"
@@ -389,7 +397,12 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
     fi
   fi
 
-  geogrid_file_input_grid="/scratch2/BMC/det/beck/SAR-FV3/geo_em.d01.nc_RAPX"  # Maybe make this a fix file?
+  if [ "${MACHINE}" = "HERA" ]; then
+   geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-SAR/geo_em.d01.nc_RAPX"  # Maybe make this a fix file?
+  elif [ "${MACHINE}" = "JET" ]; then
+   geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
+  fi
+
   replace_vgtyp=".false."
   replace_sotyp=".false."
   replace_vgfrc=".false."
