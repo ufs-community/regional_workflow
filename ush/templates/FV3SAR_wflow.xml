@@ -18,11 +18,11 @@ the workflow XML.
 <!ENTITY QUEUE_HPSS    "">
 <!ENTITY QUEUE_FCST    "">
 
-<!ENTITY USHDIR  "">
-<!ENTITY JOBSDIR "">
+<!ENTITY USHDIR     "">
+<!ENTITY JOBSDIR    "">
 <!ENTITY SCRIPTSDIR "">
-<!ENTITY EXPTDIR "">
-<!ENTITY LOGDIR  "">
+<!ENTITY EXPTDIR    "">
+<!ENTITY LOGDIR     "">
 
 <!ENTITY EXTRN_MDL_NAME_ICS  "">
 <!ENTITY EXTRN_MDL_NAME_LBCS "">
@@ -39,8 +39,13 @@ the workflow XML.
 
 <!ENTITY FHR "">
 
-<!ENTITY METPLUS_PATH "">
-<!ENTITY METPLUS_CONF "">
+<!ENTITY MODEL "">
+<!ENTITY MET_INSTALL_DIR "">
+<!ENTITY METPLUS_PATH    "">
+<!ENTITY VX_CONFIG_DIR   "">
+<!ENTITY METPLUS_CONF    "">
+<!ENTITY MET_CONFIG      "">
+<!ENTITY CCPA_OBS_DIR    "">
 
 <!ENTITY RUN_TASK_MAKE_GRID      "">
 <!ENTITY RUN_TASK_MAKE_OROG      "">
@@ -425,19 +430,21 @@ MODULES_RUN_TASK_FP script.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>SCRIPTSDIR</name><value>&SCRIPTSDIR;</value></envar>
-    <envar><name>METPLUS_CONF</name><value>&METPLUS_CONF;</value></envar>
+    <envar><name>MET_INSTALL_DIR</name><value>&MET_INSTALL_DIR;</value></envar>
     <envar><name>METPLUS_PATH</name><value>&METPLUS_PATH;</value></envar>
+    <envar><name>METPLUS_CONF</name><value>&METPLUS_CONF;</value></envar>
+    <envar><name>MET_CONFIG</name><value>&MET_CONFIG;</value></envar>
+    <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_DIR;</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr>&FHR;</cyclestr></value></envar>
     <envar><name>ACCUM</name><value>01</value></envar>
-    <envar><name>MODEL</name><value>FV3_GSD_SAR_GSD_HRRR3km</value></envar>
+    <envar><name>MODEL</name><value>&MODEL;</value></envar>
 
     <dependency>
-      <and>
-        <datadep age="05:00"><cyclestr>&CYCLE_DIR;/postprd/HRRR.t&HH_FIRST_CYCL;z.bgdawp12.tm12</cyclestr></datadep>
-      </and>
+      <metataskdep metatask="&RUN_POST_TN;"/>
     </dependency>
 
   </task>

@@ -184,8 +184,14 @@ set_file_param "${WFLOW_XML_FP}" "FHR" "$FHR"
 #
 # METPlus-specific information
 #
+set_file_param "${WFLOW_XML_FP}" "MODEL" "$MODEL"
+set_file_param "${WFLOW_XML_FP}" "MET_INSTALL_DIR" "$MET_INSTALL_DIR"
 set_file_param "${WFLOW_XML_FP}" "METPLUS_PATH" "$METPLUS_PATH"
+set_file_param "${WFLOW_XML_FP}" "VX_CONFIG_DIR" "$VX_CONFIG_DIR"
 set_file_param "${WFLOW_XML_FP}" "METPLUS_CONF" "$METPLUS_CONF"
+set_file_param "${WFLOW_XML_FP}" "MET_CONFIG" "$MET_CONFIG"
+set_file_param "${WFLOW_XML_FP}" "CCPA_OBS_DIR" "$CCPA_OBS_DIR"
+
 #
 # Rocoto workflow task names.
 #
