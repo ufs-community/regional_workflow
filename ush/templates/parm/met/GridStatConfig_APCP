@@ -123,9 +123,11 @@ interp = {
 // Neighborhood methods
 //
 nbrhd = {
-   vld_thresh = 1.0;
-   width      = [ 3,5,7 ];
+   field      = BOTH;
+   shape      = ${NEIGHBORHOOD_SHAPE};
+   width      = [ ${NEIGHBORHOOD_WIDTH} ];
    cov_thresh = [ >=0.5 ];
+   vld_thresh = 1.0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

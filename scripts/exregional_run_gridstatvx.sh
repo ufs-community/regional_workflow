@@ -185,17 +185,18 @@ rm_vrfy -f grid_stat*.stat
 #-----------------------------------------------------------------------
 #
 # Get the cycle date and hour (in formats of yyyymmdd and hh, respect-
-# ively) from CDATE.
+# ively) from CDATE. Also read in FHR and create a comma-separated list
+# for METplus to run over.
 #
 #-----------------------------------------------------------------------
 #
 yyyymmdd=${CDATE:0:8}
 hh=${CDATE:8:2}
 cyc=$hh
+export CDATE
 
-INIT=${CDATE}
-export INIT
-
+fhr_list=`echo ${FHR} | sed "s/ /,/g"`
+export fhr_list
 #
 #-----------------------------------------------------------------------
 #
@@ -213,12 +214,12 @@ ${SCRIPTSDIR}/exregional_get_ccpa_files.sh
 #
 #-----------------------------------------------------------------------
 #
+export EXPTDIR
 export METPLUS_PATH
 export METPLUS_CONF
+export OBS_DIR
 export acc="${ACCUM}h" # for stats output prefix in GridStatConfig
 export MODEL
-
-export modpath=${postprd_dir}
 
 ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common_hera.conf \
