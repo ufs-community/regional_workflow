@@ -240,6 +240,27 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that RUN_TASK_VX_GRIDSTAT is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_VX_GRIDSTAT" "valid_vals_RUN_TASK_VX_GRIDSTAT"
+#
+# Set RUN_TASK_VX_GRIDSTAT to either "TRUE" or "FALSE" so we don't have to
+# consider other valid values later on.
+#
+RUN_TASK_VX_GRIDSTAT=${RUN_TASK_VX_GRIDSTAT^^}
+if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
+   [ "${RUN_TASK_VX_GRIDSTAT}" = "YES" ]; then
+  RUN_TASK_VX_GRIDSTAT="TRUE"
+elif [ "${RUN_TASK_VX_GRIDSTAT}" = "FALSE" ] || \
+     [ "${RUN_TASK_VX_GRIDSTAT}" = "NO" ]; then
+  RUN_TASK_VX_GRIDSTAT="FALSE"
+fi
+#
+#
+#-----------------------------------------------------------------------
+#
 # Convert machine name to upper case if necessary.  Then make sure that
 # MACHINE is set to a valid value.
 #
@@ -1232,6 +1253,27 @@ contents of FIXsar.  Reset values are:"
     print_info_msg "$msg"
   
   fi
+
+  if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
+     [ "${RUN_TASK_VX_GRIDSTAT}" = "FALSE" ]; then
+
+    msg="
+When RUN_ENVIR is set to \"nco\", it is assumed that the verification
+will not be run.
+  RUN_TASK_VX_GRIDSTAT = \"${RUN_TASK_VX_GRIDSTAT}\"
+Resetting RUN_TASK_MAKE_GRID to \"FALSE\" 
+Reset value is:"
+
+    RUN_TASK_VX_GRIDSTAT="FALSE"
+
+    msg="$msg""
+  RUN_TASK_VX_GRIDSTAT = \"${RUN_TASK_VX_GRIDSTAT}\"
+"
+
+    print_info_msg "$msg"
+
+  fi
+
 
 else
 #

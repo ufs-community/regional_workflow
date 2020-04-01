@@ -759,6 +759,10 @@ CCPA_OBS_DIR=""
 # SFC_CLIMO_DIR:
 # Same as GRID_DIR but for the surface climatology generation task.
 # 
+# RUN_TASK_VX_GRIDSTAT:
+# Flag that determines whether the grid-stat verification task is to be
+# run.
+#
 #-----------------------------------------------------------------------
 #
 RUN_TASK_MAKE_GRID="TRUE"
@@ -769,6 +773,8 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
+
+RUN_TASK_VX_GRIDSTAT="TRUE"
 #
 #-----------------------------------------------------------------------
 #

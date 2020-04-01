@@ -35,6 +35,7 @@ EXTRN_MDL_NAME_LBCS="FV3GFS"
 #RUN_TASK_MAKE_GRID="FALSE"
 #RUN_TASK_MAKE_OROG="FALSE"
 #RUN_TASK_MAKE_SFC_CLIMO="FALSE"
+#RUN_TASK_VX_GRIDSTAT="FALSE"
 
 RUN="an_experiment"
 COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"     # Path to directory containing files from the external model (FV3GFS).

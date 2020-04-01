@@ -43,7 +43,7 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the ex-script for the task that runs METplus for grid-stat on
+This is the ex-script for the task that runs METplus for point-stat on
 the UPP output files by initialization time for all forecast hours.
 ========================================================================"
 
@@ -57,7 +57,7 @@ the UPP output files by initialization time for all forecast hours.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "cycle_dir" "postprd_dir" "vx_dir" "gridstat_dir" )
+valid_args=( "cycle_dir" "postprd_dir" "vx_dir" "pointstat_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -76,7 +76,7 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-print_info_msg "$VERBOSE" "Starting grid-stat verification"
+print_info_msg "$VERBOSE" "Starting point-stat verification"
 
 case $MACHINE in
 
@@ -173,13 +173,13 @@ esac
 
 #-----------------------------------------------------------------------
 #
-# Remove any files from previous runs and stage necessary files in gridstat_dir.
+# Remove any files from previous runs and stage necessary files in pointstat_dir.
 #
 #-----------------------------------------------------------------------
 #
-cd ${gridstat_dir}
+cd ${pointstat_dir}
 
-# rm_vrfy -f grid_stat*.stat
+# rm_vrfy -f point_stat*.stat
 
 #
 #-----------------------------------------------------------------------
@@ -205,7 +205,7 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-${SCRIPTSDIR}/exregional_get_ccpa_files.sh
+${SCRIPTSDIR}/exregional_get_ndas_files.sh
 
 #
 #-----------------------------------------------------------------------
@@ -218,12 +218,15 @@ export EXPTDIR
 export METPLUS_PATH
 export METPLUS_CONF
 export OBS_DIR
-export acc="${ACCUM}h" # for stats output prefix in GridStatConfig
 export MODEL
 
 ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common_hera.conf \
-  -c ${METPLUS_CONF}/APCP_${acc}.conf
+  -c ${METPLUS_CONF}/PointStat_conus_sfc.conf
+
+${METPLUS_PATH}/ush/master_metplus.py \
+  -c ${METPLUS_CONF}/common_hera.conf \
+  -c ${METPLUS_CONF}/PointStat_upper_air.conf
 
 #
 #-----------------------------------------------------------------------
@@ -234,7 +237,7 @@ ${METPLUS_PATH}/ush/master_metplus.py \
 #
 print_info_msg "
 ========================================================================
-METplus grid-stat completed successfully.
+METplus point-stat completed successfully.
 
 Exiting script:  \"${scrfunc_fn}\"
 In directory:    \"${scrfunc_dir}\"

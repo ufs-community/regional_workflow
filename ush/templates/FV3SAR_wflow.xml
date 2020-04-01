@@ -50,6 +50,7 @@ the workflow XML.
 <!ENTITY RUN_TASK_MAKE_GRID      "">
 <!ENTITY RUN_TASK_MAKE_OROG      "">
 <!ENTITY RUN_TASK_MAKE_SFC_CLIMO "">
+<!ENTITY RUN_TASK_VX_GRIDSTAT "">
 
 <!--
 The following are variables that are passed to the shell scripts that 
@@ -444,8 +445,11 @@ MODULES_RUN_TASK_FP script.
     <envar><name>MODEL</name><value>&MODEL;</value></envar>
 
     <dependency>
-      <metataskdep metatask="&RUN_POST_TN;"/>
-    </dependency>
+      <and>
+	<streq><left>&RUN_TASK_VX_GRIDSTAT;</left><right>TRUE</right></streq>
+	<metataskdep metatask="&RUN_POST_TN;"/>
+      </and>
+   </dependency>
 
   </task>
 

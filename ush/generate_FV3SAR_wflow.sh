@@ -211,6 +211,7 @@ set_file_param "${WFLOW_XML_FP}" "VX_GRIDSTAT_TN" "${VX_GRIDSTAT_TN}"
 set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_GRID" "${RUN_TASK_MAKE_GRID}"
 set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_OROG" "${RUN_TASK_MAKE_OROG}"
 set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_SFC_CLIMO" "${RUN_TASK_MAKE_SFC_CLIMO}"
+set_file_param "${WFLOW_XML_FP}" "RUN_TASK_VX_GRIDSTAT" "${RUN_TASK_VX_GRIDSTAT}"
 #
 #-----------------------------------------------------------------------
 #
