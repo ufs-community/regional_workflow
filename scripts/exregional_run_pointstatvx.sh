@@ -194,9 +194,14 @@ yyyymmdd=${CDATE:0:8}
 hh=${CDATE:8:2}
 cyc=$hh
 export CDATE
+export hh
+
+fhr_last=`echo ${FHR}  | awk '{ print $NF }'`
+export fhr_last
 
 fhr_list=`echo ${FHR} | sed "s/ /,/g"`
 export fhr_list
+
 #
 #-----------------------------------------------------------------------
 #

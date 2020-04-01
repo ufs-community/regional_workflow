@@ -5,7 +5,7 @@
 # The accumulation interval is an input argument. Current supported accumulations: 01h, 03h, and 06h.
 
 # Top-level CCPA directory
-ccpa_dir=/scratch2/BMC/det/jwolff/HIWT/obs/ccpa
+ccpa_dir=${OBS_DIR}/..
 if [[ ! -d "$ccpa_dir" ]]; then
   mkdir -p $ccpa_dir
 fi
@@ -23,13 +23,13 @@ if [[ ! -d "$ccpa_proc" ]]; then
 fi
 
 # Accumulation
-accum=01
+accum=${ACCUM}
 
 # Initialization
-init=2019101112
+init=${CDATE}${hh}
 
 # Forecast length
-fcst_length=24
+fcst_length=${fhr_last}
 
 current_fcst=$accum
 while [[ ${current_fcst} -le ${fcst_length} ]]; do
