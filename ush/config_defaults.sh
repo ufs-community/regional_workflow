@@ -763,6 +763,10 @@ CCPA_OBS_DIR=""
 # Flag that determines whether the grid-stat verification task is to be
 # run.
 #
+# RUN_TASK_VX_POINTSTAT:
+# Flag that determines whether the point-stat verification task is to be
+# run.
+#
 #-----------------------------------------------------------------------
 #
 RUN_TASK_MAKE_GRID="TRUE"
@@ -775,6 +779,9 @@ RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
 
 RUN_TASK_VX_GRIDSTAT="TRUE"
+
+RUN_TASK_VX_POINTSTAT="TRUE"
+
 #
 #-----------------------------------------------------------------------
 #
