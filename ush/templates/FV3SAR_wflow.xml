@@ -103,7 +103,7 @@ Variables that are not modified by the workflow generation script.
 <!ENTITY RSRC_RUN_FCST            "<walltime>04:30:00</walltime>">
 <!ENTITY RSRC_POST                "<walltime>00:30:00</walltime>">
 <!ENTITY RSRC_VX_GRIDSTAT         "<walltime>01:00:00</walltime>">
-<!ENTITY RSRC_VX_POINTSTAT         "<walltime>01:00:00</walltime>">
+<!ENTITY RSRC_VX_POINTSTAT        "<walltime>01:00:00</walltime>">
 
 <!ENTITY RSRV_DEFAULT  "<queue>&QUEUE_DEFAULT;</queue><account>&ACCOUNT;</account>"> 
 <!ENTITY RSRV_HPSS     "<partition>&QUEUE_HPSS;</partition><account>&ACCOUNT;</account>"> 

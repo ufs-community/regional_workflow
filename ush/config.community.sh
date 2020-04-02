@@ -30,6 +30,7 @@ MODEL="FV3_GFS_2017_gfdlmp_GSD_HRRR25km"
 METPLUS_PATH="path/to/METPlus"
 MET_INSTALL_DIR="path/to/MET"
 CCPA_OBS_DIR="/path/to/processed/CCPA/data"
+NDAS_OBS_DIR="/path/to/processed/NDAS/data"
 
 RUN_TASK_MAKE_GRID="TRUE"
 RUN_TASK_MAKE_OROG="TRUE"

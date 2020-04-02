@@ -191,6 +191,7 @@ set_file_param "${WFLOW_XML_FP}" "VX_CONFIG_DIR" "$VX_CONFIG_DIR"
 set_file_param "${WFLOW_XML_FP}" "METPLUS_CONF" "$METPLUS_CONF"
 set_file_param "${WFLOW_XML_FP}" "MET_CONFIG" "$MET_CONFIG"
 set_file_param "${WFLOW_XML_FP}" "CCPA_OBS_DIR" "$CCPA_OBS_DIR"
+set_file_param "${WFLOW_XML_FP}" "NDAS_OBS_DIR" "$NDAS_OBS_DIR"
 
 #
 # Rocoto workflow task names.
@@ -204,7 +205,9 @@ set_file_param "${WFLOW_XML_FP}" "MAKE_ICS_TN" "${MAKE_ICS_TN}"
 set_file_param "${WFLOW_XML_FP}" "MAKE_LBCS_TN" "${MAKE_LBCS_TN}"
 set_file_param "${WFLOW_XML_FP}" "RUN_FCST_TN" "${RUN_FCST_TN}"
 set_file_param "${WFLOW_XML_FP}" "RUN_POST_TN" "${RUN_POST_TN}"
+set_file_param "${WFLOW_XML_FP}" "VX_TN" "${VX_TN}"
 set_file_param "${WFLOW_XML_FP}" "VX_GRIDSTAT_TN" "${VX_GRIDSTAT_TN}"
+set_file_param "${WFLOW_XML_FP}" "VX_POINTSTAT_TN" "${VX_POINTSTAT_TN}"
 #
 # Flags that determine whether or not certain tasks are launched.
 #

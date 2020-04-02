@@ -727,6 +727,7 @@ VX_CONFIG_DIR=""
 METPLUS_CONF=""
 MET_CONFIG=""
 CCPA_OBS_DIR=""
+NDAS_OBS_DIR=""
 #-----------------------------------------------------------------------
 #
 # Set flags (and related directories) that determine whether the grid, 
