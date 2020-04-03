@@ -4,7 +4,6 @@
 # A valid YYYYMMDD directory is created, and all files for the valid day are placed within the directory.
 
 # Top-level NDAS directory
-#ndas_dir=/scratch2/BMC/det/jwolff/HIWT/obs/ndas
 ndas_dir=${OBS_DIR}/..
 if [[ ! -d "$ndas_dir" ]]; then
   mkdir -p $ndas_dir
@@ -23,7 +22,6 @@ if [[ ! -d "$ndas_proc" ]]; then
 fi
 
 # Initialization
-#init=2019101112
 init=${CDATE}${hh}
 
 # Forecast length
