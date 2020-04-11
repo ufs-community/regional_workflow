@@ -15,10 +15,10 @@
 # Set the RUN_ENVIR variable that is listed and described in the WCOSS
 # Implementation Standards document:
 #
-#  NCEP Central Operations
-#  WCOSS Implementation Standards
-#  April 17, 2019
-#  Version 10.2.0
+#   NCEP Central Operations
+#   WCOSS Implementation Standards
+#   April 17, 2019
+#   Version 10.2.0
 #
 # RUN_ENVIR is described in this document as follows:
 #
@@ -196,6 +196,10 @@ DOT_OR_USCORE="_"
 # Name of the log file that contains the output from successive calls to
 # the workflow launch script (WFLOW_LAUNCH_SCRIPT_FN).
 #
+# RUN_TASK_OUTSIDE_WFLOW_SCRIPT_FN:
+# Name of the script that can be used to run any one of the workflow tasks 
+# without using a workflow manager like rocoto.
+#
 #-----------------------------------------------------------------------
 #
 RGNL_GRID_NML_FN="regional_grid.nml"
@@ -211,6 +215,8 @@ WFLOW_XML_FN="FV3SAR_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
 WFLOW_LAUNCH_SCRIPT_FN="launch_FV3SAR_wflow.sh"
 WFLOW_LAUNCH_LOG_FN="log.launch_FV3SAR_wflow"
+
+RUN_TASK_OUTSIDE_WFLOW_SCRIPT_FN="run_one_task.sh"
 #
 #-----------------------------------------------------------------------
 #
@@ -803,5 +809,60 @@ FNVMNC="global_shdmin.0.144x0.144.grb"
 FNVMXC="global_shdmax.0.144x0.144.grb"
 FNSLPC="global_slope.1x1.grb"
 FNABSC="global_mxsnoalb.uariz.t126.384.190.rg.grb"
+#
+#-----------------------------------------------------------------------
+#
+# Set the names of the various workflow tasks.  Then, for each task, set
+# the parameters to pass to the job scheduler (e.g. slurm) that will submit
+# a job for each task to be run.  These parameters include the number of
+# nodes to use to run the job, the MPI processes per node, and the maximum
+# walltime to allow for the job to complete.
+#
+#-----------------------------------------------------------------------
+#
+# Task names.
+#
+MAKE_GRID_TN="make_grid"
+MAKE_OROG_TN="make_orog"
+MAKE_SFC_CLIMO_TN="make_sfc_climo"
+GET_EXTRN_ICS_TN="get_extrn_ics"
+GET_EXTRN_LBCS_TN="get_extrn_lbcs"
+MAKE_ICS_TN="make_ics"
+MAKE_LBCS_TN="make_lbcs"
+RUN_FCST_TN="run_fcst"
+RUN_POST_TN="run_post"
+#
+# Number of nodes.
+#
+NNODES_MAKE_GRID="1"
+NNODES_MAKE_OROG="1"
+NNODES_MAKE_SFC_CLIMO="2"
+NNODES_GET_EXTRN_MDL_FILES="1"
+NNODES_MAKE_ICS="4"
+NNODES_MAKE_LBCS="4"
+NNODES_RUN_FCST=""  # This is calculated below.
+NNODES_RUN_POST="2"
+#
+# Number of MPI processes per node.
+#
+PPN_MAKE_GRID="24"
+PPN_MAKE_OROG="24"
+PPN_MAKE_SFC_CLIMO="24"
+PPN_GET_EXTRN_MDL_FILES="1"
+PPN_MAKE_ICS="12"
+PPN_MAKE_LBCS="12"
+PPN_RUN_FCST="24"
+PPN_RUN_POST="24"
+#
+# Walltimes.
+#
+WTIME_MAKE_GRID="00:10:00"
+WTIME_MAKE_OROG="00:10:00"
+WTIME_MAKE_SFC_CLIMO="00:25:00"
+WTIME_GET_EXTRN_MDL_FILES="00:45:00"
+WTIME_MAKE_ICS="00:30:00"
+WTIME_MAKE_LBCS="01:00:00"
+WTIME_RUN_FCST="04:30:00"
+WTIME_RUN_POST="00:30:00"
 
 

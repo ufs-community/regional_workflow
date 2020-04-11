@@ -90,50 +90,14 @@ cp_vrfy ${TEMPLATE_XML_FP} ${WFLOW_XML_FP}
 #
 #-----------------------------------------------------------------------
 #
-# Set local variables that will be used later below to replace place-
-# holder values in the workflow xml file.
+# Generate an array containing the set of forecast hours at which the
+# RUN_POST_TN task is called.
 #
 #-----------------------------------------------------------------------
 #
-PROC_RUN_FCST="${NUM_NODES}:ppn=${NCORES_PER_NODE}"
-
-FHR=( $( seq 0 1 ${FCST_LEN_HRS} ) )
-i=0
-FHR_STR=$( printf "%02d" "${FHR[i]}" )
-numel=${#FHR[@]}
-for i in $(seq 1 $(($numel-1)) ); do
-  hour=$( printf "%02d" "${FHR[i]}" )
-  FHR_STR="${FHR_STR} $hour"
-done
-FHR="${FHR_STR}"
-#
-#-----------------------------------------------------------------------
-#
-# Set the variable containing a generic version of the cycle directory.
-# This variable will be used in the rocoto workflow XML file.  By "generic", 
-# we mean that the year, month, day, and hour in this variable are 
-# placeholders that rocoto will replace with actual values (integers).
-#
-#-----------------------------------------------------------------------
-#
-CDATE_generic="@Y@m@d@H"
-if [ "${RUN_ENVIR}" = "nco" ]; then
-#
-# Can't do this because there will be leftover directories from previous
-# runs with the same experiment settings that are difficult to remove.
-# Have to split the cycle CDATE from the grid name.
-#
-#  CYCLE_DIR="$STMP/tmpnwprd/${EMC_GRID_NAME}_${CDATE_generic}"
-
-  cycle_basedir="$STMP/tmpnwprd/${EMC_GRID_NAME}" 
-  check_for_preexist_dir ${cycle_basedir} ${PREEXISTING_DIR_METHOD}
-  CYCLE_DIR="${cycle_basedir}/${CDATE_generic}"
-
-else
-
-  CYCLE_DIR="$EXPTDIR/${CDATE_generic}"
-
-fi
+FHRS_RUN_POST=( $( seq 0 1 ${FCST_LEN_HRS} ) )
+FHRS_RUN_POST=$( printf "%02d " "${FHRS_RUN_POST[@]}" )
+FHRS_RUN_POST="${FHRS_RUN_POST:0:-1}"
 #
 #-----------------------------------------------------------------------
 #
@@ -150,7 +114,6 @@ set_file_param "${WFLOW_XML_FP}" "SCHED" "$SCHED"
 set_file_param "${WFLOW_XML_FP}" "QUEUE_DEFAULT" "${QUEUE_DEFAULT}"
 set_file_param "${WFLOW_XML_FP}" "QUEUE_HPSS" "${QUEUE_HPSS}"
 set_file_param "${WFLOW_XML_FP}" "QUEUE_FCST" "${QUEUE_FCST}"
-set_file_param "${WFLOW_XML_FP}" "PROC_RUN_FCST" "${PROC_RUN_FCST}"
 #
 # Directories.
 #
@@ -158,7 +121,7 @@ set_file_param "${WFLOW_XML_FP}" "USHDIR" "$USHDIR"
 set_file_param "${WFLOW_XML_FP}" "JOBSDIR" "$JOBSDIR"
 set_file_param "${WFLOW_XML_FP}" "EXPTDIR" "$EXPTDIR"
 set_file_param "${WFLOW_XML_FP}" "LOGDIR" "$LOGDIR"
-set_file_param "${WFLOW_XML_FP}" "CYCLE_DIR" "${CYCLE_DIR}"
+set_file_param "${WFLOW_XML_FP}" "CYCLE_BASEDIR" "${CYCLE_BASEDIR}"
 #
 # Files.
 #
@@ -179,7 +142,7 @@ set_file_param "${WFLOW_XML_FP}" "YYYY_FIRST_CYCL" "${YYYY_FIRST_CYCL}"
 set_file_param "${WFLOW_XML_FP}" "MM_FIRST_CYCL" "${MM_FIRST_CYCL}"
 set_file_param "${WFLOW_XML_FP}" "DD_FIRST_CYCL" "${DD_FIRST_CYCL}"
 set_file_param "${WFLOW_XML_FP}" "HH_FIRST_CYCL" "${HH_FIRST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "FHR" "$FHR"
+set_file_param "${WFLOW_XML_FP}" "FHRS_RUN_POST" "${FHRS_RUN_POST}"
 #
 # Rocoto workflow task names.
 #
@@ -199,10 +162,49 @@ set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_GRID" "${RUN_TASK_MAKE_GRID}"
 set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_OROG" "${RUN_TASK_MAKE_OROG}"
 set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_SFC_CLIMO" "${RUN_TASK_MAKE_SFC_CLIMO}"
 #
+# Full path to shell script that loads task-specific modules and then 
+# runs the task (and kills off its own process) using the exec command.
+#
+set_file_param "${WFLOW_XML_FP}" "LOAD_MODULES_RUN_TASK_FP" "${LOAD_MODULES_RUN_TASK_FP}"
+#
+# Number of nodes to use for each workflow task.
+#
+set_file_param "${WFLOW_XML_FP}" "NNODES_MAKE_GRID" "${NNODES_MAKE_GRID}"
+set_file_param "${WFLOW_XML_FP}" "NNODES_MAKE_OROG" "${NNODES_MAKE_OROG}"
+set_file_param "${WFLOW_XML_FP}" "NNODES_MAKE_SFC_CLIMO" "${NNODES_MAKE_SFC_CLIMO}"
+set_file_param "${WFLOW_XML_FP}" "NNODES_GET_EXTRN_MDL_FILES" "${NNODES_GET_EXTRN_MDL_FILES}"
+set_file_param "${WFLOW_XML_FP}" "NNODES_MAKE_ICS" "${NNODES_MAKE_ICS}"
+set_file_param "${WFLOW_XML_FP}" "NNODES_MAKE_LBCS" "${NNODES_MAKE_LBCS}"
+set_file_param "${WFLOW_XML_FP}" "NNODES_RUN_FCST" "${NNODES_RUN_FCST}"
+set_file_param "${WFLOW_XML_FP}" "NNODES_RUN_POST" "${NNODES_RUN_POST}"
+#
+# Number of tasks per node for each workflow task.
+#
+set_file_param "${WFLOW_XML_FP}" "PPN_MAKE_GRID" "${PPN_MAKE_GRID}"
+set_file_param "${WFLOW_XML_FP}" "PPN_MAKE_OROG" "${PPN_MAKE_OROG}"
+set_file_param "${WFLOW_XML_FP}" "PPN_MAKE_SFC_CLIMO" "${PPN_MAKE_SFC_CLIMO}"
+set_file_param "${WFLOW_XML_FP}" "PPN_GET_EXTRN_MDL_FILES" "${PPN_GET_EXTRN_MDL_FILES}"
+set_file_param "${WFLOW_XML_FP}" "PPN_MAKE_ICS" "${PPN_MAKE_ICS}"
+set_file_param "${WFLOW_XML_FP}" "PPN_MAKE_LBCS" "${PPN_MAKE_LBCS}"
+set_file_param "${WFLOW_XML_FP}" "PPN_RUN_FCST" "${PPN_RUN_FCST}"
+set_file_param "${WFLOW_XML_FP}" "PPN_RUN_POST" "${PPN_RUN_POST}"
+#
+# Walltime of each workflow task.
+#
+set_file_param "${WFLOW_XML_FP}" "WTIME_MAKE_GRID" "${WTIME_MAKE_GRID}"
+set_file_param "${WFLOW_XML_FP}" "WTIME_MAKE_OROG" "${WTIME_MAKE_OROG}"
+set_file_param "${WFLOW_XML_FP}" "WTIME_MAKE_SFC_CLIMO" "${WTIME_MAKE_SFC_CLIMO}"
+set_file_param "${WFLOW_XML_FP}" "WTIME_GET_EXTRN_MDL_FILES" "${WTIME_GET_EXTRN_MDL_FILES}"
+set_file_param "${WFLOW_XML_FP}" "WTIME_MAKE_ICS" "${WTIME_MAKE_ICS}"
+set_file_param "${WFLOW_XML_FP}" "WTIME_MAKE_LBCS" "${WTIME_MAKE_LBCS}"
+set_file_param "${WFLOW_XML_FP}" "WTIME_RUN_FCST" "${WTIME_RUN_FCST}"
+set_file_param "${WFLOW_XML_FP}" "WTIME_RUN_POST" "${WTIME_RUN_POST}"
+#
 #-----------------------------------------------------------------------
 #
-# Extract from CDATE the starting year, month, day, and hour of the
-# forecast.  These are needed below for various operations.
+# Extract from DATE_FIRST_CYCL the year, month and day of the start time
+# of the first cycle/forecast.  Then extract from HH_FIRST_CYCL the hour
+# of the start time of the first cycle/forecast.
 #
 #-----------------------------------------------------------------------
 #
@@ -305,16 +307,32 @@ cd_vrfy -
 #
 #-----------------------------------------------------------------------
 #
-# Copy the workflow (re)launch script to the experiment directory.
+# Create a symlink in the experiment directory that points to the workflow
+# (re)launch script.
 #
 #-----------------------------------------------------------------------
 #
 print_info_msg "
-Creating symlink in the experiment directory (EXPTDIR) to the workflow
-launch script (WFLOW_LAUNCH_SCRIPT_FP):
+Creating symlink in the experiment directory (EXPTDIR) that points to the
+workflow launch script (WFLOW_LAUNCH_SCRIPT_FP):
   EXPTDIR = \"${EXPTDIR}\"
   WFLOW_LAUNCH_SCRIPT_FP = \"${WFLOW_LAUNCH_SCRIPT_FP}\""
 ln_vrfy -fs "${WFLOW_LAUNCH_SCRIPT_FP}" "$EXPTDIR"
+#
+#-----------------------------------------------------------------------
+#
+# Create a symlink in the experiment directory that points to the script
+# that runs a single task outside the workflow.
+#
+#-----------------------------------------------------------------------
+#
+print_info_msg "
+Creating symlink in the experiment directory (EXPTDIR) that points to the
+script (RUN_TASK_OUTSIDE_WFLOW_SCRIPT_FP) that runs a single task outside
+the workflow:
+  EXPTDIR = \"${EXPTDIR}\"
+  RUN_TASK_OUTSIDE_WFLOW_SCRIPT_FP = \"${RUN_TASK_OUTSIDE_WFLOW_SCRIPT_FP}\""
+ln_vrfy -fs "${RUN_TASK_OUTSIDE_WFLOW_SCRIPT_FP}" "$EXPTDIR"
 #
 #-----------------------------------------------------------------------
 #
