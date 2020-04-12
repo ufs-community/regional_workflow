@@ -239,6 +239,34 @@ The arguments are defined as follows:
   PPN_\${TASK_NAME}, and WTIME_\${TASK_NAME} defined in the experiment
   directory's global variable definitions file (${GLOBAL_VAR_DEFNS_FN}), where
   \${TASK_NAME} is the name of the task to run converted to uppercase.
+
+Examples:
+
+1) Run the \"make_grid\" task under the \"gsd-fv3\" account in slurm's \"debug\"
+   qos:
+
+     run_one_task.sh task_name=\"make_grid\" acct=\"gsd-fv3\" qos=\"debug\"
+
+2) Same as above but now explicitly specify the number of nodes, processes
+   per node, and walltime to use for the job:
+
+     run_one_task.sh task_name=\"make_grid\" acct=\"gsd-fv3\" \\
+                     qos=\"debug\" nnodes=\"1\" ppn=\"6\" wtime=\"00:05:00\"
+
+3) Run the \"make_ics\" task for a specified cdate with all script arguments
+   except fhr specified:
+
+     run_one_task.sh task_name=\"make_ics\" cdate=\"2019052000\" \\
+                     sched=\"slurm\" acct=\"gsd-fv3\" part=\"hera\" qos=\"debug\" \\
+                     nnodes=\"2\" ppn=\"24\" wtime=\"00:10:00\"
+
+4) Run the \"run_post\" task for a specified cdate and fhr with all script 
+   arguments specified:
+
+     run_one_task.sh task_name=\"run_post\" cdate=\"2019052000\" fhr=\"01\" \\
+                     sched=\"slurm\" acct=\"gsd-fv3\" part=\"hera\" qos=\"debug\" \\
+                     nnodes=\"2\" ppn=\"24\" wtime=\"00:10:00\"
+
 "
 #
 #-----------------------------------------------------------------------
