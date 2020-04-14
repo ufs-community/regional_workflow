@@ -84,7 +84,6 @@ Starting post-processing for fhr = $fhr hr..."
 
 case $MACHINE in
 
-
 "WCOSS_C" | "WCOSS" )
 #  { save_shell_opts; set +x; } > /dev/null 2>&1
   module purge
@@ -111,35 +110,23 @@ case $MACHINE in
   APRUN="aprun -j 1 -n${ntasks} -N${ptile} -d${threads} -cc depth"
   ;;
 
-
-"THEIA")
-  { save_shell_opts; set +x; } > /dev/null 2>&1
-  module purge
-  module load intel
-  module load impi 
-  module load netcdf
-  module load contrib wrap-mpi
-  { restore_shell_opts; } > /dev/null 2>&1
-  np=${SLURM_NTASKS}
-  APRUN="mpirun -np ${np}"
-  ;;
-
-
 "HERA")
-#  export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate
   APRUN="srun"
   ;;
-
 
 "JET")
   APRUN="srun"
   ;;
 
-
 "ODIN")
   APRUN="srun -n 1"
   ;;
 
+"CHEYENNE")
+  module list
+  nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
+  APRUN="mpirun -np $nprocs"
+  ;;
 
 esac
 #

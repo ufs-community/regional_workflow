@@ -138,19 +138,17 @@ case $MACHINE in
   APRUN=${APRUN:-"aprun -j 1 -n 6 -N 6"}
   ;;
 
-"THEIA")
-# Need to load intel/15.1.133.  This and all other module loads should go into a module file.
-  module load intel/15.1.133
-  module list
-  APRUN="mpirun -np ${SLURM_NTASKS}"
-  ;;
-
 "HERA")
   APRUN="srun"
   ;;
 
 "JET")
   APRUN="srun"
+  ;;
+
+"CHEYENNE")
+  nprocs=$(( NNODES_MAKE_SFC_CLIMO*PPN_MAKE_SFC_CLIMO ))
+  APRUN="mpirun -np $nprocs"
   ;;
 
 *)

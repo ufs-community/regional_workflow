@@ -157,6 +157,9 @@ case $MACHINE in
   ulimit -a
   ;;
 
+"CHEYENNE")
+  APRUN="time"
+  ;;
 
 esac
 #

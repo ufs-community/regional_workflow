@@ -332,9 +332,10 @@ Then remove this message and rerun."
 "CHEYENNE")
 #
   NCORES_PER_NODE=36
-  SCHED="pbs"
+  SCHED="pbspro"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
-  QUEUE_HPSS=${QUEUE_HPSS:-""}
+  QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
+  QUEUE_HPSS_TAG="queue"       # pbspro does not support "partition" tag
   QUEUE_FCST=${QUEUE_FCST:-"regular"}
 #
 esac
@@ -685,8 +686,8 @@ case $MACHINE in
   SFC_CLIMO_INPUT_DIR="/scratch1/NCEPDEV/da/George.Gayno/ufs_utils.git/climo_fields_netcdf"
   ;;
 "CHEYENNE")
-  FIXgsm="/glade/p/ral/jntp/UFS_CAM/fix_am"
-  SFC_CLIMO_INPUT_DIR="/glade/p/ral/jntp/UFS_CAM/climo_fields_netcdf"
+  FIXgsm="/glade/p/ral/jntp/UFS_CAM/fix/fix_am"
+  SFC_CLIMO_INPUT_DIR="/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"
   ;;
 
 *)
@@ -1884,28 +1885,51 @@ T7) must be evenly divisible by the number of tasks per write group
   fi
 
 fi
+##
+##-----------------------------------------------------------------------
+##
+## Calculate the number of nodes (NNODES_RUN_FCST) to request from the job
+## scheduler for the forecast task (RUN_FCST_TN).  This is just PE_MEMBER01
+## dividied by the number of cores per node on the machine (NCORES_PER_NODE)
+## rounded up to the nearest integer, i.e.
+##
+##   NNODES_RUN_FCST = ceil(PE_MEMBER01/NCORES_PER_NODE)
+##
+## where ceil(...) is the ceiling function, i.e. it rounds its floating
+## point argument up to the next larger integer.  Since in bash division
+## of two integers returns a truncated integer and since bash has no
+## built-in ceil(...) function, we perform the rounding-up operation by
+## adding the denominator (of the argument of ceil(...) above) minus 1 to
+## the original numerator, i.e. by redefining NNODES_RUN_FCST to be
+##
+##   NNODES_RUN_FCST = (PE_MEMBER01 + NCORES_PER_NODE - 1)/NCORES_PER_NODE
+##
+##
+##-----------------------------------------------------------------------
+##
+#NNODES_RUN_FCST=$(( (PE_MEMBER01 + NCORES_PER_NODE - 1)/NCORES_PER_NODE ))
 #
 #-----------------------------------------------------------------------
 #
 # Calculate the number of nodes (NNODES_RUN_FCST) to request from the job
 # scheduler for the forecast task (RUN_FCST_TN).  This is just PE_MEMBER01
-# dividied by the number of cores per node on the machine (NCORES_PER_NODE)
-# rounded up to the nearest integer, i.e.
+# dividied by the number of processes per node we want to request for this
+# task (PPN_RUN_FCST), then rounded up to the nearest integer, i.e.
 #
-#   NNODES_RUN_FCST = ceil(PE_MEMBER01/NCORES_PER_NODE)
+#   NNODES_RUN_FCST = ceil(PE_MEMBER01/PPN_RUN_FCST)
 #
 # where ceil(...) is the ceiling function, i.e. it rounds its floating
-# point argument up to the next larger integer.  Since in bash division
-# of two integers returns a truncated integer and since bash has no
+# point argument up to the next larger integer.  Since in bash, division
+# of two integers returns a truncated integer, and since bash has no
 # built-in ceil(...) function, we perform the rounding-up operation by
 # adding the denominator (of the argument of ceil(...) above) minus 1 to
 # the original numerator, i.e. by redefining NNODES_RUN_FCST to be
 #
-#   NNODES_RUN_FCST = (PE_MEMBER01 + NCORES_PER_NODE - 1)/NCORES_PER_NODE
+#   NNODES_RUN_FCST = (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST
 #
 #-----------------------------------------------------------------------
 #
-NNODES_RUN_FCST=$(( (PE_MEMBER01 + NCORES_PER_NODE - 1)/NCORES_PER_NODE ))
+NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 #
 #-----------------------------------------------------------------------
 #
