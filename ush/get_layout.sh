@@ -1,13 +1,13 @@
 #!/bin/bash -f
 ###########################################################
 # get layout for given nx and ny
-# INPUT: nx, ny, number of cpu to be used (option).
+# INPUT: nx, ny, number of cpu to be used (optional).
 # Output: suggested nx, ny, layout_x, layout_y
 # email to: Linlin.Pan@noaa.gov for any questions.
 #
 ###########################################################
 if [ "$#" -lt 2 ]; then
-    echo "You must enter number of grids in x and y direction"
+    echo "You must enter number of grid points in x and y directions"
     exit
 else
    nx=$1
@@ -71,14 +71,13 @@ fi
 
 nxy=$((nx * ny))
 
-if [ $nxy -le 22000 ]; then
-layout_x=2
-layout_y=2
-nx=$((nx+nx%2))
-ny=$((ny+ny%2))
-fi
+if [ $nxy -le 22000 ]; then # 22000 is from predefined HRRR 25km domain 
+   layout_x=2
+   layout_y=2
+   nx=$((nx+nx%2))
+   ny=$((ny+ny%2))
 
-if [ $nxy -gt 22000 ] && [ $nxy -le 81900 ]; then
+elif [ $nxy -gt 22000 ] && [ $nxy -le 81900 ]; then #81900 is obtained from predefined HRRR 13km domain
    nlayout=$(((4+96*nxy/81900)))
    layout_x=$(echo "sqrt($nlayout)" |bc )
    if [ $layout_x -gt $nx ]; then
@@ -105,10 +104,9 @@ if [ $nxy -gt 22000 ] && [ $nxy -le 81900 ]; then
    else
      ny=$((ny/layout_y*layout_y))
    fi
-fi
 
-if [ $nxy -gt 81900 ]; then
-   nlayout=$(((100+716*nxy/1747872)))
+elif [ $nxy -gt 81900 ]; then
+   nlayout=$(((100+716*nxy/1747872)))  # 1747872 is obtained from predefined HRRR 3km domain.
    layout_x=$(echo "sqrt($nlayout)" |bc )
    if [ $layout_x -gt $nx ]; then
       $layout_x=$nx
@@ -140,6 +138,9 @@ if [ $nxy -gt 81900 ]; then
    else
      ny=$((ny/layout_y*layout_y))
    fi
+else
+  echo "Error: nxy=  $nxy "
+  exit
 fi
 
 echo "suggested layout_x= $layout_x, layout_y=$layout_y, total= $((layout_x*layout_y))"
