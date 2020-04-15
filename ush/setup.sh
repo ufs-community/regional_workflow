@@ -293,15 +293,6 @@ Then remove this message and rerun."
   QUEUE_FCST=${QUEUE_FCST:-""}
   ;;
 #
-"THEIA")
-#
-  NCORES_PER_NODE=24
-  SCHED="slurm"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
-  QUEUE_HPSS=${QUEUE_HPSS:-"service"}
-  QUEUE_FCST=${QUEUE_FCST:-""}
-  ;;
-#
 "HERA")
 #
   NCORES_PER_NODE=24
@@ -339,6 +330,15 @@ Then remove this message and rerun."
   QUEUE_FCST=${QUEUE_FCST:-"regular"}
 #
 esac
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that the job scheduler set above is valid.
+#
+#-----------------------------------------------------------------------
+#
+SCHED="${SCHED^^}"
+check_var_valid_value "SCHED" "valid_vals_SCHED"
 #
 #-----------------------------------------------------------------------
 #
@@ -2254,6 +2254,14 @@ done <<< "${line_list}"
 #-----------------------------------------------------------------------
 #
 
+#
+#-----------------------------------------------------------------------
+#
+# Job scheduler.
+#
+#-----------------------------------------------------------------------
+#
+SCHED="$SCHED"
 #
 #-----------------------------------------------------------------------
 #
