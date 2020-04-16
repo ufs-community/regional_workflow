@@ -440,12 +440,14 @@ fi
 #-----------------------------------------------------------------------
 #
 # If sched is not specified, set it to a default value.  Then convert it
-# to uppercase and ensure that it has a valid value.
+# to lowercase (all valid SCHED values are lower case because rocoto only
+# recognizes lower case versions of this parameter) and ensure that it 
+# has a valid value.
 #
 #-----------------------------------------------------------------------
 #
 sched="${sched:-$SCHED}"
-sched="${sched^^}"
+sched="${sched,,}"
 check_var_valid_value "sched" "valid_vals_SCHED"
 #
 #-----------------------------------------------------------------------
