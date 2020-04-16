@@ -3,7 +3,7 @@
 #
 #-----------------------------------------------------------------------
 #
-# For a description of how to use this script, see the usage message 
+# For a description of how to use this script, see the usage message
 # below.
 #
 #-----------------------------------------------------------------------
@@ -12,7 +12,7 @@ set -u +x
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located 
+# Get the full path to the file in which this script/function is located
 # (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
 # which the file is located (scrfunc_dir).
 #
@@ -25,14 +25,16 @@ scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #-----------------------------------------------------------------------
 #
 # Source the bash utility functions.  Also, source the default workflow
-# configuration file to have access to default values of certain workflow
-# variables.
+# configuration file (in order to have access to default values of certain
+# workflow variables) and the file that defines sets of valid values for
+# various workflow variables.
 #
 #-----------------------------------------------------------------------
 #
 ushdir="${scrfunc_dir}"
 . $ushdir/source_util_funcs.sh
 . $ushdir/config_defaults.sh
+. $ushdir/valid_param_vals.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -118,7 +120,7 @@ The arguments are defined as follows:
   default set of valid task names is:
     ${default_task_names_str}
   (These default values can be changed in the workflow's user-specified
-  configuration file at ush/config.sh.)  
+  configuration file at ush/config.sh.)
 
   cdate:
   The date and hour-of-day of the start time of the cycle for which to
@@ -143,7 +145,7 @@ The arguments are defined as follows:
   job queue.  Valid job schedulers are:
     ${valid_vals_sched_str}
   If not specified, the value (out of this list of valid values) that it
-  defaults to depends on the machine. 
+  defaults to depends on the machine.
 
   acct:
   The account to charge the core hours to of the job that will run the
@@ -170,40 +172,64 @@ The arguments are defined as follows:
   directory's global variable definitions file (named by default ${GLOBAL_VAR_DEFNS_FN}),
   where \${TASK_NAME} is the name of the task to run converted to uppercase.
 
+Note that when an experiment is generated, a symlink is created in the
+top level of the experiment directory that points to this script in the
+workflow's directory structure.  This allows this script to be run from
+the experiment directory.
+
 Examples:
 
-1) Run the \"make_grid\" task under the \"gsd-fv3\" account in slurm's \"debug\"
-   qos:
+* From the experiment directory, run the \"make_grid\" task:
 
-     ${scrfunc_fn} task_name=\"make_grid\" acct=\"gsd-fv3\" qos=\"debug\"
+  > cd /path/to/expt/directory
+  > ${scrfunc_fn} task_name=\"make_grid\"
 
-2) Same as above but now explicitly specify the number of nodes, processes
-   per node, and walltime to use for the job:
+  In this case, all unspecified input parameters default to those in the
+  experiment's variable defintions file.  This is usually all you need
+  to do to run the task.
 
-     ${scrfunc_fn} \\
-       task_name=\"make_grid\" acct=\"gsd-fv3\" \\
-       qos=\"debug\" nnodes=\"1\" ppn=\"6\" wtime=\"00:05:00\"
+* Run the \"make_grid\" task from outside the experiment directory:
 
-3) Run the \"make_ics\" task for a specified cdate with all script arguments
-   except fhr specified:
+  > /path/to/expt/directory/${scrfunc_fn} \\
+    exptdir=\"/path/to/expt/directory\" task_name=\"make_grid\"
 
-     ${scrfunc_fn} \\
-       task_name=\"make_ics\" cdate=\"2019052000\" \\
-       sched=\"slurm\" acct=\"gsd-fv3\" part=\"hera\" qos=\"debug\" \\
-       nnodes=\"2\" ppn=\"24\" wtime=\"00:10:00\"
+* From the experiment directory, run the \"make_grid\" task under the
+  \"gsd-fv3\" account in slurm's \"debug\" qos:
 
-4) Run the \"run_post\" task for a specified cdate and fhr with all script 
-   arguments specified:
+  > cd /path/to/expt/directory
+  > ${scrfunc_fn} \\
+    task_name=\"make_grid\" sched=\"slurm\" acct=\"gsd-fv3\" qos=\"debug\"
 
-     ${scrfunc_fn} \\
-       task_name=\"run_post\" cdate=\"2019052000\" fhr=\"01\" \\
-       sched=\"slurm\" acct=\"gsd-fv3\" part=\"hera\" qos=\"debug\" \\
-       nnodes=\"2\" ppn=\"24\" wtime=\"00:10:00\"
+* Same as above but now explicitly specify the number of nodes, processes
+  per node, and walltime to use for the job:
+
+  > cd /path/to/expt/directory
+  > ${scrfunc_fn} \\
+    task_name=\"make_grid\" sched=\"slurm\" acct=\"gsd-fv3\" qos=\"debug\" \\
+    nnodes=\"1\" ppn=\"6\" wtime=\"00:05:00\"
+
+* From the experiment directory, run the \"make_ics\" task for a specified
+  cdate with all script arguments except fhr specified:
+
+  > cd /path/to/expt/directory
+  > ${scrfunc_fn} \\
+    task_name=\"make_ics\" cdate=\"2019052000\" \\
+    sched=\"slurm\" acct=\"gsd-fv3\" part=\"hera\" qos=\"debug\" \\
+    nnodes=\"2\" ppn=\"24\" wtime=\"00:10:00\"
+
+* From the experiment directory, run the \"run_post\" task for a specified
+  cdate and fhr with all script arguments specified:
+
+  > cd /path/to/expt/directory
+  > ${scrfunc_fn} \\
+    task_name=\"run_post\" cdate=\"2019052000\" fhr=\"01\" \\
+    sched=\"slurm\" acct=\"gsd-fv3\" part=\"hera\" qos=\"debug\" \\
+    nnodes=\"2\" ppn=\"24\" wtime=\"00:10:00\"
 "
 #
 #-----------------------------------------------------------------------
 #
-# Check whether this script is called with no arguments or with one 
+# Check whether this script is called with no arguments or with one
 # argument that has a value of either "-h" or "--help".  In the first
 # case (no arguments), print out an error message followed by the usage
 # usage message and exit with a nonzero exit code.  In the second case
@@ -219,7 +245,7 @@ At least one argument must be provided to this script.  Please see usage
 message below.
 
 ${usage_msg}"
-  
+
 elif [ "$#" -eq 1 -a "$1" = "-h" ] || \
      [ "$#" -eq 1 -a "$1" = "--help" ]; then
 
@@ -263,7 +289,7 @@ print_input_args "valid_args"
 #
 #-----------------------------------------------------------------------
 #
-# If the experiment directory is not explicitly specified as an argument, 
+# If the experiment directory is not explicitly specified as an argument,
 # set to the full path to the current working directory.  Then make sure
 # that it exists.  Finally, reset it to a full path.
 #
@@ -292,7 +318,6 @@ exptdir=$( readlink -f "$exptdir" )
 #
 global_var_defns_fn="var_defns.sh"
 global_var_defns_fp=$( readlink -f "$exptdir/${global_var_defns_fn}" )
-. ${global_var_defns_fp}
 if [ -f "${global_var_defns_fp}" ]; then
   . ${global_var_defns_fp}
 else
@@ -301,7 +326,7 @@ The specified experiment directory (exptdir) does not contain a workflow
 variable definitions file (global_var_defns_fn):
   exptdir = \"${exptdir}\"
   global_var_defns_fn = \"${global_var_defns_fn}\"
-Please make sure that exptdir contains a valid experiment directory 
+Please make sure that exptdir contains a valid experiment directory
 containing a variable definitions file and rerun."
 fi
 #
@@ -326,9 +351,9 @@ fi
 if [ "${ushdir}" != "${USHDIR}" ]; then
   print_err_msg_exit "\
 The local variable ushdir specifying the full path to the utility shell
-scripts directory must be equal to the global workflow variable USHDIR 
+scripts directory must be equal to the global workflow variable USHDIR
 that also specifies this path [and which is defined in the global workflow
-variable defintions file specified by global_var_defns_fp]: 
+variable defintions file specified by global_var_defns_fp]:
   ushdir = \"${ushdir}\"
   USHDIR = \"${USHDIR}\"
   global_var_defns_fp = \"${global_var_defns_fp}\""
@@ -336,10 +361,10 @@ fi
 
 if [ "${exptdir}" != "${EXPTDIR}" ]; then
   print_err_msg_exit "\
-The local variable exptdir specifying the full path to the experiment 
+The local variable exptdir specifying the full path to the experiment
 directory must be equal to the global workflow variable EXPTDIR that also
 specifies this path [and which is defined in the global workflow variable
-defintions file specified by global_var_defns_fp]: 
+defintions file specified by global_var_defns_fp]:
   exptdir = \"${exptdir}\"
   EXPTDIR = \"${EXPTDIR}\"
   global_var_defns_fp = \"${global_var_defns_fp}\""
@@ -538,7 +563,7 @@ fi
 #-----------------------------------------------------------------------
 #
 # Export variables needed in the j-job for the task.  In the rocoto XML
-# file, these variables are passed to the task using the <envvar> tag.  
+# file, these variables are passed to the task using the <envvar> tag.
 # Here, we have to export them to the environment so that they are then
 # available to the j-job that will be run.
 #
@@ -578,17 +603,42 @@ esac
 #
 #-----------------------------------------------------------------------
 #
+# Set the name of the log file.  To mimic rocoto's log file naming 
+# convention, for the post-processing task add the forecast hour to the
+# name of the log file, and for all cycle-dependent tasks, add the cdate
+# to the name of the log file.
+#
+#-----------------------------------------------------------------------
+#
+LOG_FN="no_wflow_${task_name}"
+if [ "${task_name}" = "${RUN_POST_TN}" ]; then
+  LOG_FN="${LOG_FN}_${fhr}"
+fi
+is_element_of "cycle_dep_task_names" "${task_name}" && LOG_FN="${LOG_FN}_${cdate}"
+LOG_FN="${LOG_FN}.log"
+#
+#-----------------------------------------------------------------------
+#
 # Create the experiment's log directory if it doesn't already exist.  This
-# will have to be done if this is the first time any workflow tasks are
-# being run in the experiment directory.
+# will have to be done if this is the first time any tasks are being run
+# in the experiment directory.  Then create the full path to the log file.
 #
 #-----------------------------------------------------------------------
 #
 if [ ! -d "$LOGDIR" ]; then
   mkdir_vrfy "$LOGDIR"
 fi
-LOG_FN="no_wflow_${task_name}.log"
 LOG_FP="$LOGDIR/${LOG_FN}"
+#
+#-----------------------------------------------------------------------
+#
+# If a log file already exists, rename it.  Note that the second argument
+# in the call below can be changed to "delete" to instead overwrite the
+# existing log file.
+#
+#-----------------------------------------------------------------------
+#
+check_for_preexist_dir_file "${LOG_FP}" "rename"
 #
 #-----------------------------------------------------------------------
 #
