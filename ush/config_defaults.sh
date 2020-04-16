@@ -46,6 +46,11 @@ RUN_ENVIR="nco"
 # ACCOUNT:
 # The account under which to submit jobs to the queue.
 #
+# SCHED:
+# The job scheduler to use (e.g. slurm).  Set this to an empty string in
+# order for the experiment generation script to set it depending on the
+# machine.
+#
 # QUEUE_DEFAULT:
 # The default queue to which workflow tasks are submitted.  If a task
 # does not have a specific variable that specifies the queue to which it
@@ -83,6 +88,7 @@ RUN_ENVIR="nco"
 #
 MACHINE="BIG_COMPUTER"
 ACCOUNT="project_name"
+SCHED=""
 QUEUE_DEFAULT="batch_queue"
 QUEUE_DEFAULT_TAG="queue"
 QUEUE_HPSS="hpss_queue"

@@ -273,7 +273,7 @@ Don't know how to set several parameters on MACHINE=\"$MACHINE\".
 Please specify the correct parameters for this machine in the setup script.  
 Then remove this message and rerun." 
   NCORES_PER_NODE=""
-  SCHED=""
+  SCHED="${SCHED:-}"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-""}
   QUEUE_HPSS=${QUEUE_HPSS:-""}
   QUEUE_FCST=${QUEUE_FCST:-""}
@@ -287,7 +287,7 @@ Please specify the correct parameters for this machine in the setup script.
 Then remove this message and rerun."
 
   NCORES_PER_NODE=""
-  SCHED=""
+  SCHED="${SCHED:-}"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-""}
   QUEUE_HPSS=${QUEUE_HPSS:-""}
   QUEUE_FCST=${QUEUE_FCST:-""}
@@ -296,7 +296,7 @@ Then remove this message and rerun."
 "HERA")
 #
   NCORES_PER_NODE=24
-  SCHED="slurm"
+  SCHED="${SCHED:-slurm}"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
   QUEUE_HPSS=${QUEUE_HPSS:-"service"}
   QUEUE_FCST=${QUEUE_FCST:-""}
@@ -305,7 +305,7 @@ Then remove this message and rerun."
 "JET")
 #
   NCORES_PER_NODE=24
-  SCHED="slurm"
+  SCHED="${SCHED:-slurm}"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
   QUEUE_HPSS=${QUEUE_HPSS:-"service"}
   QUEUE_FCST=${QUEUE_FCST:-"batch"}
@@ -314,7 +314,7 @@ Then remove this message and rerun."
 "ODIN")
 #
   NCORES_PER_NODE=24
-  SCHED="slurm"
+  SCHED="${SCHED:-slurm}"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-""}
   QUEUE_HPSS=${QUEUE_HPSS:-""}
   QUEUE_FCST=${QUEUE_FCST:-""}
@@ -323,7 +323,7 @@ Then remove this message and rerun."
 "CHEYENNE")
 #
   NCORES_PER_NODE=36
-  SCHED="pbspro"
+  SCHED="${SCHED:-pbspro}"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
   QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
   QUEUE_HPSS_TAG="queue"       # pbspro does not support "partition" tag
@@ -2254,14 +2254,6 @@ done <<< "${line_list}"
 #-----------------------------------------------------------------------
 #
 
-#
-#-----------------------------------------------------------------------
-#
-# Job scheduler.
-#
-#-----------------------------------------------------------------------
-#
-SCHED="$SCHED"
 #
 #-----------------------------------------------------------------------
 #

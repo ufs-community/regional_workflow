@@ -471,7 +471,7 @@ acct=${acct:-$ACCOUNT}
 part_default=""
 qos_default=""
 
-if [ "$sched" = "SLURM" ]; then
+if [ "$sched" = "slurm" ]; then
 
   part_default=$( sinfo --format=%P | sed -r -n -e "s/^([^\*]+)\*$/\1/p" )
 
@@ -651,7 +651,7 @@ job_cmd_line="${LOAD_MODULES_RUN_TASK_FP} \"${task_name}\" \"${jjob_fn}\""
 #
 # Job scheduler is slurm.
 #
-if [ "$sched" = "SLURM" ]; then
+if [ "$sched" = "slurm" ]; then
 
   sbatch_cmd="
   sbatch --job-name=\"${task_name}\" \\
@@ -674,7 +674,7 @@ Scheduling job using $sched's sbatch utility:
 #
 # Do not use a job scheduler.
 #
-elif [ "$sched" = "NONE" ]; then
+elif [ "$sched" = "none" ]; then
 
   eval "${job_cmd_line}" >& ${LOG_FP}
 #

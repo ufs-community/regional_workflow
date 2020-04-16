@@ -380,7 +380,7 @@ fi
 part_default=""
 qos_default=""
 
-if [ "$SCHED" = "SLURM" ]; then
+if [ "$SCHED" = "slurm" ]; then
 
   part_default=$( sinfo --format=%P | sed -r -n -e "s/^([^\*]+)\*$/\1/p" )
 
@@ -542,7 +542,7 @@ job_cmd_line="${LOAD_MODULES_RUN_TASK_FP} \"${task_name}\" \"${jjob_fn}\""
 #
 # Job scheduler is slurm.
 #
-if [ "$SCHED" = "SLURM" ]; then
+if [ "$SCHED" = "slurm" ]; then
 
   sbatch_cmd="
   sbatch --job-name=\"${task_name}\" \\
@@ -565,7 +565,7 @@ Scheduling job using $SCHED's sbatch utility:
 #
 # Do not use a job scheduler.
 #
-elif [ "$SCHED" = "NONE" ]; then
+elif [ "$SCHED" = "none" ]; then
 
   eval "${job_cmd_line}" >& ${LOG_FP}
 #
