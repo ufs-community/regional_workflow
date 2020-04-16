@@ -346,6 +346,10 @@ the workflow:
   EXPTDIR = \"${EXPTDIR}\"
   RUN_TASK_OUTSIDE_WFLOW_SCRIPT_FP = \"${RUN_TASK_OUTSIDE_WFLOW_SCRIPT_FP}\""
 ln_vrfy -fs "${RUN_TASK_OUTSIDE_WFLOW_SCRIPT_FP}" "$EXPTDIR"
+# GSK 04/16/2020:
+# The following is a temporary link to the simplified version of the script
+# that runs tasks outside of a workflow manager.
+ln_vrfy -fs "${USHDIR}/run_one_task_simplified.sh" "$EXPTDIR"
 #
 #-----------------------------------------------------------------------
 #
