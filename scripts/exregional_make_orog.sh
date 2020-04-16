@@ -155,7 +155,7 @@ esac
 #
 #-----------------------------------------------------------------------
 #
-check_for_preexist_dir ${OROG_DIR} ${PREEXISTING_DIR_METHOD}
+check_for_preexist_dir_file "${OROG_DIR}" "${PREEXISTING_DIR_METHOD}"
 mkdir_vrfy -p "${OROG_DIR}"
 
 raw_dir="${OROG_DIR}/raw_topo"

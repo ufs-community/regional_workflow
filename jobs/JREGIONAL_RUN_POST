@@ -81,7 +81,7 @@ fi
 mkdir_vrfy -p "${postprd_dir}"
 
 fhr_dir="${postprd_dir}/$fhr"
-check_for_preexist_dir "${fhr_dir}" "delete"
+check_for_preexist_dir_file "${fhr_dir}" "delete"
 mkdir_vrfy -p "${fhr_dir}"
 
 cd_vrfy "${fhr_dir}"

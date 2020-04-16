@@ -900,7 +900,7 @@ fi
 #
 # May have to make setting of EXPTDIR dependent on RUN_ENVIR later on.
 EXPTDIR="${EXPT_BASEDIR}/${EXPT_SUBDIR}"
-check_for_preexist_dir $EXPTDIR ${PREEXISTING_DIR_METHOD}
+check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 #
 #-----------------------------------------------------------------------
 #
@@ -922,7 +922,7 @@ if [ "${RUN_ENVIR}" = "nco" ]; then
 else
   CYCLE_BASEDIR="$EXPTDIR"
 fi
-check_for_preexist_dir ${CYCLE_BASEDIR} ${PREEXISTING_DIR_METHOD}
+check_for_preexist_dir_file "${CYCLE_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
 #
 #-----------------------------------------------------------------------
 #

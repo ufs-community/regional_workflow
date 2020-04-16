@@ -426,7 +426,7 @@ if [ "${RUN_ENVIR}" != "nco" ]; then
   print_info_msg "$VERBOSE" "
 Copying fixed files from system directory to the experiment directory..."
 
-  check_for_preexist_dir $FIXam "delete"
+  check_for_preexist_dir_file "$FIXam" "delete"
   mkdir -p $FIXam
 
   cp_vrfy $FIXgsm/global_hyblev.l65.txt $FIXam

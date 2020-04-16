@@ -171,7 +171,7 @@ esac
 #
 #-----------------------------------------------------------------------
 #
-check_for_preexist_dir ${GRID_DIR} ${PREEXISTING_DIR_METHOD}
+check_for_preexist_dir_file "${GRID_DIR}" "${PREEXISTING_DIR_METHOD}"
 mkdir_vrfy -p "${GRID_DIR}"
 
 tmpdir="${GRID_DIR}/tmp"
