@@ -122,7 +122,7 @@ where the arguments are defined as follows:
       local i=1
       local old_indx=$( printf "%03d" "$i" )
       local old_dir_or_file="${dir_or_file}_old${old_indx}"
-      while [ -d "${old_dir_or_file}" ]; do
+      while [ -e "${old_dir_or_file}" ]; do
         i=$[$i+1]
         old_indx=$( printf "%03d" "$i" )
         old_dir_or_file="${dir_or_file}_old${old_indx}"
