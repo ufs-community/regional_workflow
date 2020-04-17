@@ -22,6 +22,7 @@ valid_vals_EMC_GRID_NAME=("ak" "conus" "conus_c96" "conus_orig" "guam" "hi" "pr"
 valid_vals_USE_CCPP=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_CCPP_PHYS_SUITE=( \
 "FV3_GFS_2017_gfdlmp" \
+"FV3_GFS_2017_gfdlmp_regional" \
 "FV3_GSD_v0" \
 "FV3_GSD_SAR" \
 "FV3_CPT_v0" \
