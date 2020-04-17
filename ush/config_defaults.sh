@@ -138,8 +138,8 @@ CRON_RELAUNCH_INTVL_MNTS="03"
 # NET, envir, RUN, COMINgfs, STMP, PTMP:
 # Directories or variables used to create directory names that are needed
 # when generating and running an experiment in NCO mode (see the description
-# of the RUN_ENVIR variable above).  These are defined in the WCOSS 
-# Implementation Standards document and thus will not be described here.
+# of the RUN_ENVIR variable above).  These are defined in the document
+# "WCOSS Implementation Standards" and thus will not be described here.
 #
 # dir_doc_end
 #

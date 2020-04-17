@@ -249,6 +249,10 @@ Creating links in the FIXsar directory to the grid files..."
     run_task="${RUN_TASK_MAKE_OROG}"
     ;;
 #
+# The following list of symlinks (which have the same names as their
+# target files) need to be created made in order for the make_ics and
+# make_lbcs tasks (i.e. tasks involving chgres_cube) to work.
+#
   "sfc_climo")
     sfc_climo_fields=( \
 "facsf" \
