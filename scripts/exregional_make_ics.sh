@@ -97,14 +97,9 @@ phys_suite=""
 
 case "${CCPP_PHYS_SUITE}" in
 
-"FV3_GFS_2017_gfdlmp")
+"FV3_GFS_2017_gfdlmp" | "FV3_GFS_2017_gfdlmp_regional" )
   phys_suite="GFS"
   ;;
-
-"FV3_GFS_2017_gfdlmp_regional")
-  phys_suite="GFS"
-  ;;
-
 "FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" )
   phys_suite="GSD"
   ;;
