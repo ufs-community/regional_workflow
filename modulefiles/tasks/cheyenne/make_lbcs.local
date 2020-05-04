@@ -2,3 +2,6 @@
 
 ncar_pylib /glade/p/ral/jntp/UFS_CAM/ncar_pylib_20200427
 
+# Get wgrib2 binary for Cheyenne
+export PATH=${PATH}:/glade/p/ral/jntp/UFS_CAM/bin
+
