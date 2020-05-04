@@ -256,9 +256,7 @@ else
         [ "${task_name}" = "${RUN_FCST_TN}" ]; then
 
        print_err_msg_exit "\
-The target modulefile does not exist:
-task modules directory (modules_dir) that points to module file for this
-task (task_name) does not exist:
+The target modulefile does not exist for this task name:
   task_name = \"${task_name}\"
   modulefile_name = \"${modulefile_name}\"
   modules_dir = \"${modules_dir}\"
