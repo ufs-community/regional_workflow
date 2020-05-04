@@ -325,7 +325,7 @@ ules_dir) for the specified task (task_name) failed:
      module load ${default_modulefile_name} || print_err_msg_exit "\
 Loading of default module file failed:
   task_name = \"${task_name}\"
-  default_modulefile_name = \"${modulefile_name}\"
+  default_modulefile_name = \"${default_modulefile_name}\"
   default_modules_dir = \"${default_modules_dir}\""
    fi
 
