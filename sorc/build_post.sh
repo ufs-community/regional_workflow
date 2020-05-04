@@ -34,7 +34,6 @@ elif [ "$target" = "cheyenne" ] ; then
   moduledir=$(readlink -f ../../modulefiles/)
   module use $moduledir
   module load cheyenne.default
-  export NCEPLIBS_DIR=/glade/p/ral/jntp/UPP/pre-compiled_libraries/NCEPlibs_intel_18.0.5
   ./configure << EOT
 4
 EOT
