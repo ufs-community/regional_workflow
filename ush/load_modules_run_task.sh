@@ -288,11 +288,7 @@ does not exist:
    print_info_msg "$VERBOSE" "
 Loading modules for task \"${task_name}\" ..."
 
-   module list
- 
    module purge
-
-   module list
 
    module use "${modules_dir}" || print_err_msg_exit "\
 Call to \"module use\" command failed."
