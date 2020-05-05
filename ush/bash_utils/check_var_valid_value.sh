@@ -115,14 +115,21 @@ ERROR: Unknown argument specified:
     valid_var_values_array_name_mach=${machine}_${valid_var_values_array_name}
 
     valid_var_values_mach_at="$valid_var_values_array_name_mach[@]"
-    valid_var_values_mach=("${!valid_var_values_mach_at}")
+    
+    # This ! thing is so-called "indirect expansion"; see the bash man page for how it
+    # works, but basically the value of valid_var_values_mach_at is interpreted as a
+    # variable name. So we have to make sure there's a variable defined with that name
+    # before we reference it
 
-    # Check to see if this array (valid values for this specific machine) exists
-    # by seeing if the array has more than zero elements; otherwise this check will
-    # be skipped and this function will fall back to the non-machine-specific values
-    if [ ${#valid_var_values_mach[@]} -eq 0 ]; then
+    valid_var_values_mach=("${!valid_var_values_mach_at:-}")
+
+    # If there is no variable defined with that name, that means there is no platform-
+    # specific array of valid_vars for this machine, therefre this check will be
+    # skipped and this function will fall back to the non-machine-specific values
+
+    if [ -z "${valid_var_values_mach}" ]; then
       print_info_msg "
-No machine-specific valid_vals for this machine ($valid_var_values_array_name_mach). 
+No machine-specific valid_vals for this machine (${valid_var_values_mach_at}). 
 Will check for a generic valid_vals (${valid_var_values_array_name})"
 
         check_var_valid_value $var_name $valid_var_values_array_name
