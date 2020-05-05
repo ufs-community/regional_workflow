@@ -258,16 +258,6 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #
 #-----------------------------------------------------------------------
 #
-# Now that machine is known and checked against valid values, include
-# the machine-specific "valid_vars" script if it exists
-#
-#-----------------------------------------------------------------------
-#
-
-
-#
-#-----------------------------------------------------------------------
-#
 # Set the number of cores per node, the job scheduler, and the names of
 # several queues.  These queues are defined in the default and local 
 # workflow/experiment configuration script.
