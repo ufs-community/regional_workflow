@@ -334,7 +334,7 @@ The specified argument name (arg_name) in the current argument-value
 pair (arg_val_pair) is not valid:
   arg_val_pair = \"${arg_val_pair}\"
   arg_name = \"${arg_name}\""
-    check_var_valid_value "arg_name" "valid_arg_names" "${err_msg}"
+    check_var_valid_value "arg_name" "valid_arg_names" "msg=${err_msg}"
 #
 #-----------------------------------------------------------------------
 #

@@ -258,6 +258,16 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #
 #-----------------------------------------------------------------------
 #
+# Now that machine is known and checked against valid values, include
+# the machine-specific "valid_vars" script if it exists
+#
+#-----------------------------------------------------------------------
+#
+
+
+#
+#-----------------------------------------------------------------------
+#
 # Set the number of cores per node, the job scheduler, and the names of
 # several queues.  These queues are defined in the default and local 
 # workflow/experiment configuration script.
@@ -390,7 +400,7 @@ if [ "${RUN_ENVIR}" = "nco" ]; then
 The EMC grid specified in EMC_GRID_NAME is not supported:
   EMC_GRID_NAME = \"${EMC_GRID_NAME}\""
   check_var_valid_value \
-    "EMC_GRID_NAME" "valid_vals_EMC_GRID_NAME" "${err_msg}"
+    "EMC_GRID_NAME" "valid_vals_EMC_GRID_NAME" "msg=${err_msg}"
 fi
 #
 # Map the specified EMC grid to one of the predefined grids.
@@ -425,7 +435,7 @@ The predefined regional grid specified in PREDEF_GRID_NAME is not sup-
 ported:
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\""
   check_var_valid_value \
-    "PREDEF_GRID_NAME" "valid_vals_PREDEF_GRID_NAME" "${err_msg}"
+    "PREDEF_GRID_NAME" "valid_vals_PREDEF_GRID_NAME" "msg=${err_msg}"
 fi
 #
 #-----------------------------------------------------------------------
@@ -469,7 +479,7 @@ if [ "${USE_CCPP}" = "TRUE" ] && [ ! -z ${CCPP_PHYS_SUITE} ]; then
 The CCPP physics suite specified in CCPP_PHYS_SUITE is not supported:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
   check_var_valid_value \
-    "CCPP_PHYS_SUITE" "valid_vals_CCPP_PHYS_SUITE" "${err_msg}"
+    "CCPP_PHYS_SUITE" "valid_vals_CCPP_PHYS_SUITE" "msg=${err_msg}"
 fi
 #
 #-----------------------------------------------------------------------
@@ -879,7 +889,7 @@ if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 The number of grid cells per tile in each horizontal direction specified
 in GFDLgrid_RES is not supported:
   GFDLgrid_RES = \"${GFDLgrid_RES}\""
-  check_var_valid_value "GFDLgrid_RES" "valid_vals_GFDLgrid_RES" "${err_msg}"
+  check_var_valid_value "GFDLgrid_RES" "valid_vals_GFDLgrid_RES" "msg=${err_msg}"
 fi
 #
 #-----------------------------------------------------------------------
@@ -1315,7 +1325,7 @@ The external model specified in EXTRN_MDL_NAME_ICS that provides initial
 conditions (ICs) and surface fields to the FV3SAR is not supported:
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\""
 check_var_valid_value \
-  "EXTRN_MDL_NAME_ICS" "valid_vals_EXTRN_MDL_NAME_ICS" "${err_msg}"
+  "EXTRN_MDL_NAME_ICS" "valid_vals_EXTRN_MDL_NAME_ICS" "msg=${err_msg}"
 #
 #-----------------------------------------------------------------------
 #
@@ -1328,7 +1338,7 @@ The external model specified in EXTRN_MDL_NAME_ICS that provides lateral
 boundary conditions (LBCs) to the FV3SAR is not supported:
   EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
 check_var_valid_value \
-  "EXTRN_MDL_NAME_LBCS" "valid_vals_EXTRN_MDL_NAME_LBCS" "${err_msg}"
+  "EXTRN_MDL_NAME_LBCS" "valid_vals_EXTRN_MDL_NAME_LBCS" "msg=${err_msg}"
 #
 #-----------------------------------------------------------------------
 #
@@ -1342,7 +1352,7 @@ The file format for FV3GFS external model files specified in FV3GFS_-
 FILE_FMT_ICS is not supported:
   FV3GFS_FILE_FMT_ICS = \"${FV3GFS_FILE_FMT_ICS}\""
   check_var_valid_value \
-    "FV3GFS_FILE_FMT_ICS" "valid_vals_FV3GFS_FILE_FMT_ICS" "${err_msg}"
+    "FV3GFS_FILE_FMT_ICS" "valid_vals_FV3GFS_FILE_FMT_ICS" "msg=${err_msg}"
 fi
 #
 #-----------------------------------------------------------------------
@@ -1357,7 +1367,7 @@ The file format for FV3GFS external model files specified in FV3GFS_-
 FILE_FMT_LBCS is not supported:
   FV3GFS_FILE_FMT_LBCS = \"${FV3GFS_FILE_FMT_LBCS}\""
   check_var_valid_value \
-    "FV3GFS_FILE_FMT_LBCS" "valid_vals_FV3GFS_FILE_FMT_LBCS" "${err_msg}"
+    "FV3GFS_FILE_FMT_LBCS" "valid_vals_FV3GFS_FILE_FMT_LBCS" "msg=${err_msg}"
 fi
 #
 #-----------------------------------------------------------------------
@@ -1464,7 +1474,7 @@ The horizontal grid generation method specified in GRID_GEN_METHOD is
 not supported:
   GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
 check_var_valid_value \
-  "GRID_GEN_METHOD" "valid_vals_GRID_GEN_METHOD" "${err_msg}"
+  "GRID_GEN_METHOD" "valid_vals_GRID_GEN_METHOD" "msg=${err_msg}"
 #
 #-----------------------------------------------------------------------
 #
@@ -1830,7 +1840,7 @@ The coordinate system used by the write-component output grid specified
 in WRTCMP_output_grid is not supported:
   WRTCMP_output_grid = \"${WRTCMP_output_grid}\""
   check_var_valid_value \
-    "WRTCMP_output_grid" "valid_vals_WRTCMP_output_grid" "${err_msg}"
+    "WRTCMP_output_grid" "valid_vals_WRTCMP_output_grid" "msg=${err_msg}"
 #
 # Now set the name of the write-component template file.
 #
@@ -1922,6 +1932,15 @@ set_fix_filenames \
   output_varname_num_fixam_files="NUM_FIXam_FILES" \
   output_varname_fixgsm_fns="FIXgsm_FILENAMES" \
   output_varname_fixam_fns="FIXam_FILENAMES"
+#-----------------------------------------------------------------------
+#
+# Make sure that all of the queues are set to valid values.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "QUEUE_DEFAULT" "valid_vals_QUEUE" "mach=$MACHINE"
+check_var_valid_value "QUEUE_HPSS" "valid_vals_QUEUE" "mach=$MACHINE"
+check_var_valid_value "QUEUE_FCST" "valid_vals_QUEUE" "mach=$MACHINE"
 #
 #-----------------------------------------------------------------------
 #
