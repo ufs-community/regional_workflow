@@ -25,7 +25,7 @@
 
   <!ENTITY MAKE_IC_RESOURCES "<nodes>1:ppn=1:tpp=24</nodes><envar><name>TOTAL_TASKS</name><value>24</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:30:00</walltime><native>-R affinity[core]</native>">
 
-  <!ENTITY MAKE_BC_RESOURCES "<nodes>1:ppn=1:tpp=24</nodes><envar><name>TOTAL_TASKS</name><value>24</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>01:30:00</walltime><native>-R affinity[core]</native>">
+  <!ENTITY MAKE_BC_RESOURCES "<nodes>1:ppn=1:tpp=24</nodes><envar><name>TOTAL_TASKS</name><value>24</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:15:00</walltime><native>-R affinity[core]</native>">
 
   <!ENTITY FORECAST_EXTRA "<envar><name>NCTSK</name><value>12</value></envar><envar><name>OMP_THREADS</name><value>2</value></envar><walltime>01:30:00</walltime><native>-R affinity[core\(2\):distribute=balance]</native>">
   <!ENTITY FORECAST_TM00_RESOURCES_conus "<nodes>76:ppn=12</nodes><envar><name>TOTAL_TASKS</name><value>912</value></envar><envar><name>TASK_X</name><value>16</value></envar><envar><name>TASK_Y</name><value>48</value></envar><envar><name>WG</name><value>3</value></envar><envar><name>WTPG</name><value>48</value></envar>&FORECAST_EXTRA;">
