@@ -45,12 +45,12 @@ export GBCOMINgfs=${GBCOMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
 export COMINgfs=${COMINgfs:-/gpfs/dell1/nco/ops/com/gfs/prod}
 export INIDIR=${COMINgfs}/gfs.$PDY/$cyc
 
-export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+export COMOUT=${COMROOT}/${RUN}.${PDY}/${cyc}
 mkdir -p $COMOUT
-export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+export NWGES=${GESROOT}/${RUN}.${PDY}/${cyc}
 mkdir -p $NWGES
 
-export INPdir=${NWGES}/anl.${dom}.${tmmark}
+export INPdir=${NWGES}
 mkdir -p ${INPdir}
 
 #####################################

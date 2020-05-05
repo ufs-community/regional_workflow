@@ -31,9 +31,9 @@ export pgmerr=errfile
 #####################################
 # Define COM directories
 #####################################
-export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+export COMOUT=${COMROOT}/${RUN}.${PDY}/${cyc}
 mkdir -p $COMOUT
-export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+export NWGES=${GESROOT}/${RUN}.${PDY}/${cyc}
 mkdir -p $NWGES
 
 if [ $tmmark = tm06 ] ; then
@@ -63,7 +63,7 @@ export CYCfcst=`echo $CYCLEfcst | cut -c 9-10`
 
 export GUESSdir=$COMOUT/guess.${tmmark_next}
 mkdir -p $GUESSdir
-export ANLdir=$NWGES/anl.${dom}.${tmmark_next}
+export ANLdir=$NWGES
 mkdir -p $ANLdir
 
 #####################################

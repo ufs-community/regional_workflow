@@ -40,9 +40,9 @@ export pgmerr=errfile
 #####################################
 # Define COM directories
 #####################################
-export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+export COMOUT=${COMROOT}/${RUN}.${PDY}/${cyc}
 mkdir -p $COMOUT
-export NWGES=${GESROOT}/${NET}/${envir}/${RUN}.${PDY}/${cyc}
+export NWGES=${GESROOT}/${RUN}.${PDY}/${cyc}
 mkdir -p $NWGES
 
 #####################################

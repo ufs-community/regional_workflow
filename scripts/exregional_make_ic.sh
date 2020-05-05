@@ -70,6 +70,7 @@ cat <<EOF >fort.41
  tracers_input="spfh","clwmr","o3mr","icmr","rwmr","snmr","grle"
  regional=${REGIONAL}
  halo_bndy=${HALO}
+ halo_blend=10
 /
 EOF
 

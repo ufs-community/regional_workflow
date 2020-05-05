@@ -91,10 +91,10 @@ export FIXsar=$FIXfv3/fix_sar/${dom}
 export FIXam=$FIXfv3/fix_am
 export FIXco2=$FIXam/fix_co2_proj
 
-export COMROOT=${PTMP}/com
+export COMROOT=${PTMP}
 export GESROOT=${PTMP}/nwges
-export GESROOT_HOLD=${PTMP}/nwges/${RUN}.hold
-mkdir -p $GESROOT_HOLD
+#export GESROOT_HOLD=${PTMP}/nwges/${RUN}.hold
+#mkdir -p $GESROOT_HOLD
 
 export NHRSguess=06	#-- Forecast length for 1st guess generation
 export NHRSda=01	#-- Forecast length for cycled DA

@@ -19,46 +19,11 @@ export ntiles=1
 export TILE_NUM=7
 
 #
-# set the links to use the 4 halo grid and orog files
-# these are necessary for creating the boundary data
-#
-ln -sf $FIXsar/${CASE}_grid.tile7.halo4.nc $FIXsar/${CASE}_grid.tile7.nc 
-ln -sf $FIXsar/${CASE}_oro_data.tile7.halo4.nc $FIXsar/${CASE}_oro_data.tile7.nc 
-ln -sf $FIXsar/${CASE}.vegetation_greenness.tile7.halo4.nc $FIXsar/${CASE}.vegetation_greenness.tile7.nc
-ln -sf $FIXsar/${CASE}.soil_type.tile7.halo4.nc $FIXsar/${CASE}.soil_type.tile7.nc
-ln -sf $FIXsar/${CASE}.slope_type.tile7.halo4.nc $FIXsar/${CASE}.slope_type.tile7.nc
-ln -sf $FIXsar/${CASE}.substrate_temperature.tile7.halo4.nc $FIXsar/${CASE}.substrate_temperature.tile7.nc
-ln -sf $FIXsar/${CASE}.facsf.tile7.halo4.nc $FIXsar/${CASE}.facsf.tile7.nc
-ln -sf $FIXsar/${CASE}.maximum_snow_albedo.tile7.halo4.nc $FIXsar/${CASE}.maximum_snow_albedo.tile7.nc
-ln -sf $FIXsar/${CASE}.snowfree_albedo.tile7.halo4.nc $FIXsar/${CASE}.snowfree_albedo.tile7.nc
-ln -sf $FIXsar/${CASE}.vegetation_type.tile7.halo4.nc $FIXsar/${CASE}.vegetation_type.tile7.nc
-
-#
 # create namelist and run chgres cube
 #
 cp ${CHGRESEXEC} .
 
-# NHRS = lentgh of free forecast
-# NHRSda = length of DA cyce forecast (always 1-h)
-if [ $tmmark = tm00 ]; then
-  hour=3
-  end_hour=$NHRS
-  hour_inc=3
-else
-  hour=0
-  end_hour=$NHRSda
-  hour_inc=1
-fi
-
-while (test "$hour" -le "$end_hour")
-  do
-  if [ $hour -lt 10 ]; then
-    hour_name='00'$hour
-  elif [ $hour -lt 100 ]; then
-    hour_name='0'$hour
-  else
-    hour_name=$hour
-  fi
+hour_name='0'$bchr
 
 cat <<EOF >fort.41
 &config
@@ -84,17 +49,16 @@ cat <<EOF >fort.41
  tracers_input="spfh","clwmr","o3mr","icmr","rwmr","snmr","grle"
  regional=${REGIONAL}
  halo_bndy=${HALO}
+ halo_blend=10
 /
 EOF
 
-  time ${APRUNC} ./regional_chgres_cube.x
-  hour=`expr $hour + $hour_inc`
+time ${APRUNC} ./regional_chgres_cube.x
 
 #
 # move output files to save directory
 #
-  mv gfs.bndy.nc $INPdir/gfs_bndy.tile7.${hour_name}.nc
-done
+mv gfs.bndy.nc $INPdir/gfs_bndy.tile7.${hour_name}.nc
 
 
 exit 0
