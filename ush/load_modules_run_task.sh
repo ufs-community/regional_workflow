@@ -235,7 +235,6 @@ if [ "${machine}" = "unknown" ]; then
     # This if statement allows for graceful exit in the case where module files are not needed.
     # This is not currently used but reserved for future development. 
     print_info_msg "Modulefile not required for task \"${task_name}\" on machine \"${machine}\""
-    exit 0
 else
 
    modulefile_path=$( readlink -f "${modules_dir}/${modulefile_name}" )
