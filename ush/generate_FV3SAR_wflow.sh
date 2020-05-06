@@ -167,7 +167,17 @@ settings="
   'run_task_make_sfc_climo': $RUN_TASK_MAKE_SFC_CLIMO
 "
 
-$USHDIR/create_xml.py -q -u "${settings}" -t $TEMPLATE_XML_FP -o $WFLOW_XML_FP || exit 1
+$USHDIR/fill_jinja_template.py -q -u "${settings}" -t $TEMPLATE_XML_FP -o $WFLOW_XML_FP || exit 1
+if [[ $? -ne 0 ]]; then
+  echo "
+  !!!!!!!!!!!!!!!!!!!!!!
+
+  fill_jinja_template.py failed!
+
+  !!!!!!!!!!!!!!!!!!!!!!
+  "
+  exit 1
+fi
 
 #
 #-----------------------------------------------------------------------
