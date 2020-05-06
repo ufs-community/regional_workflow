@@ -203,6 +203,7 @@ cd_vrfy "${MODULES_DIR}/tasks/$machine"
 # that is defined.  That needs to be fixed.  Until then, we have to use
 # a hard-coded module file, which may or may not be compatible with the
 # modules used in the UFS_UTILS repo to build the orog code.
+
 #ln_vrfy -fs "${UFS_UTILS_DIR}/modulefiles/fv3gfs/orog.$machine" \
 #            "${MAKE_OROG_TN}"
 ln_vrfy -fs "${MAKE_OROG_TN}.hardcoded" "${MAKE_OROG_TN}"
@@ -210,22 +211,18 @@ ln_vrfy -fs "${MAKE_OROG_TN}.hardcoded" "${MAKE_OROG_TN}"
 ln_vrfy -fs "${UFS_UTILS_DIR}/modulefiles/modulefile.sfc_climo_gen.$machine" \
             "${MAKE_SFC_CLIMO_TN}"
 
-#ln_vrfy -fs "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" \
-#            "${MAKE_ICS_TN}"
-#ln_vrfy -fs "${MAKE_ICS_TN}.hardcoded" "${MAKE_ICS_TN}"
 cp_vrfy "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" \
         "${MAKE_ICS_TN}"
 cat "${MAKE_ICS_TN}.local" >> "${MAKE_ICS_TN}"
 
-#ln_vrfy -fs "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" \
-#            "${MAKE_LBCS_TN}"
-#ln_vrfy -fs "${MAKE_LBCS_TN}.hardcoded" "${MAKE_LBCS_TN}"
 cp_vrfy "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" \
         "${MAKE_LBCS_TN}"
 cat "${MAKE_LBCS_TN}.local" >> "${MAKE_LBCS_TN}"
 
-ln_vrfy -fs "${UFS_WTHR_MDL_DIR}/NEMS/src/conf/modules.nems" \
+cp_vrfy -fs "${UFS_WTHR_MDL_DIR}/NEMS/src/conf/modules.nems" \
             "${RUN_FCST_TN}"
+
+cat "${RUN_FCST_TN}.local" >> "${RUN_FCST_TN}"
 
 
 #Only some platforms build EMC_post using modules

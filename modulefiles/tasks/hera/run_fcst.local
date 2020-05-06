@@ -1,0 +1,3 @@
+module load contrib
+module load miniconda3
+conda activate regional_workflow
