@@ -1,3 +1,5 @@
 module load contrib
 module load miniconda3
-conda activate regional_workflow
+if [module-info mode load] {
+  system "conda activate regional_workflow"
+}
