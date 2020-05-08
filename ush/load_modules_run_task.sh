@@ -298,7 +298,7 @@ Call to \"module use\" command failed."
      # files, we source the "module" file.  For true module files, we use the
      # "module load" command.
      #
-     SHELL="/bin/sh"
+     SHELL="/bin/bash"
      case "${task_name}" in
      #
      "${MAKE_ICS_TN}" | "${MAKE_LBCS_TN}" | "${MAKE_SFC_CLIMO_TN}")
