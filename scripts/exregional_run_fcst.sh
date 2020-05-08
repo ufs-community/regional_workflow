@@ -443,12 +443,12 @@ print_info_msg "$VERBOSE" "
 
       diag_table_fp = \"${diag_table_fp}\""
 
-settings = "
+settings="
   starttime: !datetime ${CDATE}
   cres: ${CRES}
 "
 
-$USHDIR/fill_jinja_template.py -q -u ${settings} -t "${DIAG_TABLE_TMPL_FP}" -o "${diag_table_fp}"
+$USHDIR/fill_jinja_template.py -q -u "${settings}" -t "${DIAG_TABLE_TMPL_FP}" -o "${diag_table_fp}"
 
 if [[ $? -ne 0 ]] ; then
   echo "

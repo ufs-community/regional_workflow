@@ -1,5 +1,5 @@
-{{ starttime.strftime("%Y%m%d.%h") }}Z.{{ cres }}.32bit.non-hydro.regional
-{{ starttime.strftime("%Y %m %d %h %M %s") }}
+{{ starttime.strftime("%Y%m%d.%H") }}Z.{{ cres }}.32bit.non-hydro.regional
+{{ starttime.strftime("%Y %m %d %H %M %S") }}
 
 "grid_spec",              -1,  "months",  1, "days",  "time"
 "atmos_4xdaily",           6,  "hours",   1, "days",  "time"
