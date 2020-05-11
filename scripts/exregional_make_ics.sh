@@ -438,6 +438,22 @@ hh="${EXTRN_MDL_CDATE:8:2}"
 #
 #-----------------------------------------------------------------------
 #
+# Check that the executable that generates the ICs exists.
+#
+#-----------------------------------------------------------------------
+#
+exec_fn="chgres_cube.exe"
+exec_fp="$EXECDIR/${exec_fn}"                                            
+if [ ! -f "${exec_fp}" ]; then                                           
+  print_err_msg_exit "\                                                  
+The executable (exec_fp) for generating initial conditions on the FV3SAR
+native grid does not exist:                  
+  exec_fp = \"${exec_fp}\"                                               
+Please ensure that you've built this executable."                        
+fi                                                                       
+#
+#-----------------------------------------------------------------------
+#
 # Build the FORTRAN namelist file that chgres_cube will read in.
 #
 #-----------------------------------------------------------------------
@@ -484,6 +500,13 @@ hh="${EXTRN_MDL_CDATE:8:2}"
 # fix_dir_target_grid="${BASEDIR}/JP_grid_HRRR_like_fix_files_chgres_cube"
 # base_install_dir="${SORCDIR}/chgres_cube.fd"
 
+#
+# Create a multiline variable that consists of a yaml-compliant string
+# specifying the values that the namelist variables need to be set to
+# (one namelist variable per line, plus a header and footer).  Below,
+# this variable will be passed to a python script that will create the
+# namelist file.
+#
 settings="
 'config': {
  'fix_dir_target_grid': ${FIXsar},
@@ -521,19 +544,20 @@ settings="
  'tg3_from_soil': ${tg3_from_soil},
 }
 "
-
-${USHDIR}/set_namelist.py -q -o fort.41 -u "{$settings}"
-if [[ $? -ne 0 ]]; then
-  echo "
-  !!!!!!!!!!!!!!!!!!!!!!
-
-  set_namelist.py failed!
-
-  !!!!!!!!!!!!!!!!!!!!!!
-  "
-  exit 1
-fi
-
+#
+# Call the python script to create the namelist file.
+#
+nml_fn="fort.41"
+${USHDIR}/set_namelist.py -q -u "$settings" -o ${nml_fn} || \
+  print_err_msg_exit "\
+Call to python script set_namelist.py to set the variables in the namelist 
+file read in by the ${exec_fn} executable failed.  Parameters passed to 
+this script are:
+  Name of output namelist file:
+    nml_fn = \"${nml_fn}\"
+  Namelist settings specified on command line (these have highest precedence):
+    settings =
+$settings"
 #
 #-----------------------------------------------------------------------
 #
@@ -549,8 +573,8 @@ fi
 # of chgres_cube is nonzero.
 # A similar thing happens in the forecast task.
 #
-${APRUN} ${EXECDIR}/chgres_cube.exe || \
-print_err_msg_exit "\
+${APRUN} ${exec_fp} || \
+  print_err_msg_exit "\
 Call to executable to generate surface and initial conditions files for
 the FV3SAR failed:
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"

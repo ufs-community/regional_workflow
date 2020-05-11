@@ -27,7 +27,7 @@ USE_CRON_TO_RELAUNCH="TRUE"
 CRON_RELAUNCH_INTVL_MNTS="02"
 
 
-QUEUE_DEFAULT="batch"
+QUEUE_DEFAULT="debug"
 QUEUE_HPSS="service"
 QUEUE_FCST="batch"
 
@@ -36,7 +36,7 @@ VERBOSE="TRUE"
 RUN_ENVIR="nco"
 PREEXISTING_DIR_METHOD="rename"
 
-EMC_GRID_NAME="conus_c96"  # For now (20200130), this maps to PREDEF_GRID_NAME="EMC_CONUS_coarse".
+EMC_GRID_NAME="conus"  # This maps to PREDEF_GRID_NAME="EMC_CONUS_3km".
 GRID_GEN_METHOD="GFDLgrid"
 
 QUILTING="TRUE"
@@ -61,16 +61,14 @@ EXTRN_MDL_NAME_LBCS="FV3GFS"
 #RUN_TASK_MAKE_OROG="FALSE"
 #RUN_TASK_MAKE_SFC_CLIMO="FALSE"
 
-#On Hera:
 COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"
 STMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/stmp"
 RUN="an_experiment"
 PTMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"
 
-#On Jet:
+#On Jet
 #COMINgfs="/lfs1/projects/hwrf-data/hafs-input/COMGFS"
 #STMP="/lfs3/BMC/wrfruc/beck/NCO_dirs/stmp"
-#RUN="an_experiment"
 #PTMP="/lfs3/BMC/wrfruc/beck/NCO_dirs/ptmp"
 
 #

@@ -55,3 +55,25 @@ RUN_TASK_MAKE_GRID="TRUE"
 RUN_TASK_MAKE_OROG="TRUE"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 
+#
+# For a coarse grid such as this, the number of MPI processes (= NNODES*PPN) 
+# can't be too large for the make_ics and make_lbcs tasks (both of which 
+# use chgres_cube); otherwise, the chgres_cube code will fail.
+#
+NNODES_MAKE_ICS="1"
+PPN_MAKE_ICS="12"
+WTIME_MAKE_ICS="00:30:00"
+
+NNODES_MAKE_LBCS="1"
+PPN_MAKE_LBCS="12"
+WTIME_MAKE_LBCS="00:30:00"
+#
+# For a coarse grid such as this, the number of MPI processes (= NNODES*PPN) 
+# can't be too large for the run_post metatask (which uses the UPP code); 
+# otherwise, the UPP code will fail.
+#
+NNODES_RUN_POST="1"
+PPN_RUN_POST="12"
+WTIME_RUN_POST="00:30:00"
+
+
