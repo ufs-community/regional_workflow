@@ -120,7 +120,8 @@ settings="\
   'nnodes_make_grid': ${NNODES_MAKE_GRID}
   'nnodes_make_orog': ${NNODES_MAKE_OROG}
   'nnodes_make_sfc_climo': ${NNODES_MAKE_SFC_CLIMO}
-  'nnodes_get_extrn_mdl_files': ${NNODES_GET_EXTRN_MDL_FILES}
+  'nnodes_get_extrn_ics': ${NNODES_GET_EXTRN_ICS}
+  'nnodes_get_extrn_lbcs': ${NNODES_GET_EXTRN_LBCS}
   'nnodes_make_ics': ${NNODES_MAKE_ICS}
   'nnodes_make_lbcs': ${NNODES_MAKE_LBCS}
   'nnodes_run_fcst': ${NNODES_RUN_FCST}
@@ -132,7 +133,8 @@ settings="\
   'ppn_make_grid': ${PPN_MAKE_GRID}
   'ppn_make_orog': ${PPN_MAKE_OROG}
   'ppn_make_sfc_climo': ${PPN_MAKE_SFC_CLIMO}
-  'ppn_get_extrn_mdl_files': ${PPN_GET_EXTRN_MDL_FILES}
+  'ppn_get_extrn_ics': ${PPN_GET_EXTRN_ICS}
+  'ppn_get_extrn_lbcs': ${PPN_GET_EXTRN_LBCS}
   'ppn_make_ics': ${PPN_MAKE_ICS}
   'ppn_make_lbcs': ${PPN_MAKE_LBCS}
   'ppn_run_fcst': ${PPN_RUN_FCST}
@@ -143,7 +145,8 @@ settings="\
   'wtime_make_grid': ${WTIME_MAKE_GRID}
   'wtime_make_orog': ${WTIME_MAKE_OROG}
   'wtime_make_sfc_climo': ${WTIME_MAKE_SFC_CLIMO}
-  'wtime_get_extrn_mdl_files': ${WTIME_GET_EXTRN_MDL_FILES}
+  'wtime_get_extrn_ics': ${WTIME_GET_EXTRN_ICS}
+  'wtime_get_extrn_lbcs': ${WTIME_GET_EXTRN_LBCS}
   'wtime_make_ics': ${WTIME_MAKE_ICS}
   'wtime_make_lbcs': ${WTIME_MAKE_LBCS}
   'wtime_run_fcst': ${WTIME_RUN_FCST}
@@ -161,7 +164,6 @@ settings="\
 #
 # Directories and files.
 #
-  'ushdir': $USHDIR
   'jobsdir': $JOBSDIR
   'logdir': $LOGDIR
   'cycle_basedir': ${CYCLE_BASEDIR}
