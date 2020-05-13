@@ -21,7 +21,7 @@
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located 
+# Get the full path to the file in which this script/function is located
 # (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
 # which the file is located (scrfunc_dir).
 #
@@ -48,8 +48,8 @@ specified cycle.
 #
 #-----------------------------------------------------------------------
 #
-# Specify the set of valid argument names for this script/function.  
-# Then process the arguments provided to this script/function (which 
+# Specify the set of valid argument names for this script/function.
+# Then process the arguments provided to this script/function (which
 # should consist of a set of name-value pairs of the form arg1="value1",
 # etc).
 #
@@ -80,27 +80,27 @@ case $MACHINE in
 #
 
   if [ "${USE_CCPP}" = "TRUE" ]; then
-  
+
 # Needed to change to the experiment directory because the module files
 # for the CCPP-enabled version of FV3 have been copied to there.
 
     cd_vrfy ${CYCLE_DIR}
-  
+
     set +x
     source ./module-setup.sh
     module use $( pwd -P )
     module load modules.fv3
     module list
     set -x
-  
+
   else
-  
+
     . /apps/lmod/lmod/init/sh
     module purge
     module use /scratch4/NCEPDEV/nems/noscrub/emc.nemspara/soft/modulefiles
-    module load intel/16.1.150 impi/5.1.1.109 netcdf/4.3.0 
+    module load intel/16.1.150 impi/5.1.1.109 netcdf/4.3.0
     module list
-  
+
   fi
 
   ulimit -s unlimited
@@ -137,6 +137,14 @@ case $MACHINE in
 
   APRUN="mpirun -np ${NPROCS}"
   LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  ;;
+
+"STAMPEDE")
+#
+  module list
+
+  APRUN="ibrun -np ${PE_MEMBER01}"
+  #LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
   ;;
 #
 esac
@@ -274,7 +282,7 @@ fi
 #   gfs_bndy*.nc
 #   gfs_ctrl.nc
 #
-# Some of these files (gfs_ctrl.nc, gfs_bndy*.nc) already exist, but 
+# Some of these files (gfs_ctrl.nc, gfs_bndy*.nc) already exist, but
 # others do not.  Thus, create links with these names to the appropriate
 # files (in this case the initial condition and surface files only).
 #
@@ -312,7 +320,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Create links in the current cycle's run directory to "fix" files in 
+# Create links in the current cycle's run directory to "fix" files in
 # the main experiment directory.
 #
 #-----------------------------------------------------------------------
@@ -320,15 +328,15 @@ fi
 cd_vrfy ${CYCLE_DIR}
 
 print_info_msg "$VERBOSE" "
-Creating links in the current cycle's run directory to static (fix) 
+Creating links in the current cycle's run directory to static (fix)
 files in the FIXam directory..."
 #
 # If running in "nco" mode, FIXam is simply a symlink under the workflow
-# directory that points to the system directory containing the fix 
+# directory that points to the system directory containing the fix
 # files.  The files in this system directory are named as listed in the
 # FIXgsm_FILENAMES array.  Thus, that is the array to use to form the
 # names of the targets of the symlinks, but the names of the symlinks themselves
-# must be as specified in the FIXam_FILENAMES array (because that 
+# must be as specified in the FIXam_FILENAMES array (because that
 # array contains the file names that FV3 looks for).
 #
 if [ "${RUN_ENVIR}" = "nco" ]; then
@@ -346,8 +354,8 @@ if [ "${RUN_ENVIR}" = "nco" ]; then
 # link) in the experiment directory that contains the same files as the
 # system fix directory except that the files have been renamed to the
 # file names that FV3 looks for.  Thus, when creating links to the files
-# in this directory, both the target and symlink names should be the 
-# ones specified in the FIXam_FILENAMES array (because that array 
+# in this directory, both the target and symlink names should be the
+# ones specified in the FIXam_FILENAMES array (because that array
 # contains the file names that FV3 looks for).
 #
 else
@@ -404,8 +412,8 @@ fi
 #-----------------------------------------------------------------------
 #
 print_info_msg "$VERBOSE" "
-Copying cycle-dependent model input files from the templates directory 
-to the current cycle's run directory..." 
+Copying cycle-dependent model input files from the templates directory
+to the current cycle's run directory..."
 
 print_info_msg "$VERBOSE" "
   Copying the template diagnostics table file to the current cycle's run
@@ -558,14 +566,14 @@ export OMP_STACKSIZE=1024m
 #
 # Run the FV3SAR model.  Note that we have to launch the forecast from
 # the current cycle's run directory because the FV3 executable will look
-# for input files in the current directory.  Since those files have been 
+# for input files in the current directory.  Since those files have been
 # staged in the run directory, the current directory must be the run di-
 # rectory (which it already is).
 #
 #-----------------------------------------------------------------------
 #
 $APRUN ./fv3_gfs.x || print_err_msg_exit "\
-Call to executable to run FV3SAR forecast returned with nonzero exit 
+Call to executable to run FV3SAR forecast returned with nonzero exit
 code."
 #
 #-----------------------------------------------------------------------

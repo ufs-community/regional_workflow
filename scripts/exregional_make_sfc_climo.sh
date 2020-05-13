@@ -29,7 +29,7 @@
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located 
+# Get the full path to the file in which this script/function is located
 # (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
 # which the file is located (scrfunc_dir).
 #
@@ -56,8 +56,8 @@ climatology.
 #
 #-----------------------------------------------------------------------
 #
-# Specify the set of valid argument names for this script/function.  
-# Then process the arguments provided to this script/function (which 
+# Specify the set of valid argument names for this script/function.
+# Then process the arguments provided to this script/function (which
 # should consist of a set of name-value pairs of the form arg1="value1",
 # etc).
 #
@@ -148,6 +148,14 @@ case $MACHINE in
 
 "CHEYENNE")
   APRUN="mpirun -np ${NPROCS}"
+  ;;
+
+"ODIN")
+  APRUN="srun"
+  ;;
+
+"STAMPEDE")
+  APRUN="ibrun -np ${NPROCS}"
   ;;
 
 *)

@@ -45,6 +45,9 @@ if [ "$platform" = "no_platform_specified" ]; then
     elif [[ "$(hostname)" =~ "odin" ]]; then
         # We are on odin
         platform=odin
+    elif [[ "$(hostname)" =~ "stampede" ]]; then
+        # We are on login?.stampede2.tacc.utexas.edu
+        platform=stampede
     else
         # We are on an unknown machine
         echo WARNING: UNKNOWN PLATFORM 1>&2
@@ -146,6 +149,8 @@ elif [ "$target" = "gaea" ] ; then
     module purge
 elif [ "$target" = "odin" ] ; then
     echo "Not doing anything for 'odin', if statement reserved for future use"
+elif [[ "$target" =~ "stampede" ]] ; then
+    echo "Not doing anything for 'stampede', if statement reserved for future use"
 else
     echo WARNING: UNKNOWN PLATFORM 1>&2
 fi

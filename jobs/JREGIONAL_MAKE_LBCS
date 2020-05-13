@@ -30,7 +30,7 @@
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located 
+# Get the full path to the file in which this script/function is located
 # (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
 # which the file is located (scrfunc_dir).
 #
@@ -51,9 +51,9 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the J-job script for the task that generates lateral boundary 
+This is the J-job script for the task that generates lateral boundary
 condition (LBC) files (in NetCDF format) for all LBC update hours (ex-
-cept hour zero). 
+cept hour zero).
 ========================================================================"
 #
 #-----------------------------------------------------------------------
@@ -139,6 +139,10 @@ case "$MACHINE" in
   APRUN="mpirun -np ${NPROCS}"
   ;;
 #
+"STAMPEDE")
+  APRUN="ibrun"
+  ;;
+
 esac
 #
 #-----------------------------------------------------------------------

@@ -324,9 +324,9 @@ Then remove this message and rerun."
 #
   NCORES_PER_NODE=24
   SCHED="slurm"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-""}
-  QUEUE_HPSS=${QUEUE_HPSS:-""}
-  QUEUE_FCST=${QUEUE_FCST:-""}
+  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"workq"}
+  QUEUE_HPSS=${QUEUE_HPSS:-"workq"}
+  QUEUE_FCST=${QUEUE_FCST:-"workq"}
   ;;
 #
 "CHEYENNE")
@@ -337,7 +337,16 @@ Then remove this message and rerun."
   QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
   QUEUE_HPSS_TAG="queue"       # pbspro does not support "partition" tag
   QUEUE_FCST=${QUEUE_FCST:-"regular"}
+  ;;
 #
+"STAMPEDE")
+#
+  NCORES_PER_NODE=68
+  SCHED="slurm"
+  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
+  QUEUE_HPSS=${QUEUE_HPSS:-"development"}
+  QUEUE_FCST=${QUEUE_FCST:-"normal"}
+  ;;
 esac
 #
 #-----------------------------------------------------------------------
@@ -692,6 +701,10 @@ case $MACHINE in
   SFC_CLIMO_INPUT_DIR="/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"
   ;;
 
+"STAMPEDE")
+  FIXgsm="/work/00315/tg455890/stampede2/regional_fv3/fix_am"
+  SFC_CLIMO_INPUT_DIR="/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"
+  ;;
 *)
   print_err_msg_exit "\
 Directories have not been specified for this machine:

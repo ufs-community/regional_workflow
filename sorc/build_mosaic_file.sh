@@ -74,6 +74,9 @@ elif [ $platform = "cheyenne" ]; then
 elif [ $platform = "jet" ]; then
   HDF5_DIR=$HDF5
   NETCDF_DIR=$NETCDF
+elif [ $platform = "stampede" ]; then
+  HDF5_DIR=$HDF5
+  NETCDF_DIR=$NETCDF
 fi
 #
 # Create alias for "make".

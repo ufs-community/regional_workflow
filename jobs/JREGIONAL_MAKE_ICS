@@ -30,7 +30,7 @@
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located 
+# Get the full path to the file in which this script/function is located
 # (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
 # which the file is located (scrfunc_dir).
 #
@@ -51,8 +51,8 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the J-job script for the task that generates initial condition 
-(IC), surface, and zeroth-hour lateral boundary condition (LBC0) files 
+This is the J-job script for the task that generates initial condition
+(IC), surface, and zeroth-hour lateral boundary condition (LBC0) files
 for the FV3 (in NetCDF format).
 ========================================================================"
 #
@@ -135,6 +135,11 @@ case "$MACHINE" in
 #
 "CHEYENNE")
   APRUN="mpirun -np ${NPROCS}"
+  ;;
+#
+"STAMPEDE")
+  APRUN="ibrun"
+  module load python3
   ;;
 #
 esac

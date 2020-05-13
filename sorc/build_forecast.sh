@@ -24,9 +24,11 @@ if [ $target = jet ]; then target=jet.intel ; fi
 
 if [ $target = cheyenne ]; then target=cheyenne.intel ; fi
 
+if [ $target = stampede ]; then target=stampede.intel ; fi
+
 #------------------------------------
 # Get from the manage_externals configuration file the relative directo-
-# ries in which the UFS utility codes (not including chgres_cube) and 
+# ries in which the UFS utility codes (not including chgres_cube) and
 # the chgres_cube codes get cloned.  Note that these two sets of codes
 # are in the same repository but different branches.  These directories
 # will be relative to the workflow home directory, which we denote below
@@ -52,7 +54,9 @@ CCPP=${CCPP:-"false"}
 cd tests/
 if [ $CCPP  = true ] || [ $CCPP = TRUE ] ; then
 #EMC  ./compile.sh "$FV3" "$target" "NCEP64LEV=Y HYDRO=N 32BIT=Y CCPP=Y STATIC=Y SUITES=FV3_GFS_2017_gfdlmp_regional" 1
-  ./compile.sh "$FV3" "$target" "CCPP=Y STATIC=N 32BIT=Y REPRO=Y"
+  #./compile.sh "$FV3" "$target" "CCPP=Y STATIC=N 32BIT=Y REPRO=Y"
+  ./compile.sh ${FV3} "$target" "CCPP=Y HYBRID=N STATIC=Y SUITES=FV3_GFS_v15_thompson_mynn,FV3_GSD_v0,FV3_GSD_noah 32BIT=Y REPRO=Y INTEL18=N" 32bit_static YES NO
+
 else
   ./compile.sh "$FV3" "$target" "NCEP64LEV=Y HYDRO=N 32BIT=Y" 1
 fi

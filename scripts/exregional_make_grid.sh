@@ -149,6 +149,15 @@ case $MACHINE in
   export topo_dir="/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"
   ;;
 
+"STAMPEDE")
+#
+  export APRUN="time"
+
+  ulimit -s unlimited
+  ulimit -a
+  module load python3
+  ;;
+
 esac
 #
 #-----------------------------------------------------------------------

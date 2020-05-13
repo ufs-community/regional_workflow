@@ -1,0 +1,42 @@
+#%Module######################################################################
+##
+##      nems prerequisites
+##
+
+proc ModulesHelp {} {
+     puts stderr "The prerequisites for compiling or running FV3 on Jet. "
+}
+
+#module purge
+module load PrgEnv-intel
+module swap intel/19.0.5.281
+#module load craype-ivybridge
+module load cray-libsci
+module load cray-netcdf-hdf5parallel
+module load cray-parallel-netcdf
+module load cray-hdf5-parallel
+module load gcc/6.1.0
+module load slurm
+
+
+##
+### NCEP libraries (download and build manually for the time being; https://github.com/NCAR/NCEPlibs)
+###
+set NCEPLIBS_DIR /oldscratch/ywang/external/NCEPlibs
+setenv NCEPLIBS_DIR ${NCEPLIBS_DIR}
+setenv NEMSIO_INC   ${NCEPLIBS_DIR}/include
+setenv NEMSIO_LIB   ${NCEPLIBS_DIR}/lib/libnemsio_d.a
+setenv BACIO_LIB4   ${NCEPLIBS_DIR}/lib/libbacio_4.a
+setenv SP_LIBd      ${NCEPLIBS_DIR}/lib/libsp_v2.0.2_d.a
+setenv W3EMC_LIBd   ${NCEPLIBS_DIR}/lib/libw3emc_d.a
+setenv W3NCO_LIBd   ${NCEPLIBS_DIR}/lib/libw3nco_d.a
+
+##
+### use pre-compiled EMSF library for above compiler / MPI combination
+##
+
+module use /oldscratch/ywang/external/modulefiles
+module load esmf/8.0.0
+
+#setenv ESMF_LIB_DIR          ${ESMF_DIR}/lib
+#setenv MKL_DIR   /opt/intel/compilers_and_libraries_2016.4.258/linux/mkl

@@ -36,6 +36,10 @@ elif [ ${target} == "jet" ]; then
 
     ln -sfn /lfs3/projects/hpc-wof1/ywang/regional_fv3/fix/fix_am fix_am
 
+elif [ ${target} == "stampede" ]; then
+
+    ln -sfn /work/00315/tg455890/stampede2/regional_fv3/fix_am fix_am
+
 else
 
     echo "Unknown target " ${target}
