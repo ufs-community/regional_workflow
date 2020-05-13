@@ -65,7 +65,7 @@ cat <<EOF >fort.41
  convert_atm=.true.
  convert_sfc=.true.
  convert_nst=.true.
- input_type="gaussian"
+ input_type="gaussian_nemsio"
  tracers="sphum","liq_wat","o3mr","ice_wat","rainwat","snowwat","graupel"
  tracers_input="spfh","clwmr","o3mr","icmr","rwmr","snmr","grle"
  regional=${REGIONAL}
