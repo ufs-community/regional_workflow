@@ -131,6 +131,7 @@ case "$MACHINE" in
 #
 "ODIN")
 #
+  APRUN="srun"
   ;;
 #
 "CHEYENNE")

@@ -1,7 +1,7 @@
 #
 #-----------------------------------------------------------------------
 #
-# Source the variable definitions file and the bash utility functions.
+# Source the variable definitions file and the bash utility functions. 
 #
 #-----------------------------------------------------------------------
 #
@@ -15,7 +15,7 @@
 # for a specified external model, analysis or forecast, and cycle date.
 # See the usage statement below for this function should be called and
 # the definitions of the input parameters.
-#
+# 
 #-----------------------------------------------------------------------
 #
 function get_extrn_mdl_file_dir_info() {
@@ -31,7 +31,7 @@ function get_extrn_mdl_file_dir_info() {
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located
+# Get the full path to the file in which this script/function is located 
 # (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
 # which the file is located (scrfunc_dir).
 #
@@ -51,8 +51,8 @@ function get_extrn_mdl_file_dir_info() {
 #
 #-----------------------------------------------------------------------
 #
-# Specify the set of valid argument names for this script/function.
-# Then process the arguments provided to this script/function (which
+# Specify the set of valid argument names for this script/function.  
+# Then process the arguments provided to this script/function (which 
 # should consist of a set of name-value pairs of the form arg1="value1",
 # etc).
 #
@@ -114,23 +114,23 @@ Usage:
     varname_extrn_mdl_arcvrel_dir
 
 where the arguments are defined as follows:
-
+ 
   extrn_mdl_name:
   Name of the external model, i.e. the name of the model providing the
-  fields from which files containing initial conditions, surface fields,
+  fields from which files containing initial conditions, surface fields, 
   and/or lateral boundary conditions for the FV3SAR will be generated.
-
+ 
   anl_or_fcst:
   Flag that specifies whether the external model files we are interested
-  in obtaining are analysis or forecast files.
-
+  in obtaining are analysis or forecast files.  
+ 
   cdate_FV3SAR:
   The cycle date and time (hours only) for which we want to obtain file
   and directory information.  This has the form YYYYMMDDHH, where YYYY
-  is the four-digit starting year of the cycle, MM is the two-digit
+  is the four-digit starting year of the cycle, MM is the two-digit 
   month, DD is the two-digit day of the month, and HH is the two-digit
   hour of day.
-
+ 
   time_offset_hrs:
   The number of hours by which to shift back in time the start time of
   the external model forecast from the specified cycle start time of the
@@ -138,47 +138,47 @@ where the arguments are defined as follows:
   external model analysis files, this is normally set to 0.  When get-
   ting directory and file information on external model forecast files,
   this may be set to a nonzero value to obtain information for an exter-
-  nal model run that started time_offset_hrs hours before cdate_FV3SAR
-  (instead of exactly at cdate_FV3SAR).  Note that in this case, the
+  nal model run that started time_offset_hrs hours before cdate_FV3SAR 
+  (instead of exactly at cdate_FV3SAR).  Note that in this case, the 
   forecast hours (relative to the external model run's start time) at
   which the lateral boundary conditions will be updated must be shifted
   forward by time_offset_hrs hours relative to those for the FV3SAR in
   order to make up for the backward-in-time shift in the starting time
   of the external model.
-
+ 
   varname_extrn_mdl_cdate:
-  Name of the global variable that will contain the starting date and
+  Name of the global variable that will contain the starting date and 
   hour of the external model run.
-
+ 
   varname_extrn_mdl_lbc_update_fhrs:
   Name of the global variable that will contain the forecast hours (re-
   lative to the starting time of the external model run, which is earli-
   er than that of the FV3SAR by time_offset_hrs hours) at which lateral
   boundary condition (LBC) output files are obtained from the external
   model (and will be used to update the LBCs of the FV3SAR).
-
+ 
   varname_extrn_mdl_fns:
   Name of the global variable that will contain the names of the exter-
   nal model output files.
-
+ 
   varname_extrn_mdl_sysdir:
   Name of the global variable that will contain the system directory in
   which the externaml model output files may be stored.
-
+ 
   varname_extrn_mdl_arcv_fmt:
   Name of the global variable that will contain the format of the ar-
-  chive file on HPSS in which the externaml model output files may be
+  chive file on HPSS in which the externaml model output files may be 
   stored.
-
+ 
   varname_extrn_mdl_arcv_fns:
   Name of the global variable that will contain the name of the archive
   file on HPSS in which the externaml model output files may be stored.
-
+ 
   varname_extrn_mdl_arcv_fps:
   Name of the global variable that will contain the full path to the ar-
-  chive file on HPSS in which the externaml model output files may be
+  chive file on HPSS in which the externaml model output files may be 
   stored.
-
+ 
   varname_extrn_mdl_arcvrel_dir:
   Name of the global variable that will contain the archive-relative di-
   rectory, i.e. the directory \"inside\" the archive file in which the ex-
@@ -227,11 +227,11 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Declare additional local variables.  Note that all variables in this
+# Declare additional local variables.  Note that all variables in this 
 # function should be local.  The variables set by this function are not
 # directly passed back to the calling script because that is not easily
-# feasable in bash.  Instead, the calling script specifies a file in
-# which to store the output variables and their values.  The name of
+# feasable in bash.  Instead, the calling script specifies a file in 
+# which to store the output variables and their values.  The name of 
 # of this file
 #
 #-----------------------------------------------------------------------
@@ -259,8 +259,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Extract from cdate_FV3SAR the starting year, month, day, and hour of
-# the FV3SAR cycle.  Then subtract the temporal offset specified in
+# Extract from cdate_FV3SAR the starting year, month, day, and hour of 
+# the FV3SAR cycle.  Then subtract the temporal offset specified in 
 # time_offset_hrs (assumed to be given in units of hours) from cdate_-
 # FV3SAR to obtain the starting date and time of the external model, ex-
 # press the result in YYYYMMDDHH format, and save it in cdate.  This is
@@ -280,7 +280,7 @@ fi
 #
 # Extract from cdate the starting year, month, day, and hour of the ex-
 # ternal model.  Also, set the starting minute to "00" and get the date
-# without the time-of-day.  These are needed below in setting various
+# without the time-of-day.  These are needed below in setting various 
 # directory and file names.
 #
 #-----------------------------------------------------------------------
@@ -295,10 +295,10 @@ fi
 #-----------------------------------------------------------------------
 #
 # Initialize lbc_update_fhrs to an empty array.  Then, if considering a
-# forecast, reset lbc_update_fhrs to the array of forecast hours at
+# forecast, reset lbc_update_fhrs to the array of forecast hours at 
 # which the lateral boundary conditions (LBCs) are to be updated, start-
 # ing with the 2nd such time (i.e. the one having array index 1).  We do
-# not include the first hour (hour zero) because at this initial time,
+# not include the first hour (hour zero) because at this initial time, 
 # the LBCs are obtained from the analysis fields provided by the exter-
 # nal model (as opposed to a forecast field).
 #
@@ -310,7 +310,7 @@ fi
 
     lbc_update_fhrs=( "${LBC_UPDATE_FCST_HRS[@]}" )
 #
-# Add the temporal offset specified in time_offset_hrs (assumed to be in
+# Add the temporal offset specified in time_offset_hrs (assumed to be in 
 # units of hours) to the the array of LBC update forecast hours to make
 # up for shifting the starting hour back in time.  After this addition,
 # lbc_update_fhrs will contain the LBC update forecast hours relative to
@@ -326,7 +326,7 @@ fi
 #-----------------------------------------------------------------------
 #
 # Set additional parameters needed in forming the names of RAPX and
-# HRRRX output files.
+# HRRRX output files. 
 #
 #-----------------------------------------------------------------------
 #
@@ -339,7 +339,7 @@ fi
 #
     ddd=$( date --utc --date "${yyyy}-${mm}-${dd} ${hh}:${mn} UTC" "+%j" )
 #
-# Get the last two digits of the year of the starting date and time of
+# Get the last two digits of the year of the starting date and time of 
 # the external model run.
 #
     yy=${yyyy:2:4}
@@ -348,7 +348,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Set the external model output file names that must be obtained (from
+# Set the external model output file names that must be obtained (from 
 # disk if available, otherwise from HPSS).
 #
 #-----------------------------------------------------------------------
@@ -384,8 +384,8 @@ fi
       ;;
 
     "FV3GFS")
-
-      if [ "${fv3gfs_file_fmt}" = "nemsio" ]; then
+    
+      if [ "${fv3gfs_file_fmt}" = "nemsio" ]; then  
 
 #        fns=( "atm" "sfc" "nst" )
         fns=( "atm" "sfc" )
@@ -408,7 +408,7 @@ fi
 
       fi
       ;;
-
+  
     "RAPX")
       if [ "${MACHINE}" = "JET" ]; then
         fns=( "wrfnat_130_${fcst_hh}.grib2" )
@@ -428,7 +428,7 @@ fi
     *)
       print_err_msg_exit "\
 The external model file names have not yet been specified for this com-
-bination of external model (extrn_mdl_name) and analysis or forecast
+bination of external model (extrn_mdl_name) and analysis or forecast 
 (anl_or_fcst):
   extrn_mdl_name = \"${extrn_mdl_name}\"
   anl_or_fcst = \"${anl_or_fcst}\""
@@ -477,7 +477,7 @@ bination of external model (extrn_mdl_name) and analysis or forecast
 
     "RAPX")
       fcst_hh=( $( printf "%02d " "${lbc_update_fhrs[@]}" ) )
-      if [ "${MACHINE}" = "JET" ]; then
+      if [ "${MACHINE}" = "JET" ]; then 
         prefix="wrfnat_130_"
       else
         prefix="${yy}${ddd}${hh}${mn}"
@@ -510,7 +510,7 @@ bination of external model (extrn_mdl_name) and analysis or forecast
     *)
       print_err_msg_exit "\
 The external model file names have not yet been specified for this com-
-bination of external model (extrn_mdl_name) and analysis or forecast
+bination of external model (extrn_mdl_name) and analysis or forecast 
 (anl_or_fcst):
   extrn_mdl_name = \"${extrn_mdl_name}\"
   anl_or_fcst = \"${anl_or_fcst}\""
@@ -525,7 +525,7 @@ bination of external model (extrn_mdl_name) and analysis or forecast
 #
 # Set the system directory (i.e. a directory on disk) in which the ex-
 # ternal model output files for the specified cycle date (cdate) may be
-# located.  Note that this will be used by the calling script only if
+# located.  Note that this will be used by the calling script only if 
 # the output files for the specified cdate actually exist at this loca-
 # tion.  Otherwise, the files will be searched for on the mass store
 # (HPSS).
@@ -541,7 +541,7 @@ bination of external model (extrn_mdl_name) and analysis or forecast
   case "${extrn_mdl_name}" in
 
 #
-# It is not clear which, if any, systems the (old) spectral GFS model is
+# It is not clear which, if any, systems the (old) spectral GFS model is 
 # available on, so set sysdir for this external model to a null string.
 #
   "GSMGFS")
@@ -559,17 +559,17 @@ bination of external model (extrn_mdl_name) and analysis or forecast
       sysdir=""
       ;;
     "ODIN")
-      sysdir=""
+      sysdir="$sysbasedir"
       ;;
     "CHEYENNE")
       sysdir=""
       ;;
     "STAMPEDE")
-      sysdir="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
+      sysdir="$sysbasedir"
       ;;
     *)
       print_err_msg_exit "\
-The system directory in which to look for external model output files
+The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
@@ -600,7 +600,7 @@ has not been specified for this external model and machine combination:
       ;;
     *)
       print_err_msg_exit "\
-The system directory in which to look for external model output files
+The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
@@ -631,7 +631,7 @@ has not been specified for this external model and machine combination:
       ;;
     *)
       print_err_msg_exit "\
-The system directory in which to look for external model output files
+The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
@@ -662,7 +662,7 @@ has not been specified for this external model and machine combination:
       ;;
     *)
       print_err_msg_exit "\
-The system directory in which to look for external model output files
+The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
@@ -673,7 +673,7 @@ has not been specified for this external model and machine combination:
 
   *)
     print_err_msg_exit "\
-The system directory in which to look for external model output files
+The system directory in which to look for external model output files 
 has not been specified for this external model:
   extrn_mdl_name = \"${extrn_mdl_name}\""
 
@@ -714,7 +714,7 @@ has not been specified for this external model:
 
   "FV3GFS")
     if [ "${fv3gfs_file_fmt}" = "nemsio" ]; then
-
+ 
       if [ "${cdate_FV3SAR}" -le "2019061206" ]; then
         arcv_dir="/NCEPDEV/emc-global/5year/emc.glopara/WCOSS_C/Q2FY19/prfv3rt3/${cdate_FV3SAR}"
         arcv_fns=""
@@ -746,7 +746,7 @@ has not been specified for this external model:
       arcv_fns="gpfs_dell1_nco_ops_com_gfs_prod_gfs.${yyyymmdd}_${hh}.gfs_pgrb2"
       arcv_fmt="tar"
       arcvrel_dir="./gfs.${yyyymmdd}/${hh}"
-
+  
     fi
 
     is_array arcv_fns
@@ -766,14 +766,14 @@ has not been specified for this external model:
 # The zip archive files for RAPX are named such that the forecast files
 # for odd-numbered starting hours (e.g. 01, 03, ..., 23) are stored to-
 # gether with the forecast files for the corresponding preceding even-
-# numbered starting hours (e.g. 00, 02, ..., 22, respectively), in an
-# archive file whose name contains only the even-numbered hour.  Thus,
+# numbered starting hours (e.g. 00, 02, ..., 22, respectively), in an 
+# archive file whose name contains only the even-numbered hour.  Thus, 
 # in forming the name of the archive file, if the starting hour (hh) is
-# odd, we reduce it by one to get the corresponding even-numbered hour
+# odd, we reduce it by one to get the corresponding even-numbered hour 
 # and use that to form the archive file name.
 #
     hh_orig=$hh
-# Convert hh to a decimal (i.e. base-10) number.  We need this because
+# Convert hh to a decimal (i.e. base-10) number.  We need this because 
 # if it starts with a 0 (e.g. 00, 01, ..., 09), bash will treat it as an
 # octal number, and 08 and 09 are illegal ocatal numbers for which the
 # arithmetic operations below will fail.
@@ -812,8 +812,8 @@ Archive file information has not been specified for this external model:
 
   esac
 #
-# Depending on the experiment configuration, the above code may set
-# arcv_fns and arcv_fps to either scalars or arrays.  If they are not
+# Depending on the experiment configuration, the above code may set 
+# arcv_fns and arcv_fps to either scalars or arrays.  If they are not 
 # arrays, recast them as arrays because that is what is expected in the
 # code below.
 #
