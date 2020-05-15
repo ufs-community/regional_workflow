@@ -13,6 +13,8 @@ elif [ ${target} == "hera" ]; then
     FIX_DIR="/scratch2/NCEPDEV/fv3-cam/emc.campara/fix_fv3cam"
 elif [ ${target} == "jet" ]; then
     FIX_DIR="/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix"
+elif [ ${target} == "orion" ]; then
+    FIX_DIR="/work/noaa/fv3-cam/emc.glopara/fix"
 else
     echo "Unknown site " ${target}
     exit 1

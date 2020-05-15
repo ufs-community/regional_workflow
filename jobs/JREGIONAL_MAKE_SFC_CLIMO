@@ -2,7 +2,7 @@
 set -u -x
 
 . $HOMEfv3/jobs/JREGIONAL_ENVIR
-machine="theia"
+machine="orion"
 preexisting_dir_method="delete"
 WORKDIR_GRID="abc"
 WORKDIR_SHVE="ghi"

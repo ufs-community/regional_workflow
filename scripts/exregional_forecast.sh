@@ -174,11 +174,12 @@ cat model_configure.tmp | sed s/NTASKS/$TOTAL_TASKS/ | sed s/YR/$yr/ | \
 # Run the forecast
 #-----------------------------------------
 export pgm=regional_forecast.x
-. prep_step
+#jaa . prep_step   # code/script is an operational thing - it unsets things in your environment (e.g. unit numbers related to fortran reads).
 
-startmsg
+#jaa startmsg
 ${APRUNC} $EXECfv3/regional_forecast.x >$pgmout 2>err
-export err=$?;err_chk
+#jaa export err=$?;err_chk
+export err=$?
 
 # Copy files needed for next analysis
 # use grid_spec.nc file output from model in working directory,

@@ -1,4 +1,5 @@
-#!/bin/ksh -l
+#!/bin/ksh 
+## jaa #!/bin/ksh -l
 set -xe
 
 . $HOMEfv3/jobs/JREGIONAL_ENVIR

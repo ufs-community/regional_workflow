@@ -190,6 +190,15 @@ Then remove this message and rerun."
   QUEUE_RUN_FV3SAR=${QUEUE_RUN_FV3SAR:-""}
   ;;
 #
+"ORION")
+#
+  ncores_per_node=40
+  SCHED="slurm"
+  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"400p48h"}
+  QUEUE_HPSS=${QUEUE_HPSS:-"400p48h"}
+  QUEUE_RUN_FV3SAR=${QUEUE_RUN_FV3SAR:-"400p48h"}
+  ;;
+#
 "CHEYENNE")
 #
   print_err_msg_exit "\

@@ -329,7 +329,7 @@ expt_title="desc_str"
 #
 #-----------------------------------------------------------------------
 #
-CCPP="false"
+CCPP="true"
 #
 #-----------------------------------------------------------------------
 #
@@ -636,8 +636,8 @@ VERBOSE="true"
 #
 #-----------------------------------------------------------------------
 #
-layout_x="20"
-layout_y="20"
+layout_x="24"
+layout_y="24"
 #
 #-----------------------------------------------------------------------
 #
@@ -788,9 +788,9 @@ PARMfv3=$HOMEfv3/parm
 EXECfv3=$HOMEfv3/exec
 USHfv3=$HOMEfv3/ush
 
-dom="conus"
+dom="brzse"
 FIXfv3=$HOMEfv3/fix
-FIXsar=$FIXfv3/fix_sar/${dom}
+FIXsar=$HOMEfv3/../dataout/BrSE-${dom}
 FIXam=$FIXfv3/fix_am
 FIXco2=$FIXam/fix_co2_proj
 
@@ -800,7 +800,7 @@ GESROOT_HOLD=${mainroot}/${comdir}/${USER}/nwges/${RUN}.hold
 
 NHRSguess=06     #-- Forecast length for 1st guess generation
 NHRSda=01        #-- Forecast length for cycled DA
-NHRS=60          #-- Forecast length for free fcst
+NHRS=24          #-- Forecast length for free fcst
 
 jlogfile=${mainroot}/${tmpdir}/${USER}/jlogfile.${RUN}.jlog
 
@@ -832,7 +832,7 @@ task_layout_x=16
 task_layout_y=48
 npx=1921
 npy=1297
-target_lat=38.5
+target_lat=38.5 
 target_lon=-97.5
 
 ## model config items
@@ -962,8 +962,7 @@ then
 
 fcstnodes=7
 bcnodes=11
-ername is Matthew.Pyle
-ostnodes=1
+postnodes=1
 goespostnodes=1
 goespostthrottle=9
 sh=00
@@ -991,6 +990,41 @@ lon2=5.6
 lat2=4.8
 dlon=0.025
 dlat=0.025
+
+elif [ $dom == 'brzse' ]
+then
+
+## rocoto items
+
+fcstnodes=76
+bcnodes=11
+postnodes=2
+goespostnodes=15
+goespostthrottle=3
+sh=00
+eh=12
+
+## namelist items
+
+task_layout_x=24
+task_layout_y=24
+npx=1009 
+npy=961 
+target_lat=-20.00
+target_lon=-55.00
+
+## model config items
+
+#write_groups=3            # Already defined in community workflow.
+#write_tasks_per_group=48  # Already defined in community workflow.
+cen_lon=$target_lon  
+cen_lat=$target_lat
+lon1=-11.065
+lat1=-10.0
+lon2=11.065
+lat2=10.0
+dlon=0.02195
+dlat=0.02083
 
 else
 

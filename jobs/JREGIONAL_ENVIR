@@ -54,6 +54,21 @@ export NDATE=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate
 export NHOUR=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/nhour
 export HOMEfv3=${HOMEfv3:-/scratch2/NCEPDEV/fv3-cam/$USER/regional_workflow}
 
+elif [ ${machine} = "orion" ]
+then
+
+export COMINgdas=${COMINgdas:-/work/noaa/fv3-cam/jaravequ/COMINgfs}
+export GBCOMINgfs=${GBCOMINgfs:-/work/noaa/fv3-cam/jaravequ/datain}
+export COMINgfs=${COMINgfs:-/work/noaa/fv3-cam/jaravequ/COMINgfs}
+   
+export PTMP=${PTMP:-/work/noaa/fv3-cam/${USER}}
+export STMP=${STMP:-/work/noaa/fv3-cam/${USER}}
+export rzdmuser=mpyle
+
+export NDATE=/apps/contrib/NCEPLIBS/orion/utils/prod_util.v1.2.0/exec/ndate
+export NHOUR=/apps/contrib/NCEPLIBS/orion/utils/prod_util.v1.2.0/exec/nhour
+export HOMEfv3=${HOMEfv3:-/work/noaa/fv3-cam/$USER/regional_workflow}
+
 elif [ ${machine} = "theia" ]
 then
 
@@ -84,10 +99,12 @@ export gtype=regional    # grid type = uniform, stretch, nest, or regional
 export PARMfv3=$HOMEfv3/parm
 export EXECfv3=$HOMEfv3/exec
 export USHfv3=$HOMEfv3/ush
-export LD_LIBRARY_PATH="${HOMEfv3}/sorc/regional_forecast.fd/ccpp/lib/${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="${HOMEfv3}/sorc/regional_forecast.fd/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+# export LD_LIBRARY_PATH="${HOMEfv3}/../simple-ufs/src/model/build/FV3/ccpp/physics${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 export FIXfv3=$HOMEfv3/fix
-export FIXsar=$FIXfv3/fix_sar/${dom}
+export FIXsar=$HOMEfv3/../dataout/BrSE-${CASE} 
+# export FIXsar=$FIXfv3/fix_sar/${dom}
 export FIXam=$FIXfv3/fix_am
 export FIXco2=$FIXam/fix_co2_proj
 

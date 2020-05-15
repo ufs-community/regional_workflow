@@ -29,6 +29,14 @@ elif [ "$machine" = hera ]; then
   #export APRUNO=${APRUNO:-"srun --ntasks=1 --ntasks-per-node=${NCTSK} --cpus-per-task=${OMP_NUM_THREADS}"}
   export APRUNO=${APRUNO:-"srun --ntasks=1 --ntasks-per-node=1 --cpus-per-task=1"}
   export BACKGROUND="&"
+elif [ "$machine" = orion ]; then
+  export APRUNS=${APRUNS:-"srun --ntasks=1 --ntasks-per-node=1 --cpus-per-task=1"}
+  #export APRUNF=${APRUNF:-"srun --ntasks=${TOTAL_TASKS} --ntasks-per-node=${NCTSK} --cpus-per-task=${OMP_NUM_THREADS} --multi-prog"}
+  export APRUNF=${APRUNF:-"time"}
+  export APRUNC=${APRUNC:-"srun --ntasks=${TOTAL_TASKS} --ntasks-per-node=${NCTSK} --cpus-per-task=${OMP_NUM_THREADS}"}
+  #export APRUNO=${APRUNO:-"srun --ntasks=1 --ntasks-per-node=${NCTSK} --cpus-per-task=${OMP_NUM_THREADS}"}
+  export APRUNO=${APRUNO:-"srun --ntasks=1 --ntasks-per-node=1 --cpus-per-task=1"}
+  export BACKGROUND="&"
 elif [ "$machine" = jet ]; then
   export APRUNS=${APRUNS:-"srun --ntasks=1 --ntasks-per-node=1 --cpus-per-task=1"}
   #export APRUNF=${APRUNF:-"srun --ntasks=${TOTAL_TASKS} --ntasks-per-node=${NCTSK} --cpus-per-task=${OMP_NUM_THREADS} --multi-prog"}

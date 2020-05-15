@@ -67,11 +67,12 @@ done
 # 
 # Run the post processor
 export pgm=regional_post.x
-. prep_step
+#JAA . prep_step
 
-startmsg
+#JAA startmsg
 ${APRUNC} ${POSTGPEXEC} < itag > $pgmout 2>err
-export err=$?; err_chk
+#JAA export err=$?; err_chk
+export err=$? 
 
 # RUN wgrib2
 domain=${dom}

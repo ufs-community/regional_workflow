@@ -19,6 +19,9 @@ export ntiles=1
 export TILE_NUM=7
 
 #
+source ${HOMEfv3}/rocoto/config.workflow.defaults
+
+#
 # set the links to use the 4 halo grid and orog files
 # these are necessary for creating the boundary data
 #
