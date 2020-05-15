@@ -19,7 +19,7 @@ ulimit -s unlimited
 ulimit -a
 
 mkdir -p INPUT RESTART
-cp ${NWGES}/anl.${dom}.${tmmark}/*.nc INPUT
+ln -sf ${NWGES}/*.nc INPUT
 
 numbndy=`ls -l INPUT/gfs_bndy.tile7*.nc | wc -l`
 let "numbndy_check=$NHRS/3+1"
@@ -78,11 +78,11 @@ done
 #---------------------------------------------- 
 ntiles=1
 tile=7
-cp $FIXsar/${CASE}_grid.tile${tile}.halo3.nc INPUT/.
-cp $FIXsar/${CASE}_grid.tile${tile}.halo4.nc INPUT/.
-cp $FIXsar/${CASE}_oro_data.tile${tile}.halo0.nc INPUT/.
-cp $FIXsar/${CASE}_oro_data.tile${tile}.halo4.nc INPUT/.
-cp $FIXsar/${CASE}_mosaic.nc INPUT/.
+ln -sf $FIXsar/${CASE}_grid.tile${tile}.halo3.nc INPUT/.
+ln -sf $FIXsar/${CASE}_grid.tile${tile}.halo4.nc INPUT/.
+ln -sf $FIXsar/${CASE}_oro_data.tile${tile}.halo0.nc INPUT/.
+ln -sf $FIXsar/${CASE}_oro_data.tile${tile}.halo4.nc INPUT/.
+ln -sf $FIXsar/${CASE}_mosaic.nc INPUT/.
   
 cd INPUT
 ln -sf ${CASE}_mosaic.nc grid_spec.nc
@@ -101,29 +101,24 @@ cd ..
 # Copy or set up files data_table, diag_table, field_table,
 #   input.nml, input_nest02.nml, model_configure, and nems.configure
 #-------------------------------------------------------------------
-CCPP=${CCPP:-"false"}
+CCPP=${CCPP:-"true"}
 CCPP_SUITE=${CCPP_SUITE:-"FV3_GFS_2017_gfdlmp_regional"}
 
 if [ $tmmark = tm00 ] ; then
 # Free forecast with DA (warm start)
   if [ $model = fv3sar_da ] ; then
-    cp ${PARMfv3}/input_sar_da.nml input.nml 
+    cp ${PARMfv3}/input_sar_da.nml input.nml
 # Free forecast without DA (cold start)
-  elif [ $model = fv3sar ] ; then 
+  elif [ $model = fv3sar ] ; then
     if [ $CCPP  = true ] || [ $CCPP = TRUE ] ; then
-      cp ${PARMfv3}/input_sar_${dom}_ccpp.nml input.nml.tmp
-      cat input.nml.tmp | \
-          sed s/CCPP_SUITE/\'$CCPP_SUITE\'/ | \
-          sed s/_TASK_X_/${TASK_X}/ | sed s/_TASK_Y_/${TASK_Y}/  >  input.nml
-      cp ${PARMfv3}/suite_${CCPP_SUITE}.xml suite_${CCPP_SUITE}.xml
-    else
-      cp ${PARMfv3}/input_sar_${dom}.nml input.nml
-      if [ $dom = conus ] ; then
-        mv input.nml input.nml.tmp
+      if [ ! -e ${PARMfv3}/input_sar_${dom}.nml ] ; then
+        echo "FATAL ERROR: no input_sar_${dom}.nml in PARMfv3 directory.  Create one!"
+      else
+        cp ${PARMfv3}/input_sar_${dom}.nml input.nml.tmp
         cat input.nml.tmp | \
+            sed s/CCPP_SUITE/\'$CCPP_SUITE\'/ | \
             sed s/_TASK_X_/${TASK_X}/ | sed s/_TASK_Y_/${TASK_Y}/  >  input.nml
-      elif [ ! -e input.nml ] ; then
-         echo "FATAL ERROR: no input_sar_${dom}.nml in PARMfv3 directory.  Create one!"
+        cp ${PARMfv3}/suite_${CCPP_SUITE}.xml suite_${CCPP_SUITE}.xml
       fi
     fi
   fi
@@ -137,12 +132,6 @@ fi
 cp ${PARMfv3}/d* .
 cp ${PARMfv3}/field_table .
 cp ${PARMfv3}/nems.configure .
-
-if [ $CCPP  = true ] || [ $CCPP = TRUE ] ; then
-   if [ -f "${PARMfv3}/field_table_ccpp" ] ; then
-    cp -f ${PARMfv3}/field_table_ccpp field_table
-   fi
-fi
 
 yr=`echo $CYCLEanl | cut -c1-4`
 mn=`echo $CYCLEanl | cut -c5-6`

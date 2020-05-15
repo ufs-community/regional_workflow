@@ -19,6 +19,8 @@ module use ${HOMEfv3}/modulefiles/${machine}
 jobpre=$(echo ${job} | cut -c1-17)
 if [ "${jobpre}" = "regional_forecast" ]; then
   module load fv3
+elif [ "${jobpre}" = "regional_post_con" ]; then
+  module load post
 else
   module load regional
 fi

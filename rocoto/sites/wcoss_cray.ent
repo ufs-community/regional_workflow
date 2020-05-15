@@ -25,7 +25,7 @@
 
   <!ENTITY MAKE_IC_RESOURCES "<nodes>4:ppn=4:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>16</value></envar><envar><name>NCTSK</name><value>4</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:15:00</walltime>">
 
-  <!ENTITY MAKE_BC_RESOURCES "<nodes>4:ppn=4:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>16</value></envar><envar><name>NCTSK</name><value>4</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:50:00</walltime>">
+  <!ENTITY MAKE_BC_RESOURCES "<nodes>4:ppn=4:tpp=1</nodes><envar><name>TOTAL_TASKS</name><value>16</value></envar><envar><name>NCTSK</name><value>4</value></envar><envar><name>OMP_THREADS</name><value>1</value></envar><walltime>00:15:00</walltime>">
 
 <!-- some of these are domain specific -->
   <!ENTITY FORECAST_EXTRA "<envar><name>NCTSK</name><value>12</value></envar><envar><name>OMP_THREADS</name><value>2</value></envar><walltime>02:40:00</walltime>">

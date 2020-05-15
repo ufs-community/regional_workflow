@@ -23,15 +23,33 @@ fi
 $Build_forecast && {
  ${CP} regional_forecast.fd/NEMS/exe/NEMS.x            ../exec/regional_forecast.x
 }
-$Build_forecast_ccpp && {
- ${CP} regional_forecast.fd/NEMS/exe/NEMS.x            ../exec/regional_forecast.x
-}
 
 #------------------------------------
 # install post
 #------------------------------------
 $Build_post && {
  ${CP} regional_post.fd/exec/ncep_post                 ../exec/regional_post.x
+}
+
+#------------------------------------
+# install bufrpost
+#------------------------------------
+$Build_bufr && {
+ ${CP} regional_bufr.fd/regional_bufr.x                ../exec/regional_bufr.x
+}
+
+#------------------------------------
+# install sndp
+#------------------------------------
+$Build_sndp && {
+ ${CP} regional_sndp.fd/regional_sndp.x                ../exec/regional_sndp.x
+}
+
+#------------------------------------
+# install stnmlist
+#------------------------------------
+$Build_stnmlist && {
+ ${CP} regional_stnmlist.fd/regional_stnmlist.x        ../exec/regional_stnmlist.x
 }
 
 #------------------------------------

@@ -46,16 +46,8 @@ echo " .... Library build not currently supported .... "
 #------------------------------------
 $Build_forecast && {
 echo " .... Building forecast .... "
-./build_forecast.sh > $logs_dir/build_forecast.log 2>&1
-}
-
-#------------------------------------
-# build forecast ccpp
-#------------------------------------
-$Build_forecast_ccpp && {
-echo " .... Building forecast ccpp.... "
 export CCPP=true
-./build_forecast.sh > $logs_dir/build_forecast_ccpp.log 2>&1
+./build_forecast.sh > $logs_dir/build_forecast.log 2>&1
 }
 
 #------------------------------------
@@ -64,6 +56,30 @@ export CCPP=true
 $Build_post && {
 echo " .... Building post .... "
 ./build_post.sh > $logs_dir/build_post.log 2>&1
+}
+
+#------------------------------------
+# build bufr
+#------------------------------------
+$Build_bufr && {
+echo " .... Building bufr .... "
+./build_bufr.sh > $logs_dir/build_bufr.log 2>&1
+}
+
+#------------------------------------
+# build sndp
+#------------------------------------
+$Build_sndp && {
+echo " .... Building sndp .... "
+./build_sndp.sh > $logs_dir/build_sndp.log 2>&1
+}
+
+#------------------------------------
+# build stnmlist
+#------------------------------------
+$Build_stnmlist && {
+echo " .... Building stnmlist .... "
+./build_stnmlist.sh > $logs_dir/build_stnmlist.log 2>&1
 }
 
 #------------------------------------
