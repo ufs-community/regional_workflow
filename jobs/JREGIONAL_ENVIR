@@ -103,8 +103,7 @@ export LD_LIBRARY_PATH="${HOMEfv3}/sorc/regional_forecast.fd/FV3/ccpp/lib${LD_LI
 # export LD_LIBRARY_PATH="${HOMEfv3}/../simple-ufs/src/model/build/FV3/ccpp/physics${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 export FIXfv3=$HOMEfv3/fix
-export FIXsar=$HOMEfv3/../dataout/BrSE-${CASE} 
-# export FIXsar=$FIXfv3/fix_sar/${dom}
+export FIXsar=$FIXfv3/fix_sar/${dom}
 export FIXam=$FIXfv3/fix_am
 export FIXco2=$FIXam/fix_co2_proj
 

@@ -36,10 +36,10 @@
 /
 
  &fv_core_nml
-       layout   = 24,24
+       layout   = 16,48
        io_layout = 1,1
-       npx      = 1009
-       npy      = 961  
+       npx      = 1921
+       npy      = 1297  
        ntiles   = 1,
        npz    = 64
 !       grid_type = -1

@@ -30,27 +30,27 @@ output_file:             'netcdf'
 write_nemsioflip:        .false.
 write_fsyncflag:         .false.
 
-# output_grid:             'rotated_latlon'
-#cen_lon:                 -97.5  # central longitude
-#cen_lat:                 38.5   # central latitude
-#lon1:                    -25.0  # longitude of lower-left point in rotated coordinate system (in degrees)
-#lat1:                    -15.0  # latitude of lower-left ...
-#lon2:                    25.0   # longitude of upper-right ...
-#lat2:                    15.0   # latitude of upper-right ...
-#dlon:                    0.02
-#dlat:                    0.02
+output_grid:             'rotated_latlon'
+cen_lon:                 -97.5  # central longitude
+cen_lat:                 38.5   # central latitude
+lon1:                    -25.0  # longitude of lower-left point in rotated coordinate system (in degrees)
+lat1:                    -15.0  # latitude of lower-left ...
+lon2:                    25.0   # longitude of upper-right ...
+lat2:                    15.0   # latitude of upper-right ...
+dlon:                    0.02
+dlat:                    0.02
 
-output_grid:		 'lambert_conformal'
-cen_lon:		 -97.5	 # central longitude
-cen_lat:		 38.5	 # central latitude
-stdlat1:		 38.5
-stdlat2:		 38.5
-nx:			 1799	 # number of points along x-axis.
-ny:			 1059	 # number of points along y-axis.
-lon1:			 -122.719528	# longitude of lower-left point (in degrees)
-lat1:			 21.138123	# latitude of lower-left point (in degrees)
-dx:			 3000.0	 # x-direction grid length
-dy:			 3000.0  # y-direction grid length
+#output_grid:		 'lambert_conformal'
+#cen_lon:		 -97.5	 # central longitude
+#cen_lat:		 38.5	 # central latitude
+#stdlat1:		 38.5
+#stdlat2:		 38.5
+#nx:			 1799	 # number of points along x-axis.
+#ny:			 1059	 # number of points along y-axis.
+#lon1:			 -122.719528	# longitude of lower-left point (in degrees)
+#lat1:			 21.138123	# latitude of lower-left point (in degrees)
+#dx:			 3000.0	 # x-direction grid length
+#dy:			 3000.0  # y-direction grid length
 
 nfhout:                  1
 nfhmax_hf:               60
