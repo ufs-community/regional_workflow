@@ -10,7 +10,7 @@ start_second:            0
 nhours_fcst:             NHRS
 RUN_CONTINUE:            .false.
 ENS_SPS:                 .false.
-dt_atmos:                30
+dt_atmos:                36
 cpl:                     .false.
 calendar:                'julian'
 memuse_verbose:          .false.
@@ -18,39 +18,48 @@ atmos_nthreads:          NTHRD
 use_hyper_thread:        .false.
 ncores_per_node:         NCNODE
 debug_affinity:          .true.
-restart_interval:        12
+restart_interval:        24
 output_1st_tstep_rst:    .false.
 
 quilting:                .true.
 write_groups:            _WG_
 write_tasks_per_group:   _WTPG_
+write_dopost:            .false.
+output_history:          .true.
 num_files:               2
-filename_base:           'dyn''phy'
-output_file:             'netcdf'
+filename_base:           'dyn' 'phy'
+output_file:             'netcdf' 'netcdf'
 write_nemsioflip:        .false.
 write_fsyncflag:         .false.
+ideflate:                1
+nbits:                   18
+ichunk2d:                -1
+jchunk2d:                -1
+ichunk3d:                -1
+jchunk3d:                -1
+kchunk3d:                -1
 
-# output_grid:             'rotated_latlon'
-# cen_lon:                 -97.5  # central longitude
-# cen_lat:                 38.5   # central latitude
-# lon1:                    -25.0  # longitude of lower-left point in rotated coordinate system (in degrees)
-# lat1:                    -15.0  # latitude of lower-left ...
-# lon2:                    25.0   # longitude of upper-right ...
-# lat2:                    15.0   # latitude of upper-right ...
-# dlon:                    0.02
-# dlat:                    0.02
+output_grid:             'rotated_latlon'
+cen_lon:                 -97.5  # central longitude
+cen_lat:                 38.5   # central latitude
+lon1:                    -25.0  # longitude of lower-left point in rotated coordinate system (in degrees)
+lat1:                    -15.0  # latitude of lower-left ...
+lon2:                    25.0   # longitude of upper-right ...
+lat2:                    15.0   # latitude of upper-right ...
+dlon:                    0.025
+dlat:                    0.025
 
-output_grid:		 'lambert_conformal'
-cen_lon:		 -97.5	 # central longitude
-cen_lat:		 38.5	 # central latitude
-stdlat1:		 38.5
-stdlat2:		 38.5
-nx:			 1799	 # number of points along x-axis.
-ny:			 1059	 # number of points along y-axis.
-lon1:			 -122.719528	# longitude of lower-left point (in degrees)
-lat1:			 21.138123	# latitude of lower-left point (in degrees)
-dx:			 3000.0	 # x-direction grid length
-dy:			 3000.0  # y-direction grid length
+#output_grid:		 'lambert_conformal'
+#cen_lon:		 -97.5	 # central longitude
+#cen_lat:		 38.5	 # central latitude
+#stdlat1:		 38.5
+#stdlat2:		 38.5
+#nx:			 1799	 # number of points along x-axis.
+#ny:			 1059	 # number of points along y-axis.
+#lon1:			 -122.719528	# longitude of lower-left point (in degrees)
+#lat1:			 21.138123	# latitude of lower-left point (in degrees)
+#dx:			 3000.0	 # x-direction grid length
+#dy:			 3000.0  # y-direction grid length
 
 nfhout:                  1
 nfhmax_hf:               60
