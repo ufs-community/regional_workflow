@@ -77,16 +77,9 @@ ushdir="${scrfunc_dir}"
 #
 #-----------------------------------------------------------------------
 #
+
 TEMPLATE_XML_FP="${TEMPLATE_DIR}/${WFLOW_XML_FN}"
 WFLOW_XML_FP="$EXPTDIR/${WFLOW_XML_FN}"
-#
-#-----------------------------------------------------------------------
-#
-# Copy the xml template file to the run directory.
-#
-#-----------------------------------------------------------------------
-#
-cp_vrfy ${TEMPLATE_XML_FP} ${WFLOW_XML_FP}
 #
 #-----------------------------------------------------------------------
 #
@@ -97,16 +90,6 @@ cp_vrfy ${TEMPLATE_XML_FP} ${WFLOW_XML_FP}
 #
 PROC_RUN_FCST="${NUM_NODES}:ppn=${NCORES_PER_NODE}"
 NPROCS_RUN_FCST=$(( ${NUM_NODES} * ${NCORES_PER_NODE} ))
-
-FHR=( $( seq 0 1 ${FCST_LEN_HRS} ) )
-i=0
-FHR_STR=$( printf "%02d" "${FHR[i]}" )
-numel=${#FHR[@]}
-for i in $(seq 1 $(($numel-1)) ); do
-  hour=$( printf "%02d" "${FHR[i]}" )
-  FHR_STR="${FHR_STR} $hour"
-done
-FHR="${FHR_STR}"
 #
 #-----------------------------------------------------------------------
 #
@@ -143,115 +126,48 @@ fi
 # the setup script sourced above.
 #
 #-----------------------------------------------------------------------
-#
-# Computational resource parameters.
-#
-set_file_param "${WFLOW_XML_FP}" "ACCOUNT" "$ACCOUNT"
-set_file_param "${WFLOW_XML_FP}" "SCHED" "$SCHED"
-set_file_param "${WFLOW_XML_FP}" "QUEUE_DEFAULT" "<${QUEUE_DEFAULT_TAG}>${QUEUE_DEFAULT}</${QUEUE_DEFAULT_TAG}>"
-set_file_param "${WFLOW_XML_FP}" "QUEUE_HPSS" "<${QUEUE_HPSS_TAG}>${QUEUE_HPSS}</${QUEUE_HPSS_TAG}>"
-set_file_param "${WFLOW_XML_FP}" "QUEUE_FCST" "<${QUEUE_FCST_TAG}>${QUEUE_FCST}</${QUEUE_FCST_TAG}>"
-set_file_param "${WFLOW_XML_FP}" "NCORES_PER_NODE" "${NCORES_PER_NODE}"
-set_file_param "${WFLOW_XML_FP}" "PROC_RUN_FCST" "${PROC_RUN_FCST}"
-set_file_param "${WFLOW_XML_FP}" "NPROCS_RUN_FCST" "${NPROCS_RUN_FCST}"
-#
-# Directories.
-#
-set_file_param "${WFLOW_XML_FP}" "USHDIR" "$USHDIR"
-set_file_param "${WFLOW_XML_FP}" "JOBSDIR" "$JOBSDIR"
-set_file_param "${WFLOW_XML_FP}" "EXPTDIR" "$EXPTDIR"
-set_file_param "${WFLOW_XML_FP}" "LOGDIR" "$LOGDIR"
-set_file_param "${WFLOW_XML_FP}" "CYCLE_DIR" "${CYCLE_DIR}"
-#
-# Files.
-#
-set_file_param "${WFLOW_XML_FP}" "GLOBAL_VAR_DEFNS_FP" "${GLOBAL_VAR_DEFNS_FP}"
-#
-# External model information.
-#
-set_file_param "${WFLOW_XML_FP}" "EXTRN_MDL_NAME_ICS" "${EXTRN_MDL_NAME_ICS}"
-set_file_param "${WFLOW_XML_FP}" "EXTRN_MDL_NAME_LBCS" "${EXTRN_MDL_NAME_LBCS}"
-set_file_param "${WFLOW_XML_FP}" "EXTRN_MDL_FILES_SYSBASEDIR_ICS" "${EXTRN_MDL_FILES_SYSBASEDIR_ICS}"
-set_file_param "${WFLOW_XML_FP}" "EXTRN_MDL_FILES_SYSBASEDIR_LBCS" "${EXTRN_MDL_FILES_SYSBASEDIR_LBCS}"
-#
-# Cycle-specific information.
-#
-set_file_param "${WFLOW_XML_FP}" "DATE_FIRST_CYCL" "${DATE_FIRST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "DATE_LAST_CYCL" "${DATE_LAST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "YYYY_FIRST_CYCL" "${YYYY_FIRST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "MM_FIRST_CYCL" "${MM_FIRST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "DD_FIRST_CYCL" "${DD_FIRST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "HH_FIRST_CYCL" "${HH_FIRST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "FHR" "$FHR"
-#
-# Rocoto workflow task names.
-#
-set_file_param "${WFLOW_XML_FP}" "MAKE_GRID_TN" "${MAKE_GRID_TN}"
-set_file_param "${WFLOW_XML_FP}" "MAKE_OROG_TN" "${MAKE_OROG_TN}"
-set_file_param "${WFLOW_XML_FP}" "MAKE_SFC_CLIMO_TN" "${MAKE_SFC_CLIMO_TN}"
-set_file_param "${WFLOW_XML_FP}" "GET_EXTRN_ICS_TN" "${GET_EXTRN_ICS_TN}"
-set_file_param "${WFLOW_XML_FP}" "GET_EXTRN_LBCS_TN" "${GET_EXTRN_LBCS_TN}"
-set_file_param "${WFLOW_XML_FP}" "MAKE_ICS_TN" "${MAKE_ICS_TN}"
-set_file_param "${WFLOW_XML_FP}" "MAKE_LBCS_TN" "${MAKE_LBCS_TN}"
-set_file_param "${WFLOW_XML_FP}" "RUN_FCST_TN" "${RUN_FCST_TN}"
-set_file_param "${WFLOW_XML_FP}" "RUN_POST_TN" "${RUN_POST_TN}"
-#
-# Flags that determine whether or not certain tasks are launched.
-#
-set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_GRID" "${RUN_TASK_MAKE_GRID}"
-set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_OROG" "${RUN_TASK_MAKE_OROG}"
-set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_SFC_CLIMO" "${RUN_TASK_MAKE_SFC_CLIMO}"
-#
-#-----------------------------------------------------------------------
-#
-# Extract from CDATE the starting year, month, day, and hour of the
-# forecast.  These are needed below for various operations.
-#
-#-----------------------------------------------------------------------
-#
-YYYY_FIRST_CYCL=${DATE_FIRST_CYCL:0:4}
-MM_FIRST_CYCL=${DATE_FIRST_CYCL:4:2}
-DD_FIRST_CYCL=${DATE_FIRST_CYCL:6:2}
-HH_FIRST_CYCL=${CYCL_HRS[0]}
-#
-#-----------------------------------------------------------------------
-#
-# Replace the dummy line in the XML defining a generic cycle hour with
-# one line per cycle hour containing actual values.
-#
-#-----------------------------------------------------------------------
-#
-regex_search="(^\s*<cycledef\s+group=\"at_)(CC)(Z\">)(\&DATE_FIRST_CYCL;)(CC00)(\s+)(\&DATE_LAST_CYCL;)(CC00)(.*</cycledef>)(.*)"
-i=0
-for cycl in "${CYCL_HRS[@]}"; do
-  regex_replace="\1${cycl}\3\4${cycl}00 \7${cycl}00\9"
-  crnt_line=$( sed -n -r -e "s%${regex_search}%${regex_replace}%p" "${WFLOW_XML_FP}" )
-  if [ "$i" -eq "0" ]; then
-    all_cycledefs="${crnt_line}"
-  else
-    all_cycledefs=$( printf "%s\n%s" "${all_cycledefs}" "${crnt_line}" )
-  fi
-  i=$((i+1))
-done
-#
-# Replace all actual newlines in the variable all_cycledefs with back-
-# slash-n's.  This is needed in order for the sed command below to work
-# properly (i.e. to avoid it failing with an "unterminated `s' command"
-# message).
-#
-all_cycledefs=${all_cycledefs//$'\n'/\\n}
-#
-# Replace all ampersands in the variable all_cycledefs with backslash-
-# ampersands.  This is needed because the ampersand has a special mean-
-# ing when it appears in the replacement string (here named regex_re-
-# place) and thus must be escaped.
-#
-all_cycledefs=${all_cycledefs//&/\\\&}
-#
-# Perform the subsutitution.
-#
-sed -i -r -e "s|${regex_search}|${all_cycledefs}|g" "${WFLOW_XML_FP}"
 
+settings="
+  'account': $ACCOUNT
+  'sched': $SCHED
+  'queue_default': $QUEUE_DEFAULT
+  'queue_default_tag': $QUEUE_DEFAULT_TAG
+  'queue_hpss': $QUEUE_HPSS
+  'queue_hpss_tag': $QUEUE_HPSS_TAG
+  'queue_fcst': $QUEUE_FCST
+  'queue_fcst_tag': $QUEUE_FCST_TAG
+  'proc_run_fcst': $PROC_RUN_FCST
+  'nprocs_run_fcst': $NPROCS_RUN_FCST
+  'ncores_per_node': $NCORES_PER_NODE
+  'ushdir': $USHDIR
+  'jobsdir': $JOBSDIR
+  'exptdir': $EXPTDIR
+  'logdir': $LOGDIR
+  'cycle_dir': $CYCLE_DIR
+  'global_var_defns_fp': $GLOBAL_VAR_DEFNS_FP
+  'extrn_mdl_name_ics': $EXTRN_MDL_NAME_ICS
+  'extrn_mdl_name_lbcs': $EXTRN_MDL_NAME_LBCS
+  'extrn_mdl_files_sysbasedir_ics': $EXTRN_MDL_FILES_SYSBASEDIR_ICS
+  'extrn_mdl_files_sysbasedir_lbcs': $EXTRN_MDL_FILES_SYSBASEDIR_LBCS
+  'date_first_cycl': !datetime $DATE_FIRST_CYCL${CYCL_HRS[0]}
+  'date_last_cycl': !datetime $DATE_LAST_CYCL${CYCL_HRS[0]}
+  'cycl_freq': !!str 24:00:00
+  'fcst_len_hrs': $FCST_LEN_HRS
+  'make_grid_tn': $MAKE_GRID_TN
+  'make_orog_tn': $MAKE_OROG_TN
+  'make_sfc_climo_tn': $MAKE_SFC_CLIMO_TN
+  'get_extrn_ics_tn': $GET_EXTRN_ICS_TN
+  'get_extrn_lbcs_tn': $GET_EXTRN_LBCS_TN
+  'make_ics_tn': $MAKE_ICS_TN
+  'make_lbcs_tn': $MAKE_LBCS_TN
+  'run_fcst_tn': $RUN_FCST_TN
+  'run_post_tn': $RUN_POST_TN
+  'run_task_make_grid': $RUN_TASK_MAKE_GRID
+  'run_task_make_orog': $RUN_TASK_MAKE_OROG
+  'run_task_make_sfc_climo': $RUN_TASK_MAKE_SFC_CLIMO
+"
+
+$USHDIR/create_xml.py -q -u "${settings}" -t $TEMPLATE_XML_FP -o $WFLOW_XML_FP || exit 1
 
 #
 #-----------------------------------------------------------------------
@@ -439,10 +355,6 @@ print_info_msg "$VERBOSE" "
 cp_vrfy "${FIELD_TABLE_TMPL_FP}" "${FIELD_TABLE_FP}"
 
 print_info_msg "$VERBOSE" "
-  Copying the template FV3 namelist file to the experiment directory..."
-cp_vrfy "${FV3_NML_TMPL_FP}" "${FV3_NML_FP}"
-
-print_info_msg "$VERBOSE" "
   Copying the template NEMS configuration file to the experiment direct-
   ory..."
 cp_vrfy "${NEMS_CONFIG_TMPL_FP}" "${NEMS_CONFIG_FP}"
@@ -496,47 +408,18 @@ npy=$((NY+1))
 #
 # Set parameters.
 #
-set_file_param "${FV3_NML_FP}" "blocksize" "$BLOCKSIZE"
-set_file_param "${FV3_NML_FP}" "ccpp_suite" "\'${CCPP_PHYS_SUITE}\'"
-set_file_param "${FV3_NML_FP}" "layout" "${LAYOUT_X},${LAYOUT_Y}"
-set_file_param "${FV3_NML_FP}" "npx" "$npx"
-set_file_param "${FV3_NML_FP}" "npy" "$npy"
-set_file_param "${FV3_NML_FP}" "target_lon" "${LON_CTR}"
-set_file_param "${FV3_NML_FP}" "target_lat" "${LAT_CTR}"
+
 # Question:
 # For a JPgrid type grid, what should stretch_fac be set to?  This de-
 # pends on how the FV3 code uses the stretch_fac parameter in the name-
 # list file.  Recall that for a JPgrid, it gets set in the function 
 # set_gridparams_JPgrid(.sh) to something like 0.9999, but is it ok to
 # set it to that here in the FV3 namelist file?
-set_file_param "${FV3_NML_FP}" "stretch_fac" "${STRETCH_FAC}"
-set_file_param "${FV3_NML_FP}" "bc_update_interval" "${LBC_UPDATE_INTVL_HRS}"
 
-set_file_param "${FV3_NML_FP}" "FNGLAC" "\"$FNGLAC\""
-set_file_param "${FV3_NML_FP}" "FNMXIC" "\"$FNMXIC\""
-set_file_param "${FV3_NML_FP}" "FNTSFC" "\"$FNTSFC\""
-set_file_param "${FV3_NML_FP}" "FNSNOC" "\"$FNSNOC\""
-set_file_param "${FV3_NML_FP}" "FNZORC" "\"$FNZORC\""
-set_file_param "${FV3_NML_FP}" "FNALBC" "\"$FNALBC\""
-set_file_param "${FV3_NML_FP}" "FNALBC2" "\"$FNALBC2\""
-set_file_param "${FV3_NML_FP}" "FNAISC" "\"$FNAISC\""
-set_file_param "${FV3_NML_FP}" "FNTG3C" "\"$FNTG3C\""
-set_file_param "${FV3_NML_FP}" "FNVEGC" "\"$FNVEGC\""
-set_file_param "${FV3_NML_FP}" "FNVETC" "\"$FNVETC\""
-set_file_param "${FV3_NML_FP}" "FNSOTC" "\"$FNSOTC\""
-set_file_param "${FV3_NML_FP}" "FNSMCC" "\"$FNSMCC\""
-set_file_param "${FV3_NML_FP}" "FNMSKH" "\"$FNMSKH\""
-set_file_param "${FV3_NML_FP}" "FNTSFA" "\"$FNTSFA\""
-set_file_param "${FV3_NML_FP}" "FNACNA" "\"$FNACNA\""
-set_file_param "${FV3_NML_FP}" "FNSNOA" "\"$FNSNOA\""
-set_file_param "${FV3_NML_FP}" "FNVMNC" "\"$FNVMNC\""
-set_file_param "${FV3_NML_FP}" "FNVMXC" "\"$FNVMXC\""
-set_file_param "${FV3_NML_FP}" "FNSLPC" "\"$FNSLPC\""
-set_file_param "${FV3_NML_FP}" "FNABSC" "\"$FNABSC\""
-#
 # For the GSD_v0 and the GSD_SAR physics suites, set the parameter lsoil
 # according to the external models used to obtain ICs and LBCs.
 #
+
 if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
    [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
 
@@ -544,12 +427,12 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] && \
      [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" -o \
        "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
-    set_file_param "${FV3_NML_FP}" "lsoil" "4"
+    lsoil=4
   elif [ "${EXTRN_MDL_NAME_ICS}" = "RAPX" -o \
          "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ] && \
        [ "${EXTRN_MDL_NAME_LBCS}" = "RAPX" -o \
          "${EXTRN_MDL_NAME_LBCS}" = "HRRRX" ]; then
-    set_file_param "${FV3_NML_FP}" "lsoil" "9"
+    lsoil=9
   else
     print_err_msg_exit "\
 The value to set the variable lsoil to in the FV3 namelist file (FV3_-
@@ -562,6 +445,61 @@ Please change one or more of these parameters or provide a value for
 lsoil (and change workflow generation script(s) accordingly) and rerun."
   fi
 
+fi
+
+settings="
+'atmos_model_nml': {
+    'blocksize': ${BLOCKSIZE},
+    'ccpp_suite': ${CCPP_PHYS_SUITE},
+  },
+'fv_core_nml': {
+    'layout': [${LAYOUT_X}, ${LAYOUT_Y}],
+    'npx': ${npx},
+    'npy': ${npy},
+    'target_lat': ${LAT_CTR},
+    'target_lon': ${LON_CTR},
+    'stretch_fac': ${STRETCH_FAC},
+    'bc_update_interval': ${LBC_UPDATE_INTVL_HRS},
+  },
+'gfs_physics_nml': {
+    'lsoil': ${lsoil:-null},
+  },
+'namsfc': {
+     'FNSMCC': ${FNSMCC},
+     'FNSOTC': ${FNSOTC},
+     'FNVETC': ${FNVETC},
+     'FNABSC': ${FNABSC},
+     'FNALBC': ${FNALBC},
+     'FNGLAC': ${FNGLAC},
+     'FNMXIC': ${FNMXIC},
+     'FNTSFC': ${FNTSFC},
+     'FNSNOC': ${FNSNOC},
+     'FNZORC': ${FNZORC},
+     'FNALBC2': ${FNALBC2},
+     'FNAISC': ${FNAISC},
+     'FNTG3C': ${FNTG3C},
+     'FNVEGC': ${FNVEGC},
+     'FNMSKH': ${FNMSKH},
+     'FNTSFA': ${FNTSFA},
+     'FNACNA': ${FNACNA},
+     'FNSNOA': ${FNSNOA},
+     'FNVMNC': ${FNVMNC},
+     'FNVMXC': ${FNVMXC},
+     'FNSLPC': ${FNSLPC},
+   },
+"
+
+$USHDIR/set_namelist.py -q -c $FV3_NML_CONFIG_FP $CCPP_PHYS_SUITE -n $FV3_NML_BASE_FP -o ${FV3_NML_FP} -u "{$settings}" 
+if [[ $? -ne 0 ]]; then
+  echo "
+  !!!!!!!!!!!!!!!!!!!!!!
+
+  set_namelist.py failed!
+  Check documentation to ensure that the proper python environment is available
+
+  !!!!!!!!!!!!!!!!!!!!!!
+  "
+  exit 1
 fi
 #
 #-----------------------------------------------------------------------
@@ -655,7 +593,7 @@ For automatic resubmission of the workflow (say every 3 minutes), the
 following line can be added to the user's crontab (use \"crontab -e\" to
 edit the cron table): 
 
-*/3 * * * * cd $EXPTDIR && ${rocotorun_cmd}
+*/3 * * * * cd $EXPTDIR && ./launch_FV3SAR_wflow.sh
 
 Done.
 "
@@ -754,7 +692,7 @@ rm "${tmp_fp}"
 # ful, move the log file in which the "tee" command saved the output of
 # the function to the experiment directory.
 #
-if [ $retval -eq 0 ]; then
+if [[ $retval -eq 0 ]]; then
   mv "${log_fp}" "$exptdir"
 #
 # If the call to the generate_FV3SAR_wflow function above was not suc-
