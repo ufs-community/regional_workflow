@@ -1,0 +1,65 @@
++ source ./machine-setup.sh
+++ pwd
++ cwd=/work/noaa/fv3-cam/jaravequ/regional_workflow-1/sorc/regional_utils.fd/sorc
++ '[' '!' -d ../exec ']'
++ module purge
+++ /apps/lmod-8.1/lmod-8.1/libexec/lmod bash purge
++ eval 'MODULEPATH=/apps/contrib/NCEPLIBS/orion/modulefiles:/apps/modulefiles/core:/apps/contrib/NCEPLIBS/lib/modulefiles;' export 'MODULEPATH;' '_ModuleTable001_=X01vZHVsZVRhYmxlXz17WyJNVHZlcnNpb24iXT0zLFsiY19yZWJ1aWxkVGltZSJdPTcyMDAsWyJjX3Nob3J0VGltZSJdPTEuMjc3MjIxOTE4MTA2MSxkZXB0aFQ9e30sZmFtaWx5PXt9LG1UPXt9LG1wYXRoQT17Ii9hcHBzL2NvbnRyaWIvTkNFUExJQlMvb3Jpb24vbW9kdWxlZmlsZXMiLCIvYXBwcy9tb2R1bGVmaWxlcy9jb3JlIiwiL2FwcHMvY29udHJpYi9OQ0VQTElCUy9saWIvbW9kdWxlZmlsZXMiLH0sWyJzeXN0ZW1CYXNlTVBBVEgiXT0iL2FwcHMvbW9kdWxlZmlsZXMvY29yZSIsfQ==;' export '_ModuleTable001_;' '_ModuleTable_Sz_=1;' export '_ModuleTable_Sz_;'
+++ MODULEPATH=/apps/contrib/NCEPLIBS/orion/modulefiles:/apps/modulefiles/core:/apps/contrib/NCEPLIBS/lib/modulefiles
+++ export MODULEPATH
+++ _ModuleTable001_=X01vZHVsZVRhYmxlXz17WyJNVHZlcnNpb24iXT0zLFsiY19yZWJ1aWxkVGltZSJdPTcyMDAsWyJjX3Nob3J0VGltZSJdPTEuMjc3MjIxOTE4MTA2MSxkZXB0aFQ9e30sZmFtaWx5PXt9LG1UPXt9LG1wYXRoQT17Ii9hcHBzL2NvbnRyaWIvTkNFUExJQlMvb3Jpb24vbW9kdWxlZmlsZXMiLCIvYXBwcy9tb2R1bGVmaWxlcy9jb3JlIiwiL2FwcHMvY29udHJpYi9OQ0VQTElCUy9saWIvbW9kdWxlZmlsZXMiLH0sWyJzeXN0ZW1CYXNlTVBBVEgiXT0iL2FwcHMvbW9kdWxlZmlsZXMvY29yZSIsfQ==
+++ export _ModuleTable001_
+++ _ModuleTable_Sz_=1
+++ export _ModuleTable_Sz_
+++ : -s sh
++ eval
++ USE_PREINST_LIBS=true
++ '[' true = true ']'
++ source ../modulefiles/modulefile.regional_grid.orion
++ module list
+++ /apps/lmod-8.1/lmod-8.1/libexec/lmod bash list
+
+Currently Loaded Modules:
+  1) munge/0.5.13   2) slurm/19.05.3-2   3) impi/2018.4   4) intel/2018.4   5) netcdf/4.7.2   6) hdf5/1.10.5
+
+ 
+
++ eval 'MODULEPATH=/apps/modulefiles/compilers/intel-2018:/apps/contrib/NCEPLIBS/orion/modulefiles:/apps/modulefiles/core:/apps/contrib/NCEPLIBS/lib/modulefiles;' export 'MODULEPATH;' '_ModuleTable001_=X01vZHVsZVRhYmxlXz17WyJNVHZlcnNpb24iXT0zLFsiY19yZWJ1aWxkVGltZSJdPTcyMDAsWyJjX3Nob3J0VGltZSJdPTEuMjc3MjIxOTE4MTA2MSxkZXB0aFQ9e30sZmFtaWx5PXtbImNvbXBpbGVyIl09ImludGVsIixbIm1waSJdPSJpbXBpIix9LG1UPXtoZGY1PXtbImZuIl09Ii9hcHBzL21vZHVsZWZpbGVzL2NvbXBpbGVycy9pbnRlbC0yMDE4L2hkZjUvMS4xMC41IixbImZ1bGxOYW1lIl09ImhkZjUvMS4xMC41IixbImxvYWRPcmRlciJdPTYscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iaGRmNS8xLjEwLjUiLH0saW1waT17WyJmbiJdPSIvYXBwcy9tb2R1bGVmaWxlcy9jb3JlL2ltcGkvMjAxOC40IixbImZ1;' export '_ModuleTable001_;' '_ModuleTable002_=bGxOYW1lIl09ImltcGkvMjAxOC40IixbImxvYWRPcmRlciJdPTMscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iaW1waS8yMDE4LjQiLH0saW50ZWw9e1siZm4iXT0iL2FwcHMvbW9kdWxlZmlsZXMvY29yZS9pbnRlbC8yMDE4LjQiLFsiZnVsbE5hbWUiXT0iaW50ZWwvMjAxOC40IixbImxvYWRPcmRlciJdPTQscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MSxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iaW50ZWwvMjAxOC40Iix9LG11bmdlPXtbImZuIl09Ii9hcHBzL21vZHVsZWZpbGVzL2NvcmUvbXVuZ2UvMC41LjEzIixbImZ1bGxOYW1lIl09Im11bmdlLzAuNS4xMyIsWyJsb2FkT3JkZXIiXT0xLHBy;' export '_ModuleTable002_;' '_ModuleTable003_=b3BUPXt9LFsic3RhY2tEZXB0aCJdPTIsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09Im11bmdlIix9LG5ldGNkZj17WyJmbiJdPSIvYXBwcy9tb2R1bGVmaWxlcy9jb21waWxlcnMvaW50ZWwtMjAxOC9uZXRjZGYvNC43LjIiLFsiZnVsbE5hbWUiXT0ibmV0Y2RmLzQuNy4yIixbImxvYWRPcmRlciJdPTUscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ibmV0Y2RmLzQuNy4yIix9LHNsdXJtPXtbImZuIl09Ii9hcHBzL21vZHVsZWZpbGVzL2NvcmUvc2x1cm0vMTkuMDUuMy0yIixbImZ1bGxOYW1lIl09InNsdXJtLzE5LjA1LjMtMiIsWyJsb2FkT3JkZXIiXT0yLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTEs;' export '_ModuleTable003_;' '_ModuleTable004_=WyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09InNsdXJtIix9LH0sbXBhdGhBPXsiL2FwcHMvbW9kdWxlZmlsZXMvY29tcGlsZXJzL2ludGVsLTIwMTgiLCIvYXBwcy9jb250cmliL05DRVBMSUJTL29yaW9uL21vZHVsZWZpbGVzIiwiL2FwcHMvbW9kdWxlZmlsZXMvY29yZSIsIi9hcHBzL2NvbnRyaWIvTkNFUExJQlMvbGliL21vZHVsZWZpbGVzIix9LFsic3lzdGVtQmFzZU1QQVRIIl09Ii9hcHBzL21vZHVsZWZpbGVzL2NvcmUiLH0=;' export '_ModuleTable004_;' '_ModuleTable_Sz_=4;' export '_ModuleTable_Sz_;'
+++ MODULEPATH=/apps/modulefiles/compilers/intel-2018:/apps/contrib/NCEPLIBS/orion/modulefiles:/apps/modulefiles/core:/apps/contrib/NCEPLIBS/lib/modulefiles
+++ export MODULEPATH
+++ _ModuleTable001_=X01vZHVsZVRhYmxlXz17WyJNVHZlcnNpb24iXT0zLFsiY19yZWJ1aWxkVGltZSJdPTcyMDAsWyJjX3Nob3J0VGltZSJdPTEuMjc3MjIxOTE4MTA2MSxkZXB0aFQ9e30sZmFtaWx5PXtbImNvbXBpbGVyIl09ImludGVsIixbIm1waSJdPSJpbXBpIix9LG1UPXtoZGY1PXtbImZuIl09Ii9hcHBzL21vZHVsZWZpbGVzL2NvbXBpbGVycy9pbnRlbC0yMDE4L2hkZjUvMS4xMC41IixbImZ1bGxOYW1lIl09ImhkZjUvMS4xMC41IixbImxvYWRPcmRlciJdPTYscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iaGRmNS8xLjEwLjUiLH0saW1waT17WyJmbiJdPSIvYXBwcy9tb2R1bGVmaWxlcy9jb3JlL2ltcGkvMjAxOC40IixbImZ1
+++ export _ModuleTable001_
+++ _ModuleTable002_=bGxOYW1lIl09ImltcGkvMjAxOC40IixbImxvYWRPcmRlciJdPTMscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iaW1waS8yMDE4LjQiLH0saW50ZWw9e1siZm4iXT0iL2FwcHMvbW9kdWxlZmlsZXMvY29yZS9pbnRlbC8yMDE4LjQiLFsiZnVsbE5hbWUiXT0iaW50ZWwvMjAxOC40IixbImxvYWRPcmRlciJdPTQscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MSxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0iaW50ZWwvMjAxOC40Iix9LG11bmdlPXtbImZuIl09Ii9hcHBzL21vZHVsZWZpbGVzL2NvcmUvbXVuZ2UvMC41LjEzIixbImZ1bGxOYW1lIl09Im11bmdlLzAuNS4xMyIsWyJsb2FkT3JkZXIiXT0xLHBy
+++ export _ModuleTable002_
+++ _ModuleTable003_=b3BUPXt9LFsic3RhY2tEZXB0aCJdPTIsWyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09Im11bmdlIix9LG5ldGNkZj17WyJmbiJdPSIvYXBwcy9tb2R1bGVmaWxlcy9jb21waWxlcnMvaW50ZWwtMjAxOC9uZXRjZGYvNC43LjIiLFsiZnVsbE5hbWUiXT0ibmV0Y2RmLzQuNy4yIixbImxvYWRPcmRlciJdPTUscHJvcFQ9e30sWyJzdGFja0RlcHRoIl09MCxbInN0YXR1cyJdPSJhY3RpdmUiLFsidXNlck5hbWUiXT0ibmV0Y2RmLzQuNy4yIix9LHNsdXJtPXtbImZuIl09Ii9hcHBzL21vZHVsZWZpbGVzL2NvcmUvc2x1cm0vMTkuMDUuMy0yIixbImZ1bGxOYW1lIl09InNsdXJtLzE5LjA1LjMtMiIsWyJsb2FkT3JkZXIiXT0yLHByb3BUPXt9LFsic3RhY2tEZXB0aCJdPTEs
+++ export _ModuleTable003_
+++ _ModuleTable004_=WyJzdGF0dXMiXT0iYWN0aXZlIixbInVzZXJOYW1lIl09InNsdXJtIix9LH0sbXBhdGhBPXsiL2FwcHMvbW9kdWxlZmlsZXMvY29tcGlsZXJzL2ludGVsLTIwMTgiLCIvYXBwcy9jb250cmliL05DRVBMSUJTL29yaW9uL21vZHVsZWZpbGVzIiwiL2FwcHMvbW9kdWxlZmlsZXMvY29yZSIsIi9hcHBzL2NvbnRyaWIvTkNFUExJQlMvbGliL21vZHVsZWZpbGVzIix9LFsic3lzdGVtQmFzZU1QQVRIIl09Ii9hcHBzL21vZHVsZWZpbGVzL2NvcmUiLH0=
+++ export _ModuleTable004_
+++ _ModuleTable_Sz_=4
+++ export _ModuleTable_Sz_
+++ : -s sh
++ eval
++ export INCS=-I/apps/intel-2018/netcdf-4.7.2/include
++ INCS=-I/apps/intel-2018/netcdf-4.7.2/include
++ export 'LIBS=-L/apps/intel-2018/netcdf-4.7.2/lib -lnetcdf -lnetcdff -L/apps/hdf5-1.10.5/lib -lhdf5 -lhdf5_fortran'
++ LIBS='-L/apps/intel-2018/netcdf-4.7.2/lib -lnetcdf -lnetcdff -L/apps/hdf5-1.10.5/lib -lhdf5 -lhdf5_fortran'
++ cd ./regional_grid.fd
++ make clean
+rm -f *.o *.mod regional_grid
++ make
+ifort -O2 -g -I/apps/intel-2018/netcdf-4.7.2/include -c pkind.f90
+ifort -O2 -g -I/apps/intel-2018/netcdf-4.7.2/include -c pietc.f90
+ifort -O2 -g -I/apps/intel-2018/netcdf-4.7.2/include -c pmat.f90
+ifort -O2 -g -I/apps/intel-2018/netcdf-4.7.2/include -c pmat4.f90
+ifort -O2 -g -I/apps/intel-2018/netcdf-4.7.2/include -c pmat5.f90
+ifort -O2 -g -I/apps/intel-2018/netcdf-4.7.2/include -c psym2.f90
+ifort -O2 -g -I/apps/intel-2018/netcdf-4.7.2/include -c gen_schmidt.f90
+ifort -O2 -g -I/apps/intel-2018/netcdf-4.7.2/include -c hgrid_ak.f90
+ifort -O2 -g -I/apps/intel-2018/netcdf-4.7.2/include -c regional_grid.f90
+ifort -O2 -g -I/apps/intel-2018/netcdf-4.7.2/include -L/apps/intel-2018/netcdf-4.7.2/lib -lnetcdf -lnetcdff -L/apps/hdf5-1.10.5/lib -lhdf5 -lhdf5_fortran -o regional_grid pkind.o pietc.o pmat.o pmat4.o pmat5.o psym2.o gen_schmidt.o hgrid_ak.o regional_grid.o
++ make install
+cp regional_grid ../../exec/.
++ echo
+
++ echo DONE BUILDING regional_grid
+DONE BUILDING regional_grid

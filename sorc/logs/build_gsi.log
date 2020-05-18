@@ -1,0 +1,12 @@
++ source ./machine-setup.sh
+++ pwd
++ cwd=/work/noaa/fv3-cam/jaravequ/regional_workflow-1/sorc
++ USE_PREINST_LIBS=true
++ '[' true = true ']'
++ export MOD_PATH=/scratch3/NCEPDEV/nwprod/lib/modulefiles
++ MOD_PATH=/scratch3/NCEPDEV/nwprod/lib/modulefiles
++ gsitarget=orion
++ [[ orion == wcoss_cray ]]
++ '[' '!' -d ../exec ']'
++ cd regional_gsi.fd/ush/
+./build_gsi.sh: line 22: cd: regional_gsi.fd/ush/: No such file or directory
