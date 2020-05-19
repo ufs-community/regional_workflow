@@ -45,11 +45,11 @@ cp ${PARMfv3}/params_grib2_tbl_new      ./params_grib2_tbl_new
 
 # Run the post processor
 export pgm=regional_post.x
-#JAA . prep_step
+. prep_step
 
-#JAA startmsg
+startmsg
 ${APRUNC} ${POSTGPEXEC} < itag > $pgmout 2> err
-#JAA export err=$?; err_chk
+export err=$?; err_chk
 export err=$? 
 
 # Run wgrib2
