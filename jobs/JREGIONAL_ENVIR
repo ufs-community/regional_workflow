@@ -54,20 +54,20 @@ export NDATE=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/ndate
 export NHOUR=/scratch2/NCEPDEV/nwprod/NCEPLIBS/utils/prod_util.v1.1.0/exec/nhour
 export HOMEfv3=${HOMEfv3:-/scratch2/NCEPDEV/fv3-cam/$USER/regional_workflow}
 
-elif [ ${machine} = "theia" ]
+elif [ ${machine} = "orion" ]
 then
 
-export COMINgdas=${COMINgdas:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
-export GBCOMINgfs=${GBCOMINgfs:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
-export COMINgfs=${COMINgfs:-/scratch3/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS}
-   
-export PTMP=${PTMP:-/scratch4/NCEPDEV/stmp3/${USER}}
-export STMP=${STMP:-/scratch4/NCEPDEV/stmp3/${USER}}
+export COMINgdas=${COMINgdas:-/work/noaa/fv3-cam/jaravequ/COMINgfs}
+export GBCOMINgfs=${GBCOMINgfs:-/work/noaa/fv3-cam/jaravequ/datain}
+export COMINgfs=${COMINgfs:-/work/noaa/fv3-cam/jaravequ/COMINgfs}
+
+export PTMP=${PTMP:-/work/noaa/fv3-cam/${USER}}
+export STMP=${STMP:-/work/noaa/fv3-cam/${USER}}
 export rzdmuser=mpyle
 
-export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate
-export NHOUR=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/nhour
-export HOMEfv3=${HOMEfv3:-/scratch4/NCEPDEV/fv3-cam/noscrub/$USER/regional_workflow}
+export NDATE=/apps/contrib/NCEPLIBS/orion/utils/prod_util.v1.2.0/exec/ndate
+export NHOUR=/apps/contrib/NCEPLIBS/orion/utils/prod_util.v1.2.0/exec/nhour
+export HOMEfv3=${HOMEfv3
 
 else
 

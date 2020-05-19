@@ -1,5 +1,5 @@
 valid_vals_VERBOSE=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
-valid_vals_MACHINE=("WCOSS_C" "WCOSS" "DELL" "THEIA" "JET" "ODIN" "CHEYENNE")
+valid_vals_MACHINE=("WCOSS_C" "WCOSS" "DELL" "THEIA" "ORION" "JET" "ODIN" "CHEYENNE")
 valid_vals_predef_domain=("RAP" "HRRR" "EMCCONUS")
 valid_vals_CCPP=("true" "false")
 valid_vals_CCPP_phys_suite=("GFS" "GSD")

@@ -40,6 +40,21 @@ elif [[ -d /scratch1/NCEPDEV ]] ; then
     module purge
     module use /scratch2/NCEPDEV/nwprod/NCEPLIBS/modulefiles
     MOD_PATH=/scratch2/NCEPDEV/nwprod/NCEPLIBS/modulefiles
+elif [[ -d /apps/contrib/NCEPLIBS ]] ; then
+    # We are on MSU orion 
+    if ( ! eval module help > /dev/null 2>&1 ) ; then
+	echo load the module command 1>&2
+        source /apps/lmod/init/$__ms_shell
+    fi
+    target=orion
+    module purge
+    module load contrib
+    module use /apps/contrib/NCEPLIBS/orion/modulefiles 
+    MOD_PATH=/apps/contrib/NCEPLIBS/orion/modulefiles 
+    export CMAKE_C_COMPILER=mpiicc
+    export CMAKE_CXX_COMPILER=mpiicpc
+    export CMAKE_Fortran_COMPILER=mpiifort
+    
 elif [[ -d /gpfs/hps && -e /etc/SuSE-release ]] ; then
     # We are on NOAA Luna or Surge
     if ( ! eval module help > /dev/null 2>&1 ) ; then

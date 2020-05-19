@@ -6,7 +6,7 @@ cwd=`pwd`
 
 USE_PREINST_LIBS=${USE_PREINST_LIBS:-"true"}
 if [ $USE_PREINST_LIBS = true ]; then
-  export MOD_PATH=/scratch3/NCEPDEV/nwprod/lib/modulefiles
+  export MOD_PATH=/apps/contrib/NCEPLIBS/orion/modulefiles
 else
   export MOD_PATH=${cwd}/lib/modulefiles
 fi
@@ -17,6 +17,7 @@ if [ ! -d "../exec" ]; then
 fi
 
 if [ $target = hera ]; then target=hera.intel ; fi
+if [ $target = orion ]; then target=orion ; fi
 
 cd regional_forecast.fd/
 FV3=$( pwd -P )/FV3
