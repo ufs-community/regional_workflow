@@ -329,7 +329,7 @@ expt_title="desc_str"
 #
 #-----------------------------------------------------------------------
 #
-CCPP="true"
+CCPP="false"
 #
 #-----------------------------------------------------------------------
 #
@@ -636,8 +636,8 @@ VERBOSE="true"
 #
 #-----------------------------------------------------------------------
 #
-layout_x="24"
-layout_y="24"
+layout_x="20"
+layout_y="20"
 #
 #-----------------------------------------------------------------------
 #
@@ -788,9 +788,9 @@ PARMfv3=$HOMEfv3/parm
 EXECfv3=$HOMEfv3/exec
 USHfv3=$HOMEfv3/ush
 
-dom="brzse"
+dom="conus"
 FIXfv3=$HOMEfv3/fix
-FIXsar=$HOMEfv3/../dataout/BrSE-${dom}
+FIXsar=$FIXfv3/fix_sar/${dom}
 FIXam=$FIXfv3/fix_am
 FIXco2=$FIXam/fix_co2_proj
 
@@ -800,7 +800,7 @@ GESROOT_HOLD=${mainroot}/${comdir}/${USER}/nwges/${RUN}.hold
 
 NHRSguess=06     #-- Forecast length for 1st guess generation
 NHRSda=01        #-- Forecast length for cycled DA
-NHRS=24          #-- Forecast length for free fcst
+NHRS=60          #-- Forecast length for free fcst
 
 jlogfile=${mainroot}/${tmpdir}/${USER}/jlogfile.${RUN}.jlog
 
@@ -832,7 +832,7 @@ task_layout_x=16
 task_layout_y=48
 npx=1921
 npy=1297
-target_lat=38.5 
+target_lat=38.5
 target_lon=-97.5
 
 ## model config items
