@@ -140,7 +140,6 @@ case "$MACHINE" in
 #
 "STAMPEDE")
   APRUN="ibrun"
-  module load python3
   ;;
 #
 esac

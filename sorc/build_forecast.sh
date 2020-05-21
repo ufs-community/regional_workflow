@@ -56,7 +56,13 @@ cd tests/
 if [ $CCPP  = true ] || [ $CCPP = TRUE ] ; then
 #EMC  ./compile.sh "$FV3" "$target" "NCEP64LEV=Y HYDRO=N 32BIT=Y CCPP=Y STATIC=Y SUITES=FV3_GFS_2017_gfdlmp_regional" 1
   #./compile.sh "$FV3" "$target" "CCPP=Y STATIC=N 32BIT=Y REPRO=Y"
-  ./compile.sh ${FV3} "$target" "CCPP=Y HYBRID=N STATIC=Y SUITES=FV3_GFS_v15_thompson_mynn,FV3_GSD_v0,FV3_GSD_noah 32BIT=Y REPRO=Y INTEL18=Y" 32bit_static YES NO
+  #./compile.sh ${FV3} "$target" "CCPP=Y HYBRID=N STATIC=Y SUITES=FV3_GFS_v15_thompson_mynn,FV3_GSD_v0,FV3_GSD_noah 32BIT=Y REPRO=Y INTEL18=Y" 32bit_static YES NO
+
+  suites=(FV3_GFS_v15_thompson_mynn FV3_GSD_v0 FV3_GSD_noah FV3_SAR_GSD FV3_GFS_2017_gfdlmp_regional)
+
+  for suite in ${suites[@]}; do
+      compile.sh ${FV3} "$target" "CCPP=Y HYBRID=N STATIC=Y SUITES=${suite} 32BIT=Y REPRO=Y INTEL18=N" ${suite##FV3_} YES NO
+  done
 
 else
   ./compile.sh "$FV3" "$target" "NCEP64LEV=Y HYDRO=N 32BIT=Y" 1
