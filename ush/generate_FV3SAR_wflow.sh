@@ -626,10 +626,10 @@ done
 # (FV3_NML_BASE_FP) and this step removed.
 #
 settings="$settings
-    'FNZORC': \"igbp\",
-    'FNTSFA': \"\",
-    'FNACNA': \"\",
-    'FNSNOA': \"\",
+#    'FNZORC': \"igbp\",
+#    'FNTSFA': \"\",
+#    'FNACNA': \"\",
+#    'FNSNOA': \"\",
   }"
 #
 # For debugging purposes, print out what "settings" has been set to.

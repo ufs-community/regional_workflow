@@ -97,10 +97,9 @@ phys_suite=""
 
 case "${CCPP_PHYS_SUITE}" in
 
-"FV3_GFS_2017_gfdlmp")
+"FV3_GFS_2017_gfdlmp" | "FV3_GFS_2017_gfdlmp_regional" )
   phys_suite="GFS"
   ;;
-
 "FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" )
   phys_suite="GSD"
   ;;
@@ -113,7 +112,6 @@ case "${CCPP_PHYS_SUITE}" in
 "FV3_GFS_v16beta")
   phys_suite="v16beta"
   ;;
-
 *)
   print_err_msg_exit "\
 Physics-suite-dependent namelist variables have not yet been specified 
@@ -245,6 +243,7 @@ replace_vgtyp=""
 replace_sotyp=""
 replace_vgfrc=""
 tg3_from_soil=""
+convert_nst=""
 
 
 case "${EXTRN_MDL_NAME_ICS}" in
@@ -267,6 +266,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
   replace_sotyp=True
   replace_vgfrc=True
   tg3_from_soil=False
+  convert_nst=False
 
   ;;
 
@@ -292,6 +292,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
 #
     if [ "${USE_CCPP}" = "TRUE" ]; then
       if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
@@ -326,6 +327,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
   replace_sotyp=True
   replace_vgfrc=True
   tg3_from_soil=False
+  convert_nst=True
 
   ;;
 
@@ -374,6 +376,7 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
   replace_sotyp=False
   replace_vgfrc=False
   tg3_from_soil=True
+  convert_nst=False
 
   ;;
 
@@ -411,6 +414,7 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
   replace_sotyp=False
   replace_vgfrc=False
   tg3_from_soil=True
+  convert_nst=False
 
   ;;
 
@@ -527,7 +531,7 @@ settings="
  'cycle_hour': $((10#$hh)),
  'convert_atm': True,
  'convert_sfc': True,
- 'convert_nst': False,
+ 'convert_nst': ${convert_nst},
  'regional': 1,
  'halo_bndy': ${NH4},
  'input_type': ${input_type},

@@ -1906,6 +1906,66 @@ NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "OZONE_PARAM_NO_CCPP" "valid_vals_OZONE_PARAM_NO_CCPP"
+
+
+
+
+
+
+#
+#-----------------------------------------------------------------------
+#
+# This if-statement is a temporary fix that makes corrections to the suite 
+# definition file for the "FV3_GFS_2017_gfdlmp_regional" physics suite 
+# that EMC uses.  The corrections are:
+#
+# 1) Add a "fast_physics" group name to the beginning of the file.
+# 2) Replace the ozphys parameterization with the ozphys_2015 parameterization.
+#
+# Note that this must be done before the call to the function set_ozone_param 
+# below because that function reads in the ozone parameterization in the
+# suite definition file to set the ozone parameterization being used; 
+# thus, the suite definition file must have the correct ozone parameterization
+# specified before the call to set_ozone_param.
+#
+# IMPORTANT:
+# This if-statement must be removed once these corrections are made to
+# the suite definition file in the dtc/develop branch of the NCAR fork
+# of the fv3atm repository.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${USE_CCPP}" = "TRUE" ] && \
+   [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ]; then
+
+  grep "fast_physics" "${CCPP_PHYS_SUITE_IN_CCPP_FP}" || { \
+    fast_phys_group='\
+  <group name=\"fast_physics\">\
+    <subcycle loop=\"1\">\
+      <scheme>fv_sat_adj</scheme>\
+    </subcycle>\
+  </group>' ;
+    sed -i -r "5i${fast_phys_group}" "${CCPP_PHYS_SUITE_IN_CCPP_FP}" || \
+      print_err_msg_exit "\
+Attempt to insert the \"fast_physics\" group into the suite definition
+file (CCPP_PHYS_SUITE_IN_CCPP_FP) failed:
+  CCPP_PHYS_SUITE_IN_CCPP_FP = \"${CCPP_PHYS_SUITE_IN_CCPP_FP}\"" ;
+  }
+
+  grep "<scheme>ozphys</scheme>" "${CCPP_PHYS_SUITE_IN_CCPP_FP}" && { \
+    sed -i "s/ozphys/ozphys_2015/g" "${CCPP_PHYS_SUITE_IN_CCPP_FP}" || \
+      print_err_msg_exit "\
+Attempt to replace the \"ozphys\" scheme with the \"ozphys_2015\" scheme
+in the suite definition file (CCPP_PHYS_SUITE_IN_CCPP_FP) failed:
+  CCPP_PHYS_SUITE_IN_CCPP_FP = \"${CCPP_PHYS_SUITE_IN_CCPP_FP}\"" ;
+  }
+
+fi
+
+
+
+
+
 #
 #-----------------------------------------------------------------------
 #

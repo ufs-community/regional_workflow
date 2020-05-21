@@ -27,7 +27,7 @@ USE_CRON_TO_RELAUNCH="TRUE"
 CRON_RELAUNCH_INTVL_MNTS="02"
 
 
-QUEUE_DEFAULT="debug"
+QUEUE_DEFAULT="batch"
 QUEUE_HPSS="service"
 QUEUE_FCST="batch"
 
@@ -41,7 +41,7 @@ GRID_GEN_METHOD="GFDLgrid"
 
 QUILTING="TRUE"
 USE_CCPP="TRUE"
-CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp"
+CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp_regional"
 FCST_LEN_HRS="06"
 LBC_UPDATE_INTVL_HRS="6"
 
@@ -61,14 +61,16 @@ EXTRN_MDL_NAME_LBCS="FV3GFS"
 #RUN_TASK_MAKE_OROG="FALSE"
 #RUN_TASK_MAKE_SFC_CLIMO="FALSE"
 
+#On Hera:
 COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"
 STMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/stmp"
-RUN="an_experiment"
+RUN="GRID:${EMC_GRID_NAME}__SUITE:${CCPP_PHYS_SUITE}"
 PTMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"
 
-#On Jet
+#On Jet:
 #COMINgfs="/lfs1/projects/hwrf-data/hafs-input/COMGFS"
 #STMP="/lfs3/BMC/wrfruc/beck/NCO_dirs/stmp"
+#RUN="GRID:${EMC_GRID_NAME}__SUITE:${CCPP_PHYS_SUITE}"
 #PTMP="/lfs3/BMC/wrfruc/beck/NCO_dirs/ptmp"
 
 #

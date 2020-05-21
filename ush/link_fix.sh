@@ -457,15 +457,15 @@ Cannot create symlink because target file (target) does not exist:
 # In order to be able to specify the surface climatology file names in 
 # the forecast model's namelist file, in the FIXsar directory a symlink
 # must be created for each surface climatology field that has "tile1" in
-# its name (and no "halo") and which points to the "tile7" file (again
-# without "halo" in its name).
+# its name (and no "halo") and which points to the corresponding "tile7.halo0" 
+# file.
 #
     tmp=( "${SFC_CLIMO_FIELDS[@]/#/${cres}.}" )
-    fns_sfc_climo_tile7_no_halo_in_fn=( "${tmp[@]/%/.tile${TILE_RGNL}.nc}" )
+    fns_sfc_climo_tile7_halo0_in_fn=( "${tmp[@]/%/.tile${TILE_RGNL}.halo${NH0}.nc}" )
     fns_sfc_climo_tile1_no_halo_in_fn=( "${tmp[@]/%/.tile1.nc}" )
 
     for (( i=0; i<${num_fields}; i++ )); do
-      target="${fns_sfc_climo_tile7_no_halo_in_fn[$i]}"
+      target="${fns_sfc_climo_tile7_halo0_in_fn[$i]}"
       symlink="${fns_sfc_climo_tile1_no_halo_in_fn[$i]}"
       if [ -f "$target" ]; then
         ln_vrfy -sf $target $symlink

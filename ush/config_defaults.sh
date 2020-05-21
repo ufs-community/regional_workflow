@@ -1046,7 +1046,7 @@ NNODES_GET_EXTRN_ICS="1"
 NNODES_GET_EXTRN_LBCS="1"
 NNODES_MAKE_ICS="4"
 NNODES_MAKE_LBCS="4"
-NNODES_RUN_FCST=""  # This is calculated below.
+NNODES_RUN_FCST=""  # This is calculated in the workflow generation scripts, so no need to set here.
 NNODES_RUN_POST="2"
 #
 # Number of MPI processes per node.
