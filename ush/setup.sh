@@ -614,7 +614,7 @@ HH_FIRST_CYCL=${CYCL_HRS[0]}
 # System directory from which to copy necessary fixed files for UPP.
 #
 # FIXgsd:
-# System directory from which to copy GSD physics-related fixed files 
+# System directory from which to copy GSD physics-associated fixed files 
 # needed when running CCPP.
 #
 #-----------------------------------------------------------------------
@@ -800,21 +800,21 @@ fi
 #-----------------------------------------------------------------------
 #
 # Check whether the forecast length (FCST_LEN_HRS) is evenly divisible
-# by the BC update interval (LBC_UPDATE_INTVL_HRS).  If not, print out a
+# by the BC update interval (LBC_SPEC_INTVL_HRS).  If not, print out a
 # warning and exit this script.  If so, generate an array of forecast
 # hours at which the boundary values will be updated.
 #
 #-----------------------------------------------------------------------
 #
-rem=$(( ${FCST_LEN_HRS}%${LBC_UPDATE_INTVL_HRS} ))
+rem=$(( ${FCST_LEN_HRS}%${LBC_SPEC_INTVL_HRS} ))
 
 if [ "$rem" -ne "0" ]; then
   print_err_msg_exit "\
 The forecast length (FCST_LEN_HRS) is not evenly divisible by the lateral
-boundary conditions update interval (LBC_UPDATE_INTVL_HRS):
-  FCST_LEN_HRS = $FCST_LEN_HRS
-  LBC_UPDATE_INTVL_HRS = $LBC_UPDATE_INTVL_HRS
-  rem = FCST_LEN_HRS%%LBC_UPDATE_INTVL_HRS = $rem"
+boundary conditions update interval (LBC_SPEC_INTVL_HRS):
+  FCST_LEN_HRS = ${FCST_LEN_HRS}
+  LBC_SPEC_INTVL_HRS = ${LBC_SPEC_INTVL_HRS}
+  rem = FCST_LEN_HRS%%LBC_SPEC_INTVL_HRS = $rem"
 fi
 #
 #-----------------------------------------------------------------------
@@ -825,9 +825,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-LBC_UPDATE_FCST_HRS=($( seq ${LBC_UPDATE_INTVL_HRS} \
-                            ${LBC_UPDATE_INTVL_HRS} \
-                            ${FCST_LEN_HRS} ))
+LBC_SPEC_FCST_HRS=($( seq ${LBC_SPEC_INTVL_HRS} ${LBC_SPEC_INTVL_HRS} \
+                          ${FCST_LEN_HRS} ))
 #
 #-----------------------------------------------------------------------
 #
@@ -1924,9 +1923,9 @@ check_var_valid_value "OZONE_PARAM_NO_CCPP" "valid_vals_OZONE_PARAM_NO_CCPP"
 #
 # Note that this must be done before the call to the function set_ozone_param 
 # below because that function reads in the ozone parameterization in the
-# suite definition file to set the ozone parameterization being used; 
-# thus, the suite definition file must have the correct ozone parameterization
-# specified before the call to set_ozone_param.
+# suite definition file in order to set the ozone parameterization being 
+# used in the experiment; thus, the suite definition file must have the 
+# correct ozone parameterization specified before the call to set_ozone_param.
 #
 # IMPORTANT:
 # This if-statement must be removed once these corrections are made to
@@ -1970,7 +1969,7 @@ fi
 #-----------------------------------------------------------------------
 #
 # Call the function that sets the ozone parameterization being used and
-# modifies related parameters accordingly. 
+# modifies associated parameters accordingly. 
 #
 #-----------------------------------------------------------------------
 #
@@ -2508,11 +2507,11 @@ EXTRN_MDL_LBCS_OFFSET_HRS="${EXTRN_MDL_LBCS_OFFSET_HRS}"
 #-----------------------------------------------------------------------
 #
 # Boundary condition update times (in units of forecast hours).  Note that
-# LBC_UPDATE_FCST_HRS is an array, even if it has only one element.
+# LBC_SPEC_FCST_HRS is an array, even if it has only one element.
 #
 #-----------------------------------------------------------------------
 #
-LBC_UPDATE_FCST_HRS=(${LBC_UPDATE_FCST_HRS[@]})
+LBC_SPEC_FCST_HRS=(${LBC_SPEC_FCST_HRS[@]})
 #
 #-----------------------------------------------------------------------
 #

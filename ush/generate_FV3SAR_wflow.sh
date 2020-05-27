@@ -570,7 +570,7 @@ settings="\
     'npx': $npx,
     'npy': $npy,
     'layout': [${LAYOUT_X}, ${LAYOUT_Y}],
-    'bc_update_interval': ${LBC_UPDATE_INTVL_HRS},
+    'bc_update_interval': ${LBC_SPEC_INTVL_HRS},
   }
 'gfs_physics_nml': {
     'lsoil': ${lsoil:-null},
