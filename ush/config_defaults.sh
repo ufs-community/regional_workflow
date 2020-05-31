@@ -169,7 +169,7 @@ EXPT_SUBDIR=""
 # the cycle date (cdate) is given by cdate="${yyyymmdd}${hh}"], the 
 # directory in which the aforementioned files will be located is:
 #
-#   $STMP/tmpnwprd/${EMC_GRID_NAME}/$cdate
+#   $STMP/tmpnwprd/$RUN/$cdate
 #
 # NET, envir, RUN:
 # Variables used in forming the path to the directory that will contain
