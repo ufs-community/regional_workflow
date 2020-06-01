@@ -1,29 +1,19 @@
 #
-# MACHINE will be set by the workflow launch script (launch_FV3SAR_-
-# wflow.sh) to value passed in as an argument to that script.
+# The values of the variables MACHINE, ACCOUNT, and EXPT_SUBDIR are required
+# inputs to the script that launces the WE2E test experiments.  That script 
+# will use those inputs to fill in the values of these variables below.
 #
 MACHINE=""
-#
-# ACCOUNT will be set by the workflow launch script (launch_FV3SAR_-
-# wflow.sh) to value passed in as an argument to that script.
-#
 ACCOUNT=""
-#
-# EXPT_SUBDIR will be set by the workflow launch script (launch_FV3SAR_-
-# wflow.sh) to a value obtained from the name of this file.
-#
 EXPT_SUBDIR=""
 #
-# USE_CRON_TO_RELAUNCH may be reset by the workflow launch script
-# (launch_FV3SAR_wflow.sh) to value passed in as an argument to that
-# script, but in case it is not, we give it a default value here.
+# The values of the variables USE_CRON_TO_RELAUNCH and CRON_RELAUNCH_INTVL_MNTS
+# are optional inputs to the script that launces the WE2E test experiments.  
+# If one or both of these values are specified, then that script will 
+# replace the default values of these variables below with those values.
+# Otherwise, it will keep the default values.
 #
 USE_CRON_TO_RELAUNCH="TRUE"
-#
-# CRON_RELAUNCH_INTVL_MNTS may be reset by the workflow launch script
-# (launch_FV3SAR_wflow.sh) to value passed in as an argument to that
-# script, but in case it is not, we give it a default value here.
-#
 CRON_RELAUNCH_INTVL_MNTS="02"
 
 
@@ -100,20 +90,14 @@ EXTRN_MDL_NAME_LBCS="FV3GFS"
 #
 #   $PTMP/com/$NET/$RUN/$RUN.$yyyymmdd/$hh
 #
-# Note that we obtain the name of the current test from the name of this
-# configuration file, which is assumed to be in the form
+# Note that by the time this file is sourced by the experiment generation
+# script, the script that launces the WE2E test experiments will have 
+# filled in the value of the variable EXPT_SUBDIR above (which contains 
+# the name of the experiment).  Thus, below, we can assume that EXPT_SUBDIR
+# has a valid value and use it to set RUN and envir.
 #
-#   config.${test_name}.sh
-#
-# where test_name conains the name of the test.  The code below effectively
-# sets RUN to ${test_name}.  It then sets envir to RUN.
-#
-RUN=$( readlink -f "${BASH_SOURCE[0]}" )
-RUN=$( basename "$RUN" )
-RUN=${RUN#config.}
-RUN=${RUN%.sh}
-
-envir="$RUN"
+RUN="${EXPT_SUBDIR}"
+envir="${EXPT_SUBDIR}"
 
 #On Hera:
 COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"
