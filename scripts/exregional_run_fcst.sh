@@ -527,11 +527,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-if [ "${USE_CCPP}" = "TRUE" ]; then
-  FV3SAR_EXEC="${UFS_WTHR_MDL_DIR}/tests/fv3.exe"
-else
-  FV3SAR_EXEC="${UFS_WTHR_MDL_DIR}/tests/fv3_32bit.exe"
-fi
+mdl_extrns_cfg_fp="${USHDIR}/../conf/fcst_model.cfg"
+workflow_cfg_fp="${USHDIR}/config.sh"
+
+fcst_model_name=$( get_fcst_model_name ${mdl_extrns_cfg_fp} ) || \
+  print_err_msg_exit "\
+  Call to function get_fcst_model_name failed."
+
+get_fcst_model_info ${mdl_extrns_cfg_fp} "${fcst_model_name}" exec_path
+FV3SAR_EXEC=${UFS_WTHR_MDL_DIR}/${exec_path}
 
 if [ -f $FV3SAR_EXEC ]; then
   print_info_msg "$VERBOSE" "

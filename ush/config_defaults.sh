@@ -256,6 +256,7 @@ WFLOW_LAUNCH_LOG_FN="log.launch_FV3SAR_wflow"
 #
 #-----------------------------------------------------------------------
 #
+FCST_MODEL="ufs_weather_model"
 DATE_FIRST_CYCL="YYYYMMDD"
 DATE_LAST_CYCL="YYYYMMDD"
 CYCL_HRS=( "HH1" "HH2" )

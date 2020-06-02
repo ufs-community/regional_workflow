@@ -173,6 +173,16 @@ function source_util_funcs() {
 #-----------------------------------------------------------------------
 #
   . ${bashutils_dir}/get_charvar_from_netcdf.sh
+#
+#-----------------------------------------------------------------------
+#
+# Source multi app functions
+#
+#-----------------------------------------------------------------------
+
+  . ${scrfunc_dir}/get_fcst_model_info.sh
+  . ${scrfunc_dir}/get_fcst_model_name.sh
+  . ${scrfunc_dir}/setup_externals.sh
 
 }
 source_util_funcs

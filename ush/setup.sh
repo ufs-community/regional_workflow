@@ -713,11 +713,16 @@ esac
 #-----------------------------------------------------------------------
 #
 mng_extrns_cfg_fn="$HOMErrfs/Externals.cfg"
-property_name="local_path"
+mdl_extrns_cfg_fn="$HOMErrfs/conf/fcst_model.cfg"
+
+model_name=$( get_fcst_model_name $EXPT_CONFIG_FN )
+get_fcst_model_info ${mdl_extrns_cfg_fn} "${model_name}" external_name
+echo "model_name = $model_name"
+echo "external_name = $external_name"
 #
 # Get the base directory of the FV3 forecast model code.
 #
-external_name="ufs_weather_model"
+property_name="local_path"
 UFS_WTHR_MDL_DIR=$( \
 get_manage_externals_config_property \
 "${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \

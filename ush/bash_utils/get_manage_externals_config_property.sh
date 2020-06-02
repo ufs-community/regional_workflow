@@ -183,7 +183,8 @@ does not exist:
 #
 #-----------------------------------------------------------------------
 #
-  regex_search="^[ ]*(${property_name})[ ]*=[ ]*([^ ]*).*"
+# regex_search="^[ ]*(${property_name})[ ]*=[ ]*([^ ]*).*"
+  regex_search="^[ ]*(${property_name})[ ]*=[ ]*"
   line=$( sed -r -n \
               -e "/^[ ]*\[${external_name}\]/!b" \
               -e ":SearchForLine" \
@@ -193,6 +194,7 @@ does not exist:
               -e "p;q" \
               "${externals_cfg_fp}" \
         )
+  line="${line%%#*}"
 #
 #-----------------------------------------------------------------------
 #
@@ -225,7 +227,8 @@ fied external (external_name):
   else
 
     property_value=$( printf "%s" "${line}" | \
-                      sed -r -n -e "s/${regex_search}/\2/p" )
+                      sed -r -e "s/${regex_search}//g" )
+#                     sed -r -n -e "s/${regex_search}/\2/p" )
     printf "%s\n" "${property_value}"
 
   fi
