@@ -148,7 +148,24 @@ if [ "${num_files_found_on_disk}" -eq "${num_files_to_copy}" ]; then
   DATA_SRC="disk"
 else
   DATA_SRC="HPSS"
+  if [ "${MACHINE}" = "JET" ]; then
+    searchstring="gfs"
+    icount=0
+    echo ${EXTRN_MDL_FNS[@]}
+    for ss in ${EXTRN_MDL_FNS[@]}; do
+        trest=${ss#*$searchstring}
+        EXTRN_MDL_FNS[$icount]=gfs$trest
+        icount=$(( $icount + 1 ))
+	echo "icount=" $icount
+    done
+    echo ${EXTRN_MDL_FNS[@]}
+  fi
+  ARCV_FP="${EXTRN_MDL_ARCV_FPS[0]}"
+  hsi ls $ARCV_FP || DATA_SRC="online"
+  echo "ARCV_FP= $ARCV_FP"
+  echo "DATA_SRC = $DATA_SRC"
 fi
+#DATA_SRC="online"
 #
 #-----------------------------------------------------------------------
 #
@@ -234,18 +251,6 @@ elif [ "${DATA_SRC}" = "HPSS" ]; then
 #
 #-----------------------------------------------------------------------
 #
-  if [ "${MACHINE}" = "JET" ]; then
-    searchstring="gfs"
-    icount=0
-    echo ${EXTRN_MDL_FNS[@]}
-    for ss in ${EXTRN_MDL_FNS[@]}; do
-        trest=${ss#*$searchstring}
-        EXTRN_MDL_FNS[$icount]=gfs$trest
-        icount=$(( $icount + 1 ))
-	echo "icount=" $icount
-    done
-    echo ${EXTRN_MDL_FNS[@]}
-  fi
   prefix=${EXTRN_MDL_ARCVREL_DIR:+${EXTRN_MDL_ARCVREL_DIR}/}
   EXTRN_MDL_FPS=( "${EXTRN_MDL_FNS[@]/#/$prefix}" )
 
@@ -595,6 +600,34 @@ In directory:    \"${scrfunc_dir}\"
 ========================================================================"
 
   fi
+elif [ "${DATA_SRC}" = "online" ]; then
+    print_info_msg "
+========================================================================
+getting data from online data sources
+========================================================================"
+
+#
+#-----------------------------------------------------------------------
+#
+# Reset EXTRN_MDL_FPS to the full paths within the archive files of the
+# external model output files.
+#
+#-----------------------------------------------------------------------
+#
+  prefix=${EXTRN_MDL_ARCVREL_DIR:+${EXTRN_MDL_ARCVREL_DIR}/}
+  EXTRN_MDL_FPS=( "${EXTRN_MDL_FNS[@]/#/$prefix}" )
+
+  EXTRN_MDL_FPS_str="( "$( printf "\"%s\" " "${EXTRN_MDL_FPS[@]}" )")"
+
+  echo "Getting online file EXTRN_MDL_FPS= ${EXTRN_MDL_FPS[@]}"
+    num_files_to_extract="${#EXTRN_MDL_FPS[@]}"
+    wget_LOG_FN="log.wget.txt"
+    for (( nfile=0; nfile<${num_files_to_extract}; nfile++ )); do
+       $USHDIR/get_files.sh ${EXTRN_MDL_FPS[$nfile]} >& ${wget_LOG_FN}|| \
+    print_err_msg_exit "\
+       onlie file ${EXTRN_MDL_FPS[$nfile]} not found."
+    done
+
 
 fi
 #
