@@ -111,7 +111,7 @@ case $MACHINE in
 "HERA")
   ulimit -s unlimited
   ulimit -a
-  APRUN="srun"
+  APRUN="srun -n ${PE_MEMBER01}"
   LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
   ;;
 #
@@ -378,23 +378,45 @@ rm_vrfy -f time_stamp.out
 print_info_msg "$VERBOSE" "
 Creating links in the current cycle's run directory to cycle-independent
 model input files in the main experiment directory..."
+#
+#-----------------------------------------------------------------------
+#
+# Get forecast model info
+#
+#-----------------------------------------------------------------------
+#
+mdl_extrns_cfg_fp="${CONFDIR}/fcst_model.cfg"
+workflow_cfg_fp="${USHDIR}/config.sh"
 
-ln_vrfy -sf -t ${CYCLE_DIR} ${DATA_TABLE_FP}
-ln_vrfy -sf -t ${CYCLE_DIR} ${FIELD_TABLE_FP}
-ln_vrfy -sf -t ${CYCLE_DIR} ${FV3_NML_FP}
-ln_vrfy -sf -t ${CYCLE_DIR} ${NEMS_CONFIG_FP}
+fcst_model_name=$( get_fcst_model_name ${workflow_cfg_fp} ) || \
+  print_err_msg_exit "\
+  Call to function get_fcst_model_name failed."
 
-if [ "${USE_CCPP}" = "TRUE" ]; then
+get_fcst_model_info ${mdl_extrns_cfg_fp} "${fcst_model_name}" input_dir link_files copy_files parse_files
 
-  ln_vrfy -sf -t ${CYCLE_DIR} ${CCPP_PHYS_SUITE_FP}
+# Get full path
+mdl_input_path=$( readlink -f "${input_dir}" )
 
-  if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-    ln_vrfy -sf -t ${CYCLE_DIR} $EXPTDIR/CCN_ACTIVATE.BIN
-  fi
-
+# If empty, try adding workflow base path
+if [ -z "${mdl_input_path}" ]; then
+  mdl_input_path=$( readlink -f "${HOMErrfs}/${input_dir}" )
 fi
+
+# If still empty bail out
+if [ -z "${mdl_input_path}" ]; then
+  print_err_msg_exit "\
+  Could not retrieve full path to model input files"
+fi
+
+for file in ${link_files} ; do
+  target_fp=${file}
+  for ext in ${fcst_model_name} ${CCPP_PHYS_SUITE} ; do
+    [ ! -z "${ext}" ] && target_fp=${target_fp%.${ext}}
+  done
+  print_info_msg "$VERBOSE" "linking ${mdl_input_path}/${file} ... ${CYCLE_DIR}/${target_fp}"
+  ln_vrfy -sf ${mdl_input_path}/${file} ${CYCLE_DIR}/${target_fp}
+done
+
 #
 #-----------------------------------------------------------------------
 #
@@ -407,17 +429,62 @@ print_info_msg "$VERBOSE" "
 Copying cycle-dependent model input files from the templates directory 
 to the current cycle's run directory..." 
 
-print_info_msg "$VERBOSE" "
-  Copying the template diagnostics table file to the current cycle's run
-  directory..."
-diag_table_fp="${CYCLE_DIR}/${DIAG_TABLE_FN}"
-cp_vrfy "${DIAG_TABLE_TMPL_FP}" "${diag_table_fp}"
+for file in ${copy_files} ; do
+  target_fp=${file}
+  for ext in ${fcst_model_name} ${CCPP_PHYS_SUITE} ; do
+    [ ! -z "${ext}" ] && target_fp=${target_fp%.${ext}}
+  done
+  cp_vrfy ${mdl_input_path}/${file} ${CYCLE_DIR}/${target_fp}
+done
 
 print_info_msg "$VERBOSE" "
-  Copying the template model configuration file to the current cycle's
-  run directory..."
-model_config_fp="${CYCLE_DIR}/${MODEL_CONFIG_FN}"
-cp_vrfy "${MODEL_CONFIG_TMPL_FP}" "${model_config_fp}"
+Installing model input files to be parsed from the templates directory..."
+
+diag_table_fp=
+model_config_fp=
+for file in ${parse_files} ; do
+  case "${file}" in
+    ${DIAG_TABLE_FN}*)
+      diag_table_fp="${CYCLE_DIR}/${DIAG_TABLE_FN}"
+      print_info_msg "$VERBOSE" "
+        Copying the template diagnostics table file to the current cycle's run
+        directory..."
+      cp_vrfy ${mdl_input_path}/${file} ${diag_table_fp}
+      ;;
+    ${MODEL_CONFIG_FN}*)
+      model_config_fp="${CYCLE_DIR}/${MODEL_CONFIG_FN}"
+      print_info_msg "$VERBOSE" "
+        Copying the template model configuration file to the current cycle's
+        run directory..."
+      cp_vrfy ${mdl_input_path}/${file} ${model_config_fp}
+      ;;
+    ${FV3_NML_FN%.*}*)
+      # FV3 input namelist file is staged (pre-parsed), so just link to local version
+      ln_vrfy -sf -t ${CYCLE_DIR} ${FV3_NML_FP}
+      ;;
+  esac
+done
+
+[ -z "${diag_table_fp}" ] && print_err_msg_exit "\
+Required diagnostic table file not found in property 'parse_files':
+  diag_table_fp = \"${diag_table_fp}\""
+
+[ -z "${model_config_fp}" ] && print_err_msg_exit "\
+Required model configuration file not found in property 'parse_files':
+  model_config_fp = \"${model_config_fp}\""
+
+# setup CCPP
+if [ "${USE_CCPP}" = "TRUE" ]; then
+
+  ln_vrfy -sf -t ${CYCLE_DIR} ${CCPP_PHYS_SUITE_FP}
+
+  if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+    ln_vrfy -sf -t ${CYCLE_DIR} $EXPTDIR/CCN_ACTIVATE.BIN
+  fi
+
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -527,13 +594,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-mdl_extrns_cfg_fp="${USHDIR}/../conf/fcst_model.cfg"
-workflow_cfg_fp="${USHDIR}/config.sh"
-
-fcst_model_name=$( get_fcst_model_name ${mdl_extrns_cfg_fp} ) || \
-  print_err_msg_exit "\
-  Call to function get_fcst_model_name failed."
-
 get_fcst_model_info ${mdl_extrns_cfg_fp} "${fcst_model_name}" exec_path
 FV3SAR_EXEC=${UFS_WTHR_MDL_DIR}/${exec_path}
 

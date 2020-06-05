@@ -44,20 +44,6 @@ Call to function get_fcst_model_name failed."
 
 get_fcst_model_info ${mdl_extrns_cfg_fp} "${fcst_model_name}" external_name build_dir build_cmd build_opt exec_path
 
-case "${build_cmd}" in
-  gmake)
-    cmd="cd ${build_dir} && gmake ${build_opt}"
-    ;;
-  compile)
-    FV3=$( pwd -P )/FV3
-    cmd="cd ${build_dir} && compile.sh $FV3 $target \"${build_opt}\""
-    ;;
-  *)
-    print_err_msg_exit "\
-    Unsupported build command: \"${build_cmd}\""
-    ;;
-esac
-
 forecast_model_dir=$( \
 get_manage_externals_config_property \
 "${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
@@ -66,4 +52,19 @@ Call to function get_manage_config_externals_property failed."
 forecast_model_dir="${HOMErrfs}/${forecast_model_dir}"
 
 cd ${forecast_model_dir}
+
+case "${build_cmd}" in
+  gmake)
+    cmd="cd ${build_dir} && gmake ${build_opt}"
+    ;;
+  compile)
+    FV3=$( pwd -P )/FV3
+    cmd="cd ${build_dir} && ./compile.sh $FV3 $target \"${build_opt}\""
+    ;;
+  *)
+    print_err_msg_exit "\
+    Unsupported build command: \"${build_cmd}\""
+    ;;
+esac
+
 eval ${cmd}

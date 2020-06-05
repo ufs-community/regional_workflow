@@ -345,22 +345,10 @@ fi
 #
 print_info_msg "$VERBOSE" "
 Copying templates of various input files to the experiment directory..."
-
-print_info_msg "$VERBOSE" "
-  Copying the template data table file to the experiment directory..."
-cp_vrfy "${DATA_TABLE_TMPL_FP}" "${DATA_TABLE_FP}"
-
-print_info_msg "$VERBOSE" "
-  Copying the template field table file to the experiment directory..."
-cp_vrfy "${FIELD_TABLE_TMPL_FP}" "${FIELD_TABLE_FP}"
-
-print_info_msg "$VERBOSE" "
-  Copying the template NEMS configuration file to the experiment direct-
-  ory..."
-cp_vrfy "${NEMS_CONFIG_TMPL_FP}" "${NEMS_CONFIG_FP}"
 #
 # If using CCPP ... 
 #
+set_ccpp_suite=
 if [ "${USE_CCPP}" = "TRUE" ]; then
 #
 # Copy the CCPP physics suite definition file from its location in the 
@@ -386,6 +374,7 @@ directory..."
     cp_vrfy "$FIXgsd/CCN_ACTIVATE.BIN" "$EXPTDIR"
   fi
 
+  set_ccpp_suite="'ccpp_suite': ${CCPP_PHYS_SUITE},"
 fi
 #
 #-----------------------------------------------------------------------
@@ -450,7 +439,7 @@ fi
 settings="
 'atmos_model_nml': {
     'blocksize': ${BLOCKSIZE},
-    'ccpp_suite': ${CCPP_PHYS_SUITE},
+    ${set_ccpp_suite}
   },
 'fv_core_nml': {
     'layout': [${LAYOUT_X}, ${LAYOUT_Y}],

@@ -1,0 +1,118 @@
+################################################
+#                                              #
+#  NOAA Air Quality Model (AQM) Resource File  #
+#                                              #
+################################################
+
+#
+#  Input emissions
+#
+
+# supported file formats are: 
+#  - binary 	(Fortran unformatted)
+#  - netcdf 	(netCDF)
+#
+emissions_format: netcdf
+
+# emissions directory
+# <tile> is replaced with the tile number in case of multitile grids, or removed otherwise
+#
+emissions_path: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/dev/expt_dirs/coards2
+
+# emissions file name
+emissions_file: NEI2016v1_emis_mole_all_nobeis_12US1_gsd_hrrr_25km_20160101.nc 
+
+# emissions time dependency
+# supported settings are:
+#  NetCDF only:
+#  - hourly	read data every hour
+#  - daily	read data every day
+#  - weekly	read data every 7 days
+#  - monthly	read data every calendar month
+#  Binary/NetCDF:
+#  - static     read data only at startup time
+#
+emissions_frequency: hourly
+
+# list of emission species
+# input emissions can be manipulated by adding multiple
+# sources/sinks to the same CMAQ species, scaled by the 
+# provided factors (positive for sources, negative for sinks).
+# For instance:
+#      
+#     NO2           MOL/S       0.750       no2_source_1
+#     NO2           MOL/S       0.250       no2_source_2
+#     NO2           MOL/S      -0.050       no2_sink_1
+#
+emissions_species::
+        ACET          1.00000  ACET          MOL/S
+        ACROLEIN      1.00000  ACROLEIN      MOL/S
+        ALD2          1.00000  ALD2          MOL/S
+        ALD2_PRIMARY  1.00000  ALD2_PRIMARY  MOL/S
+        ALDX          1.00000  ALDX          MOL/S
+        BENZ          1.00000  BENZ          MOL/S
+        BUTADIENE13   1.00000  BUTADIENE13   MOL/S
+        CH4           1.00000  CH4           MOL/S
+        CH4_INV       1.00000  CH4_INV       G/S
+        CL2           1.00000  CL2           MOL/S
+        CO            1.00000  CO            MOL/S
+        CO2_INV       1.00000  CO2_INV       G/S
+        ETH           1.00000  ETH           MOL/S
+        ETHA          1.00000  ETHA          MOL/S
+        ETHY          1.00000  ETHY          MOL/S
+        ETOH          1.00000  ETOH          MOL/S
+        FORM          1.00000  FORM          MOL/S
+        FORM_PRIMARY  1.00000  FORM_PRIMARY  MOL/S
+        HCL           1.00000  HCL           MOL/S
+        HONO          1.00000  HONO          MOL/S
+        IOLE          1.00000  IOLE          MOL/S
+        ISOP          1.00000  ISOP          MOL/S
+        KET           1.00000  KET           MOL/S
+        MEOH          1.00000  MEOH          MOL/S
+        N2O_INV       1.00000  N2O_INV       G/S
+        NAPH          1.00000  NAPH          MOL/S
+        NH3           1.00000  NH3           MOL/S
+        NH3_FERT      1.00000  NH3_FERT      MOL/S
+        NO            1.00000  NO            MOL/S
+        NO2           1.00000  NO2           MOL/S
+        NVOL          1.00000  NVOL          MOL/S
+        OLE           1.00000  OLE           MOL/S
+        PAL           1.00000  PAL           G/S
+        PAR           1.00000  PAR           MOL/S
+        PCA           1.00000  PCA           G/S
+        PCL           1.00000  PCL           G/S
+        PEC           1.00000  PEC           G/S
+        PFE           1.00000  PFE           G/S
+        PH2O          1.00000  PH2O          G/S
+        PK            1.00000  PK            G/S
+        PMC           1.00000  PMC           G/S
+        PMG           1.00000  PMG           G/S
+        PMN           1.00000  PMN           G/S
+        PMOTHR        1.00000  PMOTHR        G/S
+        PNA           1.00000  PNA           G/S
+        PNCOM         1.00000  PNCOM         G/S
+        PNH4          1.00000  PNH4          G/S
+        PNO3          1.00000  PNO3          G/S
+        POC           1.00000  POC           G/S
+        PRPA          1.00000  PRPA          MOL/S
+        PSI           1.00000  PSI           G/S
+        PSO4          1.00000  PSO4          G/S
+        PTI           1.00000  PTI           G/S
+        SO2           1.00000  SO2           MOL/S
+        SOAALK        1.00000  SOAALK        MOL/S
+        SULF          1.00000  SULF          MOL/S
+        TERP          1.00000  TERP          MOL/S
+        TOL           1.00000  TOL           MOL/S
+        UNK           1.00000  UNK           MOL/S
+        UNR           1.00000  UNR           MOL/S
+        VOC_INV       1.00000  VOC_INV       G/S
+        XYLMN         1.00000  XYLMN         MOL/S
+        AACD
+        FACD
+        GLYXL
+        HGIIGAS        
+        HGNRVA
+        PACD
+        SESQ            
+        TOLU
+::

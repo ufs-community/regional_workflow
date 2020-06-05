@@ -150,7 +150,7 @@ The specified model configuration file does not exist: \"${fcst_model_cfg_fp}\""
   while [ $# -gt 0 ]
   do
     case "${1}" in
-      external_name|externals_cfg|build_dir|build_cmd|build_opt|exec_path)
+      external_name|externals_cfg|build_dir|build_cmd|build_opt|exec_path|input_dir|copy_files|link_files|parse_files|ccpp_suite)
         property_name=$1
         cfg_property=$(\
           get_manage_externals_config_property \

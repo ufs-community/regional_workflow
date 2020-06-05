@@ -126,6 +126,26 @@ fi
 #-----------------------------------------------------------------------
 #
 . ./valid_param_vals.sh
+
+#
+#-----------------------------------------------------------------------
+#
+# Add model config settings
+#
+#-----------------------------------------------------------------------
+#
+CONFDIR=../conf
+mdl_extrns_cfg_fp="${CONFDIR}/fcst_model.cfg"
+
+fcst_model_name=$( get_fcst_model_name ./${EXPT_CONFIG_FN} ) || \
+  print_err_msg_exit "\
+  Call to function get_fcst_model_name failed."
+
+get_fcst_model_info ${mdl_extrns_cfg_fp} "${fcst_model_name}" build_opt ccpp_suite
+
+mdl_build_opts=( ${build_opt} )
+is_element_of mdl_build_opts "CCPP=Y" && USE_CCPP="TRUE" || USE_CCPP="FALSE"
+[ ! -z "${ccpp_suite}" ] && CCPP_PHYS_SUITE="${ccpp_suite}"
 #
 #-----------------------------------------------------------------------
 #
@@ -639,6 +659,7 @@ HH_FIRST_CYCL=${CYCL_HRS[0]}
 #
 HOMErrfs=${scrfunc_dir%/*}
 
+CONFDIR="$HOMErrfs/conf"
 USHDIR="$HOMErrfs/ush"
 SCRIPTSDIR="$HOMErrfs/scripts"
 JOBSDIR="$HOMErrfs/jobs"
@@ -717,8 +738,6 @@ mdl_extrns_cfg_fn="$HOMErrfs/conf/fcst_model.cfg"
 
 model_name=$( get_fcst_model_name $EXPT_CONFIG_FN )
 get_fcst_model_info ${mdl_extrns_cfg_fn} "${model_name}" external_name
-echo "model_name = $model_name"
-echo "external_name = $external_name"
 #
 # Get the base directory of the FV3 forecast model code.
 #
@@ -1044,6 +1063,27 @@ DATA_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DATA_TABLE_TMPL_FN}"
 DIAG_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DIAG_TABLE_TMPL_FN}"
 FIELD_TABLE_TMPL_FP="${TEMPLATE_DIR}/${FIELD_TABLE_TMPL_FN}"
 FV3_NML_BASE_FP="${TEMPLATE_DIR}/${FV3_NML_FN}"
+get_fcst_model_info ${mdl_extrns_cfg_fn} "${model_name}" input_dir parse_files
+# Get full path
+mdl_input_path=$( readlink -f "${input_dir}" )
+
+# If empty, try adding workflow base path
+if [ -z "${mdl_input_path}" ]; then
+  mdl_input_path=$( readlink -f "${HOMErrfs}/${input_dir}" )
+fi
+
+# If still empty bail out
+if [ -z "${mdl_input_path}" ]; then
+  print_err_msg_exit "\
+  Could not retrieve full path to model input files"
+fi
+#
+for file in ${parse_files}; do
+  case "${file}" in
+    ${FV3_NML_FN%.*}.*)
+      FV3_NML_BASE_FP="${mdl_input_path}/${file}"
+  esac
+done
 FV3_NML_CONFIG_FP="${TEMPLATE_DIR}/${FV3_NML_CONFIG}"
 MODEL_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${MODEL_CONFIG_TMPL_FN}"
 NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
@@ -1746,6 +1786,13 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+
+# reload layout settings from user config file to override defaults
+for var in LAYOUT_X LAYOUT_Y WRTCMP_write_groups WRTCMP_write_tasks_per_group ; do
+  line=$( grep "^ *${var}=" "${EXPT_CONFIG_FN}" 2>/dev/null )
+  [ ! -z "$line" ] && eval "$line"
+done
+
 PE_MEMBER01=$(( LAYOUT_X*LAYOUT_Y ))
 if [ "$QUILTING" = "TRUE" ]; then
   PE_MEMBER01=$(( ${PE_MEMBER01} + ${WRTCMP_write_groups}*${WRTCMP_write_tasks_per_group} ))
@@ -1922,7 +1969,7 @@ check_var_valid_value "OZONE_PARAM_NO_CCPP" "valid_vals_OZONE_PARAM_NO_CCPP"
 #
 set_fix_filenames \
   ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
-  ozone_param_no_ccpp="OZONE_PARAM_NO_CCPP" \
+  ozone_param_no_ccpp="${OZONE_PARAM_NO_CCPP}" \
   output_varname_ozone_param="OZONE_PARAM" \
   output_varname_num_fixam_files="NUM_FIXam_FILES" \
   output_varname_fixgsm_fns="FIXgsm_FILENAMES" \
@@ -2244,6 +2291,7 @@ CRONTAB_LINE="${CRONTAB_LINE}"
 #-----------------------------------------------------------------------
 #
 HOMErrfs="$HOMErrfs"
+CONFDIR="$CONFDIR"
 USHDIR="$USHDIR"
 SCRIPTSDIR="$SCRIPTSDIR"
 JOBSDIR="$JOBSDIR"
