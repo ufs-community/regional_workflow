@@ -1,12 +1,18 @@
 #%Module#####################################################
-## Module file for make_sfc_climo task.
+## Module file for sfc_climo_gen
 #############################################################
 
-module purge
+export NCEPLIBS=/lfs4/HFIP/hfv3gfs/gwv/l0530/lib
+module use $NCEPLIBS/modulefiles
 
 module load intel/18.0.5.274
-module load impi/2018.0.4
+module load impi/2018.4.274
+module load szip
+module load hdf5/1.10.4
+module load netcdf/4.6.1
 
-module use -a /scratch1/NCEPDEV/global/gwv/l819/lib/modulefiles
-module load esmflocal/8_0_48b.netcdf47
+module use -a /lfs4/HFIP/hfv3gfs/software/modulefiles/intel-18.0.5.274/impi-2018.4.274
+module load esmf/8.0.0
 
+export FCOMP=mpiifort
+export FFLAGS="-O3 -fp-model=precise -g -traceback -r8 -i4 -convert big_endian"
