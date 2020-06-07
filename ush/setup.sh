@@ -257,31 +257,24 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #
 case $MACHINE in
 #
-"WCOSS_C")
+"WCOSS_CRAY")
 #
-  print_err_msg_exit "\
-Don't know how to set several parameters on MACHINE=\"$MACHINE\".
-Please specify the correct parameters for this machine in the setup script.  
-Then remove this message and rerun." 
-  NCORES_PER_NODE=""
-  SCHED="${SCHED:-}"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-""}
-  QUEUE_HPSS=${QUEUE_HPSS:-""}
-  QUEUE_FCST=${QUEUE_FCST:-""}
+  NCORES_PER_NODE="24"
+  SCHED="lsfcray"
+  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
+  QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
+  QUEUE_HPSS_TAG="queue"       # lsfcray does not support "partition" tag
+  QUEUE_FCST=${QUEUE_FCST:-"dev"}
   ;;
 #
-"WCOSS")
+"WCOSS_DELL_P3")
 #
-  print_err_msg_exit "\
-Don't know how to set several parameters on MACHINE=\"$MACHINE\".
-Please specify the correct parameters for this machine in the setup script.  
-Then remove this message and rerun."
-
-  NCORES_PER_NODE=""
-  SCHED="${SCHED:-}"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-""}
-  QUEUE_HPSS=${QUEUE_HPSS:-""}
-  QUEUE_FCST=${QUEUE_FCST:-""}
+  NCORES_PER_NODE=24
+  SCHED="lsf"
+  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
+  QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
+  QUEUE_HPSS_TAG="queue"       # lsf does not support "partition" tag
+  QUEUE_FCST=${QUEUE_FCST:-"dev"}
   ;;
 #
 "HERA")
@@ -614,7 +607,7 @@ HH_FIRST_CYCL=${CYCL_HRS[0]}
 # System directory from which to copy necessary fixed files for UPP.
 #
 # FIXgsd:
-# System directory from which to copy GSD physics-related fixed files 
+# System directory from which to copy GSD physics-associated fixed files 
 # needed when running CCPP.
 #
 #-----------------------------------------------------------------------
@@ -642,13 +635,13 @@ TEMPLATE_DIR="$USHDIR/templates"
 
 case $MACHINE in
 
-"WCOSS_C")
+"WCOSS_CRAY")
   FIXgsm="/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"
   SFC_CLIMO_INPUT_DIR=""
   ;;
 
-"WCOSS")
-  FIXgsm="/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"
+"WCOSS_DELL_P3")
+  FIXgsm="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"
   SFC_CLIMO_INPUT_DIR=""
   ;;
 
@@ -800,21 +793,21 @@ fi
 #-----------------------------------------------------------------------
 #
 # Check whether the forecast length (FCST_LEN_HRS) is evenly divisible
-# by the BC update interval (LBC_UPDATE_INTVL_HRS).  If not, print out a
+# by the BC update interval (LBC_SPEC_INTVL_HRS).  If not, print out a
 # warning and exit this script.  If so, generate an array of forecast
 # hours at which the boundary values will be updated.
 #
 #-----------------------------------------------------------------------
 #
-rem=$(( ${FCST_LEN_HRS}%${LBC_UPDATE_INTVL_HRS} ))
+rem=$(( ${FCST_LEN_HRS}%${LBC_SPEC_INTVL_HRS} ))
 
 if [ "$rem" -ne "0" ]; then
   print_err_msg_exit "\
 The forecast length (FCST_LEN_HRS) is not evenly divisible by the lateral
-boundary conditions update interval (LBC_UPDATE_INTVL_HRS):
-  FCST_LEN_HRS = $FCST_LEN_HRS
-  LBC_UPDATE_INTVL_HRS = $LBC_UPDATE_INTVL_HRS
-  rem = FCST_LEN_HRS%%LBC_UPDATE_INTVL_HRS = $rem"
+boundary conditions update interval (LBC_SPEC_INTVL_HRS):
+  FCST_LEN_HRS = ${FCST_LEN_HRS}
+  LBC_SPEC_INTVL_HRS = ${LBC_SPEC_INTVL_HRS}
+  rem = FCST_LEN_HRS%%LBC_SPEC_INTVL_HRS = $rem"
 fi
 #
 #-----------------------------------------------------------------------
@@ -825,9 +818,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-LBC_UPDATE_FCST_HRS=($( seq ${LBC_UPDATE_INTVL_HRS} \
-                            ${LBC_UPDATE_INTVL_HRS} \
-                            ${FCST_LEN_HRS} ))
+LBC_SPEC_FCST_HRS=($( seq ${LBC_SPEC_INTVL_HRS} ${LBC_SPEC_INTVL_HRS} \
+                          ${FCST_LEN_HRS} ))
 #
 #-----------------------------------------------------------------------
 #
@@ -889,43 +881,59 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# May have to make setting of EXPTDIR dependent on RUN_ENVIR later on.
 EXPTDIR="${EXPT_BASEDIR}/${EXPT_SUBDIR}"
 check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 #
 #-----------------------------------------------------------------------
 #
-# Set other directories that depend on EXPTDIR.
+# Set other directories, some of which may depend on EXPTDIR (depending
+# on whether we're running in NCO or community mode, i.e. whether RUN_ENVIR 
+# is set to "nco" or "community").  Definitions:
 #
 # LOGDIR:
 # Directory in which the log files from the workflow tasks will be placed.
 #
+# FIXam:
+# This is the directory that will contain the fixed files or symlinks to
+# the fixed files containing various fields on global grids (which are
+# usually much coarser than the native FV3SAR grid).
+#
+# FIXsar:
+# This is the directory that will contain the fixed files or symlinks to
+# the fixed files containing the grid, orography, and surface climatology
+# on the native FV3SAR grid.
+#
 # CYCLE_BASEDIR:
 # The base directory in which the directories for the various cycles will
 # be placed.
+#
+# COMROOT:
+# In NCO mode, this is the full path to the "com" directory under which 
+# output from the RUN_POST_TN task will be placed.  Note that this output
+# is not placed directly under COMROOT but several directories further
+# down.  More specifically, for a cycle starting at yyyymmddhh, it is at
+#
+#   $COMROOT/$NET/$envir/$RUN.$yyyymmdd/$hh
+#
+# Below, we set COMROOT in terms of PTMP as COMROOT="$PTMP/com".  COMOROOT 
+# is not used by the workflow in community mode.
+#
+# COMOUT_BASEDIR:
+# In NCO mode, this is the base directory directly under which the output 
+# from the RUN_POST_TN task will be placed, i.e. it is the cycle-independent 
+# portion of the RUN_POST_TN task's output directory.  It is given by
+#
+#   $COMROOT/$NET/$envir
+#
+# COMOUT_BASEDIR is not used by the workflow in community mode.
 #
 #-----------------------------------------------------------------------
 #
 LOGDIR="${EXPTDIR}/log"
 
 if [ "${RUN_ENVIR}" = "nco" ]; then
-  CYCLE_BASEDIR="$STMP/tmpnwprd/${EMC_GRID_NAME}" 
-else
-  CYCLE_BASEDIR="$EXPTDIR"
-fi
-check_for_preexist_dir_file "${CYCLE_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
-#
-#-----------------------------------------------------------------------
-#
-#
-#
-#-----------------------------------------------------------------------
-#
-if [ "${RUN_ENVIR}" = "nco" ]; then
 
   FIXam="${FIXrrfs}/fix_am"
-  FIXsar="${FIXrrfs}/fix_sar/${EMC_GRID_NAME}"
-  COMROOT="$PTMP/com"
 #
 # In NCO mode (i.e. if RUN_ENVIR set to "nco"), it is assumed that before
 # running the experiment generation script, the path specified in FIXam 
@@ -938,15 +946,18 @@ if [ "${RUN_ENVIR}" = "nco" ]; then
   path_resolved=$( readlink -m "$FIXam" )
   if [ ! -d "${path_resolved}" ]; then
     print_err_msg_exit "\
-In NCO mode (RUN_ENVIR set to \"nco\"), the path specified by FIXam after
-resolving all symlinks (path_resolved) must point to an existing directory
-before an experiment can be generated.  In this case, path_resolved is
-not a directory or does not exist:
+In order to be able to generate a forecast experiment in NCO mode (i.e. 
+when RUN_ENVIR set to \"nco\"), the path specified by FIXam after resolving 
+all symlinks (path_resolved) must be an existing directory (but in this
+case isn't):
   RUN_ENVIR = \"${RUN_ENVIR}\"
   FIXam = \"$FIXam\"
   path_resolved = \"${path_resolved}\"
-Please correct and then rerun the experiment generation script."
+Please ensure that path_resolved is an existing directory and then rerun 
+the experiment generation script."
   fi
+
+  FIXsar="${FIXrrfs}/fix_sar/${EMC_GRID_NAME}"
 #
 # In NCO mode (i.e. if RUN_ENVIR set to "nco"), it is assumed that before
 # running the experiment generation script, the path specified in FIXsar 
@@ -958,21 +969,32 @@ Please correct and then rerun the experiment generation script."
   path_resolved=$( readlink -m "$FIXsar" )
   if [ ! -d "${path_resolved}" ]; then
     print_err_msg_exit "\
-In NCO mode (RUN_ENVIR set to \"nco\"), the path specified by FIXsar after
-resolving all symlinks (path_resolved) must point to an existing directory
-before an experiment can be generated.  In this case, path_resolved is
-not a directory or does not exist:
+In order to be able to generate a forecast experiment in NCO mode (i.e. 
+when RUN_ENVIR set to \"nco\"), the path specified by FIXsar after resolving 
+all symlinks (path_resolved) must be an existing directory (but in this
+case isn't):
   RUN_ENVIR = \"${RUN_ENVIR}\"
   FIXsar = \"$FIXsar\"
   path_resolved = \"${path_resolved}\"
-Please correct and then rerun the experiment generation script."
+Please ensure that path_resolved is an existing directory and then rerun 
+the experiment generation script."
   fi
 
+  CYCLE_BASEDIR="$STMP/tmpnwprd/$RUN"
+  check_for_preexist_dir_file "${CYCLE_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
+
+  COMROOT="$PTMP/com"
+
+  COMOUT_BASEDIR="$COMROOT/$NET/$envir"
+  check_for_preexist_dir_file "${COMOUT_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
+  
 else
 
   FIXam="${EXPTDIR}/fix_am"
   FIXsar="${EXPTDIR}/fix_sar"
+  CYCLE_BASEDIR="$EXPTDIR"
   COMROOT=""
+  COMOUT_BASEDIR=""
 
 fi
 #
@@ -1915,18 +1937,36 @@ check_var_valid_value "OZONE_PARAM_NO_CCPP" "valid_vals_OZONE_PARAM_NO_CCPP"
 #
 #-----------------------------------------------------------------------
 #
-# This if-statement is a temporary fix that makes corrections to the suite 
-# definition file for the "FV3_GFS_2017_gfdlmp_regional" physics suite 
+# Create a new experiment directory.  Note that at this point we are 
+# guaranteed that there is no preexisting experiment directory.
+#
+#-----------------------------------------------------------------------
+#
+mkdir_vrfy -p "$EXPTDIR"
+
+
+
+
+
+
+
+
+
+#
+#-----------------------------------------------------------------------
+#
+# This if-statement is a temporary fix that makes corrections to the suite
+# definition file for the "FV3_GFS_2017_gfdlmp_regional" physics suite
 # that EMC uses.  The corrections are:
 #
 # 1) Add a "fast_physics" group name to the beginning of the file.
 # 2) Replace the ozphys parameterization with the ozphys_2015 parameterization.
 #
-# Note that this must be done before the call to the function set_ozone_param 
+# Note that this must be done before the call to the function set_ozone_param
 # below because that function reads in the ozone parameterization in the
-# suite definition file to set the ozone parameterization being used; 
-# thus, the suite definition file must have the correct ozone parameterization
-# specified before the call to set_ozone_param.
+# suite definition file in order to set the ozone parameterization being
+# used in the experiment; thus, the suite definition file must have the
+# correct ozone parameterization specified before the call to set_ozone_param.
 #
 # IMPORTANT:
 # This if-statement must be removed once these corrections are made to
@@ -1938,27 +1978,69 @@ check_var_valid_value "OZONE_PARAM_NO_CCPP" "valid_vals_OZONE_PARAM_NO_CCPP"
 if [ "${USE_CCPP}" = "TRUE" ] && \
    [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ]; then
 
-  grep "fast_physics" "${CCPP_PHYS_SUITE_IN_CCPP_FP}" || { \
+  CCPP_PHYS_SUITE_FP="${CCPP_PHYS_SUITE_FP}.tmp"
+  cp_vrfy "${CCPP_PHYS_SUITE_IN_CCPP_FP}" "${CCPP_PHYS_SUITE_FP}"
+
+  grep "fast_physics" "${CCPP_PHYS_SUITE_FP}" || { \
     fast_phys_group='\
   <group name=\"fast_physics\">\
     <subcycle loop=\"1\">\
       <scheme>fv_sat_adj</scheme>\
     </subcycle>\
   </group>' ;
-    sed -i -r "5i${fast_phys_group}" "${CCPP_PHYS_SUITE_IN_CCPP_FP}" || \
+    sed -i -r "5i${fast_phys_group}" "${CCPP_PHYS_SUITE_FP}" || \
       print_err_msg_exit "\
 Attempt to insert the \"fast_physics\" group into the suite definition
-file (CCPP_PHYS_SUITE_IN_CCPP_FP) failed:
-  CCPP_PHYS_SUITE_IN_CCPP_FP = \"${CCPP_PHYS_SUITE_IN_CCPP_FP}\"" ;
+file (CCPP_PHYS_SUITE_FP) failed:
+  CCPP_PHYS_SUITE_FP = \"${CCPP_PHYS_SUITE_FP}\"" ;
   }
 
-  grep "<scheme>ozphys</scheme>" "${CCPP_PHYS_SUITE_IN_CCPP_FP}" && { \
-    sed -i "s/ozphys/ozphys_2015/g" "${CCPP_PHYS_SUITE_IN_CCPP_FP}" || \
+  grep "<scheme>ozphys</scheme>" "${CCPP_PHYS_SUITE_FP}" && { \
+    sed -i "s/ozphys/ozphys_2015/g" "${CCPP_PHYS_SUITE_FP}" || \
       print_err_msg_exit "\
 Attempt to replace the \"ozphys\" scheme with the \"ozphys_2015\" scheme
-in the suite definition file (CCPP_PHYS_SUITE_IN_CCPP_FP) failed:
-  CCPP_PHYS_SUITE_IN_CCPP_FP = \"${CCPP_PHYS_SUITE_IN_CCPP_FP}\"" ;
+in the suite definition file (CCPP_PHYS_SUITE_FP) failed:
+  CCPP_PHYS_SUITE_FP = \"${CCPP_PHYS_SUITE_FP}\"" ;
   }
+#
+#-----------------------------------------------------------------------
+#
+# Call the function that sets the ozone parameterization being used and
+# modifies associated parameters accordingly.
+#
+# This is a repeat of the same call in setup.sh.  It must be redone because
+# the contents of CCPP_PHYS_SUITE_FP have been modified, and the function
+# set_ozone_param depends on that file to set elements of the workflow
+# arrays CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING and FIXgsm_FILES_TO_COPY_TO_FIXam.
+#
+#-----------------------------------------------------------------------
+#
+  set_ozone_param \
+    ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_FP}" \
+    ozone_param_no_ccpp="OZONE_PARAM_NO_CCPP" \
+    output_varname_ozone_param="OZONE_PARAM"
+
+  CCPP_PHYS_SUITE_FP="${CCPP_PHYS_SUITE_FP%.tmp}"
+
+else
+#
+#-----------------------------------------------------------------------
+#
+# Call the function that sets the ozone parameterization being used and
+# modifies associated parameters accordingly. 
+#
+#-----------------------------------------------------------------------
+#
+# NOTE:
+# After the temporary code above in the "if" part of the if-statement is 
+# removed, this "else" part can be moved back up to before the creation
+# of EXPTDIR (above).
+#
+set_ozone_param \
+  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
+  ozone_param_no_ccpp="OZONE_PARAM_NO_CCPP" \
+  output_varname_ozone_param="OZONE_PARAM"
+
 
 fi
 
@@ -1966,34 +2048,15 @@ fi
 
 
 
+
+
 #
 #-----------------------------------------------------------------------
 #
-# Call the function that sets the ozone parameterization being used and
-# modifies related parameters accordingly. 
-#
-#-----------------------------------------------------------------------
-#
-set_ozone_param \
-  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
-  ozone_param_no_ccpp="OZONE_PARAM_NO_CCPP" \
-  output_varname_ozone_param="OZONE_PARAM"
-#
-#-----------------------------------------------------------------------
-#
-# Create a new experiment directory.  Note that at this point we are 
-# guaranteed that there is no preexisting experiment directory.
-#
-#-----------------------------------------------------------------------
-#
-mkdir_vrfy -p "$EXPTDIR"
-#
-#-----------------------------------------------------------------------
-#
-# Generate the shell script that will appear in the experiment directory 
+# Generate the shell script that will appear in the experiment directory
 # (EXPTDIR) and will contain definitions of variables needed by the va-
 # rious scripts in the workflow.  We refer to this as the experiment/
-# workflow global variable definitions file.  We will create this file 
+# workflow global variable definitions file.  We will create this file
 # by:
 #
 # 1) Copying the default workflow/experiment configuration file (speci-
@@ -2312,6 +2375,7 @@ FIXgsm="$FIXgsm"
 FIXupp="$FIXupp"
 FIXgsd="$FIXgsd"
 COMROOT="$COMROOT"
+COMOUT_BASEDIR="${COMOUT_BASEDIR}"
 TEMPLATE_DIR="${TEMPLATE_DIR}"
 UFS_WTHR_MDL_DIR="${UFS_WTHR_MDL_DIR}"
 UFS_UTILS_DIR="${UFS_UTILS_DIR}"
@@ -2508,11 +2572,11 @@ EXTRN_MDL_LBCS_OFFSET_HRS="${EXTRN_MDL_LBCS_OFFSET_HRS}"
 #-----------------------------------------------------------------------
 #
 # Boundary condition update times (in units of forecast hours).  Note that
-# LBC_UPDATE_FCST_HRS is an array, even if it has only one element.
+# LBC_SPEC_FCST_HRS is an array, even if it has only one element.
 #
 #-----------------------------------------------------------------------
 #
-LBC_UPDATE_FCST_HRS=(${LBC_UPDATE_FCST_HRS[@]})
+LBC_SPEC_FCST_HRS=(${LBC_SPEC_FCST_HRS[@]})
 #
 #-----------------------------------------------------------------------
 #
