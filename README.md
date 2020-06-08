@@ -18,13 +18,16 @@ cd sorc
 NOTE: You must *not* have the conda module loaded for the build to succeed.
 
 This step will also copy the executables to the `exec` directory and link the fix files.
+
 4. Create a `config.sh` file in the `ush` directory (see Users Guide).
+
 5. Set up your python environment; you will need python3, and it must have the 'PyYAML', 'Jinja2', and 'f90nml' packages installed
 
 On some platforms this environment is already available with a few commands;For example, on Jet/Hera:
 ```
 cd ush
-module load contrib miniconda3
+module use -a /contrib/miniconda3/modulefiles
+module load miniconda3
 conda activate regional_workflow
 ```
 on Cheyenne:
@@ -48,5 +51,5 @@ rocotostat -w FV3SAR_wflow.xml -d FV3SAR_wflow.db -v 10
 ```
 8.  For automatic resubmission of the workflow, the following can be added to your crontab:
 ```
-*/3 * * * * cd $EXPTDIR && rocotorun -w FV3SAR_wflow.xml -d FV3SAR_wflow.db -v 10
+*/3 * * * * cd $EXPTDIR && ./launch_FV3SAR_wflow.sh
 ```
