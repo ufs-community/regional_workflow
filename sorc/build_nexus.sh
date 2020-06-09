@@ -16,6 +16,7 @@ source ./machine-setup.sh $platform > /dev/null 2>&1
 if [ $platform = "wcoss_cray" ]; then
   platform="cray"
 fi
+
 #
 # Set the name of the package.  This will also be the name of the execu-
 # table that will be built.
@@ -28,14 +29,16 @@ mkdir -p ../exec
 #
 # Change directory to where the source code is located.
 # 
-cd ${package_name}.fd/
+cd ${package_name}/
 home_dir=`pwd`/../..
 srcDir=`pwd`
 #
 # Load modules.
 #
 set +x
-source config/modulefiles.${platform}
+source ../../modulefiles/codes/${platform}/global_equiv_resol
+module load cmake
+#source config/modulefiles.${platform}
 #
 MPICH_UNEX_BUFFER_SIZE=256m
 MPICH_MAX_SHORT_MSG_SIZE=64000
