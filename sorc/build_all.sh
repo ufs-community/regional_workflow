@@ -42,6 +42,17 @@ echo " .... Library build not currently supported .... "
 }
 
 #------------------------------------
+# Check and build nexus
+#------------------------------------
+if [ -d "./arl_nexus" ]
+then
+    $Build_nexus && {
+echo " .... Building nexus .... "
+./build_nexus.sh > $logs_dir/build_nexus.log 2>&1
+}
+fi
+
+#------------------------------------
 # build forecast
 #------------------------------------
 $Build_forecast && {
