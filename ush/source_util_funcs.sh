@@ -75,13 +75,12 @@ function source_util_funcs() {
 #-----------------------------------------------------------------------
 #
 # Source the file containing the function that checks for preexisting 
-# directories and handles them according to the setting of the variable
-# PREEXISTING_DIR_METHOD [which is specified in the experiment/workflow
-# configuration script(s)].
+# directories or files and handles them according to a specified method
+# (which can be one of "delete", "rename", and "quit").
 #
 #-----------------------------------------------------------------------
 #
-  . ${bashutils_dir}/check_for_preexist_dir.sh
+  . ${bashutils_dir}/check_for_preexist_dir_file.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -164,6 +163,15 @@ function source_util_funcs() {
 #-----------------------------------------------------------------------
 #
   . ${bashutils_dir}/get_manage_externals_config_property.sh
+#
+#-----------------------------------------------------------------------
+#
+# Source the file containing the function that returns to stdout the 
+# contents of a character (i.e. string) variable in a netcdf file.
+#
+#-----------------------------------------------------------------------
+#
+  . ${bashutils_dir}/get_charvar_from_netcdf.sh
 
 }
 source_util_funcs

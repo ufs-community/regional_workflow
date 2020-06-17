@@ -13,7 +13,7 @@ function generate_FV3SAR_wflow() {
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located 
+# Get the full path to the file in which this script/function is located
 # (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
 # which the file is located (scrfunc_dir).
 #
@@ -46,6 +46,7 @@ ushdir="${scrfunc_dir}"
 #-----------------------------------------------------------------------
 #
 . $ushdir/source_util_funcs.sh
+. $ushdir/set_FV3nml_sfc_climo_filenames.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -59,7 +60,7 @@ ushdir="${scrfunc_dir}"
 #-----------------------------------------------------------------------
 #
 # Source the file that defines and then calls the setup function.  The
-# setup function in turn first sources the default configuration file 
+# setup function in turn first sources the default configuration file
 # (which contains default values for the experiment/workflow parameters)
 # and then sources the user-specified configuration file (which contains
 # user-specified values for a subset of the experiment/workflow parame-
@@ -71,209 +72,177 @@ ushdir="${scrfunc_dir}"
 #
 #-----------------------------------------------------------------------
 #
-# Set the full paths to the template and actual workflow xml files.  The
-# actual workflow xml will be placed in the run directory and then used
-# by rocoto to run the workflow.
+# Set the full path to the experiment's rocoto workflow xml file.  This
+# file will be placed at the top level of the experiment directory and
+# then used by rocoto to run the workflow.
 #
 #-----------------------------------------------------------------------
 #
-TEMPLATE_XML_FP="${TEMPLATE_DIR}/${WFLOW_XML_FN}"
 WFLOW_XML_FP="$EXPTDIR/${WFLOW_XML_FN}"
 #
 #-----------------------------------------------------------------------
 #
-# Copy the xml template file to the run directory.
+# Create a multiline variable that consists of a yaml-compliant string
+# specifying the values that the jinja variables in the template rocoto
+# XML should be set to.  These values are set either in the user-specified
+# workflow configuration file (EXPT_CONFIG_FN) or in the setup.sh script
+# sourced above.  Then call the python script that generates the XML.
 #
 #-----------------------------------------------------------------------
 #
-cp_vrfy ${TEMPLATE_XML_FP} ${WFLOW_XML_FP}
+settings="\
 #
-#-----------------------------------------------------------------------
+# Parameters needed by the job scheduler.
 #
-# Set local variables that will be used later below to replace place-
-# holder values in the workflow xml file.
+  'account': $ACCOUNT
+  'sched': $SCHED
+  'queue_default': ${QUEUE_DEFAULT}
+  'queue_default_tag': ${QUEUE_DEFAULT_TAG}
+  'queue_hpss': ${QUEUE_HPSS}
+  'queue_hpss_tag': ${QUEUE_HPSS_TAG}
+  'queue_fcst': ${QUEUE_FCST}
+  'queue_fcst_tag': ${QUEUE_FCST_TAG}
 #
-#-----------------------------------------------------------------------
+# Workflow task names.
 #
-PROC_RUN_FCST="${NUM_NODES}:ppn=${NCORES_PER_NODE}"
+  'make_grid_tn': ${MAKE_GRID_TN}
+  'make_orog_tn': ${MAKE_OROG_TN}
+  'make_sfc_climo_tn': ${MAKE_SFC_CLIMO_TN}
+  'get_extrn_ics_tn': ${GET_EXTRN_ICS_TN}
+  'get_extrn_lbcs_tn': ${GET_EXTRN_LBCS_TN}
+  'make_ics_tn': ${MAKE_ICS_TN}
+  'make_lbcs_tn': ${MAKE_LBCS_TN}
+  'run_fcst_tn': ${RUN_FCST_TN}
+  'run_post_tn': ${RUN_POST_TN}
+  'vx_tn': ${VX_TN}
+  'vx_gridstat_tn': ${VX_GRIDSTAT_TN}
+  'vx_pointstat_tn': ${VX_POINTSTAT_TN}
+#
+# Number of nodes to use for each task.
+#
+  'nnodes_make_grid': ${NNODES_MAKE_GRID}
+  'nnodes_make_orog': ${NNODES_MAKE_OROG}
+  'nnodes_make_sfc_climo': ${NNODES_MAKE_SFC_CLIMO}
+  'nnodes_get_extrn_ics': ${NNODES_GET_EXTRN_ICS}
+  'nnodes_get_extrn_lbcs': ${NNODES_GET_EXTRN_LBCS}
+  'nnodes_make_ics': ${NNODES_MAKE_ICS}
+  'nnodes_make_lbcs': ${NNODES_MAKE_LBCS}
+  'nnodes_run_fcst': ${NNODES_RUN_FCST}
+  'nnodes_run_post': ${NNODES_RUN_POST}
+  'nnodes_run_vx_gridstat': ${NNODES_VX_GRIDSTAT}
+  'nnodes_run_vx_pointstat': ${NNODES_VX_POINTSTAT}
 
-FHR=( $( seq 0 1 ${FCST_LEN_HRS} ) )
-i=0
-FHR_STR=$( printf "%02d" "${FHR[i]}" )
-numel=${#FHR[@]}
-for i in $(seq 1 $(($numel-1)) ); do
-  hour=$( printf "%02d" "${FHR[i]}" )
-  FHR_STR="${FHR_STR} $hour"
-done
-FHR="${FHR_STR}"
 #
-#-----------------------------------------------------------------------
+# Number of logical processes per node for each task.  If running without
+# threading, this is equal to the number of MPI processes per node.
 #
-# Set the variable containing a generic version of the cycle directory.
-# This variable will be used in the rocoto workflow XML file.  By "generic", 
-# we mean that the year, month, day, and hour in this variable are 
-# placeholders that rocoto will replace with actual values (integers).
-#
-#-----------------------------------------------------------------------
-#
-CDATE_generic="@Y@m@d@H"
-if [ "${RUN_ENVIR}" = "nco" ]; then
-#
-# Can't do this because there will be leftover directories from previous
-# runs with the same experiment settings that are difficult to remove.
-# Have to split the cycle CDATE from the grid name.
-#
-#  CYCLE_DIR="$STMP/tmpnwprd/${EMC_GRID_NAME}_${CDATE_generic}"
+  'ppn_make_grid': ${PPN_MAKE_GRID}
+  'ppn_make_orog': ${PPN_MAKE_OROG}
+  'ppn_make_sfc_climo': ${PPN_MAKE_SFC_CLIMO}
+  'ppn_get_extrn_ics': ${PPN_GET_EXTRN_ICS}
+  'ppn_get_extrn_lbcs': ${PPN_GET_EXTRN_LBCS}
+  'ppn_make_ics': ${PPN_MAKE_ICS}
+  'ppn_make_lbcs': ${PPN_MAKE_LBCS}
+  'ppn_run_fcst': ${PPN_RUN_FCST}
+  'ppn_run_post': ${PPN_RUN_POST}
+  'ppn_vx_gridstat': ${PPN_VX_GRIDSTAT}
+  'ppn_vx_pointstat': ${PPN_VX_POINTSTAT}
 
-  cycle_basedir="$STMP/tmpnwprd/${EMC_GRID_NAME}" 
-  check_for_preexist_dir ${cycle_basedir} ${PREEXISTING_DIR_METHOD}
-  CYCLE_DIR="${cycle_basedir}/${CDATE_generic}"
-
-else
-
-  CYCLE_DIR="$EXPTDIR/${CDATE_generic}"
-
-fi
 #
-#-----------------------------------------------------------------------
+# Maximum wallclock time for each task.
 #
-# Fill in the rocoto workflow XML file with parameter values that are 
-# either specified in the configuration file/script (config.sh) or set in
-# the setup script sourced above.
+  'wtime_make_grid': ${WTIME_MAKE_GRID}
+  'wtime_make_orog': ${WTIME_MAKE_OROG}
+  'wtime_make_sfc_climo': ${WTIME_MAKE_SFC_CLIMO}
+  'wtime_get_extrn_ics': ${WTIME_GET_EXTRN_ICS}
+  'wtime_get_extrn_lbcs': ${WTIME_GET_EXTRN_LBCS}
+  'wtime_make_ics': ${WTIME_MAKE_ICS}
+  'wtime_make_lbcs': ${WTIME_MAKE_LBCS}
+  'wtime_run_fcst': ${WTIME_RUN_FCST}
+  'wtime_run_post': ${WTIME_RUN_POST}
+  'wtime_vx_gridstat': ${WTIME_VX_GRIDSTAT}
+  'wtime_vx_pointstat': ${WTIME_VX_POINTSTAT}
 #
-#-----------------------------------------------------------------------
+# Flags that specify whether to run the preprocessing tasks.
 #
-# Computational resource parameters.
+  'run_task_make_grid': ${RUN_TASK_MAKE_GRID}
+  'run_task_make_orog': ${RUN_TASK_MAKE_OROG}
+  'run_task_make_sfc_climo': ${RUN_TASK_MAKE_SFC_CLIMO}
+  'run_task_vx_grdistat': ${RUN_TASK_VX_GRIDSTAT}
+  'run_task_vx_pointstat': ${RUN_TASK_VX_POINTSTAT}
 #
-set_file_param "${WFLOW_XML_FP}" "ACCOUNT" "$ACCOUNT"
-set_file_param "${WFLOW_XML_FP}" "SCHED" "$SCHED"
-set_file_param "${WFLOW_XML_FP}" "QUEUE_DEFAULT" "${QUEUE_DEFAULT}"
-set_file_param "${WFLOW_XML_FP}" "QUEUE_HPSS" "${QUEUE_HPSS}"
-set_file_param "${WFLOW_XML_FP}" "QUEUE_FCST" "${QUEUE_FCST}"
-set_file_param "${WFLOW_XML_FP}" "PROC_RUN_FCST" "${PROC_RUN_FCST}"
+# Number of physical cores per node for the current machine.
 #
-# Directories.
+  'ncores_per_node': ${NCORES_PER_NODE}
 #
-set_file_param "${WFLOW_XML_FP}" "USHDIR" "$USHDIR"
-set_file_param "${WFLOW_XML_FP}" "JOBSDIR" "$JOBSDIR"
-set_file_param "${WFLOW_XML_FP}" "SCRIPTSDIR" "$SCRIPTSDIR"
-set_file_param "${WFLOW_XML_FP}" "EXPTDIR" "$EXPTDIR"
-set_file_param "${WFLOW_XML_FP}" "LOGDIR" "$LOGDIR"
-set_file_param "${WFLOW_XML_FP}" "CYCLE_DIR" "${CYCLE_DIR}"
+# Directories and files.
 #
-# Files.
+  'jobsdir': $JOBSDIR
+  'logdir': $LOGDIR
+  'cycle_basedir': ${CYCLE_BASEDIR}
+  'global_var_defns_fp': ${GLOBAL_VAR_DEFNS_FP}
+  'load_modules_run_task_fp': ${LOAD_MODULES_RUN_TASK_FP}
 #
-set_file_param "${WFLOW_XML_FP}" "GLOBAL_VAR_DEFNS_FP" "${GLOBAL_VAR_DEFNS_FP}"
+# External model information for generating ICs and LBCs.
 #
-# External model information.
+  'extrn_mdl_name_ics': ${EXTRN_MDL_NAME_ICS}
+  'extrn_mdl_name_lbcs': ${EXTRN_MDL_NAME_LBCS}
 #
-set_file_param "${WFLOW_XML_FP}" "EXTRN_MDL_NAME_ICS" "${EXTRN_MDL_NAME_ICS}"
-set_file_param "${WFLOW_XML_FP}" "EXTRN_MDL_NAME_LBCS" "${EXTRN_MDL_NAME_LBCS}"
-set_file_param "${WFLOW_XML_FP}" "EXTRN_MDL_FILES_SYSBASEDIR_ICS" "${EXTRN_MDL_FILES_SYSBASEDIR_ICS}"
-set_file_param "${WFLOW_XML_FP}" "EXTRN_MDL_FILES_SYSBASEDIR_LBCS" "${EXTRN_MDL_FILES_SYSBASEDIR_LBCS}"
+# Parameters that determine the set of cycles to run.
 #
-# Cycle-specific information.
+  'date_first_cycl': !datetime ${DATE_FIRST_CYCL}${CYCL_HRS[0]}
+  'date_last_cycl': !datetime ${DATE_LAST_CYCL}${CYCL_HRS[0]}
+  'cycl_freq': !!str 24:00:00
 #
-set_file_param "${WFLOW_XML_FP}" "DATE_FIRST_CYCL" "${DATE_FIRST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "DATE_LAST_CYCL" "${DATE_LAST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "YYYY_FIRST_CYCL" "${YYYY_FIRST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "MM_FIRST_CYCL" "${MM_FIRST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "DD_FIRST_CYCL" "${DD_FIRST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "HH_FIRST_CYCL" "${HH_FIRST_CYCL}"
-set_file_param "${WFLOW_XML_FP}" "FHR" "$FHR"
+# Forecast length (same for all cycles).
+#
+  'fcst_len_hrs': ${FCST_LEN_HRS}"
 #
 # METPlus-specific information
 #
-set_file_param "${WFLOW_XML_FP}" "MODEL" "$MODEL"
-set_file_param "${WFLOW_XML_FP}" "MET_INSTALL_DIR" "$MET_INSTALL_DIR"
-set_file_param "${WFLOW_XML_FP}" "METPLUS_PATH" "$METPLUS_PATH"
-set_file_param "${WFLOW_XML_FP}" "VX_CONFIG_DIR" "$VX_CONFIG_DIR"
-set_file_param "${WFLOW_XML_FP}" "METPLUS_CONF" "$METPLUS_CONF"
-set_file_param "${WFLOW_XML_FP}" "MET_CONFIG" "$MET_CONFIG"
-set_file_param "${WFLOW_XML_FP}" "CCPA_OBS_DIR" "$CCPA_OBS_DIR"
-set_file_param "${WFLOW_XML_FP}" "NDAS_OBS_DIR" "$NDAS_OBS_DIR"
+  'model': ${MODEL}
+  'met_install_dir': ${MET_INSTALL_DIR}
+  'metplus_path': ${METPLUS_PATH}
+  'vx_config_dir': ${VX_CONFIG_DIR}
+  'metplus_conf': ${METPLUS_CONF}
+  'met_config': ${MET_CONFIG}
+  'ccpa_obs_dir': ${CCPA_OBS_DIR}
+  'ndas_obs_dir': ${NDAS_OBS_DIR}
+#
+# For debugging purposes, print out what "settings" has been set to.
+#
+print_info_msg $VERBOSE "
+The variable \"settings\" specifying values of the rococo XML variables
+has been set as follows:
 
+settings =
+$settings"
 #
-# Rocoto workflow task names.
+# Set the full path to the template rocoto XML file.  Then call a python
+# script to generate the experiment's actual XML file from this template
+# file.
 #
-set_file_param "${WFLOW_XML_FP}" "MAKE_GRID_TN" "${MAKE_GRID_TN}"
-set_file_param "${WFLOW_XML_FP}" "MAKE_OROG_TN" "${MAKE_OROG_TN}"
-set_file_param "${WFLOW_XML_FP}" "MAKE_SFC_CLIMO_TN" "${MAKE_SFC_CLIMO_TN}"
-set_file_param "${WFLOW_XML_FP}" "GET_EXTRN_ICS_TN" "${GET_EXTRN_ICS_TN}"
-set_file_param "${WFLOW_XML_FP}" "GET_EXTRN_LBCS_TN" "${GET_EXTRN_LBCS_TN}"
-set_file_param "${WFLOW_XML_FP}" "MAKE_ICS_TN" "${MAKE_ICS_TN}"
-set_file_param "${WFLOW_XML_FP}" "MAKE_LBCS_TN" "${MAKE_LBCS_TN}"
-set_file_param "${WFLOW_XML_FP}" "RUN_FCST_TN" "${RUN_FCST_TN}"
-set_file_param "${WFLOW_XML_FP}" "RUN_POST_TN" "${RUN_POST_TN}"
-set_file_param "${WFLOW_XML_FP}" "VX_TN" "${VX_TN}"
-set_file_param "${WFLOW_XML_FP}" "VX_GRIDSTAT_TN" "${VX_GRIDSTAT_TN}"
-set_file_param "${WFLOW_XML_FP}" "VX_POINTSTAT_TN" "${VX_POINTSTAT_TN}"
-#
-# Flags that determine whether or not certain tasks are launched.
-#
-set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_GRID" "${RUN_TASK_MAKE_GRID}"
-set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_OROG" "${RUN_TASK_MAKE_OROG}"
-set_file_param "${WFLOW_XML_FP}" "RUN_TASK_MAKE_SFC_CLIMO" "${RUN_TASK_MAKE_SFC_CLIMO}"
-set_file_param "${WFLOW_XML_FP}" "RUN_TASK_VX_GRIDSTAT" "${RUN_TASK_VX_GRIDSTAT}"
-set_file_param "${WFLOW_XML_FP}" "RUN_TASK_VX_POINTSTAT" "${RUN_TASK_VX_POINTSTAT}"
-#
-#-----------------------------------------------------------------------
-#
-# Extract from CDATE the starting year, month, day, and hour of the
-# forecast.  These are needed below for various operations.
-#
-#-----------------------------------------------------------------------
-#
-YYYY_FIRST_CYCL=${DATE_FIRST_CYCL:0:4}
-MM_FIRST_CYCL=${DATE_FIRST_CYCL:4:2}
-DD_FIRST_CYCL=${DATE_FIRST_CYCL:6:2}
-HH_FIRST_CYCL=${CYCL_HRS[0]}
-#
-#-----------------------------------------------------------------------
-#
-# Replace the dummy line in the XML defining a generic cycle hour with
-# one line per cycle hour containing actual values.
-#
-#-----------------------------------------------------------------------
-#
-regex_search="(^\s*<cycledef\s+group=\"at_)(CC)(Z\">)(\&DATE_FIRST_CYCL;)(CC00)(\s+)(\&DATE_LAST_CYCL;)(CC00)(.*</cycledef>)(.*)"
-i=0
-for cycl in "${CYCL_HRS[@]}"; do
-  regex_replace="\1${cycl}\3\4${cycl}00 \7${cycl}00\9"
-  crnt_line=$( sed -n -r -e "s%${regex_search}%${regex_replace}%p" "${WFLOW_XML_FP}" )
-  if [ "$i" -eq "0" ]; then
-    all_cycledefs="${crnt_line}"
-  else
-    all_cycledefs=$( printf "%s\n%s" "${all_cycledefs}" "${crnt_line}" )
-  fi
-  i=$((i+1))
-done
-#
-# Replace all actual newlines in the variable all_cycledefs with back-
-# slash-n's.  This is needed in order for the sed command below to work
-# properly (i.e. to avoid it failing with an "unterminated `s' command"
-# message).
-#
-all_cycledefs=${all_cycledefs//$'\n'/\\n}
-#
-# Replace all ampersands in the variable all_cycledefs with backslash-
-# ampersands.  This is needed because the ampersand has a special mean-
-# ing when it appears in the replacement string (here named regex_re-
-# place) and thus must be escaped.
-#
-all_cycledefs=${all_cycledefs//&/\\\&}
-#
-# Perform the subsutitution.
-#
-sed -i -r -e "s|${regex_search}|${all_cycledefs}|g" "${WFLOW_XML_FP}"
-
-
+template_xml_fp="${TEMPLATE_DIR}/${WFLOW_XML_FN}"
+$USHDIR/create_xml.py -q \
+                      -t ${template_xml_fp} \
+                      -u "$settings" \
+                      -o ${WFLOW_XML_FP} || \
+  print_err_msg_exit "\
+Call to python script create_xml.py to create a rocoto workflow XML file
+from a template file failed.  Parameters passed to this script are:
+  Full path to template rocoto XML file:
+    template_xml_fp = \"${template_xml_fp}\"
+  Full path to output rocoto XML file:
+    WFLOW_XML_FP = \"${WFLOW_XML_FP}\"
+  Namelist settings specified on command line:
+    settings =
+$settings"
 #
 #-----------------------------------------------------------------------
 #
 # For select workflow tasks, create symlinks (in an appropriate subdi-
 # rectory under the workflow directory tree) that point to module files
-# in the various cloned external repositories.  In principle, this is 
+# in the various cloned external repositories.  In principle, this is
 # better than having hard-coded module files for tasks because the sym-
 # links will always point to updated module files.  However, it does re-
 # quire that these module files in the external repositories be coded
@@ -287,7 +256,7 @@ machine=${MACHINE,,}
 cd_vrfy "${MODULES_DIR}/tasks/$machine"
 
 #
-# The "module" file (really a shell script) for orog in the UFS_UTILS 
+# The "module" file (really a shell script) for orog in the UFS_UTILS
 # repo uses a shell variable named MOD_PATH, but it is not clear where
 # that is defined.  That needs to be fixed.  Until then, we have to use
 # a hard-coded module file, which may or may not be compatible with the
@@ -313,23 +282,36 @@ cp_vrfy "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" \
         "${MAKE_LBCS_TN}"
 cat "${MAKE_LBCS_TN}.local" >> "${MAKE_LBCS_TN}"
 
-ln_vrfy -fs "${UFS_WTHR_MDL_DIR}/NEMS/src/conf/modules.nems" \
+ln_vrfy -fs "${UFS_WTHR_MDL_DIR}/modulefiles/$machine.intel/fv3" \
             "${RUN_FCST_TN}"
+#
+# Only some platforms build EMC_post using modules.
+#
+case $MACHINE in
 
-ln_vrfy -fs "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" \
-            "${RUN_POST_TN}"
+  "CHEYENNE")
+    print_info_msg "No post modulefile needed for $MACHINE"
+    ;;
+
+  *)
+    ln_vrfy -fs "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" \
+                "${RUN_POST_TN}"
+    ;;
+
+esac
 
 cd_vrfy -
 #
 #-----------------------------------------------------------------------
 #
-# Copy the workflow (re)launch script to the experiment directory.
+# Create a symlink in the experiment directory that points to the workflow
+# (re)launch script.
 #
 #-----------------------------------------------------------------------
 #
 print_info_msg "
-Creating symlink in the experiment directory (EXPTDIR) to the workflow
-launch script (WFLOW_LAUNCH_SCRIPT_FP):
+Creating symlink in the experiment directory (EXPTDIR) that points to the
+workflow launch script (WFLOW_LAUNCH_SCRIPT_FP):
   EXPTDIR = \"${EXPTDIR}\"
   WFLOW_LAUNCH_SCRIPT_FP = \"${WFLOW_LAUNCH_SCRIPT_FP}\""
 ln_vrfy -fs "${WFLOW_LAUNCH_SCRIPT_FP}" "$EXPTDIR"
@@ -353,9 +335,9 @@ Copying contents of user cron table to backup file:
   crontab_backup_fp = \"${crontab_backup_fp}\""
   crontab -l > ${crontab_backup_fp}
 #
-# Below, we use "grep" to determine whether the crontab line that the 
-# variable CRONTAB_LINE contains is already present in the cron table.  
-# For that purpose, we need to escape the asterisks in the string in 
+# Below, we use "grep" to determine whether the crontab line that the
+# variable CRONTAB_LINE contains is already present in the cron table.
+# For that purpose, we need to escape the asterisks in the string in
 # CRONTAB_LINE with backslashes.  Do this next.
 #
   crontab_line_esc_astr=$( printf "%s" "${CRONTAB_LINE}" | \
@@ -363,14 +345,14 @@ Copying contents of user cron table to backup file:
 #
 # In the grep command below, the "^" at the beginning of the string be-
 # ing passed to grep is a start-of-line anchor while the "$" at the end
-# of the string is an end-of-line anchor.  Thus, in order for grep to 
-# find a match on any given line of the output of "crontab -l", that 
+# of the string is an end-of-line anchor.  Thus, in order for grep to
+# find a match on any given line of the output of "crontab -l", that
 # line must contain exactly the string in the variable crontab_line_-
 # esc_astr without any leading or trailing characters.  This is to eli-
 # minate situations in which a line in the output of "crontab -l" con-
 # tains the string in crontab_line_esc_astr but is precedeeded, for ex-
 # ample, by the comment character "#" (in which case cron ignores that
-# line) and/or is followed by further commands that are not part of the 
+# line) and/or is followed by further commands that are not part of the
 # string in crontab_line_esc_astr (in which case it does something more
 # than the command portion of the string in crontab_line_esc_astr does).
 #
@@ -383,7 +365,7 @@ Copying contents of user cron table to backup file:
 The following line already exists in the cron table and thus will not be
 added:
   CRONTAB_LINE = \"${CRONTAB_LINE}\""
-  
+
   else
 
     print_info_msg "
@@ -399,9 +381,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Copy fixed files from system directory to the FIXam directory (which 
+# Copy fixed files from system directory to the FIXam directory (which
 # is under the experiment directory).  Note that some of these files get
-# renamed.
+# renamed during the copy process.
 #
 #-----------------------------------------------------------------------
 #
@@ -411,15 +393,19 @@ fi
 if [ "${RUN_ENVIR}" != "nco" ]; then
 
   print_info_msg "$VERBOSE" "
-Copying fixed files from system directory to the experiment directory..."
+Copying fixed files from system directory (FIXgsm) to a subdirectory
+(FIXam) in the experiment directory:
+  FIXgsm = \"$FIXgsm\"
+  FIXam = \"$FIXam\""
 
-  check_for_preexist_dir $FIXam "delete"
-  mkdir -p $FIXam
+  check_for_preexist_dir_file "$FIXam" "delete"
+  mkdir_vrfy -p "$FIXam"
+  mkdir_vrfy -p "$FIXam/fix_co2_proj"
 
-  cp_vrfy $FIXgsm/global_hyblev.l65.txt $FIXam
-  for (( i=0; i<${NUM_FIXam_FILES}; i++ )); do
-    cp_vrfy $FIXgsm/${FIXgsm_FILENAMES[$i]} \
-            $FIXam/${FIXam_FILENAMES[$i]}
+  num_files=${#FIXgsm_FILES_TO_COPY_TO_FIXam[@]}
+  for (( i=0; i<${num_files}; i++ )); do
+    fn="${FIXgsm_FILES_TO_COPY_TO_FIXam[$i]}"
+    cp_vrfy "$FIXgsm/$fn" "$FIXam/$fn"
   done
 
 fi
@@ -442,19 +428,15 @@ print_info_msg "$VERBOSE" "
 cp_vrfy "${FIELD_TABLE_TMPL_FP}" "${FIELD_TABLE_FP}"
 
 print_info_msg "$VERBOSE" "
-  Copying the template FV3 namelist file to the experiment directory..."
-cp_vrfy "${FV3_NML_TMPL_FP}" "${FV3_NML_FP}"
-
-print_info_msg "$VERBOSE" "
   Copying the template NEMS configuration file to the experiment direct-
   ory..."
 cp_vrfy "${NEMS_CONFIG_TMPL_FP}" "${NEMS_CONFIG_FP}"
 #
-# If using CCPP ... 
+# If using CCPP ...
 #
 if [ "${USE_CCPP}" = "TRUE" ]; then
 #
-# Copy the CCPP physics suite definition file from its location in the 
+# Copy the CCPP physics suite definition file from its location in the
 # clone of the FV3 code repository to the experiment directory (EXPT-
 # DIR).
 #
@@ -464,20 +446,101 @@ the forecast model directory sturcture to the experiment directory..."
   cp_vrfy "${CCPP_PHYS_SUITE_IN_CCPP_FP}" "${CCPP_PHYS_SUITE_FP}"
 #
 # If using the GSD_v0 or GSD_SAR physics suite, copy the fixed file con-
-# taining cloud condensation nuclei (CCN) data that is needed by the 
+# taining cloud condensation nuclei (CCN) data that is needed by the
 # Thompson microphysics parameterization to the experiment directory.
 #
   if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
     print_info_msg "$VERBOSE" "
-Copying the fixed file containing cloud condensation nuclei (CCN) data 
+Copying the fixed file containing cloud condensation nuclei (CCN) data
 (needed by the Thompson microphysics parameterization) to the experiment
 directory..."
     cp_vrfy "$FIXgsd/CCN_ACTIVATE.BIN" "$EXPTDIR"
   fi
 
 fi
+
+
+#
+#-----------------------------------------------------------------------
+#
+# This if-statement is a temporary fix that makes corrections to the suite
+# definition file for the "FV3_GFS_2017_gfdlmp_regional" physics suite
+# that EMC uses. 
+#
+# IMPORTANT:
+# This if-statement must be removed once these corrections are made to
+# the suite definition file in the dtc/develop branch of the NCAR fork
+# of the fv3atm repository.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${USE_CCPP}" = "TRUE" ] && \
+   [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ]; then
+  mv_vrfy "${CCPP_PHYS_SUITE_FP}.tmp" "${CCPP_PHYS_SUITE_FP}"
+fi
+
+
+
+
+
+#
+#-----------------------------------------------------------------------
+#
+# Copy the forecast model executable from its location in the directory
+# in which the forecast model repository was cloned (UFS_WTHR_MDL_DIR)
+# to the executables directory (EXECDIR).
+#
+# Note that if there is already an experiment that is running the forecast
+# task (so that the forecast model executable in EXECDIR is in use) and
+# the user tries to generate another experiment, the generation of this
+# second experiment will fail because the operating system won't allow
+# the existing executable in EXECDIR to be overwritten (because it is
+# "busy", i.e. in use by the first experiment).  For this reason, below,
+# we try to prevent this situation by comparing the ages of the source
+# and target executables and attempting the copy only if the source one
+# is newer (or if the target doesn't exist).  This will very likely prevent
+# the situation described above, but it doesn't guarantee that it will
+# never happen (it will still happen if an experiment is running a forecast
+# while the user rebuilts the forecast model and attempts to generate a
+# new experiment.  For this reason, this copy operation should really be
+# performed duirng the build step, not here.
+#
+# Question:
+# Why doesn't the build script(s) perform this action?  It should...
+#
+#-----------------------------------------------------------------------
+#
+if [ "${USE_CCPP}" = "TRUE" ]; then
+  exec_fn="fv3.exe"
+else
+  exec_fn="fv3_32bit.exe"
+fi
+
+exec_fp="${UFS_WTHR_MDL_DIR}/tests/${exec_fn}"
+if [ ! -f "${exec_fp}" ]; then
+  print_err_msg_exit "\
+The executable (exec_fp) for running the forecast model does not exist:
+  exec_fp = \"${exec_fp}\"
+Please ensure that you've built this executable."
+fi
+#
+# Make a copy of the executable in the executables directory only if a
+# copy doens't already exist or if a copy does exist but is older than
+# the original.
+#
+if [ ! -e "${FV3_EXEC_FP}" ] || \
+   [ "${exec_fp}" -nt "${FV3_EXEC_FP}" ]; then
+  print_info_msg "$VERBOSE" "
+Copying the FV3SAR executable (exec_fp) to the executables directory
+(EXECDIR):
+  exec_fp = \"${exec_fp}\"
+  EXECDIR = \"$EXECDIR\""
+  cp_vrfy "${exec_fp}" "${FV3_EXEC_FP}"
+fi
+
+
 #
 #-----------------------------------------------------------------------
 #
@@ -489,56 +552,16 @@ print_info_msg "$VERBOSE" "
 Setting parameters in FV3 namelist file (FV3_NML_FP):
   FV3_NML_FP = \"${FV3_NML_FP}\""
 #
-# Set npx and npy, which are just NX plus 1 and NY plus 1, respectively.  
-# These need to be set in the FV3SAR Fortran namelist file.  They repre-
-# sent the number of cell vertices in the x and y directions on the re-
-# gional grid.
+# Set npx and npy, which are just NX plus 1 and NY plus 1, respectively.
+# These need to be set in the FV3SAR Fortran namelist file.  They represent
+# the number of cell vertices in the x and y directions on the regional
+# grid.
 #
 npx=$((NX+1))
 npy=$((NY+1))
 #
-# Set parameters.
-#
-set_file_param "${FV3_NML_FP}" "blocksize" "$BLOCKSIZE"
-set_file_param "${FV3_NML_FP}" "ccpp_suite" "\'${CCPP_PHYS_SUITE}\'"
-set_file_param "${FV3_NML_FP}" "layout" "${LAYOUT_X},${LAYOUT_Y}"
-set_file_param "${FV3_NML_FP}" "npx" "$npx"
-set_file_param "${FV3_NML_FP}" "npy" "$npy"
-set_file_param "${FV3_NML_FP}" "target_lon" "${LON_CTR}"
-set_file_param "${FV3_NML_FP}" "target_lat" "${LAT_CTR}"
-# Question:
-# For a JPgrid type grid, what should stretch_fac be set to?  This de-
-# pends on how the FV3 code uses the stretch_fac parameter in the name-
-# list file.  Recall that for a JPgrid, it gets set in the function 
-# set_gridparams_JPgrid(.sh) to something like 0.9999, but is it ok to
-# set it to that here in the FV3 namelist file?
-set_file_param "${FV3_NML_FP}" "stretch_fac" "${STRETCH_FAC}"
-set_file_param "${FV3_NML_FP}" "bc_update_interval" "${LBC_UPDATE_INTVL_HRS}"
-
-set_file_param "${FV3_NML_FP}" "FNGLAC" "\"$FNGLAC\""
-set_file_param "${FV3_NML_FP}" "FNMXIC" "\"$FNMXIC\""
-set_file_param "${FV3_NML_FP}" "FNTSFC" "\"$FNTSFC\""
-set_file_param "${FV3_NML_FP}" "FNSNOC" "\"$FNSNOC\""
-set_file_param "${FV3_NML_FP}" "FNZORC" "\"$FNZORC\""
-set_file_param "${FV3_NML_FP}" "FNALBC" "\"$FNALBC\""
-set_file_param "${FV3_NML_FP}" "FNALBC2" "\"$FNALBC2\""
-set_file_param "${FV3_NML_FP}" "FNAISC" "\"$FNAISC\""
-set_file_param "${FV3_NML_FP}" "FNTG3C" "\"$FNTG3C\""
-set_file_param "${FV3_NML_FP}" "FNVEGC" "\"$FNVEGC\""
-set_file_param "${FV3_NML_FP}" "FNVETC" "\"$FNVETC\""
-set_file_param "${FV3_NML_FP}" "FNSOTC" "\"$FNSOTC\""
-set_file_param "${FV3_NML_FP}" "FNSMCC" "\"$FNSMCC\""
-set_file_param "${FV3_NML_FP}" "FNMSKH" "\"$FNMSKH\""
-set_file_param "${FV3_NML_FP}" "FNTSFA" "\"$FNTSFA\""
-set_file_param "${FV3_NML_FP}" "FNACNA" "\"$FNACNA\""
-set_file_param "${FV3_NML_FP}" "FNSNOA" "\"$FNSNOA\""
-set_file_param "${FV3_NML_FP}" "FNVMNC" "\"$FNVMNC\""
-set_file_param "${FV3_NML_FP}" "FNVMXC" "\"$FNVMXC\""
-set_file_param "${FV3_NML_FP}" "FNSLPC" "\"$FNSLPC\""
-set_file_param "${FV3_NML_FP}" "FNABSC" "\"$FNABSC\""
-#
-# For the GSD_v0 and the GSD_SAR physics suites, set the parameter lsoil
-# according to the external models used to obtain ICs and LBCs.
+# For the FV3_GSD_v0 and the FV3_GSD_SAR physics suites, set the parameter
+# lsoil according to the external models used to obtain ICs and LBCs.
 #
 if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
    [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
@@ -547,24 +570,168 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] && \
      [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" -o \
        "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
-    set_file_param "${FV3_NML_FP}" "lsoil" "4"
+    lsoil=4
   elif [ "${EXTRN_MDL_NAME_ICS}" = "RAPX" -o \
          "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ] && \
        [ "${EXTRN_MDL_NAME_LBCS}" = "RAPX" -o \
          "${EXTRN_MDL_NAME_LBCS}" = "HRRRX" ]; then
-    set_file_param "${FV3_NML_FP}" "lsoil" "9"
+    lsoil=9
   else
     print_err_msg_exit "\
-The value to set the variable lsoil to in the FV3 namelist file (FV3_-
-NML_FP) has not been specified for the following combination of physics
-suite and external models for ICs and LBCs:
+The value to set the variable lsoil to in the FV3 namelist file (FV3_NML_FP)
+has not been specified for the following combination of physics suite and
+external models for ICs and LBCs:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
   EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
-Please change one or more of these parameters or provide a value for 
-lsoil (and change workflow generation script(s) accordingly) and rerun."
+Please change one or more of these parameters or provide a value for lsoil
+(and change workflow generation script(s) accordingly) and rerun."
   fi
 
+fi
+#
+# Create a multiline variable that consists of a yaml-compliant string
+# specifying the values that the namelist variables that are physics-
+# suite-independent need to be set to.  Below, this variable will be
+# passed to a python script that will in turn set the values of these
+# variables in the namelist file.
+#
+settings="\
+'atmos_model_nml': {
+    'blocksize': $BLOCKSIZE,
+    'ccpp_suite': ${CCPP_PHYS_SUITE},
+  }
+'fv_core_nml': {
+    'target_lon': ${LON_CTR},
+    'target_lat': ${LAT_CTR},
+#
+# Question:
+# For a JPgrid type grid, what should stretch_fac be set to?  This depends
+# on how the FV3 code uses the stretch_fac parameter in the namelist file.
+# Recall that for a JPgrid, it gets set in the function set_gridparams_JPgrid(.sh)
+# to something like 0.9999, but is it ok to set it to that here in the
+# FV3 namelist file?
+#
+    'stretch_fac': ${STRETCH_FAC},
+    'npx': $npx,
+    'npy': $npy,
+    'layout': [${LAYOUT_X}, ${LAYOUT_Y}],
+    'bc_update_interval': ${LBC_SPEC_INTVL_HRS},
+  }
+'gfs_physics_nml': {
+    'lsoil': ${lsoil:-null},
+  }"
+#
+# Add to "settings" the values of those namelist variables that specify
+# the paths to fixed files in the FIXam directory.  As above, these namelist
+# variables are physcs-suite-independent.
+#
+# Note that the array FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING contains
+# the mapping between the namelist variables and the names of the files
+# in the FIXam directory.  Here, we loop through this array and process
+# each element to construct each line of "settings".
+#
+settings="$settings
+'namsfc': {"
+
+regex_search="^[ ]*([^| ]+)[ ]*[|][ ]*([^| ]+)[ ]*$"
+num_nml_vars=${#FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[@]}
+for (( i=0; i<${num_nml_vars}; i++ )); do
+
+  mapping="${FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[$i]}"
+  nml_var_name=$( printf "%s\n" "$mapping" | \
+                  sed -n -r -e "s/${regex_search}/\1/p" )
+  FIXam_fn=$( printf "%s\n" "$mapping" |
+              sed -n -r -e "s/${regex_search}/\2/p" )
+
+  fp="\"\""
+  if [ ! -z "${FIXam_fn}" ]; then
+    fp="$FIXam/${FIXam_fn}"
+#
+# If not in NCO mode, for portability and brevity, change fp so that it
+# is a relative path (relative to any cycle directory immediately under
+# the experiment directory).
+#
+    if [ "${RUN_ENVIR}" != "nco" ]; then
+      fp=$( realpath --canonicalize-missing \
+                     --relative-to="$EXPTDIR/any_cycle_dir" "$fp" )
+    fi
+  fi
+#
+# Add a line to the variable "settings" that specifies (in a yaml-compliant
+# format) the name of the current namelist variable and the value it should
+# be set to.
+#
+  settings="$settings
+    '${nml_var_name}': $fp,"
+
+done
+#
+# Add to "settings" several namelist variable name-and-value pairs that
+# are constant.  These should probably be added to the base namelist file
+# (FV3_NML_BASE_FP) and this step removed.
+#
+settings="$settings
+#    'FNZORC': \"igbp\",
+#    'FNTSFA': \"\",
+#    'FNACNA': \"\",
+#    'FNSNOA': \"\",
+  }"
+#
+# For debugging purposes, print out what "settings" has been set to.
+#
+print_info_msg $VERBOSE "
+The variable \"settings\" specifying values of the namelist variables
+has been set as follows:
+
+settings =
+$settings"
+#
+#-----------------------------------------------------------------------
+#
+# Call the set_namelist.py script to create a new FV3 namelist file (full
+# path specified by FV3_NML_FP) using the file FV3_NML_BASE_FP as the base
+# (i.e. starting) namelist file, with physics-suite-dependent modifications
+# to the base file specified in the yaml configuration file FV3_NML_YAML_CONFIG_FP
+# (for the physics suite specified by CCPP_PHYS_SUITE), and with additional
+# physics-suite-independent modificaitons specified in the variable
+# "settings" set above.
+#
+#-----------------------------------------------------------------------
+#
+$USHDIR/set_namelist.py -q \
+                        -n ${FV3_NML_BASE_FP} \
+                        -c ${FV3_NML_YAML_CONFIG_FP} ${CCPP_PHYS_SUITE} \
+                        -u "$settings" \
+                        -o ${FV3_NML_FP} || \
+  print_err_msg_exit "\
+Call to python script set_namelist.py to generate an FV3 namelist file
+failed.  Parameters passed to this script are:
+  Full path to base namelist file:
+    FV3_NML_BASE_FP = \"${FV3_NML_BASE_FP}\"
+  Full path to yaml configuration file for various physics suites:
+    FV3_NML_YAML_CONFIG_FP = \"${FV3_NML_YAML_CONFIG_FP}\"
+  Physics suite to extract from yaml configuration file:
+    CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
+  Full path to output namelist file:
+    FV3_NML_FP = \"${FV3_NML_FP}\"
+  Namelist settings specified on command line:
+    settings =
+$settings"
+#
+# If not running the MAKE_GRID_TN task (which implies the workflow will
+# use pregenerated grid files), set the namelist variables specifying
+# the paths to surface climatology files.  These files are located in
+# (or have symlinks that point to them) in the FIXsar directory.
+#
+# Note that if running the MAKE_GRID_TN task, this action usually cannot
+# be performed here but must be performed in that task because the names
+# of the surface climatology files depend on the CRES parameter (which is
+# the C-resolution of the grid), and this parameter is in most workflow
+# configurations is not known until the grid is created.
+#
+if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
+  set_FV3nml_sfc_climo_filenames
 fi
 #
 #-----------------------------------------------------------------------
@@ -579,8 +746,8 @@ cp_vrfy $USHDIR/${EXPT_CONFIG_FN} $EXPTDIR
 #
 #-----------------------------------------------------------------------
 #
-# For convenience, print out the commands that need to be issued on the 
-# command line in order to launch the workflow and to check its status.  
+# For convenience, print out the commands that need to be issued on the
+# command line in order to launch the workflow and to check its status.
 # Also, print out the command that should be placed in the user's cron-
 # tab in order for the workflow to be continually resubmitted.
 #
@@ -603,39 +770,64 @@ The experiment directory is:
 
   > EXPTDIR=\"$EXPTDIR\"
 
+"
+case $MACHINE in
+
+"CHEYENNE")
+  print_info_msg "\
+To launch the workflow, first ensure that you have a compatible version
+of rocoto in your \$PATH. On Cheyenne, version 1.3.1 has been pre-built;
+you can load it in your \$PATH with one of the following commands, depending
+on your default shell:
+
+bash:
+  > export PATH=\${PATH}:/glade/p/ral/jntp/tools/rocoto/rocoto-1.3.1/bin/
+
+tcsh:
+  > setenv PATH \${PATH}:/glade/p/ral/jntp/tools/rocoto/rocoto-1.3.1/bin/
+"
+  ;;
+
+*)
+  print_info_msg "\
 To launch the workflow, first ensure that you have a compatible version
 of rocoto loaded.  For example, to load version 1.3.1 of rocoto, use
 
   > module load rocoto/1.3.1
 
 (This version has been tested on hera; later versions may also work but
-have not been tested.)  To launch the workflow, change location to the 
-experiment directory (EXPTDIR) and issue the rocotrun command, as fol-
-lows:
+have not been tested.)
+"
+  ;;
+
+esac
+print_info_msg "
+To launch the workflow, change location to the experiment directory
+(EXPTDIR) and issue the rocotrun command, as follows:
 
   > cd $EXPTDIR
   > ${rocotorun_cmd}
 
-To check on the status of the workflow, issue the rocotostat command 
+To check on the status of the workflow, issue the rocotostat command
 (also from the experiment directory):
 
   > ${rocotostat_cmd}
 
 Note that:
 
-1) The rocotorun command must be issued after the completion of each 
-   task in the workflow in order for the workflow to submit the next 
+1) The rocotorun command must be issued after the completion of each
+   task in the workflow in order for the workflow to submit the next
    task(s) to the queue.
 
 2) In order for the output of the rocotostat command to be up-to-date,
    the rocotorun command must be issued immediately before the rocoto-
    stat command.
 
-For automatic resubmission of the workflow (say every 3 minutes), the 
+For automatic resubmission of the workflow (say every 3 minutes), the
 following line can be added to the user's crontab (use \"crontab -e\" to
-edit the cron table): 
+edit the cron table):
 
-*/3 * * * * cd $EXPTDIR && ${rocotorun_cmd}
+*/3 * * * * cd $EXPTDIR && ./launch_FV3SAR_wflow.sh
 
 Done.
 "
@@ -657,7 +849,7 @@ Done.
 #
 #-----------------------------------------------------------------------
 #
-# Start of the script that will call the experiment/workflow generation 
+# Start of the script that will call the experiment/workflow generation
 # function defined above.
 #
 #-----------------------------------------------------------------------
@@ -667,7 +859,7 @@ set -u
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located 
+# Get the full path to the file in which this script/function is located
 # (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
 # which the file is located (scrfunc_dir).
 #
@@ -685,7 +877,7 @@ scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
 ushdir="${scrfunc_dir}"
 #
-# Set the name of and full path to the temporary file in which we will 
+# Set the name of and full path to the temporary file in which we will
 # save some experiment/workflow variables.  The need for this temporary
 # file is explained below.
 #
@@ -701,18 +893,18 @@ log_fp="$ushdir/${log_fn}"
 rm -f "${log_fp}"
 #
 # Call the generate_FV3SAR_wflow function defined above to generate the
-# experiment/workflow.  Note that we pipe the output of the function 
+# experiment/workflow.  Note that we pipe the output of the function
 # (and possibly other commands) to the "tee" command in order to be able
-# to both save it to a file and print it out to the screen (stdout).  
-# The piping causes the call to the function (and the other commands 
-# grouped with it using the curly braces, { ... }) to be executed in a 
-# subshell.  As a result, the experiment/workflow variables that the 
+# to both save it to a file and print it out to the screen (stdout).
+# The piping causes the call to the function (and the other commands
+# grouped with it using the curly braces, { ... }) to be executed in a
+# subshell.  As a result, the experiment/workflow variables that the
 # function sets are not available outside of the grouping, i.e. they are
 # not available at and after the call to "tee".  Since some of these va-
-# riables are needed after the call to "tee" below, we save them in a 
+# riables are needed after the call to "tee" below, we save them in a
 # temporary file and read them in outside the subshell later below.
 #
-{ 
+{
 generate_FV3SAR_wflow 2>&1  # If this exits with an error, the whole {...} group quits, so things don't work...
 retval=$?
 echo "$EXPTDIR" >> "${tmp_fp}"
@@ -720,8 +912,8 @@ echo "$retval" >> "${tmp_fp}"
 } | tee "${log_fp}"
 #
 # Read in experiment/workflow variables needed later below from the tem-
-# porary file created in the subshell above containing the call to the 
-# generate_FV3SAR_wflow function.  These variables are not directly 
+# porary file created in the subshell above containing the call to the
+# generate_FV3SAR_wflow function.  These variables are not directly
 # available here because the call to generate_FV3SAR_wflow above takes
 # place in a subshell (due to the fact that we are then piping its out-
 # put to the "tee" command).  Then remove the temporary file.
@@ -738,9 +930,9 @@ if [ $retval -eq 0 ]; then
   mv "${log_fp}" "$exptdir"
 #
 # If the call to the generate_FV3SAR_wflow function above was not suc-
-# cessful, print out an error message and exit with a nonzero return 
+# cessful, print out an error message and exit with a nonzero return
 # code.
-# 
+#
 else
   printf "
 Experiment/workflow generation failed.  Check the log file from the ex-
