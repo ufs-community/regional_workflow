@@ -595,6 +595,9 @@ settings="\
   }
 'gfs_physics_nml': {
     'lsoil': ${lsoil:-null},
+    'do_shum': ${DO_SHUM:-null},
+    'do_sppt': ${DO_SPPT:-null},
+    'do_skeb': ${DO_SKEB:-null},
   }"
 #
 # Add to "settings" the values of those namelist variables that specify

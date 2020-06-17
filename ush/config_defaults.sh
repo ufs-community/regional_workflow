@@ -390,6 +390,16 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #
 #-----------------------------------------------------------------------
 #
+# Set default stochastic physics options
+#
+#-----------------------------------------------------------------------
+#
+DO_SHUM="False"
+DO_SPPT="False"
+DO_SKEB="False"
+#
+#-----------------------------------------------------------------------
+#
 # Set CCPP-associated parameters.  Definitions:
 #
 # USE_CCPP:
