@@ -244,10 +244,10 @@ check_var_valid_value \
 DO_SHUM=${DO_SHUM^^}
 if [ "${DO_SHUM}" = "TRUE" ] || \
    [ "${DO_SHUM}" = "YES" ]; then
-  DO_SHUM="True"
+  DO_SHUM="true"
 elif [ "${DO_SHUM}" = "FALSE" ] || \
      [ "${DO_SHUM}" = "NO" ]; then
-  DO_SHUM="False"
+  DO_SHUM="false"
 fi
 #
 #-----------------------------------------------------------------------
@@ -265,10 +265,10 @@ check_var_valid_value \
 DO_SPPT=${DO_SPPT^^}
 if [ "${DO_SPPT}" = "TRUE" ] || \
    [ "${DO_SPPT}" = "YES" ]; then
-  DO_SPPT="True"
+  DO_SPPT="true"
 elif [ "${DO_SPPT}" = "FALSE" ] || \
      [ "${DO_SPPT}" = "NO" ]; then
-  DO_SPPT="False"
+  DO_SPPT="false"
 fi
 #
 #-----------------------------------------------------------------------
@@ -286,10 +286,10 @@ check_var_valid_value \
 DO_SKEB=${DO_SKEB^^}
 if [ "${DO_SKEB}" = "TRUE" ] || \
    [ "${DO_SKEB}" = "YES" ]; then
-  DO_SKEB="True"
+  DO_SKEB="true"
 elif [ "${DO_SKEB}" = "FALSE" ] || \
      [ "${DO_SKEB}" = "NO" ]; then
-  DO_SKEB="False"
+  DO_SKEB="false"
 fi
 #
 #-----------------------------------------------------------------------
