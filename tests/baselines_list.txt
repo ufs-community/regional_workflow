@@ -1,3 +1,7 @@
+GSD_RAP13km
+nco_conus
+nco_conus_c96
+new_JPgrid
 regional_001
 regional_002
 regional_003
@@ -11,3 +15,5 @@ regional_010
 regional_011
 regional_012
 regional_013
+regional_014
+regional_015
