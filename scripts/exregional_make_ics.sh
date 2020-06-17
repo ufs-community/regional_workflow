@@ -49,20 +49,16 @@ for FV3 (in NetCDF format).
 #
 #-----------------------------------------------------------------------
 #
-# Specify the set of valid argument names for this script/function.  
-# Then process the arguments provided to this script/function (which 
-# should consist of a set of name-value pairs of the form arg1="value1",
-# etc).
+# Specify the set of valid argument names for this script/function.  Then 
+# process the arguments provided to this script/function (which should 
+# consist of a set of name-value pairs of the form arg1="value1", etc).
 #
 #-----------------------------------------------------------------------
 #
 valid_args=( \
-"EXTRN_MDL_FNS" \
-"EXTRN_MDL_FILES_DIR" \
-"EXTRN_MDL_CDATE" \
-"WGRIB2_DIR" \
+"wgrib2_dir" \
+"ics_dir" \
 "APRUN" \
-"ICS_DIR" \
 )
 process_args valid_args "$@"
 #
@@ -75,6 +71,17 @@ process_args valid_args "$@"
 #-----------------------------------------------------------------------
 #
 print_input_args valid_args
+#                                                                        
+#----------------------------------------------------------------------- 
+#                                                                        
+# Source the file containing definitions of variables associated with the 
+# external model for ICs.
+#                                                                        
+#----------------------------------------------------------------------- 
+#                                                                        
+extrn_mdl_files_dir="${CYCLE_DIR}/${EXTRN_MDL_NAME_ICS}/ICS"             
+extrn_mdl_var_defns_fp="${extrn_mdl_files_dir}/${EXTRN_MDL_ICS_VAR_DEFNS_FN}"      
+. ${extrn_mdl_var_defns_fp}                                                   
 #
 #-----------------------------------------------------------------------
 #
@@ -82,7 +89,7 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-workdir="${ICS_DIR}/tmp_ICS"
+workdir="${ics_dir}/tmp_ICS"
 mkdir_vrfy -p "$workdir"
 cd_vrfy $workdir
 #
@@ -97,11 +104,10 @@ phys_suite=""
 
 case "${CCPP_PHYS_SUITE}" in
 
-"FV3_GFS_2017_gfdlmp")
+"FV3_GFS_2017_gfdlmp" | "FV3_GFS_2017_gfdlmp_regional" )
   phys_suite="GFS"
   ;;
-
-"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" |"FV3_RRFS_v0" )
+"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" )
   phys_suite="GSD"
   ;;
 "FV3_CPT_v0")
@@ -113,7 +119,6 @@ case "${CCPP_PHYS_SUITE}" in
 "FV3_GFS_v16beta")
   phys_suite="v16beta"
   ;;
-
 *)
   print_err_msg_exit "\
 Physics-suite-dependent namelist variables have not yet been specified 
@@ -245,6 +250,7 @@ replace_vgtyp=""
 replace_sotyp=""
 replace_vgfrc=""
 tg3_from_soil=""
+convert_nst=""
 
 
 case "${EXTRN_MDL_NAME_ICS}" in
@@ -267,6 +273,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
   replace_sotyp=True
   replace_vgfrc=True
   tg3_from_soil=False
+  convert_nst=False
 
   ;;
 
@@ -292,13 +299,13 @@ case "${EXTRN_MDL_NAME_ICS}" in
 #
     if [ "${USE_CCPP}" = "TRUE" ]; then
       if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
         tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
       elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
            [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-           [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
            [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
 # For GSD physics, add three additional tracers (the ice, rain and water
 # number concentrations) that are required for Thompson microphysics.
@@ -327,6 +334,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
   replace_sotyp=True
   replace_vgfrc=True
   tg3_from_soil=False
+  convert_nst=True
 
   ;;
 
@@ -353,7 +361,6 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
   if [ "${USE_CCPP}" = "TRUE" ]; then
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
@@ -376,6 +383,7 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
   replace_sotyp=False
   replace_vgfrc=False
   tg3_from_soil=True
+  convert_nst=False
 
   ;;
 
@@ -389,10 +397,9 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
   internal_GSD=False
 
   if [ "${USE_CCPP}" = "TRUE" ]; then
-   if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
       numsoil_out="4"
@@ -414,6 +421,7 @@ HRRRX grib2 files created after about \"${cdate_min_HRRRX}\"..."
   replace_sotyp=False
   replace_vgfrc=False
   tg3_from_soil=True
+  convert_nst=False
 
   ;;
 
@@ -428,16 +436,29 @@ esac
 #
 #-----------------------------------------------------------------------
 #
-# Get the starting year, month, day, and hour of the the external model
-# run.
+# Get the starting month, day, and hour of the the external model forecast.
 #
 #-----------------------------------------------------------------------
 #
-#yyyy="${EXTRN_MDL_CDATE:0:4}"
 mm="${EXTRN_MDL_CDATE:4:2}"
 dd="${EXTRN_MDL_CDATE:6:2}"
 hh="${EXTRN_MDL_CDATE:8:2}"
-#yyyymmdd="${EXTRN_MDL_CDATE:0:8}"
+#
+#-----------------------------------------------------------------------
+#
+# Check that the executable that generates the ICs exists.
+#
+#-----------------------------------------------------------------------
+#
+exec_fn="chgres_cube.exe"
+exec_fp="$EXECDIR/${exec_fn}"                                            
+if [ ! -f "${exec_fp}" ]; then                                           
+  print_err_msg_exit "\                                                  
+The executable (exec_fp) for generating initial conditions on the FV3SAR
+native grid does not exist:                  
+  exec_fp = \"${exec_fp}\"                                               
+Please ensure that you've built this executable."                        
+fi                                                                       
 #
 #-----------------------------------------------------------------------
 #
@@ -487,6 +508,13 @@ hh="${EXTRN_MDL_CDATE:8:2}"
 # fix_dir_target_grid="${BASEDIR}/JP_grid_HRRR_like_fix_files_chgres_cube"
 # base_install_dir="${SORCDIR}/chgres_cube.fd"
 
+#
+# Create a multiline variable that consists of a yaml-compliant string
+# specifying the values that the namelist variables need to be set to
+# (one namelist variable per line, plus a header and footer).  Below,
+# this variable will be passed to a python script that will create the
+# namelist file.
+#
 settings="
 'config': {
  'fix_dir_target_grid': ${FIXsar},
@@ -497,8 +525,8 @@ settings="
  'mosaic_file_input_grid': '',
  'orog_dir_input_grid': '',
  'base_install_dir': ${CHGRES_DIR},
- 'wgrib2_path': ${WGRIB2_DIR},
- 'data_dir_input_grid': ${EXTRN_MDL_FILES_DIR},
+ 'wgrib2_path': ${wgrib2_dir},
+ 'data_dir_input_grid': ${extrn_mdl_files_dir},
  'atm_files_input_grid': ${fn_atm_nemsio},
  'sfc_files_input_grid': ${fn_sfc_nemsio},
  'grib2_file_input_grid': \"${fn_grib2}\",
@@ -507,7 +535,7 @@ settings="
  'cycle_hour': $((10#$hh)),
  'convert_atm': True,
  'convert_sfc': True,
- 'convert_nst': False,
+ 'convert_nst': ${convert_nst},
  'regional': 1,
  'halo_bndy': ${NH4},
  'input_type': ${input_type},
@@ -524,19 +552,20 @@ settings="
  'tg3_from_soil': ${tg3_from_soil},
 }
 "
-
-${USHDIR}/set_namelist.py -q -o fort.41 -u "{$settings}"
-if [[ $? -ne 0 ]]; then
-  echo "
-  !!!!!!!!!!!!!!!!!!!!!!
-
-  set_namelist.py failed!
-
-  !!!!!!!!!!!!!!!!!!!!!!
-  "
-  exit 1
-fi
-
+#
+# Call the python script to create the namelist file.
+#
+nml_fn="fort.41"
+${USHDIR}/set_namelist.py -q -u "$settings" -o ${nml_fn} || \
+  print_err_msg_exit "\
+Call to python script set_namelist.py to set the variables in the namelist 
+file read in by the ${exec_fn} executable failed.  Parameters passed to 
+this script are:
+  Name of output namelist file:
+    nml_fn = \"${nml_fn}\"
+  Namelist settings specified on command line (these have highest precedence):
+    settings =
+$settings"
 #
 #-----------------------------------------------------------------------
 #
@@ -552,12 +581,16 @@ fi
 # of chgres_cube is nonzero.
 # A similar thing happens in the forecast task.
 #
-${APRUN} ${EXECDIR}/chgres_cube.exe || \
-print_err_msg_exit "\
-Call to executable to generate surface and initial conditions files for
-the FV3SAR failed:
+${APRUN} ${exec_fp} || \
+  print_err_msg_exit "\
+Call to executable (exec_fp) to generate surface and initial conditions 
+(ICs) files for the FV3SAR failed:
+  exec_fp = \"${exec_fp}\"
+The external model from which the ICs files are to be generated is:
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
-  EXTRN_MDL_FILES_DIR = \"${EXTRN_MDL_FILES_DIR}\""
+The external model files that are inputs to the executable (exec_fp) are
+located in the following directory:
+  extrn_mdl_files_dir = \"${extrn_mdl_files_dir}\""
 #
 #-----------------------------------------------------------------------
 #
@@ -567,14 +600,14 @@ the FV3SAR failed:
 #-----------------------------------------------------------------------
 #
 mv_vrfy out.atm.tile${TILE_RGNL}.nc \
-        ${ICS_DIR}/gfs_data.tile${TILE_RGNL}.halo${NH0}.nc
+        ${ics_dir}/gfs_data.tile${TILE_RGNL}.halo${NH0}.nc
 
 mv_vrfy out.sfc.tile${TILE_RGNL}.nc \
-        ${ICS_DIR}/sfc_data.tile${TILE_RGNL}.halo${NH0}.nc
+        ${ics_dir}/sfc_data.tile${TILE_RGNL}.halo${NH0}.nc
 
-mv_vrfy gfs_ctrl.nc ${ICS_DIR}
+mv_vrfy gfs_ctrl.nc ${ics_dir}
 
-mv_vrfy gfs_bndy.nc ${ICS_DIR}/gfs_bndy.tile${TILE_RGNL}.000.nc
+mv_vrfy gfs_bndy.nc ${ics_dir}/gfs_bndy.tile${TILE_RGNL}.000.nc
 #
 #-----------------------------------------------------------------------
 #
