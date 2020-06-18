@@ -236,47 +236,29 @@ cd_vrfy "${MODULES_DIR}/tasks/$machine"
 # require Python. If it exists for a given task, it is appended to the 
 # file copied from the external repositories.
 
-cp_vrfy "${UFS_UTILS_DIR}/modulefiles/fv3gfs/orog.$machine" "${MAKE_OROG_TN}"
-cp_vrfy "${UFS_UTILS_DIR}/modulefiles/modulefile.sfc_climo_gen.$machine" "${MAKE_SFC_CLIMO_TN}"
-cp_vrfy "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_ICS_TN}"
-cp_vrfy "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_LBCS_TN}"
-cp_vrfy "${UFS_WTHR_MDL_DIR}/modulefiles/$machine.intel/fv3" "${RUN_FCST_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/fv3gfs/orog.$machine" "${MAKE_OROG_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/modulefile.sfc_climo_gen.$machine" "${MAKE_SFC_CLIMO_TN}"
+cp_vrfy -f "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_ICS_TN}"
+cp_vrfy -f "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_LBCS_TN}"
+cp_vrfy -f "${UFS_WTHR_MDL_DIR}/modulefiles/$machine.intel/fv3" "${RUN_FCST_TN}"
 
 task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_ICS_TN}" "${MAKE_LBCS_TN}" "${RUN_FCST_TN}" )
+#
+# Only some platforms build EMC_post using modules.
+#
+if [ "$MACHINE" != "CHEYENNE" ]; then
+  cp_vrfy -f "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" "${RUN_POST_TN}"
+  task_names+=("${RUN_POST_TN}")
+else
+  print_info_msg "No post modulefile needed for $MACHINE"
+fi 
+
 for task in "${task_names[@]}"; do
   modulefile_local="${task}.local"
   if [ -f ${modulefile_local} ]; then
     cat "${modulefile_local}" >> "${task}"
   fi
 done
-
-if [ "$MACHINE" != "CHEYENNE" ]; then
-  cp_vrfy -fs "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" "${RUN_POST_TN}"
-  task_names+=("${RUN_POST_TN}")
-else
-  print_info_msg "No post modulefile needed for $MACHINE"
-fi
-
-#
-# Only some platforms build EMC_post using modules.
-#
-case $MACHINE in
-
-  "CHEYENNE")
-    print_info_msg "No post modulefile needed for $MACHINE"
-    ;;
-
-  *)
-    cp_vrfy "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" \
-            "${RUN_POST_TN}"
-    modulefile_local="${RUN_POST_TN}.local"
-    if [ -f ${modulefile_local} ]; then
-      cat "${modulefile_local}" >> "${RUN_POST_TN}"
-    fi
-
-    ;;
-
-esac
 
 cd_vrfy -
 #
