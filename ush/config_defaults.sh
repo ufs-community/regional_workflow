@@ -348,6 +348,27 @@ FCST_LEN_HRS="24"
 #
 #-----------------------------------------------------------------------
 #
+# Set METplus parameters.  Definitions:
+#
+# MODEL: 
+# MET_INSTALL_DIR:
+# METPLUS_PATH:
+# VX_CONFIG_DIR:
+# METPLUS_CONF:
+# MET_CONFIG:
+# CCPA_OBS_DIR:
+# NDAS_OBS_DIR: 
+#
+#-----------------------------------------------------------------------
+#
+MODEL=""
+MET_INSTALL_DIR="path/to/MET"
+METPLUS_PATH="path/to/METPlus"
+CCPA_OBS_DIR="/path/to/processed/CCPA/data"
+NDAS_OBS_DIR="/path/to/processed/NDAS/data"
+#
+#-----------------------------------------------------------------------
+#
 # Set initial and lateral boundary condition generation parameters.  
 # Definitions:
 #
