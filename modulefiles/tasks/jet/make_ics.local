@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 module load wgrib2/2.0.8 
+=======
+>>>>>>> origin
 
 module use -a /contrib/miniconda3/modulefiles
 module load miniconda3

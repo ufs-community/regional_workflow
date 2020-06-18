@@ -232,34 +232,44 @@ machine=${MACHINE,,}
 
 cd_vrfy "${MODULES_DIR}/tasks/$machine"
 
+# Modules files are copied from the build step for the following tasks. 
+# Some tasks also have a "task_name".local file, particularly if they
+# require Python. If it exists for a given task, it is appended to the 
+# file copied from the external repositories.
+
+cp_vrfy "${UFS_UTILS_DIR}/modulefiles/fv3gfs/orog.$machine" "${MAKE_OROG_TN}"
+modulefile_local="${MAKE_OROG_TN}.local"
+if [ -f ${modulefile_local} ]; then
+  cat "${modulefile_local}" >> "${MAKE_OROG_TN}"
+fi
+
+cp_vrfy "${UFS_UTILS_DIR}/modulefiles/modulefile.sfc_climo_gen.$machine" "${MAKE_SFC_CLIMO_TN}"
+modulefile_local="${MAKE_SFC_CLIMO_TN}.local"
+if [ -f ${modulefile_local} ]; then
+  cat "${modulefile_local}" >> "${MAKE_SFC_CLIMO_TN}"
+fi
+
+cp_vrfy "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_ICS_TN}"
+modulefile_local="${MAKE_ICS_TN}.local"
+if [ -f ${modulefile_local} ]; then
+  cat "${modulefile_local}" >> "${MAKE_ICS_TN}"
+fi
+
+cp_vrfy "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_LBCS_TN}"
+modulefile_local="${MAKE_LBCS_TN}.local"
+if [ -f ${modulefile_local} ]; then
+  cat "${modulefile_local}" >> "${MAKE_LBCS_TN}"
+fi
+
+cp_vrfy "${UFS_WTHR_MDL_DIR}/modulefiles/$machine.intel/fv3" "${RUN_FCST_TN}"
+modulefile_local="${RUN_FCST_TN}.local"
+if [ -f ${modulefile_local} ]; then
+  cat "${modulefile_local}" >> "${RUN_FCST_TN}"
+fi
+
 #
-# The "module" file (really a shell script) for orog in the UFS_UTILS
-# repo uses a shell variable named MOD_PATH, but it is not clear where
-# that is defined.  That needs to be fixed.  Until then, we have to use
-# a hard-coded module file, which may or may not be compatible with the
-# modules used in the UFS_UTILS repo to build the orog code.
-
-#ln_vrfy -fs "${UFS_UTILS_DIR}/modulefiles/fv3gfs/orog.$machine" \
-#            "${MAKE_OROG_TN}"
-ln_vrfy -fs "${MAKE_OROG_TN}.hardcoded" "${MAKE_OROG_TN}"
-
-ln_vrfy -fs "${UFS_UTILS_DIR}/modulefiles/modulefile.sfc_climo_gen.$machine" \
-            "${MAKE_SFC_CLIMO_TN}"
-
-cp_vrfy -f "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" \
-        "${MAKE_ICS_TN}"
-cat "${MAKE_ICS_TN}.local" >> "${MAKE_ICS_TN}"
-
-cp_vrfy -f "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" \
-        "${MAKE_LBCS_TN}"
-cat "${MAKE_LBCS_TN}.local" >> "${MAKE_LBCS_TN}"
-
-cp_vrfy "${UFS_WTHR_MDL_DIR}/NEMS/src/conf/modules.nems" "${RUN_FCST_TN}"
-
-cat ${RUN_FCST_TN}.local >> "${RUN_FCST_TN}"
-
-
-#Only some platforms build EMC_post using modules
+# Only some platforms build EMC_post using modules.
+#
 
 case $MACHINE in
 
@@ -268,8 +278,13 @@ case $MACHINE in
     ;;
 
   *)
-    ln_vrfy -fs "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" \
-                "${RUN_POST_TN}"
+    cp_vrfy "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" \
+            "${RUN_POST_TN}"
+    modulefile_local="${RUN_POST_TN}.local"
+    if [ -f ${modulefile_local} ]; then
+      cat "${modulefile_local}" >> "${RUN_POST_TN}"
+    fi
+
     ;;
 
 esac
