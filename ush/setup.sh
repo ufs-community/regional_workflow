@@ -235,8 +235,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value \
-  "DO_SHUM" "valid_vals_DO_SHUM"
+check_var_valid_value "DO_SHUM" "valid_vals_DO_SHUM"
 #
 # Set DO_SHUM to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
@@ -256,8 +255,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value \
-  "DO_SPPT" "valid_vals_DO_SPPT"
+check_var_valid_value "DO_SPPT" "valid_vals_DO_SPPT"
 #
 # Set DO_SPPT to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
@@ -277,8 +275,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value \
-  "DO_SKEB" "valid_vals_DO_SKEB"
+check_var_valid_value "DO_SKEB" "valid_vals_DO_SKEB"
 #
 # Set DO_SKEB to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
