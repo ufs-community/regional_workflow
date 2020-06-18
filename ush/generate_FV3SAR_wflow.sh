@@ -595,9 +595,25 @@ settings="\
   }
 'gfs_physics_nml': {
     'lsoil': ${lsoil:-null},
-    'do_shum': ${DO_SHUM:-null},
-    'do_sppt': ${DO_SPPT:-null},
-    'do_skeb': ${DO_SKEB:-null},
+    'do_shum': ${DO_SHUM},
+    'do_sppt': ${DO_SPPT},
+    'do_skeb': ${DO_SKEB},
+  }
+'nam_stochy': {
+    'shum': ${SHUM_MAG},
+    'shum_lscale': ${SHUM_LSCALE},
+    'shum_tau': ${SHUM_TSCALE},
+    'shumint': ${SHUM_INT},
+    'sppt': ${SPPT_MAG},
+    'sppt_lscale': ${SPPT_LSCALE},
+    'sppt_tau': ${SPPT_TSCALE},
+    'spptint': ${SPPT_INT},
+    'skeb': ${SKEB_MAG},
+    'skeb_lscale': ${SKEB_LSCALE},
+    'skeb_tau': ${SKEB_TSCALE},
+    'skebint': ${SKEB_INT},
+    'skeb_vdof': ${SKEB_VDOF},
+    'use_zmtnblck': ${USE_ZMTNBLCK},
   }"
 #
 # Add to "settings" the values of those namelist variables that specify
