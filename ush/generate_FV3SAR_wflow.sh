@@ -189,7 +189,7 @@ print_info_msg $VERBOSE "
 The variable \"settings\" specifying values of the rococo XML variables
 has been set as follows:
 #-----------------------------------------------------------------------
-ettings =
+settings =
 $settings"
 
 #
@@ -200,8 +200,8 @@ $settings"
 template_xml_fp="${TEMPLATE_DIR}/${WFLOW_XML_FN}"
 $USHDIR/fill_jinja_template.py -q \
                                -u "${settings}" \
-                               -t $template_xml_fp \
-                               -o $WFLOW_XML_FP || \
+                               -t ${template_xml_fp} \
+                               -o ${WFLOW_XML_FP} || \
   print_err_msg_exit "\
 Call to python script fill_jinja_template.py to create a rocoto workflow
 XML file from a template file failed.  Parameters passed to this script
@@ -214,8 +214,6 @@ are:
     settings =
 $settings"
 
-                      -u "$settings" \
-                      -o ${WFLOW_XML_FP} || \
 #
 #-----------------------------------------------------------------------
 #
