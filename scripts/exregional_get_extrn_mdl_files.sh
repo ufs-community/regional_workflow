@@ -144,7 +144,7 @@ done
 #-----------------------------------------------------------------------
 #
 # Set the variable (data_src) that determines the source of the external
-# model files (either disk or HPSS).
+# model files (disk, HPSS, or online).
 #
 #-----------------------------------------------------------------------
 #
@@ -153,11 +153,14 @@ if [ "${num_files_found_on_disk}" -eq "${num_files_to_copy}" ]; then
 else
   data_src="HPSS"
   arcv_fp="${extrn_mdl_arcv_fps[0]}"
+#
+# checking if the first archive file exists on HPSS, and if not, 
+# setting data_src to online to try to get the files from nomads.
+#
   hsi ls $arcv_fp || data_src="online"
   echo "ARCV_FP= $arcv_fp"
   echo "DATA_SRC = $data_src"
 fi
-#data_src="online"
 #
 #-----------------------------------------------------------------------
 #
@@ -646,7 +649,7 @@ getting data from online data sources
 #
 #-----------------------------------------------------------------------
 #
-# Reset EXTRN_MDL_FPS to the full paths within the archive files of the
+# Set extrn_mdl_fps to the full paths within the archive files of the
 # external model output files.
 #
 #-----------------------------------------------------------------------
@@ -655,8 +658,11 @@ getting data from online data sources
   extrn_mdl_fps=( "${extrn_mdl_fns_on_disk[@]/#/$prefix}" )
 
   extrn_mdl_fps_str="( "$( printf "\"%s\" " "${extrn_mdl_fps[@]}" )")"
+ 
+  print_info_msg " 
+Getting external model files from nomads:
+  extrn_mdl_fps= ${extrn_mdl_fps_str}"
 
-  echo "Getting online file EXTRN_MDL_FPS= ${extrn_mdl_fps[@]}"
   num_files_to_extract="${#extrn_mdl_fps[@]}"
   wget_LOG_FN="log.wget.txt"
   for (( nfile=0; nfile<${num_files_to_extract}; nfile++ )); do
