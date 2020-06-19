@@ -144,7 +144,7 @@ done
 #-----------------------------------------------------------------------
 #
 # Set the variable (data_src) that determines the source of the external
-# model files (disk, HPSS, or online).
+# model files (disk, HPSS, or online nomads).
 #
 #-----------------------------------------------------------------------
 #
@@ -155,7 +155,7 @@ else
   arcv_fp="${extrn_mdl_arcv_fps[0]}"
 #
 # checking if the first archive file exists on HPSS, and if not, 
-# setting data_src to online to try to get the files from nomads.
+# setting data_src to online nomads to get the files from nomads.
 #
   hsi ls $arcv_fp || data_src="online"
   echo "ARCV_FP= $arcv_fp"
@@ -643,7 +643,7 @@ In directory:    \"${scrfunc_dir}\"
 elif [ "${data_src}" = "online" ]; then
     print_info_msg "
 ========================================================================
-getting data from online data sources
+getting data from online nomads data sources
 ========================================================================"
 
 #
