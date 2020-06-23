@@ -129,8 +129,8 @@ settings="\
   'nnodes_make_lbcs': ${NNODES_MAKE_LBCS}
   'nnodes_run_fcst': ${NNODES_RUN_FCST}
   'nnodes_run_post': ${NNODES_RUN_POST}
-  'nnodes_run_vx_gridstat': ${NNODES_VX_GRIDSTAT}
-  'nnodes_run_vx_pointstat': ${NNODES_VX_POINTSTAT}
+  'nnodes_vx_gridstat': ${NNODES_VX_GRIDSTAT}
+  'nnodes_vx_pointstat': ${NNODES_VX_POINTSTAT}
 
 #
 # Number of logical processes per node for each task.  If running without
@@ -168,7 +168,7 @@ settings="\
   'run_task_make_grid': ${RUN_TASK_MAKE_GRID}
   'run_task_make_orog': ${RUN_TASK_MAKE_OROG}
   'run_task_make_sfc_climo': ${RUN_TASK_MAKE_SFC_CLIMO}
-  'run_task_vx_grdistat': ${RUN_TASK_VX_GRIDSTAT}
+  'run_task_vx_gridstat': ${RUN_TASK_VX_GRIDSTAT}
   'run_task_vx_pointstat': ${RUN_TASK_VX_POINTSTAT}
 #
 # Number of physical cores per node for the current machine.
