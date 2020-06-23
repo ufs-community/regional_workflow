@@ -196,7 +196,7 @@ settings="\
 #
 # Forecast length (same for all cycles).
 #
-  'fcst_len_hrs': ${FCST_LEN_HRS}"
+  'fcst_len_hrs': ${FCST_LEN_HRS}
 #
 # METPlus-specific information
 #
@@ -208,6 +208,8 @@ settings="\
   'met_config': ${MET_CONFIG}
   'ccpa_obs_dir': ${CCPA_OBS_DIR}
   'ndas_obs_dir': ${NDAS_OBS_DIR}
+" #End of settings quotation
+
 #
 # For debugging purposes, print out what "settings" has been set to.
 #
