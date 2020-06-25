@@ -94,6 +94,7 @@ case $MACHINE in
   ulimit -a
   APRUN="srun"
   LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  OMP_NUM_THREADS=4
   ;;
 #
 "JET")
@@ -101,6 +102,7 @@ case $MACHINE in
   ulimit -a
   APRUN="srun"
   LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  OMP_NUM_THREADS=4
   ;;
 #
 "ODIN")
@@ -527,8 +529,9 @@ fi
 #-----------------------------------------------------------------------
 #
 export KMP_AFFINITY=scatter
-export OMP_NUM_THREADS=1 #Needs to be 1 for dynamic build of CCPP with GFDL fast physics, was 2 before.
+export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1} #Needs to be 1 for dynamic build of CCPP with GFDL fast physics, was 2 before.
 export OMP_STACKSIZE=1024m
+
 #
 #-----------------------------------------------------------------------
 #
