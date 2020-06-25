@@ -192,7 +192,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-extrn_mdl_files_dir="${CYCLE_DIR}/${EXTRN_MDL_NAME}/${ICS_OR_LBCS}"
+extrn_mdl_files_dir="${EXTRN_MDL_FILES_BASEDIR}/${EXTRN_MDL_NAME}/$CDATE/${ICS_OR_LBCS}"
 mkdir_vrfy -p "${extrn_mdl_files_dir}"
 cd_vrfy "${extrn_mdl_files_dir}"
 #

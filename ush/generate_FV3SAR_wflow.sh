@@ -47,6 +47,7 @@ ushdir="${scrfunc_dir}"
 #
 . $ushdir/source_util_funcs.sh
 . $ushdir/set_FV3nml_sfc_climo_filenames.sh
+. $ushdir/set_FV3nml_stoch_params.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -90,6 +91,15 @@ WFLOW_XML_FP="$EXPTDIR/${WFLOW_XML_FN}"
 #
 #-----------------------------------------------------------------------
 #
+ensmem_indx_name="\"\""
+uscore_ensmem_name="\"\""
+slash_ensmem_dir="\"\""
+if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
+  ensmem_indx_name="mem"
+  uscore_ensmem_name="_mem#${ensmem_indx_name}#"
+  slash_ensmem_dir="/mem#${ensmem_indx_name}#"
+fi
+
 settings="\
 #
 # Parameters needed by the job scheduler.
@@ -183,7 +193,16 @@ settings="\
 #
 # Forecast length (same for all cycles).
 #
-  'fcst_len_hrs': ${FCST_LEN_HRS}"
+  'fcst_len_hrs': ${FCST_LEN_HRS}
+#
+# Ensemble-related parameters.
+#
+  'do_ensemble': ${DO_ENSEMBLE}
+  'num_ens_members': ${NUM_ENS_MEMBERS}
+  'ensmem_indx_name': ${ensmem_indx_name}
+  'uscore_ensmem_name': ${uscore_ensmem_name}
+  'slash_ensmem_dir': ${slash_ensmem_dir}
+" # End of "settings" variable.
 #
 # For debugging purposes, print out what "settings" has been set to.
 #
@@ -622,6 +641,11 @@ settings="\
 settings="$settings
 'namsfc': {"
 
+dummy_cyc_dir="$EXPTDIR/any_cycle_dir"
+if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
+  dummy_cyc_dir="$EXPTDIR/any_ens_member_dir/any_cycle_dir"
+fi
+
 regex_search="^[ ]*([^| ]+)[ ]*[|][ ]*([^| ]+)[ ]*$"
 num_nml_vars=${#FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[@]}
 for (( i=0; i<${num_nml_vars}; i++ )); do
@@ -641,8 +665,7 @@ for (( i=0; i<${num_nml_vars}; i++ )); do
 # the experiment directory).
 #
     if [ "${RUN_ENVIR}" != "nco" ]; then
-      fp=$( realpath --canonicalize-missing \
-                     --relative-to="$EXPTDIR/any_cycle_dir" "$fp" )
+      fp=$( realpath --canonicalize-missing --relative-to="${dummy_cyc_dir}" "$fp" )
     fi
   fi
 #
@@ -656,14 +679,10 @@ for (( i=0; i<${num_nml_vars}; i++ )); do
 done
 #
 # Add to "settings" several namelist variable name-and-value pairs that
-# are constant.  These should probably be added to the base namelist file
-# (FV3_NML_BASE_FP) and this step removed.
+# are constant.  These should probably be added to the base suite namelist 
+# file (FV3_NML_BASE_SUITE_FP) and this step removed.
 #
 settings="$settings
-#    'FNZORC': \"igbp\",
-#    'FNTSFA': \"\",
-#    'FNACNA': \"\",
-#    'FNSNOA': \"\",
   }"
 #
 # For debugging purposes, print out what "settings" has been set to.
@@ -678,17 +697,17 @@ $settings"
 #-----------------------------------------------------------------------
 #
 # Call the set_namelist.py script to create a new FV3 namelist file (full
-# path specified by FV3_NML_FP) using the file FV3_NML_BASE_FP as the base
-# (i.e. starting) namelist file, with physics-suite-dependent modifications
-# to the base file specified in the yaml configuration file FV3_NML_YAML_CONFIG_FP
-# (for the physics suite specified by CCPP_PHYS_SUITE), and with additional
-# physics-suite-independent modificaitons specified in the variable
-# "settings" set above.
+# path specified by FV3_NML_FP) using the file FV3_NML_BASE_SUITE_FP as 
+# the base (i.e. starting) namelist file, with physics-suite-dependent 
+# modifications to the base file specified in the yaml configuration file 
+# FV3_NML_YAML_CONFIG_FP (for the physics suite specified by CCPP_PHYS_SUITE), 
+# and with additional physics-suite-independent modificaitons specified 
+# in the variable "settings" set above.
 #
 #-----------------------------------------------------------------------
 #
 $USHDIR/set_namelist.py -q \
-                        -n ${FV3_NML_BASE_FP} \
+                        -n ${FV3_NML_BASE_SUITE_FP} \
                         -c ${FV3_NML_YAML_CONFIG_FP} ${CCPP_PHYS_SUITE} \
                         -u "$settings" \
                         -o ${FV3_NML_FP} || \
@@ -696,7 +715,7 @@ $USHDIR/set_namelist.py -q \
 Call to python script set_namelist.py to generate an FV3 namelist file
 failed.  Parameters passed to this script are:
   Full path to base namelist file:
-    FV3_NML_BASE_FP = \"${FV3_NML_BASE_FP}\"
+    FV3_NML_BASE_SUITE_FP = \"${FV3_NML_BASE_SUITE_FP}\"
   Full path to yaml configuration file for various physics suites:
     FV3_NML_YAML_CONFIG_FP = \"${FV3_NML_YAML_CONFIG_FP}\"
   Physics suite to extract from yaml configuration file:
@@ -719,7 +738,14 @@ $settings"
 # configurations is not known until the grid is created.
 #
 if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
-  set_FV3nml_sfc_climo_filenames
+  set_FV3nml_sfc_climo_filenames || print_err_msg_exit "\
+Call to function to set surface climatology file names in the FV3 namelist
+file failed."
+  if [ "${DO_ENSEMBLE}" = TRUE ]; then
+    set_FV3nml_stoch_params || print_err_msg_exit "\
+Call to function to set stochastic parameters in the FV3 namelist files
+for the various ensemble members failed."
+  fi
 fi
 #
 #-----------------------------------------------------------------------

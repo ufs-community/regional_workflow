@@ -135,6 +135,11 @@ suffix="tileX.nc"
 settings="\
 'namsfc': {"
 
+dummy_cyc_dir="$EXPTDIR/any_cycle_dir"                                       
+if [ "${DO_ENSEMBLE}" = "TRUE" ]; then                                   
+  dummy_cyc_dir="$EXPTDIR/any_ens_member_dir/any_cycle_dir"                 
+fi                                                                       
+
 num_nml_vars=${#FV3_NML_VARNAME_TO_SFC_CLIMO_FIELD_MAPPING[@]}
 for (( i=0; i<${num_nml_vars}; i++ )); do
 
@@ -158,8 +163,7 @@ for (( i=0; i<${num_nml_vars}; i++ )); do
 # the experiment directory).
 #
   if [ "${RUN_ENVIR}" != "nco" ]; then
-    fp=$( realpath --canonicalize-missing \
-                   --relative-to="$EXPTDIR/any_cycle_dir" "$fp" )
+    fp=$( realpath --canonicalize-missing --relative-to="${dummy_cyc_dir}" "$fp" )
   fi
 #
 # Add a line to the variable "settings" that specifies (in a yaml-compliant

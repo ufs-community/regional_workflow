@@ -229,14 +229,20 @@ DOT_OR_USCORE="_"
 # Name of file containing the namelist settings for the code that generates
 # a "JPgrid" type of regional grid.
 #
-# FV3_NML_BASE_FN:
-# Name of Fortran namelist file containing the forecast model's base 
+# FV3_NML_BASE_SUITE_FN:
+# Name of Fortran namelist file containing the forecast model's base suite
 # namelist, i.e. the portion of the namelist that is common to all physics
 # suites.
 #
 # FV3_NML_YAML_CONFIG_FN:
 # Name of YAML configuration file containing the forecast model's namelist
 # settings for various physics suites.
+#
+# FV3_NML_BASE_ENS_FN:
+# Name of Fortran namelist file containing the forecast model's base 
+# ensemble namelist, i.e. the the namelist file that is the starting point 
+# from which the namelist files for each of the enesemble members are
+# generated.
 #
 # DIAG_TABLE_FN:
 # Name of file that specifies the fields that the forecast model will 
@@ -304,8 +310,9 @@ RGNL_GRID_NML_FN="regional_grid.nml"
 DATA_TABLE_FN="data_table"
 DIAG_TABLE_FN="diag_table"
 FIELD_TABLE_FN="field_table"
-FV3_NML_BASE_FN="input.nml.FV3"
+FV3_NML_BASE_SUITE_FN="input.nml.FV3"
 FV3_NML_YAML_CONFIG_FN="FV3.input.yml"
+FV3_NML_BASE_ENS_FN="input.nml.base_ens"
 MODEL_CONFIG_FN="model_configure"
 NEMS_CONFIG_FN="nems.configure"
 FV3_EXEC_FN="fv3_gfs.x"
@@ -1088,5 +1095,23 @@ WTIME_MAKE_ICS="00:30:00"
 WTIME_MAKE_LBCS="00:30:00"
 WTIME_RUN_FCST="04:30:00"
 WTIME_RUN_POST="00:15:00"
-
+#
+#-----------------------------------------------------------------------
+#
+# Set parameters associated with running ensembles.  Definitions:
+#
+# DO_ENSEMBLE:
+# Flag that determines whether to run a set of ensemble forecasts (for
+# each set of specified cycles).  If this is set to "TRUE", NUM_ENS_MEMBERS
+# forecasts are run for each cycle, each with a different set of stochastic
+# seed values.  Otherwise, a single forecast is run for each cycle.
+#
+# NUM_ENS_MEMBERS:
+# The number of ensemble members to run if DO_ENSEMBLE is set to "TRUE".
+# This is not used if DO_ENSEMBLE is not set to "TRUE".
+# 
+#-----------------------------------------------------------------------
+#
+DO_ENSEMBLE="FALSE"
+NUM_ENS_MEMBERS="1"
 

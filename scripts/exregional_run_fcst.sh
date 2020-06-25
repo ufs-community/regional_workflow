@@ -55,7 +55,7 @@ specified cycle.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "CYCLE_DIR" )
+valid_args=( "cycle_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -137,7 +137,7 @@ rectory to the grid and (filtered) orography files ..."
 # Create links to fix files in the FIXsar directory.
 
 
-cd_vrfy ${CYCLE_DIR}/INPUT
+cd_vrfy ${cycle_dir}/INPUT
 
 relative_or_null=""
 if [ "${RUN_TASK_MAKE_GRID}" = "TRUE" ]; then
@@ -263,9 +263,9 @@ fi
 #
 print_info_msg "$VERBOSE" "
 Creating links with names that FV3 looks for in the INPUT subdirectory
-of the current cycle's run directory (CYCLE_DIR)..."
+of the current cycle's run directory (cycle_dir)..."
 
-cd_vrfy ${CYCLE_DIR}/INPUT
+cd_vrfy ${cycle_dir}/INPUT
 #ln_vrfy -sf gfs_data.tile${TILE_RGNL}.halo${NH0}.nc gfs_data.nc
 #ln_vrfy -sf sfc_data.tile${TILE_RGNL}.halo${NH0}.nc sfc_data.nc
 
@@ -301,13 +301,13 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-cd_vrfy ${CYCLE_DIR}
+cd_vrfy ${cycle_dir}
 
 print_info_msg "$VERBOSE" "
-Creating links in the current cycle directory (CYCLE_DIR) to fixed (i.e.
+Creating links in the current cycle directory (cycle_dir) to fixed (i.e.
 static) files in the FIXam directory:
   FIXam = \"${FIXam}\"
-  CYCLE_DIR = \"${CYCLE_DIR}\""
+  cycle_dir = \"${cycle_dir}\""
 
 relative_or_null=""
 if [ "${RUN_ENVIR}" != "nco" ]; then
@@ -324,7 +324,7 @@ for (( i=0; i<${num_symlinks}; i++ )); do
   target=$( printf "%s\n" "$mapping" | \
             sed -n -r -e "s/${regex_search}/\2/p" )
 
-  symlink="${CYCLE_DIR}/$symlink"
+  symlink="${cycle_dir}/$symlink"
   target="$FIXam/$target"
   if [ -f "${target}" ]; then
     ln_vrfy -sf ${relative_or_null} $target $symlink
@@ -343,7 +343,7 @@ done
 #
 #-----------------------------------------------------------------------
 #
-cd_vrfy ${CYCLE_DIR}
+cd_vrfy ${cycle_dir}
 rm_vrfy -f time_stamp.out
 #
 #-----------------------------------------------------------------------
@@ -362,20 +362,25 @@ if [ "${RUN_ENVIR}" != "nco" ]; then
   relative_or_null="--relative"
 fi
 
-ln_vrfy -sf ${relative_or_null} ${DATA_TABLE_FP} ${CYCLE_DIR}
-ln_vrfy -sf ${relative_or_null} ${FIELD_TABLE_FP} ${CYCLE_DIR}
-ln_vrfy -sf ${relative_or_null} ${FV3_NML_FP} ${CYCLE_DIR}
-ln_vrfy -sf ${relative_or_null} ${NEMS_CONFIG_FP} ${CYCLE_DIR}
+ln_vrfy -sf ${relative_or_null} ${DATA_TABLE_FP} ${cycle_dir}
+ln_vrfy -sf ${relative_or_null} ${FIELD_TABLE_FP} ${cycle_dir}
+ln_vrfy -sf ${relative_or_null} ${NEMS_CONFIG_FP} ${cycle_dir}
+
+if [ "${DO_ENSEMBLE}" = TRUE ]; then
+  ln_vrfy -sf ${relative_or_null} "${ENS_MEMBER_DIRS[$(( ENSMEM_INDX-1 ))]}/${FV3_NML_FN}" ${cycle_dir}
+else
+  ln_vrfy -sf ${relative_or_null} ${FV3_NML_FP} ${cycle_dir}
+fi
 
 if [ "${USE_CCPP}" = "TRUE" ]; then
 
-  ln_vrfy -sf ${relative_or_null} ${CCPP_PHYS_SUITE_FP} ${CYCLE_DIR} 
+  ln_vrfy -sf ${relative_or_null} ${CCPP_PHYS_SUITE_FP} ${cycle_dir} 
 
   if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-    ln_vrfy -sf ${relative_or_null} $EXPTDIR/CCN_ACTIVATE.BIN ${CYCLE_DIR}
+    ln_vrfy -sf ${relative_or_null} $EXPTDIR/CCN_ACTIVATE.BIN ${cycle_dir}
   fi
 
 fi
@@ -394,13 +399,13 @@ to the current cycle's run directory..."
 print_info_msg "$VERBOSE" "
   Copying the template diagnostics table file to the current cycle's run
   directory..."
-diag_table_fp="${CYCLE_DIR}/${DIAG_TABLE_FN}"
+diag_table_fp="${cycle_dir}/${DIAG_TABLE_FN}"
 cp_vrfy "${DIAG_TABLE_TMPL_FP}" "${diag_table_fp}"
 
 print_info_msg "$VERBOSE" "
   Copying the template model configuration file to the current cycle's
   run directory..."
-model_config_fp="${CYCLE_DIR}/${MODEL_CONFIG_FN}"
+model_config_fp="${cycle_dir}/${MODEL_CONFIG_FN}"
 cp_vrfy "${MODEL_CONFIG_TMPL_FP}" "${model_config_fp}"
 #
 #-----------------------------------------------------------------------

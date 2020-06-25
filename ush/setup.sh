@@ -785,12 +785,12 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-FCST_LEN_HRS_MAX="999"
-if [ "${FCST_LEN_HRS}" -gt "${FCST_LEN_HRS_MAX}" ]; then
+fcst_len_hrs_max="999"
+if [ "${FCST_LEN_HRS}" -gt "${fcst_len_hrs_max}" ]; then
   print_err_msg_exit "\
 Forecast length is greater than maximum allowed length:
   FCST_LEN_HRS = ${FCST_LEN_HRS}
-  FCST_LEN_HRS_MAX = ${FCST_LEN_HRS_MAX}"
+  fcst_len_hrs_max = ${fcst_len_hrs_max}"
 fi
 #
 #-----------------------------------------------------------------------
@@ -986,6 +986,8 @@ the experiment generation script."
   CYCLE_BASEDIR="$STMP/tmpnwprd/$RUN"
   check_for_preexist_dir_file "${CYCLE_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
 
+  EXTRN_MDL_FILES_BASEDIR="$STMP/tmpnwprd/$RUN"
+
   COMROOT="$PTMP/com"
 
   COMOUT_BASEDIR="$COMROOT/$NET/$envir"
@@ -996,6 +998,7 @@ else
   FIXam="${EXPTDIR}/fix_am"
   FIXsar="${EXPTDIR}/fix_sar"
   CYCLE_BASEDIR="$EXPTDIR"
+  EXTRN_MDL_FILES_BASEDIR="$EXPTDIR/extrn_mdl_files"
   COMROOT=""
   COMOUT_BASEDIR=""
 
@@ -1055,8 +1058,9 @@ NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}"
 DATA_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DATA_TABLE_TMPL_FN}"
 DIAG_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DIAG_TABLE_TMPL_FN}"
 FIELD_TABLE_TMPL_FP="${TEMPLATE_DIR}/${FIELD_TABLE_TMPL_FN}"
-FV3_NML_BASE_FP="${TEMPLATE_DIR}/${FV3_NML_BASE_FN}"
+FV3_NML_BASE_SUITE_FP="${TEMPLATE_DIR}/${FV3_NML_BASE_SUITE_FN}"
 FV3_NML_YAML_CONFIG_FP="${TEMPLATE_DIR}/${FV3_NML_YAML_CONFIG_FN}"
+FV3_NML_BASE_ENS_FP="${EXPTDIR}/${FV3_NML_BASE_ENS_FN}"
 MODEL_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${MODEL_CONFIG_TMPL_FN}"
 NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
 #
@@ -1124,9 +1128,29 @@ fi
 #
 DATA_TABLE_FP="${EXPTDIR}/${DATA_TABLE_FN}"
 FIELD_TABLE_FP="${EXPTDIR}/${FIELD_TABLE_FN}"
-FV3_NML_FN="${FV3_NML_BASE_FN%.*}"
+FV3_NML_FN="${FV3_NML_BASE_SUITE_FN%.*}"
 FV3_NML_FP="${EXPTDIR}/${FV3_NML_FN}"
 NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
+
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that DO_ENSEMBLE is set to a valid value.  Then set the full
+# paths to the ensemble member directories.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "DO_ENSEMBLE" "valid_vals_DO_ENSEMBLE"
+
+ENS_MEMBER_DIRS=()
+num_digits=${#NUM_ENS_MEMBERS}
+fmt="%0${num_digits}d"
+if [ "${DO_ENSEMBLE}" = TRUE ]; then
+  for (( i=0; i<${NUM_ENS_MEMBERS}; i++ )); do
+    ip1=$( printf "$fmt" $((i+1)) )
+    ENS_MEMBER_DIRS[$i]="$EXPTDIR/mem${ip1}"
+  done
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1946,9 +1970,12 @@ check_var_valid_value "OZONE_PARAM_NO_CCPP" "valid_vals_OZONE_PARAM_NO_CCPP"
 #-----------------------------------------------------------------------
 #
 mkdir_vrfy -p "$EXPTDIR"
-
-
-
+if [ "${DO_ENSEMBLE}" = TRUE ]; then
+  for (( i=0; i<${NUM_ENS_MEMBERS}; i++ )); do
+    check_for_preexist_dir_file "${ENS_MEMBER_DIRS[$i]}" "${PREEXISTING_DIR_METHOD}"
+    mkdir_vrfy "${ENS_MEMBER_DIRS[$i]}"
+  done
+fi
 
 
 
@@ -2390,9 +2417,12 @@ SFC_CLIMO_INPUT_DIR="${SFC_CLIMO_INPUT_DIR}"
 EXPTDIR="$EXPTDIR"
 LOGDIR="$LOGDIR"
 CYCLE_BASEDIR="${CYCLE_BASEDIR}"
+EXTRN_MDL_FILES_BASEDIR="${EXTRN_MDL_FILES_BASEDIR}"
 GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
+
+ENS_MEMBER_DIRS=( $( printf "\"%s\" " "${ENS_MEMBER_DIRS[@]}" ))
 #
 #-----------------------------------------------------------------------
 #
@@ -2414,8 +2444,9 @@ NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_TMPL_FN}"
 DATA_TABLE_TMPL_FP="${DATA_TABLE_TMPL_FP}"
 DIAG_TABLE_TMPL_FP="${DIAG_TABLE_TMPL_FP}"
 FIELD_TABLE_TMPL_FP="${FIELD_TABLE_TMPL_FP}"
-FV3_NML_BASE_FP="${FV3_NML_BASE_FP}"
+FV3_NML_BASE_SUITE_FP="${FV3_NML_BASE_SUITE_FP}"
 FV3_NML_YAML_CONFIG_FP="${FV3_NML_YAML_CONFIG_FP}"
+FV3_NML_BASE_ENS_FP="${FV3_NML_BASE_ENS_FP}"
 MODEL_CONFIG_TMPL_FP="${MODEL_CONFIG_TMPL_FP}"
 NEMS_CONFIG_TMPL_FP="${NEMS_CONFIG_TMPL_FP}"
 
