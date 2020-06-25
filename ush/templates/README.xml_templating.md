@@ -27,9 +27,6 @@ Inside a Jinja Template file, you will see several place holders:
 - `#  ... ##` for Line Statements
   - Not used for `regional_workflow` templates
 
-
-
-
 ---
 
 ## Templates for Rocoto XML
