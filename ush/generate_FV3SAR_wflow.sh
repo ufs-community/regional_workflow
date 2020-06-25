@@ -203,9 +203,7 @@ settings="\
   'uscore_ensmem_name': ${uscore_ensmem_name}
   'slash_ensmem_dir': ${slash_ensmem_dir}
 " # End of "settings" variable.
-#
-# For debugging purposes, print out what "settings" has been set to.
-#
+
 print_info_msg $VERBOSE "
 The variable \"settings\" specifying values of the rococo XML variables
 has been set as follows:
@@ -682,15 +680,11 @@ for (( i=0; i<${num_nml_vars}; i++ )); do
 
 done
 #
-# Add to "settings" several namelist variable name-and-value pairs that
-# are constant.  These should probably be added to the base suite namelist 
-# file (FV3_NML_BASE_SUITE_FP) and this step removed.
+# Add the closing curly bracket to "settings".
 #
 settings="$settings
   }"
-#
-# For debugging purposes, print out what "settings" has been set to.
-#
+
 print_info_msg $VERBOSE "
 The variable \"settings\" specifying values of the namelist variables
 has been set as follows:
