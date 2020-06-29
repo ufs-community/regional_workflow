@@ -1142,10 +1142,16 @@ NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
 #
 check_var_valid_value "DO_ENSEMBLE" "valid_vals_DO_ENSEMBLE"
 
+NDIGITS_ENSMEM_NAMES="0"
 ENS_MEMBER_DIRS=()
-num_digits=${#NUM_ENS_MEMBERS}
-fmt="%0${num_digits}d"
 if [ "${DO_ENSEMBLE}" = TRUE ]; then
+  NDIGITS_ENSMEM_NAMES="${#NUM_ENS_MEMBERS}"
+# Strip away all leading zeros in NUM_ENS_MEMBERS by converting it to a 
+# decimal (leading zeros will cause bash to interpret the number as an 
+# octal).  Note that the variable definitions file will therefore contain
+# the version of NUM_ENS_MEMBERS with any leading zeros stripped away.
+  NUM_ENS_MEMBERS="$((10#${NUM_ENS_MEMBERS}))"  
+  fmt="%0${NDIGITS_ENSMEM_NAMES}d"
   for (( i=0; i<${NUM_ENS_MEMBERS}; i++ )); do
     ip1=$( printf "$fmt" $((i+1)) )
     ENS_MEMBER_DIRS[$i]="$EXPTDIR/mem${ip1}"
@@ -2422,6 +2428,7 @@ GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
 
+NDIGITS_ENSMEM_NAMES="${NDIGITS_ENSMEM_NAMES}"
 ENS_MEMBER_DIRS=( $( printf "\"%s\" " "${ENS_MEMBER_DIRS[@]}" ))
 #
 #-----------------------------------------------------------------------

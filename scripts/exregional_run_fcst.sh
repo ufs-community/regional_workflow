@@ -367,7 +367,7 @@ ln_vrfy -sf ${relative_or_null} ${FIELD_TABLE_FP} ${cycle_dir}
 ln_vrfy -sf ${relative_or_null} ${NEMS_CONFIG_FP} ${cycle_dir}
 
 if [ "${DO_ENSEMBLE}" = TRUE ]; then
-  ln_vrfy -sf ${relative_or_null} "${ENS_MEMBER_DIRS[$(( ENSMEM_INDX-1 ))]}/${FV3_NML_FN}" ${cycle_dir}
+  ln_vrfy -sf ${relative_or_null} "${ENS_MEMBER_DIRS[$(( 10#${ENSMEM_INDX}-1 ))]}/${FV3_NML_FN}" ${cycle_dir}
 else
   ln_vrfy -sf ${relative_or_null} ${FV3_NML_FP} ${cycle_dir}
 fi

@@ -1108,7 +1108,16 @@ WTIME_RUN_POST="00:15:00"
 #
 # NUM_ENS_MEMBERS:
 # The number of ensemble members to run if DO_ENSEMBLE is set to "TRUE".
-# This is not used if DO_ENSEMBLE is not set to "TRUE".
+# This variable also controls the naming of the ensemble member directories.  
+# For example, if this is set to "8", the member directories will be named 
+# mem1, mem2, ..., mem8.  If it is set to "08" (note the leading zero), 
+# the member directories will be named mem01, mem02, ..., mem08.  Note, 
+# however, that after reading in the number of characters in this string
+# (in order to determine how many leading zeros, if any, should be placed
+# in the names of the member directories), the workflow generation scripts
+# strip away those leading zeros.  Thus, in the variable definitions file 
+# (GLOBAL_VAR_DEFNS_FN), this variable appear with its leading zeros 
+# stripped.  This variable is not used if DO_ENSEMBLE is not set to "TRUE".
 # 
 #-----------------------------------------------------------------------
 #

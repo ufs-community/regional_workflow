@@ -79,7 +79,7 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-extrn_mdl_files_dir="${EXTRN_MDL_FILES_BASEDIR}/${EXTRN_MDL_NAME_LBCS}/$CDATE/LBCS"
+extrn_mdl_files_dir="${EXTRN_MDL_FILES_BASEDIR}/${EXTRN_MDL_NAME_LBCS}/$CDATE/for_LBCS"
 extrn_mdl_var_defns_fp="${extrn_mdl_files_dir}/${EXTRN_MDL_LBCS_VAR_DEFNS_FN}"
 . ${extrn_mdl_var_defns_fp}
 #

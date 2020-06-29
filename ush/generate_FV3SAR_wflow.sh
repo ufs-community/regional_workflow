@@ -199,6 +199,7 @@ settings="\
 #
   'do_ensemble': ${DO_ENSEMBLE}
   'num_ens_members': ${NUM_ENS_MEMBERS}
+  'ndigits_ensmem_names': !!str ${NDIGITS_ENSMEM_NAMES}
   'ensmem_indx_name': ${ensmem_indx_name}
   'uscore_ensmem_name': ${uscore_ensmem_name}
   'slash_ensmem_dir': ${slash_ensmem_dir}
