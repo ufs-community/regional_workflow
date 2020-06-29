@@ -56,10 +56,10 @@ else
   "GSMGFS")
     case $MACHINE in
     "WCOSS_CRAY")
-      EXTRN_MDL_FILES_SYSBASEDIR_ICS=""
+      EXTRN_MDL_SYSBASEDIR_ICS=""
       ;;
     "WCOSS_DELL_P3")
-      EXTRN_MDL_FILES_SYSBASEDIR_ICS=""
+      EXTRN_MDL_SYSBASEDIR_ICS=""
       ;;
     "HERA")
       EXTRN_MDL_SYSBASEDIR_ICS=""
@@ -68,13 +68,13 @@ else
       EXTRN_MDL_SYSBASEDIR_ICS=""
       ;;
     "ODIN")
-      EXTRN_MDL_FILES_SYSBASEDIR_ICS="/scratch/ywang/EPIC/GDAS/2019053000_mem001"
+      EXTRN_MDL_SYSBASEDIR_ICS="/scratch/ywang/EPIC/GDAS/2019053000_mem001"
       ;;
     "CHEYENNE")
-      EXTRN_MDL_FILES_SYSBASEDIR_ICS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
+      EXTRN_MDL_SYSBASEDIR_ICS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
       ;;
     "STAMPEDE")
-      EXTRN_MDL_FILES_SYSBASEDIR_ICS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
+      EXTRN_MDL_SYSBASEDIR_ICS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
       ;;
     *)
       print_err_msg_exit "\
@@ -91,10 +91,10 @@ this machine and external model combination:
   "FV3GFS")
     case $MACHINE in
     "WCOSS_CRAY")
-      EXTRN_MDL_FILES_SYSBASEDIR_ICS="/gpfs/dell1/nco/ops/com/gfs/prod"
+      EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/dell1/nco/ops/com/gfs/prod"
       ;;
     "WCOSS_DELL_P3")
-      EXTRN_MDL_FILES_SYSBASEDIR_ICS="/gpfs/dell1/nco/ops/com/gfs/prod"
+      EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/dell1/nco/ops/com/gfs/prod"
       ;;
     "HERA")
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch1/NCEPDEV/rstprod/com/gfs/prod"
@@ -214,10 +214,10 @@ else
   "GSMGFS")
     case $MACHINE in
     "WCOSS_CRAY")
-      EXTRN_MDL_FILES_SYSBASEDIR_LBCS=""
+      EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;;
     "WCOSS_DELL_P3")
-      EXTRN_MDL_FILES_SYSBASEDIR_LBCS=""
+      EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;;
     "HERA")
       EXTRN_MDL_SYSBASEDIR_LBCS=""
@@ -226,13 +226,13 @@ else
       EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;;
     "ODIN")
-      EXTRN_MDL_FILES_SYSBASEDIR_LBCS="/scratch/ywang/EPIC/GDAS/2019053000_mem001"
+      EXTRN_MDL_SYSBASEDIR_LBCS="/scratch/ywang/EPIC/GDAS/2019053000_mem001"
       ;;
     "CHEYENNE")
-      EXTRN_MDL_FILES_SYSBASEDIR_LBCS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
+      EXTRN_MDL_SYSBASEDIR_LBCS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
       ;;
     "STAMPEDE")
-      EXTRN_MDL_FILES_SYSBASEDIR_LBCS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
+      EXTRN_MDL_SYSBASEDIR_LBCS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
       ;;
     *)
       print_err_msg_exit "\
@@ -250,10 +250,10 @@ this machine and external model combination:
   
     case $MACHINE in
     "WCOSS_CRAY")
-      EXTRN_MDL_FILES_SYSBASEDIR_LBCS="/gpfs/dell1/nco/ops/com/gfs/prod"
+      EXTRN_MDL_SYSBASEDIR_LBCS="/gpfs/dell1/nco/ops/com/gfs/prod"
       ;;
     "WCOSS_DELL_P3")
-      EXTRN_MDL_FILES_SYSBASEDIR_LBCS="/gpfs/dell1/nco/ops/com/gfs/prod"
+      EXTRN_MDL_SYSBASEDIR_LBCS="/gpfs/dell1/nco/ops/com/gfs/prod"
       ;;
     "HERA")
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch1/NCEPDEV/rstprod/com/gfs/prod"
