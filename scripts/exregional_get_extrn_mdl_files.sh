@@ -218,7 +218,7 @@ fi
 #-----------------------------------------------------------------------
 #
 # If the source of the external model files is "disk", copy the files
-# from the source directorny on disk to a staging directory.
+# from the source directory on disk to a staging directory.
 #
 #-----------------------------------------------------------------------
 #
