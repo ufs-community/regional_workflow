@@ -12,8 +12,6 @@
 #                       1. Cycle date/time in YYYYMMDDHH format
 #                       2. Forecast hour
 #
-#                       Define the path to the grib2 file on line 219.
-#
 #           		To create plots for forecast hour 24 from 5/7 00Z cycle:
 #                       python plot_allvars.py 2020050700 24
 #
@@ -21,6 +19,9 @@
 
 #-------------Import modules --------------------------#
 import pygrib
+import cartopy.crs as ccrs
+from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+import cartopy.feature as cfeature
 import matplotlib
 matplotlib.use('Agg')
 import io
@@ -28,13 +29,14 @@ import matplotlib.pyplot as plt
 import dateutil.relativedelta, dateutil.parser
 from PIL import Image
 from matplotlib.gridspec import GridSpec
-from mpl_toolkits.basemap import Basemap, maskoceans
 import numpy as np
 import time,os,sys,multiprocessing
 import multiprocessing.pool
 from scipy import ndimage
 from netCDF4 import Dataset
 import pyproj
+import argparse
+import yaml
 
 
 #--------------Define some functions ------------------#
@@ -81,7 +83,6 @@ def clear_plotables(ax,keep_ax_lst,fig):
 
 def compress_and_save(filename):
   #### - compress and save the image - ####
-#  ram = io.StringIO()
   ram = io.BytesIO()
   plt.savefig(ram, format='png', bbox_inches='tight', dpi=150)
   ram.seek(0)
@@ -198,6 +199,15 @@ def rotate_wind(true_lat,lov_lon,earth_lons,uin,vin,proj,inverse=False):
 
 
 #-------------Start of script -------------------------#
+
+# Load environment variables within yaml file
+yaml.load('env.yaml')
+
+# Define required positional arguments
+parser = argparse.ArgumentParser()
+parser.add_argument("Cycle date/time in YYYYMMDDHH format")
+parser.add_argument("Forecast hour in HH format")
+args = parser.parse_args()
               
 # Read date/time and forecast hour from command line
 ymdh = str(sys.argv[1])
@@ -215,8 +225,8 @@ print('fhour '+fhour)
 itime = ymdh
 vtime = ndate(itime,int(fhr))
 
-# Define the input files
-#data1 = pygrib.open('/gpfs/dell2/ptmp/Benjamin.Blake/fv3sarx/fv3sarx.'+str(ymd)+'/'+cyc+'/fv3sar.t'+cyc+'z.conus.f'+fhour+'.grib2')
+# Define the location of the input file
+data1 = pygrib.open(EXPT_BASEDIR+'/'+EXPT_SUBDIR+'/'+str(ymd)+'/postprd/HRRR.t'+cyc+'bgdawp'+str(fhour)+'tm00')
 
 # Get the lats and lons
 grids = [data1]
@@ -267,7 +277,8 @@ print(Lat0)
 print(Lon0)
 
 # Specify plotting domains
-# User can add domains here, just need to specify lat/lon information below (see line 382)
+# User can add domains here, just need to specify lat/lon information below 
+# (if dom == 'conus' block)
 domains=['conus']
 
 ###################################################
@@ -353,11 +364,6 @@ def plot_all(dom):
   t1dom = time.perf_counter()
   print(('Working on '+dom))
 
-  # create figure and axes instances
-  fig = plt.figure()
-  gs = GridSpec(4,4,wspace=0.0,hspace=0.0)
-  ax = fig.add_subplot(gs[:,:])
-
   # Map corners for each domain
   if dom == 'conus':
     llcrnrlon = -120.5
@@ -367,21 +373,29 @@ def plot_all(dom):
     lat_0 = 35.4
     lon_0 = -97.6
 
-  # Create basemap instance and set the dimensions
-  m = Basemap(ax=ax,projection='gnom',lat_0=lat_0,lon_0=lon_0,\
-              llcrnrlat=llcrnrlat, urcrnrlat=urcrnrlat,\
-              llcrnrlon=llcrnrlon, urcrnrlon=urcrnrlon,\
-              resolution='l')
-  m.fillcontinents(color='LightGrey',zorder=0)
-  m.drawcoastlines(linewidth=0.75)
-  m.drawstates(linewidth=0.5)
-  m.drawcountries(linewidth=0.5)
-# parallels = np.arange(0.,90.,10.)
-# m.drawparallels(parallels,labels=[1,0,0,0],fontsize=6)
-# meridians = np.arange(180.,360.,10.)
-# m.drawmeridians(meridians,labels=[0,0,0,1],fontsize=6)
-  x,y = m(lon,lat)
-  x_shift,y_shift   = m(lon_shift,lat_shift)
+  # create figure and axes instances
+  fig = plt.figure(figsize=(10,10))
+  ax1 = fig.add_axes([0.1,0.1,0.8,0.8])
+
+  # set up the map background with cartopy
+  extent=[llcrnrlon-3,urcrnrlon-6,llcrnrlat-1,urcrnrlat+2]
+  myproj=ccrs.LambertConformal(central_longitude=-97.6, central_latitude=35.4, false_easting=0.0,
+                          false_northing=0.0, secant_latitudes=None, standard_parallels=None,
+                          globe=None)
+  ax = plt.axes(projection=myproj)
+  ax.set_extent(extent)
+  ax.stock_img()
+  ax.add_feature(cfeature.GSHHSFeature(scale='auto',levels=[1]))
+
+# This does not currently work
+#  print('adding coastlines, STATES, LAND')
+#  ax.coastlines(resolution='10m')
+#  ax.add_feature(cfeature.STATES.with_scale('10m'))
+#  ax.add_feature(cfeature.LAND.with_scale('10m'))
+
+
+  # All lat lons are earth relative, so setup the associated projection correct for that data
+  transform = ccrs.PlateCarree()
  
   # Map/figure has been set up here, save axes instances for use again later
   keep_ax_lst = ax.get_children()[:]
@@ -399,16 +413,11 @@ def plot_all(dom):
   cm = plt.cm.Spectral_r
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
-  xmin, xmax = ax.get_xlim()
-  ymin, ymax = ax.get_ylim()
-  xmax = int(round(xmax))
-  ymax = int(round(ymax))
-
-  cs1_a = m.pcolormesh(x_shift,y_shift,slpsmooth,cmap=cm,norm=norm,ax=ax)  
-  cbar1 = m.colorbar(cs1_a,ax=ax,location='bottom',pad=0.05,extend='both')
+  cs1_a = plt.pcolormesh(lon_shift,lat_shift,slp,transform=transform,cmap=cm,norm=norm) 
+  cbar1 = plt.colorbar(cs1_a,orientation='horizontal',pad=0.05,extend='both')
   cbar1.set_label(units,fontsize=6)
   cbar1.ax.tick_params(labelsize=6)
-  cs1_b = m.contour(x,y,slpsmooth,np.arange(940,1060,4),colors='black',linewidths=1.25,ax=ax)
+  cs1_b = plt.contour(lon_shift,lat_shift,slpsmooth,np.arange(940,1060,4),colors='black',linewidths=1.25,transform=transform)
   plt.clabel(cs1_b,np.arange(940,1060,4),inline=1,fmt='%d',fontsize=8)
   ax.text(.5,1.03,'FV3SAR SLP ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
@@ -433,15 +442,10 @@ def plot_all(dom):
   cm = cmap_t2m()
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
-  xmin, xmax = ax.get_xlim()
-  ymin, ymax = ax.get_ylim()
-  xmax = int(round(xmax))
-  ymax = int(round(ymax))
-
-  cs_1 = m.pcolormesh(x_shift,y_shift,tmp2m,cmap=cm,norm=norm,ax=ax)
+  cs_1 = plt.pcolormesh(lon_shift,lat_shift,tmp2m,transform=transform,cmap=cm,norm=norm)
   cs_1.cmap.set_under('white')
   cs_1.cmap.set_over('white')
-  cbar1 = m.colorbar(cs_1,ax=ax,location='bottom',pad=0.05,ticks=[-16,-4,8,20,32,44,56,68,80,92,104,116,128],extend='both')
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=[-16,-4,8,20,32,44,56,68,80,92,104,116,128],extend='both')
   cbar1.set_label(units,fontsize=6)
   cbar1.ax.tick_params(labelsize=6)
   ax.text(.5,1.03,'FV3SAR 2-m Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
@@ -467,13 +471,8 @@ def plot_all(dom):
   cm = cmap_q2m()
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
-  xmin, xmax = ax.get_xlim()
-  ymin, ymax = ax.get_ylim()
-  xmax = int(round(xmax))
-  ymax = int(round(ymax))
-
-  cs_1 = m.pcolormesh(x_shift,y_shift,dew2m,cmap=cm,norm=norm,ax=ax)
-  cbar1 = m.colorbar(cs_1,ax=ax,location='bottom',pad=0.05,extend='both')
+  cs_1 = plt.pcolormesh(lon_shift,lat_shift,dew2m,transform=transform,cmap=cm,norm=norm)
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,extend='both')
   cbar1.set_label(units,fontsize=6)
   cbar1.ax.tick_params(labelsize=6)
   ax.text(.5,1.03,'FV3SAR 2-m Dew Point Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
@@ -503,21 +502,13 @@ def plot_all(dom):
   cm = matplotlib.colors.ListedColormap(colorlist)
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
-  # Rotate winds to gnomonic projection
-  urot, vrot = m.rotate_vector(uwind,vwind,lon,lat)
-
-  xmin, xmax = ax.get_xlim()
-  ymin, ymax = ax.get_ylim()
-  xmax = int(round(xmax))
-  ymax = int(round(ymax))
-
-  cs_1 = m.pcolormesh(x_shift,y_shift,wspd10m,cmap=cm,vmin=5,norm=norm,ax=ax)
+  cs_1 = plt.pcolormesh(lon_shift,lat_shift,wspd10m,transform=transform,cmap=cm,vmin=5,norm=norm)
   cs_1.cmap.set_under('white',alpha=0.)
   cs_1.cmap.set_over('black')
-  cbar1 = m.colorbar(cs_1,ax=ax,location='bottom',pad=0.05,ticks=clevs,extend='max')
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=clevs,extend='max')
   cbar1.set_label(units,fontsize=6)
   cbar1.ax.tick_params(labelsize=6)
-  m.barbs(lon[::skip,::skip],lat[::skip,::skip],urot[::skip,::skip],vrot[::skip,::skip],latlon=True,length=barblength,linewidth=0.5,color='black',ax=ax)
+  plt.barbs(lon_shift[::skip,::skip],lat_shift[::skip,::skip],uwind[::skip,::skip],vwind[::skip,::skip],length=barblength,linewidth=0.5,color='black',transform=transform)
   ax.text(.5,1.03,'FV3SAR 10-m Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
     
   compress_and_save('compare10mwind_'+dom+'_f'+fhour+'.png')
@@ -543,18 +534,13 @@ def plot_all(dom):
   cm = matplotlib.colors.ListedColormap(colorlist)
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
-  xmin, xmax = ax.get_xlim()
-  ymin, ymax = ax.get_ylim()
-  xmax = int(round(xmax))
-  ymax = int(round(ymax))
-
-  cs_1 = m.pcolormesh(x_shift,y_shift,cape,cmap=cm,vmin=100,norm=norm,ax=ax)
+  cs_1 = plt.pcolormesh(lon_shift,lat_shift,cape,transform=transform,cmap=cm,vmin=100,norm=norm)
   cs_1.cmap.set_under('white',alpha=0.)
   cs_1.cmap.set_over('darkviolet')
-  cbar1 = m.colorbar(cs_1,ax=ax,location='bottom',pad=0.05,ticks=clevs,extend='max')
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=clevs,extend='max')
   cbar1.set_label(units,fontsize=6)
   cbar1.ax.tick_params(labelsize=6)
-  cs_1b = m.contourf(x,y,cin,clevs2,colors='none',hatches=['**','++','////','..'],ax=ax)
+  cs_1b = plt.contourf(lon_shift,lat_shift,cin,clevs2,colors='none',hatches=['**','++','////','..'],transform=transform)
   ax.text(.5,1.05,'FV3SAR Surface-Based CAPE (shaded) and CIN (hatched) ('+units+') \n <-500 (*), -500<-250 (+), -250<-100 (/), -100<-25 (.) \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
   compress_and_save('comparesfcape_'+dom+'_f'+fhour+'.png')
@@ -582,22 +568,14 @@ def plot_all(dom):
   cm = matplotlib.colors.ListedColormap(colorlist)
   norm = matplotlib.colors.BoundaryNorm(vortlevs, cm.N)
 
-  # Rotate winds to gnomonic projection
-  urot, vrot = m.rotate_vector(u500,v500,lon,lat)
-
-  xmin, xmax = ax.get_xlim()
-  ymin, ymax = ax.get_ylim()
-  xmax = int(round(xmax))
-  ymax = int(round(ymax))
-
-  cs1_a = m.pcolormesh(x_shift,y_shift,vort500,cmap=cm,norm=norm,ax=ax)
+  cs1_a = plt.pcolormesh(lon_shift,lat_shift,vort500,transform=transform,cmap=cm,norm=norm)
   cs1_a.cmap.set_under('white')
   cs1_a.cmap.set_over('darkred')
-  cbar1 = m.colorbar(cs1_a,ax=ax,location='bottom',pad=0.05,ticks=vortlevs,extend='both')
+  cbar1 = plt.colorbar(cs1_a,orientation='horizontal',pad=0.05,ticks=vortlevs,extend='both')
   cbar1.set_label(units,fontsize=6)
   cbar1.ax.tick_params(labelsize=6)
-  m.barbs(lon[::skip,::skip],lat[::skip,::skip],urot[::skip,::skip],vrot[::skip,::skip],latlon=True,length=barblength,linewidth=0.5,color='steelblue',ax=ax)
-  cs1_b = m.contour(x,y,z500,np.arange(486,600,6),colors='black',linewidths=1,ax=ax)
+  plt.barbs(lon_shift[::skip,::skip],lat_shift[::skip,::skip],u500[::skip,::skip],v500[::skip,::skip],length=barblength,linewidth=0.5,color='steelblue',transform=transform)
+  cs1_b = plt.contour(lon_shift,lat_shift,z500,np.arange(486,600,6),colors='black',linewidths=1,transform=transform)
   plt.clabel(cs1_b,np.arange(486,600,6),inline_spacing=1,fmt='%d',fontsize=6)
   ax.text(.5,1.03,'FV3SAR 500 mb Heights (dam), Winds (kts), and $\zeta$ ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
@@ -626,21 +604,13 @@ def plot_all(dom):
   cm = matplotlib.colors.ListedColormap(colorlist)
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
-  # Rotate winds to gnomonic projection
-  urot, vrot = m.rotate_vector(u250,v250,lon,lat)
-
-  xmin, xmax = ax.get_xlim()
-  ymin, ymax = ax.get_ylim()
-  xmax = int(round(xmax))
-  ymax = int(round(ymax))
-
-  cs_1 = m.pcolormesh(x_shift,y_shift,wspd250,cmap=cm,vmin=50,norm=norm,ax=ax)
+  cs_1 = plt.pcolormesh(lon_shift,lat_shift,wspd250,transform=transform,cmap=cm,vmin=50,norm=norm)
   cs_1.cmap.set_under('white',alpha=0.)
   cs_1.cmap.set_over('red')
-  cbar1 = m.colorbar(cs_1,ax=ax,location='bottom',pad=0.05,ticks=clevs,extend='max')
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=clevs,extend='max')
   cbar1.set_label(units,fontsize=6)
   cbar1.ax.tick_params(labelsize=6)
-  m.barbs(lon[::skip,::skip],lat[::skip,::skip],urot[::skip,::skip],vrot[::skip,::skip],latlon=True,length=barblength,linewidth=0.5,color='black',ax=ax)
+  plt.barbs(lon_shift[::skip,::skip],lat_shift[::skip,::skip],u250[::skip,::skip],v250[::skip,::skip],length=barblength,linewidth=0.5,color='black',transform=transform)
   ax.text(.5,1.03,'FV3SAR 250 mb Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
   compress_and_save('compare250wind_'+dom+'_f'+fhour+'.png')
@@ -667,15 +637,10 @@ def plot_all(dom):
     cm = matplotlib.colors.ListedColormap(colorlist)
     norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
-    xmin, xmax = ax.get_xlim()
-    ymin, ymax = ax.get_ylim()
-    xmax = int(round(xmax))
-    ymax = int(round(ymax))
-
-    cs_1 = m.pcolormesh(x_shift,y_shift,qpf,cmap=cm,vmin=0.01,norm=norm,ax=ax)
+    cs_1 = plt.pcolormesh(lon_shift,lat_shift,qpf,transform=transform,cmap=cm,vmin=0.01,norm=norm)
     cs_1.cmap.set_under('white',alpha=0.)
     cs_1.cmap.set_over('pink')
-    cbar1 = m.colorbar(cs_1,ax=ax,location='bottom',pad=0.05,ticks=clevs,extend='max')
+    cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=clevs,extend='max')
     cbar1.set_label(units,fontsize=6)
     cbar1.ax.set_xticklabels(clevs)
     cbar1.ax.tick_params(labelsize=6)
@@ -704,15 +669,10 @@ def plot_all(dom):
   cm = matplotlib.colors.ListedColormap(colorlist)
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
   
-  xmin, xmax = ax.get_xlim()
-  ymin, ymax = ax.get_ylim()
-  xmax = int(round(xmax))
-  ymax = int(round(ymax))
-
-  cs_1 = m.pcolormesh(x_shift,y_shift,refc,cmap=cm,vmin=5,norm=norm,ax=ax)
+  cs_1 = plt.pcolormesh(lon_shift,lat_shift,refc,transform=transform,cmap=cm,vmin=5,norm=norm)
   cs_1.cmap.set_under('white',alpha=0.)
   cs_1.cmap.set_over('black')
-  cbar1 = m.colorbar(cs_1,ax=ax,location='bottom',pad=0.05,ticks=clevs,extend='max')
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=clevs,extend='max')
   cbar1.set_label(units,fontsize=6)
   cbar1.ax.tick_params(labelsize=6)
   ax.text(.5,1.03,'FV3SAR Composite Reflectivity ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
@@ -742,15 +702,10 @@ def plot_all(dom):
     cm = matplotlib.colors.ListedColormap(colorlist)
     norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
-    xmin, xmax = ax.get_xlim()
-    ymin, ymax = ax.get_ylim()
-    xmax = int(round(xmax))
-    ymax = int(round(ymax))
-
-    cs_1 = m.pcolormesh(x_shift,y_shift,uh25,cmap=cm,norm=norm,ax=ax)
+    cs_1 = plt.pcolormesh(lon_shift,lat_shift,uh25,transform=transform,cmap=cm,norm=norm)
     cs_1.cmap.set_under('darkblue')
     cs_1.cmap.set_over('black')
-    cbar1 = m.colorbar(cs_1,ax=ax,location='bottom',pad=0.05,extend='both')
+    cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,extend='both')
     cbar1.set_label(units,fontsize=6)
     cbar1.ax.tick_params(labelsize=6)
     ax.text(.5,1.03,'FV3SAR 1-h Max/Min 2-5 km Updraft Helicity ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
