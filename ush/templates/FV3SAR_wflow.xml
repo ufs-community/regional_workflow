@@ -49,9 +49,17 @@ Directories and files.
 -->
 <!ENTITY JOBSDIR                  "{{ jobsdir }}">
 <!ENTITY LOGDIR                   "{{ logdir }}">
+<!ENTITY SCRIPTSDIR               "{{ scriptsdir }}">
 <!ENTITY CYCLE_BASEDIR            "{{ cycle_basedir }}">
 <!ENTITY GLOBAL_VAR_DEFNS_FP      "{{ global_var_defns_fp }}">
 <!ENTITY LOAD_MODULES_RUN_TASK_FP "{{ load_modules_run_task_fp }}">
+
+<!ENTITY MET_INSTALL_DIR "{{ met_install_dir }}">
+<!ENTITY METPLUS_PATH "{{ metplus_path }}">
+<!ENTITY METPLUS_CONF "{{ metplus_conf }}">
+<!ENTITY MET_CONFIG "{{ met_config }}">
+<!ENTITY CCPA_OBS_DIR "{{ ccpa_obs_dir }}">
+<!ENTITY NDAS_OBS_DIR "{{ ndas_obs_dir }}">
 
 
 <!ENTITY RSRV_DEFAULT "<account>&ACCOUNT;</account><{{ queue_default_tag }}>&QUEUE_DEFAULT;</{{ queue_default_tag }}>">
@@ -393,7 +401,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>FHR</name><value><cyclestr>&FHR;</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>ACCUM</name><value>01</value></envar>
     <envar><name>MODEL</name><value>{{ model }}</value></envar>
 
@@ -432,7 +440,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>FHR</name><value><cyclestr>&FHR;</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>MODEL</name><value>{{ model }}</value></envar>
 
     <dependency>
