@@ -8,8 +8,9 @@
 # member to generate a new namelist file for each member.  The namelist
 # files of any two ensemble members differ only in their stochastic "seed" 
 # parameter values.  Each such member-specific namelist file is placed at 
-# the top level of the corresponding member directory (where the member 
-# directories are specified in the workflow array variable ENS_MEMBER_DIRS).  
+# the top level of the experiment directory.  (Then, during the RUN_FCST_TN 
+# step of the workflow, links are created from the run directories to these 
+# member-specific namelist files.)
 #
 #-----------------------------------------------------------------------
 #
@@ -113,7 +114,7 @@ cdate="${DATE_FIRST_CYCL}${CYCL_HRS[0]}"
 #
 for (( i=0; i<${NUM_ENS_MEMBERS}; i++ )); do
 
-  fv3_nml_ens_fp="${ENS_MEMBER_DIRS[$i]}/${FV3_NML_FN}"
+  fv3_nml_ensmem_fp="${FV3_NML_ENSMEM_FPS[$i]}"
 
   ip1=$(( i+1 ))
   iseed_shum=$(( cdate*1000 + ip1*10 + 2 ))
@@ -130,7 +131,7 @@ for (( i=0; i<${NUM_ENS_MEMBERS}; i++ )); do
   $USHDIR/set_namelist.py -q \
                           -n ${FV3_NML_BASE_ENS_FP} \
                           -u "$settings" \
-                          -o ${fv3_nml_ens_fp} || \
+                          -o ${fv3_nml_ensmem_fp} || \
     print_err_msg_exit "\
 Call to python script set_namelist.py to set the variables in the FV3
 namelist file that specify the paths to the surface climatology files
@@ -138,7 +139,7 @@ failed.  Parameters passed to this script are:
   Full path to base namelist file:
     FV3_NML_BASE_ENS_FP = \"${FV3_NML_BASE_ENS_FP}\"
   Full path to output namelist file:
-    FV3_NML_FP = \"${FV3_NML_FP}\"
+    fv3_nml_ensmem_fp = \"${fv3_nml_ensmem_fp}\"
   Namelist settings specified on command line (these have highest precedence):
     settings =
 $settings"
