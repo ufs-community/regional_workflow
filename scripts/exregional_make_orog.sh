@@ -147,7 +147,6 @@ case $MACHINE in
 
 "STAMPEDE")
   export APRUN="time"
-  export topo_dir="/work/00315/tg455890/stampede2/regional_fv3/fix_orog"
   ;;
 
 esac
@@ -172,15 +171,6 @@ mkdir_vrfy -p "${filter_dir}"
 shave_dir="${OROG_DIR}/shave_tmp"
 mkdir_vrfy -p "${shave_dir}"
 #
-#-----------------------------------------------------------------------
-#
-# Set the system directory from which topography data will be copied into
-# the experiment directory so it can be remapped onto the forecast model's
-# grid.
-#
-#-----------------------------------------------------------------------
-#
-topo_dir=$( readlink -f "${FIXgsm}/../fix_orog" )
 #
 #-----------------------------------------------------------------------
 #
