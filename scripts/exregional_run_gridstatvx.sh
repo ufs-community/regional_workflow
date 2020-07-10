@@ -179,7 +179,7 @@ esac
 #
 cd ${gridstat_dir}
 
-# rm_vrfy -f grid_stat*.stat
+# rm_vrfy -f grid_stat*${ACCUM}*.stat
 
 #
 #-----------------------------------------------------------------------

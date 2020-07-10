@@ -1100,6 +1100,9 @@ RUN_FCST_TN="run_fcst"
 RUN_POST_TN="run_post"
 VX_TN="run_vx"
 VX_GRIDSTAT_TN="run_gridstatvx"
+VX_GRIDSTAT_03h_TN="run_gridstatvx_03h"
+VX_GRIDSTAT_06h_TN="run_gridstatvx_06h"
+VX_GRIDSTAT_24h_TN="run_gridstatvx_24h"
 VX_POINTSTAT_TN="run_pointstatvx"
 #
 # Number of nodes.

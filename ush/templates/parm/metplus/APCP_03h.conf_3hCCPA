@@ -3,21 +3,25 @@
 [dir]
 # Input and output data directories
 INPUT_BASE = {ENV[EXPTDIR]}/{ENV[CDATE]}/postprd
-FCST_GRID_STAT_INPUT_DIR = {INPUT_BASE}
-
 OUTPUT_BASE = {ENV[EXPTDIR]}
+FCST_PCP_COMBINE_INPUT_DIR = {INPUT_BASE}
+FCST_PCP_COMBINE_OUTPUT_DIR = {ENV[EXPTDIR]}/{ENV[CDATE]}/metprd/pcp_combine
+FCST_GRID_STAT_INPUT_DIR = {FCST_PCP_COMBINE_OUTPUT_DIR}
+
+OBS_GRID_STAT_INPUT_DIR = {ENV[OBS_DIR]}
+
 GRID_STAT_OUTPUT_DIR = {OUTPUT_BASE}
 
 LOG_DIR = {OUTPUT_BASE}/log
 
-OBS_GRID_STAT_INPUT_DIR = {ENV[OBS_DIR]}
-
 [filename_templates]
 # format of filenames
-FCST_GRID_STAT_INPUT_TEMPLATE = HRRR.t{init?fmt=%H}z.bgdawp{lead?fmt=%HH}.tm{init?fmt=%H}
+FCST_PCP_COMBINE_INPUT_TEMPLATE = HRRR.t{init?fmt=%H}z.bgdawp{lead?fmt=%HH}.tm{init?fmt=%H} 
+FCST_PCP_COMBINE_OUTPUT_TEMPLATE = HRRR.t{init?fmt=%H}z.bgdawp{lead?fmt=%HH}.tm{init?fmt=%H}_a{level?fmt=%HH}h
+FCST_GRID_STAT_INPUT_TEMPLATE = {FCST_PCP_COMBINE_OUTPUT_TEMPLATE}
 
 # ANLYS
-OBS_GRID_STAT_INPUT_TEMPLATE = {OBS_GRID_STAT_INPUT_DIR}/{valid?fmt=%Y%m%d}/ccpa.t{valid?fmt=%H}z.01h.hrap.conus.gb2
+OBS_GRID_STAT_INPUT_TEMPLATE = {OBS_GRID_STAT_INPUT_DIR}/{valid?fmt=%Y%m%d}/ccpa.t{valid?fmt=%H}z.03h.hrap.conus.gb2
 
 GRID_STAT_OUTPUT_TEMPLATE = {init?fmt=%Y%m%d%H}/metprd/grid_stat
 
@@ -34,7 +38,27 @@ OBTYPE = CCPA
 OBS_NATIVE_DATA_TYPE = GRIB
 
 # List of applications to run
-PROCESS_LIST = GridStat
+PROCESS_LIST = PcpCombine, GridStat
+
+# Run pcp_combine on forecast/obs data?
+FCST_PCP_COMBINE_RUN = True
+OBS_PCP_COMBINE_RUN = False
+
+# Mode of pcp_combine to use (SUM, ADD, SUBTRACT)
+FCST_PCP_COMBINE_METHOD = ADD
+
+FCST_PCP_COMBINE_CONSTANT_INIT = True
+
+# Accumulation interval available in forecast data
+FCST_PCP_COMBINE_INPUT_ACCUMS = 01
+FCST_PCP_COMBINE_OUTPUT_ACCUM = 03
+
+# If 'bucket' output already exists, skip the PcpCombine step for the data
+PCP_COMBINE_SKIP_IF_OUTPUT_EXISTS = True
+
+# Forecast data description variables
+FCST_PCP_COMBINE_INPUT_DATATYPE = GRIB
+FCST_IS_PROB = false
 
 # location of grid_stat MET config file
 GRID_STAT_CONFIG_FILE = {CONFIG_DIR}/GridStatConfig_APCP
@@ -55,8 +79,8 @@ INIT_INCREMENT = 3600
 INIT_TIME_FMT = %Y%m%d%H
 
 # list of forecast leads to process. 
-#LEAD_SEQ = begin_end_incr(1,24,1)
-LEAD_SEQ = {ENV[fhr_list]} 
+#LEAD_SEQ = begin_end_incr({ENV[ACCUM]},{ENV[LAST_HR]},{ENV[ACCUM]})
+LEAD_SEQ = {ENV[fhr_list]}
 
 # Options are times, processes
 # times = run all items in the PROCESS_LIST for a single initialization
@@ -65,27 +89,20 @@ LEAD_SEQ = {ENV[fhr_list]}
 #   specified, then repeat for the next item in the PROCESS_LIST.
 LOOP_ORDER = times
 
-# run pcp_combine on forecast/obs data?
-FCST_PCP_COMBINE_RUN = False
-OBS_PCP_COMBINE_RUN = False
-
 # Set grid to verify on
 GRID_STAT_REGRID_TO_GRID = FCST
 
 # list of variables to compare
 # thresholds in mm, equal to .01",.02",.05",.10",.25",.50",.75",1.0"
 FCST_VAR1_NAME = APCP
-FCST_VAR1_LEVELS = A01
+FCST_VAR1_LEVELS = A03
 
-BOTH_VAR1_THRESH = gt0.0,ge0.254,ge0.508,ge1.27,ge2.54
+BOTH_VAR1_THRESH = gt0.0,ge0.254,ge0.508,ge1.27,ge2.54,ge3.810,ge6.350
 
 OBS_VAR1_NAME = APCP
-OBS_VAR1_LEVELS = A01
+OBS_VAR1_LEVELS = A03
 
 # Neighborhood shape and widths
 GRID_STAT_NEIGHBORHOOD_SHAPE = SQUARE
 GRID_STAT_NEIGHBORHOOD_WIDTH = 3,5,7
-
-# Forecast data description variables
-FCST_IS_PROB = False
 

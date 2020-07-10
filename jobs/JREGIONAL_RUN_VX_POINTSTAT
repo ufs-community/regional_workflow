@@ -83,7 +83,7 @@ fi
 mkdir_vrfy -p "${vx_dir}"
 
 pointstat_dir="${vx_dir}/point_stat"
-check_for_preexist_dir "${pointstat_dir}" "delete"
+#check_for_preexist_dir "${pointstat_dir}" "delete"
 mkdir_vrfy -p "${pointstat_dir}"
 
 cd_vrfy "${pointstat_dir}"

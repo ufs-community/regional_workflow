@@ -116,6 +116,9 @@ settings="\
   'run_post_tn': ${RUN_POST_TN}
   'vx_tn': ${VX_TN}
   'vx_gridstat_tn': ${VX_GRIDSTAT_TN}
+  'vx_gridstat_03h_tn': ${VX_GRIDSTAT_03h_TN}
+  'vx_gridstat_06h_tn': ${VX_GRIDSTAT_06h_TN}
+  'vx_gridstat_24h_tn': ${VX_GRIDSTAT_24h_TN}
   'vx_pointstat_tn': ${VX_POINTSTAT_TN}
 #
 # Number of nodes to use for each task.

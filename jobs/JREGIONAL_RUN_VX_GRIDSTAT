@@ -85,7 +85,7 @@ fi
 mkdir_vrfy -p "${vx_dir}"
 
 gridstat_dir="${vx_dir}/grid_stat"
-check_for_preexist_dir "${gridstat_dir}" "delete"
+#check_for_preexist_dir "${gridstat_dir}" "delete"
 mkdir_vrfy -p "${gridstat_dir}"
 
 cd_vrfy "${gridstat_dir}"
