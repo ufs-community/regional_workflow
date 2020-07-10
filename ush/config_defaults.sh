@@ -397,6 +397,42 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #
 #-----------------------------------------------------------------------
 #
+# User-staged external model directories and files.  Definitions:
+#
+# EXTRN_MDL_SOURCE_DIR_ICS:
+# Directory in which to look for external model files for generating ICs.
+# If this is set to a non-empty string, the workflow looks in this directory
+# (specifically, in a subdirectory under this directory named "YYYYMMDDHH"
+# consisting of the starting date and cycle hour of the forecast, where 
+# YYYY is the 4-digit year, MM the 2-digit month, DD the 2-digit day of
+# the month, and HH the 2-digit hour of the day) for the external model 
+# files specified by the array EXTRN_MDL_FILES_ICS (these files will be 
+# used to generate the ICs on the native FV3SAR grid.  If this is set to 
+# an empty string, then the workflow will look for the external model 
+# files for generating ICS in a default machine-dependent location.  In 
+# this case, EXTRN_MDL_FILES_ICS is not used.
+# 
+# EXTRN_MDL_FILES_ICS:
+# Array containing the names of the files to search for in the directory
+# specified by EXTRN_MDL_SOURCE_DIR_ICS.  This variable is not used if 
+# EXTRN_MDL_SOURCE_DIR_ICS is set to a null (i.e. empty) string.
+#
+# EXTRN_MDL_SOURCE_DIR_LBCS:
+# Analogous to EXTRN_MDL_SOURCE_DIR_ICS but for LBCs instead of ICs.
+#
+# EXTRN_MDL_FILES_LBCS:
+# Analogous to EXTRN_MDL_FILES_ICS but for LBCs instead of ICs.
+#
+#-----------------------------------------------------------------------
+#
+EXTRN_MDL_SOURCE_DIR_ICS=""
+EXTRN_MDL_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
+
+EXTRN_MDL_SOURCE_DIR_LBCS=""
+EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
+#
+#-----------------------------------------------------------------------
+#
 # Set CCPP-associated parameters.  Definitions:
 #
 # USE_CCPP:
@@ -1123,4 +1159,30 @@ WTIME_RUN_POST="00:15:00"
 #
 DO_ENSEMBLE="FALSE"
 NUM_ENS_MEMBERS="1"
+#
+#-----------------------------------------------------------------------
+#
+# Set default stochastic physics options
+# For detailed documentation of these parameters, see:
+# https://stochastic-physics.readthedocs.io/en/ufs_public_release/namelist_options.html
+#
+#-----------------------------------------------------------------------
+#
+DO_SHUM="false"
+DO_SPPT="false"
+DO_SKEB="false"
+SHUM_MAG="0.006" #Variable "shum" in input.nml
+SHUM_LSCALE="150000"
+SHUM_TSCALE="21600" #Variable "shum_tau" in input.nml
+SHUM_INT="3600" #Variable "shumint" in input.nml
+SPPT_MAG="1.0" #Variable "sppt" in input.nml
+SPPT_LSCALE="150000"
+SPPT_TSCALE="21600" #Variable "sppt_tau" in input.nml
+SPPT_INT="3600" #Variable "spptint" in input.nml
+SKEB_MAG="0.5" #Variable "skeb" in input.nml
+SKEB_LSCALE="150000"
+SKEB_TSCALE="21600" #Variable "skeb_tau" in input.nml
+SKEB_INT="3600" #Variable "skebint" in input.nml
+SKEB_VDOF="10"
+USE_ZMTNBLCK="false"
 
