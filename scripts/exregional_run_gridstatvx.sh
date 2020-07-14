@@ -80,8 +80,6 @@ print_info_msg "$VERBOSE" "Starting grid-stat verification"
 
 cd ${gridstat_dir}
 
-# rm_vrfy -f grid_stat*${ACCUM}*.stat
-
 #
 #-----------------------------------------------------------------------
 #

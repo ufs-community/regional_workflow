@@ -79,8 +79,6 @@ print_info_msg "$VERBOSE" "Starting point-stat verification"
 
 cd ${pointstat_dir}
 
-# rm_vrfy -f point_stat*.stat
-
 #
 #-----------------------------------------------------------------------
 #

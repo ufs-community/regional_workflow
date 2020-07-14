@@ -52,7 +52,7 @@ Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
 This is the J-job script for the task that runs METplus for grid-stat
-by initialitation time for all forecast hours.
+by initialization time for all forecast hours.
 ========================================================================"
 #
 #-----------------------------------------------------------------------
