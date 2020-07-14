@@ -184,28 +184,28 @@ settings="\
 # Forecast length (same for all cycles).
 #
   'fcst_len_hrs': ${FCST_LEN_HRS}"
-#
-# For debugging purposes, print out what "settings" has been set to.
-#
+
 print_info_msg $VERBOSE "
 The variable \"settings\" specifying values of the rococo XML variables
 has been set as follows:
-
+#-----------------------------------------------------------------------
 settings =
 $settings"
+
 #
 # Set the full path to the template rocoto XML file.  Then call a python
 # script to generate the experiment's actual XML file from this template
 # file.
 #
 template_xml_fp="${TEMPLATE_DIR}/${WFLOW_XML_FN}"
-$USHDIR/create_xml.py -q \
-                      -t ${template_xml_fp} \
-                      -u "$settings" \
-                      -o ${WFLOW_XML_FP} || \
+$USHDIR/fill_jinja_template.py -q \
+                               -u "${settings}" \
+                               -t ${template_xml_fp} \
+                               -o ${WFLOW_XML_FP} || \
   print_err_msg_exit "\
-Call to python script create_xml.py to create a rocoto workflow XML file
-from a template file failed.  Parameters passed to this script are:
+Call to python script fill_jinja_template.py to create a rocoto workflow
+XML file from a template file failed.  Parameters passed to this script
+are:
   Full path to template rocoto XML file:
     template_xml_fp = \"${template_xml_fp}\"
   Full path to output rocoto XML file:
@@ -213,17 +213,18 @@ from a template file failed.  Parameters passed to this script are:
   Namelist settings specified on command line:
     settings =
 $settings"
+
 #
 #-----------------------------------------------------------------------
 #
-# For select workflow tasks, create symlinks (in an appropriate subdi-
-# rectory under the workflow directory tree) that point to module files
-# in the various cloned external repositories.  In principle, this is
-# better than having hard-coded module files for tasks because the sym-
-# links will always point to updated module files.  However, it does re-
-# quire that these module files in the external repositories be coded
-# correctly, e.g. that they really be lua module files and not contain
-# any shell commands (like "export SOME_VARIABLE").
+# For select workflow tasks, copy module files from the various cloned 
+# external repositories to the appropriate subdirectory under the 
+# workflow directory tree.  In principle, this is better than having 
+# hard-coded module files for tasks because the copied module files will
+# always be up to date.  However, it does require that these module files 
+# in the external repositories be coded correctly, e.g. that they really
+# be lua module files and not contain any shell commands 
+# (like "export SOME_VARIABLE").
 #
 #-----------------------------------------------------------------------
 #
@@ -231,61 +232,32 @@ machine=${MACHINE,,}
 
 cd_vrfy "${MODULES_DIR}/tasks/$machine"
 
-# Modules files are copied from the build step for the following tasks. 
-# Some tasks also have a "task_name".local file, particularly if they
-# require Python. If it exists for a given task, it is appended to the 
-# file copied from the external repositories.
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/fv3gfs/orog.$machine" "${MAKE_OROG_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/modulefile.sfc_climo_gen.$machine" "${MAKE_SFC_CLIMO_TN}"
+cp_vrfy -f "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_ICS_TN}"
+cp_vrfy -f "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_LBCS_TN}"
+cp_vrfy -f "${UFS_WTHR_MDL_DIR}/modulefiles/$machine.intel/fv3" "${RUN_FCST_TN}"
 
-cp_vrfy "${UFS_UTILS_DIR}/modulefiles/fv3gfs/orog.$machine" "${MAKE_OROG_TN}"
-modulefile_local="${MAKE_OROG_TN}.local"
-if [ -f ${modulefile_local} ]; then
-  cat "${modulefile_local}" >> "${MAKE_OROG_TN}"
-fi
-
-cp_vrfy "${UFS_UTILS_DIR}/modulefiles/modulefile.sfc_climo_gen.$machine" "${MAKE_SFC_CLIMO_TN}"
-modulefile_local="${MAKE_SFC_CLIMO_TN}.local"
-if [ -f ${modulefile_local} ]; then
-  cat "${modulefile_local}" >> "${MAKE_SFC_CLIMO_TN}"
-fi
-
-cp_vrfy "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_ICS_TN}"
-modulefile_local="${MAKE_ICS_TN}.local"
-if [ -f ${modulefile_local} ]; then
-  cat "${modulefile_local}" >> "${MAKE_ICS_TN}"
-fi
-
-cp_vrfy "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_LBCS_TN}"
-modulefile_local="${MAKE_LBCS_TN}.local"
-if [ -f ${modulefile_local} ]; then
-  cat "${modulefile_local}" >> "${MAKE_LBCS_TN}"
-fi
-
-cp_vrfy "${UFS_WTHR_MDL_DIR}/modulefiles/$machine.intel/fv3" "${RUN_FCST_TN}"
-modulefile_local="${RUN_FCST_TN}.local"
-if [ -f ${modulefile_local} ]; then
-  cat "${modulefile_local}" >> "${RUN_FCST_TN}"
-fi
-
+task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_ICS_TN}" "${MAKE_LBCS_TN}" "${RUN_FCST_TN}" )
 #
-# Only some platforms build EMC_post using modules.
+# Only some platforms build EMC_post using modules, and some machines require a different EMC_post modulefile name.
 #
-case $MACHINE in
+if [ "${MACHINE}" = "CHEYENNE" ]; then
+  print_info_msg "No post modulefile needed for ${MACHINE}"
+elif [ "${MACHINE}" = "WCOSS_CRAY" ]; then
+  cp_vrfy -f "${EMC_POST_DIR}/modulefiles/post/v8.0.0-cray-intel" "${RUN_POST_TN}"
+  task_names+=("${RUN_POST_TN}")
+else
+  cp_vrfy -f "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" "${RUN_POST_TN}"
+  task_names+=("${RUN_POST_TN}")
+fi
 
-  "CHEYENNE")
-    print_info_msg "No post modulefile needed for $MACHINE"
-    ;;
-
-  *)
-    cp_vrfy "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" \
-            "${RUN_POST_TN}"
-    modulefile_local="${RUN_POST_TN}.local"
-    if [ -f ${modulefile_local} ]; then
-      cat "${modulefile_local}" >> "${RUN_POST_TN}"
-    fi
-
-    ;;
-
-esac
+for task in "${task_names[@]}"; do
+  modulefile_local="${task}.local"
+  if [ -f ${modulefile_local} ]; then
+    cat "${modulefile_local}" >> "${task}"
+  fi
+done
 
 cd_vrfy -
 #
@@ -608,6 +580,25 @@ settings="\
   }
 'gfs_physics_nml': {
     'lsoil': ${lsoil:-null},
+    'do_shum': ${DO_SHUM},
+    'do_sppt': ${DO_SPPT},
+    'do_skeb': ${DO_SKEB},
+  }
+'nam_stochy': {
+    'shum': ${SHUM_MAG},
+    'shum_lscale': ${SHUM_LSCALE},
+    'shum_tau': ${SHUM_TSCALE},
+    'shumint': ${SHUM_INT},
+    'sppt': ${SPPT_MAG},
+    'sppt_lscale': ${SPPT_LSCALE},
+    'sppt_tau': ${SPPT_TSCALE},
+    'spptint': ${SPPT_INT},
+    'skeb': ${SKEB_MAG},
+    'skeb_lscale': ${SKEB_LSCALE},
+    'skeb_tau': ${SKEB_TSCALE},
+    'skebint': ${SKEB_INT},
+    'skeb_vdof': ${SKEB_VDOF},
+    'use_zmtnblck': ${USE_ZMTNBLCK},
   }"
 #
 # Add to "settings" the values of those namelist variables that specify
