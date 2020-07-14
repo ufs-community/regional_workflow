@@ -36,8 +36,6 @@ Flags that specify whether to run the preprocessing and/or verification tasks.
 <!ENTITY RUN_TASK_MAKE_GRID      "{{ run_task_make_grid | upper }}">
 <!ENTITY RUN_TASK_MAKE_OROG      "{{ run_task_make_orog | upper }}">
 <!ENTITY RUN_TASK_MAKE_SFC_CLIMO "{{ run_task_make_sfc_climo | upper }}">
-<!ENTITY RUN_TASK_VX_GRIDSTAT    "{{ run_task_vx_gridstat | upper }}">
-<!ENTITY RUN_TASK_VX_POINTSTAT   "{{ run_task_vx_pointstat | upper }}">
 
 <!--
 Number of physical cores per node for the current machine.  This is used
@@ -380,6 +378,7 @@ MODULES_RUN_TASK_FP script.
 
   </metatask>
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -410,14 +409,13 @@ MODULES_RUN_TASK_FP script.
     <envar><name>MODEL</name><value>{{ model }}</value></envar>
 
     <dependency>
-      <and>
-	<streq><left>&RUN_TASK_VX_GRIDSTAT;</left><right>TRUE</right></streq>
-	<metataskdep metatask="&RUN_POST_TN;"/>
-      </and>
-   </dependency>
+      <metataskdep metatask="&RUN_POST_TN;"/>
+    </dependency>
 
   </task>
+{% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -448,14 +446,13 @@ MODULES_RUN_TASK_FP script.
     <envar><name>MODEL</name><value>{{ model }}</value></envar>
 
     <dependency>
-      <and>
-	<streq><left>&RUN_TASK_VX_GRIDSTAT;</left><right>TRUE</right></streq>
-	<metataskdep metatask="&RUN_POST_TN;"/>
-      </and>
-   </dependency>
+      <metataskdep metatask="&RUN_POST_TN;"/>
+    </dependency>
 
   </task>
+{% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -486,14 +483,13 @@ MODULES_RUN_TASK_FP script.
     <envar><name>MODEL</name><value>{{ model }}</value></envar>
 
     <dependency>
-      <and>
-        <streq><left>&RUN_TASK_VX_GRIDSTAT;</left><right>TRUE</right></streq>
-        <metataskdep metatask="&RUN_POST_TN;"/>
-      </and>
-   </dependency>
+      <metataskdep metatask="&RUN_POST_TN;"/>
+    </dependency>
 
   </task>
+{% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -524,14 +520,13 @@ MODULES_RUN_TASK_FP script.
     <envar><name>MODEL</name><value>{{ model }}</value></envar>
 
     <dependency>
-      <and>
-        <streq><left>&RUN_TASK_VX_GRIDSTAT;</left><right>TRUE</right></streq>
-        <metataskdep metatask="&RUN_POST_TN;"/>
-      </and>
-   </dependency>
+      <metataskdep metatask="&RUN_POST_TN;"/>
+    </dependency>
 
   </task>
+{% endif %}
 
+{% if run_task_vx_pointstat %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -562,12 +557,10 @@ MODULES_RUN_TASK_FP script.
     <envar><name>MODEL</name><value>{{ model }}</value></envar>
 
     <dependency>
-      <and>
-        <streq><left>&RUN_TASK_VX_POINTSTAT;</left><right>TRUE</right></streq>
-        <metataskdep metatask="&RUN_POST_TN;"/>
-      </and>
-   </dependency>
+      <metataskdep metatask="&RUN_POST_TN;"/>
+    </dependency>
 
   </task>
+{% endif %}
 
 </workflow>
