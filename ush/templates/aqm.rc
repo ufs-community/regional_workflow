@@ -7,20 +7,26 @@
 #
 #  Input emissions
 #
+emission_sources: anthro bio
+
+#
+#  Anthropogenic
+#
+anthro_type: anthropogenic
 
 # supported file formats are: 
 #  - binary 	(Fortran unformatted)
 #  - netcdf 	(netCDF)
 #
-emissions_format: netcdf
+anthro_format: netcdf
 
 # emissions directory
 # <tile> is replaced with the tile number in case of multitile grids, or removed otherwise
 #
-emissions_path: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/dev/expt_dirs/coards2
+anthro_path: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/anthro
 
 # emissions file name
-emissions_file: NEI2016v1_emis_mole_all_nobeis_12US1_gsd_hrrr_25km_20160101.nc 
+anthro_file: NEI2016v1_emis_mole_all_nobeis_12US1_gsd_hrrr_25km_20160101.nc
 
 # emissions time dependency
 # supported settings are:
@@ -32,7 +38,7 @@ emissions_file: NEI2016v1_emis_mole_all_nobeis_12US1_gsd_hrrr_25km_20160101.nc
 #  Binary/NetCDF:
 #  - static     read data only at startup time
 #
-emissions_frequency: hourly
+anthro_frequency: hourly
 
 # list of emission species
 # input emissions can be manipulated by adding multiple
@@ -44,75 +50,175 @@ emissions_frequency: hourly
 #     NO2           MOL/S       0.250       no2_source_2
 #     NO2           MOL/S      -0.050       no2_sink_1
 #
-emissions_species::
-        ACET          1.00000  ACET          MOL/S
-        ACROLEIN      1.00000  ACROLEIN      MOL/S
-        ALD2          1.00000  ALD2          MOL/S
-        ALD2_PRIMARY  1.00000  ALD2_PRIMARY  MOL/S
-        ALDX          1.00000  ALDX          MOL/S
-        BENZ          1.00000  BENZ          MOL/S
-        BUTADIENE13   1.00000  BUTADIENE13   MOL/S
-        CH4           1.00000  CH4           MOL/S
-        CH4_INV       1.00000  CH4_INV       G/S
-        CL2           1.00000  CL2           MOL/S
-        CO            1.00000  CO            MOL/S
-        CO2_INV       1.00000  CO2_INV       G/S
-        ETH           1.00000  ETH           MOL/S
-        ETHA          1.00000  ETHA          MOL/S
-        ETHY          1.00000  ETHY          MOL/S
-        ETOH          1.00000  ETOH          MOL/S
-        FORM          1.00000  FORM          MOL/S
-        FORM_PRIMARY  1.00000  FORM_PRIMARY  MOL/S
-        HCL           1.00000  HCL           MOL/S
-        HONO          1.00000  HONO          MOL/S
-        IOLE          1.00000  IOLE          MOL/S
-        ISOP          1.00000  ISOP          MOL/S
-        KET           1.00000  KET           MOL/S
-        MEOH          1.00000  MEOH          MOL/S
-        N2O_INV       1.00000  N2O_INV       G/S
-        NAPH          1.00000  NAPH          MOL/S
-        NH3           1.00000  NH3           MOL/S
-        NH3_FERT      1.00000  NH3_FERT      MOL/S
-        NO            1.00000  NO            MOL/S
-        NO2           1.00000  NO2           MOL/S
-        NVOL          1.00000  NVOL          MOL/S
-        OLE           1.00000  OLE           MOL/S
-        PAL           1.00000  PAL           G/S
-        PAR           1.00000  PAR           MOL/S
-        PCA           1.00000  PCA           G/S
-        PCL           1.00000  PCL           G/S
-        PEC           1.00000  PEC           G/S
-        PFE           1.00000  PFE           G/S
-        PH2O          1.00000  PH2O          G/S
-        PK            1.00000  PK            G/S
-        PMC           1.00000  PMC           G/S
-        PMG           1.00000  PMG           G/S
-        PMN           1.00000  PMN           G/S
-        PMOTHR        1.00000  PMOTHR        G/S
-        PNA           1.00000  PNA           G/S
-        PNCOM         1.00000  PNCOM         G/S
-        PNH4          1.00000  PNH4          G/S
-        PNO3          1.00000  PNO3          G/S
-        POC           1.00000  POC           G/S
-        PRPA          1.00000  PRPA          MOL/S
-        PSI           1.00000  PSI           G/S
-        PSO4          1.00000  PSO4          G/S
-        PTI           1.00000  PTI           G/S
-        SO2           1.00000  SO2           MOL/S
-        SOAALK        1.00000  SOAALK        MOL/S
-        SULF          1.00000  SULF          MOL/S
-        TERP          1.00000  TERP          MOL/S
-        TOL           1.00000  TOL           MOL/S
-        UNK           1.00000  UNK           MOL/S
-        UNR           1.00000  UNR           MOL/S
-        VOC_INV       1.00000  VOC_INV       G/S
-        XYLMN         1.00000  XYLMN         MOL/S
-        AACD
-        FACD
-        GLYXL
-        HGIIGAS        
-        HGNRVA
-        PACD
-        SESQ            
-        TOLU
+anthro_species::
+    ACET          1.00000  ACET          MOL/S
+    ACROLEIN      1.00000  ACROLEIN      MOL/S
+    ALD2          1.00000  ALD2          MOL/S
+    ALD2_PRIMARY  1.00000  ALD2_PRIMARY  MOL/S
+    ALDX          1.00000  ALDX          MOL/S
+    BENZ          1.00000  BENZ          MOL/S
+    BUTADIENE13   1.00000  BUTADIENE13   MOL/S
+    CH4           1.00000  CH4           MOL/S
+    CH4_INV       1.00000  CH4_INV       G/S
+    CL2           1.00000  CL2           MOL/S
+    CO            1.00000  CO            MOL/S
+    CO2_INV       1.00000  CO2_INV       G/S
+    ETH           1.00000  ETH           MOL/S
+    ETHA          1.00000  ETHA          MOL/S
+    ETHY          1.00000  ETHY          MOL/S
+    ETOH          1.00000  ETOH          MOL/S
+    FORM          1.00000  FORM          MOL/S
+    FORM_PRIMARY  1.00000  FORM_PRIMARY  MOL/S
+    HCL           1.00000  HCL           MOL/S
+    HONO          1.00000  HONO          MOL/S
+    IOLE          1.00000  IOLE          MOL/S
+    ISOP          1.00000  ISOP          MOL/S
+    KET           1.00000  KET           MOL/S
+    MEOH          1.00000  MEOH          MOL/S
+    N2O_INV       1.00000  N2O_INV       G/S
+    NAPH          1.00000  NAPH          MOL/S
+    NH3           1.00000  NH3           MOL/S
+    NH3_FERT      1.00000  NH3_FERT      MOL/S
+    NO            1.00000  NO            MOL/S
+    NO2           1.00000  NO2           MOL/S
+    NVOL          1.00000  NVOL          MOL/S
+    OLE           1.00000  OLE           MOL/S
+    PAL           1.00000  PAL           G/S
+    PAR           1.00000  PAR           MOL/S
+    PCA           1.00000  PCA           G/S
+    PCL           1.00000  PCL           G/S
+    PEC           1.00000  PEC           G/S
+    PFE           1.00000  PFE           G/S
+    PH2O          1.00000  PH2O          G/S
+    PK            1.00000  PK            G/S
+    PMC           1.00000  PMC           G/S
+    PMG           1.00000  PMG           G/S
+    PMN           1.00000  PMN           G/S
+    PMOTHR        1.00000  PMOTHR        G/S
+    PNA           1.00000  PNA           G/S
+    PNCOM         1.00000  PNCOM         G/S
+    PNH4          1.00000  PNH4          G/S
+    PNO3          1.00000  PNO3          G/S
+    POC           1.00000  POC           G/S
+    PRPA          1.00000  PRPA          MOL/S
+    PSI           1.00000  PSI           G/S
+    PSO4          1.00000  PSO4          G/S
+    PTI           1.00000  PTI           G/S
+    SO2           1.00000  SO2           MOL/S
+    SOAALK        1.00000  SOAALK        MOL/S
+    SULF          1.00000  SULF          MOL/S
+    TERP          1.00000  TERP          MOL/S
+    TOL           1.00000  TOL           MOL/S
+    UNK           1.00000  UNK           MOL/S
+    UNR           1.00000  UNR           MOL/S
+    VOC_INV       1.00000  VOC_INV       G/S
+    XYLMN         1.00000  XYLMN         MOL/S
+    AACD
+    FACD
+    GLYXL
+    HGIIGAS
+    HGNRVA
+    PACD
+    SESQ
+    TOLU
+::
+
+
+#
+#  Biogenic
+#
+bio_type: biogenic
+
+bio_format: netcdf
+
+bio_path: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/bio
+
+bio_file: BEIS_SARC401.ncf
+
+bio_frequency: static
+
+bio_period: summer
+
+bio_speciation_file: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/bio/gspro_biogenics_1mar2017.txt
+
+bio_speciation_profile: B10C6
+
+bio_species::
+    AVG_NOAG_GROW        1.00000  AVG_NOAG_GROW     gmN/hr
+    AVG_NOAG_NONGROWNB3  1.00000  AVG_NOAG_NONGROW  gmN/hr
+    AVG_NONONAG          1.00000  AVG_NONONAG       gmN/hr
+    AVG_ACETS            1.00000  AVG_ACETS         gmC/hr
+    AVG_ACETW            1.00000  AVG_ACETW         gmC/hr
+    AVG_ACTACS           1.00000  AVG_ACTACS        gmC/hr
+    AVG_ACTACW           1.00000  AVG_ACTACW        gmC/hr
+    AVG_ACTALS           1.00000  AVG_ACTALS        gmC/hr
+    AVG_ACTALW           1.00000  AVG_ACTALW        gmC/hr
+    AVG_APINS            1.00000  AVG_APINS         gmC/hr
+    AVG_APINW            1.00000  AVG_APINW         gmC/hr
+    AVG_ATERPS           1.00000  AVG_ATERPS        gmC/hr
+    AVG_ATERPW           1.00000  AVG_ATERPW        gmC/hr
+    AVG_ATHUS            1.00000  AVG_ATHUS         gmC/hr
+    AVG_ATHUW            1.00000  AVG_ATHUW         gmC/hr
+    AVG_BPHES            1.00000  AVG_BPHES         gmC/hr
+    AVG_BPHEW            1.00000  AVG_BPHEW         gmC/hr
+    AVG_BPINS            1.00000  AVG_BPINS         gmC/hr
+    AVG_BPINW            1.00000  AVG_BPINW         gmC/hr
+    AVG_BUTES            1.00000  AVG_BUTES         gmC/hr
+    AVG_BUTEW            1.00000  AVG_BUTEW         gmC/hr
+    AVG_BUTOS            1.00000  AVG_BUTOS         gmC/hr
+    AVG_BUTOW            1.00000  AVG_BUTOW         gmC/hr
+    AVG_CAMPHS           1.00000  AVG_CAMPHS        gmC/hr
+    AVG_CAMPHW           1.00000  AVG_CAMPHW        gmC/hr
+    AVG_COS              1.00000  AVG_COS           gmC/hr
+    AVG_COW              1.00000  AVG_COW           gmC/hr
+    AVG_D3CARS           1.00000  AVG_D3CARS        gmC/hr
+    AVG_D3CARW           1.00000  AVG_D3CARW        gmC/hr
+    AVG_DLIMS            1.00000  AVG_DLIMS         gmC/hr
+    AVG_DLIMW            1.00000  AVG_DLIMW         gmC/hr
+    AVG_ETHAS            1.00000  AVG_ETHAS         gmC/hr
+    AVG_ETHAW            1.00000  AVG_ETHAW         gmC/hr
+    AVG_ETHES            1.00000  AVG_ETHES         gmC/hr
+    AVG_ETHEW            1.00000  AVG_ETHEW         gmC/hr
+    AVG_ETHOS            1.00000  AVG_ETHOS         gmC/hr
+    AVG_ETHOW            1.00000  AVG_ETHOW         gmC/hr
+    AVG_FORACS           1.00000  AVG_FORACS        gmC/hr
+    AVG_FORACW           1.00000  AVG_FORACW        gmC/hr
+    AVG_FORMS            1.00000  AVG_FORMS         gmC/hr
+    AVG_FORMW            1.00000  AVG_FORMW         gmC/hr
+    AVG_GTERPS           1.00000  AVG_GTERPS        gmC/hr
+    AVG_GTERPW           1.00000  AVG_GTERPW        gmC/hr
+    AVG_HEXAS            1.00000  AVG_HEXAS         gmC/hr
+    AVG_HEXAW            1.00000  AVG_HEXAW         gmC/hr
+    AVG_HEXES            1.00000  AVG_HEXES         gmC/hr
+    AVG_HEXEW            1.00000  AVG_HEXEW         gmC/hr
+    AVG_HEXYS            1.00000  AVG_HEXYS         gmC/hr
+    AVG_HEXYW            1.00000  AVG_HEXYW         gmC/hr
+    AVG_ISOPS            1.00000  AVG_ISOPS         gmC/hr
+    AVG_ISOPW            1.00000  AVG_ISOPW         gmC/hr
+    AVG_MBOS             1.00000  AVG_MBOS          gmC/hr
+    AVG_MBOW             1.00000  AVG_MBOW          gmC/hr
+    AVG_METHS            1.00000  AVG_METHS         gmC/hr
+    AVG_METHW            1.00000  AVG_METHW         gmC/hr
+    AVG_MYRCS            1.00000  AVG_MYRCS         gmC/hr
+    AVG_MYRCW            1.00000  AVG_MYRCW         gmC/hr
+    AVG_OCIMS            1.00000  AVG_OCIMS         gmC/hr
+    AVG_OCIMW            1.00000  AVG_OCIMW         gmC/hr
+    AVG_ORVOCS           1.00000  AVG_ORVOCS        gmC/hr
+    AVG_ORVOCW           1.00000  AVG_ORVOCW        gmC/hr
+    AVG_PCYMS            1.00000  AVG_PCYMS         gmC/hr
+    AVG_PCYMW            1.00000  AVG_PCYMW         gmC/hr
+    AVG_PROPES           1.00000  AVG_PROPES        gmC/hr
+    AVG_PROPEW           1.00000  AVG_PROPEW        gmC/hr
+    AVG_SABIS            1.00000  AVG_SABIS         gmC/hr
+    AVG_SABIW            1.00000  AVG_SABIW         gmC/hr
+    AVG_SESQTS           1.00000  AVG_SESQTS        gmC/hr
+    AVG_SESQTW           1.00000  AVG_SESQTW        gmC/hr
+    AVG_TRPOS            1.00000  AVG_TRPOS         gmC/hr
+    AVG_TRPOW            1.00000  AVG_TRPOW         gmC/hr
+    LAI_ISOPS            1.00000  LAI_ISOPS         1
+    LAI_ISOPW            1.00000  LAI_ISOPW         1
+    LAI_MBOS             1.00000  LAI_MBOS          1
+    LAI_MBOW             1.00000  LAI_MBOW          1
+    LAI_METHS            1.00000  LAI_METHS         1
+    LAI_METHW            1.00000  LAI_METHW         1
 ::
