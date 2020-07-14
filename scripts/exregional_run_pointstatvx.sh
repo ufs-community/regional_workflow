@@ -69,114 +69,14 @@ process_args valid_args "$@"
 #-----------------------------------------------------------------------
 #
 print_input_args valid_args
-#
-#-----------------------------------------------------------------------
-#
-# Load modules.
-#
-#-----------------------------------------------------------------------
-#
-print_info_msg "$VERBOSE" "Starting point-stat verification"
-
-case $MACHINE in
-
-"WCOSS_C" | "WCOSS" )
-#  { save_shell_opts; set +x; } > /dev/null 2>&1
-  module purge
-  . $MODULESHOME/init/ksh
-  module load PrgEnv-intel ESMF-intel-haswell/3_1_0rp5 cfp-intel-sandybridge iobuf craype-hugepages2M craype-haswell
-#  module load cfp-intel-sandybridge/1.1.0
-  module use /gpfs/hps/nco/ops/nwprod/modulefiles
-  module load prod_envir
-#  module load prod_util
-  module load prod_util/1.0.23
-  module load grib_util/1.0.3
-  module load crtm-intel/2.2.5
-  module list
-#  { restore_shell_opts; } > /dev/null 2>&1
-
-# Specify computational resources.
-  export NODES=8
-  export ntasks=96
-  export ptile=12
-  export threads=1
-  export MP_LABELIO=yes
-  export OMP_NUM_THREADS=$threads
-
-  APRUN="aprun -j 1 -n${ntasks} -N${ptile} -d${threads} -cc depth"
-  ;;
-
-
-"THEIA")
-  { save_shell_opts; set +x; } > /dev/null 2>&1
-  module purge
-  module load intel
-  module load impi
-  module load netcdf
-  module load contrib wrap-mpi
-  { restore_shell_opts; } > /dev/null 2>&1
-  np=${SLURM_NTASKS}
-  APRUN="mpirun -np ${np}"
-  ;;
-
-
-"HERA")
-#  export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate
-  APRUN="srun"
-  ;;
-
-
-"JET")
-  { save_shell_opts; set +x; } > /dev/null 2>&1
-  module purge
-  . /apps/lmod/lmod/init/sh
-  module load newdefaults
-  module load intel/15.0.3.187
-  module load impi/5.1.1.109
-  module load szip
-  module load hdf5
-  module load netcdf4/4.2.1.1
-
-  set libdir /mnt/lfs3/projects/hfv3gfs/gwv/ljtjet/lib
-
-  export NCEPLIBS=/mnt/lfs3/projects/hfv3gfs/gwv/ljtjet/lib
-
-  module use /mnt/lfs3/projects/hfv3gfs/gwv/ljtjet/lib/modulefiles
-  module load bacio-intel-sandybridge
-  module load sp-intel-sandybridge
-  module load ip-intel-sandybridge
-  module load w3nco-intel-sandybridge
-  module load w3emc-intel-sandybridge
-  module load nemsio-intel-sandybridge
-  module load sfcio-intel-sandybridge
-  module load sigio-intel-sandybridge
-  module load g2-intel-sandybridge
-  module load g2tmpl-intel-sandybridge
-  module load gfsio-intel-sandybridge
-  module load crtm-intel-sandybridge
-
-  module use /lfs3/projects/hfv3gfs/emc.nemspara/soft/modulefiles
-  module load esmf/7.1.0r_impi_optim
-  module load contrib wrap-mpi
-  { restore_shell_opts; } > /dev/null 2>&1
-
-  np=${SLURM_NTASKS}
-  APRUN="mpirun -np ${np}"
-  ;;
-
-
-"ODIN")
-  APRUN="srun -n 1"
-  ;;
-
-esac
-
 #-----------------------------------------------------------------------
 #
 # Remove any files from previous runs and stage necessary files in pointstat_dir.
 #
 #-----------------------------------------------------------------------
 #
+print_info_msg "$VERBOSE" "Starting point-stat verification"
+
 cd ${pointstat_dir}
 
 # rm_vrfy -f point_stat*.stat
