@@ -815,18 +815,18 @@ fi
 # Get the base directory of the chgres code.
 #
 external_name="ufs_utils_chgres"
-CHGRES_DIR=$( \
+CHGRES_CUBE_DIR=$( \
 get_manage_externals_config_property \
 "${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
 print_err_msg_exit "\
 Call to function get_manage_externals_config_property failed."
 
-CHGRES_DIR="${SR_WX_APP_TOP_DIR}/${CHGRES_DIR}"
-if [ ! -d "${CHGRES_DIR}" ]; then
+CHGRES_CUBE_DIR="${SR_WX_APP_TOP_DIR}/${CHGRES_CUBE_DIR}"
+if [ ! -d "${CHGRES_CUBE_DIR}" ]; then
   print_err_msg_exit "\
 The base directory in which the chgres source code should be located 
-(CHGRES_DIR) does not exist:
-  CHGRES_DIR = \"${CHGRES_DIR}\"
+(CHGRES_CUBE_DIR) does not exist:
+  CHGRES_CUBE_DIR = \"${CHGRES_CUBE_DIR}\"
 Please clone the external repository containing the code in this direct-
 ory, build the executable, and then rerun the workflow."
 fi
@@ -2458,7 +2458,7 @@ COMOUT_BASEDIR="${COMOUT_BASEDIR}"
 TEMPLATE_DIR="${TEMPLATE_DIR}"
 UFS_WTHR_MDL_DIR="${UFS_WTHR_MDL_DIR}"
 UFS_UTILS_DIR="${UFS_UTILS_DIR}"
-CHGRES_DIR="${CHGRES_DIR}"
+CHGRES_CUBE_DIR="${CHGRES_CUBE_DIR}"
 SFC_CLIMO_INPUT_DIR="${SFC_CLIMO_INPUT_DIR}"
 
 EXPTDIR="$EXPTDIR"

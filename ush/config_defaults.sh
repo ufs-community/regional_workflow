@@ -1149,6 +1149,14 @@ EXTRN_MDL_FILES_ICS=( "file1" "file2" )
 
 EXTRN_MDL_SOURCE_DIR_LBCS=""
 EXTRN_MDL_FILES_LBCS=( "file1" "file2" )
-
-
-
+#
+#-----------------------------------------------------------------------
+# 
+# HALO_BLEND:
+# Number of rows into the computational domain that should be blended 
+# with the LBCs.
+#
+#-----------------------------------------------------------------------
+#
+HALO_BLEND=10
+#
