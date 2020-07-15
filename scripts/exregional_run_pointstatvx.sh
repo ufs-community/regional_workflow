@@ -118,17 +118,19 @@ ${SCRIPTSDIR}/exregional_get_ndas_files.sh
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
+export MET_INSTALL_DIR
 export METPLUS_PATH
 export METPLUS_CONF
+export MET_CONFIG
 export OBS_DIR
 export MODEL
 
 ${METPLUS_PATH}/ush/master_metplus.py \
-  -c ${METPLUS_CONF}/common_hera.conf \
+  -c ${METPLUS_CONF}/common.conf \
   -c ${METPLUS_CONF}/PointStat_conus_sfc.conf
 
 ${METPLUS_PATH}/ush/master_metplus.py \
-  -c ${METPLUS_CONF}/common_hera.conf \
+  -c ${METPLUS_CONF}/common.conf \
   -c ${METPLUS_CONF}/PointStat_upper_air.conf
 
 #

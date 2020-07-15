@@ -4,12 +4,6 @@
 # A valid YYYYMMDD directory is created, and all files for the valid day are placed within the directory.
 # The accumulation interval is an input argument. Current supported accumulations: 01h, 03h, and 06h.
 
-#OBS_DIR=/home/Michelle.Harrold/obs
-#ACCUM=01
-#CDATE=20200203
-#hh=00
-#fhr_last=48
-
 # Top-level CCPA directory
 ccpa_dir=${OBS_DIR}/..
 if [[ ! -d "$ccpa_dir" ]]; then
@@ -98,19 +92,19 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
   if [[ ${vyyyymmdd} -ge 20190812 && ${vyyyymmdd} -le 20200217 ]]; then
     TarFile="/NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/gpfs_dell1_nco_ops_com_ccpa_prod_ccpa.${vyyyy}${vmm}${vdd}.tar"
   else
-    TarFile="/NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/com2_ccpa_prod_ccpa.${vyyyy}${vmm}${vdd}.tar"
+    TarFile="/NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/com_ccpa_prod_ccpa.${vyyyy}${vmm}${vdd}.tar"
   fi
 
   if [[ ${vyyyymmdd_m1} -ge 20190812 && ${vyyyymmdd_m1} -le 20200217 ]]; then
     TarFile_m1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_m1}/${vyyyy_m1}${vmm_m1}/${vyyyy_m1}${vmm_m1}${vdd_m1}/gpfs_dell1_nco_ops_com_ccpa_prod_ccpa.${vyyyy_m1}${vmm_m1}${vdd_m1}.tar"
   else
-    TarFile_m1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_m1}/${vyyyy_m1}${vmm_m1}/${vyyyy_m1}${vmm_m1}${vdd_m1}/com2_ccpa_prod_ccpa.${vyyyy_m1}${vmm_m1}${vdd_m1}.tar"
+    TarFile_m1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_m1}/${vyyyy_m1}${vmm_m1}/${vyyyy_m1}${vmm_m1}${vdd_m1}/com_ccpa_prod_ccpa.${vyyyy_m1}${vmm_m1}${vdd_m1}.tar"
   fi
 
   if [[ ${vyyyymmdd_p1} -ge 20190812 && ${vyyyymmdd_p1} -le 20200217 ]]; then
     TarFile_p1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_p1}/${vyyyy_p1}${vmm_p1}/${vyyyy_p1}${vmm_p1}${vdd_p1}/gpfs_dell1_nco_ops_com_ccpa_prod_ccpa.${vyyyy_p1}${vmm_p1}${vdd_p1}.tar"
   else
-    TarFile_p1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_p1}/${vyyyy_p1}${vmm_p1}/${vyyyy_p1}${vmm_p1}${vdd_p1}/com2_ccpa_prod_ccpa.${vyyyy_p1}${vmm_p1}${vdd_p1}.tar"
+    TarFile_p1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_p1}/${vyyyy_p1}${vmm_p1}/${vyyyy_p1}${vmm_p1}${vdd_p1}/com_ccpa_prod_ccpa.${vyyyy_p1}${vmm_p1}${vdd_p1}.tar"
   fi
 
   # Check if file exists on disk; if not, pull it.

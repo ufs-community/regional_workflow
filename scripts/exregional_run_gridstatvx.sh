@@ -119,14 +119,16 @@ ${SCRIPTSDIR}/exregional_get_ccpa_files.sh
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
+export MET_INSTALL_DIR
 export METPLUS_PATH
 export METPLUS_CONF
+export MET_CONFIG
 export OBS_DIR
 export acc="${ACCUM}h" # for stats output prefix in GridStatConfig
 export MODEL
 
 ${METPLUS_PATH}/ush/master_metplus.py \
-  -c ${METPLUS_CONF}/common_hera.conf \
+  -c ${METPLUS_CONF}/common.conf \
   -c ${METPLUS_CONF}/APCP_${acc}.conf
 
 #
