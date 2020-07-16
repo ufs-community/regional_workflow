@@ -5,6 +5,22 @@
 ################################################
 
 #
+#  General settings
+#
+ae_matrix_nml: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/AE_cb6r3_ae6_aq.nml
+gc_matrix_nml: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/GC_cb6r3_ae6_aq.nml
+nr_matrix_nml: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/NR_cb6r3_ae6_aq.nml
+tr_matrix_nml: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/Species_Table_TR_0.nml
+
+csqy_data:   /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/CSQY_DATA_cb6r3_ae6_aq
+optics_data: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/PHOT_OPTICS.dat
+omi_data:    /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/omi_cmaq_2015_361X179.dat
+
+run_aerosol: true
+
+mp_tracer_map: gfdl
+
+#
 #  Input emissions
 #
 emission_sources: anthro bio
@@ -20,13 +36,13 @@ anthro_type: anthropogenic
 #
 anthro_format: netcdf
 
-# emissions directory
+# emissions directory (optional)
 # <tile> is replaced with the tile number in case of multitile grids, or removed otherwise
 #
-anthro_path: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/anthro
+#anthro_path:
 
 # emissions file name
-anthro_file: NEI2016v1_emis_mole_all_nobeis_12US1_gsd_hrrr_25km_20160101.nc
+anthro_file: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/anthro/NEI2016v1_emis_mole_all_nobeis_12US1_gsd_hrrr_25km_20160101.nc
 
 # emissions time dependency
 # supported settings are:
@@ -131,9 +147,7 @@ bio_type: biogenic
 
 bio_format: netcdf
 
-bio_path: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/bio
-
-bio_file: BEIS_SARC401.ncf
+bio_file: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/bio/BEIS_SARC401.ncf
 
 bio_frequency: static
 
