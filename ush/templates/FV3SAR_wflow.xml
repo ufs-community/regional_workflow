@@ -315,10 +315,10 @@ MODULES_RUN_TASK_FP script.
 
     &RSRV_FCST;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&RUN_FCST_TN;" "&JOBSDIR;/JREGIONAL_RUN_FCST"</command>
-  {% if machine in ["jet", "hera"]  %}
+  {% if machine in ["JET", "HERA"]  %}
     <cores>{{ ncores_run_fcst }}</cores>
     <native>{{ native_run_fcst }}</native>
-    {% if machine == "jet" %}
+    {% if machine == "JET" %}
     <partition>{{ partition_run_fcst }} </partition>
     {% endif %}
   {% else %}
@@ -368,10 +368,13 @@ MODULES_RUN_TASK_FP script.
       <envar><name>fhr</name><value>#fhr#</value></envar>
 
       <dependency>
-        <and>
-          <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H/dynf0#fhr#.nc</cyclestr></datadep>
-          <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H/phyf0#fhr#.nc</cyclestr></datadep>
-        </and>
+        <or>
+          <taskdep task="&RUN_FCST_TN;"/>
+          <and>
+            <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H/dynf0#fhr#.nc</cyclestr></datadep>
+            <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H/phyf0#fhr#.nc</cyclestr></datadep>
+          </and>
+        </or>
       </dependency>
 
     </task>
