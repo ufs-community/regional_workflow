@@ -102,7 +102,7 @@ settings="\
   'queue_hpss_tag': ${QUEUE_HPSS_TAG}
   'queue_fcst': ${QUEUE_FCST}
   'queue_fcst_tag': ${QUEUE_FCST_TAG}
-  'machine': ${machine}
+  'machine': ${MACHINE}
 #
 # Workflow task names.
 #
@@ -131,8 +131,8 @@ settings="\
 # Number of cores used for a task
 #
   'ncores_run_fcst': ${PE_MEMBER01}
-  'native_run_fcst': "--cpus-per-task 4 --exclusive"
-  'partition_run_fcst': "kjet,xjet,sjet,vjet"
+  'native_run_fcst': --cpus-per-task 4 --exclusive
+  'partition_run_fcst': sjet,vjet,kjet,xjet
 #
 # Number of logical processes per node for each task.  If running without
 # threading, this is equal to the number of MPI processes per node.
