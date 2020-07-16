@@ -347,9 +347,9 @@ predefined domain:
 
     DT_ATMOS="300"
 
-    LAYOUT_X="2"
+    LAYOUT_X="20"
     LAYOUT_Y="2"
-    BLOCKSIZE="2"
+    BLOCKSIZE="10"
 
     if [ "$QUILTING" = "TRUE" ]; then
       WRTCMP_write_groups="1"
