@@ -270,7 +270,7 @@ directory failed."
 # external repositories to the appropriate subdirectory under the workflow
 # directory tree.  In principle, this is better than having hard-coded
 # module files for tasks because the copied module files will always be
-# up to date.  However, it does require that these module files in the
+# up-to-date.  However, it does require that these module files in the
 # external repositories be coded correctly, e.g. that they really be lua
 # module files and not contain any shell commands (like "export SOME_VARIABLE").
 #

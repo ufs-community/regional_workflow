@@ -373,7 +373,7 @@ rm_vrfy -f time_stamp.out
 #-----------------------------------------------------------------------
 #
 # Create links in the current run directory to cycle-independent (and
-# ensembles- member-independent) model input files in the main experiment 
+# ensemble-member-independent) model input files in the main experiment 
 # directory.
 #
 #-----------------------------------------------------------------------

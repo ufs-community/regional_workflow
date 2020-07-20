@@ -236,8 +236,10 @@ mv_vrfy BGRD3D.GrbF${fhr} ${postprd_dir}/RRFS.t${cyc}z.bgrd3d${fhr}.${tmmark}
 #Link output for transfer to Jet
 # Should the following be done only if on jet??
 
-# Seems like start_date is the same as yyyymmdd calculated above.  If so,
-# just use the latter.
+# Seems like start_date is the same as "$yyyymmdd $hh", where yyyymmdd
+# and hh are calculated above, i.e. start_date is just cdate but with a
+# space inserted between the dd and hh.  If so, just use "$yyyymmdd $hh"
+# instead of calling sed.
 start_date=$( echo "${cdate}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/' )
 basetime=$( date +%y%j%H%M -d "${start_date}" )
 ln_vrfy -fs ${postprd_dir}/RRFS.t${cyc}z.bgdawp${fhr}.${tmmark} \
