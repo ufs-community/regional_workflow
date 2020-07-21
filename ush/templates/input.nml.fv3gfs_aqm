@@ -17,7 +17,7 @@
 
 &diag_manager_nml
      prepend_date = .false.
-     max_output_fields = 418
+     max_output_fields = 419
 /
 
 &fms_io_nml

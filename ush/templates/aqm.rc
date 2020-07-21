@@ -16,9 +16,13 @@ csqy_data:   /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/CSQY_DATA
 optics_data: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/PHOT_OPTICS.dat
 omi_data:    /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/omi_cmaq_2015_361X179.dat
 
+init_concentrations: true
+
 run_aerosol: true
 
 mp_tracer_map: gfdl
+
+ctm_aod: true
 
 #
 #  Input emissions

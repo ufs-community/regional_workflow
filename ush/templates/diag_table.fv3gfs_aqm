@@ -306,6 +306,11 @@
 "gfs_dyn",         "sv_sqt",        "sv_sqt",        "fv3_history",  "all",  .false.,  "none",  2
 "gfs_dyn",         "lv_pcsog",      "lv_pcsog",      "fv3_history",  "all",  .false.,  "none",  2
 
+###
+# aerosol diagnostics
+###
+"gfs_phys",  "aod",           "aod",         "fv3_history2d",         "all",  .false.,  "none",  2
+
 "gfs_phys",  "ALBDO_ave",     "albdo_ave",   "fv3_history2d",         "all",  .false.,  "none",  2
 "gfs_phys",  "cnvprcp_ave",   "cprat_ave",   "fv3_history2d",         "all",  .false.,  "none",  2
 "gfs_phys",  "cnvprcpb_ave",  "cpratb_ave",  "fv3_history2d",         "all",  .false.,  "none",  2
