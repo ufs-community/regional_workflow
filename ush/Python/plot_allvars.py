@@ -5,32 +5,32 @@
 # Script description:  	Generates plots from FV3-LAM post processed grib2 output
 #			over the CONUS
 #
-# Author:   Ben Blake	Org: NOAA/NWS/NCEP/EMC		Date: 2020-05-07
+# Authors:  Ben Blake		Org: NOAA/NWS/NCEP/EMC		Date: 2020-05-07
+#           David Wright 	Org: University of Michigan
 #
 # Instructions:		Make sure all the necessary modules can be imported.
-#                       Two command line arguments are needed:
+#                       Five command line arguments are needed:
 #                       1. Cycle date/time in YYYYMMDDHH format
 #                       2. Forecast hour
+#                       3. EXPT_BASEDIR: Experiment base directory
+#                       4. EXPT_SUBDIR:  Experiment named directory
+#                          -Postprocessed data should be found in the directory:
+#                            EXPT_BASEDIR/EXPT_SUBDIR/YYYYMMDDHH/postprd/
+#                       5. CARTOPY_DIR:  Base directory of cartopy shapefiles
+#                          -Shapefiles cannot be directly downloaded to NOAA
+#                            machines from the internet, so shapefiles need to
+#                            be downloaded if geopolitical boundaries are
+#                            desired on the maps.
+#                          -File structure should be:
+#                            CARTOPY_DIR/shapefiles/natural_earth/cultural/*.shp
 #
 #           		To create plots for forecast hour 24 from 5/7 00Z cycle:
-#                       python plot_allvars.py 2020050700 24
+#                        python plot_allvars.py 2020050700 24 /path/to/expt_dirs
+#                        /experiment/name /path/to/base/cartopy/maps 
 #
 #                       The variable domains in this script can be set to either
 #                         'conus' for a CONUS map or 'regional' where the map
 #                         is defined from variables in the grib2 files
-#
-#                       The following variables should be defined in env.yaml:
-#                       1.EXPT_BASEDIR: Experiment base directory
-#                       2.EXPT_SUBDIR:  Experiment named directory
-#                          -Postprocessed data should be found in the directory:
-#                            EXPT_BASEDIR/EXPT_SUBDIR/YYYYMMDDHH/postprd/
-#                       3.CARTOPY_DIR:  Base directory of cartopy shapefiles
-#                          -Shapefiles cannot be directly downloaded to NOAA
-#                            machines from the internet, so shapefiles need to
-#                            be downloaded if geopolitical boundaries are
-#                            desired on the maps. 
-#                          -File structure should be:
-#                            CARTOPY_DIR/shapefiles/natural_earth/cultural/*.shp
 #
 ################################################################################
 
@@ -226,9 +226,12 @@ inf.close()
 parser = argparse.ArgumentParser()
 parser.add_argument("Cycle date/time in YYYYMMDDHH format")
 parser.add_argument("Forecast hour in HH format")
+parser.add_argument("Path to experiment base directory")
+parser.add_argument("Path to experiment named directory")
+parser.add_argument("Path to base directory of cartopy shapefiles")
 args = parser.parse_args()
               
-# Read date/time and forecast hour from command line
+# Read date/time, forecast hour, and directory paths from command line
 ymdh = str(sys.argv[1])
 ymd = ymdh[0:8]
 year = int(ymdh[0:4])
@@ -244,8 +247,12 @@ print('fhour '+fhour)
 itime = ymdh
 vtime = ndate(itime,int(fhr))
 
+EXPT_BASEDIR = str(sys.argv[3])
+EXPT_SUBDIR = str(sys.argv[4])
+CARTOPY_DIR = str(sys.argv[5])
+
 # Define the location of the input file
-data1 = pygrib.open(envf["EXPT_BASEDIR"]+'/'+envf["EXPT_SUBDIR"]+'/'+str(ymdh)+'/postprd/RRFS.t'+cyc+'z.bgdawp'+str(fhour)+'.tm'+str(cyc))
+data1 = pygrib.open(EXPT_BASEDIR+'/'+EXPT_SUBDIR+'/'+str(ymdh)+'/postprd/RRFS.t'+cyc+'z.bgdawp'+str(fhour)+'.tm00')
 
 # Get the lats and lons
 grids = [data1]
@@ -349,7 +356,7 @@ u250, v250 = rotate_wind(Lat0,Lon0,lon,u250,v250,'lcc',inverse=False)
 wspd250 = np.sqrt(u250**2 + v250**2)
 
 # Total precipitation
-#qpf = data1.select(name='Total Precipitation',lengthOfTimeRange=fhr)[0].values * 0.0393701
+qpf = data1.select(name='Total Precipitation',lengthOfTimeRange=fhr)[0].values * 0.0393701
 
 # Composite reflectivity
 refc = data1.select(name='Maximum/Composite radar reflectivity')[0].values 
@@ -380,11 +387,6 @@ def main():
 
 def plot_all(dom):
 
-  # Define where Cartopy Maps are located
-  #  By default, these are usually located in .local folder
-  #  which may/may not have access to. Set local location in .yaml file 
-  cartopy.config['data_dir'] = envf['CARTOPY_DIR']
-
   t1dom = time.perf_counter()
   print(('Working on '+dom))
 
@@ -411,23 +413,49 @@ def plot_all(dom):
   fig = plt.figure(figsize=(10,10))
   ax1 = fig.add_axes([0.1,0.1,0.8,0.8])
 
+  # Define where Cartopy Maps are located    
+  cartopy.config['data_dir'] = CARTOPY_DIR
+  os.environ["CARTOPY_USER_BACKGROUNDS"]=CARTOPY_DIR+'/raster_files'
+
+  back_res='50m'
+  back_img='on'
+
   # set up the map background with cartopy
   myproj=ccrs.LambertConformal(central_longitude=lon_0, central_latitude=lat_0, false_easting=0.0,
                           false_northing=0.0, secant_latitudes=None, standard_parallels=None,
                           globe=None)
   ax = plt.axes(projection=myproj)
   ax.set_extent(extent)
-  ax.stock_img()
-  ax.add_feature(cfeature.GSHHSFeature(scale='auto',levels=[1]))
-# The following option can be used if CARTOPY_DIR is setup correctly
 
-#  ax.add_feature(cfeature.STATES.with_scale('50m'),facecolor='none',edgecolor='black',linewidth=1.0)
+  fline_wd = 0.5  # line width
+  falpha = 0.3    # transparency
 
-# This does not currently work
-#  print('adding coastlines, STATES, LAND')
-#  ax.coastlines(resolution='10m')
-#  ax.add_feature(cfeature.STATES.with_scale('10m'))
-#  ax.add_feature(cfeature.LAND.with_scale('10m'))
+  # natural_earth
+#  land=cfeature.NaturalEarthFeature('physical','land',back_res,
+#                    edgecolor='face',facecolor=cfeature.COLORS['land'],
+#                    alpha=falpha)
+  lakes=cfeature.NaturalEarthFeature('physical','lakes',back_res,
+                    edgecolor='blue',facecolor='none',
+                    linewidth=fline_wd,alpha=falpha)
+  coastline=cfeature.NaturalEarthFeature('physical','coastline',
+                    back_res,edgecolor='blue',facecolor='none',
+                    linewidth=fline_wd,alpha=falpha)
+  states=cfeature.NaturalEarthFeature('cultural','admin_1_states_provinces',
+                    back_res,edgecolor='black',facecolor='none',
+                    linewidth=fline_wd,linestyle=':',alpha=falpha)
+  borders=cfeature.NaturalEarthFeature('cultural','admin_0_countries',
+                    back_res,edgecolor='red',facecolor='none',
+                    linewidth=fline_wd,alpha=falpha)
+
+  # high-resolution background images
+  if back_img=='on':
+    ax.background_img(name='NE', resolution='high')
+
+#  ax.add_feature(land)
+  ax.add_feature(lakes)
+  ax.add_feature(states)
+  ax.add_feature(borders)
+  ax.add_feature(coastline)
 
 
   # All lat lons are earth relative, so setup the associated projection correct for that data
@@ -450,14 +478,14 @@ def plot_all(dom):
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
   cs1_a = plt.pcolormesh(lon_shift,lat_shift,slp,transform=transform,cmap=cm,norm=norm) 
-  cbar1 = plt.colorbar(cs1_a,orientation='horizontal',pad=0.05,extend='both')
-  cbar1.set_label(units,fontsize=6)
-  cbar1.ax.tick_params(labelsize=6)
+  cbar1 = plt.colorbar(cs1_a,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
+  cbar1.set_label(units,fontsize=8)
+  cbar1.ax.tick_params(labelsize=8)
   cs1_b = plt.contour(lon_shift,lat_shift,slpsmooth,np.arange(940,1060,4),colors='black',linewidths=1.25,transform=transform)
   plt.clabel(cs1_b,np.arange(940,1060,4),inline=1,fmt='%d',fontsize=8)
-  ax.text(.5,1.03,'FV3-LAM SLP ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax.text(.5,1.03,'FV3-LAM SLP ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('slp_'+dom+'_f'+fhour+'.png')
+  compress_and_save('compareslp_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot slp for: '+dom) % t3)
@@ -481,12 +509,12 @@ def plot_all(dom):
   cs_1 = plt.pcolormesh(lon_shift,lat_shift,tmp2m,transform=transform,cmap=cm,norm=norm)
   cs_1.cmap.set_under('white')
   cs_1.cmap.set_over('white')
-  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=[-16,-4,8,20,32,44,56,68,80,92,104,116,128],extend='both')
-  cbar1.set_label(units,fontsize=6)
-  cbar1.ax.tick_params(labelsize=6)
-  ax.text(.5,1.03,'FV3-LAM 2-m Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,ticks=[-16,-4,8,20,32,44,56,68,80,92,104,116,128],extend='both')
+  cbar1.set_label(units,fontsize=8)
+  cbar1.ax.tick_params(labelsize=8)
+  ax.text(.5,1.03,'FV3-LAM 2-m Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('2mt_'+dom+'_f'+fhour+'.png')
+  compress_and_save('compare2mt_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 2mt for: '+dom) % t3)
@@ -508,12 +536,12 @@ def plot_all(dom):
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
   cs_1 = plt.pcolormesh(lon_shift,lat_shift,dew2m,transform=transform,cmap=cm,norm=norm)
-  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,extend='both')
-  cbar1.set_label(units,fontsize=6)
-  cbar1.ax.tick_params(labelsize=6)
-  ax.text(.5,1.03,'FV3-LAM 2-m Dew Point Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
+  cbar1.set_label(units,fontsize=8)
+  cbar1.ax.tick_params(labelsize=8)
+  ax.text(.5,1.03,'FV3-LAM 2-m Dew Point Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('2mdew_'+dom+'_f'+fhour+'.png')
+  compress_and_save('compare2mdew_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 2mdew for: '+dom) % t3)
@@ -541,13 +569,13 @@ def plot_all(dom):
   cs_1 = plt.pcolormesh(lon_shift,lat_shift,wspd10m,transform=transform,cmap=cm,vmin=5,norm=norm)
   cs_1.cmap.set_under('white',alpha=0.)
   cs_1.cmap.set_over('black')
-  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=clevs,extend='max')
-  cbar1.set_label(units,fontsize=6)
-  cbar1.ax.tick_params(labelsize=6)
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,ticks=clevs,extend='max')
+  cbar1.set_label(units,fontsize=8)
+  cbar1.ax.tick_params(labelsize=8)
   plt.barbs(lon_shift[::skip,::skip],lat_shift[::skip,::skip],uwind[::skip,::skip],vwind[::skip,::skip],length=barblength,linewidth=0.5,color='black',transform=transform)
-  ax.text(.5,1.03,'FV3-LAM 10-m Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax.text(.5,1.03,'FV3-LAM 10-m Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
     
-  compress_and_save('10mwind_'+dom+'_f'+fhour+'.png')
+  compress_and_save('compare10mwind_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 10mwspd for: '+dom) % t3)
@@ -573,13 +601,13 @@ def plot_all(dom):
   cs_1 = plt.pcolormesh(lon_shift,lat_shift,cape,transform=transform,cmap=cm,vmin=100,norm=norm)
   cs_1.cmap.set_under('white',alpha=0.)
   cs_1.cmap.set_over('darkviolet')
-  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=clevs,extend='max')
-  cbar1.set_label(units,fontsize=6)
-  cbar1.ax.tick_params(labelsize=6)
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,ticks=clevs,extend='max')
+  cbar1.set_label(units,fontsize=8)
+  cbar1.ax.tick_params(labelsize=8)
   cs_1b = plt.contourf(lon_shift,lat_shift,cin,clevs2,colors='none',hatches=['**','++','////','..'],transform=transform)
-  ax.text(.5,1.05,'FV3-LAM Surface-Based CAPE (shaded) and CIN (hatched) ('+units+') \n <-500 (*), -500<-250 (+), -250<-100 (/), -100<-25 (.) \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax.text(.5,1.05,'FV3-LAM Surface-Based CAPE (shaded) and CIN (hatched) ('+units+') \n <-500 (*), -500<-250 (+), -250<-100 (/), -100<-25 (.) \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('sfcape_'+dom+'_f'+fhour+'.png')
+  compress_and_save('comparesfcape_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot surface-based CAPE/CIN for: '+dom) % t3)
@@ -607,15 +635,15 @@ def plot_all(dom):
   cs1_a = plt.pcolormesh(lon_shift,lat_shift,vort500,transform=transform,cmap=cm,norm=norm)
   cs1_a.cmap.set_under('white')
   cs1_a.cmap.set_over('darkred')
-  cbar1 = plt.colorbar(cs1_a,orientation='horizontal',pad=0.05,ticks=vortlevs,extend='both')
-  cbar1.set_label(units,fontsize=6)
-  cbar1.ax.tick_params(labelsize=6)
+  cbar1 = plt.colorbar(cs1_a,orientation='horizontal',pad=0.05,shrink=0.6,ticks=vortlevs,extend='both')
+  cbar1.set_label(units,fontsize=8)
+  cbar1.ax.tick_params(labelsize=8)
   plt.barbs(lon_shift[::skip,::skip],lat_shift[::skip,::skip],u500[::skip,::skip],v500[::skip,::skip],length=barblength,linewidth=0.5,color='steelblue',transform=transform)
   cs1_b = plt.contour(lon_shift,lat_shift,z500,np.arange(486,600,6),colors='black',linewidths=1,transform=transform)
-  plt.clabel(cs1_b,np.arange(486,600,6),inline_spacing=1,fmt='%d',fontsize=6)
-  ax.text(.5,1.03,'FV3-LAM 500 mb Heights (dam), Winds (kts), and $\zeta$ ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  plt.clabel(cs1_b,np.arange(486,600,6),inline_spacing=1,fmt='%d',fontsize=8)
+  ax.text(.5,1.03,'FV3-LAM 500 mb Heights (dam), Winds (kts), and $\zeta$ ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('500_'+dom+'_f'+fhour+'.png')
+  compress_and_save('compare500_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 500 mb Hgt/Wind/Vort for: '+dom) % t3)
@@ -643,13 +671,13 @@ def plot_all(dom):
   cs_1 = plt.pcolormesh(lon_shift,lat_shift,wspd250,transform=transform,cmap=cm,vmin=50,norm=norm)
   cs_1.cmap.set_under('white',alpha=0.)
   cs_1.cmap.set_over('red')
-  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=clevs,extend='max')
-  cbar1.set_label(units,fontsize=6)
-  cbar1.ax.tick_params(labelsize=6)
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,ticks=clevs,extend='max')
+  cbar1.set_label(units,fontsize=8)
+  cbar1.ax.tick_params(labelsize=8)
   plt.barbs(lon_shift[::skip,::skip],lat_shift[::skip,::skip],u250[::skip,::skip],v250[::skip,::skip],length=barblength,linewidth=0.5,color='black',transform=transform)
-  ax.text(.5,1.03,'FV3-LAM 250 mb Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax.text(.5,1.03,'FV3-LAM 250 mb Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('250wind_'+dom+'_f'+fhour+'.png')
+  compress_and_save('compare250wind_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 250 mb WIND for: '+dom) % t3)
@@ -658,34 +686,34 @@ def plot_all(dom):
 #################################
   # Plot Total QPF
 #################################
-#  if (fhr > 0):		# Do not make total QPF plot for forecast hour 0
-#    t1 = time.perf_counter()
-#    print(('Working on total qpf for '+dom))
-#
-#    # Clear off old plottables but keep all the map info
-#    cbar1.remove()
-#    clear_plotables(ax,keep_ax_lst,fig)
-#
-#    units = 'in'
-#    clevs = [0.01,0.1,0.25,0.5,0.75,1,1.25,1.5,1.75,2,2.5,3,4,5,7,10,15,20]
-#    clevsdif = [-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1,1.5,2,2.5,3]
-#    colorlist = ['chartreuse','limegreen','green','blue','dodgerblue','deepskyblue','cyan','mediumpurple','mediumorchid','darkmagenta','darkred','crimson','orangered','darkorange','goldenrod','gold','yellow']  
-#    cm = matplotlib.colors.ListedColormap(colorlist)
-#    norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
-#
-#    cs_1 = plt.pcolormesh(lon_shift,lat_shift,qpf,transform=transform,cmap=cm,vmin=0.01,norm=norm)
-#    cs_1.cmap.set_under('white',alpha=0.)
-#    cs_1.cmap.set_over('pink')
-#    cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=clevs,extend='max')
-#    cbar1.set_label(units,fontsize=6)
-#    cbar1.ax.set_xticklabels(clevs)
-#    cbar1.ax.tick_params(labelsize=6)
-#    ax.text(.5,1.03,'FV3-LAM '+fhour+'-hr Accumulated Precipitation ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
-#
-#    compress_and_save('compareqpf_'+dom+'_f'+fhour+'.png')
-#    t2 = time.perf_counter()
-#    t3 = round(t2-t1, 3)
-#    print(('%.3f seconds to plot total qpf for: '+dom) % t3)
+  if (fhr > 0):		# Do not make total QPF plot for forecast hour 0
+    t1 = time.perf_counter()
+    print(('Working on total qpf for '+dom))
+
+    # Clear off old plottables but keep all the map info
+    cbar1.remove()
+    clear_plotables(ax,keep_ax_lst,fig)
+
+    units = 'in'
+    clevs = [0.01,0.1,0.25,0.5,0.75,1,1.25,1.5,1.75,2,2.5,3,4,5,7,10,15,20]
+    clevsdif = [-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1,1.5,2,2.5,3]
+    colorlist = ['chartreuse','limegreen','green','blue','dodgerblue','deepskyblue','cyan','mediumpurple','mediumorchid','darkmagenta','darkred','crimson','orangered','darkorange','goldenrod','gold','yellow']  
+    cm = matplotlib.colors.ListedColormap(colorlist)
+    norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
+
+    cs_1 = plt.pcolormesh(lon_shift,lat_shift,qpf,transform=transform,cmap=cm,vmin=0.01,norm=norm)
+    cs_1.cmap.set_under('white',alpha=0.)
+    cs_1.cmap.set_over('pink')
+    cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,ticks=clevs,extend='max')
+    cbar1.set_label(units,fontsize=8)
+    cbar1.ax.set_xticklabels(clevs)
+    cbar1.ax.tick_params(labelsize=8)
+    ax.text(.5,1.03,'FV3-LAM '+fhour+'-hr Accumulated Precipitation ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+
+    compress_and_save('compareqpf_'+dom+'_f'+fhour+'.png')
+    t2 = time.perf_counter()
+    t3 = round(t2-t1, 3)
+    print(('%.3f seconds to plot total qpf for: '+dom) % t3)
 
 
 #################################
@@ -708,12 +736,12 @@ def plot_all(dom):
   cs_1 = plt.pcolormesh(lon_shift,lat_shift,refc,transform=transform,cmap=cm,vmin=5,norm=norm)
   cs_1.cmap.set_under('white',alpha=0.)
   cs_1.cmap.set_over('black')
-  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,ticks=clevs,extend='max')
-  cbar1.set_label(units,fontsize=6)
-  cbar1.ax.tick_params(labelsize=6)
-  ax.text(.5,1.03,'FV3-LAM Composite Reflectivity ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,ticks=clevs,extend='max')
+  cbar1.set_label(units,fontsize=8)
+  cbar1.ax.tick_params(labelsize=8)
+  ax.text(.5,1.03,'FV3-LAM Composite Reflectivity ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('refc_'+dom+'_f'+fhour+'.png')
+  compress_and_save('comparerefc_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot composite reflectivity for: '+dom) % t3)
@@ -741,12 +769,12 @@ def plot_all(dom):
     cs_1 = plt.pcolormesh(lon_shift,lat_shift,uh25,transform=transform,cmap=cm,norm=norm)
     cs_1.cmap.set_under('darkblue')
     cs_1.cmap.set_over('black')
-    cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,extend='both')
-    cbar1.set_label(units,fontsize=6)
-    cbar1.ax.tick_params(labelsize=6)
-    ax.text(.5,1.03,'FV3-LAM 1-h Max/Min 2-5 km Updraft Helicity ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+    cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
+    cbar1.set_label(units,fontsize=8)
+    cbar1.ax.tick_params(labelsize=8)
+    ax.text(.5,1.03,'FV3-LAM 1-h Max/Min 2-5 km Updraft Helicity ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-    compress_and_save('uh25_'+dom+'_f'+fhour+'.png')
+    compress_and_save('compareuh25_'+dom+'_f'+fhour+'.png')
     t2 = time.perf_counter()
     t3 = round(t2-t1, 3)
     print(('%.3f seconds to plot Max/Min Hourly 2-5 km UH for: '+dom) % t3)
