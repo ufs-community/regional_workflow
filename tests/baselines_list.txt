@@ -1,6 +1,9 @@
 GSD_RAP13km
+community_ensemble_2mems
+community_ensemble_008mems
 nco_conus
 nco_conus_c96
+nco_ensemble
 new_JPgrid
 regional_001
 regional_002
@@ -18,3 +21,4 @@ regional_013
 regional_014
 regional_015
 regional_016
+user_staged_extrn_files
