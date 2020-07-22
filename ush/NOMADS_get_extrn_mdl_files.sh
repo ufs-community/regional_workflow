@@ -31,12 +31,12 @@ fi
 # Get the data (do not need to edit anything after this point!)
 yyyymm=$((yyyymmdd/100))
 #din_loc_ic=`./xmlquery DIN_LOC_IC --value`
-mkdir -p $yyyymm/$yyyymmdd
+mkdir -p gfs.$yyyymmdd/$hh
 echo "Download files to $din_loc_ic/$yyyymm/$yyyymmdd ..."
-cd $yyyymm/$yyyymmdd
+cd gfs.$yyyymmdd/$hh
 
 #getting online analysis data
-if [ $file_fmt == "grib2" ] || [ $file_fmt == "GRIB2"]; then
+if [ $file_fmt == "grib2" ] || [ $file_fmt == "GRIB2" ]; then
    wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.pgrb2.0p25.f000
 else
    wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.atmanl.nemsio
@@ -59,7 +59,7 @@ echo $ifcst
  fi
  echo $ifcst_str
 #
-if [ $file_fmt == "grib2" ] || [ $file_fmt == "GRIB2"]; then
+if [ $file_fmt == "grib2" ] || [ $file_fmt == "GRIB2" ]; then
   wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.pgrb2.0p25.f${ifcst_str}
 else
   wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.atmf${ifcst_str}.nemsio
