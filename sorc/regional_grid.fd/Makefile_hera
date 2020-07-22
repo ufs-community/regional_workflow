@@ -4,7 +4,7 @@ MAKEFLAGS += --warn-undefined-variables
 
 INC  = -I${NETCDF}/include
 
-LIBS = ${NETCDF}/lib/libnetcdff.a ${NETCDF}/lib/libnetcdf.a \
+LIBS = ${NETCDF}/lib/libnetcdff.a ${NETCDF}/lib/libnetcdf.a # \
        ${HDF5}/lib/libhdf5_hl.a ${HDF5}/lib/libhdf5.a /apps/szip/2.1/lib/libsz.a -lz
 
 FC = ifort

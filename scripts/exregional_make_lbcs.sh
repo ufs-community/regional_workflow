@@ -366,13 +366,13 @@ list file has not specified for this external model:
 #
 settings="
 'config': {
- 'fix_dir_input_grid': ${CHGRES_CUBE_DIR}/fix/fix_chgres,
+ 'fix_dir_input_grid': ${UFS_UTILS_DIR}/fix/fix_chgres,
  'fix_dir_target_grid': ${FIXsar},
- 'mosaic_file_target_grid': ${FIXsar}/$((10#${CRES}))${DOT_OR_USCORE}mosaic.halo$((10#${NH4})).nc,
+ 'mosaic_file_target_grid': ${FIXsar}/${CRES}${DOT_OR_USCORE}mosaic.halo$((10#${NH4})).nc,
  'orog_dir_target_grid': ${FIXsar},
  'orog_files_target_grid': ${CRES}${DOT_OR_USCORE}oro_data.tile${TILE_RGNL}.halo$((10#${NH4})).nc,
  'vcoord_file_target_grid': ${FIXam}/global_hyblev.l65.txt,
- 'varmap_file': ${CHGRES_CUBE_DIR}/parm/varmap_tables/${varmap_file},
+ 'varmap_file': ${UFS_UTILS_DIR}/parm/varmap_tables/${varmap_file},
  'data_dir_input_grid': ${extrn_mdl_staging_dir},
  'atm_files_input_grid': ${fn_atm_nemsio},
  'sfc_files_input_grid': ${fn_sfc_nemsio},
@@ -444,7 +444,7 @@ located in the following directory:
 # that of the external model since their start times may be offset).
 #
   fcst_hhh_FV3SAR=$( printf "%03d" "${LBC_SPEC_FCST_HRS[$i]}" )
-  mv_vrfy gfs_bndy.nc ${lbcs_dir}/gfs_bndy.tile7.${fcst_hhh_FV3SAR}.nc
+  mv_vrfy gfs.bndy.nc ${lbcs_dir}/gfs_bndy.tile7.${fcst_hhh_FV3SAR}.nc
 
 done
 #

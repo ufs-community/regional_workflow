@@ -232,10 +232,10 @@ machine=${MACHINE,,}
 
 cd_vrfy "${MODULES_DIR}/tasks/$machine"
 
-cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/fv3gfs/orog.$machine" "${MAKE_OROG_TN}"
-cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/modulefile.sfc_climo_gen.$machine" "${MAKE_SFC_CLIMO_TN}"
-cp_vrfy -f "${CHGRES_CUBE_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_ICS_TN}"
-cp_vrfy -f "${CHGRES_CUBE_DIR}/modulefiles/chgres_cube.$machine" "${MAKE_LBCS_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_OROG_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_SFC_CLIMO_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_ICS_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_LBCS_TN}"
 cp_vrfy -f "${UFS_WTHR_MDL_DIR}/modulefiles/$machine.intel/fv3" "${RUN_FCST_TN}"
 
 task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_ICS_TN}" "${MAKE_LBCS_TN}" "${RUN_FCST_TN}" )
