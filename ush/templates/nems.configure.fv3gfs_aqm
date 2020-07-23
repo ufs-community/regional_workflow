@@ -20,6 +20,7 @@ AQM_model:                      aqm
 AQM_petlist_bounds:             -1 -1
 AQM_attributes::
   Verbosity = max
+  Diagnostic = 131072
 ::
 
 # Run Sequence #
