@@ -52,6 +52,48 @@ ushdir="${scrfunc_dir}"
 #
 #-----------------------------------------------------------------------
 #
+# Run python checks
+#
+#-----------------------------------------------------------------------
+#
+
+# This line will return two numbers: the python major and minor versions
+pyversion=($(/usr/bin/env python3 -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major); print(minor)'))
+echo "Version= ${pyversion[*]}"
+echo ${pyversion[0]}
+echo ${pyversion[1]}
+
+# Check that the call to python3 returned no errors, then check if the 
+# python3 minor version is 6 or higher
+if [[ -z "$pyversion" ]];then
+  print_err_msg_exit "\
+  Error: python3 not found, check your python environment"
+else
+  if [[ ${#pyversion[@]} -lt 2 ]]; then
+    print_err_msg_exit "\
+    Error retrieving python3 version; check your python environment\n"
+  elif [[ ${pyversion[1]} -lt 4 ]]; then
+    print_err_msg_exit "\
+    Error: python version must be 3.6 or higher
+    python version: ${pyversion[*]}\n"
+  fi
+fi
+
+#Next, check for the three non-standard python packages: jinja2, yaml, and f90nml
+if ! /usr/bin/env python3 -c "import jinja2" &> /dev/null; then
+    print_err_msg_exit "\
+    python module 'jinja2' not available; check your python environment\n"
+elif ! /usr/bin/env python3 -c "import yaml" &> /dev/null; then
+    print_err_msg_exit "\
+    python module 'yaml' not available; check your python environment\n"
+elif ! /usr/bin/env python3 -c "import f90nml" &> /dev/null; then
+    print_err_msg_exit "\
+    python module 'f90nml' not available; check your python environment\n"
+fi
+
+#
+#-----------------------------------------------------------------------
+#
 # Save current shell options (in a global array).  Then set new options
 # for this script/function.
 #
