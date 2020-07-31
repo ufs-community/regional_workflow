@@ -900,15 +900,16 @@ SFC_CLIMO_FIELDS=( \
 # Set parameters associated with the fixed (i.e. static) files.  Definitions:
 #
 # FIXgsm:
-# The location on disk of the majority of the static input files.
+# System directory in which the majority of fixed (i.e. time-independent) 
+# files that are needed to run the FV3SAR model are located
 #
-# topo_dir:
-# The location on disk of the static input files used by the make_orog task.
-# Can be the same as FIXgsm.
+# TOPO_DIR:
+# The location on disk of the static input files used by the make_orog
+# task (orog.x and shave.x). Can be the same as FIXgsm.
 #
 # SFC_CLIMO_INPUT_DIR:
-# The location on disk of the static surface climatology input fields. These
-# files are only used if RUN_TASK_MAKE_SFC_CLIMO=FALSE
+# The location on disk of the static surface climatology input fields, used by 
+# sfc_climo_gen. These files are only used if RUN_TASK_MAKE_SFC_CLIMO=TRUE
 #
 # FNGLAC, ..., FNMSKH:
 # Names of (some of the) global data files that are assumed to exist in 
@@ -961,7 +962,7 @@ SFC_CLIMO_FIELDS=( \
 # to a null string which will then be overwritten in setup.sh unless the
 # user has specified a different value in config.sh
 FIXgsm=""
-topo_dir=""
+TOPO_DIR=""
 SFC_CLIMO_INPUT_DIR=""
 
 FNGLAC="global_glacier.2x2.grb"

@@ -604,18 +604,6 @@ HH_FIRST_CYCL=${CYCL_HRS[0]}
 # This directory includes subdirectories for FV3, NEMS, and FMS.  If
 # USE_CCPP is set to "TRUE", it also includes a subdirectory for CCPP.
 #
-# FIXgsm:
-# System directory in which the fixed (i.e. time-independent) files that
-# are needed to run the FV3SAR model are located.
-#
-# topo_dir:
-# Directory in which the fixed (i.e. time-independent) files that are
-# needed to run the make_orog component (orog.x and shave.x) are located.
-#
-# SFC_CLIMO_INPUT_DIR:
-# Directory in which the sfc_climo_gen code looks for surface climatolo-
-# gy input files.
-#
 # FIXupp:
 # System directory from which to copy necessary fixed files for UPP.
 #
@@ -653,54 +641,54 @@ case $MACHINE in
 
 "WCOSS_CRAY")
   FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
-  topo_dir=${topo_dir:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
+  TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
   ;;
 
 "WCOSS_DELL_P3")
   FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
-  topo_dir=${topo_dir:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
+  TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
   ;;
 
 "DELL")
   FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
-  topo_dir=${topo_dir:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
+  TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
   ;;
 
 "THEIA")
   FIXgsm=${FIXgsm:-"/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_am"}
-  topo_dir=${topo_dir:-"/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_orog"}
+  TOPO_DIR=${TOPO_DIR:-"/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch4/NCEPDEV/da/noscrub/George.Gayno/climo_fields_netcdf"}
   ;;
 
 "HERA")
   FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
-  topo_dir=${topo_dir:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
+  TOPO_DIR=${TOPO_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/da/George.Gayno/ufs_utils.git/climo_fields_netcdf"}
   ;;
 
 "JET")
   FIXgsm=${FIXgsm:-"/lfs4/HFIP/gsd-fv3-hfip/FV3/fix/fix_am"}
-  topo_dir=${topo_dir:-"/lfs4/HFIP/gsd-fv3-hfip/FV3/fix/fix_orog"}
+  TOPO_DIR=${TOPO_DIR:-"/lfs4/HFIP/gsd-fv3-hfip/FV3/fix/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lfs1/HFIP/hwrf-data/git/fv3gfs/fix/fix_sfc_climo"}
   ;;
 
 "ODIN")
   FIXgsm=${FIXgsm:-"/scratch/ywang/fix/theia_fix/fix_am"}
-  topo_dir=${topo_dir:-"/scratch/ywang/fix/theia_fix/fix_orog"}
+  TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
   ;;
 "CHEYENNE")
   FIXgsm=${FIXgsm:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_am"}
-  topo_dir=${topo_dir:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"}
+  TOPO_DIR=${TOPO_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"}
   ;;
 
 "STAMPEDE")
   FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}
-  topo_dir=${topo_dir:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
+  TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
   ;;
 
@@ -709,7 +697,7 @@ case $MACHINE in
 One or more fix file directories have not been specified for this machine:
   MACHINE = \"$MACHINE\"
   FIXgsm = \"${FIXgsm:-\"\"}
-  topo_dir = \"${topo_dir:-\"\"}
+  TOPO_DIR = \"${TOPO_DIR:-\"\"}
   SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
 
 You can specify the missing location(s) in config.sh"
@@ -2417,7 +2405,7 @@ UFS_WTHR_MDL_DIR="${UFS_WTHR_MDL_DIR}"
 UFS_UTILS_DIR="${UFS_UTILS_DIR}"
 CHGRES_DIR="${CHGRES_DIR}"
 SFC_CLIMO_INPUT_DIR="${SFC_CLIMO_INPUT_DIR}"
-topo_dir=${topo_dir}
+TOPO_DIR=${TOPO_DIR}
 
 EXPTDIR="$EXPTDIR"
 LOGDIR="$LOGDIR"

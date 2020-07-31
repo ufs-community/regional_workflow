@@ -197,12 +197,12 @@ tmp_dir="${raw_dir}/tmp"
 mkdir_vrfy -p "${tmp_dir}"
 cd_vrfy "${tmp_dir}"
 #
-# Copy topography and related data files from the system directory (topo_dir)
+# Copy topography and related data files from the system directory (TOPO_DIR)
 # to the temporary directory.
 #
-cp_vrfy ${topo_dir}/thirty.second.antarctic.new.bin fort.15
-cp_vrfy ${topo_dir}/landcover30.fixed .
-cp_vrfy ${topo_dir}/gmted2010.30sec.int fort.235
+cp_vrfy ${TOPO_DIR}/thirty.second.antarctic.new.bin fort.15
+cp_vrfy ${TOPO_DIR}/landcover30.fixed .
+cp_vrfy ${TOPO_DIR}/gmted2010.30sec.int fort.235
 #
 #-----------------------------------------------------------------------
 #
@@ -303,7 +303,7 @@ ${TILE_RGNL} \
 ${FIXsar} \
 ${raw_dir} \
 ${UFS_UTILS_DIR} \
-${topo_dir} \
+${TOPO_DIR} \
 ${tmp_dir}" \
   >> ${tmp_dir}/orog.file1
 
