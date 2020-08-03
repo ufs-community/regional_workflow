@@ -1,10 +1,10 @@
 #!/bin/sh
-#SBATCH -e /scratch1/BMC/gmtb/Laurie.Carson/expt_dirs/test_wrappers/log/run_make_sfc_climo.log
+#SBATCH -e /scratch1/BMC/gmtb/Laurie.Carson/expt_dirs/test_wrappers/log/run_make_grid.log
 #SBATCH --account=gmtb
 #SBATCH --qos=batch
 #SBATCH --ntasks=24
 #SBATCH --time=20
-#SBATCH --job-name="run_make_sfc_climo"
+#SBATCH --job-name="run_make_grid"
 cd /scratch1/BMC/gmtb/Laurie.Carson/expt_dirs/test_wrappers
 set -x
 . /apps/lmod/lmod/init/sh
@@ -25,4 +25,4 @@ module use -a /contrib/miniconda3/modulefiles
 module load miniconda3
 conda activate regional_workflow
 
-./run_make_sfc_climo.sh
+./run_make_grid.sh
