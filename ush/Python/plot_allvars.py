@@ -252,7 +252,7 @@ EXPT_SUBDIR = str(sys.argv[4])
 CARTOPY_DIR = str(sys.argv[5])
 
 # Define the location of the input file
-data1 = pygrib.open(EXPT_BASEDIR+'/'+EXPT_SUBDIR+'/'+str(ymdh)+'/postprd/RRFS.t'+cyc+'z.bgdawp'+str(fhour)+'.tm00')
+data1 = pygrib.open(EXPT_BASEDIR+'/'+EXPT_SUBDIR+'/'+ymdh+'/postprd/RRFS.t'+cyc+'z.bgdawp'+fhour+'.tm00.grib2')
 
 # Get the lats and lons
 grids = [data1]
@@ -485,7 +485,7 @@ def plot_all(dom):
   plt.clabel(cs1_b,np.arange(940,1060,4),inline=1,fmt='%d',fontsize=8)
   ax.text(.5,1.03,'FV3-LAM SLP ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('compareslp_'+dom+'_f'+fhour+'.png')
+  compress_and_save('slp_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot slp for: '+dom) % t3)
@@ -514,7 +514,7 @@ def plot_all(dom):
   cbar1.ax.tick_params(labelsize=8)
   ax.text(.5,1.03,'FV3-LAM 2-m Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('compare2mt_'+dom+'_f'+fhour+'.png')
+  compress_and_save('2mt_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 2mt for: '+dom) % t3)
@@ -541,7 +541,7 @@ def plot_all(dom):
   cbar1.ax.tick_params(labelsize=8)
   ax.text(.5,1.03,'FV3-LAM 2-m Dew Point Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('compare2mdew_'+dom+'_f'+fhour+'.png')
+  compress_and_save('2mdew_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 2mdew for: '+dom) % t3)
@@ -575,7 +575,7 @@ def plot_all(dom):
   plt.barbs(lon_shift[::skip,::skip],lat_shift[::skip,::skip],uwind[::skip,::skip],vwind[::skip,::skip],length=barblength,linewidth=0.5,color='black',transform=transform)
   ax.text(.5,1.03,'FV3-LAM 10-m Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
     
-  compress_and_save('compare10mwind_'+dom+'_f'+fhour+'.png')
+  compress_and_save('10mwind_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 10mwspd for: '+dom) % t3)
@@ -607,7 +607,7 @@ def plot_all(dom):
   cs_1b = plt.contourf(lon_shift,lat_shift,cin,clevs2,colors='none',hatches=['**','++','////','..'],transform=transform)
   ax.text(.5,1.05,'FV3-LAM Surface-Based CAPE (shaded) and CIN (hatched) ('+units+') \n <-500 (*), -500<-250 (+), -250<-100 (/), -100<-25 (.) \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('comparesfcape_'+dom+'_f'+fhour+'.png')
+  compress_and_save('sfcape_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot surface-based CAPE/CIN for: '+dom) % t3)
@@ -643,7 +643,7 @@ def plot_all(dom):
   plt.clabel(cs1_b,np.arange(486,600,6),inline_spacing=1,fmt='%d',fontsize=8)
   ax.text(.5,1.03,'FV3-LAM 500 mb Heights (dam), Winds (kts), and $\zeta$ ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('compare500_'+dom+'_f'+fhour+'.png')
+  compress_and_save('500_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 500 mb Hgt/Wind/Vort for: '+dom) % t3)
@@ -677,7 +677,7 @@ def plot_all(dom):
   plt.barbs(lon_shift[::skip,::skip],lat_shift[::skip,::skip],u250[::skip,::skip],v250[::skip,::skip],length=barblength,linewidth=0.5,color='black',transform=transform)
   ax.text(.5,1.03,'FV3-LAM 250 mb Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('compare250wind_'+dom+'_f'+fhour+'.png')
+  compress_and_save('250wind_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 250 mb WIND for: '+dom) % t3)
@@ -710,7 +710,7 @@ def plot_all(dom):
     cbar1.ax.tick_params(labelsize=8)
     ax.text(.5,1.03,'FV3-LAM '+fhour+'-hr Accumulated Precipitation ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-    compress_and_save('compareqpf_'+dom+'_f'+fhour+'.png')
+    compress_and_save('qpf_'+dom+'_f'+fhour+'.png')
     t2 = time.perf_counter()
     t3 = round(t2-t1, 3)
     print(('%.3f seconds to plot total qpf for: '+dom) % t3)
@@ -741,7 +741,7 @@ def plot_all(dom):
   cbar1.ax.tick_params(labelsize=8)
   ax.text(.5,1.03,'FV3-LAM Composite Reflectivity ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('comparerefc_'+dom+'_f'+fhour+'.png')
+  compress_and_save('refc_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot composite reflectivity for: '+dom) % t3)
@@ -774,7 +774,7 @@ def plot_all(dom):
     cbar1.ax.tick_params(labelsize=8)
     ax.text(.5,1.03,'FV3-LAM 1-h Max/Min 2-5 km Updraft Helicity ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-    compress_and_save('compareuh25_'+dom+'_f'+fhour+'.png')
+    compress_and_save('uh25_'+dom+'_f'+fhour+'.png')
     t2 = time.perf_counter()
     t3 = round(t2-t1, 3)
     print(('%.3f seconds to plot Max/Min Hourly 2-5 km UH for: '+dom) % t3)
