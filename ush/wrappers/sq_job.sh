@@ -11,14 +11,28 @@ set -x
 
 module purge
 module load hpss
+module load wgrib2
 
 module load intel/18.0.5.274
 module load impi/2018.0.4
+############
+# use this netcdf for most of the tasks
 module load netcdf/4.7.0
-# use this version for make_ics and make_lbcs - for now
+############
+
+############
+# use this version for make_ics and make_lbcs
 #module load netcdf/4.6.1
+############
 module load hdf5/1.10.5
-module load wgrib2
+
+############
+# use this for the forecast model
+#module use -a /scratch1/NCEPDEV/nems/emc.nemspara/soft/modulefiles
+#module load hdf5_parallel/1.10.6
+#module load netcdf_parallel/4.7.4
+#module load esmf/8.0.0_ParallelNetCDF
+############
 
 
 module use -a /contrib/miniconda3/modulefiles
