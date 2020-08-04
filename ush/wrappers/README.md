@@ -1,10 +1,11 @@
 Each workflow task has a wrapper script to set environment variables and run the job script
 
-There is an example batch-submit script for hera (Slurm) and cheyenne (PBS)
+There is an example batch-submit script for hera (Slurm) and cheyenne (PBS).  These examples set the build and run environment for hera or cheyenne, so that run-time libraries match the compiled libraries (i.e. netcdf, mpi). 
 
 Users may either modify the one batch submit script as each task is submitted, or duplicate this batch wrapper for their system settings, for each task.  Alternatively, some batch systems allow users to specify most of the settings on the command line (with the sbatch or qsub command, for example).  This piece will be unique to your system - use the examples, but expect that you will need to change things!
 
 Tasks with the same Stage level may be run concurrently (no dependency).
+
 ```
 
 Stage/step      Task Run Script         #procs                  Wall clock time
@@ -31,7 +32,7 @@ QuickStart:
 6. Run each of the listed scripts, in the order given.  Scripts with the same stage-# may be run simultaneously.
  - On most HPC systems, you will need to submit a batch job to run the multi-processor jobs
  - On some HPC systems, you can run the first two jobs (serial) on a login node/command-line
- - Example scripts for Slurm (hera) and for PBS (cheyenne) are provided.  These may need to be adapted to your system
+ - Example scripts for Slurm (hera) and for PBS (cheyenne) are provided.  These will need to be adapted to your system
  - This batch-submit script is hard-coded per task, so will need to be modified or copied to run each task
 
  
