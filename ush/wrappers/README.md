@@ -20,7 +20,7 @@ Stage/step      Task Run Script         #procs                  Wall clock time
  3               run_make_sfc_climo.sh   48                      0:20
  4               run_make_ics.sh         48                      0:30
  4               run_make_lbcs.sh        48                      0:30
- 5               run_fcst.sh             24                      2:30
+ 5               run_fcst.sh             48                      2:30
  6               run_post.sh             48                      0:15 - per output forecast hour
 
 ```
