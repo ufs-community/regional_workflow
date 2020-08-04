@@ -3,8 +3,8 @@
 #PBS -q regular
 #PBS -l select=1:mpiprocs=24:ncpus=24
 #PBS -l walltime=02:30:00
-#PBS -N run_fcst
-#PBS -j oe -o /glade/scratch/carson/ufs/expt_dirs/test_1/log/run_fcst.log
+#PBS -N run_make_grid
+#PBS -j oe -o /glade/scratch/carson/ufs/expt_dirs/test_1/log/run_make_grid.log
 cd /glade/scratch/carson/ufs/expt_dirs/test_1
 set -x
 #
@@ -30,4 +30,4 @@ module load esmf/8.0.0
 ##module use -a /glade/p/ral/jntp/GMTB/tools/modulefiles/intel-19.0.2/impi-2019.2.187
 ##module load esmf/8.0.0_bs50
 #
-./run_fcst.sh
+./run_make_grid.sh
