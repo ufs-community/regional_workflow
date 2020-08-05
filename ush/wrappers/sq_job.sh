@@ -17,13 +17,14 @@ module load impi/2018.0.4
 module load wgrib2
 ############
 # use this netcdf for most of the tasks
-#module load netcdf/4.7.0
+module load netcdf/4.7.0
 ############
 
 ############
 # use this version for make_sfc_climo, make_ics and make_lbcs
-module load netcdf/4.6.1
+#module load netcdf/4.6.1
 ############
+
 module load hdf5/1.10.5
 
 ############
