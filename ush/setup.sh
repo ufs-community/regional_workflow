@@ -57,6 +57,7 @@ cd_vrfy ${scrfunc_dir}
 #
 #-----------------------------------------------------------------------
 #
+. ./set_cycle_dates.sh
 . ./set_gridparams_GFDLgrid.sh
 . ./set_gridparams_JPgrid.sh
 . ./link_fix.sh
@@ -275,6 +276,66 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that DO_SHUM is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "DO_SHUM" "valid_vals_DO_SHUM"
+#
+# Set DO_SHUM to either "TRUE" or "FALSE" so we don't
+# have to consider other valid values later on.
+#
+DO_SHUM=${DO_SHUM^^}
+if [ "${DO_SHUM}" = "TRUE" ] || \
+   [ "${DO_SHUM}" = "YES" ]; then
+  DO_SHUM="true"
+elif [ "${DO_SHUM}" = "FALSE" ] || \
+     [ "${DO_SHUM}" = "NO" ]; then
+  DO_SHUM="false"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that DO_SPPT is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "DO_SPPT" "valid_vals_DO_SPPT"
+#
+# Set DO_SPPT to either "TRUE" or "FALSE" so we don't
+# have to consider other valid values later on.
+#
+DO_SPPT=${DO_SPPT^^}
+if [ "${DO_SPPT}" = "TRUE" ] || \
+   [ "${DO_SPPT}" = "YES" ]; then
+  DO_SPPT="true"
+elif [ "${DO_SPPT}" = "FALSE" ] || \
+     [ "${DO_SPPT}" = "NO" ]; then
+  DO_SPPT="false"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that DO_SKEB is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "DO_SKEB" "valid_vals_DO_SKEB"
+#
+# Set DO_SKEB to either "TRUE" or "FALSE" so we don't
+# have to consider other valid values later on.
+#
+DO_SKEB=${DO_SKEB^^}
+if [ "${DO_SKEB}" = "TRUE" ] || \
+   [ "${DO_SKEB}" = "YES" ]; then
+  DO_SKEB="true"
+elif [ "${DO_SKEB}" = "FALSE" ] || \
+     [ "${DO_SKEB}" = "NO" ]; then
+  DO_SKEB="false"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that DOT_OR_USCORE is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -356,7 +417,16 @@ case $MACHINE in
   QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
   QUEUE_HPSS_TAG="queue"       # pbspro does not support "partition" tag
   QUEUE_FCST=${QUEUE_FCST:-"regular"}
+  ;;
 #
+"STAMPEDE")
+#
+  NCORES_PER_NODE=68
+  SCHED="slurm"
+  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
+  QUEUE_HPSS=${QUEUE_HPSS:-"development"}
+  QUEUE_FCST=${QUEUE_FCST:-"normal"}
+  ;;
 esac
 #
 #-----------------------------------------------------------------------
@@ -595,15 +665,21 @@ done
 #
 #-----------------------------------------------------------------------
 #
-# Extract from CDATE the starting year, month, day, and hour of the
-# forecast.  These are needed below for various operations.
+# Call a function to generate the array ALL_CDATES containing the cycle 
+# dates/hours for which to run forecasts.  The elements of this array
+# will have the form YYYYMMDDHH.  They are the starting dates/times of 
+# the forecasts that will be run in the experiment.  Then set NUM_CYCLES
+# to the number of elements in this array.
 #
 #-----------------------------------------------------------------------
 #
-YYYY_FIRST_CYCL=${DATE_FIRST_CYCL:0:4}
-MM_FIRST_CYCL=${DATE_FIRST_CYCL:4:2}
-DD_FIRST_CYCL=${DATE_FIRST_CYCL:6:2}
-HH_FIRST_CYCL=${CYCL_HRS[0]}
+set_cycle_dates \
+  date_start="${DATE_FIRST_CYCL}" \
+  date_end="${DATE_LAST_CYCL}" \
+  cycle_hrs="${CYCL_HRS_str}" \
+  output_varname_all_cdates="ALL_CDATES"
+
+NUM_CYCLES="${#ALL_CDATES[@]}"
 #
 #-----------------------------------------------------------------------
 #
@@ -638,14 +714,6 @@ HH_FIRST_CYCL=${CYCL_HRS[0]}
 # Directory in which the (NEMS-enabled) FV3SAR application is located.
 # This directory includes subdirectories for FV3, NEMS, and FMS.  If
 # USE_CCPP is set to "TRUE", it also includes a subdirectory for CCPP.
-#
-# FIXgsm:
-# System directory in which the fixed (i.e. time-independent) files that
-# are needed to run the FV3SAR model are located.
-#
-# SFC_CLIMO_INPUT_DIR:
-# Directory in which the sfc_climo_gen code looks for surface climatolo-
-# gy input files.
 #
 # FIXupp:
 # System directory from which to copy necessary fixed files for UPP.
@@ -686,50 +754,68 @@ MET_CONFIG="$TEMPLATE_DIR/parm/met"
 case $MACHINE in
 
 "WCOSS_CRAY")
-  FIXgsm="/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"
-  SFC_CLIMO_INPUT_DIR=""
+  FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
   ;;
 
 "WCOSS_DELL_P3")
-  FIXgsm="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"
-  SFC_CLIMO_INPUT_DIR=""
+  FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
   ;;
 
 "DELL")
-  FIXgsm="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"
-  SFC_CLIMO_INPUT_DIR=""
+  FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
   ;;
 
 "THEIA")
-  FIXgsm="/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_am"
-  SFC_CLIMO_INPUT_DIR="/scratch4/NCEPDEV/da/noscrub/George.Gayno/climo_fields_netcdf"
+  FIXgsm=${FIXgsm:-"/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_orog"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch4/NCEPDEV/da/noscrub/George.Gayno/climo_fields_netcdf"}
   ;;
 
 "HERA")
-  FIXgsm="/scratch1/NCEPDEV/global/glopara/fix/fix_am"
-  SFC_CLIMO_INPUT_DIR="/scratch1/NCEPDEV/da/George.Gayno/ufs_utils.git/climo_fields_netcdf"
+  FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/da/George.Gayno/ufs_utils.git/climo_fields_netcdf"}
   ;;
 
 "JET")
-  FIXgsm="/lfs4/HFIP/gsd-fv3-hfip/FV3/fix/fix_am"
-  SFC_CLIMO_INPUT_DIR="/lfs1/HFIP/hwrf-data/git/fv3gfs/fix/fix_sfc_climo"
+  FIXgsm=${FIXgsm:-"/lfs4/HFIP/gsd-fv3-hfip/FV3/fix/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/lfs4/HFIP/gsd-fv3-hfip/FV3/fix/fix_orog"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lfs1/HFIP/hwrf-data/git/fv3gfs/fix/fix_sfc_climo"}
   ;;
 
 "ODIN")
-  FIXgsm="/scratch/ywang/fix/theia_fix/fix_am"
-  SFC_CLIMO_INPUT_DIR="/scratch1/NCEPDEV/da/George.Gayno/ufs_utils.git/climo_fields_netcdf"
+  FIXgsm=${FIXgsm:-"/scratch/ywang/fix/theia_fix/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
   ;;
 "CHEYENNE")
-  FIXgsm="/glade/p/ral/jntp/UFS_CAM/fix/fix_am"
-  SFC_CLIMO_INPUT_DIR="/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"
+  FIXgsm=${FIXgsm:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"}
+  ;;
+
+"STAMPEDE")
+  FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
   ;;
 
 *)
   print_err_msg_exit "\
-Directories have not been specified for this machine:
-  MACHINE = \"$MACHINE\""
-  ;;
+One or more fix file directories have not been specified for this machine:
+  MACHINE = \"$MACHINE\"
+  FIXgsm = \"${FIXgsm:-\"\"}
+  TOPO_DIR = \"${TOPO_DIR:-\"\"}
+  SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
 
+You can specify the missing location(s) in config.sh"
+  ;;
 esac
 #
 #-----------------------------------------------------------------------
@@ -832,12 +918,12 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-FCST_LEN_HRS_MAX="999"
-if [ "${FCST_LEN_HRS}" -gt "${FCST_LEN_HRS_MAX}" ]; then
+fcst_len_hrs_max="999"
+if [ "${FCST_LEN_HRS}" -gt "${fcst_len_hrs_max}" ]; then
   print_err_msg_exit "\
 Forecast length is greater than maximum allowed length:
   FCST_LEN_HRS = ${FCST_LEN_HRS}
-  FCST_LEN_HRS_MAX = ${FCST_LEN_HRS_MAX}"
+  fcst_len_hrs_max = ${fcst_len_hrs_max}"
 fi
 #
 #-----------------------------------------------------------------------
@@ -1102,8 +1188,9 @@ NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}"
 DATA_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DATA_TABLE_TMPL_FN}"
 DIAG_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DIAG_TABLE_TMPL_FN}"
 FIELD_TABLE_TMPL_FP="${TEMPLATE_DIR}/${FIELD_TABLE_TMPL_FN}"
-FV3_NML_BASE_FP="${TEMPLATE_DIR}/${FV3_NML_BASE_FN}"
+FV3_NML_BASE_SUITE_FP="${TEMPLATE_DIR}/${FV3_NML_BASE_SUITE_FN}"
 FV3_NML_YAML_CONFIG_FP="${TEMPLATE_DIR}/${FV3_NML_YAML_CONFIG_FN}"
+FV3_NML_BASE_ENS_FP="${EXPTDIR}/${FV3_NML_BASE_ENS_FN}"
 MODEL_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${MODEL_CONFIG_TMPL_FN}"
 NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
 #
@@ -1171,9 +1258,38 @@ fi
 #
 DATA_TABLE_FP="${EXPTDIR}/${DATA_TABLE_FN}"
 FIELD_TABLE_FP="${EXPTDIR}/${FIELD_TABLE_FN}"
-FV3_NML_FN="${FV3_NML_BASE_FN%.*}"
+FV3_NML_FN="${FV3_NML_BASE_SUITE_FN%.*}"
 FV3_NML_FP="${EXPTDIR}/${FV3_NML_FN}"
 NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that DO_ENSEMBLE is set to a valid value.  Then set the names
+# of the ensemble members.  These will be used to set the ensemble member
+# directories.  Also, set the full path to the FV3 namelist file corresponding
+# to each ensemble member.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "DO_ENSEMBLE" "valid_vals_DO_ENSEMBLE"
+
+NDIGITS_ENSMEM_NAMES="0"
+ENSMEM_NAMES=("")
+FV3_NML_ENSMEM_FPS=("")
+if [ "${DO_ENSEMBLE}" = TRUE ]; then
+  NDIGITS_ENSMEM_NAMES="${#NUM_ENS_MEMBERS}"
+# Strip away all leading zeros in NUM_ENS_MEMBERS by converting it to a 
+# decimal (leading zeros will cause bash to interpret the number as an 
+# octal).  Note that the variable definitions file will therefore contain
+# the version of NUM_ENS_MEMBERS with any leading zeros stripped away.
+  NUM_ENS_MEMBERS="$((10#${NUM_ENS_MEMBERS}))"  
+  fmt="%0${NDIGITS_ENSMEM_NAMES}d"
+  for (( i=0; i<${NUM_ENS_MEMBERS}; i++ )); do
+    ip1=$( printf "$fmt" $((i+1)) )
+    ENSMEM_NAMES[$i]="mem${ip1}"
+    FV3_NML_ENSMEM_FPS[$i]="$EXPTDIR/${FV3_NML_FN}_${ENSMEM_NAMES[$i]}"
+  done
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -2018,12 +2134,6 @@ NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "OZONE_PARAM_NO_CCPP" "valid_vals_OZONE_PARAM_NO_CCPP"
-
-
-
-
-
-
 #
 #-----------------------------------------------------------------------
 #
@@ -2033,9 +2143,6 @@ check_var_valid_value "OZONE_PARAM_NO_CCPP" "valid_vals_OZONE_PARAM_NO_CCPP"
 #-----------------------------------------------------------------------
 #
 mkdir_vrfy -p "$EXPTDIR"
-
-
-
 
 
 
@@ -2358,7 +2465,7 @@ var_name = \"${var_name}\""
         else
 #          var_value=$(printf "%s" "\\\\\\n")
           var_value="\\\\\n"
-          for (( i=0; i<${num_elems}; i++)); do
+          for (( i=0; i<${num_elems}; i++ )); do
 #            var_value=$(printf "%s\"%s\" %s" "${var_value}" "${array[$i]}" "\\\\\\n")
             var_value="${var_value}\"${array[$i]}\" \\\\\n"
 #            var_value="${var_value}\"${array[$i]}\" "
@@ -2476,12 +2583,17 @@ UFS_WTHR_MDL_DIR="${UFS_WTHR_MDL_DIR}"
 UFS_UTILS_DIR="${UFS_UTILS_DIR}"
 CHGRES_DIR="${CHGRES_DIR}"
 SFC_CLIMO_INPUT_DIR="${SFC_CLIMO_INPUT_DIR}"
+TOPO_DIR=${TOPO_DIR}
 EXPTDIR="$EXPTDIR"
 LOGDIR="$LOGDIR"
 CYCLE_BASEDIR="${CYCLE_BASEDIR}"
 GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
+
+NDIGITS_ENSMEM_NAMES="${NDIGITS_ENSMEM_NAMES}"
+ENSMEM_NAMES=( $( printf "\"%s\" " "${ENSMEM_NAMES[@]}" ))
+FV3_NML_ENSMEM_FPS=( $( printf "\"%s\" " "${FV3_NML_ENSMEM_FPS[@]}" ))
 #
 #-----------------------------------------------------------------------
 #
@@ -2503,8 +2615,9 @@ NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_TMPL_FN}"
 DATA_TABLE_TMPL_FP="${DATA_TABLE_TMPL_FP}"
 DIAG_TABLE_TMPL_FP="${DIAG_TABLE_TMPL_FP}"
 FIELD_TABLE_TMPL_FP="${FIELD_TABLE_TMPL_FP}"
-FV3_NML_BASE_FP="${FV3_NML_BASE_FP}"
+FV3_NML_BASE_SUITE_FP="${FV3_NML_BASE_SUITE_FP}"
 FV3_NML_YAML_CONFIG_FP="${FV3_NML_YAML_CONFIG_FP}"
+FV3_NML_BASE_ENS_FP="${FV3_NML_BASE_ENS_FP}"
 MODEL_CONFIG_TMPL_FP="${MODEL_CONFIG_TMPL_FP}"
 NEMS_CONFIG_TMPL_FP="${NEMS_CONFIG_TMPL_FP}"
 
@@ -2634,25 +2747,27 @@ OZONE_PARAM="${OZONE_PARAM}"
 #
 #-----------------------------------------------------------------------
 #
-# System directory in which to look for the files generated by the ex-
-# ternal model specified in EXTRN_MDL_NAME_ICS.  These files will be
-# used to generate the input initial condition and surface files for the
-# FV3SAR.
+# If EXTRN_MDL_SOURCE_DIR_ICS is set to a null string, this is the system 
+# directory in which the workflow scripts will look for the files generated 
+# by the external model specified in EXTRN_MDL_NAME_ICS.  These files will 
+# be used to generate the input initial condition and surface files for 
+# the FV3SAR.
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_FILES_SYSBASEDIR_ICS="${EXTRN_MDL_FILES_SYSBASEDIR_ICS}"
+EXTRN_MDL_SYSBASEDIR_ICS="${EXTRN_MDL_SYSBASEDIR_ICS}"
 #
 #-----------------------------------------------------------------------
 #
-# System directory in which to look for the files generated by the ex-
-# ternal model specified in EXTRN_MDL_NAME_LBCS.  These files will be 
-# used to generate the input lateral boundary condition files for the 
-# FV3SAR.
+# If EXTRN_MDL_SOURCE_DIR_LBCS is set to a null string, this is the system 
+# directory in which the workflow scripts will look for the files generated 
+# by the external model specified in EXTRN_MDL_NAME_LBCS.  These files 
+# will be used to generate the input lateral boundary condition files for 
+# the FV3SAR.
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_FILES_SYSBASEDIR_LBCS="${EXTRN_MDL_FILES_SYSBASEDIR_LBCS}"
+EXTRN_MDL_SYSBASEDIR_LBCS="${EXTRN_MDL_SYSBASEDIR_LBCS}"
 #
 #-----------------------------------------------------------------------
 #
@@ -2671,6 +2786,18 @@ EXTRN_MDL_LBCS_OFFSET_HRS="${EXTRN_MDL_LBCS_OFFSET_HRS}"
 #-----------------------------------------------------------------------
 #
 LBC_SPEC_FCST_HRS=(${LBC_SPEC_FCST_HRS[@]})
+#
+#-----------------------------------------------------------------------
+#
+# The number of cycles for which to make forecasts and the list of starting
+# dates/hours of these cycles.
+#
+#-----------------------------------------------------------------------
+#
+NUM_CYCLES="${NUM_CYCLES}"
+ALL_CDATES=( \\
+$( printf "\"%s\" \\\\\n" "${ALL_CDATES[@]}" )
+)
 #
 #-----------------------------------------------------------------------
 #
