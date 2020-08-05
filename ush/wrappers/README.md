@@ -21,7 +21,7 @@ Stage/step      Task Run Script         #procs                  Wall clock time
  4               run_make_ics.sh         48                      0:30
  4               run_make_lbcs.sh        48                      0:30
  5               run_fcst.sh             48                      2:30
- 6               run_post.sh             48                      0:15 - per output forecast hour
+ 6               run_post.sh             48                      0:25 - 2min per output forecast hour
 
 ```
 
