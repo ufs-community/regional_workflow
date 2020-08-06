@@ -804,11 +804,11 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-# 3-km RRFS Alaska grid used in ESRL real-time runs
+# 3-km HRRR Alaska grid.
 #
 #-----------------------------------------------------------------------
 #
-"RRFS_AK")
+"RRFSAK")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then 
 
@@ -860,7 +860,7 @@ predefined domain:
 
     JPgrid_WIDE_HALO_WIDTH=6
 
-    DT_ATMOS="40"
+    DT_ATMOS="50"
 
     LAYOUT_X="30"
     LAYOUT_Y="17"
