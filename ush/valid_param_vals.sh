@@ -12,7 +12,7 @@ valid_vals_PREDEF_GRID_NAME=( \
 "GSD_HAFSV0.A3km" \
 "GSD_HAFSV0.A13km" \
 "GSD_HAFSV0.A25km" \
-"GSD_RRFSAK_3km" \
+"RRFS_AK" \
 "GSD_HRRR_AK_50km" \
 "GSD_HRRR3km" \
 "GSD_HRRR13km" \
@@ -47,8 +47,3 @@ valid_vals_QUILTING=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_PRINT_ESMF=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_USE_CRON_TO_RELAUNCH=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_DOT_OR_USCORE=("." "_")
-valid_vals_DO_ENSEMBLE=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
-valid_vals_DO_SHUM=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
-valid_vals_DO_SPPT=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
-valid_vals_DO_SKEB=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
-valid_vals_USE_ZMTNBLCK=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")

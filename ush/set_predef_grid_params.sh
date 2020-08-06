@@ -347,9 +347,9 @@ predefined domain:
 
     DT_ATMOS="300"
 
-    LAYOUT_X="20"
+    LAYOUT_X="2"
     LAYOUT_Y="2"
-    BLOCKSIZE="10"
+    BLOCKSIZE="2"
 
     if [ "$QUILTING" = "TRUE" ]; then
       WRTCMP_write_groups="1"
@@ -460,9 +460,9 @@ predefined domain:
 
     DT_ATMOS="40"
 
-    LAYOUT_X="18"
-    LAYOUT_Y="12"
-    BLOCKSIZE="46"
+    LAYOUT_X="36"
+    LAYOUT_Y="24"
+    BLOCKSIZE="26"
 
     QUILTING="TRUE"
 
@@ -497,9 +497,9 @@ predefined domain:
 
     DT_ATMOS="40"
 
-    LAYOUT_X="18"
-    LAYOUT_Y="12"
-    BLOCKSIZE="46"
+    LAYOUT_X="34"
+    LAYOUT_Y="24"
+    BLOCKSIZE="34"
 
     if [ "$QUILTING" = "TRUE" ]; then
       WRTCMP_write_groups="1"
@@ -804,39 +804,32 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-# 3-km HRRR Alaska grid.
+# 3-km RRFS Alaska grid used in ESRL real-time runs
 #
 #-----------------------------------------------------------------------
 #
-"GSD_RRFSAK_3km")
+"RRFS_AK")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then 
 
-    GFDLgrid_LON_T6_CTR=-160.8
-    GFDLgrid_LAT_T6_CTR=63.0
-    GFDLgrid_STRETCH_FAC=1.161
+    GFDLgrid_LON_T6_CTR="-160.8"
+    GFDLgrid_LAT_T6_CTR="63.0"
     GFDLgrid_RES="768"
-    GFDLgrid_REFINE_RATIO=4
-  
-    num_margin_cells_T6_left=204
-    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
-  
-    num_margin_cells_T6_right=204
-    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
-  
-    num_margin_cells_T6_bottom=249
-    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
-  
-    num_margin_cells_T6_top=249
-    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
+    GFDLgrid_STRETCH_FAC="1.161"
+    GFDLgrid_REFINE_RATIO="4"
+
+    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=205
+    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=564
+    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=250
+    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=519
 
     GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="FALSE"
 
-    DT_ATMOS="18"
+    DT_ATMOS="40"
 
-    LAYOUT_X="24"
-    LAYOUT_Y="24"
-    BLOCKSIZE="15"
+    LAYOUT_X="18"
+    LAYOUT_Y="12"
+    BLOCKSIZE="40"
 
     if [ "$QUILTING" = "TRUE" ]; then
       WRTCMP_write_groups="1"
@@ -867,7 +860,7 @@ predefined domain:
 
     JPgrid_WIDE_HALO_WIDTH=6
 
-    DT_ATMOS="50"
+    DT_ATMOS="40"
 
     LAYOUT_X="30"
     LAYOUT_Y="17"
