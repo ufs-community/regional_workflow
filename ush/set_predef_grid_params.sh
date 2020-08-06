@@ -796,7 +796,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"RRFSAK")
+"RRFS_AK")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then 
 
