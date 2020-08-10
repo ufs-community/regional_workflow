@@ -440,10 +440,18 @@ predefined domain:
     GFDLgrid_STRETCH_FAC="1.0001"
     GFDLgrid_REFINE_RATIO="36"
 
-    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G="26"
-    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G="71"
-    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G="36"
-    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G="61"
+    num_margin_cells_T6_left=25
+    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
+
+    num_margin_cells_T6_right=25
+    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
+
+    num_margin_cells_T6_bottom=35
+    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
+
+    num_margin_cells_T6_top=35
+    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
+
     GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="FALSE"
 
     DT_ATMOS="40"
@@ -485,9 +493,9 @@ predefined domain:
 
     DT_ATMOS="40"
 
-    LAYOUT_X="34"
-    LAYOUT_Y="24"
-    BLOCKSIZE="34"
+    LAYOUT_X="18"
+    LAYOUT_Y="12"
+    BLOCKSIZE="46"
 
     if [ "$QUILTING" = "TRUE" ]; then
       WRTCMP_write_groups="1"
@@ -806,10 +814,17 @@ predefined domain:
     GFDLgrid_STRETCH_FAC="1.161"
     GFDLgrid_REFINE_RATIO="4"
 
-    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=205
-    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=564
-    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=250
-    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=519
+    num_margin_cells_T6_left=204
+    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
+
+    num_margin_cells_T6_right=204
+    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
+
+    num_margin_cells_T6_bottom=249
+    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
+
+    num_margin_cells_T6_top=249
+    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
 
     GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="FALSE"
 
