@@ -236,7 +236,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"GSD_RAP13km")
+"RRFS_RAP13km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 
@@ -322,7 +322,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"GSD_HRRR25km")
+"RRFS_HRRR25km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 
@@ -376,7 +376,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"GSD_HRRR13km")
+"RRFS_HRRR13km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 
@@ -430,7 +430,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"RRFS_HRRRCONUS")
+"RRFS_HRRR3km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 
@@ -796,7 +796,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"RRFS_AK")
+"RRFS_HRRRAK3km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then 
 
@@ -879,7 +879,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"GSD_HRRR_AK_50km")
+"RRFS_HRRRAK50km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 

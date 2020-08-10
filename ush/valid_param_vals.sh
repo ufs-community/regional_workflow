@@ -12,12 +12,12 @@ valid_vals_PREDEF_GRID_NAME=( \
 "GSD_HAFSV0.A3km" \
 "GSD_HAFSV0.A13km" \
 "GSD_HAFSV0.A25km" \
-"RRFS_AK" \
-"GSD_HRRR_AK_50km" \
-"RRFS_HRRRCONUS" \
-"GSD_HRRR13km" \
-"GSD_HRRR25km" \
-"GSD_RAP13km" )
+"RRFS_HRRRAK3km" \
+"RRFS_HRRRAK50km" \
+"RRFS_HRRR3km" \
+"RRFS_HRRR13km" \
+"RRFS_HRRR25km" \
+"RRFS_RAP13km" )
 valid_vals_EMC_GRID_NAME=("ak" "conus" "conus_c96" "conus_orig" "guam" "hi" "pr")
 valid_vals_USE_CCPP=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_CCPP_PHYS_SUITE=( \
