@@ -12,6 +12,14 @@
 #
 #-----------------------------------------------------------------------
 #
+# Source other necessary files.
+#
+#-----------------------------------------------------------------------
+#
+. $USHDIR/create_model_config_file.sh
+#
+#-----------------------------------------------------------------------
+#
 # Save current shell options (in a global array).  Then set new options
 # for this script/function.
 #
@@ -56,6 +64,7 @@ specified cycle.
 #-----------------------------------------------------------------------
 #
 valid_args=( \
+"cdate" \
 "cycle_dir" \
 "ensmem_indx" \
 "slash_ensmem_subdir" \
@@ -98,6 +107,7 @@ case $MACHINE in
   ulimit -a
   APRUN="srun"
   LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  OMP_NUM_THREADS=4
   ;;
 #
 "JET")
@@ -105,6 +115,7 @@ case $MACHINE in
   ulimit -a
   APRUN="srun"
   LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  OMP_NUM_THREADS=4
   ;;
 #
 "ODIN")
@@ -409,7 +420,6 @@ if [ "${USE_CCPP}" = "TRUE" ]; then
   fi
 
 fi
-#
 #-----------------------------------------------------------------------
 #
 # If running enemble forecasts, create links to the cycle-specific 
@@ -418,6 +428,30 @@ fi
 # ensemble forecasts because in that case, the cycle directory is the
 # run directory (and we would be creating a symlink with the name of a
 # file that already exists).
+#
+#-----------------------------------------------------------------------
+#
+# Call the function that creates the model configuration file within each
+# cycle directory.
+#
+#-----------------------------------------------------------------------
+#
+create_model_config_file \
+  cdate="$cdate" \
+  nthreads=${OMP_NUM_THREADS:-1} \
+  run_dir="${run_dir}" || print_err_msg_exit "\
+Call to function to create a model configuration file for the current 
+cycle's (cdate) run directory (run_dir) failed:
+  cdate = \"${cdate}\"
+  run_dir = \"${run_dir}\""
+#
+#-----------------------------------------------------------------------
+#
+# If running enemble forecasts, create a link to the cycle-specific 
+# diagnostic tables file in the cycle directory.  Note that this link 
+# should not be made if not running ensemble forecasts because in that 
+# case, the cycle directory is the run directory (and we would be creating 
+# a symlink with the name of a file that already exists).
 #
 #-----------------------------------------------------------------------
 #
@@ -436,8 +470,9 @@ fi
 #-----------------------------------------------------------------------
 #
 export KMP_AFFINITY=scatter
-export OMP_NUM_THREADS=1 #Needs to be 1 for dynamic build of CCPP with GFDL fast physics, was 2 before.
+export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1} #Needs to be 1 for dynamic build of CCPP with GFDL fast physics, was 2 before.
 export OMP_STACKSIZE=1024m
+
 #
 #-----------------------------------------------------------------------
 #
