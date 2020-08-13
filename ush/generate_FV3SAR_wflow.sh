@@ -72,24 +72,21 @@ else
   if [[ ${#pyversion[@]} -lt 2 ]]; then
     print_err_msg_exit "\
     Error retrieving python3 version; check your python environment\n"
-  elif [[ ${pyversion[1]} -lt 4 ]]; then
+  elif [[ ${pyversion[1]} -lt 6 ]]; then
     print_err_msg_exit "\
     Error: python version must be 3.6 or higher
     python version: ${pyversion[*]}\n"
   fi
 fi
 
-#Next, check for the three non-standard python packages: jinja2, yaml, and f90nml
-if ! /usr/bin/env python3 -c "import jinja2" &> /dev/null; then
-    print_err_msg_exit "\
-    python module 'jinja2' not available; check your python environment\n"
-elif ! /usr/bin/env python3 -c "import yaml" &> /dev/null; then
-    print_err_msg_exit "\
-    python module 'yaml' not available; check your python environment\n"
-elif ! /usr/bin/env python3 -c "import f90nml" &> /dev/null; then
-    print_err_msg_exit "\
-    python module 'f90nml' not available; check your python environment\n"
-fi
+#Next, check for the non-standard python packages: jinja2, yaml, and f90nml
+pkgs=(jinja2 yaml f90nml)
+for pkg in ${pkgs[@]}  ; do
+  if ! /usr/bin/env python3 -c "import ${pkg}" &> /dev/null; then
+  print_err_msg_exit "\
+  python module ${pkg} not available; check your python environment\n"
+  fi
+done
 
 #
 #-----------------------------------------------------------------------
