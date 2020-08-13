@@ -59,9 +59,6 @@ ushdir="${scrfunc_dir}"
 
 # This line will return two numbers: the python major and minor versions
 pyversion=($(/usr/bin/env python3 -c 'import platform; major, minor, patch = platform.python_version_tuple(); print(major); print(minor)'))
-echo "Version= ${pyversion[*]}"
-echo ${pyversion[0]}
-echo ${pyversion[1]}
 
 #Now, set an error check variable so that we can print all python errors rather than just the first
 pyerrors=0
@@ -70,17 +67,20 @@ pyerrors=0
 # python3 minor version is 6 or higher
 if [[ -z "$pyversion" ]];then
   print_info_msg "\
+
   Error: python3 not found"
   pyerrors=$((pyerrors+1))
 else
   if [[ ${#pyversion[@]} -lt 2 ]]; then
     print_info_msg "\
-    Error retrieving python3 version"
+
+  Error retrieving python3 version"
     pyerrors=$((pyerrors+1))
   elif [[ ${pyversion[1]} -lt 6 ]]; then
     print_info_msg "\
-    Error: python version must be 3.6 or higher
-    python version: ${pyversion[*]}"
+
+  Error: python version must be 3.6 or higher
+  python version: ${pyversion[*]}"
     pyerrors=$((pyerrors+1))
   fi
 fi
@@ -90,7 +90,8 @@ pkgs=(jinja2 yaml f90nml)
 for pkg in ${pkgs[@]}  ; do
   if ! /usr/bin/env python3 -c "import ${pkg}" &> /dev/null; then
   print_info_msg "\
-  python module ${pkg} not available"
+
+  Error: python module ${pkg} not available"
   pyerrors=$((pyerrors+1))
   fi
 done
@@ -101,7 +102,9 @@ if [ $pyerrors -gt 0 ];then
   Errors found: check your python environment
   
   Instructions for setting up python environments can be found on the web:
-  https://github.com/ufs-community/ufs-srweather-app/wiki/Getting-Started"
+  https://github.com/ufs-community/ufs-srweather-app/wiki/Getting-Started
+
+"
 fi
 
 #
