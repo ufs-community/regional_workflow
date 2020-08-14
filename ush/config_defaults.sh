@@ -782,6 +782,12 @@ VERBOSE="TRUE"
 # SFC_CLIMO_DIR:
 # Same as GRID_DIR but for the surface climatology generation task.
 # 
+# RUN_TASK_RUN_NEXUS:
+# Same as RUN_TASK_MAKE_GRID but for the air quality emission generation
+# task.
+#
+# NEXUS_DIR:
+# Same as GRID_DIR but for the the air quality emission generation task.
 #-----------------------------------------------------------------------
 #
 RUN_TASK_MAKE_GRID="TRUE"
@@ -792,6 +798,9 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
+
+RUN_TASK_RUN_NEXUS="FALSE"
+NEXUS_DIR="/path/to/pregenerated/emission/files"
 #
 #-----------------------------------------------------------------------
 #

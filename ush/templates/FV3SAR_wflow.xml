@@ -43,6 +43,7 @@ Rocoto task names.
 <!ENTITY GET_EXTRN_LBCS_TN "{{ get_extrn_lbcs_tn }}">
 <!ENTITY MAKE_ICS_TN       "{{ make_ics_tn }}">
 <!ENTITY MAKE_LBCS_TN      "{{ make_lbcs_tn }}">
+<!ENTITY RUN_NEXUS_TN      "{{ run_nexus_tn }}">
 <!ENTITY RUN_FCST_TN       "{{ run_fcst_tn }}">
 <!ENTITY RUN_POST_TN       "{{ run_post_tn }}">
 
@@ -63,6 +64,8 @@ Task compute resources
 <!ENTITY PROC_MAKE_LBC1_TO_LBCN    "4:ppn=12">
 <!ENTITY NPROCS_MAKE_LBC1_TO_LBCN  "48">
 
+<!ENTITY PROC_RUN_NEXUS            "1:ppn=1">
+
 <!ENTITY PROC_RUN_FCST             "{{ proc_run_fcst }}">
 <!ENTITY NPROCS_RUN_FCST           "{{ nprocs_run_fcst }}">
 <!ENTITY NCORES_PER_NODE           "{{ ncores_per_node }}">
@@ -76,6 +79,7 @@ Task compute resources
 <!ENTITY RSRC_GET_EXTRN_MDL_FILES "<walltime>00:45:00</walltime>">
 <!ENTITY RSRC_MAKE_ICS_SURF_LBC0  "<walltime>00:30:00</walltime>">
 <!ENTITY RSRC_MAKE_LBC1_TO_LBCN   "<walltime>01:00:00</walltime>">
+<!ENTITY RSRC_RUN_NEXUS           "<walltime>00:30:00</walltime>">
 <!ENTITY RSRC_RUN_FCST            "<walltime>04:30:00</walltime>">
 <!ENTITY RSRC_POST                "<walltime>00:30:00</walltime>">
 
@@ -348,6 +352,31 @@ MODULES_RUN_TASK_FP script.
     </dependency>
 
   </task>
+
+{% if run_task_run_nexus %}
+<!--
+************************************************************************
+************************************************************************
+-->
+  <task name="&RUN_NEXUS_TN;" cycledefs="at_start" maxtries="4">
+
+    &RSRC_RUN_NEXUS;
+    &RSRV_DEFAULT;
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&RUN_NEXUS_TN;" "&JOBSDIR;/JREGIONAL_RUN_NEXUS"</command>
+    <nodes>&PROC_RUN_NEXUS;</nodes>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&RUN_NEXUS_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&RUN_NEXUS_TN;.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_DIR;</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+
+  </task>
+
+{% endif %}
+
 <!--
 ************************************************************************
 ************************************************************************
@@ -372,6 +401,9 @@ MODULES_RUN_TASK_FP script.
       <and>
         <taskdep task="&MAKE_ICS_TN;"/>
         <taskdep task="&MAKE_LBCS_TN;"/>
+{% if run_task_run_nexus %}
+        <taskdep task="&RUN_NEXUS_TN;"/>
+{% endif %}
       </and>
     </dependency>
 

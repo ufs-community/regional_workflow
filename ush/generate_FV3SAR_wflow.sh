@@ -160,11 +160,13 @@ settings="
   'get_extrn_lbcs_tn': $GET_EXTRN_LBCS_TN
   'make_ics_tn': $MAKE_ICS_TN
   'make_lbcs_tn': $MAKE_LBCS_TN
+  'run_nexus_tn': $RUN_NEXUS_TN
   'run_fcst_tn': $RUN_FCST_TN
   'run_post_tn': $RUN_POST_TN
   'run_task_make_grid': $RUN_TASK_MAKE_GRID
   'run_task_make_orog': $RUN_TASK_MAKE_OROG
   'run_task_make_sfc_climo': $RUN_TASK_MAKE_SFC_CLIMO
+  'run_task_run_nexus': $RUN_TASK_RUN_NEXUS
 "
 
 $USHDIR/create_xml.py -q -u "${settings}" -t $TEMPLATE_XML_FP -o $WFLOW_XML_FP || exit 1
@@ -217,6 +219,10 @@ cat "${MAKE_LBCS_TN}.local" >> "${MAKE_LBCS_TN}"
 ln_vrfy -fs "${UFS_WTHR_MDL_DIR}/NEMS/src/conf/modules.nems" \
             "${RUN_FCST_TN}"
 
+if [ "${RUN_TASK_RUN_NEXUS}" = "TRUE" ]; then
+  ln_vrfy -fs "${ARL_NEXUS_DIR}/build/modules" \
+              "${RUN_NEXUS_TN}"
+fi
 
 #Only some platforms build EMC_post using modules
 case $MACHINE in

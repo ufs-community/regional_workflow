@@ -815,6 +815,25 @@ Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
 fi
 #
+# Get the base directory of the NEXUS code if required
+#
+external_name="arl_nexus"
+ARL_NEXUS_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+ARL_NEXUS_DIR="$HOMErrfs/${ARL_NEXUS_DIR}"
+if [ ! -d "${ARL_NEXUS_DIR}" ]; then
+  print_err_msg_exit "\
+The base directory in which the arl_nexus source code should be located
+(ARL_NEXUS_DIR) does not exist:
+  ARL_NEXUS_DIR = \"${ARL_NEXUS_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+fi
+#
 #-----------------------------------------------------------------------
 #
 # Set the names of the various tasks in the rocoto workflow XML.
@@ -828,6 +847,7 @@ GET_EXTRN_ICS_TN="get_extrn_ics"
 GET_EXTRN_LBCS_TN="get_extrn_lbcs"
 MAKE_ICS_TN="make_ics"
 MAKE_LBCS_TN="make_lbcs"
+RUN_NEXUS_TN="run_nexus"
 RUN_FCST_TN="run_fcst"
 RUN_POST_TN="run_post"
 #
@@ -2364,6 +2384,7 @@ GET_EXTRN_ICS_TN="${GET_EXTRN_ICS_TN}"
 GET_EXTRN_LBCS_TN="${GET_EXTRN_LBCS_TN}"
 MAKE_ICS_TN="${MAKE_ICS_TN}"
 MAKE_LBCS_TN="${MAKE_LBCS_TN}"
+RUN_NEXUS_TN="${RUN_NEXUS_TN}"
 RUN_FCST_TN="${RUN_FCST_TN}"
 RUN_POST_TN="${RUN_POST_TN}"
 #

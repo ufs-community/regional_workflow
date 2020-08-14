@@ -13,10 +13,6 @@ else
 fi
 #
 source ./machine-setup.sh $platform > /dev/null 2>&1
-if [ $platform = "wcoss_cray" ]; then
-  platform="cray"
-fi
-
 #
 # Set the name of the package.  This will also be the name of the execu-
 # table that will be built.
@@ -29,52 +25,40 @@ mkdir -p ../exec
 #
 # Change directory to where the source code is located.
 # 
-cd ${package_name}/
-home_dir=`pwd`/../..
-srcDir=`pwd`
+cd ${package_name}
+home_dir=`pwd`/../../
+src_dir=`pwd`
+build_dir=${src_dir}/build
 #
 # Load modules.
 #
 set +x
-source ../../modulefiles/codes/${platform}/global_equiv_resol
-module load cmake
-#source config/modulefiles.${platform}
-#
-MPICH_UNEX_BUFFER_SIZE=256m
-MPICH_MAX_SHORT_MSG_SIZE=64000
-MPICH_PTL_UNEX_EVENTS=160k
-KMP_STACKSIZE=2g
-F_UFMTENDIAN=big
-#
-# HDF5 and NetCDF directories.
-#
-if [ $platform = "cray" ]; then
-  HDF5=${HDF5_DIR}
-  NETCDF=${NETCDF_DIR}
-elif [ $platform = "theia" ]; then
-  HDF5_DIR=$HDF5
-  NETCDF_DIR=$NETCDF
-elif [ $platform = "hera" ]; then
-  HDF5_DIR=$HDF5
-  NETCDF_DIR=$NETCDF
-elif [ $platform = "cheyenne" ]; then
-  NETCDF_DIR=$NETCDF
-  HDF5_DIR=$NETCDF #HDF5 resides with NETCDF on Cheyenne
-  export HDF5=$NETCDF     #HDF5 used in Makefile_cheyenne
-elif [ $platform = "jet" ]; then
-  HDF5_DIR=$HDF5
-  NETCDF_DIR=$NETCDF
+modules_dir=${src_dir}/modulefiles
+module_name=${platform}
+module_path=${modules_dir}/${module_name}
+if [ ! -r ${module_path} ]; then
+  # select Intel compilers if no generic module file is available
+  module_name=${module_name}.intel
+  module_path=${modules_dir}/${module_name}
 fi
+if [ -r ${module_path} ]; then
+  module use  ${modules_dir}
+  module load ${module_name}
+else
+  echo "No module file found for platform: ${platform}"
+  exit 1
+fi
+#
+# Build NEXUS
+#
+mkdir -p ${build_dir}
+cd ${build_dir}
+cmake ..
+make -j
+#
+# Install NEXUS
+#
+ln -sf ${build_dir}/bin/nexus ${home_dir}/exec
+ln -sf ${module_path} ${build_dir}/modules
 
-#build the file
-
-export COMPILER=${COMPILER:-intel}
-export CMAKE_Platform=linux.${COMPILER}
-export CMAKE_C_COMPILER=${CMAKE_C_COMPILER:-mpicc}
-export CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER:-mpicxx}
-export CMAKE_Fortran_COMPILER=${CMAKE_Fortran_COMPILER:-mpif90}
-
-cmake CMakeLists.txt
-make -j ${BUILD_JOBS:-4}
-
-exit
+exit $?

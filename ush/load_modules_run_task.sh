@@ -252,6 +252,7 @@ else
         [ "${task_name}" = "${MAKE_SFC_CLIMO_TN}" ] || \
         [ "${task_name}" = "${MAKE_ICS_TN}" ] || \
         [ "${task_name}" = "${MAKE_LBCS_TN}" ] || \
+        [ "${task_name}" = "${RUN_NEXUS_TN}" ] || \
         [ "${task_name}" = "${RUN_FCST_TN}" ]; then
 
        print_err_msg_exit "\
