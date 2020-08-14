@@ -30,6 +30,10 @@ RUN_TASK_MAKE_GRID="TRUE"
 RUN_TASK_MAKE_OROG="TRUE"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 
+# Run ARL NEXUS package to generate anthropogenic emissions
+# for air quality experiments
+RUN_TASK_RUN_NEXUS="TRUE"
+
 LAYOUT_X=10
 LAYOUT_Y=11
 WRTCMP_write_groups=1
