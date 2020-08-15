@@ -217,6 +217,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
     fn_atm_nemsio="${EXTRN_MDL_FNS[0]}"
     fn_sfc_nemsio="${EXTRN_MDL_FNS[1]}"
     input_type="gaussian_nemsio"     # For FV3-GFS Gaussian grid in nemsio format.
+    convert_nst=True
 
   elif [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
 
@@ -224,6 +225,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
 
     fn_grib2="${EXTRN_MDL_FNS[0]}"
     input_type="grib2"
+    convert_nst=False
 
   fi
 
@@ -234,7 +236,6 @@ case "${EXTRN_MDL_NAME_ICS}" in
   minmax_vgfrc_from_climo=True
   lai_from_climo=True
   tg3_from_soil=False
-  convert_nst=True
 
   ;;
 
