@@ -1237,8 +1237,6 @@ elif [ "$DO_ENSEMBLE" = "FALSE" ] || \
      [ "$DO_ENSEMBLE" = "NO" ]; then
   DO_ENSEMBLE="FALSE"
 fi
-echo "DO_ENSEMBLE is ${DO_ENSEMBLE}"
-#exit
 NDIGITS_ENSMEM_NAMES="0"
 ENSMEM_NAMES=("")
 FV3_NML_ENSMEM_FPS=("")
@@ -1256,10 +1254,6 @@ if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
     FV3_NML_ENSMEM_FPS[$i]="$EXPTDIR/${FV3_NML_FN}_${ENSMEM_NAMES[$i]}"
   done
 fi
-echo "NDIGITS_ENSMEM_NAMES is ${NDIGITS_ENSMEM_NAMES}"
-echo "NUM_ENS_MEMBERS is ${NUM_ENS_MEMBERS}"
-echo "ENSMEM_NAMES is ( ${ENSMEM_NAMES[@]} )"
-echo "FV3_NML_ENSMEM_FPS is ( ${FV3_NML_ENSMEM_FPS[@]} )"
 #-----------------------------------------------------------------------
 #
 # Set the full path to the forecast model executable.
