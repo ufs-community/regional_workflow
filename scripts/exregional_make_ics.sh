@@ -194,7 +194,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
 
   fn_atm_nemsio="${EXTRN_MDL_FNS[0]}"
   fn_sfc_nemsio="${EXTRN_MDL_FNS[1]}"
-  input_type="gfs_gaussian" # For spectral GFS Gaussian grid in nemsio format.
+  input_type="gfs_gaussian_nemsio" # For spectral GFS Gaussian grid in nemsio format.
 
   nsoill_out="4"
   vgtyp_from_climo=True
@@ -216,7 +216,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
 
     fn_atm_nemsio="${EXTRN_MDL_FNS[0]}"
     fn_sfc_nemsio="${EXTRN_MDL_FNS[1]}"
-    input_type="gaussian"     # For FV3-GFS Gaussian grid in nemsio format.
+    input_type="gaussian_nemsio"     # For FV3-GFS Gaussian grid in nemsio format.
 
   elif [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
 
