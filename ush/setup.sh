@@ -1254,6 +1254,7 @@ if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
     FV3_NML_ENSMEM_FPS[$i]="$EXPTDIR/${FV3_NML_FN}_${ENSMEM_NAMES[$i]}"
   done
 fi
+#
 #-----------------------------------------------------------------------
 #
 # Set the full path to the forecast model executable.
