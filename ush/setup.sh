@@ -1225,11 +1225,24 @@ NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "DO_ENSEMBLE" "valid_vals_DO_ENSEMBLE"
-
+#
+# Set DO_ENSEMBLE to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+DO_ENSEMBLE=${DO_ENSEMBLE^^}
+if [ "$DO_ENSEMBLE" = "TRUE" ] || \
+   [ "$DO_ENSEMBLE" = "YES" ]; then
+  DO_ENSEMBLE="TRUE"
+elif [ "$DO_ENSEMBLE" = "FALSE" ] || \
+     [ "$DO_ENSEMBLE" = "NO" ]; then
+  DO_ENSEMBLE="FALSE"
+fi
+echo "DO_ENSEMBLE is ${DO_ENSEMBLE}"
+#exit
 NDIGITS_ENSMEM_NAMES="0"
 ENSMEM_NAMES=("")
 FV3_NML_ENSMEM_FPS=("")
-if [ "${DO_ENSEMBLE}" = TRUE ]; then
+if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
   NDIGITS_ENSMEM_NAMES="${#NUM_ENS_MEMBERS}"
 # Strip away all leading zeros in NUM_ENS_MEMBERS by converting it to a 
 # decimal (leading zeros will cause bash to interpret the number as an 
@@ -1243,7 +1256,10 @@ if [ "${DO_ENSEMBLE}" = TRUE ]; then
     FV3_NML_ENSMEM_FPS[$i]="$EXPTDIR/${FV3_NML_FN}_${ENSMEM_NAMES[$i]}"
   done
 fi
-#
+echo "NDIGITS_ENSMEM_NAMES is ${NDIGITS_ENSMEM_NAMES}"
+echo "NUM_ENS_MEMBERS is ${NUM_ENS_MEMBERS}"
+echo "ENSMEM_NAMES is ( ${ENSMEM_NAMES[@]} )"
+echo "FV3_NML_ENSMEM_FPS is ( ${FV3_NML_ENSMEM_FPS[@]} )"
 #-----------------------------------------------------------------------
 #
 # Set the full path to the forecast model executable.
