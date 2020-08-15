@@ -232,6 +232,7 @@ machine=${MACHINE,,}
 
 cd_vrfy "${MODULES_DIR}/tasks/$machine"
 
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_GRID_TN}"
 cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_OROG_TN}"
 cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_SFC_CLIMO_TN}"
 cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_ICS_TN}"
