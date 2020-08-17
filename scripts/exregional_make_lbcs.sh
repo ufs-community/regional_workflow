@@ -49,8 +49,8 @@ hour zero).
 #
 #-----------------------------------------------------------------------
 #
-# Specify the set of valid argument names for this script/function.  Then 
-# process the arguments provided to this script/function (which should 
+# Specify the set of valid argument names for this script/function.  Then
+# process the arguments provided to this script/function (which should
 # consist of a set of name-value pairs of the form arg1="value1", etc).
 #
 #-----------------------------------------------------------------------
@@ -79,8 +79,8 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-extrn_mdl_files_dir="${CYCLE_DIR}/${EXTRN_MDL_NAME_LBCS}/LBCS"
-extrn_mdl_var_defns_fp="${extrn_mdl_files_dir}/${EXTRN_MDL_LBCS_VAR_DEFNS_FN}"
+extrn_mdl_staging_dir="${CYCLE_DIR}/${EXTRN_MDL_NAME_LBCS}/for_LBCS"
+extrn_mdl_var_defns_fp="${extrn_mdl_staging_dir}/${EXTRN_MDL_LBCS_VAR_DEFNS_FN}"
 . ${extrn_mdl_var_defns_fp}
 #
 #-----------------------------------------------------------------------
@@ -419,8 +419,8 @@ list file has not specified for this external model:
     ;;
   esac
 #
-# Get the starting date (year, month, and day together), month, day, and 
-# hour of the the external model forecast.  Then add the forecast hour 
+# Get the starting date (year, month, and day together), month, day, and
+# hour of the the external model forecast.  Then add the forecast hour
 # to it to get a date and time corresponding to the current forecast time.
 #
   yyyymmdd="${EXTRN_MDL_CDATE:0:8}"
@@ -430,7 +430,7 @@ list file has not specified for this external model:
 
   cdate_crnt_fhr=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours" "+%Y%m%d%H" )
 #
-# Get the month, day, and hour corresponding to the current forecast time 
+# Get the month, day, and hour corresponding to the current forecast time
 # of the the external model.
 #
   mm="${cdate_crnt_fhr:4:2}"
@@ -461,7 +461,7 @@ list file has not specified for this external model:
  'orog_dir_input_grid': '',
  'base_install_dir': ${CHGRES_DIR},
  'wgrib2_path': ${wgrib2_dir},
- 'data_dir_input_grid': ${extrn_mdl_files_dir},
+ 'data_dir_input_grid': ${extrn_mdl_staging_dir},
  'atm_files_input_grid': ${fn_atm_nemsio},
  'sfc_files_input_grid': ${fn_sfc_nemsio},
  'grib2_file_input_grid': \"${fn_grib2}\",
@@ -511,15 +511,15 @@ $settings"
 #
   ${APRUN} ${exec_fp} || \
     print_err_msg_exit "\
-Call to executable (exec_fp) to generate lateral boundary conditions (LBCs) 
+Call to executable (exec_fp) to generate lateral boundary conditions (LBCs)
 file for the FV3SAR for forecast hour fhr failed:
   exec_fp = \"${exec_fp}\"
   fhr = \"$fhr\"
-The external model from which the LBCs files are to be generated is:      
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"                         
-The external model files that are inputs to the executable (exec_fp) are 
-located in the following directory:                                      
-  extrn_mdl_files_dir = \"${extrn_mdl_files_dir}\""                      
+The external model from which the LBCs files are to be generated is:
+  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
+The external model files that are inputs to the executable (exec_fp) are
+located in the following directory:
+  extrn_mdl_staging_dir = \"${extrn_mdl_staging_dir}\""
 #
 # Move LBCs file for the current lateral boundary update time to the LBCs
 # work directory.  Note that we rename the file by including in its name
