@@ -345,7 +345,7 @@ predefined domain:
 
     JPgrid_WIDE_HALO_WIDTH=6
 
-    DT_ATMOS="300"
+    DT_ATMOS="40"
 
     LAYOUT_X="2"
     LAYOUT_Y="2"

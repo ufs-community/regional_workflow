@@ -229,6 +229,26 @@ Cannot create symlink because target does not exist:
   target = \"$target}\""
 fi
 
+# two files for drag_suite scheme
+# Symlink to orographic statistics fields file with "${CRES}_" and "halo0" stripped from name.
+target="${FIXsar}/${CRES}${DOT_OR_USCORE}oro_data_ls.tile${TILE_RGNL}.halo${NH0}.nc"
+symlink="oro_data_ls.nc"
+if [ -f "${target}" ]; then
+  ln_vrfy -sf ${relative_or_null} $target $symlink
+else
+  print_err_msg_exit "\
+Cannot create symlink because target does not exist:
+  target = \"$target}\""
+fi
+target="${FIXsar}/${CRES}${DOT_OR_USCORE}oro_data_ss.tile${TILE_RGNL}.halo${NH0}.nc"
+symlink="oro_data_ss.nc"
+if [ -f "${target}" ]; then
+  ln_vrfy -sf ${relative_or_null} $target $symlink
+else
+  print_err_msg_exit "\
+Cannot create symlink because target does not exist:
+  target = \"$target}\""
+fi
 #
 # Symlink to halo-4 orography file with "${CRES}_" stripped from name.
 #
@@ -383,6 +403,7 @@ if [ "${USE_CCPP}" = "TRUE" ]; then
   if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
     ln_vrfy -sf ${relative_or_null} $EXPTDIR/CCN_ACTIVATE.BIN ${CYCLE_DIR}
   fi

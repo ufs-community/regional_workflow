@@ -244,6 +244,8 @@ Creating links in the FIXsar directory to the grid files..."
     fns=( \
 "C*${DOT_OR_USCORE}oro_data.tile${TILE_RGNL}.halo${NH0}.nc" \
 "C*${DOT_OR_USCORE}oro_data.tile${TILE_RGNL}.halo${NH4}.nc" \
+"C*${DOT_OR_USCORE}oro_data_ss.tile${TILE_RGNL}.halo${NH0}.nc" \
+"C*${DOT_OR_USCORE}oro_data_ls.tile${TILE_RGNL}.halo${NH0}.nc" \
         )
     fps=( "${fns[@]/#/${OROG_DIR}/}" )
     run_task="${RUN_TASK_MAKE_OROG}"
