@@ -206,29 +206,6 @@ zero exit code."
 #
 #-----------------------------------------------------------------------
 #
-if [ -n "${PREDEF_GRID_NAME}" ]; then 
-
-  grid_name="${PREDEF_GRID_NAME}"
-
-else 
-
-  grid_name="${GRID_GEN_METHOD}"
-
-  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
-    stretch_str="S$( printf "%s" "${STRETCH_FAC}" | sed "s|\.|p|" )"
-    refine_str="RR${GFDLgrid_REFINE_RATIO}"
-    grid_name="${grid_name}_${CRES}_${stretch_str}_${refine_str}"
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
-    nx_str="NX$( printf "%s" "$NX" | sed "s|\.|p|" )"
-    ny_str="NY$( printf "%s" "$NY" | sed "s|\.|p|" )"
-    JPgrid_alpha_param_str="A"$( printf "%s" "${JPgrid_ALPHA_PARAM}" | \
-                                 sed "s|-|mns|" | sed "s|\.|p|" )
-    JPgrid_kappa_param_str="K"$( printf "%s" "${JPgrid_KAPPA_PARAM}" | \
-                                 sed "s|-|mns|" | sed "s|\.|p|" )
-    grid_name="${grid_name}_${nx_str}_${ny_str}_${JPgrid_alpha_param_str}_${JPgrid_kappa_param_str}"
-  fi
-
-fi
 
 mv_vrfy BGDAWP.GrbF${fhr} ${postprd_dir}/RRFS.t${cyc}z.bgdawp${fhr}.${tmmark}
 mv_vrfy BGRD3D.GrbF${fhr} ${postprd_dir}/RRFS.t${cyc}z.bgrd3d${fhr}.${tmmark}
