@@ -464,7 +464,7 @@ the forecast model directory sturcture to the experiment directory..."
 Copying the fixed file containing cloud condensation nuclei (CCN) data
 (needed by the Thompson microphysics parameterization) to the experiment
 directory..."
-    cp_vrfy "${FIXam}/CCN_ACTIVATE.BIN" "$EXPTDIR"
+    cp_vrfy "${FIXgsm}/CCN_ACTIVATE.BIN" "$EXPTDIR"
   fi
 
 fi
