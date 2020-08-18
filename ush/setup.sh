@@ -1521,6 +1521,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+if [ 0 = 1 ]; then
 if [ "${RUN_ENVIR}" = "nco" ]; then
 
   if [ "${EXTRN_MDL_NAME_ICS}" != "FV3GFS" ] && \
@@ -1541,6 +1542,7 @@ conditions and surface fields must be either \"FV3GFS\" or \"GSMGFS\":
   EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
   fi
 
+fi
 fi
 #
 #-----------------------------------------------------------------------
