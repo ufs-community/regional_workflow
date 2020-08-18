@@ -94,34 +94,25 @@ cd_vrfy $workdir
 #
 #-----------------------------------------------------------------------
 #
-# Set physics-suite-dependent variables that are needed in the FORTRAN
-# namelist file that the chgres executable will read in.
+# Set physics-suite-dependent variable mapping table needed in the FORTRAN
+# namelist file that the chgres_cube executable will read in.
 #
 #-----------------------------------------------------------------------
 #
-phys_suite=""
+varmap_file=""
 
 case "${CCPP_PHYS_SUITE}" in
 
-"FV3_GFS_2017_gfdlmp" | "FV3_GFS_2017_gfdlmp_regional")
-  phys_suite="GFS"
-  ;;
-"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" | "FV3_RRFS_v0" )
-  phys_suite="GSD"
-  ;;
-"FV3_CPT_v0" )
-  phys_suite="CPT"
-  ;;
+"FV3_GFS_2017_gfdlmp" | "FV3_GFS_2017_gfdlmp_regional" | "FV3_GFS_v16beta" | \
 "FV3_GFS_v15p2" )
-  phys_suite="v15p2"
+  varmap_file="GFSphys_var_map.txt"
   ;;
-"FV3_GFS_v16beta" )
-  phys_suite="v16beta"
+"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" |"FV3_RRFS_v0" )
+  varmap_file="GSDphys_var_map.txt"
   ;;
 *)
   print_err_msg_exit "\
-Physics-suite-dependent namelist variables have not yet been specified
-for this physics suite:
+A variable mapping table has not yet been defined for this physics suite:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
   ;;
 
@@ -242,7 +233,7 @@ case "${EXTRN_MDL_NAME_LBCS}" in
 
     external_model="FV3GFS"
 
-    input_type="gaussian"     # For FV3-GFS Gaussian grid in nemsio format.
+    input_type="gaussian_nemsio"     # For FV3-GFS Gaussian grid in nemsio format.
 
     tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
 #
@@ -413,6 +404,8 @@ settings="
  'halo_blend': $((10#${HALO_BLEND})),
  'input_type': ${input_type},
  'external_model': ${external_model},
+ 'tracers_input': ${tracers_input},
+ 'tracers': ${tracers},
 }
 "
 #
