@@ -728,8 +728,8 @@ case $MACHINE in
   ;;
 
 "JET")
-  FIXgsm=${FIXgsm:-"/lfs4/HFIP/gsd-fv3-hfip/FV3/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/lfs4/HFIP/gsd-fv3-hfip/FV3/fix/fix_orog"}
+  FIXgsm=${FIXgsm:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lfs1/HFIP/hwrf-data/git/fv3gfs/fix/fix_sfc_climo"}
   ;;
 
