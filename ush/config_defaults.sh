@@ -1204,4 +1204,14 @@ SKEB_TSCALE="21600" #Variable "skeb_tau" in input.nml
 SKEB_INT="3600" #Variable "skebint" in input.nml
 SKEB_VDOF="10"
 USE_ZMTNBLCK="false"
-
+#
+#-----------------------------------------------------------------------
+# 
+# HALO_BLEND:
+# Number of rows into the computational domain that should be blended 
+# with the LBCs.
+#
+#-----------------------------------------------------------------------
+#
+HALO_BLEND=10
+#
