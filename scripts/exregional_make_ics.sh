@@ -75,12 +75,12 @@ print_input_args valid_args
 #                                                                        
 # Source the file containing definitions of variables associated with the 
 # external model for ICs.
-#                                                                        
-#----------------------------------------------------------------------- 
-#                                                                        
-extrn_mdl_staging_dir="${CYCLE_DIR}/${EXTRN_MDL_NAME_ICS}/ICS"             
-extrn_mdl_var_defns_fp="${extrn_mdl_staging_dir}/${EXTRN_MDL_ICS_VAR_DEFNS_FN}"      
-. ${extrn_mdl_var_defns_fp}                                                   
+#
+#-----------------------------------------------------------------------
+#
+extrn_mdl_staging_dir="${CYCLE_DIR}/${EXTRN_MDL_NAME_ICS}/for_ICS"
+extrn_mdl_var_defns_fp="${extrn_mdl_staging_dir}/${EXTRN_MDL_ICS_VAR_DEFNS_FN}"
+. ${extrn_mdl_var_defns_fp}
 #
 #-----------------------------------------------------------------------
 #
@@ -99,21 +99,29 @@ cd_vrfy $workdir
 #
 #-----------------------------------------------------------------------
 #
-varmap_file=""
+phys_suite=""
 
 case "${CCPP_PHYS_SUITE}" in
 
-"FV3_GFS_2017_gfdlmp" | "FV3_GFS_2017_gfdlmp_regional" | "FV3_GFS_v16beta" | \
-"FV3_GFS_v15p2" )
-  varmap_file="GFSphys_var_map.txt"
+"FV3_GFS_2017_gfdlmp" | "FV3_GFS_2017_gfdlmp_regional" )
+  phys_suite="GFS"
   ;;
 "FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" |"FV3_RRFS_v0" )
-  varmap_file="GSDphys_var_map.txt"
+  phys_suite="GSD"
+  ;;
+"FV3_CPT_v0")
+  phys_suite="CPT"
+  ;;
+"FV3_GFS_v15p2")
+  phys_suite="v15p2"
+  ;;
+"FV3_GFS_v16beta")
+  phys_suite="v16beta"
   ;;
 *)
   print_err_msg_exit "\
-Physics-suite-dependent namelist variables have not yet been specified in a
-varmap table for this physics suite:
+Physics-suite-dependent namelist variables have not yet been specified
+for this physics suite:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
   ;;
 
@@ -145,6 +153,26 @@ esac
 # eliminate this variable in chgres and replace with with 2 or 3 others
 # (e.g. extrn_mdl, extrn_mdl_file_format, etc).
 # 
+# tracers_input:
+# List of atmospheric tracers to read in from the external model file
+# containing these tracers.
+#
+# tracers:
+# Names to use in the output NetCDF file for the atmospheric tracers 
+# specified in tracers_input.  With the possible exception of GSD phys-
+# ics, the elements of this array should have a one-to-one correspond-
+# ence with the elements in tracers_input, e.g. if the third element of
+# tracers_input is the name of the O3 mixing ratio, then the third ele-
+# ment of tracers should be the name to use for the O3 mixing ratio in
+# the output file.  For GSD physics, three additional tracers -- ice, 
+# rain, and water number concentrations -- may be specified at the end
+# of tracers, and these will be calculated by chgres.
+#
+# internal_GSD:
+# Logical variable indicating whether or not to try to read in land sur-
+# face model (LSM) variables available in the HRRRX grib2 files created
+# after about 2019111500.
+#
 # nsoill_out:
 # The number of soil layers to include in the output NetCDF file.
 #
@@ -179,21 +207,6 @@ esac
 # subroutine read_input_atm_gfs_spectral_file), so that subroutine will
 # break if tracers_input(:) is not specified as above.
 #
-# Note that there are other fields too ["hgt" (surface height (togography?)),
-# pres (surface pressure), ugrd, vgrd, and tmp (temperature)] in the atmanl file, but those
-# are not considered tracers (they're categorized as dynamics variables,
-# I guess).
-#
-# Another note:  The way things are set up now, tracers_input(:) and
-# tracers(:) are assumed to have the same number of elements (just the
-# atmospheric tracer names in the input and output files may be differ-
-# ent).  There needs to be a check for this in the chgres_cube code!!
-# If there was a varmap table that specifies how to handle missing
-# fields, that would solve this problem.
-#
-# Also, it seems like the order of tracers in tracers_input(:) and
-# tracers(:) must match, e.g. if ozone mixing ratio is 3rd in
-# tracers_input(:), it must also be 3rd in tracers(:).  How can this be check
 # Note that there are other fields too ["hgt" (surface height (togography?)),
 # pres (surface pressure), ugrd, vgrd, and tmp (temperature)] in the atmanl file, but those
 # are not considered tracers (they're categorized as dynamics variables,
