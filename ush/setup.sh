@@ -459,6 +459,9 @@ case "${EMC_GRID_NAME}" in
   "conus_c96")
     PREDEF_GRID_NAME="EMC_CONUS_coarse"
     ;;
+  "GSD_HRRR3km")
+    PREDEF_GRID_NAME="${EMC_GRID_NAME}"
+    ;;
   "conus_orig"|"guam"|"hi"|"pr")
     print_err_msg_exit "\
 A predefined grid (PREDEF_GRID_NAME) has not yet been defined for this

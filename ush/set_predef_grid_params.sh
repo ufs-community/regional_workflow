@@ -490,16 +490,16 @@ predefined domain:
     JPgrid_DELX="3000.0"
     JPgrid_DELY="3000.0"
 
-    JPgrid_NX=1734
+    JPgrid_NX=1728
     JPgrid_NY=1008
 
     JPgrid_WIDE_HALO_WIDTH=6
 
     DT_ATMOS="40"
 
-    LAYOUT_X="18"
-    LAYOUT_Y="12"
-    BLOCKSIZE="46"
+    LAYOUT_X="32"
+    LAYOUT_Y="16"
+    BLOCKSIZE="27"
 
     if [ "$QUILTING" = "TRUE" ]; then
       WRTCMP_write_groups="1"
