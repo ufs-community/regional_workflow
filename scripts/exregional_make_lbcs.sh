@@ -220,7 +220,6 @@ fn_grib2=""
 input_type=""
 tracers_input="\"\""
 tracers="\"\""
-geogrid_file_input_grid="\"\""
 
 case "${EXTRN_MDL_NAME_LBCS}" in
 
@@ -230,6 +229,9 @@ case "${EXTRN_MDL_NAME_LBCS}" in
   external_model="GSMGFS"
 
   input_type="gfs_gaussian_nemsio" # For spectral GFS Gaussian grid in nemsio format.
+
+  tracers_input="[\"spfh\",\"clwmr\",\"o3mr\"]"
+  tracers="[\"sphum\",\"liq_wat\",\"o3mr\"]"
 
   ;;
 
@@ -406,14 +408,11 @@ settings="
  'cycle_day': $((10#${dd})),
  'cycle_hour': $((10#${hh})),
  'convert_atm': True,
- 'convert_sfc': False,
- 'convert_nst': False,
  'regional': 2,
  'halo_bndy': $((10#${NH4})),
  'halo_blend': $((10#${HALO_BLEND})),
  'input_type': ${input_type},
  'external_model': ${external_model},
- 'geogrid_file_input_grid': ${geogrid_file_input_grid},
 }
 "
 #
