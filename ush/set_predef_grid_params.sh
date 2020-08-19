@@ -90,7 +90,7 @@ predefined domain:
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
   GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     ESGgrid_LON_CTR=-62.0
     ESGgrid_LAT_CTR=22.0
@@ -142,7 +142,7 @@ predefined domain:
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
   GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     ESGgrid_LON_CTR=-62.0
     ESGgrid_LAT_CTR=22.0
@@ -194,7 +194,7 @@ predefined domain:
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
   GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     ESGgrid_LON_CTR=-62.0
     ESGgrid_LAT_CTR=22.0
@@ -280,7 +280,7 @@ predefined domain:
       WRTCMP_dlat="0.121833"
     fi
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     ESGgrid_LON_CTR=-106.0
     ESGgrid_LAT_CTR=54.0
@@ -332,7 +332,7 @@ predefined domain:
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
   GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     ESGgrid_LON_CTR=-97.5
     ESGgrid_LAT_CTR=38.5
@@ -386,7 +386,7 @@ predefined domain:
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
   GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     ESGgrid_LON_CTR=-97.5
     ESGgrid_LAT_CTR=38.5
@@ -482,7 +482,7 @@ predefined domain:
       WRTCMP_dy="3000.0"
     fi
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     ESGgrid_LON_CTR=-97.5
     ESGgrid_LAT_CTR=38.5
@@ -571,7 +571,7 @@ predefined domain:
       WRTCMP_dlat="0.02"
     fi
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     ESGgrid_LON_CTR=-97.5
     ESGgrid_LAT_CTR=38.5
@@ -641,7 +641,7 @@ predefined domain:
       WRTCMP_dlat="0.24"
     fi
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     print_err_msg_exit "\
 The parameters for a \"${GRID_GEN_METHOD}\" type grid have not yet been specified for this
@@ -731,7 +731,7 @@ predefined domain:
     WRTCMP_write_tasks_per_group="24"
     BLOCKSIZE=32
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
@@ -854,7 +854,7 @@ predefined domain:
       WRTCMP_dy="3000.0"
     fi
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     ESGgrid_LON_CTR=-161.5
     ESGgrid_LAT_CTR=63.0
@@ -908,7 +908,7 @@ predefined domain:
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
   GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\"
 "
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     ESGgrid_LON_CTR=-163.5
     ESGgrid_LAT_CTR=62.8
@@ -963,7 +963,7 @@ predefined domain:
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
   GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/hi/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
@@ -1018,7 +1018,7 @@ predefined domain:
       WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
       WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
       WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-#Write component grid should be close to the JPgrid values unless you are doing something weird
+#Write component grid should be close to the ESGgrid values unless you are doing something weird
       WRTCMP_nx="420"
       WRTCMP_ny="348"
 
@@ -1050,7 +1050,7 @@ predefined domain:
   GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\"
 "
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/pr/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
@@ -1136,7 +1136,7 @@ predefined domain:
   GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\"
 "
 
-  elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/guam/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
