@@ -6,7 +6,7 @@ nco_GSD_HRRR3km_HRRRX_RAPX
 nco_conus
 nco_conus_c96
 nco_ensemble
-new_JPgrid
+new_ESGgrid
 regional_001
 regional_002
 regional_003
