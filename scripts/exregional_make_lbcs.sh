@@ -49,8 +49,8 @@ hour zero).
 #
 #-----------------------------------------------------------------------
 #
-# Specify the set of valid argument names for this script/function.  Then 
-# process the arguments provided to this script/function (which should 
+# Specify the set of valid argument names for this script/function.  Then
+# process the arguments provided to this script/function (which should
 # consist of a set of name-value pairs of the form arg1="value1", etc).
 #
 #-----------------------------------------------------------------------
@@ -126,7 +126,7 @@ esac
 # subset of these all variables are set (since some may be irrelevant).
 #
 # external_model:
-# Name of the external model from which we are obtaining the fields 
+# Name of the external model from which we are obtaining the fields
 # needed to generate the LBCs.
 #
 # fn_atm_nemsio:
@@ -140,7 +140,7 @@ esac
 # input_type:
 # The "type" of input being provided to chgres.  This contains a combi-
 # nation of information on the external model, external model file for-
-# mat, and maybe other parameters.  For clarity, it would be best to 
+# mat, and maybe other parameters.  For clarity, it would be best to
 # eliminate this variable in chgres and replace with with 2 or 3 others
 # (e.g. extrn_mdl, extrn_mdl_file_format, etc).
 #
@@ -301,7 +301,7 @@ exec_fn="chgres_cube.exe"
 exec_fp="$EXECDIR/${exec_fn}"
 if [ ! -f "${exec_fp}" ]; then
   print_err_msg_exit "\
-The executable (exec_fp) for generating initial conditions on the FV3SAR
+The executable (exec_fp) for generating initial conditions on the FV3-LAM
 native grid does not exist:
   exec_fp = \"${exec_fp}\"
 Please ensure that you've built this executable."
@@ -310,7 +310,7 @@ fi
 #-----------------------------------------------------------------------
 #
 # Loop through the LBC update times and run chgres for each such time to
-# obtain an LBC file for each that can be used as input to the FV3SAR.
+# obtain an LBC file for each that can be used as input to the FV3-LAM.
 #
 #-----------------------------------------------------------------------
 #
@@ -349,8 +349,8 @@ list file has not specified for this external model:
     ;;
   esac
 #
-# Get the starting date (year, month, and day together), month, day, and 
-# hour of the the external model forecast.  Then add the forecast hour 
+# Get the starting date (year, month, and day together), month, day, and
+# hour of the the external model forecast.  Then add the forecast hour
 # to it to get a date and time corresponding to the current forecast time.
 #
   yyyymmdd="${EXTRN_MDL_CDATE:0:8}"
@@ -360,7 +360,7 @@ list file has not specified for this external model:
 
   cdate_crnt_fhr=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours" "+%Y%m%d%H" )
 #
-# Get the month, day, and hour corresponding to the current forecast time 
+# Get the month, day, and hour corresponding to the current forecast time
 # of the the external model.
 #
   mm="${cdate_crnt_fhr:4:2}"
@@ -407,11 +407,11 @@ settings="
 #
 # Call the python script to create the namelist file.
 #
-nml_fn="fort.41"
-${USHDIR}/set_namelist.py -q -u "$settings" -o ${nml_fn} || \
-  print_err_msg_exit "\
-Call to python script set_namelist.py to set the variables in the namelist 
-file read in by the ${exec_fn} executable failed.  Parameters passed to 
+  nml_fn="fort.41"
+  ${USHDIR}/set_namelist.py -q -u "$settings" -o ${nml_fn} || \
+    print_err_msg_exit "\
+Call to python script set_namelist.py to set the variables in the namelist
+file read in by the ${exec_fn} executable failed.  Parameters passed to
 this script are:
   Name of output namelist file:
     nml_fn = \"${nml_fn}\"
@@ -433,25 +433,25 @@ $settings"
 # of chgres_cube is nonzero.
 # A similar thing happens in the forecast task.
 #
-${APRUN} ${exec_fp} || \
-  print_err_msg_exit "\
-Call to executable (exec_fp) to generate surface and initial conditions 
-(LBCs) files for the FV3SAR failed:
+  ${APRUN} ${exec_fp} || \
+    print_err_msg_exit "\
+Call to executable (exec_fp) to generate lateral boundary conditions (LBCs)
+file for the FV3-LAM for forecast hour fhr failed:
   exec_fp = \"${exec_fp}\"
   fhr = \"$fhr\"
-The external model from which the LBCs files are to be generated is:      
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"                         
-The external model files that are inputs to the executable (exec_fp) are 
-located in the following directory:                                      
-  extrn_mdl_staging_dir = \"${extrn_mdl_staging_dir}\""                      
+The external model from which the LBCs files are to be generated is:
+  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
+The external model files that are inputs to the executable (exec_fp) are
+located in the following directory:
+  extrn_mdl_staging_dir = \"${extrn_mdl_staging_dir}\""
 #
 # Move LBCs file for the current lateral boundary update time to the LBCs
 # work directory.  Note that we rename the file by including in its name
-# the forecast hour of the FV3SAR (which is not necessarily the same as
+# the forecast hour of the FV3-LAM (which is not necessarily the same as
 # that of the external model since their start times may be offset).
 #
-  fcst_hhh_FV3SAR=$( printf "%03d" "${LBC_SPEC_FCST_HRS[$i]}" )
-  mv_vrfy gfs.bndy.nc ${lbcs_dir}/gfs_bndy.tile7.${fcst_hhh_FV3SAR}.nc
+  fcst_hhh_FV3LAM=$( printf "%03d" "${LBC_SPEC_FCST_HRS[$i]}" )
+  mv_vrfy gfs_bndy.nc ${lbcs_dir}/gfs_bndy.tile7.${fcst_hhh_FV3LAM}.nc
 
 done
 #

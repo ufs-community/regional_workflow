@@ -42,15 +42,15 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the ex-script for the task that generates initial condition 
-(IC), surface, and zeroth hour lateral boundary condition (LBC0) files 
+This is the ex-script for the task that generates initial condition
+(IC), surface, and zeroth hour lateral boundary condition (LBC0) files
 for FV3 (in NetCDF format).
 ========================================================================"
 #
 #-----------------------------------------------------------------------
 #
-# Specify the set of valid argument names for this script/function.  Then 
-# process the arguments provided to this script/function (which should 
+# Specify the set of valid argument names for this script/function.  Then
+# process the arguments provided to this script/function (which should
 # consist of a set of name-value pairs of the form arg1="value1", etc).
 #
 #-----------------------------------------------------------------------
@@ -70,10 +70,10 @@ process_args valid_args "$@"
 #-----------------------------------------------------------------------
 #
 print_input_args valid_args
-#                                                                        
-#----------------------------------------------------------------------- 
-#                                                                        
-# Source the file containing definitions of variables associated with the 
+#
+#-----------------------------------------------------------------------
+#
+# Source the file containing definitions of variables associated with the
 # external model for ICs.
 #
 #-----------------------------------------------------------------------
@@ -117,7 +117,7 @@ A variable mapping table has not yet been defined for this physics suite:
   ;;
 
 esac
-
+#
 #-----------------------------------------------------------------------
 #
 # Set external-model-dependent variables that are needed in the FORTRAN
@@ -126,7 +126,7 @@ esac
 # subset of these all variables are set (since some may be irrelevant).
 #
 # external_model:
-# Name of the external model from which we are obtaining the fields 
+# Name of the external model from which we are obtaining the fields
 # needed to generate the ICs.
 #
 # fn_atm_nemsio:
@@ -140,22 +140,22 @@ esac
 # input_type:
 # The "type" of input being provided to chgres.  This contains a combi-
 # nation of information on the external model, external model file for-
-# mat, and maybe other parameters.  For clarity, it would be best to 
+# mat, and maybe other parameters.  For clarity, it would be best to
 # eliminate this variable in chgres and replace with with 2 or 3 others
 # (e.g. extrn_mdl, extrn_mdl_file_format, etc).
-# 
+#
 # tracers_input:
 # List of atmospheric tracers to read in from the external model file
 # containing these tracers.
 #
 # tracers:
-# Names to use in the output NetCDF file for the atmospheric tracers 
+# Names to use in the output NetCDF file for the atmospheric tracers
 # specified in tracers_input.  With the possible exception of GSD phys-
 # ics, the elements of this array should have a one-to-one correspond-
 # ence with the elements in tracers_input, e.g. if the third element of
 # tracers_input is the name of the O3 mixing ratio, then the third ele-
 # ment of tracers should be the name to use for the O3 mixing ratio in
-# the output file.  For GSD physics, three additional tracers -- ice, 
+# the output file.  For GSD physics, three additional tracers -- ice,
 # rain, and water number concentrations -- may be specified at the end
 # of tracers, and these will be calculated by chgres.
 #
@@ -183,7 +183,7 @@ esac
 #
 # tg3_from_soil:
 # Logical variable indicating whether or not to set the tg3 soil tempe-  # Needs to be verified.
-# rature field to the temperature of the deepest soil layer. 
+# rature field to the temperature of the deepest soil layer.
 #
 #-----------------------------------------------------------------------
 #
@@ -354,7 +354,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
 # These geogrid files need to be moved to more permanent locations.
 #
   if [ "${MACHINE}" = "HERA" ]; then
-    geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-SAR/geo_em.d01.nc_HRRRX"
+    geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-LAM/geo_em.d01.nc_HRRRX"
   elif [ "${MACHINE}" = "JET" ]; then
     geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
   fi
@@ -397,7 +397,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
 # These geogrid files need to be moved to more permanent locations.
 #
   if [ "${MACHINE}" = "HERA" ]; then
-    geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-SAR/geo_em.d01.nc_RAPX"
+    geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-LAM/geo_em.d01.nc_RAPX"
   elif [ "${MACHINE}" = "JET" ]; then
     geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
   fi
@@ -414,7 +414,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
 
 *)
   print_err_msg_exit "\
-External-model-dependent namelist variables have not yet been specified 
+External-model-dependent namelist variables have not yet been specified
 for this external model:
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\""
   ;;
@@ -438,14 +438,14 @@ hh="${EXTRN_MDL_CDATE:8:2}"
 #-----------------------------------------------------------------------
 #
 exec_fn="chgres_cube.exe"
-exec_fp="$EXECDIR/${exec_fn}"                                            
-if [ ! -f "${exec_fp}" ]; then                                           
-  print_err_msg_exit "\                                                  
+exec_fp="$EXECDIR/${exec_fn}"
+if [ ! -f "${exec_fp}" ]; then
+  print_err_msg_exit "\
 The executable (exec_fp) for generating initial conditions on the FV3SAR
-native grid does not exist:                  
-  exec_fp = \"${exec_fp}\"                                               
-Please ensure that you've built this executable."                        
-fi                                                                       
+native grid does not exist:
+  exec_fp = \"${exec_fp}\"
+Please ensure that you've built this executable."
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -506,8 +506,8 @@ settings="
 nml_fn="fort.41"
 ${USHDIR}/set_namelist.py -q -u "$settings" -o ${nml_fn} || \
   print_err_msg_exit "\
-Call to python script set_namelist.py to set the variables in the namelist 
-file read in by the ${exec_fn} executable failed.  Parameters passed to 
+Call to python script set_namelist.py to set the variables in the namelist
+file read in by the ${exec_fn} executable failed.  Parameters passed to
 this script are:
   Name of output namelist file:
     nml_fn = \"${nml_fn}\"
@@ -525,14 +525,14 @@ $settings"
 # Often when the chgres_cube.exe run fails, it still returns a zero re-
 # turn code, so the failure isn't picked up the the logical OR (||) be-
 # low.  That should be fixed.  This might be due to the APRUN command -
-# maybe that is returning a zero exit code even though the exit code 
+# maybe that is returning a zero exit code even though the exit code
 # of chgres_cube is nonzero.
 # A similar thing happens in the forecast task.
 #
 ${APRUN} ${exec_fp} || \
   print_err_msg_exit "\
-Call to executable (exec_fp) to generate surface and initial conditions 
-(ICs) files for the FV3SAR failed:
+Call to executable (exec_fp) to generate surface and initial conditions
+(ICs) files for the FV3-LAM failed:
   exec_fp = \"${exec_fp}\"
 The external model from which the ICs files are to be generated is:
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
@@ -543,7 +543,7 @@ located in the following directory:
 #-----------------------------------------------------------------------
 #
 # Move initial condition, surface, control, and 0-th hour lateral bound-
-# ary files to ICs_BCs directory. 
+# ary files to ICs_BCs directory.
 #
 #-----------------------------------------------------------------------
 #
