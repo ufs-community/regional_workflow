@@ -509,7 +509,6 @@ predefined domain:
       WRTCMP_cen_lat="${JPgrid_LAT_CTR}"
       WRTCMP_stdlat1="${JPgrid_LAT_CTR}"
       WRTCMP_stdlat2="${JPgrid_LAT_CTR}"
-#      WRTCMP_nx="1738"
       WRTCMP_nx="1726"
       WRTCMP_ny="974"
       WRTCMP_lon_lwr_left="-122.21414225"

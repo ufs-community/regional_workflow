@@ -1516,37 +1516,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If the run environment is "nco", the external model for both the ICs
-# and the LBCs should be either the FV3GFS or the GSMGFS.
-#
-#-----------------------------------------------------------------------
-#
-if [ 0 = 1 ]; then
-if [ "${RUN_ENVIR}" = "nco" ]; then
-
-  if [ "${EXTRN_MDL_NAME_ICS}" != "FV3GFS" ] && \
-     [ "${EXTRN_MDL_NAME_ICS}" != "GSMGFS" ]; then
-    print_err_msg_exit "\
-When RUN_ENVIR set to \"nco\", the external model used for the initial
-conditions and surface fields must be either \"FV3GFS\" or \"GSMGFS\":
-  RUN_ENVIR = \"${RUN_ENVIR}\"
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\""
-  fi
-
-  if [ "${EXTRN_MDL_NAME_LBCS}" != "FV3GFS" ] && \
-     [ "${EXTRN_MDL_NAME_LBCS}" != "GSMGFS" ]; then
-    print_err_msg_exit "\
-When RUN_ENVIR set to \"nco\", the external model used for the initial
-conditions and surface fields must be either \"FV3GFS\" or \"GSMGFS\":
-  RUN_ENVIR = \"${RUN_ENVIR}\"
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
-  fi
-
-fi
-fi
-#
-#-----------------------------------------------------------------------
-#
 # Set cycle-independent parameters associated with the external models
 # from which we will obtain the ICs and LBCs.
 #
