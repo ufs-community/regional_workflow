@@ -254,11 +254,7 @@ case "${EXTRN_MDL_NAME_LBCS}" in
          [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
       tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
-         if [ "${MACHINE}" = "HERA" ]; then
-           thomp_mp_climo_file="/scratch1/BMC/gsd-fv3-dev/Judy.K.Henderson/test/gw_ccpp_v16b/sorc/aeroconv.fd/INPUT/QNWFA_QNIFA_SIGMA_MONTHLY.dat.nc"
-         elif [ "${MACHINE}" = "JET" ]; then
-           thomp_mp_climo_file=""
-         fi
+      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
     else
       print_err_msg_exit "\
       The chosen CCPP physics suite is unsupported as this time:
