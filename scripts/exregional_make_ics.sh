@@ -243,7 +243,7 @@ minmax_vgfrc_from_climo=""
 lai_from_climo=""
 tg3_from_soil=""
 convert_nst=""
-
+thomp_mp_climo_file=""
 
 case "${EXTRN_MDL_NAME_ICS}" in
 
@@ -285,33 +285,34 @@ case "${EXTRN_MDL_NAME_ICS}" in
     tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
 
 #
-# If CCPP is being used, then the list of atmospheric tracers to include
-# in the output file depends on the physics suite.  Hopefully, this me-
-# thod of specifying output tracers will be replaced with a variable
-# table (which should be specific to each combination of external model,
-# external model file type, and physics suite).
+# The list of atmospheric tracers to include in the output file depends 
+# on the physics suite.  Hopefully, this method of specifying output tracers
+# will be replaced with a variable table (which should be specific to each
+# combination of external model, external model file type, and physics suite).
 #
-    if [ "${USE_CCPP}" = "TRUE" ]; then
-      if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-        tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
-      elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-           [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-           [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
-           [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-# For GSD physics, add three additional tracers (the ice, rain and water
-# number concentrations) that are required for Thompson microphysics.
-        tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\",\"ice_nc\",\"rain_nc\",\"water_nc\"]"
-      fi
-#
-# If CCPP is not being used, the only physics suite that can be used is
-# GFS.
-#
-    else
+    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
       tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
+      nsoil_out="4"
+    elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+      tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
+      nsoill_out="9"
+
+         if [ "${MACHINE}" = "HERA" ]; then
+           thomp_mp_climo_file="/scratch1/BMC/gsd-fv3-dev/Judy.K.Henderson/test/gw_ccpp_v16b/sorc/aeroconv.fd/INPUT/QNWFA_QNIFA_SIGMA_MONTHLY.dat.nc"
+         elif [ "${MACHINE}" = "JET" ]; then
+           thomp_mp_climo_file=""
+         fi
+    else
+      print_err_msg_exit "\
+      The chosen CCPP physics suite is unsupported as this time:
+      CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
     fi
 
   elif [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
@@ -323,8 +324,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
     convert_nst=False
 
   fi
-
-  nsoill_out="4"
+  
   vgtyp_from_climo=True
   sotyp_from_climo=True
   vgfrc_from_climo=True
@@ -502,6 +502,7 @@ settings="
  'minmax_vgfrc_from_climo': ${minmax_vgfrc_from_climo},
  'lai_from_climo': ${lai_from_climo},
  'tg3_from_soil': ${tg3_from_soil},
+ 'thomp_mp_climo_file': ${thomp_mp_climo_file},
 }
 "
 #
