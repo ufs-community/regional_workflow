@@ -182,6 +182,7 @@ function source_util_funcs() {
 
   . ${scrfunc_dir}/get_fcst_model_info.sh
   . ${scrfunc_dir}/get_fcst_model_name.sh
+  . ${scrfunc_dir}/get_platform_info.sh
   . ${scrfunc_dir}/setup_externals.sh
 
 }

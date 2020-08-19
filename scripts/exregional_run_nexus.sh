@@ -71,7 +71,23 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
+# Set number of OpenMP threads
 #
+#-----------------------------------------------------------------------
+#
+export NUM_OMP_THREADS=1
+#
+#-----------------------------------------------------------------------
+#
+# Retrieve platform's parallel application launcher command.
+#
+#-----------------------------------------------------------------------
+#
+local PLAUNCH
+
+get_platform_info \
+    num_threads="${NUM_OMP_THREADS}" \
+    varname_run_cmd="PLAUNCH"
 #
 #-----------------------------------------------------------------------
 #
@@ -164,7 +180,7 @@ fi
 #
 # Execute NEXUS
 #
-${EXECDIR}/nexus -c NEXUS_Config.rc -r grid_spec.nc || \
+${PLAUNCH} ${EXECDIR}/nexus -c NEXUS_Config.rc -r grid_spec.nc || \
 print_err_msg_exit "\
 Call to execute nexus standalone for the FV3SAR failed
 "

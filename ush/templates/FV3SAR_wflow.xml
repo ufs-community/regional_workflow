@@ -64,7 +64,7 @@ Task compute resources
 <!ENTITY PROC_MAKE_LBC1_TO_LBCN    "4:ppn=12">
 <!ENTITY NPROCS_MAKE_LBC1_TO_LBCN  "48">
 
-<!ENTITY PROC_RUN_NEXUS            "1:ppn=1">
+<!ENTITY PROC_RUN_NEXUS            "1:ppn={{ ncores_per_node }}">
 
 <!ENTITY PROC_RUN_FCST             "{{ proc_run_fcst }}">
 <!ENTITY NPROCS_RUN_FCST           "{{ nprocs_run_fcst }}">
