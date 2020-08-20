@@ -162,13 +162,13 @@ for this machine and external model combination:
   "NAM")
     case $MACHINE in
     "HERA")
-      EXTRN_MDL_FILES_SYSBASEDIR_ICS="/define/path/to/NAM/files/here"
+      EXTRN_MDL_SYSBASEDIR_ICS=""
       ;;
     "JET")
-      EXTRN_MDL_FILES_SYSBASEDIR_ICS="/define/path/to/NAM/files/here"
+      EXTRN_MDL_SYSBASEDIR_ICS=""
       ;;
     "CHEYENNE")
-      EXTRN_MDL_FILES_SYSBASEDIR_ICS="/define/path/to/NAM/files/here"
+      EXTRN_MDL_SYSBASEDIR_ICS=""
       ;;
     *)
       print_err_msg_exit "\
@@ -351,13 +351,13 @@ this machine and external model combination:
 
     case $MACHINE in
     "HERA")
-      EXTRN_MDL_FILES_SYSBASEDIR_LBCS="/define/path/to/NAM/files/here"
+      EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;;
     "JET")
-      EXTRN_MDL_FILES_SYSBASEDIR_LBCS="/define/path/to/NAM/files/here"
+      EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;;
     "CHEYENNE")
-      EXTRN_MDL_FILES_SYSBASEDIR_LBCS="/define/path/to/NAM/files/here"
+      EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;; 
     esac
     ;;
