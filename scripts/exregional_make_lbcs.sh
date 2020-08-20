@@ -257,7 +257,7 @@ case "${EXTRN_MDL_NAME_LBCS}" in
       thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
     else
       print_err_msg_exit "\
-      The chosen CCPP physics suite is unsupported as this time:
+      The chosen CCPP physics suite is unsupported at this time:
       CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
     fi
 
