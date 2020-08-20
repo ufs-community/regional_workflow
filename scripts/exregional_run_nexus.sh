@@ -156,7 +156,6 @@ cp_vrfy ${EXECDIR}/../sorc/arl_nexus/utils/python/nexus_root_parser.py .
 #----------------------------------------------------------------------
 # Get all the files needed (TEMPORARILY JUST COPY FROM THE DIRECTORY)
 mkdir_vrfy -p ${workdir}/inputs
-mkdir_vrfy -p ${workdir}/output
 if [ ${NEI2016} == "TRUE" ]; then #NEI2016
     cp_vrfy ${EXECDIR}/../sorc/arl_nexus/utils/python/nexus_nei2016_linker.py .
     cp_vrfy ${EXECDIR}/../sorc/arl_nexus/utils/python/nexus_nei2016_control_tilefix.py .
