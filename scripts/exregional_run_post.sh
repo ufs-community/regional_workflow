@@ -207,8 +207,8 @@ zero exit code."
 #-----------------------------------------------------------------------
 #
 
-mv_vrfy BGDAWP.GrbF${fhr} ${postprd_dir}/RRFS.t${cyc}z.bgdawp${fhr}.${tmmark}
-mv_vrfy BGRD3D.GrbF${fhr} ${postprd_dir}/RRFS.t${cyc}z.bgrd3d${fhr}.${tmmark}
+mv_vrfy BGDAWP.GrbF${fhr} ${postprd_dir}/RRFS.t${cyc}z.bgdawp${fhr}.${tmmark}.grib2
+mv_vrfy BGRD3D.GrbF${fhr} ${postprd_dir}/RRFS.t${cyc}z.bgrd3d${fhr}.${tmmark}.grib2
 
 #Link output for transfer to Jet
 # Should the following be done only if on jet??
