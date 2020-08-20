@@ -27,7 +27,7 @@ RUN_ENVIR="nco"
 PREEXISTING_DIR_METHOD="rename"
 
 EMC_GRID_NAME="GSD_HRRR3km"
-GRID_GEN_METHOD="JPgrid"
+GRID_GEN_METHOD="ESGgrid"
 
 QUILTING="TRUE"
 USE_CCPP="TRUE"
@@ -100,14 +100,14 @@ RUN="${EXPT_SUBDIR}"
 envir="${EXPT_SUBDIR}"
 
 #On Hera:
-COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"
-STMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/stmp"
-PTMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"
+#COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"
+#STMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/stmp"
+#PTMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"
 
 #On Jet:
-#COMINgfs="/lfs1/HFIP/hwrf-data/hafs-input/COMGFS"
-#STMP=""
-#PTMP=""
+COMINgfs="/lfs1/HFIP/hwrf-data/hafs-input/COMGFS"
+STMP="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/NCO_dirs/stmp"
+PTMP="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"
 
 #
 # In NCO mode, the user must manually (e.g. after doing the build step)
@@ -124,3 +124,16 @@ PTMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"
 # where EMC_GRID_NAME has the value set above.
 #
 
+# If want to use user-staged external model files:
+
+#On Hera:
+#EXTRN_MDL_SOURCE_DIR_ICS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
+#EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
+#EXTRN_MDL_SOURCE_DIR_LBCS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
+#EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
+
+#On Jet:
+#EXTRN_MDL_SOURCE_DIR_ICS="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
+#EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
+#EXTRN_MDL_SOURCE_DIR_LBCS="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
+#EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
