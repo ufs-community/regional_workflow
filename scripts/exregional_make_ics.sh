@@ -466,9 +466,9 @@ fi
 settings="
 'config': {
  'fix_dir_input_grid': ${UFS_UTILS_DIR}/fix/fix_chgres,
- 'fix_dir_target_grid': ${FIXsar},
- 'mosaic_file_target_grid': ${FIXsar}/${CRES}${DOT_OR_USCORE}mosaic.halo$((10#${NH4})).nc,
- 'orog_dir_target_grid': ${FIXsar},
+ 'fix_dir_target_grid': ${FIXLAM},
+ 'mosaic_file_target_grid': ${FIXLAM}/${CRES}${DOT_OR_USCORE}mosaic.halo$((10#${NH4})).nc,
+ 'orog_dir_target_grid': ${FIXLAM},
  'orog_files_target_grid': ${CRES}${DOT_OR_USCORE}oro_data.tile${TILE_RGNL}.halo$((10#${NH4})).nc,
  'vcoord_file_target_grid': ${FIXam}/global_hyblev.l65.txt,
  'varmap_file': ${UFS_UTILS_DIR}/parm/varmap_tables/${varmap_file},
