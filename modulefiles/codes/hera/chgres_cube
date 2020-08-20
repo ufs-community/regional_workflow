@@ -1,0 +1,33 @@
+#%Module#####################################################
+## Build module for Hera
+#############################################################
+
+module load intel/18.0.5.274
+module load impi/2018.0.4
+
+module load netcdf_parallel/4.7.4
+module load esmf/8.0.0_ParallelNetCDF
+
+module use -a /scratch2/NCEPDEV/nwprod/NCEPLIBS/modulefiles
+module load w3nco
+module load nemsio
+module load bacio
+module load sp
+module load sfcio
+module load sigio
+
+export FCOMP=mpiifort
+#export FFLAGS="-O3 -fp-model precise -g -traceback -r8 -i4 -qopenmp -convert big_endian -assume byterecl"
+# for debugging
+export FFLAGS="-O0 -g -traceback -r8 -i4 -qopenmp -convert big_endian -check bounds -warn unused -assume byterecl"
+
+#
+# The following should be (but are not) set when the command
+#
+#   module load wgrib2/2.0.8
+#
+# is issued.  I put in a theia help ticket; hopefully this will be fixed.
+#
+export WGRIB2API_LIB="/apps/wgrib2/2.0.8/intel/18.0.3.222/lib/libwgrib2_api.a"
+export WGRIB2API_INC="/apps/wgrib2/2.0.8/intel/18.0.3.222/lib"
+export WGRIB2_LIB="/apps/wgrib2/2.0.8/intel/18.0.3.222/lib/libwgrib2.a"

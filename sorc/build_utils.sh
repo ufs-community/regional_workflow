@@ -69,6 +69,12 @@ echo " .... Chgres build not currently supported .... "
 #------------------------------------
 $Build_chgres_cube && {
 echo " .... Building chgres_cube .... "
+source $UFS_UTILS_CHGRES_GRIB2/machine-setup.sh
+if [ -r ../modulefiles/codes/${target}/chgres_cube ]; then
+  echo " .... Updating module file .... "
+ cp_vrfy ../modulefiles/codes/${target}/chgres_cube \
+         $UFS_UTILS_CHGRES_GRIB2/../modulefiles/chgres_cube.${target}
+fi
 cd $UFS_UTILS_CHGRES_GRIB2
 ./build_chgres_cube.sh > $logs_dir/build_chgres_cube.log 2>&1
 }
