@@ -281,6 +281,13 @@ case "${EXTRN_MDL_NAME_LBCS}" in
   ;;
 
 
+"NAM")
+
+  external_model="NAM"
+  input_type="grib2"
+
+  ;;
+
 *)
   print_err_msg_exit "\
 External-model-dependent namelist variables have not yet been specified

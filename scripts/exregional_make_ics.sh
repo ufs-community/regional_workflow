@@ -439,6 +439,38 @@ case "${EXTRN_MDL_NAME_ICS}" in
 
   ;;
 
+"NAM")
+
+  external_model="NAM"
+
+  fn_grib2="${EXTRN_MDL_FNS[0]}"
+  input_type="grib2"
+
+  internal_GSD=False
+
+  if [ "${USE_CCPP}" = "TRUE" ]; then
+    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+      numsoil_out="4"
+    elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+      numsoil_out="9"
+      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
+    fi
+  fi
+
+  replace_vgtyp=True
+  replace_sotyp=True
+  replace_vgfrc=True
+  tg3_from_soil=False
+  convert_nst=False
+
+  ;;
+
 *)
   print_err_msg_exit "\
 External-model-dependent namelist variables have not yet been specified
