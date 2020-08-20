@@ -255,23 +255,43 @@ case "${EXTRN_MDL_NAME_ICS}" in
   fn_atm_nemsio="${EXTRN_MDL_FNS[0]}"
   fn_sfc_nemsio="${EXTRN_MDL_FNS[1]}"
   input_type="gfs_gaussian_nemsio" # For spectral GFS Gaussian grid in nemsio format.
+  convert_nst=False
 
   tracers_input="[\"spfh\",\"clwmr\",\"o3mr\"]"
   tracers="[\"sphum\",\"liq_wat\",\"o3mr\"]"
+    
+    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+      nsoill_out="4"
+    elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+      nsoill_out="9"
+      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
+    else
+      print_err_msg_exit "\
+      The chosen CCPP physics suite is unsupported as this time:
+      CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
+    fi
 
-  nsoill_out="4"
   vgtyp_from_climo=True
   sotyp_from_climo=True
   vgfrc_from_climo=True
   minmax_vgfrc_from_climo=True
   lai_from_climo=True
   tg3_from_soil=False
-  convert_nst=False
 
   ;;
 
 
 "FV3GFS")
+
+  tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
+  tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
 
   if [ "${FV3GFS_FILE_FMT_ICS}" = "nemsio" ]; then
 
@@ -282,26 +302,16 @@ case "${EXTRN_MDL_NAME_ICS}" in
     input_type="gaussian_nemsio"     # For FV3-GFS Gaussian grid in nemsio format.
     convert_nst=True
 
-    tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
-
-#
-# The list of atmospheric tracers to include in the output file depends 
-# on the physics suite.  Hopefully, this method of specifying output tracers
-# will be replaced with a variable table (which should be specific to each
-# combination of external model, external model file type, and physics suite).
-#
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-      tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
-      nsoil_out="4"
+      nsoill_out="4"
     elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-      tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
       nsoill_out="9"
       thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
     else
@@ -317,6 +327,24 @@ case "${EXTRN_MDL_NAME_ICS}" in
     fn_grib2="${EXTRN_MDL_FNS[0]}"
     input_type="grib2"
     convert_nst=False
+   
+    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+      nsoill_out="4"
+    elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+      nsoill_out="9"
+      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
+    else
+      print_err_msg_exit "\
+      The chosen CCPP physics suite is unsupported as this time:
+      CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
+    fi
 
   fi
   
@@ -358,7 +386,6 @@ case "${EXTRN_MDL_NAME_ICS}" in
   elif [ "${MACHINE}" = "JET" ]; then
     geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
   fi
-
 
   #Note that vgfrc, shdmin/shdmax (minmax_vgfrc), and lai fields are only available in HRRRX 
   #files after mid-July 2019, and only so long as the record order didn't change afterward
