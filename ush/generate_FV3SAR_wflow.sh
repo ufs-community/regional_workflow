@@ -156,6 +156,7 @@ settings="
   'make_grid_tn': $MAKE_GRID_TN
   'make_orog_tn': $MAKE_OROG_TN
   'make_sfc_climo_tn': $MAKE_SFC_CLIMO_TN
+  'add_aqm_lbcs_tn': $ADD_AQM_LBCS_TN
   'get_extrn_ics_tn': $GET_EXTRN_ICS_TN
   'get_extrn_lbcs_tn': $GET_EXTRN_LBCS_TN
   'make_ics_tn': $MAKE_ICS_TN
@@ -166,6 +167,7 @@ settings="
   'run_task_make_grid': $RUN_TASK_MAKE_GRID
   'run_task_make_orog': $RUN_TASK_MAKE_OROG
   'run_task_make_sfc_climo': $RUN_TASK_MAKE_SFC_CLIMO
+  'run_task_add_aqm_lbcs': $RUN_TASK_ADD_AQM_LBCS
   'run_task_run_nexus': $RUN_TASK_RUN_NEXUS
 "
 

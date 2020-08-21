@@ -758,6 +758,15 @@ VERBOSE="TRUE"
 # to be run, they do so only once at the beginning of the workflow before
 # any cycles are run.  Definitions:
 #
+# RUN_TASK_ADD_AQM_LBCS:
+# Flag that determines whether the air quality LBCs generation
+# task is to be run. If this is set to "TRUE", air quality lateral
+# boundary conditions are retrieved and added to meteorological LBCs.
+# If it is set to "FALSE", air quality LBCs are not included.
+#
+# AQM_ARCHIVE:
+# The HPSS tar file used to generate ICs and LBCs for air quality.
+#
 # RUN_TASK_MAKE_GRID:
 # Flag that determines whether the grid file generation task is to be run.
 # If this is set to "TRUE", the grid generation task is run and new grid
@@ -790,6 +799,9 @@ VERBOSE="TRUE"
 # Same as GRID_DIR but for the the air quality emission generation task.
 #-----------------------------------------------------------------------
 #
+RUN_TASK_ADD_AQM_LBCS="FALSE"
+AQM_ARCHIVE="/NCEPDEV/emc-naqfc/5year/Barry.Baker/emissions/BOUNDARY_CONDITIONS/NAQFC_RRFS_CMAQ_C401.tar"
+
 RUN_TASK_MAKE_GRID="TRUE"
 GRID_DIR="/path/to/pregenerated/grid/files"
 
