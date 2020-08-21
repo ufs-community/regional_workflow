@@ -23,6 +23,8 @@
 #                            desired on the maps.
 #                          -File structure should be:
 #                            CARTOPY_DIR/shapefiles/natural_earth/cultural/*.shp
+#                          -More information regarding files needed to setup
+#                            display maps in Cartopy, see SRW App Users' Guide
 #
 #           		To create plots for forecast hour 24 from 5/7 00Z cycle:
 #                        python plot_allvars.py 2020050700 24 /path/to/expt_dirs
@@ -103,7 +105,7 @@ def compress_and_save(filename):
   plt.savefig(ram, format='png', bbox_inches='tight', dpi=150)
   ram.seek(0)
   im = Image.open(ram)
-  im2 = im.convert('RGB')#.convert('P', palette=Image.ADAPTIVE, colors=256)
+  im2 = im.convert('RGB')#.convert('P', palette=Image.ADAPTIVE)
   im2.save(filename, format='PNG')
 
 def cmap_t2m():
@@ -245,7 +247,7 @@ EXPT_SUBDIR = str(sys.argv[4])
 CARTOPY_DIR = str(sys.argv[5])
 
 # Define the location of the input file
-data1 = pygrib.open(EXPT_BASEDIR+'/'+EXPT_SUBDIR+'/'+ymdh+'/postprd/rrfs.t'+cyc+'z.bgdawp'+fhour+'.tm00.grib2')
+data1 = pygrib.open(EXPT_BASEDIR+'/'+EXPT_SUBDIR+'/'+ymdh+'/postprd/RRFS.t'+cyc+'z.bgdawp'+fhour+'.tm00.grib2')
 
 # Get the lats and lons
 grids = [data1]
@@ -550,7 +552,9 @@ def plot_all(dom):
   clear_plotables(ax,keep_ax_lst,fig)
 
   units = 'kts'
-  skip = 50
+  # Places a wind barb every ~90-100km, optimized for CONUS domain
+  skip = round(88.64*(dx/1000.)**-.97)
+  print('skipping every '+str(skip)+' grid points to plot')
   barblength = 4
 
   clevs = [5,10,15,20,25,30,35,40,45,50,55,60]
