@@ -459,6 +459,9 @@ case "${EMC_GRID_NAME}" in
   "conus_c96")
     PREDEF_GRID_NAME="EMC_CONUS_coarse"
     ;;
+  "GSD_HRRR3km")
+    PREDEF_GRID_NAME="${EMC_GRID_NAME}"
+    ;;
   "conus_orig"|"guam"|"hi"|"pr")
     print_err_msg_exit "\
 A predefined grid (PREDEF_GRID_NAME) has not yet been defined for this
@@ -1197,11 +1200,22 @@ NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "DO_ENSEMBLE" "valid_vals_DO_ENSEMBLE"
-
+#
+# Set DO_ENSEMBLE to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+DO_ENSEMBLE=${DO_ENSEMBLE^^}
+if [ "$DO_ENSEMBLE" = "TRUE" ] || \
+   [ "$DO_ENSEMBLE" = "YES" ]; then
+  DO_ENSEMBLE="TRUE"
+elif [ "$DO_ENSEMBLE" = "FALSE" ] || \
+     [ "$DO_ENSEMBLE" = "NO" ]; then
+  DO_ENSEMBLE="FALSE"
+fi
 NDIGITS_ENSMEM_NAMES="0"
 ENSMEM_NAMES=("")
 FV3_NML_ENSMEM_FPS=("")
-if [ "${DO_ENSEMBLE}" = TRUE ]; then
+if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
   NDIGITS_ENSMEM_NAMES="${#NUM_ENS_MEMBERS}"
 # Strip away all leading zeros in NUM_ENS_MEMBERS by converting it to a 
 # decimal (leading zeros will cause bash to interpret the number as an 
@@ -1481,35 +1495,6 @@ FILE_FMT_LBCS is not supported:
   FV3GFS_FILE_FMT_LBCS = \"${FV3GFS_FILE_FMT_LBCS}\""
   check_var_valid_value \
     "FV3GFS_FILE_FMT_LBCS" "valid_vals_FV3GFS_FILE_FMT_LBCS" "${err_msg}"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# If the run environment is "nco", the external model for both the ICs
-# and the LBCs should be either the FV3GFS or the GSMGFS.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${RUN_ENVIR}" = "nco" ]; then
-
-  if [ "${EXTRN_MDL_NAME_ICS}" != "FV3GFS" ] && \
-     [ "${EXTRN_MDL_NAME_ICS}" != "GSMGFS" ]; then
-    print_err_msg_exit "\
-When RUN_ENVIR set to \"nco\", the external model used for the initial
-conditions and surface fields must be either \"FV3GFS\" or \"GSMGFS\":
-  RUN_ENVIR = \"${RUN_ENVIR}\"
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\""
-  fi
-
-  if [ "${EXTRN_MDL_NAME_LBCS}" != "FV3GFS" ] && \
-     [ "${EXTRN_MDL_NAME_LBCS}" != "GSMGFS" ]; then
-    print_err_msg_exit "\
-When RUN_ENVIR set to \"nco\", the external model used for the initial
-conditions and surface fields must be either \"FV3GFS\" or \"GSMGFS\":
-  RUN_ENVIR = \"${RUN_ENVIR}\"
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
-  fi
-
 fi
 #
 #-----------------------------------------------------------------------

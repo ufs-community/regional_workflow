@@ -500,7 +500,7 @@ exec_fn="chgres_cube.exe"
 exec_fp="$EXECDIR/${exec_fn}"
 if [ ! -f "${exec_fp}" ]; then
   print_err_msg_exit "\
-The executable (exec_fp) for generating initial conditions on the FV3SAR
+The executable (exec_fp) for generating initial conditions on the FV3-LAM
 native grid does not exist:
   exec_fp = \"${exec_fp}\"
 Please ensure that you've built this executable."
@@ -511,10 +511,6 @@ fi
 # Build the FORTRAN namelist file that chgres_cube will read in.
 #
 #-----------------------------------------------------------------------
-#
-# fix_dir_target_grid="${BASEDIR}/JP_grid_HRRR_like_fix_files_chgres_cube"
-# base_install_dir="${SORCDIR}/chgres_cube.fd"
-
 #
 # Create a multiline variable that consists of a yaml-compliant string
 # specifying the values that the namelist variables need to be set to
