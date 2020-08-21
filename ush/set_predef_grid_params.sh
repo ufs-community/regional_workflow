@@ -76,7 +76,7 @@ case ${PREDEF_GRID_NAME} in
 #
 #-----------------------------------------------------------------------
 #
-# Emulation of the HAFS v0.A grid at 3 km.
+# RRFS emulation of the HAFS v0.A domain with ~3km cells.
 #
 #-----------------------------------------------------------------------
 #
@@ -128,7 +128,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-# Emulation of the HAFS v0.A grid at 13 km.
+# RRFS emulation of the HAFS v0.A domain with ~13km cells.
 #
 #-----------------------------------------------------------------------
 #
@@ -180,7 +180,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-# Emulation of the HAFS v0.A grid at 25 km.
+# RRFS emulation of the HAFS v0.A domain with ~25km cells.
 #
 #-----------------------------------------------------------------------
 #
@@ -232,7 +232,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-# Emulation of GSD's RAP grid.
+# RRFS emulation of RAP domain with ~13km cells.
 #
 #-----------------------------------------------------------------------
 #
@@ -318,7 +318,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-# GSD's CONUS domain with ~150km cells.
+# RRFS CONUS domain with ~25km cells.
 #
 #-----------------------------------------------------------------------
 #
@@ -372,7 +372,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-# GSD's CONUS domain with ~13km cells.
+# RRFS CONUS domain with ~13km cells.
 #
 #-----------------------------------------------------------------------
 #
@@ -426,7 +426,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-# GSD's CONUS domain with ~3km cells.
+# RRFS CONUS domain with ~3km cells.
 #
 #-----------------------------------------------------------------------
 #
