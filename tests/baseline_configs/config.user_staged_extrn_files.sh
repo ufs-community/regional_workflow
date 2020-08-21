@@ -27,7 +27,7 @@ RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 
 PREDEF_GRID_NAME="GSD_HRRR25km"
-GRID_GEN_METHOD="JPgrid"
+GRID_GEN_METHOD="ESGgrid"
 QUILTING="TRUE"
 USE_CCPP="TRUE"
 CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp"
@@ -46,8 +46,8 @@ RUN_TASK_MAKE_OROG="TRUE"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 
 EXTRN_MDL_SOURCE_DIR_ICS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
-EXTRN_MDL_FILES_ICS=( "gfs.t00z.atmanl.nemsio" "gfs.t00z.sfcanl.nemsio" )
+EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
 
 EXTRN_MDL_SOURCE_DIR_LBCS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
-EXTRN_MDL_FILES_LBCS=( "gfs.t00z.atmf003.nemsio" "gfs.t00z.atmf006.nemsio" )
+EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
 
