@@ -255,7 +255,7 @@ fi
 # two files for drag_suite scheme
 if [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
     # Symlink to orographic statistics fields file with "${CRES}_" and "halo0" stripped from name.
-    target="${FIXsar}/${CRES}${DOT_OR_USCORE}oro_data_ls.tile${TILE_RGNL}.halo${NH0}.nc"
+    target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data_ls.tile${TILE_RGNL}.halo${NH0}.nc"
     symlink="oro_data_ls.nc"
     if [ -f "${target}" ]; then
       ln_vrfy -sf ${relative_or_null} $target $symlink
@@ -264,7 +264,7 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
     Cannot create symlink because target does not exist:
       target = \"$target}\""
     fi
-    target="${FIXsar}/${CRES}${DOT_OR_USCORE}oro_data_ss.tile${TILE_RGNL}.halo${NH0}.nc"
+    target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data_ss.tile${TILE_RGNL}.halo${NH0}.nc"
     symlink="oro_data_ss.nc"
     if [ -f "${target}" ]; then
       ln_vrfy -sf ${relative_or_null} $target $symlink
