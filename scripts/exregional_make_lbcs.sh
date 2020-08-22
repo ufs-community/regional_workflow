@@ -107,7 +107,7 @@ case "${CCPP_PHYS_SUITE}" in
 "FV3_GFS_v15p2" )
   varmap_file="GFSphys_var_map.txt"
   ;;
-"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" |"FV3_RRFS_v0" )
+"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" | "FV3_RRFS_v0" | "FV3_RRFS_v1beta" )
   varmap_file="GSDphys_var_map.txt"
   ;;
 *)
@@ -224,11 +224,51 @@ case "${EXTRN_MDL_NAME_LBCS}" in
 
   tracers_input="[\"spfh\",\"clwmr\",\"o3mr\"]"
   tracers="[\"sphum\",\"liq_wat\",\"o3mr\"]"
+# 
+# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
+#
+  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
+  else
+    print_err_msg_exit "\
+    The chosen CCPP physics suite is unsupported at this time:
+    CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
+  fi
+
 
   ;;
 
 
 "FV3GFS")
+
+#
+# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
+#
+  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
+  else
+    print_err_msg_exit "\
+    The chosen CCPP physics suite is unsupported at this time:
+    CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
+  fi
 
   if [ "${FV3GFS_FILE_FMT_LBCS}" = "nemsio" ]; then
 
@@ -237,29 +277,7 @@ case "${EXTRN_MDL_NAME_LBCS}" in
     input_type="gaussian_nemsio"     # For FV3-GFS Gaussian grid in nemsio format.
 
     tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
-#
-# The list of atmospheric tracers to include in the output file depends 
-# on the physics suite.  Hopefully, this method of specifying output tracers
-# will be replaced with a variable table (which should be specific to each
-# combination of external model, external model file type, and physics suite).
-#
-    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-      tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
-    elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-      tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
-      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-    else
-      print_err_msg_exit "\
-      The chosen CCPP physics suite is unsupported at this time:
-      CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-    fi
+    tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
 
   elif [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
 
@@ -285,6 +303,25 @@ case "${EXTRN_MDL_NAME_LBCS}" in
 
   external_model="NAM"
   input_type="grib2"
+#
+# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
+#
+  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
+  else
+    print_err_msg_exit "\
+    The chosen CCPP physics suite is unsupported at this time:
+    CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
+  fi
 
   ;;
 

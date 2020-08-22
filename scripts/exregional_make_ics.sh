@@ -44,7 +44,7 @@ In directory:     \"${scrfunc_dir}\"
 
 This is the ex-script for the task that generates initial condition
 (IC), surface, and zeroth hour lateral boundary condition (LBC0) files
-for FV3 (in NetCDF format).
+(in NetCDF format) for the FV3-LAM.
 ========================================================================"
 #
 #-----------------------------------------------------------------------
@@ -107,7 +107,8 @@ case "${CCPP_PHYS_SUITE}" in
 "FV3_GFS_v15p2" )
   varmap_file="GFSphys_var_map.txt"
   ;;
-"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" |"FV3_RRFS_v0" )
+"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" | "FV3_RRFS_v0" | \
+"FV3_RRFS_v1beta" )
   varmap_file="GSDphys_var_map.txt"
   ;;
 *)
@@ -259,16 +260,19 @@ case "${EXTRN_MDL_NAME_ICS}" in
 
   tracers_input="[\"spfh\",\"clwmr\",\"o3mr\"]"
   tracers="[\"sphum\",\"liq_wat\",\"o3mr\"]"
-    
+#
+# Set soil levels and use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
+#    
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
       nsoill_out="4"
     elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
       nsoill_out="9"
       thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
@@ -290,6 +294,28 @@ case "${EXTRN_MDL_NAME_ICS}" in
 
 "FV3GFS")
 
+#
+# Set soil levels and use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
+#
+  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+    nsoill_out="4"
+  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+    nsoill_out="9"
+    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
+  else
+    print_err_msg_exit "\
+    The chosen CCPP physics suite is unsupported as this time:
+    CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
+  fi
+
   tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
   tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
 
@@ -302,24 +328,6 @@ case "${EXTRN_MDL_NAME_ICS}" in
     input_type="gaussian_nemsio"     # For FV3-GFS Gaussian grid in nemsio format.
     convert_nst=True
 
-    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-      nsoill_out="4"
-    elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-      nsoill_out="9"
-      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-    else
-      print_err_msg_exit "\
-      The chosen CCPP physics suite is unsupported as this time:
-      CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-    fi
-
   elif [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
 
     external_model="GFS"
@@ -328,24 +336,6 @@ case "${EXTRN_MDL_NAME_ICS}" in
     input_type="grib2"
     convert_nst=False
    
-    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-      nsoill_out="4"
-    elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-      nsoill_out="9"
-      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-    else
-      print_err_msg_exit "\
-      The chosen CCPP physics suite is unsupported as this time:
-      CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-    fi
-
   fi
   
   vgtyp_from_climo=True
@@ -364,17 +354,22 @@ case "${EXTRN_MDL_NAME_ICS}" in
 
   fn_grib2="${EXTRN_MDL_FNS[0]}"
   input_type="grib2"
-
+#
+# Set soil levels based on CCPP SDF
+#
   if [ "${USE_CCPP}" = "TRUE" ]; then
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
       nsoill_out="4"
     elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
       nsoill_out="9"
     fi
   fi
@@ -406,17 +401,21 @@ case "${EXTRN_MDL_NAME_ICS}" in
 
   fn_grib2="${EXTRN_MDL_FNS[0]}"
   input_type="grib2"
-
+#
+# Set soil levels based on CCPP SDF
+#
   if [ "${USE_CCPP}" = "TRUE" ]; then
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
       nsoill_out="4"
     elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
       nsoill_out="9"
     fi
   fi
@@ -447,18 +446,22 @@ case "${EXTRN_MDL_NAME_ICS}" in
   input_type="grib2"
 
   internal_GSD=False
-
+#
+# Set soil levels and use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
+#
   if [ "${USE_CCPP}" = "TRUE" ]; then
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-      numsoil_out="4"
+      nsoill_out="4"
     elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-      numsoil_out="9"
+         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+      nsoill_out="9"
       thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
     fi
   fi
