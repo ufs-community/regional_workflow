@@ -220,9 +220,9 @@ mv_vrfy BGRD3D.GrbF${fhr} ${postprd_dir}/RRFS.t${cyc}z.bgrd3d${fhr}.${tmmark}.gr
 start_date=$( echo "${cdate}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/' )
 basetime=$( date +%y%j%H%M -d "${start_date}" )
 ln_vrfy -fs ${postprd_dir}/RRFS.t${cyc}z.bgdawp${fhr}.${tmmark} \
-            ${postprd_dir}/BGDAWP_${basetime}${fhr}00
+            ${postprd_dir}/BGDAWP_${basetime}${fhr}00.grib2
 ln_vrfy -fs ${postprd_dir}/RRFS.t${cyc}z.bgrd3d${fhr}.${tmmark} \
-            ${postprd_dir}/BGRD3D_${basetime}${fhr}00
+            ${postprd_dir}/BGRD3D_${basetime}${fhr}00.grib2
 
 rm_vrfy -rf ${fhr_dir}
 #
