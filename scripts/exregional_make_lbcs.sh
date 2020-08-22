@@ -232,12 +232,13 @@ case "${EXTRN_MDL_NAME_LBCS}" in
      [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+     thomp_mp_climo_file=""
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
+     thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
   else
     print_err_msg_exit "\
     The chosen CCPP physics suite is unsupported at this time:
@@ -258,12 +259,13 @@ case "${EXTRN_MDL_NAME_LBCS}" in
      [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+     thomp_mp_climo_file=""
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
+     thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
   else
     print_err_msg_exit "\
     The chosen CCPP physics suite is unsupported at this time:
@@ -311,12 +313,13 @@ case "${EXTRN_MDL_NAME_LBCS}" in
      [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+     thomp_mp_climo_file=""
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
+     thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
   else
     print_err_msg_exit "\
     The chosen CCPP physics suite is unsupported at this time:
