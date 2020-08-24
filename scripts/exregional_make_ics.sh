@@ -160,11 +160,6 @@ esac
 # rain, and water number concentrations -- may be specified at the end
 # of tracers, and these will be calculated by chgres.
 #
-# internal_GSD:
-# Logical variable indicating whether or not to try to read in land sur-
-# face model (LSM) variables available in the HRRRX grib2 files created
-# after about 2019111500.
-#
 # nsoill_out:
 # The number of soil layers to include in the output NetCDF file.
 #
@@ -261,20 +256,19 @@ case "${EXTRN_MDL_NAME_ICS}" in
   tracers_input="[\"spfh\",\"clwmr\",\"o3mr\"]"
   tracers="[\"sphum\",\"liq_wat\",\"o3mr\"]"
 #
-# Set soil levels and use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
+# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
 #    
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-      nsoill_out="4"
+      thomp_mp_climo_file=""
     elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-      nsoill_out="9"
       thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
     else
       print_err_msg_exit "\
@@ -282,6 +276,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
       CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
     fi
 
+  nsoill_out="4" #If the CCPP suites uses RUC-LSM, the scheme will interpolate from 4 to 9 soil levels.
   vgtyp_from_climo=True
   sotyp_from_climo=True
   vgfrc_from_climo=True
@@ -295,20 +290,19 @@ case "${EXTRN_MDL_NAME_ICS}" in
 "FV3GFS")
 
 #
-# Set soil levels and use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
+# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
 #
   if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-    nsoill_out="4"
+    thomp_mp_climo_file=""
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-    nsoill_out="9"
     thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
   else
     print_err_msg_exit "\
@@ -316,12 +310,12 @@ case "${EXTRN_MDL_NAME_ICS}" in
     CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
   fi
 
-  tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
-  tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
-
   if [ "${FV3GFS_FILE_FMT_ICS}" = "nemsio" ]; then
 
     external_model="FV3GFS"
+
+    tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
+    tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
 
     fn_atm_nemsio="${EXTRN_MDL_FNS[0]}"
     fn_sfc_nemsio="${EXTRN_MDL_FNS[1]}"
@@ -337,7 +331,8 @@ case "${EXTRN_MDL_NAME_ICS}" in
     convert_nst=False
    
   fi
-  
+ 
+  nsoill_out="4" #If the CCPP suites uses RUC-LSM, the scheme will interpolate from 4 to 9 soil levels.
   vgtyp_from_climo=True
   sotyp_from_climo=True
   vgfrc_from_climo=True
@@ -355,7 +350,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
   fn_grib2="${EXTRN_MDL_FNS[0]}"
   input_type="grib2"
 #
-# Set soil levels based on CCPP SDF
+# Set soil levels based on LSM in CCPP SDF (RUC-LSM or Noah/Noah MP)
 #
   if [ "${USE_CCPP}" = "TRUE" ]; then
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
@@ -445,27 +440,26 @@ case "${EXTRN_MDL_NAME_ICS}" in
   fn_grib2="${EXTRN_MDL_FNS[0]}"
   input_type="grib2"
 
-  internal_GSD=False
 #
-# Set soil levels and use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
+# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
 #
   if [ "${USE_CCPP}" = "TRUE" ]; then
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-      nsoill_out="4"
+      thomp_mp_climo_file=""
     elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
          [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-      nsoill_out="9"
       thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
     fi
   fi
 
+  nsoill_out="4" #If the CCPP suites uses RUC-LSM, the scheme will interpolate from 4 to 9 soil levels.
   replace_vgtyp=True
   replace_sotyp=True
   replace_vgfrc=True
