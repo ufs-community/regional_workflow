@@ -107,8 +107,14 @@ case "${CCPP_PHYS_SUITE}" in
 "FV3_GFS_v15p2" )
   varmap_file="GFSphys_var_map.txt"
   ;;
-"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" | "FV3_RRFS_v0" | "FV3_RRFS_v1beta" )
-  varmap_file="GSDphys_var_map.txt"
+"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" | "FV3_RRFS_v0" | \
+"FV3_RRFS_v1beta" )
+  if   [ "${EXTRN_MDL_NAME_ICS}" = "RAPX" ] || [ "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ]; then
+      varmap_file="GSDphys_var_map.txt"
+  elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] || [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
+       [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ]; then
+      varmap_file="GFSphys_var_map.txt"
+  fi
   ;;
 *)
   print_err_msg_exit "\
