@@ -8,3 +8,9 @@ endif()
 
 add_executable(global_equiv_resol global_equiv_resol.f90)
 target_link_libraries(global_equiv_resol NetCDF::NetCDF_Fortran)
+
+
+install(
+  TARGETS global_equiv_resol
+  RUNTIME DESTINATION bin
+  )

@@ -8,3 +8,9 @@ endif()
 
 add_executable(mosaic_file mosaic_file.f90)
 target_link_libraries(mosaic_file NetCDF::NetCDF_Fortran)
+
+
+install(
+  TARGETS mosaic_file
+  RUNTIME DESTINATION bin
+  )
