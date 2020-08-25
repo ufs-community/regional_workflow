@@ -109,10 +109,10 @@ case "${CCPP_PHYS_SUITE}" in
   ;;
 "FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" | "FV3_RRFS_v0" | \
 "FV3_RRFS_v1beta" )
-  if   [ "${EXTRN_MDL_NAME_ICS}" = "RAPX" ] || [ "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ]; then
+  if   [ "${EXTRN_MDL_NAME_LBCS}" = "RAPX" ] || [ "${EXTRN_MDL_NAME_LBCS}" = "HRRRX" ]; then
       varmap_file="GSDphys_var_map.txt"
-  elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] || [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
-       [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ]; then
+  elif [ "${EXTRN_MDL_NAME_LBCS}" = "NAM" ] || [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
+       [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then
       varmap_file="GFSphys_var_map.txt"
   fi
   ;;
@@ -127,7 +127,7 @@ esac
 #-----------------------------------------------------------------------
 #
 # Set external-model-dependent variables that are needed in the FORTRAN
-# namelist file that the chgres executable will read in.  These are de-
+# namelist file that the chgres_cube executable will read in.  These are de-
 # scribed below.  Note that for a given external model, usually only a
 # subset of these all variables are set (since some may be irrelevant).
 #
@@ -144,10 +144,10 @@ esac
 # model that contains the surface fields.
 #
 # input_type:
-# The "type" of input being provided to chgres.  This contains a combi-
+# The "type" of input being provided to chgres_cube.  This contains a combi-
 # nation of information on the external model, external model file for-
 # mat, and maybe other parameters.  For clarity, it would be best to
-# eliminate this variable in chgres and replace with with 2 or 3 others
+# eliminate this variable in chgres_cube and replace with with 2 or 3 others
 # (e.g. extrn_mdl, extrn_mdl_file_format, etc).
 #
 # tracers_input:
@@ -163,12 +163,12 @@ esac
 # ment of tracers should be the name to use for the O3 mixing ratio in
 # the output file.  For GSD physics, three additional tracers -- ice,
 # rain, and water number concentrations -- may be specified at the end
-# of tracers, and these will be calculated by chgres.
+# of tracers, and these will be calculated by chgres_cube.
 #
 #-----------------------------------------------------------------------
 #
 
-# GSK comments about chgres:
+# GSK comments about chgres_cube:
 #
 # The following are the three atmsopheric tracers that are in the atmo-
 # spheric analysis (atmanl) nemsio file for CDATE=2017100700:
@@ -362,7 +362,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Loop through the LBC update times and run chgres for each such time to
+# Loop through the LBC update times and run chgres_cube for each such time to
 # obtain an LBC file for each that can be used as input to the FV3-LAM.
 #
 #-----------------------------------------------------------------------
@@ -375,7 +375,7 @@ for (( i=0; i<${num_fhrs}; i++ )); do
   fhr="${EXTRN_MDL_LBC_SPEC_FHRS[$i]}"
 #
 # Set external model output file name and file type/format.  Note that
-# these are now inputs into chgres.
+# these are now inputs into chgres_cube.
 #
   fn_atm_nemsio=""
   fn_grib2=""
@@ -393,10 +393,16 @@ for (( i=0; i<${num_fhrs}; i++ )); do
     ;;
   "RAPX")
     fn_grib2="${EXTRN_MDL_FNS[$i]}"
+    ;;  
+  "HRRRX")
+    fn_grib2="${EXTRN_MDL_FNS[$i]}"
+    ;;
+  "NAM")
+    fn_grib2="${EXTRN_MDL_FNS[$i]}"
     ;;
   *)
     print_err_msg_exit "\
-The external model output file name to use in the chgres FORTRAN name-
+The external model output file name to use in the chgres_cube FORTRAN name-
 list file has not specified for this external model:
   EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
     ;;

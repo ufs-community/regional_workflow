@@ -631,18 +631,15 @@ npy=$((NY+1))
 # For the FV3_GSD_v0 and the FV3_GSD_SAR physics suites, set the parameter
 # lsoil according to the external models used to obtain ICs and LBCs.
 #
-if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] -o \
    [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
 
-  if [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" -o \
-       "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] && \
-     [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" -o \
-       "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
+  if [ "${EXTRN_MDL_NAME_ICS}" = "NAM" -o \ 
+       "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" -o \
+       "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
     lsoil=4
   elif [ "${EXTRN_MDL_NAME_ICS}" = "RAPX" -o \
-         "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ] && \
-       [ "${EXTRN_MDL_NAME_LBCS}" = "RAPX" -o \
-         "${EXTRN_MDL_NAME_LBCS}" = "HRRRX" ]; then
+         "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ]; then
     lsoil=9
   else
     print_err_msg_exit "\
@@ -651,7 +648,6 @@ has not been specified for the following combination of physics suite and
 external models for ICs and LBCs:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
 Please change one or more of these parameters or provide a value for lsoil
 (and change workflow generation script(s) accordingly) and rerun."
   fi
