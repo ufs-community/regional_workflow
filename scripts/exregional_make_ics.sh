@@ -385,11 +385,11 @@ case "${EXTRN_MDL_NAME_ICS}" in
   #Note that vgfrc, shdmin/shdmax (minmax_vgfrc), and lai fields are only available in HRRRX 
   #files after mid-July 2019, and only so long as the record order didn't change afterward
 
-  vgtyp_from_climo=False
-  sotyp_from_climo=False
-  vgfrc_from_climo=False
-  minmax_vgfrc_from_climo=False
-  lai_from_climo=False
+  vgtyp_from_climo=True
+  sotyp_from_climo=True
+  vgfrc_from_climo=True 
+  minmax_vgfrc_from_climo=True
+  lai_from_climo=True
   tg3_from_soil=True
   convert_nst=False
 
@@ -465,11 +465,13 @@ case "${EXTRN_MDL_NAME_ICS}" in
   fi
 
   nsoill_out="4" #If the CCPP suites uses RUC-LSM, the scheme will interpolate from 4 to 9 soil levels.
-  replace_vgtyp=True
-  replace_sotyp=True
-  replace_vgfrc=True
+  vgtyp_from_climo=True
+  sotyp_from_climo=True
+  vgfrc_from_climo=True
+  minmax_vgfrc_from_climo=True
+  lai_from_climo=True
   tg3_from_soil=False
-  convert_nst=False
+  convert_nst=False  
 
   ;;
 
