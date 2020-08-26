@@ -26,21 +26,21 @@ VERBOSE="TRUE"
 RUN_ENVIR="nco"
 PREEXISTING_DIR_METHOD="rename"
 
-EMC_GRID_NAME="conus_c96"  # This maps to PREDEF_GRID_NAME="EMC_CONUS_coarse".
-GRID_GEN_METHOD="GFDLgrid"
+EMC_GRID_NAME="GSD_HRRR3km"
+GRID_GEN_METHOD="ESGgrid"
 
 QUILTING="TRUE"
 USE_CCPP="TRUE"
-CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp_regional"
+CCPP_PHYS_SUITE="FV3_GSD_SAR"
 FCST_LEN_HRS="06"
 LBC_SPEC_INTVL_HRS="3"
 
-DATE_FIRST_CYCL="20190901"
-DATE_LAST_CYCL="20190901"
-CYCL_HRS=( "18" )
+DATE_FIRST_CYCL="20200801"
+DATE_LAST_CYCL="20200801"
+CYCL_HRS=( "00" )
 
-EXTRN_MDL_NAME_ICS="FV3GFS"
-EXTRN_MDL_NAME_LBCS="FV3GFS"
+EXTRN_MDL_NAME_ICS="HRRRX"
+EXTRN_MDL_NAME_LBCS="RAPX"
 
 #
 # In NCO mode, the following don't need to be explicitly set to "FALSE"
@@ -106,21 +106,36 @@ PTMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"
 
 #On Jet:
 #COMINgfs="/lfs1/HFIP/hwrf-data/hafs-input/COMGFS"
-#STMP=""
-#PTMP=""
+#STMP="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/NCO_dirs/stmp"
+#PTMP="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"
+
 
 #
 # In NCO mode, the user must manually (e.g. after doing the build step)
-# create the symlink "${FIXrrfs}/fix_lam" that points to EMC's FIXLAM
+# create the symlink "${FIXrrfs}/fix_sar" that points to EMC's FIXsar
 # directory on the machine.  For example, on hera, the symlink's target
 # needs to be
 #
 #   /scratch2/NCEPDEV/fv3-cam/emc.campara/fix_fv3cam/fix_sar
 #
-# The experiment generation script will then set FIXLAM to
+# The experiment generation script will then set FIXsar to
 #
-#   FIXLAM="${FIXrrfs}/fix_lam/${EMC_GRID_NAME}"
+#   FIXsar="${FIXrrfs}/fix_sar/${EMC_GRID_NAME}"
 #
 # where EMC_GRID_NAME has the value set above.
 #
+
+# If want to use user-staged external model files:
+
+#On Hera:
+#EXTRN_MDL_SOURCE_DIR_ICS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/HRRRX"
+#EXTRN_MDL_FILES_ICS=( "hrrrx.out.for_f000" )
+#EXTRN_MDL_SOURCE_DIR_LBCS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/RAPX"
+#EXTRN_MDL_FILES_LBCS=( "rapx.out.for_f003" "rapx.out.for_f006" )
+
+#On Jet:
+#EXTRN_MDL_SOURCE_DIR_ICS="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/HRRRX"
+#EXTRN_MDL_FILES_ICS=( "hrrrx.out.for_f000" )
+#EXTRN_MDL_SOURCE_DIR_LBCS="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/RAPX"
+#EXTRN_MDL_FILES_LBCS=( "rapx.out.for_f003" "rapx.out.for_f006" )
 
