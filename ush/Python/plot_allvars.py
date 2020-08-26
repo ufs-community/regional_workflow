@@ -351,7 +351,7 @@ u250, v250 = rotate_wind(Lat0,Lon0,lon,u250,v250,'lcc',inverse=False)
 wspd250 = np.sqrt(u250**2 + v250**2)
 
 # Total precipitation
-#qpf = data1.select(name='Total Precipitation',lengthOfTimeRange=fhr)[0].values * 0.0393701
+qpf = data1.select(name='Total Precipitation',lengthOfTimeRange=fhr)[0].values * 0.0393701
 
 # Composite reflectivity
 refc = data1.select(name='Maximum/Composite radar reflectivity')[0].values 
@@ -681,34 +681,34 @@ def plot_all(dom):
 #################################
   # Plot Total QPF
 #################################
-#  if (fhr > 0):		# Do not make total QPF plot for forecast hour 0
-#    t1 = time.perf_counter()
-#    print(('Working on total qpf for '+dom))
-#
-#    # Clear off old plottables but keep all the map info
-#    cbar1.remove()
-#    clear_plotables(ax,keep_ax_lst,fig)
-#
-#    units = 'in'
-#    clevs = [0.01,0.1,0.25,0.5,0.75,1,1.25,1.5,1.75,2,2.5,3,4,5,7,10,15,20]
-#    clevsdif = [-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1,1.5,2,2.5,3]
-#    colorlist = ['chartreuse','limegreen','green','blue','dodgerblue','deepskyblue','cyan','mediumpurple','mediumorchid','darkmagenta','darkred','crimson','orangered','darkorange','goldenrod','gold','yellow']  
-#    cm = matplotlib.colors.ListedColormap(colorlist)
-#    norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
-#
-#    cs_1 = plt.pcolormesh(lon_shift,lat_shift,qpf,transform=transform,cmap=cm,vmin=0.01,norm=norm)
-#    cs_1.cmap.set_under('white',alpha=0.)
-#    cs_1.cmap.set_over('pink')
-#    cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,ticks=clevs,extend='max')
-#    cbar1.set_label(units,fontsize=8)
-#    cbar1.ax.set_xticklabels(clevs)
-#    cbar1.ax.tick_params(labelsize=8)
-#    ax.text(.5,1.03,'FV3-LAM '+fhour+'-hr Accumulated Precipitation ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  if (fhr > 0):		# Do not make total QPF plot for forecast hour 0
+    t1 = time.perf_counter()
+    print(('Working on total qpf for '+dom))
 
-#    compress_and_save('qpf_'+dom+'_f'+fhour+'.png')
-#    t2 = time.perf_counter()
-#    t3 = round(t2-t1, 3)
-#    print(('%.3f seconds to plot total qpf for: '+dom) % t3)
+    # Clear off old plottables but keep all the map info
+    cbar1.remove()
+    clear_plotables(ax,keep_ax_lst,fig)
+
+    units = 'in'
+    clevs = [0.01,0.1,0.25,0.5,0.75,1,1.25,1.5,1.75,2,2.5,3,4,5,7,10,15,20]
+    clevsdif = [-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1,1.5,2,2.5,3]
+    colorlist = ['chartreuse','limegreen','green','blue','dodgerblue','deepskyblue','cyan','mediumpurple','mediumorchid','darkmagenta','darkred','crimson','orangered','darkorange','goldenrod','gold','yellow']  
+    cm = matplotlib.colors.ListedColormap(colorlist)
+    norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
+
+    cs_1 = plt.pcolormesh(lon_shift,lat_shift,qpf,transform=transform,cmap=cm,vmin=0.01,norm=norm)
+    cs_1.cmap.set_under('white',alpha=0.)
+    cs_1.cmap.set_over('pink')
+    cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,ticks=clevs,extend='max')
+    cbar1.set_label(units,fontsize=8)
+    cbar1.ax.set_xticklabels(clevs)
+    cbar1.ax.tick_params(labelsize=8)
+    ax.text(.5,1.03,'FV3-LAM '+fhour+'-hr Accumulated Precipitation ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+
+    compress_and_save('qpf_'+dom+'_f'+fhour+'.png')
+    t2 = time.perf_counter()
+    t3 = round(t2-t1, 3)
+    print(('%.3f seconds to plot total qpf for: '+dom) % t3)
 
 #################################
   # Plot composite reflectivity
