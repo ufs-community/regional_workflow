@@ -56,7 +56,7 @@ for FV3 (in NetCDF format).
 #
 #-----------------------------------------------------------------------
 #
-valid_args=()
+valid_args=( "CYCLE_DIR" "CYCLE_DATE" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -83,8 +83,6 @@ export NUM_OMP_THREADS=1
 #
 #-----------------------------------------------------------------------
 #
-local PLAUNCH
-
 get_platform_info \
     num_threads="${NUM_OMP_THREADS}" \
     varname_run_cmd="PLAUNCH"
@@ -107,18 +105,19 @@ cp_vrfy ${EXECDIR}/../sorc/arl_nexus/fix/grid_spec_C401.nc ${workdir}/grid_spec.
 #
 #-----------------------------------------------------------------------
 #
-# Get the starting year, month, day, and hour of the the external model
-# run.
+# Get the starting and ending year, month, day, and hour of the emission
+# time series.
 #
 #-----------------------------------------------------------------------
 #
-cyc="00" #"${PDY:8:2}"
-yyyymmdd="${PDY:0:8}"
-start_date=$(date -d "$yyyymmdd" +"%Y%m%d")
-mm=$(date -d "$yyyymmdd" +"%m")
-# assume ending date is +24 hours for now
-end_date=$(date -d "$yyyymmdd + $FCST_LEN_HRS hours" +"%Y%m%d")
-
+mm="${CYCLE_DATE:4:2}"
+dd="${CYCLE_DATE:6:2}"
+hh="${CYCLE_DATE:8:2}"
+yyyymmdd="${CYCLE_DATE:0:8}"
+# Note: a timezone offset is used to compute the end date. Consequently,
+# the code below will only work for forecast lengths up to 24 hours.
+start_date=$( date --utc --date "${yyyymmdd} ${hh}" "+%Y%m%d%H" )
+end_date=$( date --utc --date "${yyyymmdd} ${hh} -${FCST_LEN_HRS}" "+%Y%m%d%H" )
 #
 #######################################################################
 # This will be the section to set the datasets used in $workdir/NEXUS_Config.rc 
@@ -141,8 +140,8 @@ NEXUS_INPUT_BASE_DIR=/scratch2/NAGAPE/arl/Barry.Baker/emissions
 # modify time configuration file
 #
 cp_vrfy ${EXECDIR}/../sorc/arl_nexus/utils/python/nexus_time_parser.py .
-echo ${start_date} ${end_date} ${cyc}
-./nexus_time_parser.py -f ${workdir}/HEMCO_sa_Time.rc -s $start_date -e $end_date -c $cyc
+echo ${start_date} ${end_date} # ${cyc}
+./nexus_time_parser.py -f ${workdir}/HEMCO_sa_Time.rc -s $start_date -e $end_date
 
 #
 #---------------------------------------------------------------------
