@@ -63,6 +63,7 @@ function get_platform_info() {
     "num_threads" \
     "varname_res_mgr" \
     "varname_run_cmd" \
+    "varname_stack_size" \
   )
   process_args valid_args "$@"
 #
@@ -148,15 +149,27 @@ fi
 #-----------------------------------------------------------------------
 #
   scheduler="unknown"
+  set_stack_size=
   case "$MACHINE" in
-    "WCOSS" | "WCOSS_C")
+    "WCOSS")
       scheduler="lsf"
+      set_stack_size="unlimited"
+      ;;
+    "WCOSS_C")
+      scheduler="lsf_cray"
+      set_stack_size="unlimited"
+      ;;
+    "WCOSS_DELL_P3")
+      scheduler="lsf_dell"
+      set_stack_size="unlimited"
       ;;
     "HERA")
       scheduler="slurm"
+      set_stack_size="unlimited"
       ;;
     "JET")
       scheduler="slurm"
+      set_stack_size="unlimited"
       ;;
     "CHEYENNE")
       scheduler="pbs"
@@ -185,10 +198,12 @@ Unsupported platform:
 #
 #-----------------------------------------------------------------------
 #
-  plaunch=
   case "${scheduler}" in
-    "lsf")
+    "lsf" | "lsf_cray")
       plaunch="aprun -n ${num_pes} -N ${pes_per_node} -d ${num_threads:-1}"
+      ;;
+    "lsf_dell")
+      plaunch="mpirun -n ${num_pes}"
       ;;
     "slurm")
       plaunch="srun -l"
@@ -214,7 +229,10 @@ Unsupported resource manager:
     eval ${varname_run_cmd}=\"${plaunch}\"
   fi
   if [ ! -z "${varname_res_mgr}" ] ; then
-    eval ${varname_res_mgr}=\"${scheduler}\"
+    eval ${varname_res_mgr}=\"${scheduler%%_*}\"
+  fi
+  if [ ! -z "${varname_stack_size}" ] ; then
+    eval ${varname_stack_size}=\"${set_stack_size}\"
   fi
 #
 #-----------------------------------------------------------------------

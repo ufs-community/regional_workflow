@@ -107,7 +107,7 @@ case "$MACHINE" in
     . /opt/modules/default/init/sh
     ;;
 #
-  "DELL")
+  "WCOSS_DELL_P3")
     . /usrx/local/prod/lmod/lmod/init/sh
     ;;
 #

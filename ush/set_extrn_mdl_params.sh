@@ -58,6 +58,9 @@ else
     "WCOSS_C")
       EXTRN_MDL_FILES_SYSBASEDIR_ICS=""
       ;;
+    "WCOSS_DELL_P3")
+      EXTRN_MDL_FILES_SYSBASEDIR_ICS=""
+      ;;
     "HERA")
       EXTRN_MDL_FILES_SYSBASEDIR_ICS=""
       ;;
@@ -86,6 +89,9 @@ this machine and external model combination:
     case $MACHINE in
     "WCOSS_C")
       EXTRN_MDL_FILES_SYSBASEDIR_ICS="/gpfs/hps/nco/ops/com/gfs/prod"
+      ;;
+    "WCOSS_DELL_P3")
+      EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/dell1/nco/ops/com/gfs/prod"
       ;;
     "HERA")
       EXTRN_MDL_FILES_SYSBASEDIR_ICS="/scratch1/NCEPDEV/rstprod/com/gfs/prod"
@@ -207,6 +213,9 @@ else
     "WCOSS_C")
       EXTRN_MDL_FILES_SYSBASEDIR_LBCS=""
       ;;
+    "WCOSS_DELL_P3")
+      EXTRN_MDL_FILES_SYSBASEDIR_LBCS=""
+      ;;
     "HERA")
       EXTRN_MDL_FILES_SYSBASEDIR_LBCS=""
       ;;
@@ -236,6 +245,9 @@ this machine and external model combination:
     case $MACHINE in
     "WCOSS_C")
       EXTRN_MDL_FILES_SYSBASEDIR_LBCS="/gpfs/hps/nco/ops/com/gfs/prod"
+      ;;
+    "WCOSS_DELL_P3")
+      EXTRN_MDL_SYSBASEDIR_LBCS="/gpfs/dell1/nco/ops/com/gfs/prod"
       ;;
     "HERA")
       EXTRN_MDL_FILES_SYSBASEDIR_LBCS="/scratch1/NCEPDEV/rstprod/com/gfs/prod"

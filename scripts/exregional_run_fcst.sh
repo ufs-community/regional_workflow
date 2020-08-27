@@ -76,7 +76,7 @@ print_input_args valid_args
 #
 case $MACHINE in
 #
-"WCOSS_C" | "WCOSS")
+"WCOSS_C" | "WCOSS" | "WCOSS_DELL_P3")
 #
 
   if [ "${USE_CCPP}" = "TRUE" ]; then

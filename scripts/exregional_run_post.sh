@@ -111,6 +111,18 @@ case $MACHINE in
   APRUN="aprun -j 1 -n${ntasks} -N${ptile} -d${threads} -cc depth"
   ;;
 
+"WCOSS_DELL_P3")
+
+# Specify computational resources.
+  export NODES=2
+  export ntasks=48
+  export ptile=24
+  export threads=1
+  export MP_LABELIO=yes
+  export OMP_NUM_THREADS=$threads
+
+  APRUN="mpirun"
+  ;;
 
 "HERA")
 #  export NDATE=/scratch3/NCEPDEV/nwprod/lib/prod_util/v1.1.0/exec/ndate

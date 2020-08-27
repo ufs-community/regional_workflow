@@ -313,6 +313,16 @@ Then remove this message and rerun."
   QUEUE_FCST=${QUEUE_FCST:-""}
   ;;
 #
+"WCOSS_DELL_P3")
+#
+  NCORES_PER_NODE=24
+  SCHED="lsf"
+  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
+  QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
+  QUEUE_HPSS_TAG="queue"       # lsf does not support "partition" tag
+  QUEUE_FCST=${QUEUE_FCST:-"dev"}
+  ;;
+#
 "THEIA")
 #
   NCORES_PER_NODE=24
@@ -684,9 +694,10 @@ case $MACHINE in
   SFC_CLIMO_INPUT_DIR=""
   ;;
 
-"DELL")
-  FIXgsm="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"
-  SFC_CLIMO_INPUT_DIR=""
+"WCOSS_DELL_P3")
+  FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
   ;;
 
 "THEIA")
