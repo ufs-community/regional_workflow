@@ -207,8 +207,8 @@ zero exit code."
 #-----------------------------------------------------------------------
 #
 
-mv_vrfy BGDAWP.GrbF${fhr} ${postprd_dir}/RRFS.t${cyc}z.bgdawp${fhr}.${tmmark}.grib2
-mv_vrfy BGRD3D.GrbF${fhr} ${postprd_dir}/RRFS.t${cyc}z.bgrd3d${fhr}.${tmmark}.grib2
+mv_vrfy BGDAWP.GrbF${fhr} ${postprd_dir}/rrfs.t${cyc}z.bgdawpf${fhr}.${tmmark}.grib2
+mv_vrfy BGRD3D.GrbF${fhr} ${postprd_dir}/rrfs.t${cyc}z.bgrd3df${fhr}.${tmmark}.grib2
 
 #Link output for transfer to Jet
 # Should the following be done only if on jet??
@@ -219,7 +219,7 @@ mv_vrfy BGRD3D.GrbF${fhr} ${postprd_dir}/RRFS.t${cyc}z.bgrd3d${fhr}.${tmmark}.gr
 # instead of calling sed.
 start_date=$( echo "${cdate}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/' )
 basetime=$( date +%y%j%H%M -d "${start_date}" )
-ln_vrfy -fs ${postprd_dir}/RRFS.t${cyc}z.bgdawp${fhr}.${tmmark}.grib2 \
+ln_vrfy -fs ${postprd_dir}/rrfs.t${cyc}z.bgdawpf${fhr}.${tmmark}.grib2 \
             ${postprd_dir}/BGDAWP_${basetime}${fhr}00
 ln_vrfy -fs ${postprd_dir}/RRFS.t${cyc}z.bgrd3d${fhr}.${tmmark}.grib2 \
             ${postprd_dir}/BGRD3D_${basetime}${fhr}00
