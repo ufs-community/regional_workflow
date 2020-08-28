@@ -90,7 +90,7 @@ Directories and files.
 {%- endfor %}
 
   <log>
-    <cyclestr>&LOGDIR;/FV3SAR_wflow.log</cyclestr>
+    <cyclestr>&LOGDIR;/FV3LAM_wflow.log</cyclestr>
   </log>
 
 <!-- 
