@@ -217,20 +217,15 @@ zero exit code."
 #
 len_fhr=${#fhr}
 if [ ${len_fhr} -eq 2 ]; then
-
 post_fhr=${fhr}
-
 elif [ ${len_fhr} -eq 3 ]; then
-
   if [ "${fhr:0:1}" = "0" ]; then
     post_fhr="${fhr:1}"
   fi
-
 else
-
-echo "The \${fhr} variable contains too few or too many characters!"
-echo "fhr = \"$fhr\""
-
+print_err_msg_exit "\
+The \${fhr} variable contains too few or too many characters:
+  fhr = \"$fhr\""
 fi
 
 mv_vrfy BGDAWP.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}.${tmmark}.grib2
