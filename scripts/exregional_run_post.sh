@@ -167,8 +167,8 @@ tmmark="tm$hh"
 #
 #-----------------------------------------------------------------------
 #
-dyn_file="${run_dir}/dynf0${fhr}.nc"
-phy_file="${run_dir}/phyf0${fhr}.nc"
+dyn_file="${run_dir}/dynf${fhr}.nc"
+phy_file="${run_dir}/phyf${fhr}.nc"
 
 post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours" "+%Y%m%d%H" )
 post_yyyy=${post_time:0:4}
@@ -206,9 +206,35 @@ zero exit code."
 #
 #-----------------------------------------------------------------------
 #
+#
+#-----------------------------------------------------------------------
+#
+# A separate ${post_fhr} forecast hour variable is required for the post 
+# files, since they may or may not be three digits long, depending on the
+# length of the forecast.
+#
+#-----------------------------------------------------------------------
+#
+len_fhr=${#fhr}
+if [ ${len_fhr} -eq 2 ]; then
 
-mv_vrfy BGDAWP.GrbF${fhr} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}.${tmmark}.grib2
-mv_vrfy BGRD3D.GrbF${fhr} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}.${tmmark}.grib2
+post_fhr=${fhr}
+
+elif [ ${len_fhr} -eq 3 ]; then
+
+  if [ "${fhr:0:1}" = "0" ]; then
+    post_fhr="${fhr:1}"
+  fi
+
+else
+
+echo "The \${fhr} variable contains too few or too many characters!"
+echo "fhr = \"$fhr\""
+
+fi
+
+mv_vrfy BGDAWP.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}.${tmmark}.grib2
+mv_vrfy BGRD3D.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}.${tmmark}.grib2
 
 #Link output for transfer to Jet
 # Should the following be done only if on jet??
