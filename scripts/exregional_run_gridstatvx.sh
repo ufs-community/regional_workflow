@@ -110,7 +110,7 @@ export fhr_list
 #-----------------------------------------------------------------------
 #
 ${SCRIPTSDIR}/exregional_get_ccpa_files.sh
-
+${SCRIPTSDIR}/exregional_get_mrms_files.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -124,12 +124,20 @@ export METPLUS_PATH
 export METPLUS_CONF
 export MET_CONFIG
 export OBS_DIR
-export acc="${ACCUM}h" # for stats output prefix in GridStatConfig
+export VAR
 export MODEL
 
-${METPLUS_PATH}/ush/master_metplus.py \
-  -c ${METPLUS_CONF}/common.conf \
-  -c ${METPLUS_CONF}/APCP_${acc}.conf
+if [ ${VAR} -eq "APCP" ]
+then
+  export acc="${ACCUM}h" # for stats output prefix in GridStatConfig
+  ${METPLUS_PATH}/ush/master_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/${VAR}_${acc}.conf
+else
+  ${METPLUS_PATH}/ush/master_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/${VAR}.conf
+fi
 
 #
 #-----------------------------------------------------------------------

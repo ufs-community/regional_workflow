@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # This script pulls MRMS data from the NOAA HPSS
-OBS_DIR=/scratch2/BMC/det/jwolff/HIWT/obs/mrms/proc
+#OBS_DIR=/scratch2/BMC/det/jwolff/HIWT/obs/mrms/proc
 
 # Top-level MRMS directory
 mrms_dir=${OBS_DIR}/..
@@ -22,24 +22,23 @@ if [[ ! -d "$mrms_proc" ]]; then
 fi
 
 # Initialization
-#init=${CDATE}${hh}
-start_init=${CDATE}
-start_init=2020063000
+start_init=${CDATE}${hh}
+#start_init=2020063000
 
 # Forecast length
 fcst_length=${fhr_last}
-fcst_length=36
+#fcst_length=36
 
 s_yyyy=`echo ${start_init} | cut -c1-4`  # year (YYYY) of initialization time
 s_mm=`echo ${start_init} | cut -c5-6`    # month (MM) of initialization time
 s_dd=`echo ${start_init} | cut -c7-8`    # day (DD) of initialization time
 s_hh=`echo ${start_init} | cut -c9-10`   # hour (HH) of initialization time
 start_init_ut=`date -ud ''${s_yyyy}-${s_mm}-${s_dd}' UTC '${s_hh}':00:00' +%s` # convert initialization time to universal time
-echo "start_init_ut=${start_init_ut}"
+#echo "start_init_ut=${start_init_ut}"
 
 end_fcst_sec=`expr ${fcst_length} \* 3600` # convert last forecast lead hour to seconds
 end_init_ut=`expr ${start_init_ut} + ${end_fcst_sec}` # calculate current forecast time in universal time
-echo "end_init_ut=${end_init_ut}"
+#echo "end_init_ut=${end_init_ut}"
 #end_init=`date -ud '1970-01-01 UTC '${end_init_ut}' seconds' +%Y%m%d%H` # convert universal time to standard time
 #echo "end_init=${end_init}"
 
@@ -59,7 +58,7 @@ while [[ ${cur_ut} -le ${end_init_ut} ]]; do
   vyyyymmdd=`echo ${cur_init} | cut -c1-8`    # YYYYMMDD of initialization time
   vinit_ut=`date -ud ''${vyyyy}-${vmm}-${vdd}' UTC '${vhh}':00:00' +%s` # convert initialization time to universal time
 
-  echo "vyyyy vmm vdd vhh = ${vyyyy} ${vmm} ${vdd} ${vhh}"
+  #echo "vyyyy vmm vdd vhh = ${vyyyy} ${vmm} ${vdd} ${vhh}"
 
   # Create necessary raw and proc directories
   if [[ ! -d "$mrms_raw/${vyyyymmdd}" ]]; then
@@ -67,7 +66,7 @@ while [[ ${cur_ut} -le ${end_init_ut} ]]; do
 
     # Check if file exists on disk; if not, pull it.
     mrms_file="$mrms_proc/${vyyyymmdd}/MergedReflectivityQComposite_00.00_${vyyyy}${vmm}${vdd}-${vhh}0000.grib2"
-    echo "MRMS FILE:${mrms_file}"
+    #echo "MRMS FILE:${mrms_file}"
 
     if [[ ! -f "${mrms_file}" ]]; then
       cd $mrms_raw/${vyyyymmdd}
@@ -100,7 +99,7 @@ while [[ ${cur_ut} -le ${end_init_ut} ]]; do
   else
     # Check if file exists on disk; if not, pull it.
     mrms_file="$mrms_proc/${vyyyymmdd}/MergedReflectivityQComposite_00.00_${vyyyy}${vmm}${vdd}-${vhh}0000.grib2"
-    echo "MRMS FILE:${mrms_file}"
+    #echo "MRMS FILE:${mrms_file}"
 
     if [[ ! -f "${mrms_file}" ]]; then
       cd $mrms_raw/${vyyyymmdd}

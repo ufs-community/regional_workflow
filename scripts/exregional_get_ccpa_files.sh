@@ -187,7 +187,7 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
     fi
   fi
   
-  # INcrement to next forecast hour      
+  # Increment to next forecast hour      
   current_fcst=$((${current_fcst} + ${accum}))
   echo "Current fcst hr=${current_fcst}"
 
