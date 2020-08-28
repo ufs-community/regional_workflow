@@ -221,7 +221,7 @@ start_date=$( echo "${cdate}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/' )
 basetime=$( date +%y%j%H%M -d "${start_date}" )
 ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}.${tmmark}.grib2 \
             ${postprd_dir}/BGDAWP_${basetime}f${fhr}00
-ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgrd3d${fhr}.${tmmark}.grib2 \
+ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}.${tmmark}.grib2 \
             ${postprd_dir}/BGRD3D_${basetime}f${fhr}00
 
 rm_vrfy -rf ${fhr_dir}
