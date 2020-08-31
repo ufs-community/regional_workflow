@@ -251,8 +251,10 @@ else
 Cannot create symlink because target does not exist:
   target = \"$target\""
 fi
-
+#
 # two files for drag_suite scheme
+# this is only for the drag parameterization in the FV3_RRFS_v1beta physics suite
+#
 if [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
     # Symlink to orographic statistics fields file with "${CRES}_" and "halo0" stripped from name.
     target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data_ls.tile${TILE_RGNL}.halo${NH0}.nc"
