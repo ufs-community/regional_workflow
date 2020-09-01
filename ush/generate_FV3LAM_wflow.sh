@@ -290,6 +290,7 @@ settings="\
   'metplus_conf': ${METPLUS_CONF}
   'met_config': ${MET_CONFIG}
   'ccpa_obs_dir': ${CCPA_OBS_DIR}
+  'mrms_obs_dir': ${MRMS_OBS_DIR}
   'ndas_obs_dir': ${NDAS_OBS_DIR}
 #
 # Ensemble-related parameters.

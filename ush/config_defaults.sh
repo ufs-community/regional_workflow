@@ -364,6 +364,7 @@ FCST_LEN_HRS="24"
 # METPLUS_CONF:
 # MET_CONFIG:
 # CCPA_OBS_DIR:
+# MRMS_OBS_DIR:
 # NDAS_OBS_DIR: 
 #
 #-----------------------------------------------------------------------
@@ -372,6 +373,7 @@ MODEL=""
 MET_INSTALL_DIR="path/to/MET"
 METPLUS_PATH="path/to/METPlus"
 CCPA_OBS_DIR="/path/to/processed/CCPA/data"
+MRMS_OBS_DIR="/path/to/processed/MRMS/data"
 NDAS_OBS_DIR="/path/to/processed/NDAS/data"
 #
 #-----------------------------------------------------------------------
@@ -909,6 +911,7 @@ VX_CONFIG_DIR=""
 METPLUS_CONF=""
 MET_CONFIG=""
 CCPA_OBS_DIR=""
+MRMS_OBS_DIR=""
 NDAS_OBS_DIR=""
 #-----------------------------------------------------------------------
 #

@@ -104,17 +104,7 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-# Run exregional_get_ccpa_files.sh script to reorganize the files into
-# a more intuitive structure for this purpose.
-#
-#-----------------------------------------------------------------------
-#
-${SCRIPTSDIR}/exregional_get_ccpa_files.sh
-${SCRIPTSDIR}/exregional_get_mrms_files.sh
-#
-#-----------------------------------------------------------------------
-#
-# Export some environment variables passed in by the XML and run METplus 
+# Export some environment variables passed in by the XML 
 #
 #-----------------------------------------------------------------------
 #
@@ -126,17 +116,40 @@ export MET_CONFIG
 export OBS_DIR
 export VAR
 export MODEL
+#
+#-----------------------------------------------------------------------
+#
+# Run exregional_get_ccpa_files.sh script to reorganize the files into
+# a more intuitive structure for this purpose.
+#
+#-----------------------------------------------------------------------
+#
+if [ ${VAR} == "APCP" ]; then
+  ${SCRIPTSDIR}/exregional_get_ccpa_files.sh
+elif [ ${VAR} == "REFC" ]; then
+  ${SCRIPTSDIR}/exregional_get_mrms_files.sh
+else
+  echo "No variable defined"
+fi
 
-if [ ${VAR} -eq "APCP" ]
-then
+#
+#-----------------------------------------------------------------------
+#
+# Run METplus 
+#
+#-----------------------------------------------------------------------
+#
+if [ ${VAR} == "APCP" ]; then
   export acc="${ACCUM}h" # for stats output prefix in GridStatConfig
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/${VAR}_${acc}.conf
-else
+elif [ ${VAR} == "REFC" ]; then
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/${VAR}.conf
+else
+  echo "No variable defined"
 fi
 
 #

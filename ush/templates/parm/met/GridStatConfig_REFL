@@ -31,7 +31,7 @@ regrid = {
    to_grid    = ${REGRID_TO_GRID};
    vld_thresh = 0.5;
    method     = NEAREST;
-   width      = 2;
+   width      = 1;
    shape      = SQUARE;
 }
 
