@@ -76,7 +76,7 @@ print_input_args valid_args
 #
 case $MACHINE in
 #
-"WCOSS_C" | "WCOSS" | "WCOSS_DELL_P3")
+"WCOSS_C" | "WCOSS")
 #
 
   if [ "${USE_CCPP}" = "TRUE" ]; then
@@ -115,6 +115,23 @@ case $MACHINE in
   LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
   ;;
 #
+"WCOSS_DELL_P3")
+
+  export NODES=5
+  export ntasks=120
+  export ptile=24
+  export threads=1
+  export MP_LABELIO=yes
+  export OMP_NUM_THREADS=$threads
+  ulimit -s unlimited
+  ulimit -a
+  APRUN="mpirun"
+
+#  APRUN="mpirun -l -np ${PE_MEMBER01}"
+
+;;
+
+
 "JET")
   ulimit -s unlimited
   ulimit -a
@@ -632,6 +649,26 @@ $APRUN ./fv3_gfs.x || print_err_msg_exit "\
 Call to executable to run FV3SAR forecast returned with nonzero exit 
 code."
 #
+#-----------------------------------------------------------------------
+# move currnt runs to tmpt dir 
+# added by jphuang
+case $MACHINE in
+
+"WCOSS_DELL_P3")
+
+export EXPT_Pre_RUN=/gpfs/dell1/ptmp/$USER/rcmaq
+  mkdir_vrfy -p "${EXPT_Pre_RUN}/$DATE_FIRST_CYCL/$CYCL_HRS"
+  mkdir_vrfy -p "${EXPT_Pre_RUN}/$DATE_FIRST_CYCL/$CYCL_HRS/NEXUS"
+#  mv_vrfy "$CYCLE_DIR/*nc"  "${EXPT_Pre_RUN}/$DATE_FIRST_CYCL/$CYCL_HRS"
+ mv  $CYCLE_DIR/*nc  ${EXPT_Pre_RUN}/$DATE_FIRST_CYCL/$CYCL_HRS/
+#  mv_vrfy "$CYCLE_DIR/INPUT"  "${EXPT_Pre_RUN}/$DATE_FIRST_CYCL/$CYCL_HRS"
+  mv $CYCLE_DIR/INPUT  ${EXPT_Pre_RUN}/$DATE_FIRST_CYCL/$CYCL_HRS
+  mv $CYCLE_DIR/NEXUS/*nc  ${EXPT_Pre_RUN}/$DATE_FIRST_CYCL/$CYCL_HRS/NEXUS
+  ln -s ${EXPT_Pre_RUN}/$DATE_FIRST_CYCL/$CYCL_HRS/*nc $CYCLE_DIR
+;;
+esac
+
+
 #-----------------------------------------------------------------------
 #
 # Print message indicating successful completion of script.

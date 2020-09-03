@@ -16,6 +16,8 @@ else
     __ms_shell=sh
 fi
 
+echo "hjp221,__ms_shell=",$__ms_shell
+
 # Handle platform as an optional command line argument
 platform=${1:-no_platform_specified}
 
@@ -33,6 +35,10 @@ if [ "$platform" = "no_platform_specified" ]; then
     elif [[ -d /gpfs/hps && -e /etc/SuSE-release ]] ; then
         # We are on NOAA Luna or Surge
         platform=wcoss_cray
+    elif [[ -d /gpfs/hps && -e /etc/os-release ]] ; then
+        # We are on NOAA Mars or Venus   
+        platform=wcoss_dell_p3
+
     elif [[ -d /dcom && -d /hwrf ]] ; then
         # We are on NOAA Tide or Gyre
         platform=wcoss

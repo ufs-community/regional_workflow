@@ -16,6 +16,10 @@ source ./machine-setup.sh $platform > /dev/null 2>&1
 if [ $platform = "wcoss_cray" ]; then
   platform="cray"
 fi
+if [ $platform = "wcoss_dell_p3" ]; then
+  platform="dell"
+fi
+#
 #
 # Set the name of the package.  This will also be the name of the execu-
 # table that will be built.
@@ -29,8 +33,16 @@ mkdir -p ../exec
 # Change directory to where the source code is located.
 # 
 cd ${package_name}.fd/
+
+make clean
+./compile.sh
+
+if [ "1" = "2" ] ; then
+
 home_dir=`pwd`/../..
 srcDir=`pwd`
+
+
 #
 # The build will be performed in a temporary directory.  If the build is
 # successful, the temporary directory will be removed.
@@ -120,6 +132,7 @@ echo "Removing temporary build directory ..."
 echo
 rm -fr $tmpDir
 
+fi
 echo "Done."
 
 exit

@@ -92,8 +92,23 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
+yyyymmdd=${CDATE:0:8}
+hh=${CDATE:8:2}
+cyc=$hh
+
 num_files_to_copy="${#EXTRN_MDL_FNS[@]}"
+case $MACHINE in
+
+"HERA")
 prefix="${EXTRN_MDL_SYSDIR}/"
+;;
+
+"WCOSS_DELL_P3")
+prefix="${EXTRN_MDL_SYSDIR}/${cyc}/"
+;;
+
+esac
+
 EXTRN_MDL_FPS=( "${EXTRN_MDL_FNS[@]/#/$prefix}" )
 
 num_files_found_on_disk="0"

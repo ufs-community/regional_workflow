@@ -1,4 +1,5 @@
 #!/bin/sh
+
 set -eux
 #
 # Check for input argument: this should be the "platform" if it exists.
@@ -8,13 +9,17 @@ if [ $# -eq 0 ]; then
   echo "No 'platform' argument supplied"
   echo "Using directory structure to determine machine settings"
   platform=''
-else 
+else
   platform=$1
 fi
 #
-source ./machine-setup.sh $platform > /dev/null 2>&1
-if [ $platform = "wcoss_cray" ]; then
+source ./machine-setup.sh > /dev/null 2>&1
+#jpif [ $platform = "wcoss_cray" ] |  [ $platform = "wcoss_dell_p3" ]; then
+if [ $platform = "wcoss_cray" ] ; then
   platform="cray"
+fi
+if [ $platform = "wcoss_dell_p3" ]; then
+  platform="dell"
 fi
 #
 # Set the name of the package.  This will also be the name of the execu-
@@ -24,13 +29,17 @@ package_name="regional_grid"
 #
 # Make an exec folder if it doesn't already exist.
 #
-mkdir -p ../exec
+exec_dir=`pwd`/../exec
+mkdir -p ${exec_dir}
 #
 # Change directory to where the source code is located.
-# 
-cd ${package_name}.fd/
-home_dir=`pwd`/../..
-srcDir=`pwd`
+#
+srcDir=`pwd`/${package_name}.fd/
+cd ${srcDir}
+
+make clean
+./compile.sh
+if [ "1" = "2" ] ; then
 #
 # The build will be performed in a temporary directory.  If the build is
 # successful, the temporary directory will be removed.
@@ -41,13 +50,17 @@ cd $tmpDir
 #
 # Load modules.
 #
+echo "hjp,target=",$target
 set +x
 module list
 #module use ../../../modulefiles/regional_workflow
 #module load ${package_name}.${target}
-module use ../../../modulefiles/codes/${target}
-module load ${package_name}
-module list
+#module use ../regional_workflow/modulefiles/codes
+#module use ../regional_workflow/modulefiles/codes/${target}
+#module load ${package_name}
+#module use ../../../modulefiles/codes/${target}
+#module load ${package_name}
+#module list
 set -x
 #
 MPICH_UNEX_BUFFER_SIZE=256m
@@ -58,7 +71,10 @@ F_UFMTENDIAN=big
 #
 # HDF5 and NetCDF directories.
 #
-if [ $platform = "cray" ]; then
+if [ $platform = "dell" ]; then
+  HDF5_DIR=${HDF5}
+  NETCDF=${NETCDF}
+elif [ $platform = "cray" ]; then
   HDF5=${HDF5_DIR}
   NETCDF=${NETCDF_DIR}
 elif [ $platform = "theia" ]; then
@@ -74,6 +90,9 @@ elif [ $platform = "cheyenne" ]; then
 elif [ $platform = "jet" ]; then
   HDF5_DIR=$HDF5
   NETCDF_DIR=$NETCDF
+elif [ $platform = "stampede" ]; then
+  HDF5_DIR=$TACC_HDF5_DIR
+  NETCDF_DIR=$TACC_NETCDF_DIR
 fi
 #
 # Create alias for "make".
@@ -92,7 +111,7 @@ echo "//////////////////////////////////////////////////////////////////////////
 echo
 set -x
 #
-# Copy all source code and the makefile to the temporary directory.  
+# Copy all source code and the makefile to the temporary directory.
 # Then clean and build from scratch.
 #
 cp $srcDir/*.f90 $tmpDir
@@ -106,7 +125,7 @@ make
 #
 target="${package_name}"
 if [ -f $target ]; then
-  mv $target $home_dir/exec
+  mv $target $exec_dir
 else
   echo "Error during '$target' build"
   exit 1
@@ -114,11 +133,14 @@ fi
 #
 # Remove the temporary build directory.
 #
+fi 
 set +x
 echo
 echo "Removing temporary build directory ..."
 echo
-rm -fr $tmpDir
+#rm -fr $tmpDir
+
+cp regional_grid ../../exec
 
 echo "Done."
 

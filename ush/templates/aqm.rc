@@ -7,14 +7,14 @@
 #
 #  General settings
 #
-ae_matrix_nml: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/AE_cb6r3_ae6_aq.nml
-gc_matrix_nml: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/GC_cb6r3_ae6_aq.nml
-nr_matrix_nml: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/NR_cb6r3_ae6_aq.nml
-tr_matrix_nml: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/Species_Table_TR_0.nml
+ae_matrix_nml: /gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data/AE_cb6r3_ae6_aq.nml
+gc_matrix_nml: /gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data/GC_cb6r3_ae6_aq.nml
+nr_matrix_nml: /gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data/NR_cb6r3_ae6_aq.nml
+tr_matrix_nml: /gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data/Species_Table_TR_0.nml
 
-csqy_data:   /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/CSQY_DATA_cb6r3_ae6_aq
-optics_data: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/PHOT_OPTICS.dat
-omi_data:    /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data/omi_cmaq_2015_361X179.dat
+csqy_data:   /gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data/CSQY_DATA_cb6r3_ae6_aq
+optics_data: /gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data/PHOT_OPTICS.dat
+omi_data:    /gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data/omi_cmaq_2015_361X179.dat
 
 init_concentrations: true
 
@@ -146,13 +146,13 @@ bio_type: biogenic
 
 bio_format: netcdf
 
-bio_file: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/bio/BEIS_SARC401.ncf
+bio_file: /gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/bio/BEIS_SARC401.ncf
 
 bio_frequency: static
 
 bio_period: summer
 
-bio_speciation_file: /scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/bio/gspro_biogenics_1mar2017.txt
+bio_speciation_file: /gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/bio/gspro_biogenics_1mar2017.txt
 
 bio_speciation_profile: B10C6
 

@@ -11,8 +11,11 @@ if [ $# -eq 0 ]; then
 else 
   platform=$1
 fi
+echo "hjp111,platform=",$platform
 #
-source ./machine-setup.sh $platform > /dev/null 2>&1
+#source ./machine-setup.sh $platform > /dev/null 2>&1
+source ./machine-setup.sh $platform
+echo "hjp112"
 #
 # Set the name of the package.  This will also be the name of the execu-
 # table that will be built.

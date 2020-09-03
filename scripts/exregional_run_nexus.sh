@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source ~/.bashrc
 #
 #-----------------------------------------------------------------------
 #
@@ -114,10 +115,41 @@ mm="${CYCLE_DATE:4:2}"
 dd="${CYCLE_DATE:6:2}"
 hh="${CYCLE_DATE:8:2}"
 yyyymmdd="${CYCLE_DATE:0:8}"
+
+
 # Note: a timezone offset is used to compute the end date. Consequently,
 # the code below will only work for forecast lengths up to 24 hours.
 start_date=$( date --utc --date "${yyyymmdd} ${hh}" "+%Y%m%d%H" )
-end_date=$( date --utc --date "${yyyymmdd} ${hh} -${FCST_LEN_HRS}" "+%Y%m%d%H" )
+case $MACHINE in
+ 
+"HERA")
+
+ export NEXUS_INPUT_BASE_DIR=/scratch2/NAGAPE/arl/Barry.Baker/emissions
+
+ end_date=$( date --utc --date "${yyyymmdd} ${hh} -${FCST_LEN_HRS}" "+%Y%m%d%H" )
+;;
+
+"WCOSS_C" | "WCOSS" | "WCOSS_DELL_P3")
+
+#  module load prod_util/1.1.4
+#  module load NCL/6.4.0 
+  export NEXUS_INPUT_BASE_DIR=/gpfs/dell2/emc/modeling/noscrub/$USER/emissions
+
+  export NODES=1
+  export ntasks=24
+  export ptile=24
+  export threads=1
+  export MP_LABELIO=yes
+  export OMP_NUM_THREADS=$threads
+  ulimit -s unlimited
+  ulimit -a
+  APRUN="mpirun"
+ 
+ end_date=`$NDATE +${FCST_LEN_HRS} ${start_date} | cut -c 1-10`
+ echo "hjp115,end_date=",$end_date
+
+ ;;
+esac
 #
 #######################################################################
 # This will be the section to set the datasets used in $workdir/NEXUS_Config.rc 
@@ -131,7 +163,7 @@ CEDS2017="FALSE"
 HTAP2010="FALSE"
 MASKS="TRUE"
 
-NEXUS_INPUT_BASE_DIR=/scratch2/NAGAPE/arl/Barry.Baker/emissions
+
 ########################################################################
 
 #
@@ -178,7 +210,8 @@ fi
 #
 # Execute NEXUS
 #
-${PLAUNCH} ${EXECDIR}/nexus -c NEXUS_Config.rc -r grid_spec.nc || \
+#${PLAUNCH} ${EXECDIR}/nexus -c NEXUS_Config.rc -r grid_spec.nc || \
+${APRUN} ${EXECDIR}/nexus -c NEXUS_Config.rc -r grid_spec.nc || \
 print_err_msg_exit "\
 Call to execute nexus standalone for the FV3SAR failed
 "

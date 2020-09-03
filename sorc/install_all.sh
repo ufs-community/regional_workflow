@@ -53,6 +53,10 @@ fi
 # ${CP} regional_utils.fd/exec/regional_grid            ../exec/regional_grid.x
 
 #------------------------------------
+# install regional_grid
+#------------------------------------
+ ${CP} global_equiv_resol.fd/global_equiv_resol         ../exec/
+#------------------------------------
 # install fre-nctools
 #------------------------------------
  ${CP} UFS_UTILS_develop/exec/make_hgrid               ../exec/make_hgrid

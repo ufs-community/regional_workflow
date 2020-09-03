@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/bin/bash -l
 
+source ~/.bashrc 
 #
 #-----------------------------------------------------------------------
 #
@@ -100,19 +101,21 @@ export OMP_STACKSIZE=2048m
 case $MACHINE in
 
 
-"WCOSS_C" | "WCOSS")
+"WCOSS_C" | "WCOSS" | "WCOSS_DELL_P3")
 #
   { save_shell_opts; set +x; } > /dev/null 2>&1
 
   . $MODULESHOME/init/sh
-  module load PrgEnv-intel cfp-intel-sandybridge/1.1.0
+#  module load PrgEnv-intel cfp-intel-sandybridge/1.1.0
+  module load prod_envir/1.1.0
   module list
 
   { restore_shell_opts; } > /dev/null 2>&1
 
   export NODES=1
-  export APRUN="aprun -n 1 -N 1 -j 1 -d 1 -cc depth"
-  export KMP_AFFINITY=disabled
+#  export APRUN="aprun -n 1 -N 1 -j 1 -d 1 -cc depth"
+#  export KMP_AFFINITY=disabled
+    APRUN="mpirun -n 1 "
 
   ulimit -s unlimited
   ulimit -a

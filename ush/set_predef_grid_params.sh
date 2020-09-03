@@ -209,7 +209,8 @@ predefined domain:
 
     DT_ATMOS="300"
 
-    LAYOUT_X="5"
+#jp     LAYOUT_X="5"
+     LAYOUT_X="10"
     LAYOUT_Y="5"
     BLOCKSIZE="6"
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 
 #
 #-----------------------------------------------------------------------
@@ -90,7 +90,31 @@ mm=$(date -d "$yyyymmdd" +"%m")
 
 CHEM_BOUNDARY_CONDITION_FILE=gfs_bndy_chem_${mm}.tile7.000.nc
 
+case $MACHINE in
+
+"HERA")
+
 boundary_file_loc=/scratch2/NAGAPE/arl/Barry.Baker/boundary_conditions
+
+;;
+
+"WCOSS_DELL_P3")
+
+module load  NCL/6.4.0   
+
+module list
+
+#export Pre_cyc=$CYCLE_DIR/../
+#export CYC_1=`$NDATE -6 ${DATE_FIRST_CYCL}$CYCL_HRS`  
+#export CYC_2=`$NDATE -12 ${DATE_FIRST_CYCL}$CYCL_HRS`  
+#export CYC_3=`$NDATE -18 ${DATE_FIRST_CYCL}$CYCL_HRS`  
+#export PDYm1=`$NDATE -24 ${DATE_FIRST_CYCL}$CYCL_HRS | cut -c1-8`  
+
+
+boundary_file_loc=/gpfs/dell2/emc/modeling/noscrub/$USER/boundary_conditions
+
+;;
+esac
 
 FULL_CHEMICAL_BOUNDARY_FILE=${boundary_file_loc}/${CHEM_BOUNDARY_CONDITION_FILE}
 if [ -f ${FULL_CHEMICAL_BOUNDARY_FILE} ]; then
@@ -106,9 +130,135 @@ Fetching chemical lateral boundary condition filesfrom HPSS:
     htar -xvf ${AQM_ARCHIVE} ${CHEM_BOUNDARY_CONDITION_FILE}
 fi
 
-for hr in 00 06 12 18 24; do
-    ncks -A ${CHEM_BOUNDARY_CONDITION_FILE} ${CYCLE_DIR}/INPUT/gfs_bndy.tile7.0${hr}.nc
+#
+export hr=0
+while [ $hr -le ${FCST_LEN_HRS} ]; do
+#    typeset -Z3 hr
+    if [ $hr -le 9 ]; then
+      new_lbc=${CYCLE_DIR}/INPUT/gfs_bndy.tile7.00${hr}.nc 
+    elif [ $hr -le 99 ]; then
+      new_lbc=${CYCLE_DIR}/INPUT/gfs_bndy.tile7.0${hr}.nc
+    else
+      new_lbc=${CYCLE_DIR}/INPUT/gfs_bndy.tile7.${hr}.nc
+    fi
+#   ncks -A ${CHEM_BOUNDARY_CONDITION_FILE} ${CYCLE_DIR}/INPUT/gfs_bndy.tile7.${hr}.nc
+    ncks -A ${CHEM_BOUNDARY_CONDITION_FILE} ${new_lbc}
+    let "hr=hr+6"
 done
+#
+# added by J. Huang  09/02/2020
+
+echo "hjp111"
+case $MACHINE in
+
+"WCOSS_C" | "WCOSS" | "WCOSS_DELL_P3")
+
+#below added by J.Huang on 9/2/2020
+#source ~/.bashrc
+
+module load prod_util/1.1.0
+
+export cyc=$CYCL_HRS
+export cycle=t${cyc}z
+
+setpdy.sh
+
+. PDY
+
+echo "hjp222=",$PDY
+;;
+esac
+
+export COMIN=/gpfs/dell1/ptmp/$USER/rcmaq/${PDY}
+export COMINm1=/gpfs/dell1/ptmp/$USER/rcmaq/${PDYm1}
+export COMINm2=/gpfs/dell1/ptmp/$USER/rcmaq/${PDYm2}
+  
+
+case $cyc in
+ 00) restart_file1=$COMINm1/18/dynf006.nc
+     restart_log1=$COMINm1/rcmaq.t18z.log
+     restart_file2=$COMINm1/12/dynf012.nc
+     restart_log2=$COMINm1/rcmaq.t12z.log
+     restart_file3=$COMINm1/06/dynf018.nc
+     restart_log3=$COMINm1/rcmaq.t06z.log
+     restart_file4=$COMINm1/00/dynf024.nc
+     restart_log4=$COMINm1/rcmaq.t00z.log
+     restart_file5=$COMINm2/18/dynf030.nc
+     restart_log5=$COMINm2/aqm.t18z.log;;
+ 06) restart_file1=$COMIN/00/dynf006.nc
+     restart_log1=$COMIN/rcmaq.t00z.log
+     restart_file2=$COMINm1/18/dynf012.nc
+     restart_log2=$COMINm1/rcmaq.t18z.log
+     restart_file3=$COMINm1/12/dynf018.nc
+     restart_log3=$COMINm1/rcmaq.t12z.log
+     restart_file4=$COMINm1/06/dynf024.nc
+     restart_log4=$COMINm1/rcmaq.t06z.log
+     restart_file5=$COMINm1/00/dynf030.nc
+     restart_log5=$COMINm1/aqm.t00z.log;;
+ 12) restart_file1=$COMIN/06/dynf006.nc
+     restart_log1=$COMIN/rcmaq.t06z.log
+     restart_file2=$COMIN/00/dynf012.nc
+     restart_log2=$COMIN/rcmaq.t00z.log
+     restart_file3=$COMINm1/18/dynf018.nc
+     restart_log3=$COMINm1/rcmaq.t18z.log
+     restart_file4=$COMINm1/12/dynf024.nc
+     restart_log4=$COMINm1/rcmaq.t12z.log
+     restart_file5=$COMINm1/18/dynf030.nc
+     restart_log5=$COMINm1/aqm.t18z.log;;
+ 18) restart_file1=$COMIN/12/dynf006.nc
+     restart_log1=$COMIN/rcmaq.t12z.log
+     restart_file2=$COMIN/06/dynf012.nc
+     restart_log2=$COMIN/rcmaq.t06z.log
+     restart_file3=$COMIN/00/dynf018.nc
+     restart_log3=$COMIN/rcmaq.t00z.log
+     restart_file4=$COMINm1/18/dynf024.nc
+     restart_log4=$COMINm1/rcmaq.t18z.log
+     restart_file5=$COMINm1/12/dynf030.nc
+     restart_log5=$COMINm1/aqm.t12z.log;;
+esac
+
+if [ -s "$restart_file1" ]
+then
+  restart_file=$restart_file1
+  restart_log=$restart_log1
+elif [ -s "$restart_file2" ]
+then
+  restart_file=$restart_file2
+  restart_log=$restart_log2
+elif [ -s "$restart_file3" ]
+then
+  restart_file=$restart_file3
+  restart_log=$restart_log3
+elif [ -s "$restart_file4" ]
+then
+  restart_file=$restart_file4
+  restart_log=$restart_log4
+elif [ -s "$restart_file5" ]
+then
+  restart_file=$restart_file5
+  restart_log=$restart_log5
+fi
+
+if [ -s "$restart_file" ]
+then
+ export START=WARM
+ export INITIAL_RUN=N
+else
+  export START=COLD
+  export INITIAL_RUN=Y
+fi
+
+
+if [ "$INITIAL_RUN" = "N" ]
+then
+
+  cp -rp ${CYCLE_DIR}/INPUT/C401_grid.tile7.halo3.nc ${CYCLE_DIR}/INPUT/C401_grid.tile7.halo3.nc_ori
+  ncks -A $restart_file ${CYCLE_DIR}/INPUT/C401_grid.tile7.halo3.nc
+
+  echo "hjp999 is generating new ICs for chemical species"
+fi
+
+
 #
 #-----------------------------------------------------------------------
 #

@@ -209,14 +209,29 @@ ln_vrfy -fs "${UFS_UTILS_DIR}/modulefiles/modulefile.sfc_climo_gen.$machine" \
 #ln_vrfy -fs "${MAKE_ICS_TN}.hardcoded" "${MAKE_ICS_TN}"
 cp_vrfy "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" \
         "${MAKE_ICS_TN}"
+case $MACHINE in
+"HERA")
 cat "${MAKE_ICS_TN}.local" >> "${MAKE_ICS_TN}"
+;;
+"WCOSS_DELL_P3")
+cat "${MAKE_ICS_TN}.wcoss_dell_p3" >> "${MAKE_ICS_TN}"
+;;
+esac
 
 #ln_vrfy -fs "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" \
 #            "${MAKE_LBCS_TN}"
 #ln_vrfy -fs "${MAKE_LBCS_TN}.hardcoded" "${MAKE_LBCS_TN}"
 cp_vrfy "${CHGRES_DIR}/modulefiles/chgres_cube.$machine" \
         "${MAKE_LBCS_TN}"
+
+case $MACHINE in
+"HERA")
 cat "${MAKE_LBCS_TN}.local" >> "${MAKE_LBCS_TN}"
+;;
+"WCOSS_DELL_P3")
+cat "${MAKE_LBCS_TN}.wcoss_dell_p3" >> "${MAKE_LBCS_TN}"
+;;
+esac
 
 ln_vrfy -fs "${UFS_WTHR_MDL_DIR}/NEMS/src/conf/modules.nems" \
             "${RUN_FCST_TN}"

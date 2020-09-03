@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 #
 #-----------------------------------------------------------------------
 #
@@ -26,6 +28,7 @@
 #-----------------------------------------------------------------------
 #
 { save_shell_opts; set -u +x; } > /dev/null 2>&1
+set -x
 #
 #-----------------------------------------------------------------------
 #
@@ -83,8 +86,8 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-export OMP_NUM_THREADS=6
-export OMP_STACKSIZE=2048m
+#export OMP_NUM_THREADS=6
+#export OMP_STACKSIZE=2048m
 #
 #-----------------------------------------------------------------------
 #
@@ -117,11 +120,17 @@ case $MACHINE in
   ulimit -a
   ;;
 
+"WCOSS_DELL_P3")
+ . $MODULESHOME/init/sh
+  ulimit -s unlimited
+  ulimit -a
+  APRUN="mpirun"
+  ;;
 
 "HERA")
   ulimit -s unlimited
   ulimit -a
-  export APRUN="time"
+  APRUN="time"
   ;;
 
 
@@ -142,8 +151,7 @@ case $MACHINE in
 
 
 "CHEYENNE")
-  export APRUN="time"
-  export topo_dir="/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"
+  APRUN="time"
   ;;
 
 esac
@@ -156,7 +164,7 @@ esac
 #
 #-----------------------------------------------------------------------
 #
-check_for_preexist_dir ${OROG_DIR} ${PREEXISTING_DIR_METHOD}
+check_for_preexist_dir_file "${OROG_DIR}" "${PREEXISTING_DIR_METHOD}"
 mkdir_vrfy -p "${OROG_DIR}"
 
 raw_dir="${OROG_DIR}/raw_topo"
@@ -315,6 +323,38 @@ ${tmp_dir}" \
 
   aprun -j 1 -n 4 -N 4 -d 6 -cc depth cfp ${tmp_dir}/orog.file1
   rm_vrfy ${tmp_dir}/orog.file1
+  ;;
+
+"WCOSS_DELL_P3")
+#
+# On WCOSS and WCOSS_C, use cfp to run multiple tiles simulatneously for
+# the orography.  For now, we have only one tile in the regional case,
+# but in the future we will have more.  First, create an input file for
+# cfp.
+#
+  ufs_utils_ushdir="${UFS_UTILS_DIR}/ush"
+  res="0"  # What should this be set to???
+
+# printf "%s\n" "\
+#${ufs_utils_ushdir}/${orog_gen_scr} \
+#$res \
+#${TILE_RGNL} \
+#${FIXsar} \
+#${raw_dir} \
+#${UFS_UTILS_DIR} \
+#${topo_dir} \
+#${tmp_dir}" \
+#  >> ${tmp_dir}/orog.file1
+
+# aprun -j 1 -n 4 -N 4 -d 6 -cc depth cfp ${tmp_dir}/orog.file1
+"${exec_fp}" < "${input_redirect_fn}" || \
+#  $APRUN "${exec_fp}" < "${input_redirect_fn}" || \
+    print_err_msg_exit "\
+Call to executable (exec_fp) that generates the raw orography file returned
+with nonzero exit code:
+  exec_fp = \"${exec_fp}\""
+
+# rm_vrfy ${tmp_dir}/orog.file1
   ;;
 
 
@@ -487,7 +527,8 @@ cd_vrfy "${filter_dir}"
 print_info_msg "$VERBOSE" "
 Starting filtering of orography..."
 
-$APRUN "${exec_fp}" || \
+ "${exec_fp}" || \
+#$APRUN "${exec_fp}" || \
   print_err_msg_exit "\
 Call to executable that generates filtered orography file returned with
 non-zero exit code."
@@ -556,7 +597,8 @@ printf "%s %s %s %s %s\n" \
   $NX $NY ${NH0} \"${unshaved_fp}\" \"${shaved_fp}\" \
   > ${nml_fn}
 
-$APRUN ${exec_fp} < ${nml_fn} || \
+ ${exec_fp} < ${nml_fn} || \
+#$APRUN ${exec_fp} < ${nml_fn} || \
 print_err_msg_exit "\
 Call to executable (exec_fp) to generate a (filtered) orography file with
 a ${NH0}-cell-wide halo from the orography file with a {NHW}-cell-wide halo
@@ -582,7 +624,8 @@ printf "%s %s %s %s %s\n" \
   $NX $NY ${NH4} \"${unshaved_fp}\" \"${shaved_fp}\" \
   > ${nml_fn}
 
-$APRUN ${exec_fp} < ${nml_fn} || \
+ ${exec_fp} < ${nml_fn} || \
+#$APRUN ${exec_fp} < ${nml_fn} || \
 print_err_msg_exit "\
 Call to executable (exec_fp) to generate a (filtered) orography file with
 a ${NH4}-cell-wide halo from the orography file with a {NHW}-cell-wide halo

@@ -29,6 +29,12 @@ mkdir -p ../exec
 # Change directory to where the source code is located.
 # 
 cd ${package_name}.fd/
+
+./compile.sh 
+
+if [ "1" = "2" ] ;  then
+
+
 home_dir=`pwd`/../..
 srcDir=`pwd`
 #
@@ -119,6 +125,8 @@ echo
 echo "Removing temporary build directory ..."
 echo
 rm -fr $tmpDir
+
+fi
 
 echo "Done."
 

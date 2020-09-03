@@ -286,17 +286,17 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #
 case $MACHINE in
 #
-"WCOSS_C")
+#"WCOSS_C")
+"WCOSS_DELL_P3")
+ source  $MODULESHOME/init/sh
 #
-  print_err_msg_exit "\
-Don't know how to set several parameters on MACHINE=\"$MACHINE\".
-Please specify the correct parameters for this machine in the setup script.  
-Then remove this message and rerun." 
-  NCORES_PER_NODE=""
-  SCHED=""
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-""}
-  QUEUE_HPSS=${QUEUE_HPSS:-""}
-  QUEUE_FCST=${QUEUE_FCST:-""}
+  NCORES_PER_NODE=24
+  SCHED="lsf"
+  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
+  QUEUE_HPSS=${QUEUE_HPSS:-"dev"}
+  QUEUE_HPSS_TAG="queue"       # lsf does not support "partition" tag
+  QUEUE_FCST=${QUEUE_FCST:-"dev"}
+
   ;;
 #
 "WCOSS")
@@ -311,16 +311,6 @@ Then remove this message and rerun."
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-""}
   QUEUE_HPSS=${QUEUE_HPSS:-""}
   QUEUE_FCST=${QUEUE_FCST:-""}
-  ;;
-#
-"WCOSS_DELL_P3")
-#
-  NCORES_PER_NODE=24
-  SCHED="lsf"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
-  QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
-  QUEUE_HPSS_TAG="queue"       # lsf does not support "partition" tag
-  QUEUE_FCST=${QUEUE_FCST:-"dev"}
   ;;
 #
 "THEIA")
@@ -695,9 +685,10 @@ case $MACHINE in
   ;;
 
 "WCOSS_DELL_P3")
-  FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
+  FIXgsm="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"
+  SFC_CLIMO_INPUT_DIR="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"
+  EXPT_BASEDIR=/gpfs/dell1/ptmp/$USER/expt_dirs
+  EXPT_Pre_RUN=/gpfs/dell1/ptmp/$USER/rcmaq
   ;;
 
 "THEIA")

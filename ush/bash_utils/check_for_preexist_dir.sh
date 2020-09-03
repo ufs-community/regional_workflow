@@ -138,6 +138,7 @@ Moving (renaming) preexisting directory to:
   old_dir = \"${old_dir}\""
 
       mv_vrfy "$dir" "${old_dir}"
+#      mv_vrfy "$dir" "${EXPT_Pre_RUN}/$PDY/$pre_cyc"
       ;;
 #
 #-----------------------------------------------------------------------

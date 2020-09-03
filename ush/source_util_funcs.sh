@@ -83,6 +83,7 @@ function source_util_funcs() {
 #
   . ${bashutils_dir}/check_for_preexist_dir.sh
 #
+    . ${bashutils_dir}/check_for_preexist_dir_file.sh
 #-----------------------------------------------------------------------
 #
 # Source the file containing functions that execute filesystem commands

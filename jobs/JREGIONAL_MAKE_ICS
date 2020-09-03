@@ -68,17 +68,85 @@ mkdir_vrfy -p "${ICS_DIR}"
 #
 #-----------------------------------------------------------------------
 #
-# Retrieve platform's parallel application launcher command.
+# Load modules and set machine-dependent parameters.
 #
 #-----------------------------------------------------------------------
 #
-get_platform_info \
-    num_pes="48" \
-    num_threads="2" \
-    varname_run_cmd="APRUN" \
-    varname_stack_size="stack_size"
+case "$MACHINE" in
+#
+"WCOSS_C")
+#
+  { save_shell_opts; set +x; } > /dev/null 2>&1
 
-ulimit -s ${stack_size} > /dev/null 2>&1
+  { restore_shell_opts; } > /dev/null 2>&1
+  ;;
+#
+"WCOSS")
+#
+  { save_shell_opts; set +x; } > /dev/null 2>&1
+
+  { restore_shell_opts; } > /dev/null 2>&1
+  ;;
+#
+"WCOSS_DELL_P3")
+#
+  { save_shell_opts; set +x; } > /dev/null 2>&1
+
+  export NODES=2
+  export ntasks=48
+  export ptile=24
+  export threads=1
+  export MP_LABELIO=yes
+  export OMP_NUM_THREADS=$threads
+
+  APRUN="mpirun"
+
+  { restore_shell_opts; } > /dev/null 2>&1
+  ;;
+#
+"THEIA")
+#
+  { save_shell_opts; set +x; } > /dev/null 2>&1
+
+  ulimit -s unlimited
+#  ulimit -a
+
+  module purge
+  module load intel/18.1.163
+  module load impi/5.1.1.109
+  module load netcdf/4.3.0
+  module load hdf5/1.8.14
+  module load wgrib2/2.0.8
+  module load contrib wrap-mpi
+  module list
+
+  np=${SLURM_NTASKS}
+  APRUN="mpirun -np ${np}"
+
+  { restore_shell_opts; } > /dev/null 2>&1
+  ;;
+#
+"HERA")
+  ulimit -s unlimited
+#  ulimit -a
+  APRUN="srun"
+  ;;
+#
+"JET")
+  ulimit -s unlimited
+#  ulimit -a
+  APRUN="srun"
+  ;;
+#
+"ODIN")
+#
+  ;;
+#
+"CHEYENNE")
+  APRUN="mpirun -np ${NPROCS}"
+  ;;
+#
+esac
 #
 #-----------------------------------------------------------------------
 #
