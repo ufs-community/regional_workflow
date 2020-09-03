@@ -1,0 +1,33 @@
+#%Module#####################################################
+## chgres build module for WCOSS-Dell P3
+##############################################################
+module purge
+module load ips/18.0.1.163
+module load impi/18.0.1
+
+module load NetCDF/4.5.0
+module load HDF5-serial/1.10.1
+module load nemsio/2.2.3
+module load metplus/2.1
+module load w3nco/2.0.6
+module load bacio/2.0.2
+module load zlib/1.2.11
+
+
+module load prod_envir/1.1.0
+module load prod_util/1.1.4
+module load grib_util/1.0.6
+
+module load lsf/10.1
+module load python/3.6.3
+
+
+
+setenv FCOMP ifort
+setenv FFLAGS "-O3 -fp-model precise -g -r8 -i4"
+
+
+
+
+
+

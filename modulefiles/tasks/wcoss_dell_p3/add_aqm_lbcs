@@ -1,0 +1,13 @@
+#%Module#####################################################
+## Module file for get_extrn_aqm task.
+#############################################################
+
+module purge
+
+#module load hpss
+module load ips/18.0.1.163
+module load HPSS/5.0.2.5
+module load NetCDF/4.5.0
+module load w3nco/2.0.6
+#module load intel netcdf nco
+setenv ESMFMKFILE /gpfs/dell2/emc/modeling/noscrub/George.Gayno/esmf_lib/8_0_0bs20/lib/libO/Linux.intel.64.intelmpi.default/esmf.mk

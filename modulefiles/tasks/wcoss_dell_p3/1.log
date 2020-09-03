@@ -1,0 +1,80 @@
+
+-------------------------------- Third Party Test Applications - Not for Production Use --------------------------------
+   GrADS/2.2.0                                  (L)    mpi_third/ips/18.0.1/impi/18.0.1/ESMF/8.0.0
+   NCARG/6.4.0                                         mpi_third/ips/18.0.1/impi/18.0.1/ESMF/8.0.1
+   cdo/1.9.8                                           mpi_third/ips/18.0.1/impi/18.0.1/HDF5-parallel/1.10.6
+   cmake/3.10.0                                        mpi_third/ips/18.0.1/impi/18.0.1/NetCDF-HDF5-parallel/4.5.0
+   compiler_mpi/ips/19.0.5/impi/19.0.5                 mpi_third/ips/18.0.1/impi/18.0.1/NetCDF-parallel/4.7.4
+   compiler_third/ips/18.0.1/NCO/4.7.0                 mpi_third/ips/18.0.1/smpi/10.1.1.0/CFP/2.0.2
+   compiler_third/ips/19.0.5/HDF5-serial/1.8.20        mpi_third/ips/19.0.5/impi/19.0.5/CFP/2.0.1
+   compiler_third/ips/19.0.5/HDF5-serial/1.10.1        mpi_third/ips/19.0.5/impi/19.0.5/CFP/2.0.2
+   compiler_third/ips/19.0.5/NCL/6.4.0                 mpi_third/ips/19.0.5/impi/19.0.5/ESMF/4_0_0rp2
+   compiler_third/ips/19.0.5/NCO/4.7.0                 mpi_third/ips/19.0.5/impi/19.0.5/ESMF/7_0_0
+   compiler_third/ips/19.0.5/NetCDF/3.6.3              mpi_third/ips/19.0.5/impi/19.0.5/ESMF/7_1_0r
+   compiler_third/ips/19.0.5/NetCDF/4.5.0              mpi_third/ips/19.0.5/impi/19.0.5/HDF5-parallel/1.8.20
+   compiler_third/ips/19.0.5/jasper/1.900.1            mpi_third/ips/19.0.5/impi/19.0.5/HDF5-parallel/1.10.1
+   compiler_third/ips/19.0.5/jasper/1.900.29           mpi_third/ips/19.0.5/impi/19.0.5/PNetCDF/1.8.1
+   compiler_third/ips/19.0.5/libpng/1.2.44             perl/DateTime/1.44
+   compiler_third/ips/19.0.5/libpng/1.2.59             perl/XML-Parser/2.44
+   compiler_third/ips/19.0.5/udunits/2.2.25            pigz/2.3.4
+   compiler_third/ips/19.0.5/xmlparse/2.0.0            pygrib/2.0.4
+   compiler_third/ips/19.0.5/zlib/1.2.11               python/2.7.13
+   emc-utils/1.0.0                                     python/2.7.14
+   git/2.14.3                                   (L)    python/3.6.3
+   idl/8.6.1                                           rocoto/pre-release-20181212
+   idl/8.7.3                                           rocoto/pre-release-20181218
+   imagemagick/6.9.9-25                         (L)    rocoto/complete                                             (L)
+   met/8.1                                             rocoto/experimental
+   metplus/2.1                                         rocoto/1.2.4
+   mpi_third/ips/18.0.1/impi/18.0.1/CFP/2.0.2          rocoto/1.3.0rc2
+   mpi_third/ips/18.0.1/impi/18.0.1/CFP/2.0.3          rocoto/20180420-master
+   mpi_third/ips/18.0.1/impi/18.0.1/CFP/2.0.4          ruby/2.5.1                                                  (L)
+
+---------------------------------------------------- System Modules ----------------------------------------------------
+   lmod/7.7    settarg/7.7
+
+---------------------------------------- Third Party Applications and Compilers ----------------------------------------
+   EnvVars/1.0.2        cmake/3.16.2                ips/18.0.5.274        pm5/1.0       (L)    python/3.6.3      (L)
+   EnvVars/1.0.3 (L)    gnu/4.8.5                   ips/19.0.5.281        pygrib/2.0.4         rsync/3.1.2       (L)
+   HPSS/5.0.2.5  (L)    imagemagick/6.9.9-25        lsf/10.1       (L)    python/2.7.13        subversion/1.7.16 (L)
+   cmake/3.10.0  (L)    ips/18.0.1.163       (L)    mktgs/1.0      (L)    python/2.7.14
+
+--------------------------------------------- NCO Production Core Modules ----------------------------------------------
+   prod_envir/1.0.2 (L)    prod_envir/1.0.3    prod_envir/1.1.0
+
+--------------------------------------- Third Party Compiled Libraries and Tools ---------------------------------------
+   HDF5-serial/1.8.20    NCO/4.7.0           jasper/1.900.1     libpng/1.2.59     zlib/1.2.11
+   HDF5-serial/1.10.1    NetCDF/3.6.3        jasper/1.900.29    udunits/2.2.25
+   NCL/6.4.0             NetCDF/4.5.0 (L)    libpng/1.2.44      xmlparse/2.0.0
+
+------------------------------------- NCO Production Compiled Libraries and Tools --------------------------------------
+   bacio/2.0.2         (L)    crtm/2.2.6       gempak/7.3.1             prod_util/1.1.2
+   bufr/11.2.0         (L)    dumpjb/5.0.0     gfsio/1.1.0              prod_util/1.1.3
+   bufr/11.3.0                dumpjb/5.0.1     graphics/2.0.0           prod_util/1.1.4
+   bufr/11.3.1                dumpjb/5.0.2     grib_util/1.0.6          sfcio/1.0.0       (L)
+   bufr_dumplist/2.0.0        dumpjb/5.0.3     grib_util/1.1.0   (L)    sigio/2.0.1       (L)
+   bufr_dumplist/2.0.1        dumpmb/1.0.0     grib_util/1.1.1          sigio/2.1.0
+   bufr_dumplist/2.0.2        ecflow/4.7.1     ip/3.0.1          (L)    sp/2.0.2          (L)
+   bufr_dumplist/2.1.0        ecflow/4.17.0    ip2/1.0.0                util_shared/1.1.0
+   bufr_dumplist/2.2.0        g2/3.1.0         landsfcutil/2.1.0        util_shared/1.1.1
+   bufr_util/1.0.0            g2c/1.5.0        mmab/3.5.0               util_shared/1.1.2
+   bufr_util/1.0.1            g2tmpl/1.5.0     prod_util/1.1.0   (L)    w3nco/2.0.6       (L)
+   crtm/2.2.5          (L)    g2tmpl/1.6.0     prod_util/1.1.1          wrfio/1.1.1
+
+----------------------------------------------------- MPI versions -----------------------------------------------------
+   impi/18.0.1 (L)    smpi/10.1.1.0    smpi/10.1.1.0p
+
+------------------------------------- Third Party Compiled MPI Libraries and Tools -------------------------------------
+   CFP/2.0.1    ESMF/4_0_0rp2    ESMF/7_1_0r    HDF5-parallel/1.8.20    PNetCDF/1.8.1
+   CFP/2.0.2    ESMF/7_0_0       ESMF/8.0.0     HDF5-parallel/1.10.1
+
+----------------------------------- NCO Production Compiled MPI Libraries and Tools ------------------------------------
+   nemsio/2.2.3 (L)    nemsiogfs/2.0.1    w3emc/2.3.0 (L)
+
+  Where:
+   L:  Module is loaded
+
+Use "module spider" to find all possible modules.
+Use "module keyword key1 key2 ..." to search for all possible modules matching any of the "keys".
+
+
