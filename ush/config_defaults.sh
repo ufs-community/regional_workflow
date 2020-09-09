@@ -397,6 +397,19 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #
 #-----------------------------------------------------------------------
 #
+# Set NOMADS online data associated parameters. Definitions:
+#
+# NOMADS:
+# Flag controlling whether or not using NOMADS online data
+#
+# NOMADS_file_type
+# Flag controlling the format of data
+#
+NOMADS="FALSE"
+NOMADS_file_type="nemsio"
+#
+#-----------------------------------------------------------------------
+#
 # User-staged external model directories and files.  Definitions:
 #
 # EXTRN_MDL_SOURCE_DIR_ICS:
@@ -1206,12 +1219,21 @@ SKEB_VDOF="10"
 USE_ZMTNBLCK="false"
 #
 #-----------------------------------------------------------------------
-# 
-# HALO_BLEND:
-# Number of rows into the computational domain that should be blended 
-# with the LBCs.
+#
+# GWD_RRFS_v1beta_BASEDIR:
+# Temporary workflow variable specifies the base directory in which to 
+# look for certain fixed orography files needed only by the gravity wave 
+# drag parameterization in the FV3_RRFS_v1beta physics suite.  This variable
+# is added in order to avoid including hard-coded paths in the workflow
+# scripts.  Currently, the workflow simply copies the necessary files 
+# from a subdirectory under this directory (named according to the specified
+# predefined grid) to the orography directory (OROG_DIR) under the 
+# experiment directory.  
+#
+# Note that this variable is only used when using the FV3_RRFS_v1beta 
+# physics suite.  This variable should be removed from the workflow once 
+# there is a script that generates these files for any grid.
 #
 #-----------------------------------------------------------------------
 #
-HALO_BLEND=10
-#
+GWD_RRFS_v1beta_BASEDIR=""
