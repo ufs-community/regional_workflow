@@ -628,18 +628,18 @@ Setting parameters in FV3 namelist file (FV3_NML_FP):
 npx=$((NX+1))
 npy=$((NY+1))
 #
-# For the FV3_GSD_v0 and the FV3_GSD_SAR physics suites, set the parameter
+# For the physics suites that use RUC-LSM, set the parameter
 # lsoil according to the external models used to obtain ICs and LBCs.
 #
-if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] -o \
+if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
    [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
 
-  if [ "${EXTRN_MDL_NAME_ICS}" = "NAM" -o \ 
-       "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" -o \
-       "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
+  if [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] || \
+     [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ] || \
+     [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
     lsoil=4
-  elif [ "${EXTRN_MDL_NAME_ICS}" = "RAPX" -o \
-         "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ]; then
+  elif [ "${EXTRN_MDL_NAME_ICS}" = "RAPX" ] || \
+       [ "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ]; then
     lsoil=9
   else
     print_err_msg_exit "\
@@ -1034,13 +1034,6 @@ periment/workflow generation script in the file specified by log_fp:
 Stopping.
 "
   exit 1
-fi
-source $exptdir/var_defns.sh
-if [ "${NOMADS}" = "TRUE" ]; then
-  echo "Getting NOMADS online data"
-  echo "NOMADS_file_type=" $NOMADS_file_type
-cd $exptdir
-$ushdir/NOMADS_get_extrn_mdl_files.sh $DATE_FIRST_CYCL $CYCL_HRS $NOMADS_file_type $FCST_LEN_HRS $LBC_SPEC_INTVL_HRS
 fi
 
 
