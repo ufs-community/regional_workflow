@@ -251,28 +251,30 @@ else
 Cannot create symlink because target does not exist:
   target = \"$target\""
 fi
-
+#
 # two files for drag_suite scheme
+# this is only for the drag parameterization in the FV3_RRFS_v1beta physics suite
+#
 if [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
-    # Symlink to orographic statistics fields file with "${CRES}_" and "halo0" stripped from name.
-    target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data_ls.tile${TILE_RGNL}.halo${NH0}.nc"
-    symlink="oro_data_ls.nc"
-    if [ -f "${target}" ]; then
-      ln_vrfy -sf ${relative_or_null} $target $symlink
-    else
-      print_err_msg_exit "\
-    Cannot create symlink because target does not exist:
-      target = \"$target}\""
-    fi
-    target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data_ss.tile${TILE_RGNL}.halo${NH0}.nc"
-    symlink="oro_data_ss.nc"
-    if [ -f "${target}" ]; then
-      ln_vrfy -sf ${relative_or_null} $target $symlink
-    else
-      print_err_msg_exit "\
-    Cannot create symlink because target does not exist:
-      target = \"$target}\""
-    fi
+  # Symlink to orographic statistics fields file with "${CRES}_" and "halo0" stripped from name.
+  target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data_ls.tile${TILE_RGNL}.halo${NH0}.nc"
+  symlink="oro_data_ls.nc"
+  if [ -f "${target}" ]; then
+    ln_vrfy -sf ${relative_or_null} $target $symlink
+  else
+    print_err_msg_exit "\
+Cannot create symlink because target does not exist:
+  target = \"$target}\""
+  fi
+  target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data_ss.tile${TILE_RGNL}.halo${NH0}.nc"
+  symlink="oro_data_ss.nc"
+  if [ -f "${target}" ]; then
+    ln_vrfy -sf ${relative_or_null} $target $symlink
+  else
+    print_err_msg_exit "\
+Cannot create symlink because target does not exist:
+  target = \"$target}\""
+  fi
 fi
 #
 # Symlink to halo-4 orography file with "${CRES}_" stripped from name.
@@ -445,6 +447,15 @@ if [ "${USE_CCPP}" = "TRUE" ]; then
 fi
 #-----------------------------------------------------------------------
 #
+# If running enemble forecasts, create links to the cycle-specific 
+# diagnostic tables file and model configuration file in the cycle 
+# directory.  Note that these links should not be made if not running
+# ensemble forecasts because in that case, the cycle directory is the
+# run directory (and we would be creating a symlink with the name of a
+# file that already exists).
+#
+#-----------------------------------------------------------------------
+#
 # Call the function that creates the model configuration file within each
 # cycle directory.
 #
@@ -473,6 +484,8 @@ if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
   relative_or_null="--relative"
   diag_table_fp="${cycle_dir}/${DIAG_TABLE_FN}"
   ln_vrfy -sf ${relative_or_null} ${diag_table_fp} ${run_dir}
+  model_config_fp="${cycle_dir}/${MODEL_CONFIG_FN}"
+  ln_vrfy -sf ${relative_or_null} ${model_config_fp} ${run_dir}
 fi
 #
 #-----------------------------------------------------------------------
