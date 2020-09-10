@@ -16,7 +16,7 @@
 #
 #-----------------------------------------------------------------------
 #
-. $USHDIR/create_model_config_file.sh
+. $USHDIR/create_model_configure_file.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -456,7 +456,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-create_model_config_file \
+create_model_configure_file \
   cdate="$cdate" \
   nthreads=${OMP_NUM_THREADS:-1} \
   run_dir="${run_dir}" || print_err_msg_exit "\
@@ -467,7 +467,7 @@ cycle's (cdate) run directory (run_dir) failed:
 #
 #-----------------------------------------------------------------------
 #
-# If running enemble forecasts, create a link to the cycle-specific 
+# If running ensemble forecasts, create a link to the cycle-specific 
 # diagnostic tables file in the cycle directory.  Note that this link 
 # should not be made if not running ensemble forecasts because in that 
 # case, the cycle directory is the run directory (and we would be creating 
