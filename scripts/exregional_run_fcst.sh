@@ -481,8 +481,6 @@ if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
   relative_or_null="--relative"
   diag_table_fp="${cycle_dir}/${DIAG_TABLE_FN}"
   ln_vrfy -sf ${relative_or_null} ${diag_table_fp} ${run_dir}
-  model_config_fp="${cycle_dir}/${MODEL_CONFIG_FN}"
-  ln_vrfy -sf ${relative_or_null} ${model_config_fp} ${run_dir}
 fi
 #
 #-----------------------------------------------------------------------
