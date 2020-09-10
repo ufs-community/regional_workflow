@@ -252,11 +252,16 @@ Cannot create symlink because target does not exist:
   target = \"$target\""
 fi
 #
-# two files for drag_suite scheme
-# this is only for the drag parameterization in the FV3_RRFS_v1beta physics suite
+# If using the FV3_RRFS_v1beta physics suite, there are two files (that
+# contain statistics of the orography) that are needed by the drag 
+# parameterization in that suite.  Below, symlinks to these are created
+# in the run directory.  Note that the symlinks must have specific names
+# that the FV3 model is hardcoded to recognize ("${CRES}_" and "halo0" 
+# must be stripped from the file names).  We use those below.
 #
 if [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
-  # Symlink to orographic statistics fields file with "${CRES}_" and "halo0" stripped from name.
+# Symlink to orographic statistics fields file with "${CRES}_" and "halo0" 
+# stripped from name.
   target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data_ls.tile${TILE_RGNL}.halo${NH0}.nc"
   symlink="oro_data_ls.nc"
   if [ -f "${target}" ]; then
@@ -445,14 +450,6 @@ if [ "${USE_CCPP}" = "TRUE" ]; then
   fi
 
 fi
-#-----------------------------------------------------------------------
-#
-# If running enemble forecasts, create links to the cycle-specific 
-# diagnostic tables file and model configuration file in the cycle 
-# directory.  Note that these links should not be made if not running
-# ensemble forecasts because in that case, the cycle directory is the
-# run directory (and we would be creating a symlink with the name of a
-# file that already exists).
 #
 #-----------------------------------------------------------------------
 #
