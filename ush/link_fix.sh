@@ -247,8 +247,8 @@ Creating links in the FIXLAM directory to the grid files..."
         )
     if [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
       fns+=( \
-    "C*${DOT_OR_USCORE}oro_data_ss.tile${TILE_RGNL}.halo${NH0}.nc" \
-    "C*${DOT_OR_USCORE}oro_data_ls.tile${TILE_RGNL}.halo${NH0}.nc" \
+      "C*${DOT_OR_USCORE}oro_data_ss.tile${TILE_RGNL}.halo${NH0}.nc" \
+      "C*${DOT_OR_USCORE}oro_data_ls.tile${TILE_RGNL}.halo${NH0}.nc" \
            )
     fi
 
