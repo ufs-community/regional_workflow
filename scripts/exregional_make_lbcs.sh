@@ -438,7 +438,7 @@ list file has not specified for this external model:
 #
 settings="
 'config': {
- 'fix_dir_input_grid': ${UFS_UTILS_DIR}/fix/fix_chgres,
+ 'fix_dir_input_grid': ${FIXgsm},
  'fix_dir_target_grid': ${FIXLAM},
  'mosaic_file_target_grid': ${FIXLAM}/${CRES}${DOT_OR_USCORE}mosaic.halo$((10#${NH4})).nc,
  'orog_dir_target_grid': ${FIXLAM},
