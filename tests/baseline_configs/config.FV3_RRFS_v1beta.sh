@@ -47,5 +47,7 @@ RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 
 # On hera:
 GWD_RRFS_v1beta_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen/orog"
+# On jet:
+#GWD_RRFS_v1beta_BASEDIR="/lfs4/BMC/wrfruc/FV3LAM_pregen/orog"
 # On cheyenne:
 #GWD_RRFS_v1beta_BASEDIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen/orog/GSD_HRRR25km"
