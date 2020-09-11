@@ -657,6 +657,22 @@ Please change one or more of these parameters or provide a value for lsoil
 
 fi
 #
+# Set magnitude of stochastic ad-hoc schemes to -999.0 if they are not
+# being used. This is required at the moment, since "do_shum/sppt/skeb"
+# does not override the use of the scheme unless the magnitude is also
+# specifically set to -999.0.  If all "do_shum/sppt/skeb" are set to
+# "false," then none will run, regardless of the magnitude values. 
+#
+if [ "${DO_SHUM}" = "false" ]; then
+  SHUM_MAG=-999.0
+fi
+if [ "${DO_SKEB}" = "false" ]; then
+  SKEB_MAG=-999.0
+fi
+if [ "${DO_SPPT}" = "false" ]; then
+  SPPT_MAG=-999.0
+fi
+#
 # Create a multiline variable that consists of a yaml-compliant string
 # specifying the values that the namelist variables that are physics-
 # suite-independent need to be set to.  Below, this variable will be
