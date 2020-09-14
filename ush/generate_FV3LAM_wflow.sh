@@ -311,6 +311,8 @@ $settings"
 print_info_msg "$VERBOSE" "
 Creating the cycle directories..."
 
+echo "CYCLE_BASEDIR = ${CYCLE_BASEDIR}"
+set -x
 for (( i=0; i<${NUM_CYCLES}; i++ )); do
   cdate="${ALL_CDATES[$i]}"
   cycle_dir="${CYCLE_BASEDIR}/$cdate"

@@ -16,11 +16,6 @@ EXPT_SUBDIR=""
 USE_CRON_TO_RELAUNCH="TRUE"
 CRON_RELAUNCH_INTVL_MNTS="02"
 
-
-QUEUE_DEFAULT="batch"
-QUEUE_HPSS="service"
-QUEUE_FCST="batch"
-
 VERBOSE="TRUE"
 
 RUN_ENVIR="community"
@@ -45,9 +40,3 @@ RUN_TASK_MAKE_GRID="TRUE"
 RUN_TASK_MAKE_OROG="TRUE"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 
-# On hera:
-GWD_RRFS_v1beta_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen/orog"
-# On jet:
-#GWD_RRFS_v1beta_BASEDIR="/lfs4/BMC/wrfruc/FV3LAM_pregen/orog"
-# On cheyenne:
-#GWD_RRFS_v1beta_BASEDIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen/orog/GSD_HRRR25km"

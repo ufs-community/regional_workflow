@@ -89,11 +89,11 @@ RUN_ENVIR="nco"
 MACHINE="BIG_COMPUTER"
 ACCOUNT="project_name"
 SCHED=""
-QUEUE_DEFAULT="batch_queue"
+QUEUE_DEFAULT=""
 QUEUE_DEFAULT_TAG="queue"
-QUEUE_HPSS="hpss_queue"
+QUEUE_HPSS=""
 QUEUE_HPSS_TAG="partition"
-QUEUE_FCST="production_queue"
+QUEUE_FCST=""
 QUEUE_FCST_TAG="queue"
 #
 #-----------------------------------------------------------------------
@@ -438,6 +438,8 @@ NOMADS_file_type="nemsio"
 #
 #-----------------------------------------------------------------------
 #
+EXTRN_MDL_SOURCE_BASEDIR=""
+
 EXTRN_MDL_SOURCE_DIR_ICS=""
 EXTRN_MDL_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
 

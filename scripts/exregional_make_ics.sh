@@ -392,6 +392,8 @@ of external model (EXTRN_MDL_NAME_ICS) and physics suite (CCPP_PHYS_SUITE):
     geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-LAM/geo_em.d01.nc_HRRRX"
   elif [ "${MACHINE}" = "JET" ]; then
     geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
+  elif [ "${MACHINE}" = "CHEYENNE" ]; then
+    geogrid_file_input_grid="/glade/p/ral/jntp/UFS_CAM/fix/geo_em.d01.nc_HRRRX"
   fi
 
   replace_vgtyp=False
@@ -437,6 +439,8 @@ of external model (EXTRN_MDL_NAME_ICS) and physics suite (CCPP_PHYS_SUITE):
     geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-LAM/geo_em.d01.nc_RAPX"
   elif [ "${MACHINE}" = "JET" ]; then
     geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
+  elif [ "${MACHINE}" = "CHEYENNE" ]; then
+    geogrid_file_input_grid="/glade/p/ral/jntp/UFS_CAM/fix/geo_em.d01.nc_RAPX"
   fi
 
   replace_vgtyp=False
