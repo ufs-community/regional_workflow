@@ -1,4 +1,5 @@
 FV3_RRFS_v1beta
+GSD_HRRR13km
 GSD_RAP13km
 community_ensemble_008mems
 community_ensemble_2mems
@@ -23,3 +24,4 @@ regional_012
 regional_014
 regional_015
 user_staged_extrn_files
+user_download_extrn_files
