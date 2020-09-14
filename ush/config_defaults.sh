@@ -1222,7 +1222,7 @@ USE_ZMTNBLCK="false"
 # 
 # HALO_BLEND:
 # Number of rows into the computational domain that should be blended 
-# with the LBCs.
+# with the LBCs.  To shut of halo blending, this can be set to zero.
 #
 #-----------------------------------------------------------------------
 #
