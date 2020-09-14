@@ -438,8 +438,6 @@ NOMADS_file_type="nemsio"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SOURCE_BASEDIR=""
-
 EXTRN_MDL_SOURCE_DIR_ICS=""
 EXTRN_MDL_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
 

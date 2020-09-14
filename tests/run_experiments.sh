@@ -657,20 +657,20 @@ a nonzero status."
     LBC_SPEC_INTVL_HRS=$( . ${expt_config_fp} ; echo "${LBC_SPEC_INTVL_HRS}" )
 
     if [ "$MACHINE" = "HERA" ]; then
-      EXTRN_MDL_SOURCE_BASEDIR="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
+      extrn_mdl_source_baseir="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "JET" ]; then
-      EXTRN_MDL_SOURCE_BASEDIR="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
+      extrn_mdl_source_baseir="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
-      EXTRN_MDL_SOURCE_BASEDIR="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files"
+      extrn_mdl_source_baseir="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files"
     else
       print_err_msg_exit "\
-The base directory (EXTRN_MDL_SOURCE_BASEDIR) in which the user-staged 
+The base directory (extrn_mdl_source_baseir) in which the user-staged 
 external model files should be located has not been specified for this 
 machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
 
-    EXTRN_MDL_SOURCE_DIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR}/${EXTRN_MDL_NAME_ICS}"
+    EXTRN_MDL_SOURCE_DIR_ICS="${extrn_mdl_source_baseir}/${EXTRN_MDL_NAME_ICS}"
     if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
        [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ]; then
       EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
@@ -679,7 +679,7 @@ machine (MACHINE):
       EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
     fi
 
-    EXTRN_MDL_SOURCE_DIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR}/${EXTRN_MDL_NAME_LBCS}"
+    EXTRN_MDL_SOURCE_DIR_LBCS="${extrn_mdl_source_baseir}/${EXTRN_MDL_NAME_LBCS}"
     EXTRN_MDL_FILES_LBCS=( $( seq ${LBC_SPEC_INTVL_HRS} ${LBC_SPEC_INTVL_HRS} ${FCST_LEN_HRS} ) )
     if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
        [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then

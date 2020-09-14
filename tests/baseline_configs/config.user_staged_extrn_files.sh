@@ -40,9 +40,3 @@ RUN_TASK_MAKE_GRID="TRUE"
 RUN_TASK_MAKE_OROG="TRUE"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 
-EXTRN_MDL_SOURCE_DIR_ICS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
-EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
-
-EXTRN_MDL_SOURCE_DIR_LBCS="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS"
-EXTRN_MDL_FILES_LBCS=( "gfs.atmf003.nemsio" "gfs.atmf006.nemsio" )
-
