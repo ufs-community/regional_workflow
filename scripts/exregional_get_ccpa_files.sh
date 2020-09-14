@@ -2,7 +2,8 @@
 
 # This script reorganizes the CCPA data into a more intuitive structure:
 # A valid YYYYMMDD directory is created, and all files for the valid day are placed within the directory.
-# The accumulation interval is an input argument. Current supported accumulations: 01h, 03h, and 06h.
+# Supported accumulations: 01h, 03h, and 06h. NOTE: Accumulation is currently hardcoded to 01h.
+# The verification uses MET/pcp-combine to sum 01h files into desired accumulations.
 
 # Top-level CCPA directory
 ccpa_dir=${OBS_DIR}/..
@@ -22,9 +23,7 @@ if [[ ! -d "$ccpa_proc" ]]; then
   mkdir -p $ccpa_proc
 fi
 
-# Accumulation is for accumulation of CCPA data to pull
-# This script supports pulling 01h, 03h, and 06h, but it hardcoded to 01h.
-# The verification uses MET/pcp-combine to sum 01h files into desired accumulations.
+# Accumulation is for accumulation of CCPA data to pull (hardcoded to 01h, see note above.)
 #accum=${ACCUM}
 accum=01
 
@@ -88,46 +87,64 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
     mkdir -p $ccpa_proc/${vyyyymmdd}
   fi
 
-  # Name of CCPA tar file on HPSS is dependent on date. Logic accounts for files from 2019 until July 2020.
+  # Name of CCPA tar file on HPSS is dependent on date. Logic accounts for files from 2019 until Sept. 2020.
+  if [[ ${vyyyymmdd} -ge 20190101 && ${vyyyymmdd} -lt 20190812 ]]; then
+    TarFile="/NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/com2_ccpa_prod_ccpa.${vyyyy}${vmm}${vdd}.tar"
+  fi
+
+  if [[ ${vyyyymmdd_m1} -ge 20190101 && ${vyyyymmdd_m1} -lt 20190812 ]]; then
+    TarFile_m1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_m1}/${vyyyy_m1}${vmm_m1}/${vyyyy_m1}${vmm_m1}${vdd_m1}/com2_ccpa_prod_ccpa.${vyyyy_m1}${vmm_m1}${vdd_m1}.tar"
+  fi
+
+  if [[ ${vyyyymmdd_p1} -ge 20190101 && ${vyyyymmdd_p1} -lt 20190812 ]]; then
+    TarFile_p1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_p1}/${vyyyy_p1}${vmm_p1}/${vyyyy_p1}${vmm_p1}${vdd_p1}/com2_ccpa_prod_ccpa.${vyyyy_p1}${vmm_p1}${vdd_p1}.tar"
+  fi
+
   if [[ ${vyyyymmdd} -ge 20190812 && ${vyyyymmdd} -le 20200217 ]]; then
     TarFile="/NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/gpfs_dell1_nco_ops_com_ccpa_prod_ccpa.${vyyyy}${vmm}${vdd}.tar"
-  else
-    TarFile="/NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/com_ccpa_prod_ccpa.${vyyyy}${vmm}${vdd}.tar"
   fi
 
   if [[ ${vyyyymmdd_m1} -ge 20190812 && ${vyyyymmdd_m1} -le 20200217 ]]; then
     TarFile_m1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_m1}/${vyyyy_m1}${vmm_m1}/${vyyyy_m1}${vmm_m1}${vdd_m1}/gpfs_dell1_nco_ops_com_ccpa_prod_ccpa.${vyyyy_m1}${vmm_m1}${vdd_m1}.tar"
-  else
-    TarFile_m1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_m1}/${vyyyy_m1}${vmm_m1}/${vyyyy_m1}${vmm_m1}${vdd_m1}/com_ccpa_prod_ccpa.${vyyyy_m1}${vmm_m1}${vdd_m1}.tar"
   fi
 
   if [[ ${vyyyymmdd_p1} -ge 20190812 && ${vyyyymmdd_p1} -le 20200217 ]]; then
     TarFile_p1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_p1}/${vyyyy_p1}${vmm_p1}/${vyyyy_p1}${vmm_p1}${vdd_p1}/gpfs_dell1_nco_ops_com_ccpa_prod_ccpa.${vyyyy_p1}${vmm_p1}${vdd_p1}.tar"
-  else
+  fi
+
+  if [[ ${vyyyymmdd} -gt 20200217 ]]; then
+    TarFile="/NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/com_ccpa_prod_ccpa.${vyyyy}${vmm}${vdd}.tar"
+  fi
+
+  if [[ ${vyyyymmdd_m1} -gt 20200217 ]]; then
+    TarFile_m1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_m1}/${vyyyy_m1}${vmm_m1}/${vyyyy_m1}${vmm_m1}${vdd_m1}/com_ccpa_prod_ccpa.${vyyyy_m1}${vmm_m1}${vdd_m1}.tar"
+  fi
+
+  if [[ ${vyyyymmdd_p1} -gt 20200217 ]]; then
     TarFile_p1="/NCEPPROD/hpssprod/runhistory/rh${vyyyy_p1}/${vyyyy_p1}${vmm_p1}/${vyyyy_p1}${vmm_p1}${vdd_p1}/com_ccpa_prod_ccpa.${vyyyy_p1}${vmm_p1}${vdd_p1}.tar"
   fi
 
   # Check if file exists on disk; if not, pull it.
   ccpa_file="$ccpa_proc/${vyyyymmdd}/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2"
   echo "CCPA FILE:${ccpa_file}"
-
   if [[ ! -f "${ccpa_file}" ]]; then 
     if [[ ${accum} == "01" ]]; then
       # Check if valid hour is 00
-      if [[ ${vhh_noZero} -ne 0 ]]; then
+      if [[ ${vhh_noZero} -ge 19 && ${vhh_noZero} -le 23 ]]; then
+        cd $ccpa_raw/${vyyyymmdd_p1}
+        # Pull CCPA data from HPSS
+        TarCommand="htar -xvf ${TarFile_p1} \`htar -tf ${TarFile_p1} | egrep \"ccpa.t${vhh}z.${accum}h.hrap.conus.gb2\" | awk '{print $7}'\`"
+        echo "CALLING: ${TarCommand}"
+        htar -xvf ${TarFile_p1} `htar -tf ${TarFile_p1} | egrep "ccpa.t${vhh}z.${accum}h.hrap.conus.gb2" | awk '{print $7}'`
+      else 
         cd $ccpa_raw/${vyyyymmdd}
         # Pull CCPA data from HPSS
         TarCommand="htar -xvf ${TarFile} \`htar -tf ${TarFile} | egrep \"ccpa.t${vhh}z.${accum}h.hrap.conus.gb2\" | awk '{print $7}'\`"
         echo "CALLING: ${TarCommand}"
         htar -xvf ${TarFile} `htar -tf ${TarFile} | egrep "ccpa.t${vhh}z.${accum}h.hrap.conus.gb2" | awk '{print $7}'`
-      elif [[ ${vhh_noZero} -eq 0 ]]; then
-        cd $ccpa_raw/${vyyyymmdd_m1}
-        # Pull CCPA data from HPSS
-        TarCommand="htar -xvf ${TarFile_m1} \`htar -tf ${TarFile_m1} | egrep \"ccpa.t${vhh}z.${accum}h.hrap.conus.gb2\" | awk '{print $7}'\`"
-        echo "CALLING: ${TarCommand}"
-        htar -xvf ${TarFile_m1} `htar -tf ${TarFile_m1} | egrep "ccpa.t${vhh}z.${accum}h.hrap.conus.gb2" | awk '{print $7}'`
       fi
 
+      # One hour CCPA files have incorrect metadeta in the files under the "00" directory. After data is pulled, reorganize into correct valid yyyymmdd structure.
       if [[ ${vhh_noZero} -ge 1 && ${vhh_noZero} -le 6 ]]; then
         cp $ccpa_raw/${vyyyymmdd}/06/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
       elif [[ ${vhh_noZero} -ge 7 && ${vhh_noZero} -le 12 ]]; then
@@ -135,9 +152,9 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
       elif [[ ${vhh_noZero} -ge 13 && ${vhh_noZero} -le 18 ]]; then
         cp $ccpa_raw/${vyyyymmdd}/18/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
       elif [[ ${vhh_noZero} -ge 19 && ${vhh_noZero} -le 23 ]]; then
-        cp $ccpa_raw/${vyyyymmdd}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
+        wgrib2 $ccpa_raw/${vyyyymmdd_p1}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -set_date -24hr -grib $ccpa_proc/${vyyyymmdd}/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -s
       elif [[ ${vhh_noZero} -eq 0 ]]; then
-        cp $ccpa_raw/${vyyyymmdd_m1}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
+        wgrib2 $ccpa_raw/${vyyyymmdd}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -set_date -24hr -grib $ccpa_proc/${vyyyymmdd}/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -s
       fi
 
     elif [[ ${accum} == "03" ]]; then
