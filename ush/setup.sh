@@ -344,7 +344,7 @@ case $MACHINE in
   SCHED="${SCHED:-slurm}"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
   QUEUE_HPSS=${QUEUE_HPSS:-"service"}
-  QUEUE_FCST=${QUEUE_FCST:-""}
+  QUEUE_FCST=${QUEUE_FCST:-"batch"}
   ;;
 #
 "JET")
