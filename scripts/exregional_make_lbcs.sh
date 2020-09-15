@@ -107,7 +107,7 @@ case "${CCPP_PHYS_SUITE}" in
 "FV3_GFS_v15p2" )
   varmap_file="GFSphys_var_map.txt"
   ;;
-"FV3_GSD_v0" | "FV3_GSD_SAR" | "FV3_GSD_SAR_v1" | "FV3_RRFS_v0" | \
+"FV3_GSD_v0" | "FV3_GSD_SAR" | \
 "FV3_RRFS_v1beta" )
   if   [ "${EXTRN_MDL_NAME_LBCS}" = "RAPX" ] || [ "${EXTRN_MDL_NAME_LBCS}" = "HRRRX" ]; then
       varmap_file="GSDphys_var_map.txt"
@@ -240,8 +240,6 @@ case "${EXTRN_MDL_NAME_LBCS}" in
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
      thomp_mp_climo_file=""
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
@@ -267,8 +265,6 @@ case "${EXTRN_MDL_NAME_LBCS}" in
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
      thomp_mp_climo_file=""
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
@@ -321,8 +317,6 @@ case "${EXTRN_MDL_NAME_LBCS}" in
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
      thomp_mp_climo_file=""
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
