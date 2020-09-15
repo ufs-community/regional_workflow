@@ -516,8 +516,6 @@ the forecast model directory sturcture to the experiment directory..."
 # Thompson microphysics parameterization to the experiment directory.
 #
   if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
     print_info_msg "$VERBOSE" "
@@ -668,6 +666,7 @@ settings="\
 'fv_core_nml': {
     'target_lon': ${LON_CTR},
     'target_lat': ${LAT_CTR},
+    'nrows_blend': ${HALO_BLEND},
 #
 # Question:
 # For a ESGgrid type grid, what should stretch_fac be set to?  This depends

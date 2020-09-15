@@ -89,11 +89,11 @@ RUN_ENVIR="nco"
 MACHINE="BIG_COMPUTER"
 ACCOUNT="project_name"
 SCHED=""
-QUEUE_DEFAULT="batch_queue"
+QUEUE_DEFAULT=""
 QUEUE_DEFAULT_TAG="queue"
-QUEUE_HPSS="hpss_queue"
+QUEUE_HPSS=""
 QUEUE_HPSS_TAG="partition"
-QUEUE_FCST="production_queue"
+QUEUE_FCST=""
 QUEUE_FCST_TAG="queue"
 #
 #-----------------------------------------------------------------------
@@ -1222,7 +1222,7 @@ USE_ZMTNBLCK="false"
 # 
 # HALO_BLEND:
 # Number of rows into the computational domain that should be blended 
-# with the LBCs.
+# with the LBCs.  To shut of halo blending, this can be set to zero.
 #
 #-----------------------------------------------------------------------
 #

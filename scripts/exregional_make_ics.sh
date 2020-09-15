@@ -188,7 +188,8 @@ esac
 #
 #-----------------------------------------------------------------------
 #
-# GSK comments about chgres_cube:
+
+# GSK comments about chgres:
 #
 # The following are the three atmsopheric tracers that are in the atmo-
 # spheric analysis (atmanl) nemsio file for CDATE=2017100700:
@@ -359,8 +360,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
 #
   if [ "${USE_CCPP}" = "TRUE" ]; then
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
@@ -406,9 +406,8 @@ case "${EXTRN_MDL_NAME_ICS}" in
 #
   if [ "${USE_CCPP}" = "TRUE" ]; then
     if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR_v1" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
@@ -426,6 +425,8 @@ case "${EXTRN_MDL_NAME_ICS}" in
     geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-LAM/geo_em.d01.nc_RAPX"
   elif [ "${MACHINE}" = "JET" ]; then
     geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
+  elif [ "${MACHINE}" = "CHEYENNE" ]; then
+    geogrid_file_input_grid="/glade/p/ral/jntp/UFS_CAM/fix/geo_em.d01.nc_RAPX"
   fi
 
   vgtyp_from_climo=True
