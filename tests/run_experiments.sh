@@ -410,7 +410,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-  . ${expt_config_fp}
+#  . ${expt_config_fp}
+#
+#-----------------------------------------------------------------------
+#
+# Source the experiment baseline configuration file.
+#
+#-----------------------------------------------------------------------
+#
+  . ${baseline_config_fp}
 #
 #-----------------------------------------------------------------------
 #
@@ -674,10 +682,10 @@ a nonzero status."
 
   if [ ${do_user_staged_extrn} = "TRUE" ]; then
 
-    EXTRN_MDL_NAME_ICS=$( . ${expt_config_fp} ; echo "${EXTRN_MDL_NAME_ICS}" )
-    EXTRN_MDL_NAME_LBCS=$( . ${expt_config_fp} ; echo "${EXTRN_MDL_NAME_LBCS}" )
-    FCST_LEN_HRS=$( . ${expt_config_fp} ; echo "${FCST_LEN_HRS}" )
-    LBC_SPEC_INTVL_HRS=$( . ${expt_config_fp} ; echo "${LBC_SPEC_INTVL_HRS}" )
+#    EXTRN_MDL_NAME_ICS=$( . ${expt_config_fp} ; echo "${EXTRN_MDL_NAME_ICS}" )
+#    EXTRN_MDL_NAME_LBCS=$( . ${expt_config_fp} ; echo "${EXTRN_MDL_NAME_LBCS}" )
+#    FCST_LEN_HRS=$( . ${expt_config_fp} ; echo "${FCST_LEN_HRS}" )
+#    LBC_SPEC_INTVL_HRS=$( . ${expt_config_fp} ; echo "${LBC_SPEC_INTVL_HRS}" )
 
     if [ "$MACHINE" = "HERA" ]; then
       extrn_mdl_source_baseir="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
