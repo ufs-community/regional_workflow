@@ -412,18 +412,21 @@ NOMADS_file_type="nemsio"
 #
 # User-staged external model directories and files.  Definitions:
 #
-# EXTRN_MDL_SOURCE_DIR_ICS:
+# USE_USER_STAGED_EXTRN_FILES:
+# Flag that determines whether or not the workflow will look for the 
+# external model files needed for generating ICs and LBCs in user-specified
+# directories.
+#
+# EXTRN_MDL_SOURCE_DIR_ICS:                                                # Should this be renamed BASEDIR?  Same question for EXTRN_MDL_SOURCE_DIR_LBCS.
 # Directory in which to look for external model files for generating ICs.
-# If this is set to a non-empty string, the workflow looks in this directory
-# (specifically, in a subdirectory under this directory named "YYYYMMDDHH"
-# consisting of the starting date and cycle hour of the forecast, where 
-# YYYY is the 4-digit year, MM the 2-digit month, DD the 2-digit day of
-# the month, and HH the 2-digit hour of the day) for the external model 
-# files specified by the array EXTRN_MDL_FILES_ICS (these files will be 
-# used to generate the ICs on the native FV3-LAM grid.  If this is set to 
-# an empty string, then the workflow will look for the external model 
-# files for generating ICS in a default machine-dependent location.  In 
-# this case, EXTRN_MDL_FILES_ICS is not used.
+# If USE_USER_STAGED_EXTRN_FILES is set to "TRUE", the workflow looks in 
+# this directory (specifically, in a subdirectory under this directory 
+# named "YYYYMMDDHH" consisting of the starting date and cycle hour of 
+# the forecast, where YYYY is the 4-digit year, MM the 2-digit month, DD 
+# the 2-digit day of the month, and HH the 2-digit hour of the day) for 
+# the external model files specified by the array EXTRN_MDL_FILES_ICS 
+# (these files will be used to generate the ICs on the native FV3-LAM 
+# grid).
 # 
 # EXTRN_MDL_FILES_ICS:
 # Array containing the names of the files to search for in the directory
@@ -438,10 +441,10 @@ NOMADS_file_type="nemsio"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SOURCE_DIR_ICS=""
+USE_USER_STAGED_EXTRN_FILES="TRUE"
+EXTRN_MDL_SOURCE_DIR_ICS="/dir/containing/user/staged/extrn/mdl/files/for/ICs"
 EXTRN_MDL_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
-
-EXTRN_MDL_SOURCE_DIR_LBCS=""
+EXTRN_MDL_SOURCE_DIR_LBCS="/dir/containing/user/staged/extrn/mdl/files/for/LBCs"
 EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
 #
 #-----------------------------------------------------------------------

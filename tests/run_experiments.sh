@@ -716,9 +716,7 @@ PTMP=\"${PTMP}\""
 #
 #-----------------------------------------------------------------------
 #
-  do_user_staged_extrn="TRUE"  # Change this to an input argument at some point?
-
-  if [ ${do_user_staged_extrn} = "TRUE" ]; then
+  if [ ${USE_USER_STAGED_EXTRN_FILES} = "TRUE" ]; then
 
     if [ "$MACHINE" = "HERA" ]; then
       extrn_mdl_source_basedir="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"

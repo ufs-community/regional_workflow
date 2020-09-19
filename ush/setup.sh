@@ -1271,6 +1271,24 @@ NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that USE_USER_STAGED_EXTRN_FILES is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "USE_USER_STAGED_EXTRN_FILES" "valid_vals_USE_USER_STAGED_EXTRN_FILES"
+#
+# Set USE_USER_STAGED_EXTRN_FILES to either "TRUE" or "FALSE" so we don't 
+# have to consider other valid values later on.
+#
+USE_USER_STAGED_EXTRN_FILES=${USE_USER_STAGED_EXTRN_FILES^^}
+if [ "${USE_USER_STAGED_EXTRN_FILES}" = "YES" ]; then
+  USE_USER_STAGED_EXTRN_FILES="TRUE"
+elif [ "${USE_USER_STAGED_EXTRN_FILES}" = "NO" ]; then
+  USE_USER_STAGED_EXTRN_FILES="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that DO_ENSEMBLE is set to a valid value.  Then set the names
 # of the ensemble members.  These will be used to set the ensemble member
 # directories.  Also, set the full path to the FV3 namelist file corresponding
@@ -2694,7 +2712,7 @@ OZONE_PARAM="${OZONE_PARAM}"
 #
 #-----------------------------------------------------------------------
 #
-# If EXTRN_MDL_SOURCE_DIR_ICS is set to a null string, this is the system 
+# If USE_USER_STAGED_EXTRN_FILES is set to "FALSE", this is the system 
 # directory in which the workflow scripts will look for the files generated 
 # by the external model specified in EXTRN_MDL_NAME_ICS.  These files will 
 # be used to generate the input initial condition and surface files for 
@@ -2706,7 +2724,7 @@ EXTRN_MDL_SYSBASEDIR_ICS="${EXTRN_MDL_SYSBASEDIR_ICS}"
 #
 #-----------------------------------------------------------------------
 #
-# If EXTRN_MDL_SOURCE_DIR_LBCS is set to a null string, this is the system 
+# If USE_USER_STAGED_EXTRN_FILES is set to "FALSE", this is the system 
 # directory in which the workflow scripts will look for the files generated 
 # by the external model specified in EXTRN_MDL_NAME_LBCS.  These files 
 # will be used to generate the input lateral boundary condition files for 
