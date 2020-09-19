@@ -351,26 +351,6 @@ specified baseline (baseline_name) does not exist:
 Please correct and rerun."
   fi
 #
-# We require that EXPT_SUBDIR in the configuration file for the baseline
-# be set to the name of the baseline.  Check for this by extracting the
-# value of EXPT_SUBDIR from the baseline configuration file and compa-
-# ring it to baseline_name.
-#
-if [ 0 = 1 ]; then
-  regex_search="^[ ]*EXPT_SUBDIR=(\")?([^ =\"]+)(.*)"
-  EXPT_SUBDIR=$( sed -r -n -e "s/${regex_search}/\2/p" \
-                 "${baseline_config_fp}" )
-  if [ "${EXPT_SUBDIR}" != "${baseline_name}" ]; then
-    print_err_msg_exit "\
-The name of the experiment subdirectory (EXPT_SUBDIR) in the configura-
-tion file (baseline_config_fp) for the current baseline does not match
-the name of the baseline (baseline_name):
-  baseline_name = \"${baseline_name}\"
-  baseline_config_fp = \"${baseline_config_fp}\"
-  EXPT_SUBDIR = \"${EXPT_SUBDIR}\""
-  fi
-fi
-#
 # Generate a name for the current experiment.  We start with the name of
 # the current baseline and modify it to indicate which variables must be
 # reset to obtain the current experiment.
@@ -660,7 +640,21 @@ GWD_RRFS_v1beta_BASEDIR=\"${GWD_RRFS_v1beta_BASEDIR}\""
 #   \$PTMP/com/\$NET/\$RUN/\$RUN.\$yyyymmdd/\$hh
 #
 RUN=\"\${EXPT_SUBDIR}\"
-envir=\"\${EXPT_SUBDIR}\""
+envir=\"\${EXPT_SUBDIR}\"
+#
+# In NCO mode, the user must manually (e.g. after doing the build step)
+# create the symlink "${FIXrrfs}/fix_sar" that points to EMC's FIXsar
+# directory on the machine.  For example, on hera, the symlink's target
+# needs to be
+#
+#   /scratch2/NCEPDEV/fv3-cam/emc.campara/fix_fv3cam/fix_sar
+#
+# The experiment generation script will then set FIXsar to
+#
+#   FIXsar="${FIXrrfs}/fix_sar/${EMC_GRID_NAME}"
+#
+# where EMC_GRID_NAME has the value set above.
+#"
 #
 # Set COMINgfs.
 #
