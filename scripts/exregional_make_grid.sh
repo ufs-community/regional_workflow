@@ -597,8 +597,6 @@ cd_vrfy -
 #
 #-----------------------------------------------------------------------
 #
-echo "QQQQQQQQQQQQQQQQQQQQQQ"
-echo "GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
 make_grid_mosaic_file \
   grid_dir="${GRID_DIR}" \
   grid_fn="${CRES}${DOT_OR_USCORE}grid.tile${TILE_RGNL}.halo${NHW}.nc" \

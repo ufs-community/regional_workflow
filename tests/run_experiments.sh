@@ -395,19 +395,20 @@ Please correct and rerun."
 #
   MACHINE="${machine^^}"
   ACCOUNT="${account}"
-  EXPT_BASEDIR="${expt_basedir}"
+
+#  EXPT_BASEDIR="${expt_basedir}"
+# Note: 
+# If expt_basedir is a null (or unset) string, ${expt_basedir:+/} gets 
+# set to a null string; if expt_basedir is not null (or unset), 
+# ${expt_basedir:+/} gets set to "/".
+  EXPT_BASEDIR="${expt_basedir}${expt_basedir:+/}${testset_name}"
+# If EXPT_BASEDIR already exists, rename it.
+  check_for_preexist_dir_file "${EXPT_BASEDIR}" "rename"
+
   EXPT_SUBDIR="${expt_name}"
   USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch:-"TRUE"}
   CRON_RELAUNCH_INTVL_MNTS=${cron_relaunch_intvl_mnts:-"02"}
   VERBOSE=${verbose:-"TRUE"}
-
-  if [ ! -z "${testset_name}" ]; then
-    if [ ! -z "${EXPT_BASEDIR}" ]; then
-      EXPT_BASEDIR="${EXPT_BASEDIR}/${testset_name}"
-    else
-      EXPT_SUBDIR="${testset_name}/${EXPT_SUBDIR}"
-    fi
-  fi
 
   str="\
 #
@@ -421,7 +422,7 @@ ACCOUNT=\"${ACCOUNT}\""
 
   if [ ! -z "${EXPT_BASEDIR}" ]; then
     str=${str}"
-EXPT_BASEDIR=\"${expt_basedir}\""
+EXPT_BASEDIR=\"${EXPT_BASEDIR}\""
   fi
 
   str=${str}"
@@ -643,7 +644,7 @@ RUN=\"\${EXPT_SUBDIR}\"
 envir=\"\${EXPT_SUBDIR}\"
 #
 # In NCO mode, the user must manually (e.g. after doing the build step)
-# create the symlink "${FIXrrfs}/fix_sar" that points to EMC's FIXsar
+# create the symlink \"\${FIXrrfs}/fix_sar\" that points to EMC's FIXsar
 # directory on the machine.  For example, on hera, the symlink's target
 # needs to be
 #
@@ -651,7 +652,7 @@ envir=\"\${EXPT_SUBDIR}\"
 #
 # The experiment generation script will then set FIXsar to
 #
-#   FIXsar="${FIXrrfs}/fix_sar/${EMC_GRID_NAME}"
+#   FIXsar=\"\${FIXrrfs}/fix_sar/\${EMC_GRID_NAME}\"
 #
 # where EMC_GRID_NAME has the value set above.
 #"

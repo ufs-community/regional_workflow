@@ -798,7 +798,7 @@ esac
 #
 #-----------------------------------------------------------------------
 #
-mng_extrns_cfg_fn=$( readlink -f "$SR_WX_APP_TOP_DIR/Externals.cfg" )
+mng_extrns_cfg_fn=$( readlink -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
 property_name="local_path"
 #
 # Get the base directory of the FV3 forecast model code.
@@ -986,6 +986,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# This comment needs updating.  Also need to update the info on EXPT_DIR
+# in config_defaults.sh.
 # If the base directory (EXPT_BASEDIR) in which the experiment subdirec-
 # tory (EXPT_SUBDIR) will be located is not set or is set to an empty 
 # string, set it to a default location that is at the same level as the
@@ -994,7 +996,12 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-EXPT_BASEDIR="${EXPT_BASEDIR:-${SR_WX_APP_TOP_DIR}/../expt_dirs}"
+# If EXPT_BASEDIR does not start with a "/", then it is either set to a
+# null string or contains a relative directory.  In both cases, reset it
+# to the default location.
+if [ "${EXPT_BASEDIR:0:1}" != "/" ]; then
+  EXPT_BASEDIR="${SR_WX_APP_TOP_DIR}/../expt_dirs/${EXPT_BASEDIR}"
+fi
 EXPT_BASEDIR="$( readlink -f ${EXPT_BASEDIR} )"
 mkdir_vrfy -p "${EXPT_BASEDIR}"
 #
@@ -2524,7 +2531,7 @@ CRONTAB_LINE="${CRONTAB_LINE}"
 #
 #-----------------------------------------------------------------------
 #
-SR_WX_APP_TOP_DIR="$SR_WX_APP_TOP_DIR"
+SR_WX_APP_TOP_DIR="${SR_WX_APP_TOP_DIR}"
 HOMErrfs="$HOMErrfs"
 USHDIR="$USHDIR"
 SCRIPTSDIR="$SCRIPTSDIR"
