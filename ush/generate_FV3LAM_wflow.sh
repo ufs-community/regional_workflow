@@ -369,6 +369,20 @@ cd_vrfy -
 #
 #-----------------------------------------------------------------------
 #
+# Check that the path exists for a user-defined custom post config file
+#
+if [ ${USE_CUSTOM_POST_CONFIG_FILE} = "TRUE" ]; then
+  if [ -f "${CUSTOM_POST_CONFIG_PATH}" ]; then
+    print_info_msg "
+    Using custom post config file in path: \"${CUSTOM_POST_CONFIG_PATH}\""
+  else
+    print_err_msg_exit "
+    Cannot use custom post config file because file does not exist:
+    \"${CUSTOM_POST_CONFIG_PATH}\""
+  fi
+fi
+#-----------------------------------------------------------------------
+#
 # Create a symlink in the experiment directory that points to the workflow
 # (re)launch script.
 #
