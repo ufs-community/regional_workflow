@@ -79,7 +79,7 @@ cd_vrfy ${scrfunc_dir}
 #
 #-----------------------------------------------------------------------
 #
-  EXPT_DEFAULT_CONFIG_FN="config_defaults.sh"
+EXPT_DEFAULT_CONFIG_FN="config_defaults.sh"
 . ./${EXPT_DEFAULT_CONFIG_FN}
 #
 #-----------------------------------------------------------------------

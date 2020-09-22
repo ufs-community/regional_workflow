@@ -449,13 +449,14 @@ VERBOSE=\"${VERBOSE}\""
 #
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
-# The following section is from the base configuration of this WE2E test.
+# The following section is a copy of the base configuration of this WE2E 
+# test.
 #
 "
   str=${str}$( cat "${baseline_config_fp}" )
   str=${str}"
 #
-# End of section is from the base configuration of this WE2E test.
+# End of section from the base configuration file of this WE2E test.
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------"
 #
