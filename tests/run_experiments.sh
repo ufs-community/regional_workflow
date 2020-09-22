@@ -146,14 +146,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Source the default workflow configuration file.
-#
-#-----------------------------------------------------------------------
-#
-. ${ushdir}/config_defaults.sh
-#
-#-----------------------------------------------------------------------
-#
 # Get the full path to the experiments list file and verify that it exists.
 #
 #-----------------------------------------------------------------------
@@ -372,6 +364,18 @@ Please correct and rerun."
 #
   expt_config_fp="$ushdir/config.${expt_name}.sh"
   rm_vrfy -rf "${expt_config_fp}"
+#
+#-----------------------------------------------------------------------
+#
+# Source the default workflow configuration file.  Note that we need to
+# re-source this file for each WE2E test because the previous test may 
+# change these default values when the test-specific configuration file
+# is sourced below.  We need to reset the workflow variables because some 
+# of the tests rely on the default values.
+#
+#-----------------------------------------------------------------------
+#
+  . ${ushdir}/config_defaults.sh
 #
 #-----------------------------------------------------------------------
 #
