@@ -712,42 +712,6 @@ PTMP=\"${PTMP}\""
 #
 #-----------------------------------------------------------------------
 #
-# On some machines (e.g. cheyenne), some tasks take many attempts to 
-# succeed.  To make it more convenient to run the WE2E tests on these
-# machines without manual intervention, change the number of attempts
-# for such tasks on those machines to be more than one.
-#
-#-----------------------------------------------------------------------
-#
-  add_maxtries="FALSE"
-
-  if [ "$MACHINE" = "CHEYENNE" ]; then
-    add_maxtries="TRUE"
-    MAXTRIES_MAKE_ICS="5"
-    MAXTRIES_MAKE_LBCS="10"
-    MAXTRIES_RUN_POST="10"
-  fi
-
-  if [ "${add_maxtries}" = "TRUE" ]; then
-
-    str=${str}"
-#
-# Maximum number of attempts at running each task.
-#
-MAXTRIES_MAKE_GRID=\"${MAXTRIES_MAKE_GRID}\"
-MAXTRIES_MAKE_OROG=\"${MAXTRIES_MAKE_OROG}\"
-MAXTRIES_MAKE_SFC_CLIMO=\"${MAXTRIES_MAKE_SFC_CLIMO}\"
-MAXTRIES_GET_EXTRN_ICS=\"${MAXTRIES_GET_EXTRN_ICS}\"
-MAXTRIES_GET_EXTRN_LBCS=\"${MAXTRIES_GET_EXTRN_LBCS}\"
-MAXTRIES_MAKE_ICS=\"${MAXTRIES_MAKE_ICS}\"
-MAXTRIES_MAKE_LBCS=\"${MAXTRIES_MAKE_LBCS}\"
-MAXTRIES_RUN_FCST=\"${MAXTRIES_RUN_FCST}\"
-MAXTRIES_RUN_POST=\"${MAXTRIES_RUN_POST}\""
-
-  fi
-#
-#-----------------------------------------------------------------------
-#
 #
 #
 #-----------------------------------------------------------------------
@@ -812,6 +776,42 @@ EXTRN_MDL_SOURCE_DIR_ICS=\"${EXTRN_MDL_SOURCE_DIR_ICS}\"
 EXTRN_MDL_FILES_ICS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_ICS[@]}" ))
 EXTRN_MDL_SOURCE_DIR_LBCS=\"${EXTRN_MDL_SOURCE_DIR_LBCS}\"
 EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
+
+  fi
+#
+#-----------------------------------------------------------------------
+#
+# On some machines (e.g. cheyenne), some tasks take many attempts to 
+# succeed.  To make it more convenient to run the WE2E tests on these
+# machines without manual intervention, change the number of attempts
+# for such tasks on those machines to be more than one.
+#
+#-----------------------------------------------------------------------
+#
+  add_maxtries="FALSE"
+
+  if [ "$MACHINE" = "CHEYENNE" ]; then
+    add_maxtries="TRUE"
+    MAXTRIES_MAKE_ICS="5"
+    MAXTRIES_MAKE_LBCS="10"
+    MAXTRIES_RUN_POST="10"
+  fi
+
+  if [ "${add_maxtries}" = "TRUE" ]; then
+
+    str=${str}"
+#
+# Maximum number of attempts at running each task.
+#
+MAXTRIES_MAKE_GRID=\"${MAXTRIES_MAKE_GRID}\"
+MAXTRIES_MAKE_OROG=\"${MAXTRIES_MAKE_OROG}\"
+MAXTRIES_MAKE_SFC_CLIMO=\"${MAXTRIES_MAKE_SFC_CLIMO}\"
+MAXTRIES_GET_EXTRN_ICS=\"${MAXTRIES_GET_EXTRN_ICS}\"
+MAXTRIES_GET_EXTRN_LBCS=\"${MAXTRIES_GET_EXTRN_LBCS}\"
+MAXTRIES_MAKE_ICS=\"${MAXTRIES_MAKE_ICS}\"
+MAXTRIES_MAKE_LBCS=\"${MAXTRIES_MAKE_LBCS}\"
+MAXTRIES_RUN_FCST=\"${MAXTRIES_RUN_FCST}\"
+MAXTRIES_RUN_POST=\"${MAXTRIES_RUN_POST}\""
 
   fi
 #
