@@ -1167,6 +1167,18 @@ WTIME_MAKE_LBCS="00:30:00"
 WTIME_RUN_FCST="04:30:00"
 WTIME_RUN_POST="00:15:00"
 #
+# Maximum number of attempts.
+#
+MAXTRIES_MAKE_GRID="1"
+MAXTRIES_MAKE_OROG="1"
+MAXTRIES_MAKE_SFC_CLIMO="1"
+MAXTRIES_GET_EXTRN_ICS="1"
+MAXTRIES_GET_EXTRN_LBCS="1"
+MAXTRIES_MAKE_ICS="1"
+MAXTRIES_MAKE_LBCS="1"
+MAXTRIES_RUN_FCST="1"
+MAXTRIES_RUN_POST="1"
+#
 #-----------------------------------------------------------------------
 #
 # Set parameters associated with running ensembles.  Definitions:
