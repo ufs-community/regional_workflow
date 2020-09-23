@@ -1114,8 +1114,9 @@ CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING=( \
 # Set the names of the various workflow tasks.  Then, for each task, set
 # the parameters to pass to the job scheduler (e.g. slurm) that will submit
 # a job for each task to be run.  These parameters include the number of
-# nodes to use to run the job, the MPI processes per node, and the maximum
-# walltime to allow for the job to complete.
+# nodes to use to run the job, the MPI processes per node, the maximum
+# walltime to allow for the job to complete, and the maximum number of
+# times to attempt to run each task.
 #
 #-----------------------------------------------------------------------
 #

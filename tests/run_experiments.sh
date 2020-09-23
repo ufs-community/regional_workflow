@@ -356,11 +356,12 @@ Please correct and rerun."
     fi
   done
 #
-# Comment needs updating.
-# Create a configuration file for the current experiment.  We do this by
-# first copying the baseline configuration file and then modifying the
-# the values of those variables within it that are different between the
-# baseline and the experiment.
+# Set the full path to the workflow configuration file for the current 
+# experiment that the workflow generation script will read in.  For now, 
+# include the name of the test in the file name.  Once this file is 
+# constructed below, it will get renamed to the file name that the 
+# generation script expects (which is "config.sh").  Also, if a preexisting
+# file of this name exists, delete it.
 #
   expt_config_fp="$ushdir/config.${expt_name}.sh"
   rm_vrfy -rf "${expt_config_fp}"
@@ -389,25 +390,41 @@ Please correct and rerun."
 #
 #-----------------------------------------------------------------------
 #
-# Comment needs updating.
-# Set MACHINE, ACCOUNT, and EXPT_SUBDIR using the values provided on the
-# command line or set above.  These override any values set in the default
-# workflow configuration file sourced above.  Then write them to the actual
-# workflow configuration file for the test.
+# Set various workflow variables that depend on inputs to this script (as
+# opposed to information in the test-specific configuration file specified 
+# by baseline_config_fp).  Note that any values of these parameters 
+# specified in the default workflow configuration file (config_defaults.sh) 
+# or in the test-specific configuraiton file (baseline_config_fp) that 
+# are sourced above will be overwritten by the settings below.
+#
+# Note that EXPT_BASEDIR is set below as follows:
+# * If neither of the command line arguments expt_basedir and testset_name 
+#   to this script are specified, EXPT_BASEDIR gets set to a null string.
+# * If expt_basedir is specified but testset_name is not, EXPT_BASEDIR
+#   gets set to expt_basedir.
+# * If expt_basedir is not specified but testset_name is, EXPT_BASEDIR
+#   gets set to testset_name.
+# * If expt_basedir and testset_name are both specified, EXPT_BASEDIR 
+#   gets set to expt_basedir with testset_name appended to it (with a
+#   "/" in between).
+#
+# Note also that if EXPT_BASEDIR ends up getting set to a null string, 
+# the workflow generation script that gets called further below will set 
+# it to a default path; if it gets set to a relative path, then the workflow 
+# generation script will set it to a path consisting of a default path 
+# with the relative path appended to it; and if it gets set to an absolute 
+# path, then the workflow will leave it set to that path.
 #
 #-----------------------------------------------------------------------
 #
   MACHINE="${machine^^}"
   ACCOUNT="${account}"
 
-#  EXPT_BASEDIR="${expt_basedir}"
-# Note: 
-# If expt_basedir is a null (or unset) string, ${expt_basedir:+/} gets 
-# set to a null string; if expt_basedir is not null (or unset), 
-# ${expt_basedir:+/} gets set to "/".
+# Note that if expt_basedir is a null (or unset) string, ${expt_basedir:+/} 
+# gets set to a null string; otherwise, it gets set to "/".
   EXPT_BASEDIR="${expt_basedir}${expt_basedir:+/}${testset_name}"
-# If EXPT_BASEDIR already exists, rename it.
-  check_for_preexist_dir_file "${EXPT_BASEDIR}" "rename"
+# Remove any trailing "/" from EXPT_BASEDIR.
+  EXPT_BASEDIR="${EXPT_BASEDIR%%/}"
 
   EXPT_SUBDIR="${expt_name}"
   USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch:-"TRUE"}

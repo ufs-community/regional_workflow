@@ -986,19 +986,19 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# This comment needs updating.  Also need to update the info on EXPT_DIR
-# in config_defaults.sh.
-# If the base directory (EXPT_BASEDIR) in which the experiment subdirec-
-# tory (EXPT_SUBDIR) will be located is not set or is set to an empty 
-# string, set it to a default location that is at the same level as the
-# workflow directory (HOMErrfs).  Then create EXPT_BASEDIR if it doesn't
+# If the base directory (EXPT_BASEDIR) in which the experiment subdirectory 
+# (EXPT_SUBDIR) will be located does not start with a "/", then it is 
+# either set to a null string or contains a relative directory.  In both 
+# cases, prepend to it the absolute path of the default directory under 
+# which the experiment directories are placed.  If EXPT_BASEDIR was set 
+# to a null string, it will get reset to this default experiment directory, 
+# and if it was set to a relative directory, it will get reset to an 
+# absolute directory that points to the relative directory under the 
+# default experiment directory.  Then create EXPT_BASEDIR if it doesn't 
 # already exist.
 #
 #-----------------------------------------------------------------------
 #
-# If EXPT_BASEDIR does not start with a "/", then it is either set to a
-# null string or contains a relative directory.  In both cases, reset it
-# to the default location.
 if [ "${EXPT_BASEDIR:0:1}" != "/" ]; then
   EXPT_BASEDIR="${SR_WX_APP_TOP_DIR}/../expt_dirs/${EXPT_BASEDIR}"
 fi
