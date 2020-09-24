@@ -1182,6 +1182,29 @@ MAXTRIES_RUN_POST="1"
 #
 #-----------------------------------------------------------------------
 #
+# Set parameters associated with defining a customized post configuration 
+# file.
+#
+# USE_CUSTOM_POST_CONFIG_FILE:
+# Flag that determines whether a user-provided custom configuration file
+# should be used for post-processing the model data. If this is set to
+# "TRUE", then the workflow will use the custom post-processing (UPP) 
+# configuration file specified in CUSTOM_POST_CONFIG_FP. Otherwise, a 
+# default configuration file provided in the EMC_post repository will be 
+# used.
+#
+# CUSTOM_POST_CONFIG_FP:
+# The full path to the custom post flat file, including filename, to be 
+# used for post-processing. This is only used if CUSTOM_POST_CONFIG_FILE
+# is set to "TRUE".
+#
+#-----------------------------------------------------------------------
+#
+USE_CUSTOM_POST_CONFIG_FILE="FALSE"
+CUSTOM_POST_CONFIG_FP=""
+#
+#-----------------------------------------------------------------------
+#
 # Set parameters associated with running ensembles.  Definitions:
 #
 # DO_ENSEMBLE:
