@@ -1,7 +1,7 @@
 ################################################################################
 ####  Python Script Documentation Block
 #                      
-# Script name:       	plot_allvars_dif.py
+# Script name:       	plot_allvars_diff.py
 # Script description:  	Generates difference plots from FV3-LAM post processed 
 #                       grib2 output over the CONUS
 #
@@ -225,7 +225,7 @@ def rotate_wind(true_lat,lov_lon,earth_lons,uin,vin,proj,inverse=False):
 # Define required positional arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("Cycle date/time in YYYYMMDDHH format")
-parser.add_argument("Forecast hour in HH format")
+parser.add_argument("Forecast hour in HHH format")
 parser.add_argument("Path to experiment 1 base directory")
 parser.add_argument("Path to experiment 1 named directory")
 parser.add_argument("Path to experiment 2 base directory")
@@ -244,7 +244,7 @@ cyc = str(hour).zfill(2)
 print(year, month, day, hour)
 
 fhr = int(sys.argv[2])
-fhour = str(fhr).zfill(2)
+fhour = str(fhr).zfill(3)
 print('fhour '+fhour)
 itime = ymdh
 vtime = ndate(itime,int(fhr))
@@ -256,8 +256,8 @@ EXPT_SUBDIR_2 = str(sys.argv[6])
 CARTOPY_DIR = str(sys.argv[7])
 
 # Define the location of the input files
-data1 = pygrib.open(EXPT_BASEDIR_1+'/'+EXPT_SUBDIR_1+'/'+ymdh+'/postprd/RRFS.t'+cyc+'z.bgdawp'+fhour+'.tm00.grib2')
-data2 = pygrib.open(EXPT_BASEDIR_2+'/'+EXPT_SUBDIR_2+'/'+ymdh+'/postprd/RRFS.t'+cyc+'z.bgdawp'+fhour+'.tm00.grib2')
+data1 = pygrib.open(EXPT_BASEDIR_1+'/'+EXPT_SUBDIR_1+'/'+ymdh+'/postprd/rrfs.t'+cyc+'z.bgdawpf'+fhour+'.tm00.grib2')
+data2 = pygrib.open(EXPT_BASEDIR_2+'/'+EXPT_SUBDIR_2+'/'+ymdh+'/postprd/rrfs.t'+cyc+'z.bgdawpf'+fhour+'.tm00.grib2')
 
 # Get the lats and lons
 grids = [data1, data2]
@@ -326,21 +326,21 @@ slp_1 = data1.select(name='Pressure reduced to MSL')[0].values * 0.01
 slpsmooth_1 = ndimage.filters.gaussian_filter(slp_1, 13.78)
 slp_2 = data2.select(name='Pressure reduced to MSL')[0].values * 0.01
 slpsmooth_2 = ndimage.filters.gaussian_filter(slp_2, 13.78)
-slp_dif = slp_2 - slp_1
+slp_diff = slp_2 - slp_1
 
 # 2-m temperature
 tmp2m_1 = data1.select(name='2 metre temperature')[0].values
 tmp2m_1 = (tmp2m_1 - 273.15)*1.8 + 32.0
 tmp2m_2 = data2.select(name='2 metre temperature')[0].values
 tmp2m_2 = (tmp2m_2 - 273.15)*1.8 + 32.0
-tmp2m_dif = tmp2m_2 - tmp2m_1
+tmp2m_diff = tmp2m_2 - tmp2m_1
 
 # 2-m dew point temperature
 dew2m_1 = data1.select(name='2 metre dewpoint temperature')[0].values
 dew2m_1 = (dew2m_1 - 273.15)*1.8 + 32.0
 dew2m_2 = data2.select(name='2 metre dewpoint temperature')[0].values
 dew2m_2 = (dew2m_2 - 273.15)*1.8 + 32.0
-dew2m_dif = dew2m_2 - dew2m_1
+dew2m_diff = dew2m_2 - dew2m_1
 
 # 10-m wind speed
 uwind_1 = data1.select(name='10 metre U wind component')[0].values * 1.94384
@@ -352,24 +352,24 @@ uwind_1, vwind_1 = rotate_wind(Lat0,Lon0,lon,uwind_1,vwind_1,'lcc',inverse=False
 uwind_2, vwind_2 = rotate_wind(Lat0,Lon0,lon2,uwind_2,vwind_2,'lcc',inverse=False)
 wspd10m_1 = np.sqrt(uwind_1**2 + vwind_1**2)
 wspd10m_2 = np.sqrt(uwind_2**2 + vwind_2**2)
-wspd10m_dif = wspd10m_2 - wspd10m_1
+wspd10m_diff = wspd10m_2 - wspd10m_1
 
 # Surface-based CAPE
 cape_1 = data1.select(name='Convective available potential energy',typeOfLevel='surface')[0].values
 cape_2 = data2.select(name='Convective available potential energy',typeOfLevel='surface')[0].values
-cape_dif = cape_2 - cape_1
+cape_diff = cape_2 - cape_1
 
 # Surface-based CIN
 cin_1 = data1.select(name='Convective inhibition',typeOfLevel='surface')[0].values
 cin_2 = data2.select(name='Convective inhibition',typeOfLevel='surface')[0].values
-cin_dif = cin_2 - cin_1
+cin_diff = cin_2 - cin_1
 
 # 500 mb height, wind, vorticity
 z500_1 = data1.select(name='Geopotential Height',level=500)[0].values * 0.1
 z500_1 = ndimage.filters.gaussian_filter(z500_1, 6.89)
 z500_2 = data2.select(name='Geopotential Height',level=500)[0].values * 0.1
 z500_2 = ndimage.filters.gaussian_filter(z500_2, 6.89)
-z500_dif = z500_2 - z500_1
+z500_diff = z500_2 - z500_1
 vort500_1 = data1.select(name='Absolute vorticity',level=500)[0].values * 100000
 vort500_1 = ndimage.filters.gaussian_filter(vort500_1,1.7225)
 vort500_1[vort500_1 > 1000] = 0	# Mask out undefined values on domain edge
@@ -394,12 +394,12 @@ u250_1, v250_1 = rotate_wind(Lat0,Lon0,lon,u250_1,v250_1,'lcc',inverse=False)
 u250_2, v250_2 = rotate_wind(Lat0,Lon0,lon2,u250_2,v250_2,'lcc',inverse=False)
 wspd250_1 = np.sqrt(u250_1**2 + v250_1**2)
 wspd250_2 = np.sqrt(u250_2**2 + v250_2**2)
-wspd250_dif = wspd250_2 - wspd250_1
+wspd250_diff = wspd250_2 - wspd250_1
 
 # Total precipitation
 qpf_1 = data1.select(name='Total Precipitation',lengthOfTimeRange=fhr)[0].values * 0.0393701
 qpf_2 = data2.select(name='Total Precipitation',lengthOfTimeRange=fhr)[0].values * 0.0393701
-qpf_dif = qpf_2 - qpf_1
+qpf_diff = qpf_2 - qpf_1
 
 # Composite reflectivity
 refc_1 = data1.select(name='Maximum/Composite radar reflectivity')[0].values 
@@ -417,7 +417,7 @@ if (fhr > 0):
   minuh25_2[minuh25_2 > -10] = 0
   uh25_1 = maxuh25_1 + minuh25_1
   uh25_2 = maxuh25_2 + minuh25_2
-  uh25_dif = uh25_2 - uh25_1
+  uh25_diff = uh25_2 - uh25_1
 
 
 t2a = time.perf_counter()
@@ -530,7 +530,7 @@ def plot_all(dom):
   keep_ax_lst_3 = ax3.get_children()[:]
 
 # colors for difference plots, only need to define once
-  difcolors = ['blue','#1874CD','dodgerblue','deepskyblue','turquoise','white','white','#EEEE00','#EEC900','darkorange','orangered','red']
+  diffcolors = ['blue','#1874CD','dodgerblue','deepskyblue','turquoise','white','white','#EEEE00','#EEC900','darkorange','orangered','red']
 
 
 ################################
@@ -541,11 +541,11 @@ def plot_all(dom):
 
   units = 'mb'
   clevs = [976,980,984,988,992,996,1000,1004,1008,1012,1016,1020,1024,1028,1032,1036,1040,1044,1048,1052]
-  clevsdif = [-12,-10,-8,-6,-4,-2,0,2,4,6,8,10,12]
+  clevsdiff = [-12,-10,-8,-6,-4,-2,0,2,4,6,8,10,12]
   cm = plt.cm.Spectral_r
-  cmdif = matplotlib.colors.ListedColormap(difcolors)
+  cmdiff = matplotlib.colors.ListedColormap(diffcolors)
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
-  normdif = matplotlib.colors.BoundaryNorm(clevsdif, cmdif.N)
+  normdiff = matplotlib.colors.BoundaryNorm(clevsdiff, cmdiff.N)
 
   cs1_a = ax1.pcolormesh(lon_shift,lat_shift,slp_1,transform=transform,cmap=cm,norm=norm) 
   cbar1 = plt.colorbar(cs1_a,ax=ax1,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
@@ -563,7 +563,7 @@ def plot_all(dom):
   plt.clabel(cs2_b,np.arange(940,1060,4),inline=1,fmt='%d',fontsize=6)
   ax2.text(.5,1.03,'FV3-LAM-X SLP ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax2.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  cs = ax3.pcolormesh(lon2_shift,lat2_shift,slp_dif,transform=transform,cmap=cmdif,norm=normdif)
+  cs = ax3.pcolormesh(lon2_shift,lat2_shift,slp_diff,transform=transform,cmap=cmdiff,norm=normdiff)
   cs.cmap.set_under('darkblue')
   cs.cmap.set_over('darkred')
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
@@ -571,7 +571,7 @@ def plot_all(dom):
   cbar3.ax.tick_params(labelsize=5)
   ax3.text(.5,1.03,'FV3-LAM-X - FV3-LAM SLP ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('slp_dif_'+dom+'_f'+fhour+'.png')
+  compress_and_save('slp_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot slp for: '+dom) % t3)
@@ -593,11 +593,11 @@ def plot_all(dom):
 
   units = '\xb0''F'
   clevs = np.linspace(-16,134,51)
-  clevsdif = [-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6]
+  clevsdiff = [-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6]
 #  cm = plt.cm.Spectral_r
   cm = cmap_t2m()
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
-  normdif = matplotlib.colors.BoundaryNorm(clevsdif, cmdif.N)
+  normdiff = matplotlib.colors.BoundaryNorm(clevsdiff, cmdiff.N)
 
   cs_1 = ax1.pcolormesh(lon_shift,lat_shift,tmp2m_1,transform=transform,cmap=cm,norm=norm)
   cs_1.cmap.set_under('white')
@@ -615,7 +615,7 @@ def plot_all(dom):
   cbar2.ax.tick_params(labelsize=5)
   ax2.text(.5,1.03,'FV3-LAM-X 2-m Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax2.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  cs = ax3.pcolormesh(lon2_shift,lat2_shift,tmp2m_dif,transform=transform,cmap=cmdif,norm=normdif)
+  cs = ax3.pcolormesh(lon2_shift,lat2_shift,tmp2m_diff,transform=transform,cmap=cmdiff,norm=normdiff)
   cs.cmap.set_under('darkblue')
   cs.cmap.set_over('darkred')
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
@@ -623,7 +623,7 @@ def plot_all(dom):
   cbar3.ax.tick_params(labelsize=6)
   ax3.text(.5,1.03,'FV3-LAM-X - FV3-LAM 2-m Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('2mt_dif_'+dom+'_f'+fhour+'.png')
+  compress_and_save('2mt_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 2mt for: '+dom) % t3)
@@ -645,10 +645,10 @@ def plot_all(dom):
 
   units = '\xb0''F'
   clevs = np.linspace(-5,80,35)
-  clevsdif = [-12,-10,-8,-6,-4,-2,0,2,4,6,8,10,12]
+  clevsdiff = [-12,-10,-8,-6,-4,-2,0,2,4,6,8,10,12]
   cm = cmap_q2m()
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
-  normdif = matplotlib.colors.BoundaryNorm(clevsdif, cmdif.N)
+  normdiff = matplotlib.colors.BoundaryNorm(clevsdiff, cmdiff.N)
 
   cs_1 = ax1.pcolormesh(lon_shift,lat_shift,dew2m_1,transform=transform,cmap=cm,norm=norm)
   cbar1 = plt.colorbar(cs_1,ax=ax1,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
@@ -662,7 +662,7 @@ def plot_all(dom):
   cbar2.ax.tick_params(labelsize=6)
   ax2.text(.5,1.03,'FV3-LAM-X 2-m Dew Point Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax2.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  cs = ax3.pcolormesh(lon2_shift,lat2_shift,dew2m_dif,transform=transform,cmap=cmdif,norm=normdif)
+  cs = ax3.pcolormesh(lon2_shift,lat2_shift,dew2m_diff,transform=transform,cmap=cmdiff,norm=normdiff)
   cs.cmap.set_under('darkblue')
   cs.cmap.set_over('darkred')
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
@@ -670,7 +670,7 @@ def plot_all(dom):
   cbar3.ax.tick_params(labelsize=6)
   ax3.text(.5,1.03,'FV3-LAM-X - FV3-LAM 2-m Dew Point Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('2mdew_dif_'+dom+'_f'+fhour+'.png')
+  compress_and_save('2mdew_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 2mdew for: '+dom) % t3)
@@ -691,17 +691,18 @@ def plot_all(dom):
   clear_plotables(ax3,keep_ax_lst_3,fig)
 
   units = 'kts'
-  # Places a wind barb every 90-100km, optimized for CONUS domain
-  skip = round(88.64*(dx/1000.)**-.97)
+  print('dx is '+str(dx))
+  # Places a wind barb every ~180 km, optimized for CONUS domain
+  skip = round(177.28*(dx/1000.)**-.97)
   print('skipping every '+str(skip)+' grid points to plot')
   barblength = 4
 
   clevs = [5,10,15,20,25,30,35,40,45,50,55,60]
-  clevsdif = [-12,-10,-8,-6,-4,-2,0,2,4,6,8,10,12]
+  clevsdiff = [-12,-10,-8,-6,-4,-2,0,2,4,6,8,10,12]
   colorlist = ['turquoise','dodgerblue','blue','#FFF68F','#E3CF57','peru','brown','crimson','red','fuchsia','DarkViolet']
   cm = matplotlib.colors.ListedColormap(colorlist)
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
-  normdif = matplotlib.colors.BoundaryNorm(clevsdif, cmdif.N)
+  normdiff = matplotlib.colors.BoundaryNorm(clevsdiff, cmdiff.N)
 
   cs_1 = ax1.pcolormesh(lon_shift,lat_shift,wspd10m_1,transform=transform,cmap=cm,vmin=5,norm=norm)
   cs_1.cmap.set_under('white',alpha=0.)
@@ -721,7 +722,7 @@ def plot_all(dom):
   ax2.barbs(lon2_shift[::skip,::skip],lat2_shift[::skip,::skip],uwind_2[::skip,::skip],vwind_2[::skip,::skip],length=barblength,linewidth=0.5,color='black',transform=transform)
   ax2.text(.5,1.03,'FV3-LAM-X 10-m Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax2.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  cs = ax3.pcolormesh(lon2_shift,lat2_shift,wspd10m_dif,transform=transform,cmap=cmdif,norm=normdif)
+  cs = ax3.pcolormesh(lon2_shift,lat2_shift,wspd10m_diff,transform=transform,cmap=cmdiff,norm=normdiff)
   cs.cmap.set_under('darkblue')
   cs.cmap.set_over('darkred')
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
@@ -729,7 +730,7 @@ def plot_all(dom):
   cbar3.ax.tick_params(labelsize=6)
   ax3.text(.5,1.03,'FV3-LAM-X - FV3-LAM 10-m Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
    
-  compress_and_save('10mwind_dif_'+dom+'_f'+fhour+'.png')
+  compress_and_save('10mwind_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 10mwspd for: '+dom) % t3)
@@ -752,11 +753,11 @@ def plot_all(dom):
   units = 'J/kg'
   clevs = [100,250,500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
   clevs2 = [-2000,-500,-250,-100,-25]
-  clevsdif = [-2000,-1500,-1000,-500,-250,-100,0,100,250,500,1000,1500,2000]
+  clevsdiff = [-2000,-1500,-1000,-500,-250,-100,0,100,250,500,1000,1500,2000]
   colorlist = ['blue','dodgerblue','cyan','mediumspringgreen','#FAFAD2','#EEEE00','#EEC900','darkorange','crimson','darkred']
   cm = matplotlib.colors.ListedColormap(colorlist)
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
-  normdif = matplotlib.colors.BoundaryNorm(clevsdif, cmdif.N)
+  normdiff = matplotlib.colors.BoundaryNorm(clevsdiff, cmdiff.N)
 
   cs_1 = ax1.pcolormesh(lon_shift,lat_shift,cape_1,transform=transform,cmap=cm,vmin=100,norm=norm)
   cs_1.cmap.set_under('white',alpha=0.)
@@ -776,7 +777,7 @@ def plot_all(dom):
   cs_2b = ax2.contourf(lon2_shift,lat2_shift,cin_2,clevs2,colors='none',hatches=['**','++','////','..'],transform=transform)
   ax2.text(.5,1.05,'FV3-LAM-X Surface-Based CAPE (shaded) and CIN (hatched) ('+units+') \n <-500 (*), -500<-250 (+), -250<-100 (/), -100<-25 (.) \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax2.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  cs = ax3.pcolormesh(lon2_shift,lat2_shift,cape_dif,transform=transform,cmap=cmdif,norm=normdif)
+  cs = ax3.pcolormesh(lon2_shift,lat2_shift,cape_diff,transform=transform,cmap=cmdiff,norm=normdiff)
   cs.cmap.set_under('darkblue')
   cs.cmap.set_over('darkred')
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
@@ -784,7 +785,7 @@ def plot_all(dom):
   cbar3.ax.tick_params(labelsize=6)
   ax3.text(.5,1.03,'FV3-LAM-X - FV3-LAM 10-m Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('sfcape_dif_'+dom+'_f'+fhour+'.png')
+  compress_and_save('sfcape_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot surface-based CAPE/CIN for: '+dom) % t3)
@@ -805,15 +806,16 @@ def plot_all(dom):
   clear_plotables(ax3,keep_ax_lst_3,fig)
 
   units = 'x10${^5}$ s${^{-1}}$'
-  skip = 70
+  skip = round(177.28*(dx/1000.)**-.97)
+  print('skipping every '+str(skip)+' grid points to plot')  
   barblength = 4
 
   vortlevs = [16,20,24,28,32,36,40]
-  clevsdif = [-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6]
+  clevsdiff = [-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6]
   colorlist = ['yellow','gold','goldenrod','orange','orangered','red']
   cm = matplotlib.colors.ListedColormap(colorlist)
   norm = matplotlib.colors.BoundaryNorm(vortlevs, cm.N)
-  normdif = matplotlib.colors.BoundaryNorm(clevsdif, cmdif.N)
+  normdiff = matplotlib.colors.BoundaryNorm(clevsdiff, cmdiff.N)
 
   cs1_a = ax1.pcolormesh(lon_shift,lat_shift,vort500_1,transform=transform,cmap=cm,norm=norm)
   cs1_a.cmap.set_under('white')
@@ -837,7 +839,7 @@ def plot_all(dom):
   plt.clabel(cs2_b,np.arange(486,600,6),inline_spacing=1,fmt='%d',fontsize=8)
   ax2.text(.5,1.03,'FV3-LAM-X 500 mb Heights (dam), Winds (kts), and $\zeta$ ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=8,transform=ax2.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  cs = ax3.pcolormesh(lon2_shift,lat2_shift,z500_dif,transform=transform,cmap=cmdif,norm=normdif)
+  cs = ax3.pcolormesh(lon2_shift,lat2_shift,z500_diff,transform=transform,cmap=cmdiff,norm=normdiff)
   cs.cmap.set_under('darkblue')
   cs.cmap.set_over('darkred')
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
@@ -845,7 +847,7 @@ def plot_all(dom):
   cbar3.ax.tick_params(labelsize=6)
   ax3.text(.5,1.03,'FV3-LAM-X - FV3-LAM 500-mb Heights (dam) \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('500_dif_'+dom+'_f'+fhour+'.png')
+  compress_and_save('500_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 500 mb Hgt/Wind/Vort for: '+dom) % t3)
@@ -866,15 +868,16 @@ def plot_all(dom):
   clear_plotables(ax3,keep_ax_lst_3,fig)
 
   units = 'kts'
-  skip = 70
+  skip = round(177.28*(dx/1000.)**-.97)
+  print('skipping every '+str(skip)+' grid points to plot')  
   barblength = 4
 
   clevs = [50,60,70,80,90,100,110,120,130,140,150]
-  clevsdif = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30]
+  clevsdiff = [-30,-25,-20,-15,-10,-5,0,5,10,15,20,25,30]
   colorlist = ['turquoise','deepskyblue','dodgerblue','#1874CD','blue','beige','khaki','peru','brown','crimson']
   cm = matplotlib.colors.ListedColormap(colorlist)
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
-  normdif = matplotlib.colors.BoundaryNorm(clevsdif, cmdif.N)
+  normdiff = matplotlib.colors.BoundaryNorm(clevsdiff, cmdiff.N)
 
   cs_1 = ax1.pcolormesh(lon_shift,lat_shift,wspd250_1,transform=transform,cmap=cm,vmin=50,norm=norm)
   cs_1.cmap.set_under('white',alpha=0.)
@@ -894,7 +897,7 @@ def plot_all(dom):
   ax2.barbs(lon2_shift[::skip,::skip],lat2_shift[::skip,::skip],u250_2[::skip,::skip],v250_2[::skip,::skip],length=barblength,linewidth=0.5,color='black',transform=transform)
   ax2.text(.5,1.03,'FV3-LAM-X 250 mb Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax2.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  cs = ax3.pcolormesh(lon2_shift,lat2_shift,wspd250_dif,transform=transform,cmap=cmdif,norm=normdif)
+  cs = ax3.pcolormesh(lon2_shift,lat2_shift,wspd250_diff,transform=transform,cmap=cmdiff,norm=normdiff)
   cs.cmap.set_under('darkblue')
   cs.cmap.set_over('darkred')
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
@@ -902,7 +905,7 @@ def plot_all(dom):
   cbar3.ax.tick_params(labelsize=6)
   ax3.text(.5,1.03,'FV3-LAM-X - FV3-LAM 250-mb Winds (dam) \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  compress_and_save('250wind_dif_'+dom+'_f'+fhour+'.png')
+  compress_and_save('250wind_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
   t3 = round(t2-t1, 3)
   print(('%.3f seconds to plot 250 mb WIND for: '+dom) % t3)
@@ -925,11 +928,11 @@ def plot_all(dom):
 
     units = 'in'
     clevs = [0.01,0.1,0.25,0.5,0.75,1,1.25,1.5,1.75,2,2.5,3,4,5,7,10,15,20]
-    clevsdif = [-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1,1.5,2,2.5,3]
+    clevsdiff = [-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1,1.5,2,2.5,3]
     colorlist = ['chartreuse','limegreen','green','blue','dodgerblue','deepskyblue','cyan','mediumpurple','mediumorchid','darkmagenta','darkred','crimson','orangered','darkorange','goldenrod','gold','yellow']  
     cm = matplotlib.colors.ListedColormap(colorlist)
     norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
-    normdif = matplotlib.colors.BoundaryNorm(clevsdif, cmdif.N)
+    normdiff = matplotlib.colors.BoundaryNorm(clevsdiff, cmdiff.N)
 
     cs_1 = ax1.pcolormesh(lon_shift,lat_shift,qpf_1,transform=transform,cmap=cm,vmin=0.01,norm=norm)
     cs_1.cmap.set_under('white',alpha=0.)
@@ -949,7 +952,7 @@ def plot_all(dom):
     cbar2.ax.tick_params(labelsize=6)
     ax2.text(.5,1.03,'FV3-LAM-X '+fhour+'-hr Accumulated Precipitation ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax2.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-    cs = ax3.pcolormesh(lon2_shift,lat2_shift,qpf_dif,transform=transform,cmap=cmdif,norm=normdif)
+    cs = ax3.pcolormesh(lon2_shift,lat2_shift,qpf_diff,transform=transform,cmap=cmdiff,norm=normdiff)
     cs.cmap.set_under('darkblue')
     cs.cmap.set_over('darkred')
     cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
@@ -957,7 +960,7 @@ def plot_all(dom):
     cbar3.ax.tick_params(labelsize=6)
     ax3.text(.5,1.03,'FV3-LAM-X - FV3-LAM '+fhour+'-hr Accumulated Precipitation ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-    compress_and_save('qpf_dif_'+dom+'_f'+fhour+'.png')
+    compress_and_save('qpf_diff_'+dom+'_f'+fhour+'.png')
     t2 = time.perf_counter()
     t3 = round(t2-t1, 3)
     print(('%.3f seconds to plot total qpf for: '+dom) % t3)
@@ -984,9 +987,9 @@ def plot_all(dom):
 #   colorlist = ['white','skyblue','mediumblue','green','orchid','firebrick','#EEC900','DarkViolet']
     colorlist = ['blue','#1874CD','dodgerblue','deepskyblue','turquoise','#E5E5E5','#E5E5E5','#EEEE00','#EEC900','darkorange','orangered','red','firebrick','mediumvioletred','darkviolet']
     cm = matplotlib.colors.ListedColormap(colorlist)
-    cmdif = matplotlib.colors.ListedColormap(difcolors)
+    cmdiff = matplotlib.colors.ListedColormap(diffcolors)
     norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
-    normdif = matplotlib.colors.BoundaryNorm(clevsdif, cmdif.N)
+    normdiff = matplotlib.colors.BoundaryNorm(clevsdiff, cmdiff.N)
 
     cs_1 = ax1.pcolormesh(lon_shift,lat_shift,uh25_1,transform=transform,cmap=cm,norm=norm)
     cs_1.cmap.set_under('darkblue')
@@ -1004,7 +1007,7 @@ def plot_all(dom):
     cbar2.ax.tick_params(labelsize=6)
     ax2.text(.5,1.03,'FV3-LAM-X 1-h Max/Min 2-5 km Updraft Helicity ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax2.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-    cs = ax3.pcolormesh(lon2_shift,lat2_shift,uh25_dif,transform=transform,cmap=cmdif,norm=normdif)
+    cs = ax3.pcolormesh(lon2_shift,lat2_shift,uh25_diff,transform=transform,cmap=cmdiff,norm=normdiff)
     cs.cmap.set_under('darkblue')
     cs.cmap.set_over('darkred')
     cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
@@ -1012,7 +1015,7 @@ def plot_all(dom):
     cbar3.ax.tick_params(labelsize=6)
     ax3.text(.5,1.03,'FV3-LAM-X - FV3-LAM 1-h Max/Min 2-5 km Updraft Helicity \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=5,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-    compress_and_save('uh25_dif_'+dom+'_f'+fhour+'.png')
+    compress_and_save('uh25_diff_'+dom+'_f'+fhour+'.png')
     t2 = time.perf_counter()
     t3 = round(t2-t1, 3)
     print(('%.3f seconds to plot Max/Min Hourly 2-5 km UH for: '+dom) % t3)
@@ -1034,7 +1037,7 @@ def plot_all(dom):
 
   units = 'dBZ'
   clevs = np.linspace(5,70,14)
-  clevsdif = [20,1000]
+  clevsdiff = [20,1000]
   colorlist = ['turquoise','dodgerblue','mediumblue','lime','limegreen','green','#EEEE00','#EEC900','darkorange','red','firebrick','darkred','fuchsia']
   cm = matplotlib.colors.ListedColormap(colorlist)
   norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
@@ -1055,8 +1058,8 @@ def plot_all(dom):
   cbar2.ax.tick_params(labelsize=6)
   ax2.text(.5,1.03,'FV3-LAM-X Composite Reflectivity ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax2.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
-  csdif = ax3.contourf(lon_shift,lat_shift,refc_1,clevsdif,colors='red',transform=transform)
-  csdif2 = ax3.contourf(lon2_shift,lat2_shift,refc_2,clevsdif,colors='dodgerblue',transform=transform)
+  csdiff = ax3.contourf(lon_shift,lat_shift,refc_1,clevsdiff,colors='red',transform=transform)
+  csdiff2 = ax3.contourf(lon2_shift,lat2_shift,refc_2,clevsdiff,colors='dodgerblue',transform=transform)
   ax3.text(.5,1.03,'FV3-LAM (red) and FV3-LAM-X (blue) Composite Reflectivity > 20 ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=5,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
   compress_and_save('refc_dif_'+dom+'_f'+fhour+'.png')
