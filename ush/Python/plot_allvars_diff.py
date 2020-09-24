@@ -691,7 +691,6 @@ def plot_all(dom):
   clear_plotables(ax3,keep_ax_lst_3,fig)
 
   units = 'kts'
-  print('dx is '+str(dx))
   # Places a wind barb every ~180 km, optimized for CONUS domain
   skip = round(177.28*(dx/1000.)**-.97)
   print('skipping every '+str(skip)+' grid points to plot')
