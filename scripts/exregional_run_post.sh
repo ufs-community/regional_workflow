@@ -144,7 +144,7 @@ esac
 #
 rm_vrfy -f fort.*
 cp_vrfy ${EMC_POST_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
-cp_vrfy ${EMC_POST_DIR}/parm/postxconfig-NT-fv3sar.txt ./postxconfig-NT.txt
+cp_vrfy ${EMC_POST_DIR}/parm/postxconfig-NT-fv3lam.txt ./postxconfig-NT.txt
 cp_vrfy ${EMC_POST_DIR}/parm/params_grib2_tbl_new ./params_grib2_tbl_new
 cp_vrfy ${EXECDIR}/ncep_post .
 #

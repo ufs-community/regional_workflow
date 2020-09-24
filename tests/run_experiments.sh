@@ -807,7 +807,12 @@ EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
 #
   add_maxtries="FALSE"
 
-  if [ "$MACHINE" = "CHEYENNE" ]; then
+  if [ "$MACHINE" = "HERA" ]; then
+    add_maxtries="TRUE"
+    MAXTRIES_MAKE_ICS="2"
+    MAXTRIES_MAKE_LBCS="2"
+    MAXTRIES_RUN_POST="2"
+  elif [ "$MACHINE" = "CHEYENNE" ]; then
     add_maxtries="TRUE"
     MAXTRIES_MAKE_SFC_CLIMO="3"
     MAXTRIES_MAKE_ICS="5"
