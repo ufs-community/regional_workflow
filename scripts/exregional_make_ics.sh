@@ -645,7 +645,7 @@ mv_vrfy gfs_bndy.nc ${ics_dir}/gfs_bndy.tile${TILE_RGNL}.000.nc
 #
 if [ "${USE_FVCOM}" = "TRUE" ]; then
 
-  fvcom_exec_fn="fvcom_to_FV3.exe"
+  fvcom_exec_fn="fvcom_to_FV3"
   fvcom_exec_fp="$EXECDIR/${fvcom_exec_fn}"
   if [ ! -f "${fvcom_exec_fp}" ]; then
     print_err_msg_exit "\
