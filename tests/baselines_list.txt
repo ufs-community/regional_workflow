@@ -6,6 +6,7 @@ get_extrn_files_from_hpss_GSMGFS_GSMGFS
 get_extrn_files_from_hpss_HRRRX_RAPX
 get_extrn_files_from_hpss_RAPX_RAPX
 grid_GSD_HRRR_AK_50km
+grid_GSD_HRRR13km
 grid_GSD_RAP13km
 nco_GSD_HRRR25km_HRRRX_RAPX
 nco_GSD_HRRR3km_FV3GFS_FV3GFS
