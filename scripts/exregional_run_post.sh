@@ -144,14 +144,33 @@ esac
 #
 rm_vrfy -f fort.*
 cp_vrfy ${EMC_POST_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
-cp_vrfy ${EMC_POST_DIR}/parm/postxconfig-NT-fv3sar.txt ./postxconfig-NT.txt
+if [ ${USE_CUSTOM_POST_CONFIG_FILE} = "TRUE" ]; then
+  post_config_fp="${CUSTOM_POST_CONFIG_FP}"
+  print_info_msg "
+====================================================================
+Copying the user-defined post flat file specified by CUSTOM_POST_CONFIG_FP 
+to the post forecast hour directory (fhr_dir):
+  CUSTOM_POST_CONFIG_FP = \"${CUSTOM_POST_CONFIG_FP}\"
+  fhr_dir = \"${fhr_dir}\"
+===================================================================="
+else
+  post_config_fp="${EMC_POST_DIR}/parm/postxconfig-NT-fv3lam.txt"
+  print_info_msg "
+====================================================================
+Copying the default post flat file specified by post_config_fp to the post 
+forecast hour directory (fhr_dir):
+  post_config_fp = \"${post_config_fp}\"
+  fhr_dir = \"${fhr_dir}\"
+===================================================================="
+fi
+cp_vrfy ${post_config_fp} ./postxconfig-NT.txt
 cp_vrfy ${EMC_POST_DIR}/parm/params_grib2_tbl_new ./params_grib2_tbl_new
 cp_vrfy ${EXECDIR}/ncep_post .
 #
 #-----------------------------------------------------------------------
 #
-# Get the cycle date and hour (in formats of yyyymmdd and hh, respect-
-# ively) from cdate.
+# Get the cycle date and hour (in formats of yyyymmdd and hh, respectively) 
+# from cdate.
 #
 #-----------------------------------------------------------------------
 #

@@ -79,7 +79,7 @@ cd_vrfy ${scrfunc_dir}
 #
 #-----------------------------------------------------------------------
 #
-  EXPT_DEFAULT_CONFIG_FN="config_defaults.sh"
+EXPT_DEFAULT_CONFIG_FN="config_defaults.sh"
 . ./${EXPT_DEFAULT_CONFIG_FN}
 #
 #-----------------------------------------------------------------------
@@ -244,10 +244,10 @@ check_var_valid_value "DO_SHUM" "valid_vals_DO_SHUM"
 DO_SHUM=${DO_SHUM^^}
 if [ "${DO_SHUM}" = "TRUE" ] || \
    [ "${DO_SHUM}" = "YES" ]; then
-  DO_SHUM="true"
+  DO_SHUM="TRUE"
 elif [ "${DO_SHUM}" = "FALSE" ] || \
      [ "${DO_SHUM}" = "NO" ]; then
-  DO_SHUM="false"
+  DO_SHUM="FALSE"
 fi
 #
 #-----------------------------------------------------------------------
@@ -264,10 +264,10 @@ check_var_valid_value "DO_SPPT" "valid_vals_DO_SPPT"
 DO_SPPT=${DO_SPPT^^}
 if [ "${DO_SPPT}" = "TRUE" ] || \
    [ "${DO_SPPT}" = "YES" ]; then
-  DO_SPPT="true"
+  DO_SPPT="TRUE"
 elif [ "${DO_SPPT}" = "FALSE" ] || \
      [ "${DO_SPPT}" = "NO" ]; then
-  DO_SPPT="false"
+  DO_SPPT="FALSE"
 fi
 #
 #-----------------------------------------------------------------------
@@ -284,11 +284,32 @@ check_var_valid_value "DO_SKEB" "valid_vals_DO_SKEB"
 DO_SKEB=${DO_SKEB^^}
 if [ "${DO_SKEB}" = "TRUE" ] || \
    [ "${DO_SKEB}" = "YES" ]; then
-  DO_SKEB="true"
+  DO_SKEB="TRUE"
 elif [ "${DO_SKEB}" = "FALSE" ] || \
      [ "${DO_SKEB}" = "NO" ]; then
-  DO_SKEB="false"
+  DO_SKEB="FALSE"
 fi
+#
+#-----------------------------------------------------------------------
+#
+# Set magnitude of stochastic ad-hoc schemes to -999.0 if they are not
+# being used. This is required at the moment, since "do_shum/sppt/skeb"
+# does not override the use of the scheme unless the magnitude is also
+# specifically set to -999.0.  If all "do_shum/sppt/skeb" are set to
+# "false," then none will run, regardless of the magnitude values. 
+#
+#-----------------------------------------------------------------------
+#
+if [ "${DO_SHUM}" = "FALSE" ]; then
+  SHUM_MAG=-999.0
+fi
+if [ "${DO_SKEB}" = "FALSE" ]; then
+  SKEB_MAG=-999.0
+fi
+if [ "${DO_SPPT}" = "FALSE" ]; then
+  SPPT_MAG=-999.0
+fi
+
 #
 #-----------------------------------------------------------------------
 #
@@ -459,10 +480,10 @@ case "${EMC_GRID_NAME}" in
   "conus_c96")
     PREDEF_GRID_NAME="EMC_CONUS_coarse"
     ;;
-  "GSD_HRRR3km")
+  "GSD_HRRR25km" | "GSD_HRRR13km" | "GSD_HRRR3km" | "GSD_SUBCONUS3km")
     PREDEF_GRID_NAME="${EMC_GRID_NAME}"
     ;;
-  "conus_orig"|"guam"|"hi"|"pr")
+  "conus_orig" | "guam" | "hi" | "pr")
     print_err_msg_exit "\
 A predefined grid (PREDEF_GRID_NAME) has not yet been defined for this
 EMC grid (EMC_GRID_NAME):
@@ -777,7 +798,7 @@ esac
 #
 #-----------------------------------------------------------------------
 #
-mng_extrns_cfg_fn=$( readlink -f "$SR_WX_APP_TOP_DIR/Externals.cfg" )
+mng_extrns_cfg_fn=$( readlink -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
 property_name="local_path"
 #
 # Get the base directory of the FV3 forecast model code.
@@ -799,7 +820,7 @@ Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
 fi
 #
-# Get the base directory of the UFS_UTILS codes (except for chgres).
+# Get the base directory of the UFS_UTILS codes.
 #
 external_name="ufs_utils"
 UFS_UTILS_DIR=$( \
@@ -816,25 +837,6 @@ cated (UFS_UTILS_DIR) does not exist:
   UFS_UTILS_DIR = \"${UFS_UTILS_DIR}\"
 Please clone the external repository containing the code in this direct-
 ory, build the executables, and then rerun the workflow."
-fi
-#
-# Get the base directory of the chgres code.
-#
-external_name="ufs_utils_chgres"
-CHGRES_DIR=$( \
-get_manage_externals_config_property \
-"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
-print_err_msg_exit "\
-Call to function get_manage_externals_config_property failed."
-
-CHGRES_DIR="${SR_WX_APP_TOP_DIR}/${CHGRES_DIR}"
-if [ ! -d "${CHGRES_DIR}" ]; then
-  print_err_msg_exit "\
-The base directory in which the chgres source code should be located 
-(CHGRES_DIR) does not exist:
-  CHGRES_DIR = \"${CHGRES_DIR}\"
-Please clone the external repository containing the code in this direct-
-ory, build the executable, and then rerun the workflow."
 fi
 #
 # Get the base directory of the EMC_post code.
@@ -854,6 +856,42 @@ The base directory in which the EMC_post source code should be located
   EMS_POST_DIR = \"${EMC_POST_DIR}\"
 Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that USE_CUSTOM_POST_CONFIG_FILE is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value \
+  "USE_CUSTOM_POST_CONFIG_FILE" "valid_vals_USE_CUSTOM_POST_CONFIG_FILE"
+#
+# Set USE_CUSTOM_POST_CONFIG_FILE to either "TRUE" or "FALSE" so we don't
+# have to consider other valid values later on.
+#
+USE_CUSTOM_POST_CONFIG_FILE=${USE_CUSTOM_POST_CONFIG_FILE^^}
+if [ "$USE_CUSTOM_POST_CONFIG_FILE" = "TRUE" ] || \
+   [ "$USE_CUSTOM_POST_CONFIG_FILE" = "YES" ]; then
+  USE_CUSTOM_POST_CONFIG_FILE="TRUE"
+elif [ "$USE_CUSTOM_POST_CONFIG_FILE" = "FALSE" ] || \
+     [ "$USE_CUSTOM_POST_CONFIG_FILE" = "NO" ]; then
+  USE_CUSTOM_POST_CONFIG_FILE="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# If using a custom post configuration file, make sure that it exists.
+#
+#-----------------------------------------------------------------------
+#
+if [ ${USE_CUSTOM_POST_CONFIG_FILE} = "TRUE" ]; then
+  if [ ! -f "${CUSTOM_POST_CONFIG_FP}" ]; then
+    print_err_msg_exit "
+The custom post configuration specified by CUSTOM_POST_CONFIG_FP does not 
+exist:
+  CUSTOM_POST_CONFIG_FP = \"${CUSTOM_POST_CONFIG_FP}\""
+  fi
 fi
 #
 #-----------------------------------------------------------------------
@@ -965,15 +1003,22 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If the base directory (EXPT_BASEDIR) in which the experiment subdirec-
-# tory (EXPT_SUBDIR) will be located is not set or is set to an empty 
-# string, set it to a default location that is at the same level as the
-# workflow directory (HOMErrfs).  Then create EXPT_BASEDIR if it doesn't
+# If the base directory (EXPT_BASEDIR) in which the experiment subdirectory 
+# (EXPT_SUBDIR) will be located does not start with a "/", then it is 
+# either set to a null string or contains a relative directory.  In both 
+# cases, prepend to it the absolute path of the default directory under 
+# which the experiment directories are placed.  If EXPT_BASEDIR was set 
+# to a null string, it will get reset to this default experiment directory, 
+# and if it was set to a relative directory, it will get reset to an 
+# absolute directory that points to the relative directory under the 
+# default experiment directory.  Then create EXPT_BASEDIR if it doesn't 
 # already exist.
 #
 #-----------------------------------------------------------------------
 #
-EXPT_BASEDIR="${EXPT_BASEDIR:-${SR_WX_APP_TOP_DIR}/../expt_dirs}"
+if [ "${EXPT_BASEDIR:0:1}" != "/" ]; then
+  EXPT_BASEDIR="${SR_WX_APP_TOP_DIR}/../expt_dirs/${EXPT_BASEDIR}"
+fi
 EXPT_BASEDIR="$( readlink -f ${EXPT_BASEDIR} )"
 mkdir_vrfy -p "${EXPT_BASEDIR}"
 #
@@ -1103,7 +1148,7 @@ the experiment generation script."
 
   COMOUT_BASEDIR="$COMROOT/$NET/$envir"
   check_for_preexist_dir_file "${COMOUT_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
-  
+
 else
 
   FIXam="${EXPTDIR}/fix_am"
@@ -1203,6 +1248,12 @@ if [ "${USE_CCPP}" = "TRUE" ]; then
   CCPP_PHYS_SUITE_FN="suite_${CCPP_PHYS_SUITE}.xml"
   CCPP_PHYS_SUITE_IN_CCPP_FP="${UFS_WTHR_MDL_DIR}/FV3/ccpp/suites/${CCPP_PHYS_SUITE_FN}"
   CCPP_PHYS_SUITE_FP="${EXPTDIR}/${CCPP_PHYS_SUITE_FN}"
+  if [ ! -f "${CCPP_PHYS_SUITE_IN_CCPP_FP}" ]; then
+    print_err_msg_exit "\
+The CCPP suite definition file (CCPP_PHYS_SUITE_IN_CCPP_FP) does not exist
+in the local clone of the ufs-weather-model:
+  CCPP_PHYS_SUITE_IN_CCPP_FP = \"${CCPP_PHYS_SUITE_IN_CCPP_FP}\""
+  fi
 fi
 #
 #-----------------------------------------------------------------------
@@ -1241,6 +1292,24 @@ FIELD_TABLE_FP="${EXPTDIR}/${FIELD_TABLE_FN}"
 FV3_NML_FN="${FV3_NML_BASE_SUITE_FN%.*}"
 FV3_NML_FP="${EXPTDIR}/${FV3_NML_FN}"
 NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that USE_USER_STAGED_EXTRN_FILES is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "USE_USER_STAGED_EXTRN_FILES" "valid_vals_USE_USER_STAGED_EXTRN_FILES"
+#
+# Set USE_USER_STAGED_EXTRN_FILES to either "TRUE" or "FALSE" so we don't 
+# have to consider other valid values later on.
+#
+USE_USER_STAGED_EXTRN_FILES=${USE_USER_STAGED_EXTRN_FILES^^}
+if [ "${USE_USER_STAGED_EXTRN_FILES}" = "YES" ]; then
+  USE_USER_STAGED_EXTRN_FILES="TRUE"
+elif [ "${USE_USER_STAGED_EXTRN_FILES}" = "NO" ]; then
+  USE_USER_STAGED_EXTRN_FILES="FALSE"
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -2479,7 +2548,7 @@ CRONTAB_LINE="${CRONTAB_LINE}"
 #
 #-----------------------------------------------------------------------
 #
-SR_WX_APP_TOP_DIR="$SR_WX_APP_TOP_DIR"
+SR_WX_APP_TOP_DIR="${SR_WX_APP_TOP_DIR}"
 HOMErrfs="$HOMErrfs"
 USHDIR="$USHDIR"
 SCRIPTSDIR="$SCRIPTSDIR"
@@ -2498,10 +2567,9 @@ COMOUT_BASEDIR="${COMOUT_BASEDIR}"
 TEMPLATE_DIR="${TEMPLATE_DIR}"
 UFS_WTHR_MDL_DIR="${UFS_WTHR_MDL_DIR}"
 UFS_UTILS_DIR="${UFS_UTILS_DIR}"
-EMC_POST_DIR="${EMC_POST_DIR}"
-CHGRES_DIR="${CHGRES_DIR}"
 SFC_CLIMO_INPUT_DIR="${SFC_CLIMO_INPUT_DIR}"
-TOPO_DIR=${TOPO_DIR}
+TOPO_DIR="${TOPO_DIR}"
+EMC_POST_DIR="${EMC_POST_DIR}"
 
 EXPTDIR="$EXPTDIR"
 LOGDIR="$LOGDIR"
@@ -2667,7 +2735,7 @@ OZONE_PARAM="${OZONE_PARAM}"
 #
 #-----------------------------------------------------------------------
 #
-# If EXTRN_MDL_SOURCE_DIR_ICS is set to a null string, this is the system 
+# If USE_USER_STAGED_EXTRN_FILES is set to "FALSE", this is the system 
 # directory in which the workflow scripts will look for the files generated 
 # by the external model specified in EXTRN_MDL_NAME_ICS.  These files will 
 # be used to generate the input initial condition and surface files for 
@@ -2679,7 +2747,7 @@ EXTRN_MDL_SYSBASEDIR_ICS="${EXTRN_MDL_SYSBASEDIR_ICS}"
 #
 #-----------------------------------------------------------------------
 #
-# If EXTRN_MDL_SOURCE_DIR_LBCS is set to a null string, this is the system 
+# If USE_USER_STAGED_EXTRN_FILES is set to "FALSE", this is the system 
 # directory in which the workflow scripts will look for the files generated 
 # by the external model specified in EXTRN_MDL_NAME_LBCS.  These files 
 # will be used to generate the input lateral boundary condition files for 
