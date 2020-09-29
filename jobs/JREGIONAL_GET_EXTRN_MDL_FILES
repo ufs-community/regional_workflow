@@ -233,8 +233,8 @@ extrn_mdl_source_dir="${extrn_mdl_sysdir}"
 #-----------------------------------------------------------------------
 #
 # If the user has specified that the external model files to be used for
-# generating ICs or LBCs are staged, then reset extrn_mdl_source_dir to the
-# user-specified directory in which these files are staged, and reset 
+# generating ICs or LBCs are staged, then reset extrn_mdl_source_dir to 
+# the user-specified directory in which these files are staged, and reset 
 # extrn_mdl_fns_on_disk to the user-specified array containing the names 
 # of the files.
 #
