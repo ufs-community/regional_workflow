@@ -480,7 +480,7 @@ case "${EMC_GRID_NAME}" in
   "conus_c96")
     PREDEF_GRID_NAME="EMC_CONUS_coarse"
     ;;
-  "RRFS_CONUS_25km" | "RRFS_CONUS_13km" | "GSD_HRRR3km" | "GSD_SUBCONUS3km")
+  "RRFS_CONUS_25km" | "RRFS_CONUS_13km" | "RRFS_CONUS_3km" | "GSD_SUBCONUS3km")
     PREDEF_GRID_NAME="${EMC_GRID_NAME}"
     ;;
   "conus_orig" | "guam" | "hi" | "pr")
