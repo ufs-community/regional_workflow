@@ -526,7 +526,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"GSD_SUBCONUS3km")
+"RRFS_SUBCONUS_3km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 

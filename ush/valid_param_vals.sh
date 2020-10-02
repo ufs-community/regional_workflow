@@ -17,7 +17,7 @@ valid_vals_PREDEF_GRID_NAME=( \
 "RRFS_CONUS_25km" \
 "RRFS_CONUS_13km" \
 "RRFS_CONUS_3km" \
-"GSD_SUBCONUS3km" \
+"RRFS_SUBCONUS_3km" \
 "GSD_RAP13km" \
 )
 valid_vals_EMC_GRID_NAME=( \
@@ -31,7 +31,7 @@ valid_vals_EMC_GRID_NAME=( \
 "RRFS_CONUS_25km" \
 "RRFS_CONUS_13km" \
 "RRFS_CONUS_3km" \
-"GSD_SUBCONUS3km" \
+"RRFS_SUBCONUS_3km" \
 "GSD_RAP13km" \
 )
 valid_vals_USE_CCPP=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")

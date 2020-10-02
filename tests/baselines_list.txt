@@ -11,7 +11,7 @@ grid_GSD_RAP13km
 nco_RRFS_CONUS_25km_HRRRX_RAPX
 nco_RRFS_CONUS_3km_FV3GFS_FV3GFS
 nco_RRFS_CONUS_3km_HRRRX_RAPX
-nco_GSD_SUBCONUS3km_HRRRX_RAPX
+nco_RRFS_SUBCONUS_3km_HRRRX_RAPX
 nco_conus
 nco_conus_c96
 nco_conus_c96__suite_FV3_GFS_2017_gfdlmp
