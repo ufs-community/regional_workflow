@@ -376,7 +376,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"GSD_HRRR13km")
+"RRFS_CONUS_13km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 

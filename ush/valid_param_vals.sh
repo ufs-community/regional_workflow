@@ -15,7 +15,7 @@ valid_vals_PREDEF_GRID_NAME=( \
 "GSD_RRFSAK_3km" \
 "GSD_HRRR_AK_50km" \
 "GSD_HRRR25km" \
-"GSD_HRRR13km" \
+"RRFS_CONUS_13km" \
 "GSD_HRRR3km" \
 "GSD_SUBCONUS3km" \
 "GSD_RAP13km" \
@@ -29,7 +29,7 @@ valid_vals_EMC_GRID_NAME=( \
 "hi" \
 "pr" \
 "GSD_HRRR25km" \
-"GSD_HRRR13km" \
+"RRFS_CONUS_13km" \
 "GSD_HRRR3km" \
 "GSD_SUBCONUS3km" \
 "GSD_RAP13km" \
