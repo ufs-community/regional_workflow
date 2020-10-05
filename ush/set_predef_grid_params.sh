@@ -820,7 +820,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"GSD_RRFSAK_3km")
+"RRFS_AK_3km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then 
 
@@ -879,27 +879,105 @@ predefined domain:
 
     ESGgrid_WIDE_HALO_WIDTH=6
 
-    DT_ATMOS="50"
+#    DT_ATMOS="50"
+    DT_ATMOS="10"
 
     LAYOUT_X="30"
     LAYOUT_Y="17"
-    BLOCKSIZE="25"
+    BLOCKSIZE="40"
 
     if [ "$QUILTING" = "TRUE" ]; then
       WRTCMP_write_groups="1"
-      WRTCMP_write_tasks_per_group="2"
+      WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))
       WRTCMP_output_grid="lambert_conformal"
       WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
       WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
       WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
       WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-      WRTCMP_nx="1320"
-      WRTCMP_ny="950"
-      WRTCMP_lon_lwr_left="173.734"
-      WRTCMP_lat_lwr_left="46.740347"
+      WRTCMP_nx="1379"
+      WRTCMP_ny="1003"
+      WRTCMP_lon_lwr_left="-187.89737923"
+      WRTCMP_lat_lwr_left="45.84576053"
       WRTCMP_dx="${ESGgrid_DELX}"
       WRTCMP_dy="${ESGgrid_DELY}"
     fi
+
+  fi
+  ;;
+#
+#-----------------------------------------------------------------------
+#
+# 13-km HRRR Alaska grid.
+#
+#-----------------------------------------------------------------------
+#
+"RRFS_AK_13km")
+
+  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then 
+
+    print_err_msg_exit "\
+The parameters for a \"${GRID_GEN_METHOD}\" type grid have not yet been specified for this
+predefined domain:
+  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
+  GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
+
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
+
+    ESGgrid_LON_CTR=-161.5
+    ESGgrid_LAT_CTR=63.0
+
+    ESGgrid_DELX="13000.0"
+    ESGgrid_DELY="13000.0"
+
+    ESGgrid_NX=320
+    ESGgrid_NY=240
+
+    ESGgrid_WIDE_HALO_WIDTH=6
+
+#    DT_ATMOS="50"
+    DT_ATMOS="10"
+
+    LAYOUT_X="16"
+    LAYOUT_Y="12"
+    BLOCKSIZE="40"
+
+    if [ "$QUILTING" = "TRUE" ]; then
+      WRTCMP_write_groups="1"
+      WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))
+      WRTCMP_output_grid="lambert_conformal"
+      WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
+      WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
+      WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
+      WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
+
+# The following work.  They were obtained using the NCL scripts but only
+# after manually modifying the longitutes of two of the 4 corners of the
+# domain to add 360.0 to them.  Need to automate that procedure.
+      WRTCMP_nx="318"
+      WRTCMP_ny="234"
+#      WRTCMP_lon_lwr_left="-187.76660836"
+      WRTCMP_lon_lwr_left="172.23339164"
+      WRTCMP_lat_lwr_left="45.77691870"
+
+      WRTCMP_dx="${ESGgrid_DELX}"
+      WRTCMP_dy="${ESGgrid_DELY}"
+    fi
+
+# The following rotated_latlon coordinate system parameters were obtained
+# using the NCL code and work.
+#    if [ "$QUILTING" = "TRUE" ]; then
+#      WRTCMP_write_groups="1"
+#      WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))
+#      WRTCMP_output_grid="rotated_latlon"
+#      WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
+#      WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
+#      WRTCMP_lon_lwr_left="-18.47206579"
+#      WRTCMP_lat_lwr_left="-13.56176982"
+#      WRTCMP_lon_upr_rght="18.47206579"
+#      WRTCMP_lat_upr_rght="13.56176982"
+#      WRTCMP_dlon="0.11691181"
+#      WRTCMP_dlat="0.11691181"
+#    fi
 
   fi
   ;;
@@ -918,8 +996,8 @@ predefined domain:
 The parameters for a \"${GRID_GEN_METHOD}\" type grid have not yet been specified for this
 predefined domain:
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
-  GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\"
-"
+  GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
+
   elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
     ESGgrid_LON_CTR=-163.5
