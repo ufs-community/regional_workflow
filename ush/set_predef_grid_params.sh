@@ -534,6 +534,134 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
+# A CONUS domain of GFDLgrid type with ~25km cells.
+# Note:
+# This grid is larger than the HRRR domain and thus cannot be initialized
+# using the HRRRX.
+#
+#-----------------------------------------------------------------------
+#
+"CONUS_25km_GFDLgrid")
+
+  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
+
+    GFDLgrid_LON_T6_CTR=-97.5
+    GFDLgrid_LAT_T6_CTR=38.5
+    GFDLgrid_STRETCH_FAC=1.4
+    GFDLgrid_RES="96"
+    GFDLgrid_REFINE_RATIO=3
+  
+    num_margin_cells_T6_left=12
+    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
+  
+    num_margin_cells_T6_right=12
+    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
+  
+    num_margin_cells_T6_bottom=16
+    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
+  
+    num_margin_cells_T6_top=16
+    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
+
+#    GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="FALSE"
+
+    DT_ATMOS="225"
+
+    LAYOUT_X="6"
+    LAYOUT_Y="4"
+    BLOCKSIZE="36"
+
+    if [ "$QUILTING" = "TRUE" ]; then
+      WRTCMP_write_groups="1"
+      WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))
+      WRTCMP_output_grid="rotated_latlon"
+      WRTCMP_cen_lon="${GFDLgrid_LON_T6_CTR}"
+      WRTCMP_cen_lat="${GFDLgrid_LAT_T6_CTR}"
+      WRTCMP_lon_lwr_left="-24.40085141"
+      WRTCMP_lat_lwr_left="-19.65624142"
+      WRTCMP_lon_upr_rght="24.40085141"
+      WRTCMP_lat_upr_rght="19.65624142"
+      WRTCMP_dlon="0.22593381"
+      WRTCMP_dlat="0.22593381"
+    fi
+
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
+
+    print_err_msg_exit "\
+The parameters for a \"${GRID_GEN_METHOD}\" type grid have not yet been specified for this
+predefined domain:
+  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
+  GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
+
+  fi
+  ;;
+#
+#-----------------------------------------------------------------------
+#
+# A CONUS domain of GFDLgrid type with ~3km cells.
+# Note:
+# This grid is larger than the HRRR domain and thus cannot be initialized
+# using the HRRRX.
+#
+#-----------------------------------------------------------------------
+#
+"CONUS_3km_GFDLgrid")
+
+  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
+
+    GFDLgrid_LON_T6_CTR=-97.5
+    GFDLgrid_LAT_T6_CTR=38.5
+    GFDLgrid_STRETCH_FAC=1.5
+    GFDLgrid_RES="768"
+    GFDLgrid_REFINE_RATIO=3
+  
+    num_margin_cells_T6_left=69
+    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
+  
+    num_margin_cells_T6_right=69
+    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
+  
+    num_margin_cells_T6_bottom=164
+    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
+  
+    num_margin_cells_T6_top=164
+    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
+
+#    GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="FALSE"
+
+    DT_ATMOS="18"
+
+    LAYOUT_X="30"
+    LAYOUT_Y="22"
+    BLOCKSIZE="35"
+
+    if [ "$QUILTING" = "TRUE" ]; then
+      WRTCMP_write_groups="1"
+      WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))
+      WRTCMP_output_grid="rotated_latlon"
+      WRTCMP_cen_lon="${GFDLgrid_LON_T6_CTR}"
+      WRTCMP_cen_lat="${GFDLgrid_LAT_T6_CTR}"
+      WRTCMP_lon_lwr_left="-25.23144805"
+      WRTCMP_lat_lwr_left="-15.82130419"
+      WRTCMP_lon_upr_rght="25.23144805"
+      WRTCMP_lat_upr_rght="15.82130419"
+      WRTCMP_dlon="0.02665763"
+      WRTCMP_dlat="0.02665763"
+    fi
+
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
+
+    print_err_msg_exit "\
+The parameters for a \"${GRID_GEN_METHOD}\" type grid have not yet been specified for this
+predefined domain:
+  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
+  GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
+
+  fi
+  ;;
+#
+#-----------------------------------------------------------------------
+#
 # EMC's 3km CONUS grid.
 #
 #-----------------------------------------------------------------------

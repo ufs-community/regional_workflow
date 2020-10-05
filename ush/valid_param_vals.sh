@@ -19,6 +19,8 @@ valid_vals_PREDEF_GRID_NAME=( \
 "RRFS_CONUS_13km" \
 "RRFS_CONUS_3km" \
 "RRFS_SUBCONUS_3km" \
+"CONUS_25km_GFDLgrid" \
+"CONUS_3km_GFDLgrid" \
 "GSD_RAP13km" \
 )
 valid_vals_EMC_GRID_NAME=( \
