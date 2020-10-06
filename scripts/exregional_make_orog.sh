@@ -140,7 +140,6 @@ case $MACHINE in
 
 "STAMPEDE")
   export APRUN="time"
-  export topo_dir="/work/00315/tg455890/stampede2/regional_fv3/fix_orog"
   ;;
 
 "ORION")
@@ -171,15 +170,6 @@ mkdir_vrfy -p "${filter_dir}"
 shave_dir="${OROG_DIR}/shave_tmp"
 mkdir_vrfy -p "${shave_dir}"
 #
-#-----------------------------------------------------------------------
-#
-# Set the system directory from which topography data will be copied into
-# the experiment directory so it can be remapped onto the forecast model's
-# grid.
-#
-#-----------------------------------------------------------------------
-#
-topo_dir=$( readlink -f "${FIXgsm}/../fix_orog" )
 #
 #-----------------------------------------------------------------------
 #
@@ -206,12 +196,12 @@ tmp_dir="${raw_dir}/tmp"
 mkdir_vrfy -p "${tmp_dir}"
 cd_vrfy "${tmp_dir}"
 #
-# Copy topography and related data files from the system directory (topo_dir)
+# Copy topography and related data files from the system directory (TOPO_DIR)
 # to the temporary directory.
 #
-cp_vrfy ${topo_dir}/thirty.second.antarctic.new.bin fort.15
-cp_vrfy ${topo_dir}/landcover30.fixed .
-cp_vrfy ${topo_dir}/gmted2010.30sec.int fort.235
+cp_vrfy ${TOPO_DIR}/thirty.second.antarctic.new.bin fort.15
+cp_vrfy ${TOPO_DIR}/landcover30.fixed .
+cp_vrfy ${TOPO_DIR}/gmted2010.30sec.int fort.235
 #
 #-----------------------------------------------------------------------
 #
@@ -228,10 +218,10 @@ cp_vrfy ${topo_dir}/gmted2010.30sec.int fort.235
 #-----------------------------------------------------------------------
 #
 mosaic_fn="${CRES}${DOT_OR_USCORE}mosaic.halo${NHW}.nc"
-mosaic_fp="$FIXsar/${mosaic_fn}"
+mosaic_fp="$FIXLAM/${mosaic_fn}"
 
 grid_fn=$( get_charvar_from_netcdf "${mosaic_fp}" "gridfiles" )
-grid_fp="${FIXsar}/${grid_fn}"
+grid_fp="${FIXLAM}/${grid_fn}"
 #
 #-----------------------------------------------------------------------
 #
@@ -309,10 +299,10 @@ case $MACHINE in
 ${ufs_utils_ushdir}/${orog_gen_scr} \
 $res \
 ${TILE_RGNL} \
-${FIXsar} \
+${FIXLAM} \
 ${raw_dir} \
 ${UFS_UTILS_DIR} \
-${topo_dir} \
+${TOPO_DIR} \
 ${tmp_dir}" \
   >> ${tmp_dir}/orog.file1
 
@@ -351,13 +341,30 @@ raw_orog_fn="${raw_orog_fn_prefix}.${fn_suffix_with_halo}"
 raw_orog_fp="${raw_dir}/${raw_orog_fn}"
 mv_vrfy "${raw_orog_fp_orig}" "${raw_orog_fp}"
 
+#
+#-----------------------------------------------------------------------
+#
+# Copy the two orography files needed for the drag suite in the FV3_RRFS_v1beta
+# physics suite.
+# 
+# Note that the following is a temporary fix. We need a long-term solution 
+# that calls a script or program to generates the necessary files (instead 
+# of copying them).
+#
+#-----------------------------------------------------------------------
+#
+if [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
+  cp_vrfy ${GWD_RRFS_v1beta_DIR}/*_ls*.nc ${OROG_DIR}
+  cp_vrfy ${GWD_RRFS_v1beta_DIR}/*_ss*.nc ${OROG_DIR}
+fi
+
 print_info_msg "$VERBOSE" "
 Orography file generation complete."
 #
 #-----------------------------------------------------------------------
 #
 # Note that the orography filtering code assumes that the regional grid
-# is a GFDLgrid type of grid; it is not designed to handle JPgrid type
+# is a GFDLgrid type of grid; it is not designed to handle ESGgrid type
 # regional grids.  If the flag "regional" in the orography filtering 
 # namelist file is set to .TRUE. (which it always is will be here; see
 # below), then filtering code will first calculate a resolution (i.e. 
@@ -379,7 +386,7 @@ Orography file generation complete."
 # resolution of res_regional.  These interpolated/extrapolated values are
 # then used to perform the orography filtering.
 #
-# The above approach works for a GFDLgrid type of grid.  To handle JPgrid
+# The above approach works for a GFDLgrid type of grid.  To handle ESGgrid
 # type grids, we set res in the namelist to the orography filtering code
 # the equivalent global uniform cubed-sphere resolution of the regional
 # grid, we set stretch_fac to 1 (since the equivalent resolution assumes
@@ -407,7 +414,7 @@ if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 #  stretch_fac="${GFDLgrid_STRETCH_FAC}"
   refine_ratio="${GFDLgrid_REFINE_RATIO}"
 
-elif [ "${GRID_GEN_METHOD}" = "JPgrid" ]; then
+elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
   res="${CRES:1}"
 #  stretch_fac="${STRETCH_FAC}"
