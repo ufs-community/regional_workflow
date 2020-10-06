@@ -122,7 +122,7 @@ EOF
 #
 #-----------------------------------------------------------------------
 #
-# Set the run machine-dependent run command.
+# Set the machine-dependent run command.
 #
 #-----------------------------------------------------------------------
 #
@@ -159,6 +159,10 @@ case $MACHINE in
 "STAMPEDE")
   nprocs=$(( NNODES_MAKE_SFC_CLIMO*PPN_MAKE_SFC_CLIMO ))
   APRUN="ibrun -np ${nprocs}"
+  ;;
+
+"ORION")
+  APRUN="srun"
   ;;
 
 *)

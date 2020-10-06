@@ -97,6 +97,11 @@ case "$MACHINE" in
     APRUN="ibrun"
     ;;
 
+  "ORION")
+    ulimit -s unlimited
+    APRUN="srun"
+    ;;
+
 esac
 #
 #-----------------------------------------------------------------------

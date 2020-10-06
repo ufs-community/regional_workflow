@@ -79,9 +79,6 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-print_info_msg "$VERBOSE" "
-Starting post-processing for fhr = $fhr hr..."
-
 case $MACHINE in
 
 "WCOSS_CRAY")
@@ -131,6 +128,10 @@ case $MACHINE in
 "STAMPEDE")
   nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
   APRUN="ibrun -n $nprocs"
+  ;;
+
+"ORION")
+  APRUN="srun"
   ;;
 
 esac
@@ -195,6 +196,9 @@ EOF
 #
 #-----------------------------------------------------------------------
 #
+print_info_msg "$VERBOSE" "
+Starting post-processing for fhr = $fhr hr..."
+
 ${APRUN} ./ncep_post < itag || print_err_msg_exit "\
 Call to executable to run post for forecast hour $fhr returned with non-
 zero exit code."

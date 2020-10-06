@@ -128,7 +128,13 @@ case $MACHINE in
   APRUN="ibrun -np ${PE_MEMBER01}"
   #LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
   ;;
-
+#
+"ORION")
+  ulimit -s unlimited
+  ulimit -a
+  APRUN="srun"
+#  LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+#
 esac
 #
 #-----------------------------------------------------------------------

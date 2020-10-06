@@ -90,19 +90,14 @@ export OMP_STACKSIZE=2048m
 #
 #-----------------------------------------------------------------------
 #
-# Load modules and set various computational parameters and directories.
-#
-# Note:
-# These module loads should all be moved to modulefiles.  This has been
-# done for Hera but must still be done for other machines.
+# Set the machine-dependent run command.  Also, set resource limits as
+# necessary.
 #
 #-----------------------------------------------------------------------
 #
 case $MACHINE in
 
-
 "WCOSS_C" | "WCOSS")
-#
   { save_shell_opts; set +x; } > /dev/null 2>&1
 
   . $MODULESHOME/init/sh
@@ -119,27 +114,20 @@ case $MACHINE in
   ulimit -a
   ;;
 
-
 "HERA")
-#
   APRUN="time"
-#
 #  ulimit -s unlimited
 #  ulimit -a
   ;;
-#
 
 "JET")
-#
   APRUN="time"
   ulimit -a
   ;;
 
 
 "ODIN")
-#
   export APRUN="srun -n 1"
-
   ulimit -s unlimited
   ulimit -a
   ;;
@@ -149,12 +137,15 @@ case $MACHINE in
   ;;
 
 "STAMPEDE")
-#
   export APRUN="time"
-
   ulimit -s unlimited
   ulimit -a
   ;;
+
+"ORION")
+  APRUN="time"
+  ;;
+
 esac
 #
 #-----------------------------------------------------------------------

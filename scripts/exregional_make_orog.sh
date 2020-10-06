@@ -98,9 +98,7 @@ export OMP_STACKSIZE=2048m
 #
 case $MACHINE in
 
-
 "WCOSS_C" | "WCOSS")
-#
   { save_shell_opts; set +x; } > /dev/null 2>&1
 
   . $MODULESHOME/init/sh
@@ -117,13 +115,11 @@ case $MACHINE in
   ulimit -a
   ;;
 
-
 "HERA")
   ulimit -s unlimited
   ulimit -a
   APRUN="time"
   ;;
-
 
 "JET")
   ulimit -s unlimited
@@ -133,13 +129,10 @@ case $MACHINE in
 
 
 "ODIN")
-#
   export APRUN="srun -n 1"
-
   ulimit -s unlimited
   ulimit -a
   ;;
-
 
 "CHEYENNE")
   APRUN="time"
@@ -148,6 +141,12 @@ case $MACHINE in
 "STAMPEDE")
   export APRUN="time"
   export topo_dir="/work/00315/tg455890/stampede2/regional_fv3/fix_orog"
+  ;;
+
+"ORION")
+  ulimit -s unlimited
+  ulimit -a
+  APRUN="time"
   ;;
 
 esac
@@ -322,7 +321,7 @@ ${tmp_dir}" \
   ;;
 
 
-"CHEYENNE" | "HERA" | "JET" | "ODIN" | "STAMPEDE")
+"CHEYENNE" | "HERA" | "JET" | "ODIN" | "STAMPEDE" | "ORION")
   $APRUN "${exec_fp}" < "${input_redirect_fn}" || \
     print_err_msg_exit "\
 Call to executable (exec_fp) that generates the raw orography file returned 

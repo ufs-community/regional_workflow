@@ -318,7 +318,6 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 case $MACHINE in
 #
 "WCOSS_CRAY")
-#
   NCORES_PER_NODE="24"
   SCHED="lsfcray"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
@@ -328,7 +327,6 @@ case $MACHINE in
   ;;
 #
 "WCOSS_DELL_P3")
-#
   NCORES_PER_NODE=24
   SCHED="lsf"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
@@ -338,8 +336,7 @@ case $MACHINE in
   ;;
 #
 "HERA")
-#
-  NCORES_PER_NODE=24
+  NCORES_PER_NODE=24  # Should this be 40?  Need to check heradocs.
   SCHED="${SCHED:-slurm}"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
   QUEUE_HPSS=${QUEUE_HPSS:-"service"}
@@ -347,7 +344,6 @@ case $MACHINE in
   ;;
 #
 "JET")
-#
   NCORES_PER_NODE=24
   SCHED="${SCHED:-slurm}"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
@@ -356,7 +352,6 @@ case $MACHINE in
   ;;
 #
 "ODIN")
-#
   NCORES_PER_NODE=24
   SCHED="${SCHED:-slurm}"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-""}
@@ -365,7 +360,6 @@ case $MACHINE in
   ;;
 #
 "CHEYENNE")
-#
   NCORES_PER_NODE=36
   SCHED="${SCHED:-pbspro}"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
@@ -375,13 +369,21 @@ case $MACHINE in
   ;;
 #
 "STAMPEDE")
-#
   NCORES_PER_NODE=68
   SCHED="slurm"
   QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
   QUEUE_HPSS=${QUEUE_HPSS:-"development"}
   QUEUE_FCST=${QUEUE_FCST:-"normal"}
   ;;
+#
+"ORION")
+  NCORES_PER_NODE=40
+  SCHED="${SCHED:-slurm}"
+  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
+  QUEUE_HPSS=${QUEUE_HPSS:-"service"}
+  QUEUE_FCST=${QUEUE_FCST:-""}
+  ;;
+#
 esac
 #
 #-----------------------------------------------------------------------
@@ -741,6 +743,7 @@ case $MACHINE in
   FIXgsm="/scratch/ywang/fix/theia_fix/fix_am"
   SFC_CLIMO_INPUT_DIR="/scratch/ywang/fix/climo_fields_netcdf"
   ;;
+
 "CHEYENNE")
   FIXgsm="/glade/p/ral/jntp/UFS_CAM/fix/fix_am"
   SFC_CLIMO_INPUT_DIR="/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"
@@ -749,6 +752,11 @@ case $MACHINE in
 "STAMPEDE")
   FIXgsm="/work/00315/tg455890/stampede2/regional_fv3/fix_am"
   SFC_CLIMO_INPUT_DIR="/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"
+  ;;
+
+"ORION")
+  FIXgsm="/work/noaa/fv3-cam/emc.campara/fix_fv3cam/fix_am"
+  SFC_CLIMO_INPUT_DIR="/dont/know/what/this/should/be"
   ;;
 
 *)
