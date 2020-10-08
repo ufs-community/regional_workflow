@@ -598,6 +598,18 @@ Please set USE_CCPP=TRUE in your config.sh file.
 fi
 
 exec_fp="${SR_WX_APP_TOP_DIR}/bin/${exec_fn}"
+#Check for the old build location for fv3 executable
+if [ ! -f "${exec_fp}" ]; then
+  if [ ! -f "${SR_WX_APP_TOP_DIR}/src/ufs_weather_model/build/${exec_fn}" ]; then
+  print_err_msg_exit "\
+The executable (exec_fp) for running the forecast model does not exist:
+  exec_fp = \"${exec_fp}\"
+Please ensure that you've built this executable."
+  else
+    exec_fp="${SR_WX_APP_TOP_DIR}/src/ufs_weather_model/build/${exec_fn}"
+  fi
+fi
+
 if [ ! -f "${exec_fp}" ]; then
   print_err_msg_exit "\
 The executable (exec_fp) for running the forecast model does not exist:
