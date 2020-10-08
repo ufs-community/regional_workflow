@@ -165,7 +165,7 @@ forecast hour directory (fhr_dir):
 fi
 cp_vrfy ${post_config_fp} ./postxconfig-NT.txt
 cp_vrfy ${EMC_POST_DIR}/parm/params_grib2_tbl_new ./params_grib2_tbl_new
-cp_vrfy ${EXECDIR}/nceppost.x .
+cp_vrfy ${EXECDIR}/ncep_post .
 #
 #-----------------------------------------------------------------------
 #
@@ -214,7 +214,7 @@ EOF
 #
 #-----------------------------------------------------------------------
 #
-${APRUN} ./nceppost.x < itag || print_err_msg_exit "\
+${APRUN} ./ncep_post < itag || print_err_msg_exit "\
 Call to executable to run post for forecast hour $fhr returned with non-
 zero exit code."
 #
