@@ -779,6 +779,7 @@ case $MACHINE in
 
 "ORION")
   FIXgsm="/work/noaa/fv3-cam/emc.campara/fix_fv3cam/fix_am"
+  TOPO_DIR="/work/noaa/fv3-cam/emc.campara/fix_fv3cam/fix_am"
   SFC_CLIMO_INPUT_DIR="/dont/know/what/this/should/be"
   ;;
 
@@ -1027,7 +1028,7 @@ fi
 if [ "${EXPT_BASEDIR:0:1}" != "/" ]; then
   EXPT_BASEDIR="${SR_WX_APP_TOP_DIR}/../expt_dirs/${EXPT_BASEDIR}"
 fi
-EXPT_BASEDIR="$( readlink -f ${EXPT_BASEDIR} )"
+EXPT_BASEDIR="$( readlink -m ${EXPT_BASEDIR} )"
 mkdir_vrfy -p "${EXPT_BASEDIR}"
 #
 #-----------------------------------------------------------------------
