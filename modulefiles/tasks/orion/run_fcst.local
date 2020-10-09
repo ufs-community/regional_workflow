@@ -4,3 +4,4 @@
 #if [module-info mode load] {
 #  system "conda activate regional_workflow"
 #}
+#module load python/3.7
