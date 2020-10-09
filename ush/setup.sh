@@ -741,16 +741,16 @@ case $MACHINE in
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
   ;;
 
-"THEIA")
-  FIXgsm=${FIXgsm:-"/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch4/NCEPDEV/da/noscrub/George.Gayno/climo_fields_netcdf"}
-  ;;
-
 "HERA")
   FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
   TOPO_DIR=${TOPO_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/da/George.Gayno/ufs_utils.git/climo_fields_netcdf"}
+  ;;
+
+"ORION")
+  FIXgsm=${FIXgsm:-"/work/noaa/fv3-cam/emc.campara/fix_fv3cam/fix_am"}
+  TOPO_DIR=${TOPO_DIR:-"/work/noaa/gsd-fv3-dev/gsketefia/UFS/fix_orog"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/noaa/gsd-fv3-dev/gsketefia/UFS/climo_fields_netcdf"}
   ;;
 
 "JET")
@@ -775,12 +775,6 @@ case $MACHINE in
   FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}
   TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
   SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
-  ;;
-
-"ORION")
-  FIXgsm="/work/noaa/fv3-cam/emc.campara/fix_fv3cam/fix_am"
-  TOPO_DIR="/work/noaa/fv3-cam/emc.campara/fix_fv3cam/fix_am"
-  SFC_CLIMO_INPUT_DIR="/dont/know/what/this/should/be"
   ;;
 
 *)

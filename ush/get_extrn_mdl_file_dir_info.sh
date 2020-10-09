@@ -560,6 +560,9 @@ bination of external model (extrn_mdl_name) and analysis or forecast
     "HERA")
       sysdir=""
       ;;
+    "ORION")
+      sysdir="$sysbasedir"
+      ;;
     "JET")
       sysdir=""
       ;;
@@ -594,6 +597,9 @@ has not been specified for this external model and machine combination:
     "HERA")
       sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}"
       ;;
+    "ORION")
+      sysdir="$sysbasedir"
+      ;;
     "JET")
       sysdir="$sysbasedir"
       ;;
@@ -623,6 +629,9 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     "HERA")
+      sysdir="$sysbasedir"
+      ;;
+    "ORION")
       sysdir="$sysbasedir"
       ;;
     "JET")
@@ -656,6 +665,9 @@ has not been specified for this external model and machine combination:
     "HERA")
       sysdir="$sysbasedir"
       ;;
+    "ORION")
+      sysdir="$sysbasedir"
+      ;;
     "JET")
       sysdir="$sysbasedir/${yyyymmdd}${hh}/postprd"
       ;;
@@ -684,6 +696,9 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     "HERA")
+      sysdir="$sysbasedir"
+      ;;
+    "ORION")
       sysdir="$sysbasedir"
       ;;
     "JET")

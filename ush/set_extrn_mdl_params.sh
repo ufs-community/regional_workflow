@@ -75,7 +75,7 @@ else
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
       ;;
     "ORION")
-      EXTRN_MDL_SYSBASEDIR_ICS=""
+      EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
       ;;
     esac
     ;;
@@ -101,7 +101,7 @@ else
       EXTRN_MDL_SYSBASEDIR_ICS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
       ;;
     "ORION")
-      EXTRN_MDL_SYSBASEDIR_ICS=""
+      EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
       ;;
     esac
     ;;
@@ -222,7 +222,7 @@ else
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
       ;;
     "ORION")
-      EXTRN_MDL_SYSBASEDIR_LBCS=""
+      EXTRN_MDL_SYSBASEDIR_LBCS="dummy_value"
       ;;
     esac
     ;;
@@ -248,7 +248,7 @@ else
       EXTRN_MDL_SYSBASEDIR_LBCS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
       ;;
     "ORION")
-      EXTRN_MDL_SYSBASEDIR_LBCS=""
+      EXTRN_MDL_SYSBASEDIR_LBCS="dummy_value"
       ;;
     esac
     ;;

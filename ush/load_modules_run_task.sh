@@ -115,6 +115,10 @@ case "$MACHINE" in
     . /apps/lmod/lmod/init/sh
     ;;
 #
+  "ORION")
+    . /apps/lmod/lmod/init/sh
+    ;;
+#
   "JET")
     . /apps/lmod/lmod/init/sh
     ;;
