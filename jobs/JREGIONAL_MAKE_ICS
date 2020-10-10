@@ -70,6 +70,11 @@ case "$MACHINE" in
     APRUN="srun"
     ;;
 
+  "ORION")
+    ulimit -s unlimited
+    APRUN="srun"
+    ;;
+
   "JET")
     ulimit -s unlimited
     APRUN="srun"
@@ -88,9 +93,11 @@ case "$MACHINE" in
     APRUN="ibrun"
     ;;
 
-  "ORION")
-    ulimit -s unlimited
-    APRUN="srun"
+  *)
+    print_err_msg_exit "\
+Run command has not been specified for this machine:
+  MACHINE = \"$MACHINE\"
+  APRUN = \"$APRUN\""
     ;;
 
 esac

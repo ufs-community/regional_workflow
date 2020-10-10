@@ -88,68 +88,68 @@ print_input_args valid_args
 #-----------------------------------------------------------------------
 #
 case $MACHINE in
-#
-"WCOSS_CRAY")
-#
-  ulimit -s unlimited
-  ulimit -a
-  APRUN="aprun -b -j1 -n${PE_MEMBER01} -N24 -d1 -cc depth"
-  ;;
-#
-"WCOSS_DELL_P3")
-  ulimit -s unlimited
-  ulimit -a
-  APRUN="mpirun -l -np ${PE_MEMBER01}"
-  ;;
-#
-"HERA")
-  ulimit -s unlimited
-  ulimit -a
-  APRUN="srun"
-  LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-  OMP_NUM_THREADS=4
-  ;;
-#
-"JET")
-  ulimit -s unlimited
-  ulimit -a
-  APRUN="srun"
-  LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-  OMP_NUM_THREADS=4
-  ;;
-#
-"ODIN")
-#
-  module list
 
-  ulimit -s unlimited
-  ulimit -a
-  APRUN="srun -n ${PE_MEMBER01}"
-  ;;
-#
-"CHEYENNE")
-#
-  module list
-  nprocs=$(( NNODES_RUN_FCST*PPN_RUN_FCST ))
-  APRUN="mpirun -np $nprocs"
-  LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-  ;;
-#
-
-"STAMPEDE")
-#
-  module list
-
-  APRUN="ibrun -np ${PE_MEMBER01}"
-  #LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-  ;;
-#
-"ORION")
-  ulimit -s unlimited
-  ulimit -a
-  APRUN="srun"
-#  LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-#
+  "WCOSS_CRAY")
+    ulimit -s unlimited
+    ulimit -a
+    APRUN="aprun -b -j1 -n${PE_MEMBER01} -N24 -d1 -cc depth"
+    ;;
+  
+  "WCOSS_DELL_P3")
+    ulimit -s unlimited
+    ulimit -a
+    APRUN="mpirun -l -np ${PE_MEMBER01}"
+    ;;
+  
+  "HERA")
+    ulimit -s unlimited
+    ulimit -a
+    APRUN="srun"
+    LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    OMP_NUM_THREADS=4
+    ;;
+  
+  "ORION")
+    ulimit -s unlimited
+    ulimit -a
+    APRUN="srun"
+#    LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+  
+  "JET")
+    ulimit -s unlimited
+    ulimit -a
+    APRUN="srun"
+    LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    OMP_NUM_THREADS=4
+    ;;
+  
+  "ODIN")
+    module list
+    ulimit -s unlimited
+    ulimit -a
+    APRUN="srun -n ${PE_MEMBER01}"
+    ;;
+  
+  "CHEYENNE")
+    module list
+    nprocs=$(( NNODES_RUN_FCST*PPN_RUN_FCST ))
+    APRUN="mpirun -np $nprocs"
+    LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    ;;
+  
+  "STAMPEDE")
+    module list
+    APRUN="ibrun -np ${PE_MEMBER01}"
+#    LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    ;;
+  
+  *)
+    print_err_msg_exit "\
+Run command has not been specified for this machine:
+  MACHINE = \"$MACHINE\"
+  APRUN = \"$APRUN\""
+    ;;
+  
 esac
 #
 #-----------------------------------------------------------------------

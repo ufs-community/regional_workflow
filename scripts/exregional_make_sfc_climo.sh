@@ -128,49 +128,49 @@ EOF
 #
 case $MACHINE in
 
-"WCOSS_C")
+  "WCOSS_C")
 # This could be wrong.  Just a guess since I don't have access to this machine.
-  APRUN=${APRUN:-"aprun -j 1 -n 6 -N 6"}
-  ;;
+    APRUN=${APRUN:-"aprun -j 1 -n 6 -N 6"}
+    ;;
 
-"WCOSS")
+  "WCOSS")
 # This could be wrong.  Just a guess since I don't have access to this machine.
-  APRUN=${APRUN:-"aprun -j 1 -n 6 -N 6"}
-  ;;
+    APRUN=${APRUN:-"aprun -j 1 -n 6 -N 6"}
+    ;;
 
-"HERA")
-  APRUN="srun"
-  ;;
+  "HERA")
+    APRUN="srun"
+    ;;
 
-"JET")
-  APRUN="srun"
-  ;;
+  "ORION")
+    APRUN="srun"
+    ;;
 
-"CHEYENNE")
-  nprocs=$(( NNODES_MAKE_SFC_CLIMO*PPN_MAKE_SFC_CLIMO ))
-  APRUN="mpirun -np $nprocs"
-  ;;
+  "JET")
+    APRUN="srun"
+    ;;
 
-"ODIN")
-  nprocs=$(( NNODES_MAKE_SFC_CLIMO*PPN_MAKE_SFC_CLIMO ))
-  APRUN="srun -n $nprocs"
-  ;;
+  "CHEYENNE")
+    nprocs=$(( NNODES_MAKE_SFC_CLIMO*PPN_MAKE_SFC_CLIMO ))
+    APRUN="mpirun -np $nprocs"
+    ;;
 
-"STAMPEDE")
-  nprocs=$(( NNODES_MAKE_SFC_CLIMO*PPN_MAKE_SFC_CLIMO ))
-  APRUN="ibrun -np ${nprocs}"
-  ;;
+  "ODIN")
+    nprocs=$(( NNODES_MAKE_SFC_CLIMO*PPN_MAKE_SFC_CLIMO ))
+    APRUN="srun -n $nprocs"
+    ;;
 
-"ORION")
-  APRUN="srun"
-  ;;
+  "STAMPEDE")
+    nprocs=$(( NNODES_MAKE_SFC_CLIMO*PPN_MAKE_SFC_CLIMO ))
+    APRUN="ibrun -np ${nprocs}"
+    ;;
 
-*)
-  print_err_msg_exit "\
+  *)
+    print_err_msg_exit "\
 Run command has not been specified for this machine:
   MACHINE = \"$MACHINE\"
   APRUN = \"$APRUN\""
-  ;;
+    ;;
 
 esac
 #

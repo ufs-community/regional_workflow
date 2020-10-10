@@ -98,55 +98,61 @@ export OMP_STACKSIZE=2048m
 #
 case $MACHINE in
 
-"WCOSS_C" | "WCOSS")
-  { save_shell_opts; set +x; } > /dev/null 2>&1
+  "WCOSS_C" | "WCOSS")
+    { save_shell_opts; set +x; } > /dev/null 2>&1
 
-  . $MODULESHOME/init/sh
-  module load PrgEnv-intel cfp-intel-sandybridge/1.1.0
-  module list
+    . $MODULESHOME/init/sh
+    module load PrgEnv-intel cfp-intel-sandybridge/1.1.0
+    module list
 
-  { restore_shell_opts; } > /dev/null 2>&1
+    { restore_shell_opts; } > /dev/null 2>&1
 
-  export NODES=1
-  export APRUN="aprun -n 1 -N 1 -j 1 -d 1 -cc depth"
-  export KMP_AFFINITY=disabled
+    export NODES=1
+    export APRUN="aprun -n 1 -N 1 -j 1 -d 1 -cc depth"
+    export KMP_AFFINITY=disabled
 
-  ulimit -s unlimited
-  ulimit -a
-  ;;
+    ulimit -s unlimited
+    ulimit -a
+    ;;
 
-"HERA")
-  ulimit -s unlimited
-  ulimit -a
-  APRUN="time"
-  ;;
+  "HERA")
+    ulimit -s unlimited
+    ulimit -a
+    APRUN="time"
+    ;;
 
-"JET")
-  ulimit -s unlimited
-  ulimit -a
-  export APRUN="time"
-  ;;
+  "ORION")
+    ulimit -s unlimited
+    ulimit -a
+    APRUN="time"
+    ;;
 
+  "JET")
+    ulimit -s unlimited
+    ulimit -a
+    export APRUN="time"
+    ;;
 
-"ODIN")
-  export APRUN="srun -n 1"
-  ulimit -s unlimited
-  ulimit -a
-  ;;
+  "ODIN")
+    export APRUN="srun -n 1"
+    ulimit -s unlimited
+    ulimit -a
+    ;;
 
-"CHEYENNE")
-  APRUN="time"
-  ;;
+  "CHEYENNE")
+    APRUN="time"
+    ;;
 
-"STAMPEDE")
-  export APRUN="time"
-  ;;
+  "STAMPEDE")
+    export APRUN="time"
+    ;;
 
-"ORION")
-  ulimit -s unlimited
-  ulimit -a
-  APRUN="time"
-  ;;
+  *)
+    print_err_msg_exit "\
+Run command has not been specified for this machine:
+  MACHINE = \"$MACHINE\"
+  APRUN = \"$APRUN\""
+    ;;
 
 esac
 #
@@ -191,7 +197,7 @@ fi
 #
 # Create a temporary (work) directory in which to generate the raw orography
 # file and change location to it.
-# 
+#
 tmp_dir="${raw_dir}/tmp"
 mkdir_vrfy -p "${tmp_dir}"
 cd_vrfy "${tmp_dir}"
@@ -229,7 +235,7 @@ grid_fp="${FIXLAM}/${grid_fn}"
 # them to a text file.
 #
 # Note that it doesn't matter what lonb and latb are set to below because
-# if we specify an input grid file to the executable read in (which is 
+# if we specify an input grid file to the executable read in (which is
 # what we do below), then if lonb and latb are not set to the dimensions
 # of the grid specified in that file (divided by 2 since the grid file
 # specifies a "supergrid"), then lonb and latb effectively get reset to
@@ -263,7 +269,7 @@ cat "${input_redirect_fn}"
 #
 #-----------------------------------------------------------------------
 #
-# Call the executable to generate the raw orography file corresponding 
+# Call the executable to generate the raw orography file corresponding
 # to tile 7 (the regional domain) only.
 #
 # The following will create an orography file named
@@ -314,7 +320,7 @@ ${tmp_dir}" \
 "CHEYENNE" | "HERA" | "JET" | "ODIN" | "STAMPEDE" | "ORION")
   $APRUN "${exec_fp}" < "${input_redirect_fn}" || \
     print_err_msg_exit "\
-Call to executable (exec_fp) that generates the raw orography file returned 
+Call to executable (exec_fp) that generates the raw orography file returned
 with nonzero exit code:
   exec_fp = \"${exec_fp}\""
   ;;
@@ -346,9 +352,9 @@ mv_vrfy "${raw_orog_fp_orig}" "${raw_orog_fp}"
 #
 # Copy the two orography files needed for the drag suite in the FV3_RRFS_v1beta
 # physics suite.
-# 
-# Note that the following is a temporary fix. We need a long-term solution 
-# that calls a script or program to generates the necessary files (instead 
+#
+# Note that the following is a temporary fix. We need a long-term solution
+# that calls a script or program to generates the necessary files (instead
 # of copying them).
 #
 #-----------------------------------------------------------------------
@@ -365,22 +371,22 @@ Orography file generation complete."
 #
 # Note that the orography filtering code assumes that the regional grid
 # is a GFDLgrid type of grid; it is not designed to handle ESGgrid type
-# regional grids.  If the flag "regional" in the orography filtering 
+# regional grids.  If the flag "regional" in the orography filtering
 # namelist file is set to .TRUE. (which it always is will be here; see
-# below), then filtering code will first calculate a resolution (i.e. 
+# below), then filtering code will first calculate a resolution (i.e.
 # number of grid points) value named res_regional for the assumed GFDLgrid
 # type regional grid using the formula
 #
 #   res_regional = res*stretch_fac*real(refine_ratio)
 #
 # Here res, stretch_fac, and refine_ratio are the values passed to the
-# code via the namelist.  res and stretch_fac are assumed to be the 
+# code via the namelist.  res and stretch_fac are assumed to be the
 # resolution (in terms of number of grid points) and the stretch factor
 # of the (GFDLgrid type) regional grid's parent global cubed-sphere grid,
 # and refine_ratio is the ratio of the number of grid cells on the regional
 # grid to a single cell on tile 6 of the parent global grid.  After
 # calculating res_regional, the code interpolates/extrapolates between/
-# beyond a set of (currently 7) resolution values for which the four 
+# beyond a set of (currently 7) resolution values for which the four
 # filtering parameters (n_del2_weak, cd4, max_slope, peak_fac) are provided
 # (by GFDL) to obtain the corresponding values of these parameters at a
 # resolution of res_regional.  These interpolated/extrapolated values are
