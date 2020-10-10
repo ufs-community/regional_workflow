@@ -62,6 +62,9 @@ else
     "HERA")
       EXTRN_MDL_SYSBASEDIR_ICS=""
       ;;
+    "ORION")
+      EXTRN_MDL_SYSBASEDIR_ICS=""
+      ;;
     "JET")
       EXTRN_MDL_SYSBASEDIR_ICS=""
       ;;
@@ -73,9 +76,6 @@ else
       ;;
     "STAMPEDE")
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
-      ;;
-    "ORION")
-      EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
       ;;
     esac
     ;;
@@ -91,6 +91,9 @@ else
     "HERA")
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch1/NCEPDEV/rstprod/com/gfs/prod"
       ;;
+    "ORION")
+      EXTRN_MDL_SYSBASEDIR_ICS=""
+      ;;
     "JET")
       EXTRN_MDL_SYSBASEDIR_ICS="/public/data/grids/gfs/nemsio"
       ;;
@@ -100,9 +103,6 @@ else
     "CHEYENNE")
       EXTRN_MDL_SYSBASEDIR_ICS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
       ;;
-    "ORION")
-      EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
-      ;;
     esac
     ;;
 
@@ -111,11 +111,12 @@ else
     "HERA")
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch2/BMC/public/data/gsd/rap/full/wrfnat"
       ;;
+    "ORION")
+      EXTRN_MDL_SYSBASEDIR_ICS=""
+      ;;
     "JET")
       EXTRN_MDL_SYSBASEDIR_ICS="/misc/whome/rtrr/rap"
       ;;
-# This goes with the comment below for the if-statement (-z EXTRN_MDL_SYSBASEDIR_ICS).
-# Should not need this case.
     "CHEYENNE")
       EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
       ;;
@@ -126,6 +127,9 @@ else
     case $MACHINE in
     "HERA")
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch2/BMC/public/data/gsd/hrrr/conus/wrfnat"
+      ;;
+    "ORION")
+      EXTRN_MDL_SYSBASEDIR_ICS=""
       ;;
     "JET")
       EXTRN_MDL_SYSBASEDIR_ICS="/misc/whome/rtrr/hrrr"
@@ -209,6 +213,9 @@ else
     "HERA")
       EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;;
+    "ORION")
+      EXTRN_MDL_SYSBASEDIR_LBCS=""
+      ;;
     "JET")
       EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;;
@@ -220,9 +227,6 @@ else
       ;;
     "STAMPEDE")
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
-      ;;
-    "ORION")
-      EXTRN_MDL_SYSBASEDIR_LBCS="dummy_value"
       ;;
     esac
     ;;
@@ -238,6 +242,9 @@ else
     "HERA")
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch1/NCEPDEV/rstprod/com/gfs/prod"
       ;;
+    "ORION")
+      EXTRN_MDL_SYSBASEDIR_LBCS=""
+      ;;
     "JET")
       EXTRN_MDL_SYSBASEDIR_LBCS="/public/data/grids/gfs/nemsio"
       ;;
@@ -247,9 +254,6 @@ else
     "CHEYENNE")
       EXTRN_MDL_SYSBASEDIR_LBCS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
       ;;
-    "ORION")
-      EXTRN_MDL_SYSBASEDIR_LBCS="dummy_value"
-      ;;
     esac
     ;;
 
@@ -257,6 +261,9 @@ else
     case $MACHINE in
     "HERA")
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch2/BMC/public/data/gsd/rap/full/wrfnat"
+      ;;
+    "ORION")
+      EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;;
     "JET")
       EXTRN_MDL_SYSBASEDIR_LBCS="/misc/whome/rtrr/rap"
@@ -271,6 +278,9 @@ else
     case $MACHINE in
     "HERA")
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch2/BMC/public/data/gsd/hrrr/conus/wrfnat"
+      ;;
+    "ORION")
+      EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;;
     "JET")
       EXTRN_MDL_SYSBASEDIR_LBCS="/misc/whome/rtrr/hrrr"
