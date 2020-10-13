@@ -631,8 +631,6 @@ Copying the FV3-LAM executable (exec_fp) to the executables directory
   EXECDIR = \"$EXECDIR\""
   cp_vrfy "${exec_fp}" "${FV3_EXEC_FP}"
 fi
-
-
 #
 #-----------------------------------------------------------------------
 #
@@ -950,6 +948,15 @@ edit the cron table):
 Done.
 "
 #
+# If necessary, run the NOMADS script to source external model data.
+#
+if [ "${NOMADS}" = "TRUE" ]; then
+  echo "Getting NOMADS online data"
+  echo "NOMADS_file_type=" $NOMADS_file_type
+  cd $EXPTDIR
+  $USHDIR/NOMADS_get_extrn_mdl_files.sh $DATE_FIRST_CYCL $CYCL_HRS $NOMADS_file_type $FCST_LEN_HRS $LBC_SPEC_INTVL_HRS
+fi
+#
 #-----------------------------------------------------------------------
 #
 # Restore the shell options saved at the beginning of this script/func-
@@ -960,10 +967,6 @@ Done.
 { restore_shell_opts; } > /dev/null 2>&1
 
 }
-
-
-
-
 #
 #-----------------------------------------------------------------------
 #
@@ -1059,14 +1062,4 @@ periment/workflow generation script in the file specified by log_fp:
 Stopping.
 "
   exit 1
-fi
-#
-# If necessary, run the NOMADS script to source external model data.
-#
-source $exptdir/var_defns.sh
-if [ "${NOMADS}" = "TRUE" ]; then
-  echo "Getting NOMADS online data"
-  echo "NOMADS_file_type=" $NOMADS_file_type
-cd $exptdir
-$ushdir/NOMADS_get_extrn_mdl_files.sh $DATE_FIRST_CYCL $CYCL_HRS $NOMADS_file_type $FCST_LEN_HRS $LBC_SPEC_INTVL_HRS
 fi
