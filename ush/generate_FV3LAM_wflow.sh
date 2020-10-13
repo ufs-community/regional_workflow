@@ -159,6 +159,37 @@ if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
   slash_ensmem_subdir="/mem#${ensmem_indx_name}#"
 fi
 
+#
+# To see if the following is enough (i.e. to see whether the if-statements 
+# below are really needed), have to run with the following lines uncommented
+# on systems that don't use slurm.
+# The following seem to work ok on orion, i.e. passing an empty partition
+# setting in the rocoto xml, like this:  <partition></partition>
+# This causes rocoto/slurm to submit to the default partition (called "orion").
+#
+#partition_default_spec="<partition>${PARTITION_DEFAULT}</partition>"
+#partition_hpss_spec="<partition>${PARTITION_HPSS}</partition>"
+#partition_fcst_spec="<partition>${PARTITION_FCST}</partition>"
+
+partition_default_spec="\"\""
+if [ ! -z "${PARTITION_DEFAULT}" ]; then
+  partition_default_spec="<partition>${PARTITION_DEFAULT}</partition>"
+fi
+
+partition_hpss_spec="\"\""
+if [ ! -z "${PARTITION_HPSS}" ]; then
+  partition_hpss_spec="<partition>${PARTITION_HPSS}</partition>"
+fi
+
+partition_fcst_spec="\"\""
+if [ ! -z "${PARTITION_FCST}" ]; then
+  partition_fcst_spec="<partition>${PARTITION_FCST}</partition>"
+fi
+
+#  'queue_default_tag': ${QUEUE_DEFAULT_TAG}
+#  'queue_hpss_tag': ${QUEUE_HPSS_TAG}
+#  'queue_fcst_tag': ${QUEUE_FCST_TAG}
+
 settings="\
 #
 # Parameters needed by the job scheduler.
@@ -166,11 +197,11 @@ settings="\
   'account': $ACCOUNT
   'sched': $SCHED
   'queue_default': ${QUEUE_DEFAULT}
-  'queue_default_tag': ${QUEUE_DEFAULT_TAG}
   'queue_hpss': ${QUEUE_HPSS}
-  'queue_hpss_tag': ${QUEUE_HPSS_TAG}
   'queue_fcst': ${QUEUE_FCST}
-  'queue_fcst_tag': ${QUEUE_FCST_TAG}
+  'partition_default_spec': ${partition_default_spec}
+  'partition_hpss_spec': ${partition_hpss_spec}
+  'partition_fcst_spec': ${partition_fcst_spec}
   'machine': ${MACHINE}
 #
 # Workflow task names.
@@ -201,7 +232,6 @@ settings="\
 #
   'ncores_run_fcst': ${PE_MEMBER01}
   'native_run_fcst': --cpus-per-task 4 --exclusive
-  'partition_run_fcst': sjet,vjet,kjet,xjet
 #
 # Number of logical processes per node for each task.  If running without
 # threading, this is equal to the number of MPI processes per node.
