@@ -669,7 +669,7 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
     print_err_msg_exit "\
 The value to set the variable lsoil to in the FV3 namelist file (FV3_NML_FP)
 has not been specified for the following combination of physics suite and
-external models for ICs and LBCs:
+external model ICs:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
 Please change one or more of these parameters or provide a value for lsoil
@@ -1060,6 +1060,13 @@ Stopping.
 "
   exit 1
 fi
-
-
-
+#
+# If necessary, run the NOMADS script to source external model data.
+#
+source $exptdir/var_defns.sh
+if [ "${NOMADS}" = "TRUE" ]; then
+  echo "Getting NOMADS online data"
+  echo "NOMADS_file_type=" $NOMADS_file_type
+cd $exptdir
+$ushdir/NOMADS_get_extrn_mdl_files.sh $DATE_FIRST_CYCL $CYCL_HRS $NOMADS_file_type $FCST_LEN_HRS $LBC_SPEC_INTVL_HRS
+fi
