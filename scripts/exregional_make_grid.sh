@@ -424,7 +424,7 @@ cubed-sphere grid equivalent resolution does not exist:
 Please ensure that you've built this executable."
 fi
 
-${exec_fp} "${grid_fp}" || \
+$APRUN ${exec_fp} "${grid_fp}" || \
 print_err_msg_exit "\
 Call to executable (exec_fp) that calculates the regional grid's global
 uniform cubed-sphere grid equivalent resolution returned with nonzero exit
@@ -508,7 +508,7 @@ fi
 #
 # Set the name and path to the executable and make sure that it exists.
 #
-exec_fn="shave.x"
+exec_fn="shave"
 exec_fp="$EXECDIR/${exec_fn}"
 if [ ! -f "${exec_fp}" ]; then
   print_err_msg_exit "\

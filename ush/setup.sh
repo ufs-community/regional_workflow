@@ -313,6 +313,27 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that USE_FVCOM is set to a valid value and assign directory
+# and file names.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
+#
+# Set USE_FVCOM to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+USE_FVCOM=${USE_FVCOM^^}
+if [ "$USE_FVCOM" = "TRUE" ] || \
+   [ "$USE_FVCOM" = "YES" ]; then
+  USE_FVCOM="TRUE"
+elif [ "$USE_FVCOM" = "FALSE" ] || \
+     [ "$USE_FVCOM" = "NO" ]; then
+  USE_FVCOM="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that DOT_OR_USCORE is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -537,7 +558,7 @@ case "${EMC_GRID_NAME}" in
   "conus_c96")
     PREDEF_GRID_NAME="EMC_CONUS_coarse"
     ;;
-  "GSD_HRRR25km" | "GSD_HRRR13km" | "GSD_HRRR3km" | "GSD_SUBCONUS3km")
+  "RRFS_CONUS_25km" | "RRFS_CONUS_13km" | "RRFS_CONUS_3km" | "RRFS_SUBCONUS_3km")
     PREDEF_GRID_NAME="${EMC_GRID_NAME}"
     ;;
   "conus_orig" | "guam" | "hi" | "pr")
@@ -574,38 +595,15 @@ check_var_valid_value \
 #
 #-----------------------------------------------------------------------
 #
-# Make sure USE_CCPP is set to a valid value.
+# Make sure CCPP_PHYS_SUITE is set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "USE_CCPP" "valid_vals_USE_CCPP"
-#
-# Set USE_CCPP to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-USE_CCPP=${USE_CCPP^^}
-if [ "$USE_CCPP" = "TRUE" ] || \
-   [ "$USE_CCPP" = "YES" ]; then
-  USE_CCPP="TRUE"
-elif [ "$USE_CCPP" = "FALSE" ] || \
-     [ "$USE_CCPP" = "NO" ]; then
-  USE_CCPP="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# If USE_CCPP is set to "TRUE", make sure CCPP_PHYS_SUITE is set to a 
-# valid value.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${USE_CCPP}" = "TRUE" ] && [ ! -z ${CCPP_PHYS_SUITE} ]; then
-  err_msg="\
+err_msg="\
 The CCPP physics suite specified in CCPP_PHYS_SUITE is not supported:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-  check_var_valid_value \
-    "CCPP_PHYS_SUITE" "valid_vals_CCPP_PHYS_SUITE" "${err_msg}"
-fi
+check_var_valid_value \
+  "CCPP_PHYS_SUITE" "valid_vals_CCPP_PHYS_SUITE" "${err_msg}"
 #
 #-----------------------------------------------------------------------
 #
@@ -614,8 +612,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-if [ "${USE_CCPP}" = "TRUE" ] && \
-   [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ]; then
+if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ]; then
 
   if [ "${EXTRN_MDL_NAME_ICS}" != "GSMGFS" -a \
        "${EXTRN_MDL_NAME_ICS}" != "FV3GFS" ] || \
@@ -749,8 +746,7 @@ NUM_CYCLES="${#ALL_CDATES[@]}"
 #
 # UFS_WTHR_MDL_DIR:
 # Directory in which the (NEMS-enabled) FV3-LAM application is located.
-# This directory includes subdirectories for FV3, NEMS, and FMS.  If
-# USE_CCPP is set to "TRUE", it also includes a subdirectory for CCPP.
+# This directory includes subdirectories for FV3, NEMS, and FMS.
 #
 #-----------------------------------------------------------------------
 #
@@ -772,7 +768,7 @@ SORCDIR="$HOMErrfs/sorc"
 SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
 PARMDIR="$HOMErrfs/parm"
 MODULES_DIR="$HOMErrfs/modulefiles"
-EXECDIR="${SR_WX_APP_TOP_DIR}/exec"
+EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
 FIXrrfs="$HOMErrfs/fix"
 TEMPLATE_DIR="$USHDIR/templates"
 
@@ -1257,10 +1253,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-dot_ccpp_phys_suite_or_null=""
-if [ "${USE_CCPP}" = "TRUE" ]; then
-  dot_ccpp_phys_suite_or_null=".${CCPP_PHYS_SUITE}"
-fi
+dot_ccpp_phys_suite_or_null=".${CCPP_PHYS_SUITE}"
 
 DATA_TABLE_TMPL_FN="${DATA_TABLE_FN}"
 DIAG_TABLE_TMPL_FN="${DIAG_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
@@ -1298,20 +1291,14 @@ NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
 #
 #-----------------------------------------------------------------------
 #
-CCPP_PHYS_SUITE_FN=""
-CCPP_PHYS_SUITE_IN_CCPP_FP=""
-CCPP_PHYS_SUITE_FP=""
-
-if [ "${USE_CCPP}" = "TRUE" ]; then
-  CCPP_PHYS_SUITE_FN="suite_${CCPP_PHYS_SUITE}.xml"
-  CCPP_PHYS_SUITE_IN_CCPP_FP="${UFS_WTHR_MDL_DIR}/FV3/ccpp/suites/${CCPP_PHYS_SUITE_FN}"
-  CCPP_PHYS_SUITE_FP="${EXPTDIR}/${CCPP_PHYS_SUITE_FN}"
-  if [ ! -f "${CCPP_PHYS_SUITE_IN_CCPP_FP}" ]; then
-    print_err_msg_exit "\
+CCPP_PHYS_SUITE_FN="suite_${CCPP_PHYS_SUITE}.xml"
+CCPP_PHYS_SUITE_IN_CCPP_FP="${UFS_WTHR_MDL_DIR}/FV3/ccpp/suites/${CCPP_PHYS_SUITE_FN}"
+CCPP_PHYS_SUITE_FP="${EXPTDIR}/${CCPP_PHYS_SUITE_FN}"
+if [ ! -f "${CCPP_PHYS_SUITE_IN_CCPP_FP}" ]; then
+  print_err_msg_exit "\
 The CCPP suite definition file (CCPP_PHYS_SUITE_IN_CCPP_FP) does not exist
 in the local clone of the ufs-weather-model:
   CCPP_PHYS_SUITE_IN_CCPP_FP = \"${CCPP_PHYS_SUITE_IN_CCPP_FP}\""
-  fi
 fi
 #
 #-----------------------------------------------------------------------
@@ -1826,8 +1813,6 @@ elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
     halo_width="${ESGgrid_WIDE_HALO_WIDTH}" \
     delx="${ESGgrid_DELX}" \
     dely="${ESGgrid_DELY}" \
-    alpha="${ESGgrid_ALPHA_PARAM}" \
-    kappa="${ESGgrid_KAPPA_PARAM}" \
     output_varname_lon_ctr="LON_CTR" \
     output_varname_lat_ctr="LAT_CTR" \
     output_varname_nx="NX" \
@@ -2204,14 +2189,6 @@ NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that OZONE_PARAM_NO_CCPP is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "OZONE_PARAM_NO_CCPP" "valid_vals_OZONE_PARAM_NO_CCPP"
-#
-#-----------------------------------------------------------------------
-#
 # Create a new experiment directory.  Note that at this point we are 
 # guaranteed that there is no preexisting experiment directory.
 #
@@ -2247,8 +2224,7 @@ mkdir_vrfy -p "$EXPTDIR"
 #
 #-----------------------------------------------------------------------
 #
-if [ "${USE_CCPP}" = "TRUE" ] && \
-   [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ]; then
+if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ]; then
 
   CCPP_PHYS_SUITE_FP="${CCPP_PHYS_SUITE_FP}.tmp"
   cp_vrfy "${CCPP_PHYS_SUITE_IN_CCPP_FP}" "${CCPP_PHYS_SUITE_FP}"
@@ -2289,7 +2265,6 @@ in the suite definition file (CCPP_PHYS_SUITE_FP) failed:
 #
   set_ozone_param \
     ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_FP}" \
-    ozone_param_no_ccpp="OZONE_PARAM_NO_CCPP" \
     output_varname_ozone_param="OZONE_PARAM"
 
   CCPP_PHYS_SUITE_FP="${CCPP_PHYS_SUITE_FP%.tmp}"
@@ -2310,7 +2285,6 @@ else
 #
 set_ozone_param \
   ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
-  ozone_param_no_ccpp="OZONE_PARAM_NO_CCPP" \
   output_varname_ozone_param="OZONE_PARAM"
 
 
@@ -2808,10 +2782,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Name of the ozone parameterization.  If USE_CCPP is set to "FALSE", 
-# then this will be equal to OZONE_PARAM_NO_CCPP.  If USE_CCPP is set to
-# "TRUE", then the value this gets set to depends on the CCPP physics
-# suite being used.
+# Name of the ozone parameterization.  The value this gets set to depends 
+# on the CCPP physics suite being used.
 #
 #-----------------------------------------------------------------------
 #
@@ -2870,6 +2842,18 @@ NUM_CYCLES="${NUM_CYCLES}"
 ALL_CDATES=( \\
 $( printf "\"%s\" \\\\\n" "${ALL_CDATES[@]}" )
 )
+#
+#-----------------------------------------------------------------------
+#
+# If USE_FVCOM is set to TRUE, then FVCOM data (located in FVCOM_DIR
+# in FVCOM_FILE) will be used to update lower boundary conditions during
+# make_ics.
+#
+#-----------------------------------------------------------------------
+#
+USE_FVCOM="${USE_FVCOM}"
+FVCOM_DIR="${FVCOM_DIR}"
+FVCOM_FILE="${FVCOM_FILE}"
 #
 #-----------------------------------------------------------------------
 #
