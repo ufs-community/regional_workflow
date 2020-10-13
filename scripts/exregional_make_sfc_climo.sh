@@ -129,7 +129,6 @@ EOF
 case $MACHINE in
 
 "WCOSS_CRAY")
-# This could be wrong.  Just a guess since I don't have access to this machine.
   APRUN=${APRUN:-"aprun -j 1 -n 6 -N 6"}
   ;;
 
