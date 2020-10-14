@@ -102,26 +102,33 @@ cd_vrfy $workdir
 varmap_file=""
 
 case "${CCPP_PHYS_SUITE}" in
-
-"FV3_GFS_2017_gfdlmp" | "FV3_GFS_2017_gfdlmp_regional" | "FV3_GFS_v16beta" | \
-"FV3_GFS_v15p2" | "FV3_CPT_v0" )
-  varmap_file="GFSphys_var_map.txt"
-  ;;
-"FV3_GSD_v0" | "FV3_GSD_SAR" | \
-"FV3_RRFS_v1beta" )
-  if   [ "${EXTRN_MDL_NAME_LBCS}" = "RAPX" ] || [ "${EXTRN_MDL_NAME_LBCS}" = "HRRRX" ]; then
+#
+  "FV3_GFS_2017_gfdlmp" | \
+  "FV3_GFS_2017_gfdlmp_regional" | \
+  "FV3_GFS_v16beta" | \
+  "FV3_GFS_v15p2" | "FV3_CPT_v0" )
+    varmap_file="GFSphys_var_map.txt"
+    ;;
+#
+  "FV3_GSD_v0" | \
+  "FV3_GSD_SAR" | \
+  "FV3_RRFS_v1beta" )
+    if [ "${EXTRN_MDL_NAME_LBCS}" = "RAPX" ] || \
+       [ "${EXTRN_MDL_NAME_LBCS}" = "HRRRX" ]; then
       varmap_file="GSDphys_var_map.txt"
-  elif [ "${EXTRN_MDL_NAME_LBCS}" = "NAM" ] || [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
-       [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then
+    elif [ "${EXTRN_MDL_NAME_LBCS}" = "NAM" ] || \
+         [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
+         [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then
       varmap_file="GFSphys_var_map.txt"
-  fi
-  ;;
-*)
+    fi
+    ;;
+#
+  *)
   print_err_msg_exit "\
 A variable mapping table has not yet been defined for this physics suite:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
   ;;
-
+#
 esac
 #
 #-----------------------------------------------------------------------
