@@ -985,17 +985,6 @@ drag related orography files for the FV3_RRFS_v1beta is empty:
   fi
 fi
 #
-#-----------------------------------------------------------------------
-#
-# Call the function that sets the ozone parameterization being used and
-# modifies associated parameters accordingly. 
-#
-#-----------------------------------------------------------------------
-#
-set_ozone_param \
-  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
-  output_varname_ozone_param="OZONE_PARAM"
-#
 #
 #-----------------------------------------------------------------------
 #
@@ -1214,7 +1203,7 @@ NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
 #
 #-----------------------------------------------------------------------
 #
-# If using CCPP, set:
+# Set:
 #
 # 1) the variable CCPP_PHYS_SUITE_FN to the name of the CCPP physics 
 #    suite definition file.
@@ -1228,9 +1217,6 @@ NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
 # each cycle, the forecast launch script will create a link in the cycle
 # run directory to the copy of this file at CCPP_PHYS_SUITE_FP.
 #
-# Note that if not using CCPP, the variables described above will get 
-# set to null strings.
-#
 #-----------------------------------------------------------------------
 #
 CCPP_PHYS_SUITE_FN="suite_${CCPP_PHYS_SUITE}.xml"
@@ -1242,6 +1228,17 @@ The CCPP suite definition file (CCPP_PHYS_SUITE_IN_CCPP_FP) does not exist
 in the local clone of the ufs-weather-model:
   CCPP_PHYS_SUITE_IN_CCPP_FP = \"${CCPP_PHYS_SUITE_IN_CCPP_FP}\""
 fi
+#
+#-----------------------------------------------------------------------
+#
+# Call the function that sets the ozone parameterization being used and
+# modifies associated parameters accordingly. 
+#
+#-----------------------------------------------------------------------
+#
+set_ozone_param \
+  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
+  output_varname_ozone_param="OZONE_PARAM"
 #
 #-----------------------------------------------------------------------
 #
