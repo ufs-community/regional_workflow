@@ -98,21 +98,23 @@ export OMP_STACKSIZE=2048m
 #
 case $MACHINE in
 
-  "WCOSS_C" | "WCOSS")
+  "WCOSS_CRAY")
     { save_shell_opts; set +x; } > /dev/null 2>&1
-
     . $MODULESHOME/init/sh
     module load PrgEnv-intel cfp-intel-sandybridge/1.1.0
     module list
-
     { restore_shell_opts; } > /dev/null 2>&1
-
     export NODES=1
     export APRUN="aprun -n 1 -N 1 -j 1 -d 1 -cc depth"
     export KMP_AFFINITY=disabled
-
     ulimit -s unlimited
     ulimit -a
+    ;;
+
+  "WCOSS_DELL_P3")
+    ulimit -s unlimited
+    ulimit -a
+    APRUN="mpirun"
     ;;
 
   "HERA")
@@ -287,21 +289,18 @@ cat "${input_redirect_fn}"
 print_info_msg "$VERBOSE" "
 Starting orography file generation..."
 
-
 case $MACHINE in
 
-
-"WCOSS_C" | "WCOSS")
+  "WCOSS_CRAY")
 #
 # On WCOSS and WCOSS_C, use cfp to run multiple tiles simulatneously for
 # the orography.  For now, we have only one tile in the regional case,
 # but in the future we will have more.  First, create an input file for
 # cfp.
 #
-  ufs_utils_ushdir="${UFS_UTILS_DIR}/ush"
-  res="0"  # What should this be set to???
-
-  printf "%s\n" "\
+    ufs_utils_ushdir="${UFS_UTILS_DIR}/ush"
+    res="0"  # What should this be set to???
+    printf "%s\n" "\
 ${ufs_utils_ushdir}/${orog_gen_scr} \
 $res \
 ${TILE_RGNL} \
@@ -310,21 +309,28 @@ ${raw_dir} \
 ${UFS_UTILS_DIR} \
 ${TOPO_DIR} \
 ${tmp_dir}" \
-  >> ${tmp_dir}/orog.file1
+    >> ${tmp_dir}/orog.file1
+    aprun -j 1 -n 4 -N 4 -d 6 -cc depth cfp ${tmp_dir}/orog.file1
+    rm_vrfy ${tmp_dir}/orog.file1
+    ;;
 
-  aprun -j 1 -n 4 -N 4 -d 6 -cc depth cfp ${tmp_dir}/orog.file1
-  rm_vrfy ${tmp_dir}/orog.file1
-  ;;
-
-
-"CHEYENNE" | "HERA" | "JET" | "ODIN" | "STAMPEDE" | "ORION")
-  $APRUN "${exec_fp}" < "${input_redirect_fn}" || \
-    print_err_msg_exit "\
+  "WCOSS_DELL_P3")
+    ufs_utils_ushdir="${UFS_UTILS_DIR}/ush"
+    res="0"  # What should this be set to???
+    "${exec_fp}" < "${input_redirect_fn}" || \
+      print_err_msg_exit "\
 Call to executable (exec_fp) that generates the raw orography file returned
 with nonzero exit code:
   exec_fp = \"${exec_fp}\""
-  ;;
+    ;;
 
+  "CHEYENNE" | "HERA" | "ORION" | "JET" | "ODIN" | "STAMPEDE")
+    $APRUN "${exec_fp}" < "${input_redirect_fn}" || \
+      print_err_msg_exit "\
+Call to executable (exec_fp) that generates the raw orography file returned
+with nonzero exit code:
+  exec_fp = \"${exec_fp}\""
+    ;;
 
 esac
 #
