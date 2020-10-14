@@ -987,6 +987,18 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Call the function that sets the ozone parameterization being used and
+# modifies associated parameters accordingly. 
+#
+#-----------------------------------------------------------------------
+#
+set_ozone_param \
+  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
+  output_varname_ozone_param="OZONE_PARAM"
+#
+#
+#-----------------------------------------------------------------------
+#
 # If the base directory (EXPT_BASEDIR) in which the experiment subdirectory 
 # (EXPT_SUBDIR) will be located does not start with a "/", then it is 
 # either set to a null string or contains a relative directory.  In both 
@@ -2131,94 +2143,94 @@ mkdir_vrfy -p "$EXPTDIR"
 
 
 
+##
+##-----------------------------------------------------------------------
+##
+## This if-statement is a temporary fix that makes corrections to the suite
+## definition file for the "FV3_GFS_2017_gfdlmp_regional" physics suite
+## that EMC uses.  The corrections are:
+##
+## 1) Add a "fast_physics" group name to the beginning of the file.
+## 2) Replace the ozphys parameterization with the ozphys_2015 parameterization.
+##
+## Note that this must be done before the call to the function set_ozone_param
+## below because that function reads in the ozone parameterization in the
+## suite definition file in order to set the ozone parameterization being
+## used in the experiment; thus, the suite definition file must have the
+## correct ozone parameterization specified before the call to set_ozone_param.
+##
+## IMPORTANT:
+## This if-statement must be removed once these corrections are made to
+## the suite definition file in the dtc/develop branch of the NCAR fork
+## of the fv3atm repository.
+##
+##-----------------------------------------------------------------------
+##
+#if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ]; then
 #
-#-----------------------------------------------------------------------
+#  CCPP_PHYS_SUITE_FP="${CCPP_PHYS_SUITE_FP}.tmp"
+#  cp_vrfy "${CCPP_PHYS_SUITE_IN_CCPP_FP}" "${CCPP_PHYS_SUITE_FP}"
 #
-# This if-statement is a temporary fix that makes corrections to the suite
-# definition file for the "FV3_GFS_2017_gfdlmp_regional" physics suite
-# that EMC uses.  The corrections are:
+#  grep "fast_physics" "${CCPP_PHYS_SUITE_FP}" || { \
+#    fast_phys_group='\
+#  <group name=\"fast_physics\">\
+#    <subcycle loop=\"1\">\
+#      <scheme>fv_sat_adj</scheme>\
+#    </subcycle>\
+#  </group>' ;
+#    sed -i -r "5i${fast_phys_group}" "${CCPP_PHYS_SUITE_FP}" || \
+#      print_err_msg_exit "\
+#Attempt to insert the \"fast_physics\" group into the suite definition
+#file (CCPP_PHYS_SUITE_FP) failed:
+#  CCPP_PHYS_SUITE_FP = \"${CCPP_PHYS_SUITE_FP}\"" ;
+#  }
 #
-# 1) Add a "fast_physics" group name to the beginning of the file.
-# 2) Replace the ozphys parameterization with the ozphys_2015 parameterization.
+#  grep "<scheme>ozphys</scheme>" "${CCPP_PHYS_SUITE_FP}" && { \
+#    sed -i "s/ozphys/ozphys_2015/g" "${CCPP_PHYS_SUITE_FP}" || \
+#      print_err_msg_exit "\
+#Attempt to replace the \"ozphys\" scheme with the \"ozphys_2015\" scheme
+#in the suite definition file (CCPP_PHYS_SUITE_FP) failed:
+#  CCPP_PHYS_SUITE_FP = \"${CCPP_PHYS_SUITE_FP}\"" ;
+#  }
+##
+##-----------------------------------------------------------------------
+##
+## Call the function that sets the ozone parameterization being used and
+## modifies associated parameters accordingly.
+##
+## This is a repeat of the same call in setup.sh.  It must be redone because
+## the contents of CCPP_PHYS_SUITE_FP have been modified, and the function
+## set_ozone_param depends on that file to set elements of the workflow
+## arrays CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING and FIXgsm_FILES_TO_COPY_TO_FIXam.
+##
+##-----------------------------------------------------------------------
+##
+#  set_ozone_param \
+#    ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_FP}" \
+#    output_varname_ozone_param="OZONE_PARAM"
 #
-# Note that this must be done before the call to the function set_ozone_param
-# below because that function reads in the ozone parameterization in the
-# suite definition file in order to set the ozone parameterization being
-# used in the experiment; thus, the suite definition file must have the
-# correct ozone parameterization specified before the call to set_ozone_param.
+#  CCPP_PHYS_SUITE_FP="${CCPP_PHYS_SUITE_FP%.tmp}"
 #
-# IMPORTANT:
-# This if-statement must be removed once these corrections are made to
-# the suite definition file in the dtc/develop branch of the NCAR fork
-# of the fv3atm repository.
+#else
+##
+##-----------------------------------------------------------------------
+##
+## Call the function that sets the ozone parameterization being used and
+## modifies associated parameters accordingly. 
+##
+##-----------------------------------------------------------------------
+##
+## NOTE:
+## After the temporary code above in the "if" part of the if-statement is 
+## removed, this "else" part can be moved back up to before the creation
+## of EXPTDIR (above).
+##
+#set_ozone_param \
+#  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
+#  output_varname_ozone_param="OZONE_PARAM"
 #
-#-----------------------------------------------------------------------
 #
-if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ]; then
-
-  CCPP_PHYS_SUITE_FP="${CCPP_PHYS_SUITE_FP}.tmp"
-  cp_vrfy "${CCPP_PHYS_SUITE_IN_CCPP_FP}" "${CCPP_PHYS_SUITE_FP}"
-
-  grep "fast_physics" "${CCPP_PHYS_SUITE_FP}" || { \
-    fast_phys_group='\
-  <group name=\"fast_physics\">\
-    <subcycle loop=\"1\">\
-      <scheme>fv_sat_adj</scheme>\
-    </subcycle>\
-  </group>' ;
-    sed -i -r "5i${fast_phys_group}" "${CCPP_PHYS_SUITE_FP}" || \
-      print_err_msg_exit "\
-Attempt to insert the \"fast_physics\" group into the suite definition
-file (CCPP_PHYS_SUITE_FP) failed:
-  CCPP_PHYS_SUITE_FP = \"${CCPP_PHYS_SUITE_FP}\"" ;
-  }
-
-  grep "<scheme>ozphys</scheme>" "${CCPP_PHYS_SUITE_FP}" && { \
-    sed -i "s/ozphys/ozphys_2015/g" "${CCPP_PHYS_SUITE_FP}" || \
-      print_err_msg_exit "\
-Attempt to replace the \"ozphys\" scheme with the \"ozphys_2015\" scheme
-in the suite definition file (CCPP_PHYS_SUITE_FP) failed:
-  CCPP_PHYS_SUITE_FP = \"${CCPP_PHYS_SUITE_FP}\"" ;
-  }
-#
-#-----------------------------------------------------------------------
-#
-# Call the function that sets the ozone parameterization being used and
-# modifies associated parameters accordingly.
-#
-# This is a repeat of the same call in setup.sh.  It must be redone because
-# the contents of CCPP_PHYS_SUITE_FP have been modified, and the function
-# set_ozone_param depends on that file to set elements of the workflow
-# arrays CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING and FIXgsm_FILES_TO_COPY_TO_FIXam.
-#
-#-----------------------------------------------------------------------
-#
-  set_ozone_param \
-    ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_FP}" \
-    output_varname_ozone_param="OZONE_PARAM"
-
-  CCPP_PHYS_SUITE_FP="${CCPP_PHYS_SUITE_FP%.tmp}"
-
-else
-#
-#-----------------------------------------------------------------------
-#
-# Call the function that sets the ozone parameterization being used and
-# modifies associated parameters accordingly. 
-#
-#-----------------------------------------------------------------------
-#
-# NOTE:
-# After the temporary code above in the "if" part of the if-statement is 
-# removed, this "else" part can be moved back up to before the creation
-# of EXPTDIR (above).
-#
-set_ozone_param \
-  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
-  output_varname_ozone_param="OZONE_PARAM"
-
-
-fi
+#fi
 
 
 
