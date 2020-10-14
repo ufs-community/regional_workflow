@@ -103,7 +103,7 @@ export OMP_STACKSIZE=2048m
 case $MACHINE in
 
 
-"WCOSS_C" | "WCOSS")
+"WCOSS_CRAY")
 #
   { save_shell_opts; set +x; } > /dev/null 2>&1
 
@@ -121,6 +121,18 @@ case $MACHINE in
   ulimit -a
   ;;
 
+"WCOSS_DELL_P3")
+#
+  { save_shell_opts; set +x; } > /dev/null 2>&1
+
+  module list
+
+  { restore_shell_opts; } > /dev/null 2>&1
+
+  export APRUN="mpirun"
+
+  ulimit -s unlimited
+  ;;
 
 "HERA")
 #
@@ -429,7 +441,7 @@ cubed-sphere grid equivalent resolution does not exist:
 Please ensure that you've built this executable."
 fi
 
-${exec_fp} "${grid_fp}" || \
+$APRUN ${exec_fp} "${grid_fp}" || \
 print_err_msg_exit "\
 Call to executable (exec_fp) that calculates the regional grid's global
 uniform cubed-sphere grid equivalent resolution returned with nonzero exit
@@ -513,7 +525,7 @@ fi
 #
 # Set the name and path to the executable and make sure that it exists.
 #
-exec_fn="shave.x"
+exec_fn="shave"
 exec_fp="$EXECDIR/${exec_fn}"
 if [ ! -f "${exec_fp}" ]; then
   print_err_msg_exit "\

@@ -475,38 +475,16 @@ EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
 #
 # Set CCPP-associated parameters.  Definitions:
 #
-# USE_CCPP:
-# Flag controlling whether or not a CCPP-enabled version of the forecast
-# model will be run.  Note that the user is responsible for ensuring that
-# a CCPP-enabled forecast model executable is built and placed at the 
-# correct location (that is part of the build process).
-#
 # CCPP_PHYS_SUITE:
-# If USE_CCPP has been set to "TRUE", this variable defines the physics
-# suite that will run using CCPP.  The choice of physics suite determines
-# the forecast model's namelist file, the diagnostics table file, the 
-# field table file, and the XML physics suite definition file that are 
-# staged in the experiment directory or the cycle directories under it.
-# If USE_CCPP is set to "FALSE", the only physics suite that can be run
-# is the GFS.
-#
-# Note that it is up to the user to ensure that the CCPP-enabled forecast 
-# model executable is built with either the dynamic build (which can 
-# handle any CCPP physics package but is slower to run) or the static 
-# build with the correct physics package.  If using a static build, the 
-# forecast will fail if the physics package specified in the experiment's 
-# variable defintions file (GLOBAL_VAR_DEFNS_FN) is not the same as the
-# one that was used for the static build. 
-#
-# OZONE_PARAM_NO_CCPP:
-# The ozone parameterization to use if NOT using a CCPP-enabled forecast
-# model executable.
+# The physics suite that will run using CCPP (Common Community Physics
+# Package).  The choice of physics suite determines the forecast model's 
+# namelist file, the diagnostics table file, the field table file, and 
+# the XML physics suite definition file that are staged in the experiment 
+# directory or the cycle directories under it.
 #
 #-----------------------------------------------------------------------
 #
-USE_CCPP="FALSE"
 CCPP_PHYS_SUITE="FV3_GSD_v0"
-OZONE_PARAM_NO_CCPP="ozphys"
 #
 #-----------------------------------------------------------------------
 #
@@ -731,14 +709,6 @@ GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="TRUE"
 #   NOTE: Probably don't need to make this a user-specified variable.  
 #         Just set it in the function set_gridparams_ESGgrid.sh.
 #
-# ESGgrid_ALPHA_PARAM:
-# The alpha parameter used in the Jim Purser map projection/grid generation
-# method.
-#
-# ESGgrid_KAPPA_PARAM:
-# The kappa parameter used in the Jim Purser map projection/grid generation
-# method.
-#
 #-----------------------------------------------------------------------
 #
 ESGgrid_LON_CTR="-97.5"
@@ -748,8 +718,6 @@ ESGgrid_DELY="3000.0"
 ESGgrid_NX="1000"
 ESGgrid_NY="1000"
 ESGgrid_WIDE_HALO_WIDTH="6"
-ESGgrid_ALPHA_PARAM="0.21423"
-ESGgrid_KAPPA_PARAM="-0.23209"
 #
 #-----------------------------------------------------------------------
 #
@@ -1349,3 +1317,27 @@ HALO_BLEND=0
 #-----------------------------------------------------------------------
 #
 GWD_RRFS_v1beta_BASEDIR=""
+#
+#-----------------------------------------------------------------------
+#
+# USE_FVCOM:
+# Flag set to update surface conditions in FV3-LAM with fields generated
+# from the Finite Volume Community Ocean Model (FVCOM). This will
+# replace lake/sea surface temperature, ice surface temperature, and ice
+# placement. FVCOM data must already be interpolated to the desired
+# FV3-LAM grid. This flag will be used in make_ics to modify sfc_data.nc
+# after chgres_cube is run by running the routine process_FVCOM.exe
+#
+# FVCOM_DIR:
+# User defined directory where FVCOM data already interpolated to FV3-LAM
+# grid is located. File name in this path should be "fvcom.nc" to allow
+#
+# FVCOM_FILE:
+# Name of file located in FVCOM_DIR that has FVCOM data interpolated to 
+# FV3-LAM grid. This file will be copied later to a new location and name
+# changed to fvcom.nc
+#------------------------------------------------------------------------
+#
+USE_FVCOM="FALSE"
+FVCOM_DIR="/user/defined/dir/to/fvcom/data"
+FVCOM_FILE="fvcom.nc"
