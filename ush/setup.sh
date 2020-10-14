@@ -547,31 +547,31 @@ The CCPP physics suite specified in CCPP_PHYS_SUITE is not supported:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
 check_var_valid_value \
   "CCPP_PHYS_SUITE" "valid_vals_CCPP_PHYS_SUITE" "${err_msg}"
+##
+##-----------------------------------------------------------------------
+##
+## If using CCPP with the GFS_2017_gfdlmp physics suite, only allow 
+## "GSMGFS" and "FV3GFS" as the external models for ICs and LBCs.
+##
+##-----------------------------------------------------------------------
+##
+#if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ]; then
 #
-#-----------------------------------------------------------------------
+#  if [ "${EXTRN_MDL_NAME_ICS}" != "GSMGFS" -a \
+#       "${EXTRN_MDL_NAME_ICS}" != "FV3GFS" ] || \
+#     [ "${EXTRN_MDL_NAME_LBCS}" != "GSMGFS" -a \
+#       "${EXTRN_MDL_NAME_LBCS}" != "FV3GFS" ]; then
+#    print_info_msg "$VERBOSE" "
+#The following combination of physics suite and external model(s) for ICs 
+#and LBCs is not allowed:
+#  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
+#  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
+#  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
+#For this physics suite, the only external models that the workflow cur-
+#rently allows are \"GSMGFS\" and \"FV3GFS\"." 
+#  fi
 #
-# If using CCPP with the GFS_2017_gfdlmp physics suite, only allow 
-# "GSMGFS" and "FV3GFS" as the external models for ICs and LBCs.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ]; then
-
-  if [ "${EXTRN_MDL_NAME_ICS}" != "GSMGFS" -a \
-       "${EXTRN_MDL_NAME_ICS}" != "FV3GFS" ] || \
-     [ "${EXTRN_MDL_NAME_LBCS}" != "GSMGFS" -a \
-       "${EXTRN_MDL_NAME_LBCS}" != "FV3GFS" ]; then
-    print_info_msg "$VERBOSE" "
-The following combination of physics suite and external model(s) for ICs 
-and LBCs is not allowed:
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
-For this physics suite, the only external models that the workflow cur-
-rently allows are \"GSMGFS\" and \"FV3GFS\"." 
-  fi
-
-fi
+#fi
 #
 #-----------------------------------------------------------------------
 #
