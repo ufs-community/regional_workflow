@@ -57,7 +57,6 @@ hour zero).
 #
 valid_args=( \
 "lbcs_dir" \
-"APRUN" \
 )
 process_args valid_args "$@"
 #
@@ -70,6 +69,49 @@ process_args valid_args "$@"
 #-----------------------------------------------------------------------
 #
 print_input_args valid_args
+#
+#-----------------------------------------------------------------------
+#
+# Set machine-dependent parameters.
+#
+#-----------------------------------------------------------------------
+#
+case "$MACHINE" in
+
+  "WCOSS_CRAY")
+    ulimit -s unlimited
+    APRUN="aprun -b -j1 -n48 -N12 -d1 -cc depth"
+    ;;
+
+  "WCOSS_DELL_P3")
+    ulimit -s unlimited
+    APRUN="mpirun"
+    ;;
+
+  "HERA")
+    ulimit -s unlimited
+    APRUN="srun"
+    ;;
+
+  "JET")
+    ulimit -s unlimited
+    APRUN="srun"
+    ;;
+
+  "ODIN")
+    APRUN="srun"
+    ;;
+
+  "CHEYENNE")
+    nprocs=$(( NNODES_MAKE_LBCS*PPN_MAKE_LBCS ))
+    APRUN="mpirun -np $nprocs"
+    ;;
+
+  "STAMPEDE")
+    APRUN="ibrun"
+    ;;
+
+esac
 #
 #-----------------------------------------------------------------------
 #
