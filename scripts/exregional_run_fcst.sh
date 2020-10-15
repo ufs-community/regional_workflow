@@ -105,7 +105,6 @@ case $MACHINE in
     ulimit -s unlimited
     ulimit -a
     APRUN="srun"
-    LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     OMP_NUM_THREADS=4
     ;;
 
@@ -113,14 +112,12 @@ case $MACHINE in
     ulimit -s unlimited
     ulimit -a
     APRUN="srun"
-#    LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     ;;
 
   "JET")
     ulimit -s unlimited
     ulimit -a
     APRUN="srun"
-    LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     OMP_NUM_THREADS=4
     ;;
 
@@ -135,13 +132,11 @@ case $MACHINE in
     module list
     nprocs=$(( NNODES_RUN_FCST*PPN_RUN_FCST ))
     APRUN="mpirun -np $nprocs"
-    LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     ;;
 
   "STAMPEDE")
     module list
     APRUN="ibrun -np ${PE_MEMBER01}"
-#    LD_LIBRARY_PATH="${UFS_WTHR_MDL_DIR}/FV3/ccpp/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     ;;
 
   *)
