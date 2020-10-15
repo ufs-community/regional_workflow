@@ -313,6 +313,27 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that USE_FVCOM is set to a valid value and assign directory
+# and file names.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
+#
+# Set USE_FVCOM to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+USE_FVCOM=${USE_FVCOM^^}
+if [ "$USE_FVCOM" = "TRUE" ] || \
+   [ "$USE_FVCOM" = "YES" ]; then
+  USE_FVCOM="TRUE"
+elif [ "$USE_FVCOM" = "FALSE" ] || \
+     [ "$USE_FVCOM" = "NO" ]; then
+  USE_FVCOM="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that DOT_OR_USCORE is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -699,25 +720,13 @@ case $MACHINE in
 "WCOSS_CRAY")
   FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
   TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
   ;;
 
 "WCOSS_DELL_P3")
   FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
   TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
-  ;;
-
-"DELL")
-  FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
-  ;;
-
-"THEIA")
-  FIXgsm=${FIXgsm:-"/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch4/NCEPDEV/da/noscrub/George.Gayno/climo_fields_netcdf"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
   ;;
 
 "HERA")
@@ -2763,6 +2772,18 @@ NUM_CYCLES="${NUM_CYCLES}"
 ALL_CDATES=( \\
 $( printf "\"%s\" \\\\\n" "${ALL_CDATES[@]}" )
 )
+#
+#-----------------------------------------------------------------------
+#
+# If USE_FVCOM is set to TRUE, then FVCOM data (located in FVCOM_DIR
+# in FVCOM_FILE) will be used to update lower boundary conditions during
+# make_ics.
+#
+#-----------------------------------------------------------------------
+#
+USE_FVCOM="${USE_FVCOM}"
+FVCOM_DIR="${FVCOM_DIR}"
+FVCOM_FILE="${FVCOM_FILE}"
 #
 #-----------------------------------------------------------------------
 #
