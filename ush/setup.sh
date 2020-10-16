@@ -711,7 +711,7 @@ SORCDIR="$HOMErrfs/sorc"
 SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
 PARMDIR="$HOMErrfs/parm"
 MODULES_DIR="$HOMErrfs/modulefiles"
-EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
+EXECDIR="${SR_WX_APP_TOP_DIR}/exec"
 FIXrrfs="$HOMErrfs/fix"
 TEMPLATE_DIR="$USHDIR/templates"
 
@@ -2532,8 +2532,6 @@ CYCLE_BASEDIR="${CYCLE_BASEDIR}"
 GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
-# Commented out for now due to reverting RRFS_v1beta SDF to GFS GWD suite
-#GWD_RRFS_v1beta_DIR="${GWD_RRFS_v1beta_DIR}"
 
 NDIGITS_ENSMEM_NAMES="${NDIGITS_ENSMEM_NAMES}"
 ENSMEM_NAMES=( $( printf "\"%s\" " "${ENSMEM_NAMES[@]}" ))
