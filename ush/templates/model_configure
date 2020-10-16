@@ -109,16 +109,16 @@ dy:       {{ dy }}
 # Latitude of center of grid (degrees).
 #
 # lon1:
-# Longitude of lower-left (southwest) grid point (degrees).
+# Longitude of center of lower-left (southwest) grid cell (degrees).
 #
 # lat1:
-# Latitude of lower-left (southwest) grid point (degrees).
+# Latitude of center of lower-left (southwest) grid cell (degrees).
 #
 # lon2:
-# Longitude of upper-right (northeast) grid point (degrees).
+# Longitude of center of upper-right (northeast) grid cell (degrees).
 #
 # lat2:
-# Latitude of upper-right (northeast) grid point (degrees).
+# Latitude of center of upper-right (northeast) grid cell (degrees).
 #
 # dlon:
 # Longitudinal grid size (degrees).
@@ -150,20 +150,20 @@ dlat:     {{ dlat }}
 # ROTATED latlon coordinate system are both 0).
 #
 # lon1:
-# Longitude of lower-left grid point, expressed in the ROTATED latlon 
-# coordinate system (degrees).
+# Longitude of center of lower-left grid cell, expressed in the ROTATED 
+# latlon coordinate system (degrees).
 #
 # lat1:
-# Latitude of lower-left grid point, expressed in the ROTATED latlon 
-# coordinate system (degrees).
+# Latitude of center of lower-left grid cell, expressed in the ROTATED 
+# latlon coordinate system (degrees).
 #
 # lon2:
-# Longitude of upper-right grid point, expressed in the ROTATED latlon 
-# coordinate system (degrees).
+# Longitude of center of upper-right grid cell, expressed in the ROTATED 
+# latlon coordinate system (degrees).
 #
 # lat2:
-# Latitude of upper-right grid point, expressed in the ROTATED latlon 
-# coordinate system (degrees).
+# Latitude of center of upper-right grid cell, expressed in the ROTATED 
+# latlon coordinate system (degrees).
 #
 # dlon:
 # Longitudinal grid size in the ROTATED latlon coordinate system (degrees).
