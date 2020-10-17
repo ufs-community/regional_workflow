@@ -78,8 +78,6 @@ print_input_args valid_args
 #
 # The orography code runs with threads.  On Cray, the code is optimized
 # for six threads.  Do not change.
-# Note that OMP_NUM_THREADS and OMP_STACKSIZE only affect the threaded   <== I don't think this is true.  Remove??
-# executions on Cray; they don't affect executions on theia.
 #
 #-----------------------------------------------------------------------
 #
