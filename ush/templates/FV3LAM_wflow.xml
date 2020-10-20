@@ -63,9 +63,22 @@ tasks other than GET_EXTRN_ICS_TN, GET_EXTRN_LBCS_TN, and RUN_FCST_TN;
 the "HPSS" type is used for the GET_EXTRN_ICS_TN and GET_EXTRN_LBCS_TN 
 tasks; and the "FCST" type is used for the RUN_FCST_TN task.
 -->
-<!ENTITY RSRV_DEFAULT "<account>&ACCOUNT;</account><queue>&QUEUE_DEFAULT;</queue>{{ partition_default_spec }}">
-<!ENTITY RSRV_HPSS    "<account>&ACCOUNT;</account><queue>&QUEUE_HPSS;</queue>{{ partition_hpss_spec }}">
-<!ENTITY RSRV_FCST    "<account>&ACCOUNT;</account><queue>&QUEUE_FCST;</queue>{{ partition_fcst_spec }}">
+
+{%- if (partition_default != "")  %}
+<!ENTITY RSRV_DEFAULT "<account>&ACCOUNT;</account><queue>&QUEUE_DEFAULT;</queue><partition>{{ partition_default }}</partition>">
+{%- else %}
+<!ENTITY RSRV_DEFAULT "<account>&ACCOUNT;</account><queue>&QUEUE_DEFAULT;</queue>">
+{%- endif %}
+{%- if (partition_hpss != "")  %}
+<!ENTITY RSRV_HPSS    "<account>&ACCOUNT;</account><queue>&QUEUE_HPSS;</queue><partition>{{ partition_hpss }}</partition>">
+{%- else %}
+<!ENTITY RSRV_HPSS    "<account>&ACCOUNT;</account><queue>&QUEUE_HPSS;</queue>">
+{%- endif %}
+{%- if (partition_fcst != "")  %}
+<!ENTITY RSRV_FCST    "<account>&ACCOUNT;</account><queue>&QUEUE_FCST;</queue><partition>{{ partition_fcst }}</partition>">
+{%- else %}
+<!ENTITY RSRV_FCST    "<account>&ACCOUNT;</account><queue>&QUEUE_FCST;</queue>">
+{%- endif %}
 
 ]>
 

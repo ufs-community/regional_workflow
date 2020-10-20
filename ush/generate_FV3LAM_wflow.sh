@@ -171,24 +171,28 @@ fi
 #partition_hpss_spec="<partition>${PARTITION_HPSS}</partition>"
 #partition_fcst_spec="<partition>${PARTITION_FCST}</partition>"
 
-partition_default_spec="\"\""
-if [ ! -z "${PARTITION_DEFAULT}" ]; then
-  partition_default_spec="<partition>${PARTITION_DEFAULT}</partition>"
-fi
-
-partition_hpss_spec="\"\""
-if [ ! -z "${PARTITION_HPSS}" ]; then
-  partition_hpss_spec="<partition>${PARTITION_HPSS}</partition>"
-fi
-
-partition_fcst_spec="\"\""
-if [ ! -z "${PARTITION_FCST}" ]; then
-  partition_fcst_spec="<partition>${PARTITION_FCST}</partition>"
-fi
+#partition_default_spec="\"\""
+#if [ ! -z "${PARTITION_DEFAULT}" ]; then
+#  partition_default_spec="<partition>${PARTITION_DEFAULT}</partition>"
+#fi
+#
+#partition_hpss_spec="\"\""
+#if [ ! -z "${PARTITION_HPSS}" ]; then
+#  partition_hpss_spec="<partition>${PARTITION_HPSS}</partition>"
+#fi
+#
+#partition_fcst_spec="\"\""
+#if [ ! -z "${PARTITION_FCST}" ]; then
+#  partition_fcst_spec="<partition>${PARTITION_FCST}</partition>"
+#fi
 
 #  'queue_default_tag': ${QUEUE_DEFAULT_TAG}
 #  'queue_hpss_tag': ${QUEUE_HPSS_TAG}
 #  'queue_fcst_tag': ${QUEUE_FCST_TAG}
+
+#  'partition_default_spec': ${partition_default_spec}
+#  'partition_hpss_spec': ${partition_hpss_spec}
+#  'partition_fcst_spec': ${partition_fcst_spec}
 
 settings="\
 #
@@ -199,9 +203,9 @@ settings="\
   'queue_default': ${QUEUE_DEFAULT}
   'queue_hpss': ${QUEUE_HPSS}
   'queue_fcst': ${QUEUE_FCST}
-  'partition_default_spec': ${partition_default_spec}
-  'partition_hpss_spec': ${partition_hpss_spec}
-  'partition_fcst_spec': ${partition_fcst_spec}
+  'partition_default': ${PARTITION_DEFAULT}
+  'partition_hpss': ${PARTITION_HPSS}
+  'partition_fcst': ${PARTITION_FCST}
   'machine': ${MACHINE}
 #
 # Workflow task names.
