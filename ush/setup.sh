@@ -366,7 +366,6 @@ case $MACHINE in
     SCHED="lsfcray"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
     QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
-#    QUEUE_HPSS_TAG="queue"       # lsfcray does not support "partition" tag
     QUEUE_FCST=${QUEUE_FCST:-"dev"}
     ;;
 
@@ -375,21 +374,16 @@ case $MACHINE in
     SCHED="lsf"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
     QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
-#    QUEUE_HPSS_TAG="queue"       # lsf does not support "partition" tag
     QUEUE_FCST=${QUEUE_FCST:-"dev"}
     ;;
 
   "HERA")
     NCORES_PER_NODE=40
     SCHED="${SCHED:-slurm}"
-
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"hera"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
-
     PARTITION_HPSS=${PARTITION_HPSS:-"service"}
     QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
-#    QUEUE_HPSS_TAG="queue"
-
     PARTITION_FCST=${PARTITION_FCST:-"hera"}
     QUEUE_FCST=${QUEUE_FCST:-"batch"}
     ;;
@@ -397,14 +391,10 @@ case $MACHINE in
   "ORION")
     NCORES_PER_NODE=40
     SCHED="${SCHED:-slurm}"
-
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"orion"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
-
     PARTITION_HPSS=${PARTITION_HPSS:-"service"}
     QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
-#    QUEUE_HPSS_TAG="queue"
-
     PARTITION_FCST=${PARTITION_FCST:-"orion"}
     QUEUE_FCST=${QUEUE_FCST:-"batch"}
     ;;
@@ -412,13 +402,10 @@ case $MACHINE in
   "JET")
     NCORES_PER_NODE=24
     SCHED="${SCHED:-slurm}"
-
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"sjet,vjet,kjet,xjet"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
-
     PARTITION_HPSS=${PARTITION_HPSS:-"service"}
     QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
-
     PARTITION_FCST=${PARTITION_FCST:-"sjet,vjet,kjet,xjet"}
     QUEUE_FCST=${QUEUE_FCST:-"batch"}
     ;;
@@ -436,7 +423,6 @@ case $MACHINE in
     SCHED="${SCHED:-pbspro}"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
     QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
-#    QUEUE_HPSS_TAG="queue"       # pbspro does not support "partition" tag
     QUEUE_FCST=${QUEUE_FCST:-"regular"}
     ;;
 
@@ -449,40 +435,6 @@ case $MACHINE in
     ;;
 
 esac
-
-
-# Is the following needed???
-#
-#if [ "$SCHED" = "slurm" ]; then
-#
-#  if [ -z "${PARTITION_DEFAULT}" ]; then
-#    print_err_msg_exit "\
-#When SCHED is set to \"slurm\", the variable specifying the default
-#slurm partition to which to submit tasks (PARTITION_DEFAULT) cannot be 
-#empty:
-#  SCHED = \"$SCHED\"
-#  PARTITION_DEFAULT = \"${PARTITION_DEFAULT}\""
-#  fi
-#
-#  if [ -z "${PARTITION_HPSS}" ]; then
-#    print_err_msg_exit "\
-#When SCHED is set to \"slurm\", the variable specifying the slurm 
-#partition to which to submit the tasks that fetch/copy external model
-#files (PARTITION_HPSS) cannot be empty:
-#  SCHED = \"$SCHED\"
-#  PARTITION_HPSS = \"${PARTITION_HPSS}\""
-#  fi
-#
-#  if [ -z "${PARTITION_FCST}" ]; then
-#    print_err_msg_exit "\
-#When SCHED is set to \"slurm\", the variable specifying the slurm 
-#partition to which to submit the forecast task (PARTITION_FCST) cannot 
-#be empty:
-#  SCHED = \"$SCHED\"
-#  PARTITION_DEFAULT = \"${PARTITION_FCST}\""
-#  fi
-#
-#fi
 #
 #-----------------------------------------------------------------------
 #
