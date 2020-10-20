@@ -57,7 +57,6 @@ This is the ex-script for the task that generates initial condition
 #
 valid_args=( \
 "ics_dir" \
-"APRUN" \
 )
 process_args valid_args "$@"
 #
@@ -70,6 +69,49 @@ process_args valid_args "$@"
 #-----------------------------------------------------------------------
 #
 print_input_args valid_args
+#
+#-----------------------------------------------------------------------
+#
+# Set machine-dependent parameters.
+#
+#-----------------------------------------------------------------------
+#
+case "$MACHINE" in
+
+  "WCOSS_CRAY")
+    ulimit -s unlimited
+    APRUN="aprun -b -j1 -n48 -N12 -d1 -cc depth"
+    ;;
+
+  "WCOSS_DELL_P3")
+    ulimit -s unlimited
+    APRUN="mpirun"
+    ;;
+
+  "HERA")
+    ulimit -s unlimited
+    APRUN="srun"
+    ;;
+
+  "JET")
+    ulimit -s unlimited
+    APRUN="srun"
+    ;;
+
+  "ODIN")
+    APRUN="srun"
+    ;;
+
+  "CHEYENNE")
+    nprocs=$(( NNODES_MAKE_ICS*PPN_MAKE_ICS ))
+    APRUN="mpirun -np $nprocs"
+    ;;
+
+  "STAMPEDE")
+    APRUN="ibrun"
+    ;;
+
+esac
 #
 #-----------------------------------------------------------------------
 #
@@ -102,26 +144,33 @@ cd_vrfy $workdir
 varmap_file=""
 
 case "${CCPP_PHYS_SUITE}" in
-
-"FV3_GFS_2017_gfdlmp" | "FV3_GFS_2017_gfdlmp_regional" | "FV3_GFS_v16beta" | \
-"FV3_GFS_v15p2" | "FV3_CPT_v0" )
-  varmap_file="GFSphys_var_map.txt"
-  ;;
-"FV3_GSD_v0" | "FV3_GSD_SAR" | \
-"FV3_RRFS_v1beta" )
-  if   [ "${EXTRN_MDL_NAME_ICS}" = "RAPX" ] || [ "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ]; then
+#
+  "FV3_GFS_2017_gfdlmp" | \
+  "FV3_GFS_2017_gfdlmp_regional" | \
+  "FV3_GFS_v16beta" | \
+  "FV3_GFS_v15p2" | "FV3_CPT_v0" )
+    varmap_file="GFSphys_var_map.txt"
+    ;;
+#
+  "FV3_GSD_v0" | \
+  "FV3_GSD_SAR" | \
+  "FV3_RRFS_v1beta" )
+    if [ "${EXTRN_MDL_NAME_ICS}" = "RAPX" ] || \
+       [ "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ]; then
       varmap_file="GSDphys_var_map.txt"
-  elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] || [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
-       [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ]; then
+    elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] || \
+         [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
+         [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ]; then
       varmap_file="GFSphys_var_map.txt"
-  fi
-  ;;
-*)
-  print_err_msg_exit "\
+    fi
+    ;;
+#
+  *)
+    print_err_msg_exit "\
 A variable mapping table has not yet been defined for this physics suite:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-  ;;
-
+    ;;
+#
 esac
 #
 #-----------------------------------------------------------------------
@@ -352,21 +401,19 @@ case "${EXTRN_MDL_NAME_ICS}" in
   fn_grib2="${EXTRN_MDL_FNS[0]}"
   input_type="grib2"
 #
-# Set soil levels based on LSM in CCPP SDF (RUC-LSM or Noah/Noah MP)
+# Set soil levels based on LSM in CCPP SDF (RUC-LSM or Noah/Noah MP).
 #
-  if [ "${USE_CCPP}" = "TRUE" ]; then
-    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-      nsoill_out="4"
-    elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-      nsoill_out="9"
-    fi
+  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+    nsoill_out="4"
+  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+    nsoill_out="9"
   fi
 #
 # These geogrid files need to be moved to more permanent locations.
@@ -397,20 +444,18 @@ case "${EXTRN_MDL_NAME_ICS}" in
   fn_grib2="${EXTRN_MDL_FNS[0]}"
   input_type="grib2"
 #
-# Set soil levels based on CCPP SDF
+# Set soil levels based on CCPP SDF.
 #
-  if [ "${USE_CCPP}" = "TRUE" ]; then
-    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-      nsoill_out="4"
-    elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-      nsoill_out="9"
-    fi
+  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+    nsoill_out="4"
+  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+    nsoill_out="9"
   fi
 #
 # These geogrid files need to be moved to more permanent locations.
@@ -441,20 +486,19 @@ case "${EXTRN_MDL_NAME_ICS}" in
   input_type="grib2"
 
 #
-# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
+# Use Thompson climatology for ice- and water-friendly aerosols if CCPP 
+# suite uses Thompson MP
 #
-  if [ "${USE_CCPP}" = "TRUE" ]; then
-    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \       
-       [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-      thomp_mp_climo_file=""
-    elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-    fi
+  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \       
+     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
+     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
+    thomp_mp_climo_file=""
+  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
   fi
 
   nsoill_out="4" #If the CCPP suites uses RUC-LSM, the scheme will interpolate from 4 to 9 soil levels.
@@ -493,7 +537,7 @@ hh="${EXTRN_MDL_CDATE:8:2}"
 #
 #-----------------------------------------------------------------------
 #
-exec_fn="chgres_cube.exe"
+exec_fn="chgres_cube"
 exec_fp="$EXECDIR/${exec_fn}"
 if [ ! -f "${exec_fp}" ]; then
   print_err_msg_exit "\
@@ -608,6 +652,48 @@ mv_vrfy out.sfc.tile${TILE_RGNL}.nc \
 mv_vrfy gfs_ctrl.nc ${ics_dir}
 
 mv_vrfy gfs.bndy.nc ${ics_dir}/gfs_bndy.tile${TILE_RGNL}.000.nc
+#
+#-----------------------------------------------------------------------
+#
+# Process FVCOM Data
+#
+#-----------------------------------------------------------------------
+#
+if [ "${USE_FVCOM}" = "TRUE" ]; then
+
+  fvcom_exec_fn="fvcom_to_FV3"
+  fvcom_exec_fp="$EXECDIR/${fvcom_exec_fn}"
+  if [ ! -f "${fvcom_exec_fp}" ]; then
+    print_err_msg_exit "\
+The executable (fvcom_exec_fp) for processing FVCOM data onto FV3-LAM
+native grid does not exist:
+  fvcom_exec_fp = \"${fvcom_exec_fp}\"
+Please ensure that you've built this executable."
+  fi
+  cp_vrfy ${fvcom_exec_fp} ${ics_dir}/.
+  fvcom_data_fp="${FVCOM_DIR}/${FVCOM_FILE}"
+  if [ ! -f "${fvcom_data_fp}" ]; then
+    print_err_msg_exit "\
+The file or path (fvcom_data_fp) does not exist:
+  fvcom_data_fp = \"${fvcom_data_fp}\"
+Please check the following user defined variables:
+  FVCOM_DIR = \"${FVCOM_DIR}\"
+  FVCOM_FILE= \"${FVCOM_FILE}\" "
+  fi
+
+  cp_vrfy ${fvcom_data_fp} ${ics_dir}/fvcom.nc  
+  cd_vrfy ${ics_dir}
+  ${APRUN} ${fvcom_exec_fn} sfc_data.tile${TILE_RGNL}.halo${NH0}.nc fvcom.nc || \
+  print_err_msg_exit "\
+Call to executable (fvcom_exe) to modify sfc fields for FV3-LAM failed:
+  fvcom_exe = \"${fvcom_exe}\"
+The following variables were being used:
+  FVCOM_DIR = \"${FVCOM_DIR}\"
+  FVCOM_FILE = \"${FVCOM_FILE}\"
+  ics_dir = \"${ics_dir}\"
+  fvcom_exe_dir = \"${fvcom_exe_dir}\"
+  fvcom_exe = \"${fvcom_exe}\""
+fi
 #
 #-----------------------------------------------------------------------
 #

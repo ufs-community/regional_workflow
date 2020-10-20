@@ -579,41 +579,6 @@ SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
 #
 #-----------------------------------------------------------------------
 #
-# If using the FV3_RRFS_v1beta physics suite, set the base directory in 
-# which the pregenerated orography statistics files needed by the gravity 
-# wave drag parameterization in this suite are located.
-#
-#-----------------------------------------------------------------------
-#
-  if [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
-
-    if [ "$MACHINE" = "HERA" ]; then
-      GWD_RRFS_v1beta_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen/orog"
-    elif [ "$MACHINE" = "JET" ]; then
-      GWD_RRFS_v1beta_BASEDIR="/lfs4/BMC/wrfruc/FV3LAM_pregen/orog"
-    elif [ "$MACHINE" = "CHEYENNE" ]; then
-      GWD_RRFS_v1beta_BASEDIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen/orog"
-    else
-      print_err_msg_exit "\
-The base directory (GWD_RRFS_v1beta_BASEDIR) containing the pregenerated 
-orography statistics files needed by the gravity wave drag parameterization
-in the FV3_RRFS_v1beta physics suite has not been specified for this 
-machine (MACHINE):
-  MACHINE= \"${MACHINE}\""
-    fi
-
-    str=${str}"
-#
-# Base directory containing the pregenerated orography statistics files 
-# needed by the gravity wave drag parameterization in the FV3_RRFS_v1beta 
-# physics suite.
-#
-GWD_RRFS_v1beta_BASEDIR=\"${GWD_RRFS_v1beta_BASEDIR}\""
-
-  fi
-#
-#-----------------------------------------------------------------------
-#
 #
 #
 #-----------------------------------------------------------------------
@@ -749,7 +714,7 @@ machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
 
-    EXTRN_MDL_SOURCE_DIR_ICS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_ICS}"
+    EXTRN_MDL_SOURCE_BASEDIR_ICS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_ICS}"
     if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
        [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ]; then
       EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
@@ -758,7 +723,7 @@ machine (MACHINE):
       EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
     fi
 
-    EXTRN_MDL_SOURCE_DIR_LBCS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_LBCS}"
+    EXTRN_MDL_SOURCE_BASEDIR_LBCS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_LBCS}"
 #
 # Make sure that the forecast length is evenly divisible by the interval
 # between the times at which the lateral boundary conditions will be
@@ -789,9 +754,9 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
 # Locations and names of user-staged external model files for generating
 # ICs and LBCs.
 #
-EXTRN_MDL_SOURCE_DIR_ICS=\"${EXTRN_MDL_SOURCE_DIR_ICS}\"
+EXTRN_MDL_SOURCE_BASEDIR_ICS=\"${EXTRN_MDL_SOURCE_BASEDIR_ICS}\"
 EXTRN_MDL_FILES_ICS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_ICS[@]}" ))
-EXTRN_MDL_SOURCE_DIR_LBCS=\"${EXTRN_MDL_SOURCE_DIR_LBCS}\"
+EXTRN_MDL_SOURCE_BASEDIR_LBCS=\"${EXTRN_MDL_SOURCE_BASEDIR_LBCS}\"
 EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
 
   fi

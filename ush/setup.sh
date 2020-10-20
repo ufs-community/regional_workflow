@@ -62,6 +62,7 @@ cd_vrfy ${scrfunc_dir}
 . ./set_gridparams_ESGgrid.sh
 . ./link_fix.sh
 . ./set_ozone_param.sh
+. ./set_thompson_mp_fix_files.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -313,6 +314,27 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that USE_FVCOM is set to a valid value and assign directory
+# and file names.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
+#
+# Set USE_FVCOM to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+USE_FVCOM=${USE_FVCOM^^}
+if [ "$USE_FVCOM" = "TRUE" ] || \
+   [ "$USE_FVCOM" = "YES" ]; then
+  USE_FVCOM="TRUE"
+elif [ "$USE_FVCOM" = "FALSE" ] || \
+     [ "$USE_FVCOM" = "NO" ]; then
+  USE_FVCOM="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that DOT_OR_USCORE is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -480,7 +502,7 @@ case "${EMC_GRID_NAME}" in
   "conus_c96")
     PREDEF_GRID_NAME="EMC_CONUS_coarse"
     ;;
-  "GSD_HRRR25km" | "GSD_HRRR13km" | "GSD_HRRR3km" | "GSD_SUBCONUS3km")
+  "RRFS_CONUS_25km" | "RRFS_CONUS_13km" | "RRFS_CONUS_3km" | "RRFS_SUBCONUS_3km")
     PREDEF_GRID_NAME="${EMC_GRID_NAME}"
     ;;
   "conus_orig" | "guam" | "hi" | "pr")
@@ -517,64 +539,15 @@ check_var_valid_value \
 #
 #-----------------------------------------------------------------------
 #
-# Make sure USE_CCPP is set to a valid value.
+# Make sure CCPP_PHYS_SUITE is set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "USE_CCPP" "valid_vals_USE_CCPP"
-#
-# Set USE_CCPP to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-USE_CCPP=${USE_CCPP^^}
-if [ "$USE_CCPP" = "TRUE" ] || \
-   [ "$USE_CCPP" = "YES" ]; then
-  USE_CCPP="TRUE"
-elif [ "$USE_CCPP" = "FALSE" ] || \
-     [ "$USE_CCPP" = "NO" ]; then
-  USE_CCPP="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# If USE_CCPP is set to "TRUE", make sure CCPP_PHYS_SUITE is set to a 
-# valid value.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${USE_CCPP}" = "TRUE" ] && [ ! -z ${CCPP_PHYS_SUITE} ]; then
-  err_msg="\
+err_msg="\
 The CCPP physics suite specified in CCPP_PHYS_SUITE is not supported:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-  check_var_valid_value \
-    "CCPP_PHYS_SUITE" "valid_vals_CCPP_PHYS_SUITE" "${err_msg}"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# If using CCPP with the GFS_2017_gfdlmp physics suite, only allow 
-# "GSMGFS" and "FV3GFS" as the external models for ICs and LBCs.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${USE_CCPP}" = "TRUE" ] && \
-   [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ]; then
-
-  if [ "${EXTRN_MDL_NAME_ICS}" != "GSMGFS" -a \
-       "${EXTRN_MDL_NAME_ICS}" != "FV3GFS" ] || \
-     [ "${EXTRN_MDL_NAME_LBCS}" != "GSMGFS" -a \
-       "${EXTRN_MDL_NAME_LBCS}" != "FV3GFS" ]; then
-    print_info_msg "$VERBOSE" "
-The following combination of physics suite and external model(s) for ICs 
-and LBCs is not allowed:
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
-For this physics suite, the only external models that the workflow cur-
-rently allows are \"GSMGFS\" and \"FV3GFS\"." 
-  fi
-
-fi
+check_var_valid_value \
+  "CCPP_PHYS_SUITE" "valid_vals_CCPP_PHYS_SUITE" "${err_msg}"
 #
 #-----------------------------------------------------------------------
 #
@@ -692,8 +665,7 @@ NUM_CYCLES="${#ALL_CDATES[@]}"
 #
 # UFS_WTHR_MDL_DIR:
 # Directory in which the (NEMS-enabled) FV3-LAM application is located.
-# This directory includes subdirectories for FV3, NEMS, and FMS.  If
-# USE_CCPP is set to "TRUE", it also includes a subdirectory for CCPP.
+# This directory includes subdirectories for FV3, NEMS, and FMS.
 #
 #-----------------------------------------------------------------------
 #
@@ -715,7 +687,7 @@ SORCDIR="$HOMErrfs/sorc"
 SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
 PARMDIR="$HOMErrfs/parm"
 MODULES_DIR="$HOMErrfs/modulefiles"
-EXECDIR="${SR_WX_APP_TOP_DIR}/exec"
+EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
 FIXrrfs="$HOMErrfs/fix"
 TEMPLATE_DIR="$USHDIR/templates"
 
@@ -724,25 +696,13 @@ case $MACHINE in
 "WCOSS_CRAY")
   FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
   TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
   ;;
 
 "WCOSS_DELL_P3")
   FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
   TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
-  ;;
-
-"DELL")
-  FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-""}
-  ;;
-
-"THEIA")
-  FIXgsm=${FIXgsm:-"/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch4/NCEPDEV/da/noscrub/George.Gayno/climo_fields_netcdf"}
+  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
   ;;
 
 "HERA")
@@ -970,39 +930,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If using the FV3_RRFS_v1beta physics suite, make sure that the directory
-# from which certain fixed orography files will be copied to the experiment 
-# directory actually exists.  Note that this is temporary code.  It should
-# be removed once there is a script that will create these orography files
-# for any grid.
-#
-#-----------------------------------------------------------------------
-#
-GWD_RRFS_v1beta_DIR="${GWD_RRFS_v1beta_BASEDIR}/${PREDEF_GRID_NAME}"
-if [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
-  if [ -z "${PREDEF_GRID_NAME}" ]; then
-    print_err_msg_exit "\
-A predefined grid name (PREDEF_GRID_NAME) must be specified when using 
-the FV3_RRFS_v1beta physic suite:
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
-  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\""
-  else        
-    if [ ! -d "${GWD_RRFS_v1beta_DIR}" ]; then
-      print_err_msg_exit "\
-The directory (GWD_RRFS_v1beta_DIR) that should contain the gravity wave 
-drag-related orography files for the FV3_RRFS_v1beta does not exist:
-  GWD_RRFS_v1beta_DIR = \"${GWD_RRFS_v1beta_DIR}\""
-    elif [ ! "$( ls -A ${GWD_RRFS_v1beta_DIR} )" ]; then
-      print_err_msg_exit "\
-The directory (GWD_RRFS_v1beta_DIR) that should contain the gravity wave 
-drag related orography files for the FV3_RRFS_v1beta is empty:
-  GWD_RRFS_v1beta_DIR = \"${GWD_RRFS_v1beta_DIR}\""
-    fi      
-  fi
-fi
-#
-#-----------------------------------------------------------------------
-#
 # If the base directory (EXPT_BASEDIR) in which the experiment subdirectory 
 # (EXPT_SUBDIR) will be located does not start with a "/", then it is 
 # either set to a null string or contains a relative directory.  In both 
@@ -1019,7 +946,7 @@ fi
 if [ "${EXPT_BASEDIR:0:1}" != "/" ]; then
   EXPT_BASEDIR="${SR_WX_APP_TOP_DIR}/../expt_dirs/${EXPT_BASEDIR}"
 fi
-EXPT_BASEDIR="$( readlink -f ${EXPT_BASEDIR} )"
+EXPT_BASEDIR="$( readlink -m ${EXPT_BASEDIR} )"
 mkdir_vrfy -p "${EXPT_BASEDIR}"
 #
 #-----------------------------------------------------------------------
@@ -1199,10 +1126,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-dot_ccpp_phys_suite_or_null=""
-if [ "${USE_CCPP}" = "TRUE" ]; then
-  dot_ccpp_phys_suite_or_null=".${CCPP_PHYS_SUITE}"
-fi
+dot_ccpp_phys_suite_or_null=".${CCPP_PHYS_SUITE}"
 
 DATA_TABLE_TMPL_FN="${DATA_TABLE_FN}"
 DIAG_TABLE_TMPL_FN="${DIAG_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
@@ -1221,7 +1145,7 @@ NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
 #
 #-----------------------------------------------------------------------
 #
-# If using CCPP, set:
+# Set:
 #
 # 1) the variable CCPP_PHYS_SUITE_FN to the name of the CCPP physics 
 #    suite definition file.
@@ -1235,26 +1159,28 @@ NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
 # each cycle, the forecast launch script will create a link in the cycle
 # run directory to the copy of this file at CCPP_PHYS_SUITE_FP.
 #
-# Note that if not using CCPP, the variables described above will get 
-# set to null strings.
-#
 #-----------------------------------------------------------------------
 #
-CCPP_PHYS_SUITE_FN=""
-CCPP_PHYS_SUITE_IN_CCPP_FP=""
-CCPP_PHYS_SUITE_FP=""
-
-if [ "${USE_CCPP}" = "TRUE" ]; then
-  CCPP_PHYS_SUITE_FN="suite_${CCPP_PHYS_SUITE}.xml"
-  CCPP_PHYS_SUITE_IN_CCPP_FP="${UFS_WTHR_MDL_DIR}/FV3/ccpp/suites/${CCPP_PHYS_SUITE_FN}"
-  CCPP_PHYS_SUITE_FP="${EXPTDIR}/${CCPP_PHYS_SUITE_FN}"
-  if [ ! -f "${CCPP_PHYS_SUITE_IN_CCPP_FP}" ]; then
-    print_err_msg_exit "\
+CCPP_PHYS_SUITE_FN="suite_${CCPP_PHYS_SUITE}.xml"
+CCPP_PHYS_SUITE_IN_CCPP_FP="${UFS_WTHR_MDL_DIR}/FV3/ccpp/suites/${CCPP_PHYS_SUITE_FN}"
+CCPP_PHYS_SUITE_FP="${EXPTDIR}/${CCPP_PHYS_SUITE_FN}"
+if [ ! -f "${CCPP_PHYS_SUITE_IN_CCPP_FP}" ]; then
+  print_err_msg_exit "\
 The CCPP suite definition file (CCPP_PHYS_SUITE_IN_CCPP_FP) does not exist
 in the local clone of the ufs-weather-model:
   CCPP_PHYS_SUITE_IN_CCPP_FP = \"${CCPP_PHYS_SUITE_IN_CCPP_FP}\""
-  fi
 fi
+#
+#-----------------------------------------------------------------------
+#
+# Call the function that sets the ozone parameterization being used and
+# modifies associated parameters accordingly. 
+#
+#-----------------------------------------------------------------------
+#
+set_ozone_param \
+  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
+  output_varname_ozone_param="OZONE_PARAM"
 #
 #-----------------------------------------------------------------------
 #
@@ -1309,6 +1235,32 @@ if [ "${USE_USER_STAGED_EXTRN_FILES}" = "YES" ]; then
   USE_USER_STAGED_EXTRN_FILES="TRUE"
 elif [ "${USE_USER_STAGED_EXTRN_FILES}" = "NO" ]; then
   USE_USER_STAGED_EXTRN_FILES="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# If USE_USER_STAGED_EXTRN_FILES is set to TRUE, make sure that the user-
+# specified directories under which the external model files should be 
+# located actually exist.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
+
+  if [ ! -d "${EXTRN_MDL_SOURCE_BASEDIR_ICS}" ]; then
+    print_err_msg_exit "\
+The directory (EXTRN_MDL_SOURCE_BASEDIR_ICS) in which the user-staged 
+external model files for generating ICs should be located does not exist:
+  EXTRN_MDL_SOURCE_BASEDIR_ICS = \"${EXTRN_MDL_SOURCE_BASEDIR_ICS}\""
+  fi
+
+  if [ ! -d "${EXTRN_MDL_SOURCE_BASEDIR_LBCS}" ]; then
+    print_err_msg_exit "\
+The directory (EXTRN_MDL_SOURCE_BASEDIR_LBCS) in which the user-staged 
+external model files for generating LBCs should be located does not exist:
+  EXTRN_MDL_SOURCE_BASEDIR_LBCS = \"${EXTRN_MDL_SOURCE_BASEDIR_LBCS}\""
+  fi
+
 fi
 #
 #-----------------------------------------------------------------------
@@ -1742,8 +1694,6 @@ elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
     halo_width="${ESGgrid_WIDE_HALO_WIDTH}" \
     delx="${ESGgrid_DELX}" \
     dely="${ESGgrid_DELY}" \
-    alpha="${ESGgrid_ALPHA_PARAM}" \
-    kappa="${ESGgrid_KAPPA_PARAM}" \
     output_varname_lon_ctr="LON_CTR" \
     output_varname_lat_ctr="LAT_CTR" \
     output_varname_nx="NX" \
@@ -2120,14 +2070,6 @@ NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that OZONE_PARAM_NO_CCPP is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "OZONE_PARAM_NO_CCPP" "valid_vals_OZONE_PARAM_NO_CCPP"
-#
-#-----------------------------------------------------------------------
-#
 # Create a new experiment directory.  Note that at this point we are 
 # guaranteed that there is no preexisting experiment directory.
 #
@@ -2140,100 +2082,20 @@ mkdir_vrfy -p "$EXPTDIR"
 
 
 
+
 #
 #-----------------------------------------------------------------------
 #
-# This if-statement is a temporary fix that makes corrections to the suite
-# definition file for the "FV3_GFS_2017_gfdlmp_regional" physics suite
-# that EMC uses.  The corrections are:
-#
-# 1) Add a "fast_physics" group name to the beginning of the file.
-# 2) Replace the ozphys parameterization with the ozphys_2015 parameterization.
-#
-# Note that this must be done before the call to the function set_ozone_param
-# below because that function reads in the ozone parameterization in the
-# suite definition file in order to set the ozone parameterization being
-# used in the experiment; thus, the suite definition file must have the
-# correct ozone parameterization specified before the call to set_ozone_param.
-#
-# IMPORTANT:
-# This if-statement must be removed once these corrections are made to
-# the suite definition file in the dtc/develop branch of the NCAR fork
-# of the fv3atm repository.
+# Call the function that, if the Thompson microphysics parameterization
+# is being called by the physics suite, modifies certain workflow arrays
+# to ensure that fixed files needed by this parameterization are copied
+# to the FIXam directory and appropriate symlinks to them are created in
+# the run directories. 
 #
 #-----------------------------------------------------------------------
 #
-if [ "${USE_CCPP}" = "TRUE" ] && \
-   [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ]; then
-
-  CCPP_PHYS_SUITE_FP="${CCPP_PHYS_SUITE_FP}.tmp"
-  cp_vrfy "${CCPP_PHYS_SUITE_IN_CCPP_FP}" "${CCPP_PHYS_SUITE_FP}"
-
-  grep "fast_physics" "${CCPP_PHYS_SUITE_FP}" || { \
-    fast_phys_group='\
-  <group name=\"fast_physics\">\
-    <subcycle loop=\"1\">\
-      <scheme>fv_sat_adj</scheme>\
-    </subcycle>\
-  </group>' ;
-    sed -i -r "5i${fast_phys_group}" "${CCPP_PHYS_SUITE_FP}" || \
-      print_err_msg_exit "\
-Attempt to insert the \"fast_physics\" group into the suite definition
-file (CCPP_PHYS_SUITE_FP) failed:
-  CCPP_PHYS_SUITE_FP = \"${CCPP_PHYS_SUITE_FP}\"" ;
-  }
-
-  grep "<scheme>ozphys</scheme>" "${CCPP_PHYS_SUITE_FP}" && { \
-    sed -i "s/ozphys/ozphys_2015/g" "${CCPP_PHYS_SUITE_FP}" || \
-      print_err_msg_exit "\
-Attempt to replace the \"ozphys\" scheme with the \"ozphys_2015\" scheme
-in the suite definition file (CCPP_PHYS_SUITE_FP) failed:
-  CCPP_PHYS_SUITE_FP = \"${CCPP_PHYS_SUITE_FP}\"" ;
-  }
-#
-#-----------------------------------------------------------------------
-#
-# Call the function that sets the ozone parameterization being used and
-# modifies associated parameters accordingly.
-#
-# This is a repeat of the same call in setup.sh.  It must be redone because
-# the contents of CCPP_PHYS_SUITE_FP have been modified, and the function
-# set_ozone_param depends on that file to set elements of the workflow
-# arrays CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING and FIXgsm_FILES_TO_COPY_TO_FIXam.
-#
-#-----------------------------------------------------------------------
-#
-  set_ozone_param \
-    ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_FP}" \
-    ozone_param_no_ccpp="OZONE_PARAM_NO_CCPP" \
-    output_varname_ozone_param="OZONE_PARAM"
-
-  CCPP_PHYS_SUITE_FP="${CCPP_PHYS_SUITE_FP%.tmp}"
-
-else
-#
-#-----------------------------------------------------------------------
-#
-# Call the function that sets the ozone parameterization being used and
-# modifies associated parameters accordingly. 
-#
-#-----------------------------------------------------------------------
-#
-# NOTE:
-# After the temporary code above in the "if" part of the if-statement is 
-# removed, this "else" part can be moved back up to before the creation
-# of EXPTDIR (above).
-#
-set_ozone_param \
-  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
-  ozone_param_no_ccpp="OZONE_PARAM_NO_CCPP" \
-  output_varname_ozone_param="OZONE_PARAM"
-
-
-fi
-
-
-
+set_thompson_mp_fix_files \
+  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" 
 
 
 
@@ -2577,7 +2439,6 @@ CYCLE_BASEDIR="${CYCLE_BASEDIR}"
 GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
-GWD_RRFS_v1beta_DIR="${GWD_RRFS_v1beta_DIR}"
 
 NDIGITS_ENSMEM_NAMES="${NDIGITS_ENSMEM_NAMES}"
 ENSMEM_NAMES=( $( printf "\"%s\" " "${ENSMEM_NAMES[@]}" ))
@@ -2724,10 +2585,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Name of the ozone parameterization.  If USE_CCPP is set to "FALSE", 
-# then this will be equal to OZONE_PARAM_NO_CCPP.  If USE_CCPP is set to
-# "TRUE", then the value this gets set to depends on the CCPP physics
-# suite being used.
+# Name of the ozone parameterization.  The value this gets set to depends 
+# on the CCPP physics suite being used.
 #
 #-----------------------------------------------------------------------
 #
@@ -2786,6 +2645,18 @@ NUM_CYCLES="${NUM_CYCLES}"
 ALL_CDATES=( \\
 $( printf "\"%s\" \\\\\n" "${ALL_CDATES[@]}" )
 )
+#
+#-----------------------------------------------------------------------
+#
+# If USE_FVCOM is set to TRUE, then FVCOM data (located in FVCOM_DIR
+# in FVCOM_FILE) will be used to update lower boundary conditions during
+# make_ics.
+#
+#-----------------------------------------------------------------------
+#
+USE_FVCOM="${USE_FVCOM}"
+FVCOM_DIR="${FVCOM_DIR}"
+FVCOM_FILE="${FVCOM_FILE}"
 #
 #-----------------------------------------------------------------------
 #

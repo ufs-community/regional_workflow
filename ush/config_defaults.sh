@@ -417,7 +417,7 @@ NOMADS_file_type="nemsio"
 # external model files needed for generating ICs and LBCs in user-specified
 # directories.
 #
-# EXTRN_MDL_SOURCE_DIR_ICS:                                                # Should this be renamed BASEDIR?  Same question for EXTRN_MDL_SOURCE_DIR_LBCS.
+# EXTRN_MDL_SOURCE_BASEDIR_ICS:
 # Directory in which to look for external model files for generating ICs.
 # If USE_USER_STAGED_EXTRN_FILES is set to "TRUE", the workflow looks in 
 # this directory (specifically, in a subdirectory under this directory 
@@ -426,63 +426,42 @@ NOMADS_file_type="nemsio"
 # the 2-digit day of the month, and HH the 2-digit hour of the day) for 
 # the external model files specified by the array EXTRN_MDL_FILES_ICS 
 # (these files will be used to generate the ICs on the native FV3-LAM 
-# grid).
+# grid).  This variable is not used if USE_USER_STAGED_EXTRN_FILES is 
+# set to "FALSE".
 # 
 # EXTRN_MDL_FILES_ICS:
 # Array containing the names of the files to search for in the directory
-# specified by EXTRN_MDL_SOURCE_DIR_ICS.  This variable is not used if 
-# EXTRN_MDL_SOURCE_DIR_ICS is set to a null (i.e. empty) string.
+# specified by EXTRN_MDL_SOURCE_BASEDIR_ICS.  This variable is not used
+# if USE_USER_STAGED_EXTRN_FILES is set to "FALSE".
 #
-# EXTRN_MDL_SOURCE_DIR_LBCS:
-# Analogous to EXTRN_MDL_SOURCE_DIR_ICS but for LBCs instead of ICs.
+# EXTRN_MDL_SOURCE_BASEDIR_LBCS:
+# Analogous to EXTRN_MDL_SOURCE_BASEDIR_ICS but for LBCs instead of ICs.
 #
 # EXTRN_MDL_FILES_LBCS:
 # Analogous to EXTRN_MDL_FILES_ICS but for LBCs instead of ICs.
 #
 #-----------------------------------------------------------------------
 #
-USE_USER_STAGED_EXTRN_FILES="TRUE"
-EXTRN_MDL_SOURCE_DIR_ICS="/dir/containing/user/staged/extrn/mdl/files/for/ICs"
+USE_USER_STAGED_EXTRN_FILES="FALSE"
+EXTRN_MDL_SOURCE_BASEDIR_ICS="/base/dir/containing/user/staged/extrn/mdl/files/for/ICs"
 EXTRN_MDL_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
-EXTRN_MDL_SOURCE_DIR_LBCS="/dir/containing/user/staged/extrn/mdl/files/for/LBCs"
+EXTRN_MDL_SOURCE_BASEDIR_LBCS="/base/dir/containing/user/staged/extrn/mdl/files/for/LBCs"
 EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
 #
 #-----------------------------------------------------------------------
 #
 # Set CCPP-associated parameters.  Definitions:
 #
-# USE_CCPP:
-# Flag controlling whether or not a CCPP-enabled version of the forecast
-# model will be run.  Note that the user is responsible for ensuring that
-# a CCPP-enabled forecast model executable is built and placed at the 
-# correct location (that is part of the build process).
-#
 # CCPP_PHYS_SUITE:
-# If USE_CCPP has been set to "TRUE", this variable defines the physics
-# suite that will run using CCPP.  The choice of physics suite determines
-# the forecast model's namelist file, the diagnostics table file, the 
-# field table file, and the XML physics suite definition file that are 
-# staged in the experiment directory or the cycle directories under it.
-# If USE_CCPP is set to "FALSE", the only physics suite that can be run
-# is the GFS.
-#
-# Note that it is up to the user to ensure that the CCPP-enabled forecast 
-# model executable is built with either the dynamic build (which can 
-# handle any CCPP physics package but is slower to run) or the static 
-# build with the correct physics package.  If using a static build, the 
-# forecast will fail if the physics package specified in the experiment's 
-# variable defintions file (GLOBAL_VAR_DEFNS_FN) is not the same as the
-# one that was used for the static build. 
-#
-# OZONE_PARAM_NO_CCPP:
-# The ozone parameterization to use if NOT using a CCPP-enabled forecast
-# model executable.
+# The physics suite that will run using CCPP (Common Community Physics
+# Package).  The choice of physics suite determines the forecast model's 
+# namelist file, the diagnostics table file, the field table file, and 
+# the XML physics suite definition file that are staged in the experiment 
+# directory or the cycle directories under it.
 #
 #-----------------------------------------------------------------------
 #
-USE_CCPP="FALSE"
 CCPP_PHYS_SUITE="FV3_GSD_v0"
-OZONE_PARAM_NO_CCPP="ozphys"
 #
 #-----------------------------------------------------------------------
 #
@@ -707,14 +686,6 @@ GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="TRUE"
 #   NOTE: Probably don't need to make this a user-specified variable.  
 #         Just set it in the function set_gridparams_ESGgrid.sh.
 #
-# ESGgrid_ALPHA_PARAM:
-# The alpha parameter used in the Jim Purser map projection/grid generation
-# method.
-#
-# ESGgrid_KAPPA_PARAM:
-# The kappa parameter used in the Jim Purser map projection/grid generation
-# method.
-#
 #-----------------------------------------------------------------------
 #
 ESGgrid_LON_CTR="-97.5"
@@ -724,8 +695,6 @@ ESGgrid_DELY="3000.0"
 ESGgrid_NX="1000"
 ESGgrid_NY="1000"
 ESGgrid_WIDE_HALO_WIDTH="6"
-ESGgrid_ALPHA_PARAM="0.21423"
-ESGgrid_KAPPA_PARAM="-0.23209"
 #
 #-----------------------------------------------------------------------
 #
@@ -1269,20 +1238,24 @@ HALO_BLEND=0
 #
 #-----------------------------------------------------------------------
 #
-# GWD_RRFS_v1beta_BASEDIR:
-# Temporary workflow variable specifies the base directory in which to 
-# look for certain fixed orography files needed only by the gravity wave 
-# drag parameterization in the FV3_RRFS_v1beta physics suite.  This variable
-# is added in order to avoid including hard-coded paths in the workflow
-# scripts.  Currently, the workflow simply copies the necessary files 
-# from a subdirectory under this directory (named according to the specified
-# predefined grid) to the orography directory (OROG_DIR) under the 
-# experiment directory.  
+# USE_FVCOM:
+# Flag set to update surface conditions in FV3-LAM with fields generated
+# from the Finite Volume Community Ocean Model (FVCOM). This will
+# replace lake/sea surface temperature, ice surface temperature, and ice
+# placement. FVCOM data must already be interpolated to the desired
+# FV3-LAM grid. This flag will be used in make_ics to modify sfc_data.nc
+# after chgres_cube is run by running the routine process_FVCOM.exe
 #
-# Note that this variable is only used when using the FV3_RRFS_v1beta 
-# physics suite.  This variable should be removed from the workflow once 
-# there is a script that generates these files for any grid.
+# FVCOM_DIR:
+# User defined directory where FVCOM data already interpolated to FV3-LAM
+# grid is located. File name in this path should be "fvcom.nc" to allow
 #
-#-----------------------------------------------------------------------
+# FVCOM_FILE:
+# Name of file located in FVCOM_DIR that has FVCOM data interpolated to 
+# FV3-LAM grid. This file will be copied later to a new location and name
+# changed to fvcom.nc
+#------------------------------------------------------------------------
 #
-GWD_RRFS_v1beta_BASEDIR=""
+USE_FVCOM="FALSE"
+FVCOM_DIR="/user/defined/dir/to/fvcom/data"
+FVCOM_FILE="fvcom.nc"

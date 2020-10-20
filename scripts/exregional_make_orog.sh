@@ -99,7 +99,7 @@ export OMP_STACKSIZE=2048m
 case $MACHINE in
 
 
-"WCOSS_C" | "WCOSS")
+"WCOSS_CRAY")
 #
   { save_shell_opts; set +x; } > /dev/null 2>&1
 
@@ -117,6 +117,11 @@ case $MACHINE in
   ulimit -a
   ;;
 
+"WCOSS_DELL_P3")
+  ulimit -s unlimited
+  ulimit -a
+  APRUN="mpirun"
+  ;;
 
 "HERA")
   ulimit -s unlimited
@@ -181,7 +186,7 @@ mkdir_vrfy -p "${shave_dir}"
 # Set the name and path to the executable that generates the raw orography
 # file and make sure that it exists.
 #
-exec_fn="orog.x"
+exec_fn="orog"
 exec_fp="$EXECDIR/${exec_fn}"
 if [ ! -f "${exec_fp}" ]; then
   print_err_msg_exit "\
@@ -286,7 +291,7 @@ Starting orography file generation..."
 case $MACHINE in
 
 
-"WCOSS_C" | "WCOSS")
+"WCOSS_CRAY")
 #
 # On WCOSS and WCOSS_C, use cfp to run multiple tiles simulatneously for
 # the orography.  For now, we have only one tile in the regional case,
@@ -309,6 +314,19 @@ ${tmp_dir}" \
 
   aprun -j 1 -n 4 -N 4 -d 6 -cc depth cfp ${tmp_dir}/orog.file1
   rm_vrfy ${tmp_dir}/orog.file1
+  ;;
+
+
+"WCOSS_DELL_P3")
+
+  ufs_utils_ushdir="${UFS_UTILS_DIR}/ush"
+  res="0"  # What should this be set to???
+
+  "${exec_fp}" < "${input_redirect_fn}" || \
+    print_err_msg_exit "\
+Call to executable (exec_fp) that generates the raw orography file returned
+with nonzero exit code:
+  exec_fp = \"${exec_fp}\""
   ;;
 
 
@@ -342,25 +360,6 @@ raw_orog_fn="${raw_orog_fn_prefix}.${fn_suffix_with_halo}"
 raw_orog_fp="${raw_dir}/${raw_orog_fn}"
 mv_vrfy "${raw_orog_fp_orig}" "${raw_orog_fp}"
 
-#
-#-----------------------------------------------------------------------
-#
-# Copy the two orography files needed for the drag suite in the FV3_RRFS_v1beta
-# physics suite.
-# 
-# Note that the following is a temporary fix. We need a long-term solution 
-# that calls a script or program to generates the necessary files (instead 
-# of copying them).
-#
-#-----------------------------------------------------------------------
-#
-if [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
-  cp_vrfy ${GWD_RRFS_v1beta_DIR}/*_ls*.nc ${OROG_DIR}
-  cp_vrfy ${GWD_RRFS_v1beta_DIR}/*_ss*.nc ${OROG_DIR}
-fi
-
-print_info_msg "$VERBOSE" "
-Orography file generation complete."
 #
 #-----------------------------------------------------------------------
 #
@@ -531,7 +530,7 @@ Filtering of orography complete."
 #
 # Set the name and path to the executable and make sure that it exists.
 #
-exec_fn="shave.x"
+exec_fn="shave"
 exec_fp="$EXECDIR/${exec_fn}"
 if [ ! -f "${exec_fp}" ]; then
   print_err_msg_exit "\
