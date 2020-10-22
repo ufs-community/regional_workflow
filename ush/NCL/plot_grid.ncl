@@ -63,7 +63,15 @@ CDATE="2019052000"
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_GSD_HRRR13km"
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_CONUS_13km"
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_CONUS_13km_HRRRX_RAPX"
+expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try01/grid_RRFS_CONUS_13km_FV3GFS_FV3GFS"
+expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try03/grid_RRFS_CONUS_13km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
 CDATE="2019070100"
+
+;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try01/grid_RRFS_CONUS_13km_HRRRX_RAPX"
+;CDATE="2020080100"
+
+;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try01/grid_RRFS_CONUS_3km_FV3GFS_FV3GFS"
+;CDATE="2019070100"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_SUBCONUS_3km"
 ;CDATE="2019070100"
@@ -72,7 +80,8 @@ CDATE="2019070100"
 ;CDATE="2019070100"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_CONUS_25km_GFDLgrid"
-;CDATE="2019070100"
+expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try03/grid_RRFS_CONUS_25km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
+CDATE="2019070100"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/suite_FV3_GSD_SAR"
 ;CDATE="2019052000"
@@ -174,15 +183,21 @@ subreg_limits := (/ -135, -60, 20, 55 /) ; HRRR domain if using "cyln" map proje
 
 ; Zoom in on midpoint of southern edge of CONUS domain.
 ;subreg_limits := (/ -103.5, -93.5, 22.5, 26.5 /) ; 10deg x 4deg
-;subreg_limits := (/ -101.0, -96.0, 23.5, 25.5 /) ; 5deg x 2deg
+;subreg_limits := (/ -100.0, -95.0, 24.0, 26.0 /) ; 5deg x 2deg
 ;subreg_limits := (/ -99.5, -97.5, 24, 25 /) ; 2deg x 1deg
 ;subreg_limits := (/ -99, -98, 24.15, 24.65 /) ; 1deg x 0.5deg
 
+; Zoom in on midpoint of eastern edge of CONUS domain.
+;subreg_limits := (/ -71, -66, 33.5, 38.5 /) ; 5deg x 5deg
+
 ; Zoom in on midpoint of northern edge of CONUS domain.
 ;subreg_limits := (/ -103.5, -93.5, 50.2, 54.2 /) ; 10deg x 4deg
-;subreg_limits := (/ -101.0, -96.0, 51.3, 53.3 /) ; 5deg x 2deg
+;subreg_limits := (/ -100.0, -95.0, 51.3, 53.3 /) ; 5deg x 2deg
 ;subreg_limits := (/ -99.5, -97.5, 51.9, 52.9 /) ; 2deg x 1deg
 ;subreg_limits := (/ -99, -98, 52.3, 52.8 /) ; 1deg x 0.5deg
+
+; Zoom in on midpoint of western edge of CONUS domain.
+;subreg_limits := (/ -128, -123, 33.5, 38.5 /) ; 5deg x 5deg
 
 ; Zoom in on northwest corner of CONUS domain.
 ;subreg_limits := (/ -129, -99, 32, 52 /) ; 20deg x 20deg
@@ -626,7 +641,7 @@ halo@bdy_line_thickness = 4.0
 halo@bdy_dash_pattern = 1
 
 wrtcmp = True
-wrtcmp = False
+;wrtcmp = False
 wrtcmp@plot_gridlines = True
 wrtcmp@plot_gridlines = False
 ;wrtcmp@gridline_color = "green"
