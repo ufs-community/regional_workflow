@@ -91,16 +91,6 @@ output_grid:  '{{ output_grid }}'
 # dy:
 # Grid cell size in y direction (meters).
 #
-cen_lon:  {{ cen_lon }}
-cen_lat:  {{ cen_lat }}
-stdlat1:  {{ stdlat1 }}
-stdlat2:  {{ stdlat2 }}
-nx:       {{ nx }}
-ny:       {{ ny }}
-lon1:     {{ lon1 }}
-lat1:     {{ lat1 }}
-dx:       {{ dx }}
-dy:       {{ dy }}
   {%- elif output_grid == "regional_latlon" %}
 # cen_lon:
 # Longitude of center of grid (degrees).
@@ -126,14 +116,6 @@ dy:       {{ dy }}
 # dlat:
 # Latitudinal grid size (degrees).
 #
-cen_lon:  {{ cen_lon }}
-cen_lat:  {{ cen_lat }}
-lon1:     {{ lon1 }}
-lat1:     {{ lat1 }}
-lon2:     {{ lon2 }}
-lat2:     {{ lat2 }}
-dlon:     {{ dlon }}
-dlat:     {{ dlat }}
   {%- elif output_grid == "rotated_latlon" %}
 # cen_lon:
 # Longitude of center of grid, expressed in the NON-ROTATED latlon
@@ -171,6 +153,19 @@ dlat:     {{ dlat }}
 # dlat:
 # Latitudinal grid size in the ROTATED latlon coordinate system (degrees).
 #
+  {%- endif %}
+  {%- if output_grid == "lambert_conformal" %}
+cen_lon:  {{ cen_lon }}
+cen_lat:  {{ cen_lat }}
+stdlat1:  {{ stdlat1 }}
+stdlat2:  {{ stdlat2 }}
+nx:       {{ nx }}
+ny:       {{ ny }}
+lon1:     {{ lon1 }}
+lat1:     {{ lat1 }}
+dx:       {{ dx }}
+dy:       {{ dy }}
+  {%- elif (output_grid == "regional_latlon") or (output_grid == "rotated_latlon") %}
 cen_lon:  {{ cen_lon }}
 cen_lat:  {{ cen_lat }}
 lon1:     {{ lon1 }}            

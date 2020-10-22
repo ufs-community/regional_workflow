@@ -151,21 +151,8 @@ run directory (run_dir):
   'dlon': \"\"
   'dlat': \"\""
 
-    elif [ "${WRTCMP_output_grid}" = "regional_latlon" ]; then
-
-      settings="${settings}
-  'lon2': ${WRTCMP_lon_upr_rght}
-  'lat2': ${WRTCMP_lat_upr_rght}
-  'dlon': ${WRTCMP_dlon}
-  'dlat': ${WRTCMP_dlat}
-  'stdlat1': \"\"
-  'stdlat2': \"\"
-  'nx': \"\"
-  'ny': \"\"
-  'dx': \"\"
-  'dy': \"\""
-
-    elif [ "${WRTCMP_output_grid}" = "rotated_latlon" ]; then
+    elif [ "${WRTCMP_output_grid}" = "regional_latlon" ] || \
+         [ "${WRTCMP_output_grid}" = "rotated_latlon" ]; then
 
       settings="${settings}
   'lon2': ${WRTCMP_lon_upr_rght}
