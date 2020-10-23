@@ -1,7 +1,5 @@
-
-#module use -a /contrib/miniconda3/modulefiles
-#module load miniconda3
-#if [module-info mode load] {
-#  system "conda activate regional_workflow"
-#}
-module load python/3.7
+module use -a /apps/contrib/miniconda3-noaa-gsl/modulefiles
+module load miniconda3
+if [module-info mode load] {
+  system "conda activate regional_workflow"
+}
