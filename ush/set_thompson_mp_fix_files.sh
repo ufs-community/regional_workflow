@@ -123,6 +123,14 @@ string."
       "qr_acr_qs.dat" \
       )
 
+    if [ "${EXTRN_MDL_NAME_ICS}" != "HRRRX" ] && \
+       [ "${EXTRN_MDL_NAME_ICS}" != "RAPX" ] && \
+       [ "${EXTRN_MDL_NAME_LBCS}" != "HRRRX" ] && \
+       [ "${EXTRN_MDL_NAME_LBCS}" != "RAPX" ]; then
+      thompson_mp_fix_files+=( "Thompson_MP_MONTHLY_CLIMO.nc" )
+    fi
+
+
     FIXgsm_FILES_TO_COPY_TO_FIXam+=( "${thompson_mp_fix_files[@]}" )
 
     num_files=${#thompson_mp_fix_files[@]} 
