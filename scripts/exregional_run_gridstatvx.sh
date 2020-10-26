@@ -108,6 +108,7 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
+export SCRIPTSDIR
 export EXPTDIR
 export MET_INSTALL_DIR
 export METPLUS_PATH
@@ -116,6 +117,7 @@ export MET_CONFIG
 export OBS_DIR
 export VAR
 export MODEL
+export NET
 #
 #-----------------------------------------------------------------------
 #

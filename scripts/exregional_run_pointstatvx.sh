@@ -124,6 +124,7 @@ export METPLUS_CONF
 export MET_CONFIG
 export OBS_DIR
 export MODEL
+export NET
 
 ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common.conf \

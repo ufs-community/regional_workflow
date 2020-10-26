@@ -66,7 +66,11 @@ for MRMS_PRODUCT in MRMS_PRODUCTS:
         #level = '_18_00.50_'
 
     # Sort list of files for each MRMS product
-    search_path = MRMS_PROD_DIR+'/'+valid.strftime('%Y%m%d')+'/upperair/mrms/conus/'+MRMS_PRODUCT+'/'+MRMS_PRODUCT+'*.gz'
+    print(valid.strftime('%Y%m%d'))
+    if valid.strftime('%Y%m%d') < '20200304':
+        search_path = MRMS_PROD_DIR+'/'+valid.strftime('%Y%m%d')+'/dcom/us007003/ldmdata/obs/upperair/mrms/conus/'+MRMS_PRODUCT+'/'+MRMS_PRODUCT+'*.gz'
+    elif valid.strftime('%Y%m%d') >= '20200304':
+        search_path = MRMS_PROD_DIR+'/'+valid.strftime('%Y%m%d')+'/upperair/mrms/conus/'+MRMS_PRODUCT+'/'+MRMS_PRODUCT+'*.gz'
     file_list = [f for f in glob.glob(search_path)]
     time_list = [file_list[x][-24:-9] for x in range(len(file_list))]
     int_list = [int(time_list[x][0:8]+time_list[x][9:15]) for x in range(len(time_list))]
@@ -84,11 +88,16 @@ for MRMS_PRODUCT in MRMS_PRODUCTS:
         filename1 = MRMS_PRODUCT+level+closest_timestamp.strftime('%Y%m%d-%H%M%S')+'.grib2.gz'
         filename2 = MRMS_PRODUCT+level+valid.strftime('%Y%m%d-%H')+'0000.grib2.gz'
 
+        if valid.strftime('%Y%m%d') < '20200304':
+            print('cp '+MRMS_PROD_DIR+'/'+valid.strftime('%Y%m%d')+'/dcom/us007003/ldmdata/obs/upperair/mrms/conus/'+MRMS_PRODUCT+'/'+filename1+' '+VALID_DIR+'/'+filename2)
 
-        print('cp '+MRMS_PROD_DIR+'/'+valid.strftime('%Y%m%d')+'/upperair/mrms/conus/'+MRMS_PRODUCT+'/'+filename1+' '+VALID_DIR+'/'+filename2)
+            os.system('cp '+MRMS_PROD_DIR+'/'+valid.strftime('%Y%m%d')+'/dcom/us007003/ldmdata/obs/upperair/mrms/conus/'+MRMS_PRODUCT+'/'+filename1+' '+VALID_DIR+'/'+filename2)
+            os.system('gunzip '+VALID_DIR+'/'+filename2)
+        elif valid.strftime('%Y%m%d') >= '20200304':
+            print('cp '+MRMS_PROD_DIR+'/'+valid.strftime('%Y%m%d')+'/upperair/mrms/conus/'+MRMS_PRODUCT+'/'+filename1+' '+VALID_DIR+'/'+filename2)
 
-        os.system('cp '+MRMS_PROD_DIR+'/'+valid.strftime('%Y%m%d')+'/upperair/mrms/conus/'+MRMS_PRODUCT+'/'+filename1+' '+VALID_DIR+'/'+filename2)
-        os.system('gunzip '+VALID_DIR+'/'+filename2)
+            os.system('cp '+MRMS_PROD_DIR+'/'+valid.strftime('%Y%m%d')+'/upperair/mrms/conus/'+MRMS_PRODUCT+'/'+filename1+' '+VALID_DIR+'/'+filename2)
+            os.system('gunzip '+VALID_DIR+'/'+filename2)
     else:
         print('No '+MRMS_PRODUCT+' file found within 15 minutes of '+valid.strftime('%HZ %m/%d/%Y')+'. Skipping this time.')
 
