@@ -165,12 +165,12 @@ settings="\
 #
   'account': $ACCOUNT
   'sched': $SCHED
+  'partition_default': ${PARTITION_DEFAULT}
   'queue_default': ${QUEUE_DEFAULT}
-  'queue_default_tag': ${QUEUE_DEFAULT_TAG}
+  'partition_hpss': ${PARTITION_HPSS}
   'queue_hpss': ${QUEUE_HPSS}
-  'queue_hpss_tag': ${QUEUE_HPSS_TAG}
+  'partition_fcst': ${PARTITION_FCST}
   'queue_fcst': ${QUEUE_FCST}
-  'queue_fcst_tag': ${QUEUE_FCST_TAG}
   'machine': ${MACHINE}
 #
 # Workflow task names.
@@ -211,7 +211,6 @@ settings="\
 #
   'ncores_run_fcst': ${PE_MEMBER01}
   'native_run_fcst': --cpus-per-task 4 --exclusive
-  'partition_run_fcst': sjet,vjet,kjet,xjet
 #
 # Number of logical processes per node for each task.  If running without
 # threading, this is equal to the number of MPI processes per node.
@@ -548,42 +547,6 @@ print_info_msg "$VERBOSE" "
 Copying the CCPP physics suite definition XML file from its location in
 the forecast model directory sturcture to the experiment directory..."
 cp_vrfy "${CCPP_PHYS_SUITE_IN_CCPP_FP}" "${CCPP_PHYS_SUITE_FP}"
-#
-# If using a physics suite that includes the Thompson microphysics 
-# parameterization, copy the fixed file containing cloud condensation 
-# nuclei (CCN) data that is needed by that parameterization.
-#
-if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-   [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-   [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-  print_info_msg "$VERBOSE" "
-Copying the fixed file containing cloud condensation nuclei (CCN) data
-(needed by the Thompson microphysics parameterization) to the experiment
-directory..."
-  cp_vrfy "${FIXgsm}/CCN_ACTIVATE.BIN" "$EXPTDIR"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# This if-statement is a temporary fix that makes corrections to the suite
-# definition file for the "FV3_GFS_2017_gfdlmp_regional" physics suite
-# that EMC uses.
-#
-# IMPORTANT:
-# This if-statement must be removed once these corrections are made to
-# the suite definition file in the dtc/develop branch of the NCAR fork
-# of the fv3atm repository.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ]; then
-  mv_vrfy "${CCPP_PHYS_SUITE_FP}.tmp" "${CCPP_PHYS_SUITE_FP}"
-fi
-
-
-
-
-
 #
 #-----------------------------------------------------------------------
 #
