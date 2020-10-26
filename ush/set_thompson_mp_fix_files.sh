@@ -122,6 +122,14 @@ string."
       "qr_acr_qg.dat" \
       "qr_acr_qs.dat" \
       )
+   
+
+    if [ "${EXTRN_MDL_NAME_ICS}" != "HRRRX" -a "${EXTRN_MDL_NAME_ICS}" != "RAPX" ] || \
+       [ "${EXTRN_MDL_NAME_LBCS}" != "HRRRX" -a "${EXTRN_MDL_NAME_LBCS}" != "RAPX" ]; then
+
+      thompson_mp_fix_files+=( "Thompson_MP_MONTHLY_CLIMO.nc" )
+
+    fi  
 
     if [ "${EXTRN_MDL_NAME_ICS}" != "HRRRX" ] && \
        [ "${EXTRN_MDL_NAME_ICS}" != "RAPX" ] && \

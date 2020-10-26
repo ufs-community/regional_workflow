@@ -360,72 +360,86 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #-----------------------------------------------------------------------
 #
 case $MACHINE in
-#
-"WCOSS_CRAY")
-#
-  NCORES_PER_NODE="24"
-  SCHED="lsfcray"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
-  QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
-  QUEUE_HPSS_TAG="queue"       # lsfcray does not support "partition" tag
-  QUEUE_FCST=${QUEUE_FCST:-"dev"}
-  ;;
-#
-"WCOSS_DELL_P3")
-#
-  NCORES_PER_NODE=24
-  SCHED="lsf"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
-  QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
-  QUEUE_HPSS_TAG="queue"       # lsf does not support "partition" tag
-  QUEUE_FCST=${QUEUE_FCST:-"dev"}
-  ;;
-#
-"HERA")
-#
-  NCORES_PER_NODE=24
-  SCHED="${SCHED:-slurm}"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
-  QUEUE_HPSS=${QUEUE_HPSS:-"service"}
-  QUEUE_FCST=${QUEUE_FCST:-"batch"}
-  ;;
-#
-"JET")
-#
-  NCORES_PER_NODE=24
-  SCHED="${SCHED:-slurm}"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
-  QUEUE_HPSS=${QUEUE_HPSS:-"service"}
-  QUEUE_FCST=${QUEUE_FCST:-"batch"}
-  ;;
-#
-"ODIN")
-#
-  NCORES_PER_NODE=24
-  SCHED="${SCHED:-slurm}"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-""}
-  QUEUE_HPSS=${QUEUE_HPSS:-""}
-  QUEUE_FCST=${QUEUE_FCST:-""}
-  ;;
-#
-"CHEYENNE")
-#
-  NCORES_PER_NODE=36
-  SCHED="${SCHED:-pbspro}"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
-  QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
-  QUEUE_HPSS_TAG="queue"       # pbspro does not support "partition" tag
-  QUEUE_FCST=${QUEUE_FCST:-"regular"}
-  ;;
-#
-"STAMPEDE")
-#
-  NCORES_PER_NODE=68
-  SCHED="slurm"
-  QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
-  QUEUE_HPSS=${QUEUE_HPSS:-"development"}
-  QUEUE_FCST=${QUEUE_FCST:-"normal"}
-  ;;
+
+  "WCOSS_CRAY")
+    NCORES_PER_NODE="24"
+    SCHED="lsfcray"
+    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
+    QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
+    QUEUE_FCST=${QUEUE_FCST:-"dev"}
+    ;;
+
+  "WCOSS_DELL_P3")
+    NCORES_PER_NODE=24
+    SCHED="lsf"
+    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
+    QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
+    QUEUE_FCST=${QUEUE_FCST:-"dev"}
+    ;;
+
+  "HERA")
+    NCORES_PER_NODE=40
+    SCHED="${SCHED:-slurm}"
+    PARTITION_DEFAULT=${PARTITION_DEFAULT:-"hera"}
+    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
+    PARTITION_HPSS=${PARTITION_HPSS:-"service"}
+    QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
+    PARTITION_FCST=${PARTITION_FCST:-"hera"}
+    QUEUE_FCST=${QUEUE_FCST:-"batch"}
+    ;;
+
+  "ORION")
+    NCORES_PER_NODE=40
+    SCHED="${SCHED:-slurm}"
+    PARTITION_DEFAULT=${PARTITION_DEFAULT:-"orion"}
+    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
+    PARTITION_HPSS=${PARTITION_HPSS:-"service"}
+    QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
+    PARTITION_FCST=${PARTITION_FCST:-"orion"}
+    QUEUE_FCST=${QUEUE_FCST:-"batch"}
+    ;;
+
+  "JET")
+    NCORES_PER_NODE=24
+    SCHED="${SCHED:-slurm}"
+    PARTITION_DEFAULT=${PARTITION_DEFAULT:-"sjet,vjet,kjet,xjet"}
+    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
+    PARTITION_HPSS=${PARTITION_HPSS:-"service"}
+    QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
+    PARTITION_FCST=${PARTITION_FCST:-"sjet,vjet,kjet,xjet"}
+    QUEUE_FCST=${QUEUE_FCST:-"batch"}
+    ;;
+
+  "ODIN")
+    NCORES_PER_NODE=24
+    SCHED="${SCHED:-slurm}"
+    PARTITION_DEFAULT=${PARTITION_DEFAULT:-"workq"}
+    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"workq"}
+    PARTITION_HPSS=${PARTITION_HPSS:-"workq"}
+    QUEUE_HPSS=${QUEUE_HPSS:-"workq"}
+    PARTITION_FCST=${PARTITION_FCST:-"workq"}
+    QUEUE_FCST=${QUEUE_FCST:-"workq"}
+    ;;
+
+  "CHEYENNE")
+    NCORES_PER_NODE=36
+    SCHED="${SCHED:-pbspro}"
+    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
+    QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
+    QUEUE_FCST=${QUEUE_FCST:-"regular"}
+    ;;
+
+  "STAMPEDE")
+    NCORES_PER_NODE=68
+    SCHED="slurm"
+    PARTITION_DEFAULT=${PARTITION_DEFAULT:-"normal"}
+    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
+    PARTITION_HPSS=${PARTITION_HPSS:-"normal"}
+    QUEUE_HPSS=${QUEUE_HPSS:-"normal"}
+    PARTITION_FCST=${PARTITION_FCST:-"normal"}
+    QUEUE_FCST=${QUEUE_FCST:-"normal"}
+    ;;
+
 esac
 #
 #-----------------------------------------------------------------------
@@ -471,47 +485,6 @@ TILE_RGNL="7"
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "GTYPE" "valid_vals_GTYPE"
-#
-#-----------------------------------------------------------------------
-#
-# If running in NCO mode, a valid EMC grid must be specified.  Make sure 
-# EMC_GRID_NAME is set to a valid value.
-#
-# Note: It is probably best to eventually eliminate EMC_GRID_NAME as a
-# user-specified variable and just go with PREDEF_GRID_NAME.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${RUN_ENVIR}" = "nco" ]; then
-  err_msg="\
-The EMC grid specified in EMC_GRID_NAME is not supported:
-  EMC_GRID_NAME = \"${EMC_GRID_NAME}\""
-  check_var_valid_value \
-    "EMC_GRID_NAME" "valid_vals_EMC_GRID_NAME" "${err_msg}"
-fi
-#
-# Map the specified EMC grid to one of the predefined grids.
-#
-case "${EMC_GRID_NAME}" in
-  "ak")
-    PREDEF_GRID_NAME="EMC_AK"
-    ;;
-  "conus")
-    PREDEF_GRID_NAME="EMC_CONUS_3km"
-    ;;
-  "conus_c96")
-    PREDEF_GRID_NAME="EMC_CONUS_coarse"
-    ;;
-  "RRFS_CONUS_25km" | "RRFS_CONUS_13km" | "RRFS_CONUS_3km" | "RRFS_SUBCONUS_3km")
-    PREDEF_GRID_NAME="${EMC_GRID_NAME}"
-    ;;
-  "conus_orig" | "guam" | "hi" | "pr")
-    print_err_msg_exit "\
-A predefined grid (PREDEF_GRID_NAME) has not yet been defined for this
-EMC grid (EMC_GRID_NAME):
-  EMC_GRID_NAME = \"${EMC_GRID_NAME}\""
-    ;;
-esac
 #
 #-----------------------------------------------------------------------
 #
@@ -693,57 +666,64 @@ TEMPLATE_DIR="$USHDIR/templates"
 
 case $MACHINE in
 
-"WCOSS_CRAY")
-  FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
-  ;;
+  "WCOSS_CRAY")
+    FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
+    TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
+    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
+    ;;
 
-"WCOSS_DELL_P3")
-  FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
-  ;;
+  "WCOSS_DELL_P3")
+    FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
+    TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
+    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
+    ;;
 
-"HERA")
-  FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/da/George.Gayno/ufs_utils.git/climo_fields_netcdf"}
-  ;;
+  "HERA")
+    FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
+    TOPO_DIR=${TOPO_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
+    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/da/George.Gayno/ufs_utils.git/climo_fields_netcdf"}
+    ;;
 
-"JET")
-  FIXgsm=${FIXgsm:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lfs1/HFIP/hwrf-data/git/fv3gfs/fix/fix_sfc_climo"}
-  ;;
+  "ORION")
+    FIXgsm=${FIXgsm:-"/work/noaa/fv3-cam/emc.campara/fix_fv3cam/fix_am"}
+    TOPO_DIR=${TOPO_DIR:-"/work/noaa/fv3-cam/emc.campara/fix_fv3cam/fix_orog"}
+    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/noaa/gsd-fv3-dev/gsketefia/UFS/climo_fields_netcdf"}
+    ;;
 
-"ODIN")
-  FIXgsm=${FIXgsm:-"/scratch/ywang/fix/theia_fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
-  ;;
-"CHEYENNE")
-  FIXgsm=${FIXgsm:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"}
-  ;;
+  "JET")
+    FIXgsm=${FIXgsm:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am"}
+    TOPO_DIR=${TOPO_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_orog"}
+    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lfs1/HFIP/hwrf-data/git/fv3gfs/fix/fix_sfc_climo"}
+    ;;
 
-"STAMPEDE")
-  FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}
-  TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
-  SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
-  ;;
+  "ODIN")
+    FIXgsm=${FIXgsm:-"/scratch/ywang/fix/theia_fix/fix_am"}
+    TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
+    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
+    ;;
 
-*)
-  print_err_msg_exit "\
+  "CHEYENNE")
+    FIXgsm=${FIXgsm:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_am"}
+    TOPO_DIR=${TOPO_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"}
+    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"}
+    ;;
+
+  "STAMPEDE")
+    FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}
+    TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
+    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
+    ;;
+
+  *)
+    print_err_msg_exit "\
 One or more fix file directories have not been specified for this machine:
   MACHINE = \"$MACHINE\"
   FIXgsm = \"${FIXgsm:-\"\"}
   TOPO_DIR = \"${TOPO_DIR:-\"\"}
   SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
-
 You can specify the missing location(s) in config.sh"
-  ;;
+    ;;
+
 esac
 #
 #-----------------------------------------------------------------------
@@ -1045,7 +1025,7 @@ Please ensure that path_resolved is an existing directory and then rerun
 the experiment generation script."
   fi
 
-  FIXLAM="${FIXrrfs}/fix_lam/${EMC_GRID_NAME}"
+  FIXLAM="${FIXrrfs}/fix_lam/${PREDEF_GRID_NAME}"
 #
 # In NCO mode (i.e. if RUN_ENVIR set to "nco"), it is assumed that before
 # running the experiment generation script, the path specified in FIXLAM 
@@ -1131,7 +1111,7 @@ dot_ccpp_phys_suite_or_null=".${CCPP_PHYS_SUITE}"
 DATA_TABLE_TMPL_FN="${DATA_TABLE_FN}"
 DIAG_TABLE_TMPL_FN="${DIAG_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
 FIELD_TABLE_TMPL_FN="${FIELD_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
-MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_FN}${dot_ccpp_phys_suite_or_null}"
+MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_FN}"
 NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}"
 
 DATA_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DATA_TABLE_TMPL_FN}"
@@ -1979,42 +1959,19 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Initialize the full path to the template file containing placeholder 
-# values for the write component parameters.  Then, if the write component
-# is going to be used to write output files to disk (i.e. if QUILTING is
-# set to "TRUE"), set the full path to this file.  This file will be 
-# appended to the NEMS configuration file (MODEL_CONFIG_FN), and placeholder
-# values will be replaced with actual ones.  
+# If the write-component is going to be used to write output files to 
+# disk (i.e. if QUILTING is set to "TRUE"), make sure that the grid type 
+# used by the write-component (WRTCMP_output_grid) is set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
-WRTCMP_PARAMS_TMPL_FP=""
-
 if [ "$QUILTING" = "TRUE" ]; then
-#
-# First, make sure that WRTCMP_output_grid is set to a valid value.
-#
   err_msg="\
 The coordinate system used by the write-component output grid specified
 in WRTCMP_output_grid is not supported:
   WRTCMP_output_grid = \"${WRTCMP_output_grid}\""
   check_var_valid_value \
     "WRTCMP_output_grid" "valid_vals_WRTCMP_output_grid" "${err_msg}"
-#
-# Now set the name of the write-component template file.
-#
-  wrtcmp_params_tmpl_fn=${wrtcmp_params_tmpl_fn:-"wrtcmp_${WRTCMP_output_grid}"}
-#
-# Finally, set the full path to the write component template file and
-# make sure that the file exists.
-#
-  WRTCMP_PARAMS_TMPL_FP="${TEMPLATE_DIR}/${wrtcmp_params_tmpl_fn}"
-  if [ ! -f "${WRTCMP_PARAMS_TMPL_FP}" ]; then
-    print_err_msg_exit "\
-The write-component template file does not exist or is not a file:
-  WRTCMP_PARAMS_TMPL_FP = \"${WRTCMP_PARAMS_TMPL_FP}\""
-  fi
-
 fi
 #
 #-----------------------------------------------------------------------
@@ -2483,8 +2440,6 @@ NEMS_CONFIG_FP="${NEMS_CONFIG_FP}"
 FV3_EXEC_FP="${FV3_EXEC_FP}"
 
 LOAD_MODULES_RUN_TASK_FP="${LOAD_MODULES_RUN_TASK_FP}"
-
-WRTCMP_PARAMS_TMPL_FP="${WRTCMP_PARAMS_TMPL_FP}"
 #
 #-----------------------------------------------------------------------
 #

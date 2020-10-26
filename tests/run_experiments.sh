@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/bash 
 
 #
 #-----------------------------------------------------------------------
@@ -639,9 +639,9 @@ envir=\"\${EXPT_SUBDIR}\"
 #
 # The experiment generation script will then set FIXsar to
 #
-#   FIXsar=\"\${FIXrrfs}/fix_sar/\${EMC_GRID_NAME}\"
+#   FIXsar=\"\${FIXrrfs}/fix_sar/\${PREDEF_GRID_NAME}\"
 #
-# where EMC_GRID_NAME has the value set above.
+# where PREDEF_GRID_NAME has the value set above.
 #"
 #
 # Set COMINgfs.
@@ -706,6 +706,8 @@ PTMP=\"${PTMP}\""
       extrn_mdl_source_basedir="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
       extrn_mdl_source_basedir="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files"
+    elif [ "$MACHINE" = "ORION" ]; then
+      extrn_mdl_source_basedir="/work/noaa/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files"
     else
       print_err_msg_exit "\
 The base directory (extrn_mdl_source_basedir) in which the user-staged
