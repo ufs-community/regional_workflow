@@ -124,17 +124,17 @@ string."
       )
    
 
-    if [ "${EXTRN_MDL_NAME_ICS}" != "HRRRX" -a "${EXTRN_MDL_NAME_ICS}" != "RAPX" ] || \
-       [ "${EXTRN_MDL_NAME_LBCS}" != "HRRRX" -a "${EXTRN_MDL_NAME_LBCS}" != "RAPX" ]; then
+    if [ "${EXTRN_MDL_NAME_ICS}" != "HRRR" -a "${EXTRN_MDL_NAME_ICS}" != "RAP" ] || \
+       [ "${EXTRN_MDL_NAME_LBCS}" != "HRRR" -a "${EXTRN_MDL_NAME_LBCS}" != "RAP" ]; then
 
       thompson_mp_fix_files+=( "Thompson_MP_MONTHLY_CLIMO.nc" )
 
     fi  
 
-    if [ "${EXTRN_MDL_NAME_ICS}" != "HRRRX" ] && \
-       [ "${EXTRN_MDL_NAME_ICS}" != "RAPX" ] && \
-       [ "${EXTRN_MDL_NAME_LBCS}" != "HRRRX" ] && \
-       [ "${EXTRN_MDL_NAME_LBCS}" != "RAPX" ]; then
+    if [ "${EXTRN_MDL_NAME_ICS}" != "HRRR" ] && \
+       [ "${EXTRN_MDL_NAME_ICS}" != "RAP" ] && \
+       [ "${EXTRN_MDL_NAME_LBCS}" != "HRRR" ] && \
+       [ "${EXTRN_MDL_NAME_LBCS}" != "RAP" ]; then
       thompson_mp_fix_files+=( "Thompson_MP_MONTHLY_CLIMO.nc" )
     fi
 

@@ -43,9 +43,9 @@ expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_rrfs_v1beta/expt
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/regional_002_25km"
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/regional_002_13km"
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_rrfs_v1beta/expt_dirs/subconus"
-expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_rrfs_v1beta/expt_dirs/nco_GSD_SUBCONUS3km_HRRRX_RAPX_works01"
+expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_rrfs_v1beta/expt_dirs/nco_GSD_SUBCONUS3km_HRRR_RAP_works01"
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_WE2E_testing/expt_dirs/try13/regional_002"
-expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_WE2E_testing/expt_dirs/try13/nco_GSD_HRRR3km_HRRRX_RAPX"
+expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_WE2E_testing/expt_dirs/try13/nco_GSD_HRRR3km_HRRR_RAP"
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_WE2E_testing/expt_dirs/try15/suite_FV3_GSD_SAR_3km"
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_GSD_HRRR13km"
 
@@ -62,12 +62,12 @@ CDATE="2019052000"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_GSD_HRRR13km"
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_CONUS_13km"
-expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_CONUS_13km_HRRRX_RAPX"
+expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_feature_predef_grids/expt_dirs/try01/grid_RRFS_CONUS_13km_HRRR_RAP"
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try01/grid_RRFS_CONUS_13km_FV3GFS_FV3GFS"
 expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try03/grid_RRFS_CONUS_13km_ics_FV3GFS_lbcs_FV3GFS_suite_GFS_v15p2"
 CDATE="2019070100"
 
-;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try01/grid_RRFS_CONUS_13km_HRRRX_RAPX"
+;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try01/grid_RRFS_CONUS_13km_HRRR_RAP"
 ;CDATE="2020080100"
 
 ;expt_dir = "/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/PR_bugfix_adjust_CONUS_grids/expt_dirs/try01/grid_RRFS_CONUS_3km_FV3GFS_FV3GFS"
