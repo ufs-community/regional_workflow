@@ -11,12 +11,11 @@
 # Instructions:		Make sure all the necessary modules can be imported.
 #                       Five command line arguments are needed:
 #                       1. Cycle date/time in YYYYMMDDHH format
-#                       2. Forecast hour
-#                       3. EXPT_BASEDIR: Experiment base directory
-#                       4. EXPT_SUBDIR:  Experiment named directory
+#                       2. Forecast hour in HHH format
+#                       3. EXPT_DIR: Experiment directory
 #                          -Postprocessed data should be found in the directory:
-#                            EXPT_BASEDIR/EXPT_SUBDIR/YYYYMMDDHH/postprd/
-#                       5. CARTOPY_DIR:  Base directory of cartopy shapefiles
+#                            EXPT_DIR/YYYYMMDDHH/postprd/
+#                       4. CARTOPY_DIR:  Base directory of cartopy shapefiles
 #                          -Shapefiles cannot be directly downloaded to NOAA
 #                            machines from the internet, so shapefiles need to
 #                            be downloaded if geopolitical boundaries are
@@ -220,9 +219,8 @@ def rotate_wind(true_lat,lov_lon,earth_lons,uin,vin,proj,inverse=False):
 # Define required positional arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("Cycle date/time in YYYYMMDDHH format")
-parser.add_argument("Forecast hour in HH format")
-parser.add_argument("Path to experiment base directory")
-parser.add_argument("Path to experiment named directory")
+parser.add_argument("Forecast hour in HHH format")
+parser.add_argument("Path to experiment directory")
 parser.add_argument("Path to base directory of cartopy shapefiles")
 args = parser.parse_args()
               
@@ -237,17 +235,16 @@ cyc = str(hour).zfill(2)
 print(year, month, day, hour)
 
 fhr = int(sys.argv[2])
-fhour = str(fhr).zfill(2)
+fhour = str(fhr).zfill(3)
 print('fhour '+fhour)
 itime = ymdh
 vtime = ndate(itime,int(fhr))
 
-EXPT_BASEDIR = str(sys.argv[3])
-EXPT_SUBDIR = str(sys.argv[4])
-CARTOPY_DIR = str(sys.argv[5])
+EXPT_DIR = str(sys.argv[3])
+CARTOPY_DIR = str(sys.argv[4])
 
 # Define the location of the input file
-data1 = pygrib.open(EXPT_BASEDIR+'/'+EXPT_SUBDIR+'/'+ymdh+'/postprd/RRFS.t'+cyc+'z.bgdawp'+fhour+'.tm00.grib2')
+data1 = pygrib.open(EXPT_DIR+'/'+ymdh+'/postprd/rrfs.t'+cyc+'z.bgdawpf'+fhour+'.tm00.grib2')
 
 # Get the lats and lons
 grids = [data1]
