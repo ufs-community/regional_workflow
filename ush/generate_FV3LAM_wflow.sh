@@ -532,23 +532,6 @@ Copying the fixed file containing cloud condensation nuclei (CCN) data
 directory..."
   cp_vrfy "${FIXgsm}/CCN_ACTIVATE.BIN" "$EXPTDIR"
 fi
-#
-#-----------------------------------------------------------------------
-#
-# This if-statement is a temporary fix that makes corrections to the suite
-# definition file for the "FV3_GFS_2017_gfdlmp_regional" physics suite
-# that EMC uses.
-#
-# IMPORTANT:
-# This if-statement must be removed once these corrections are made to
-# the suite definition file in the dtc/develop branch of the NCAR fork
-# of the fv3atm repository.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ]; then
-  mv_vrfy "${CCPP_PHYS_SUITE_FP}.tmp" "${CCPP_PHYS_SUITE_FP}"
-fi
 
 
 
@@ -616,8 +599,6 @@ Copying the FV3-LAM executable (exec_fp) to the executables directory
   EXECDIR = \"$EXECDIR\""
   cp_vrfy "${exec_fp}" "${FV3_EXEC_FP}"
 fi
-
-
 #
 #-----------------------------------------------------------------------
 #
@@ -654,7 +635,7 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
     print_err_msg_exit "\
 The value to set the variable lsoil to in the FV3 namelist file (FV3_NML_FP)
 has not been specified for the following combination of physics suite and
-external models for ICs and LBCs:
+external model ICs:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
 Please change one or more of these parameters or provide a value for lsoil
@@ -1054,6 +1035,3 @@ Stopping.
 "
   exit 1
 fi
-
-
-
