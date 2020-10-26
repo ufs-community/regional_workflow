@@ -617,7 +617,7 @@ def plot_all(dom):
   clear_plotables(ax,keep_ax_lst,fig)
 
   units = 'x10${^5}$ s${^{-1}}$'
-  skip = 70
+  skip = round(177.28*(dx/1000.)**-.97)
   barblength = 4
 
   vortlevs = [16,20,24,28,32,36,40]
@@ -653,7 +653,8 @@ def plot_all(dom):
   clear_plotables(ax,keep_ax_lst,fig)
 
   units = 'kts'
-  skip = 70
+  skip = round(177.28*(dx/1000.)**-.97)
+
   barblength = 4
 
   clevs = [50,60,70,80,90,100,110,120,130,140,150]
