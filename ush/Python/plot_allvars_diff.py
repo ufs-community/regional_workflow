@@ -583,7 +583,7 @@ def plot_all(dom):
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
   cbar3.set_label(units,fontsize=6)
   cbar3.ax.tick_params(labelsize=5)
-  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM SLP ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM SLP ('+units+') \n initialized: '+itime+' (FV3-LAM), '+itime2+' (FV3-LAM-2), valid: '+vtime+' (f'+fhour+') (FV3-LAM), '+vtime2+' (f'+fhour+') (FV3-LAM-2)',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
   compress_and_save('slp_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
@@ -635,7 +635,7 @@ def plot_all(dom):
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
   cbar3.set_label(units,fontsize=6)
   cbar3.ax.tick_params(labelsize=6)
-  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 2-m Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 2-m Temperature ('+units+') \n initialized: '+itime+' (FV3-LAM), '+itime2+' (FV3-LAM-2), valid: '+vtime+' (f'+fhour+') (FV3-LAM), '+vtime2+' (f'+fhour+') (FV3-LAM-2)',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
   compress_and_save('2mt_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
@@ -682,7 +682,7 @@ def plot_all(dom):
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
   cbar3.set_label(units,fontsize=6)
   cbar3.ax.tick_params(labelsize=6)
-  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 2-m Dew Point Temperature ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 2-m Dew Point Temperature ('+units+') \n initialized: '+itime+' (FV3-LAM), '+itime2+' (FV3-LAM-2), valid: '+vtime+' (f'+fhour+') (FV3-LAM), '+vtime2+' (f'+fhour+') (FV3-LAM-2)',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
   compress_and_save('2mdew_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
@@ -741,7 +741,7 @@ def plot_all(dom):
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
   cbar3.set_label(units,fontsize=6)
   cbar3.ax.tick_params(labelsize=6)
-  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 10-m Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 10-m Winds ('+units+') \n initialized: '+itime+' (FV3-LAM), '+itime2+' (FV3-LAM-2), valid: '+vtime+' (f'+fhour+') (FV3-LAM), '+vtime2+' (f'+fhour+') (FV3-LAM-2)',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
    
   compress_and_save('10mwind_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
@@ -796,7 +796,7 @@ def plot_all(dom):
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
   cbar3.set_label(units,fontsize=6)
   cbar3.ax.tick_params(labelsize=6)
-  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 10-m Winds ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM Surface-Based CAPE ('+units+') \n initialized: '+itime+' (FV3-LAM), '+itime2+' (FV3-LAM-2), valid: '+vtime+' (f'+fhour+') (FV3-LAM), '+vtime2+' (f'+fhour+') (FV3-LAM-2)',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
   compress_and_save('sfcape_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
@@ -858,7 +858,7 @@ def plot_all(dom):
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
   cbar3.set_label(units,fontsize=6)
   cbar3.ax.tick_params(labelsize=6)
-  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 500-mb Heights (dam) \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 500-mb Heights (dam) \n initialized: '+itime+' (FV3-LAM), '+itime2+' (FV3-LAM-2), valid: '+vtime+' (f'+fhour+') (FV3-LAM), '+vtime2+' (f'+fhour+') (FV3-LAM-2)',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
   compress_and_save('500_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
@@ -916,7 +916,7 @@ def plot_all(dom):
   cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
   cbar3.set_label(units,fontsize=6)
   cbar3.ax.tick_params(labelsize=6)
-  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 250-mb Winds (dam) \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 250-mb Winds ('+units+') \n initialized: '+itime+' (FV3-LAM), '+itime2+' (FV3-LAM-2), valid: '+vtime+' (f'+fhour+') (FV3-LAM), '+vtime2+' (f'+fhour+') (FV3-LAM-2)',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
   compress_and_save('250wind_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
@@ -971,7 +971,7 @@ def plot_all(dom):
     cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
     cbar3.set_label(units,fontsize=6)
     cbar3.ax.tick_params(labelsize=6)
-    ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM '+fhour+'-hr Accumulated Precipitation ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+    ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM '+fhour+'-hr Accumulated Precipitation ('+units+') \n initialized: '+itime+' (FV3-LAM), '+itime2+' (FV3-LAM-2), valid: '+vtime+' (f'+fhour+') (FV3-LAM), '+vtime2+' (f'+fhour+') (FV3-LAM-2)',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
     compress_and_save('qpf_diff_'+dom+'_f'+fhour+'.png')
     t2 = time.perf_counter()
@@ -1026,7 +1026,7 @@ def plot_all(dom):
     cbar3 = plt.colorbar(cs,ax=ax3,orientation='horizontal',pad=0.05,shrink=0.6,extend='both')
     cbar3.set_label(units,fontsize=6)
     cbar3.ax.tick_params(labelsize=6)
-    ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 1-h Max/Min 2-5 km Updraft Helicity \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=5,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+    ax3.text(.5,1.03,'FV3-LAM-2 - FV3-LAM 1-h Max/Min 2-5 km Updraft Helicity ('+units+') \n initialized: '+itime+' (FV3-LAM), '+itime2+' (FV3-LAM-2), valid: '+vtime+' (f'+fhour+') (FV3-LAM), '+vtime2+' (f'+fhour+') (FV3-LAM-2)',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
     compress_and_save('uh25_diff_'+dom+'_f'+fhour+'.png')
     t2 = time.perf_counter()
@@ -1073,7 +1073,7 @@ def plot_all(dom):
 
   csdiff = ax3.contourf(lon_shift,lat_shift,refc_1,clevsdiff,colors='red',transform=transform)
   csdiff2 = ax3.contourf(lon2_shift,lat2_shift,refc_2,clevsdiff,colors='dodgerblue',transform=transform)
-  ax3.text(.5,1.03,'FV3-LAM (red) and FV3-LAM-2 (blue) Composite Reflectivity > 20 ('+units+') \n initialized: '+itime+' valid: '+vtime + ' (f'+fhour+')',horizontalalignment='center',fontsize=5,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
+  ax3.text(.5,1.03,'FV3-LAM (red) and FV3-LAM-2 (blue) Composite Reflectivity > 20 ('+units+') \n initialized: '+itime+' (FV3-LAM), '+itime2+' (FV3-LAM-2), valid: '+vtime+' (f'+fhour+') (FV3-LAM), '+vtime2+' (f'+fhour+') (FV3-LAM-2)',horizontalalignment='center',fontsize=6,transform=ax3.transAxes,bbox=dict(facecolor='white',alpha=0.85,boxstyle='square,pad=0.2'))
 
   compress_and_save('refc_diff_'+dom+'_f'+fhour+'.png')
   t2 = time.perf_counter()
