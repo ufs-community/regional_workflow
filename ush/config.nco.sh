@@ -7,11 +7,12 @@ VERBOSE="TRUE"
 RUN_ENVIR="nco"
 PREEXISTING_DIR_METHOD="rename"
 
-PREDEF_GRID_NAME="EMC_CONUS_coarse"
+PREDEF_GRID_NAME="CONUS_25km_GFDLgrid"
 GRID_GEN_METHOD="GFDLgrid"
-
 QUILTING="TRUE"
-CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp"
+
+CCPP_PHYS_SUITE="FV3_GFS_v15p2"
+
 FCST_LEN_HRS="06"
 LBC_SPEC_INTVL_HRS="6"
 
@@ -21,15 +22,6 @@ CYCL_HRS=( "18" )
 
 EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
-
-#
-# In NCO mode, the following don't need to be explicitly set to "FALSE" 
-# in this configuration file because the experiment generation script
-# will do this (along with printing out an informational message).
-#
-#RUN_TASK_MAKE_GRID="FALSE"
-#RUN_TASK_MAKE_OROG="FALSE"
-#RUN_TASK_MAKE_SFC_CLIMO="FALSE"
 
 RUN="an_experiment"
 COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"     # Path to directory containing files from the external model (FV3GFS).
