@@ -131,14 +131,6 @@ string."
 
     fi  
 
-    if [ "${EXTRN_MDL_NAME_ICS}" != "HRRR" ] && \
-       [ "${EXTRN_MDL_NAME_ICS}" != "RAP" ] && \
-       [ "${EXTRN_MDL_NAME_LBCS}" != "HRRR" ] && \
-       [ "${EXTRN_MDL_NAME_LBCS}" != "RAP" ]; then
-      thompson_mp_fix_files+=( "Thompson_MP_MONTHLY_CLIMO.nc" )
-    fi
-
-
     FIXgsm_FILES_TO_COPY_TO_FIXam+=( "${thompson_mp_fix_files[@]}" )
 
     num_files=${#thompson_mp_fix_files[@]} 
