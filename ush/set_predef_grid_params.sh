@@ -1002,6 +1002,58 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
+# Emulation of the HAFS v0.A grid at 3 km.
+#
+#-----------------------------------------------------------------------
+#
+"GSD_HAFSV0.A_3km")
+
+  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
+
+    print_err_msg_exit "\
+The parameters for a \"${GRID_GEN_METHOD}\" type grid have not yet been specified for this
+predefined domain:
+  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
+  GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
+
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
+
+    ESGgrid_LON_CTR=-62.0
+    ESGgrid_LAT_CTR=22.0
+
+    ESGgrid_DELX="3000.0"
+    ESGgrid_DELY="3000.0"
+
+    ESGgrid_NX=2880
+    ESGgrid_NY=1920
+
+    ESGgrid_WIDE_HALO_WIDTH=6
+
+    DT_ATMOS="40"
+
+    LAYOUT_X="32"
+    LAYOUT_Y="24"
+    BLOCKSIZE="32"
+
+    if [ "$QUILTING" = "TRUE" ]; then
+      WRTCMP_write_groups="1"
+      WRTCMP_write_tasks_per_group="32"
+      WRTCMP_output_grid="regional_latlon"
+      WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
+      WRTCMP_cen_lat="25.0"
+      WRTCMP_lon_lwr_left="-114.5"
+      WRTCMP_lat_lwr_left="-5.0"
+      WRTCMP_lon_upr_rght="-9.5"
+      WRTCMP_lat_upr_rght="55.0"
+      WRTCMP_dlon="0.03"
+      WRTCMP_dlat="0.03"
+    fi
+
+  fi
+  ;;
+#
+#-----------------------------------------------------------------------
+#
 # 50-km HRRR Alaska grid.
 #
 #-----------------------------------------------------------------------
