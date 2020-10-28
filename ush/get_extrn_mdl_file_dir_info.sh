@@ -380,6 +380,10 @@ fi
       ;;
   
     "RAP")
+#
+# Note that this is GSL RAPX data, not operational NCEP RAP data.  An option for the latter
+# may be added in the future.
+#
       if [ "${MACHINE}" = "JET" ]; then
         fns_on_disk=( "wrfnat_130_${fcst_hh}.grib2" )
       else
@@ -389,6 +393,10 @@ fi
       ;;
 
     "HRRR")
+#
+# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An option for the latter
+# may be added in the future.
+#
       if [ "${MACHINE}" = "JET" ]; then
         fns_on_disk=( "wrfnat_hrconus_${fcst_hh}.grib2" )
       else
@@ -467,6 +475,10 @@ and analysis or forecast (anl_or_fcst):
       ;;
 
     "RAP")
+#
+# Note that this is GSL RAPX data, not operational NCEP RAP data.  An option for the latter
+# may be added in the future.
+#
       fcst_hh=( $( printf "%02d " "${lbc_spec_fhrs[@]}" ) )
 
       if [ "${MACHINE}" = "JET" ]; then 
@@ -486,6 +498,10 @@ and analysis or forecast (anl_or_fcst):
       ;;
 
     "HRRR")
+#
+# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An option for the latter
+# may be added in the future.
+#
       fcst_hh=( $( printf "%02d " "${lbc_spec_fhrs[@]}" ) )
 
       if [ "${MACHINE}" = "JET" ]; then
@@ -814,7 +830,11 @@ has not been specified for this external model:
     fi
     ;;
 
+
   "RAP")
+#
+# Note that this is GSL RAPX data, not operational NCEP RAP data.  An option for the latter
+# may be added in the future.
 #
 # The zip archive files for RAPX are named such that the forecast files
 # for odd-numbered starting hours (e.g. 01, 03, ..., 23) are stored 
@@ -850,6 +870,10 @@ has not been specified for this external model:
     ;;
 
   "HRRR")
+#
+# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An option for the latter
+# may be added in the future.
+#
     arcv_dir="/BMC/fdr/Permanent/${yyyy}/${mm}/${dd}/data/fsl/hrrr/conus/wrfnat"
     arcv_fmt="zip"
     arcv_fns="${yyyy}${mm}${dd}${hh}00.${arcv_fmt}"
