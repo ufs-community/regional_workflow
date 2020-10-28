@@ -724,8 +724,8 @@ machine (MACHINE):
       elif [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
         EXTRN_MDL_FILES_ICS=( "gfs.pgrb2.0p25.f000" )
       fi
-    elif [ "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ] || \
-         [ "${EXTRN_MDL_NAME_ICS}" = "RAPX" ]; then
+    elif [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ] || \
+         [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ]; then
       EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
     fi
 
@@ -754,8 +754,8 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
       elif [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
         EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/gfs.pgrb2.0p25.f}" )
       fi
-    elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRRX" ] || \
-         [ "${EXTRN_MDL_NAME_LBCS}" = "RAPX" ]; then
+    elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ] || \
+         [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ]; then
       EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
     fi
 
