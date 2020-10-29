@@ -15,9 +15,9 @@ valid_vals_PREDEF_GRID_NAME=( \
 "EMC_HI" \
 "EMC_PR" \
 "EMC_GU" \
-"GSD_HAFSV0.A_25km" \
-"GSD_HAFSV0.A_13km" \
-"GSD_HAFSV0.A_3km" \
+"GSL_HAFSV0.A_25km" \
+"GSL_HAFSV0.A_13km" \
+"GSL_HAFSV0.A_3km" \
 "GSD_HRRR_AK_50km" \
 "GSD_RAP13km" \
 )

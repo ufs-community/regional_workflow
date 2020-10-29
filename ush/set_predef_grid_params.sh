@@ -1006,7 +1006,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"GSD_HAFSV0.A_25km")
+"GSL_HAFSV0.A_25km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 
@@ -1058,7 +1058,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"GSD_HAFSV0.A_13km")
+"GSL_HAFSV0.A_13km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 
@@ -1110,7 +1110,7 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
-"GSD_HAFSV0.A_3km")
+"GSL_HAFSV0.A_3km")
 
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 
