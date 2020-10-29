@@ -1002,6 +1002,110 @@ predefined domain:
 #
 #-----------------------------------------------------------------------
 #
+# Emulation of the HAFS v0.A grid at 25 km.
+#
+#-----------------------------------------------------------------------
+#
+"GSD_HAFSV0.A_25km")
+
+  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
+
+    print_err_msg_exit "\
+The parameters for a \"${GRID_GEN_METHOD}\" type grid have not yet been specified for this
+predefined domain:
+  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
+  GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
+
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
+
+    ESGgrid_LON_CTR=-62.0
+    ESGgrid_LAT_CTR=22.0
+
+    ESGgrid_DELX="25000.0"
+    ESGgrid_DELY="25000.0"
+
+    ESGgrid_NX=345
+    ESGgrid_NY=230
+
+    ESGgrid_WIDE_HALO_WIDTH=6
+
+    DT_ATMOS="300"
+
+    LAYOUT_X="5"
+    LAYOUT_Y="5"
+    BLOCKSIZE="6"
+
+    if [ "$QUILTING" = "TRUE" ]; then
+      WRTCMP_write_groups="1"
+      WRTCMP_write_tasks_per_group="32"
+      WRTCMP_output_grid="regional_latlon"
+      WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
+      WRTCMP_cen_lat="25.0"
+      WRTCMP_lon_lwr_left="-114.5"
+      WRTCMP_lat_lwr_left="-5.0"
+      WRTCMP_lon_upr_rght="-9.5"
+      WRTCMP_lat_upr_rght="55.0"
+      WRTCMP_dlon="0.25"
+      WRTCMP_dlat="0.25"
+    fi
+
+  fi
+  ;;
+#
+#-----------------------------------------------------------------------
+#
+# Emulation of the HAFS v0.A grid at 13 km.
+#
+#-----------------------------------------------------------------------
+#
+"GSD_HAFSV0.A_13km")
+
+  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
+
+    print_err_msg_exit "\
+The parameters for a \"${GRID_GEN_METHOD}\" type grid have not yet been specified for this
+predefined domain:
+  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
+  GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
+
+  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
+
+    ESGgrid_LON_CTR=-62.0
+    ESGgrid_LAT_CTR=22.0
+
+    ESGgrid_DELX="13000.0"
+    ESGgrid_DELY="13000.0"
+
+    ESGgrid_NX=665
+    ESGgrid_NY=444
+
+    ESGgrid_WIDE_HALO_WIDTH=6
+
+    DT_ATMOS="180"
+
+    LAYOUT_X="19"
+    LAYOUT_Y="12"
+    BLOCKSIZE="35"
+
+    if [ "$QUILTING" = "TRUE" ]; then
+      WRTCMP_write_groups="1"
+      WRTCMP_write_tasks_per_group="32"
+      WRTCMP_output_grid="regional_latlon"
+      WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
+      WRTCMP_cen_lat="25.0"
+      WRTCMP_lon_lwr_left="-114.5"
+      WRTCMP_lat_lwr_left="-5.0"
+      WRTCMP_lon_upr_rght="-9.5"
+      WRTCMP_lat_upr_rght="55.0"
+      WRTCMP_dlon="0.13"
+      WRTCMP_dlat="0.13"
+    fi
+
+  fi
+  ;;
+#
+#-----------------------------------------------------------------------
+#
 # Emulation of the HAFS v0.A grid at 3 km.
 #
 #-----------------------------------------------------------------------
