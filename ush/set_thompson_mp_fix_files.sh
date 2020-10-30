@@ -122,6 +122,13 @@ string."
       "qr_acr_qg.dat" \
       "qr_acr_qs.dat" \
       )
+   
+    if [ "${EXTRN_MDL_NAME_ICS}" != "HRRR" -a "${EXTRN_MDL_NAME_ICS}" != "RAP" ] || \
+       [ "${EXTRN_MDL_NAME_LBCS}" != "HRRR" -a "${EXTRN_MDL_NAME_LBCS}" != "RAP" ]; then
+
+      thompson_mp_fix_files+=( "Thompson_MP_MONTHLY_CLIMO.nc" )
+
+    fi  
 
     FIXgsm_FILES_TO_COPY_TO_FIXam+=( "${thompson_mp_fix_files[@]}" )
 
