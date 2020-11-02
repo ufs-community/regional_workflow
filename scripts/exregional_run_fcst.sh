@@ -17,6 +17,7 @@
 #-----------------------------------------------------------------------
 #
 . $USHDIR/create_model_configure_file.sh
+. $USHDIR/create_diag_table_file.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -424,6 +425,19 @@ Call to function to create a model configuration file for the current
 cycle's (cdate) run directory (run_dir) failed:
   cdate = \"${cdate}\"
   run_dir = \"${run_dir}\""
+#
+#-----------------------------------------------------------------------
+#
+# Call the function that creates the model configuration file within each
+# cycle directory.
+#
+#-----------------------------------------------------------------------
+#
+create_diag_table_file \
+    run_dir="${run_dir}" || print_err_msg_exit "\
+      Call to function to create a diag table file for the current
+      cycle's (cdate) run directory (run_dir) failed:
+         run_dir = \"${run_dir}\""
 #
 #-----------------------------------------------------------------------
 #

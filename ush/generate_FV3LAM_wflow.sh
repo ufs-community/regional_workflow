@@ -48,7 +48,6 @@ ushdir="${scrfunc_dir}"
 . $ushdir/source_util_funcs.sh
 . $ushdir/set_FV3nml_sfc_climo_filenames.sh
 . $ushdir/set_FV3nml_stoch_params.sh
-. $ushdir/create_diag_table_files.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -312,21 +311,6 @@ are:
   Namelist settings specified on command line:
     settings =
 $settings"
-#
-#-----------------------------------------------------------------------
-#
-# Create the cycle directories.
-#
-#-----------------------------------------------------------------------
-#
-print_info_msg "$VERBOSE" "
-Creating the cycle directories..."
-
-for (( i=0; i<${NUM_CYCLES}; i++ )); do
-  cdate="${ALL_CDATES[$i]}"
-  cycle_dir="${CYCLE_BASEDIR}/$cdate"
-  mkdir_vrfy -p "${cycle_dir}"
-done
 #
 #-----------------------------------------------------------------------
 #
@@ -791,10 +775,6 @@ file failed."
 Call to function to set stochastic parameters in the FV3 namelist files
 for the various ensemble members failed."
   fi
-
-  create_diag_table_files || print_err_msg_exit "\
-Call to function to create a diagnostics table file under each cycle 
-directory failed."
 
 fi
 #

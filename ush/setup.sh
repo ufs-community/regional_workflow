@@ -591,24 +591,6 @@ done
 #
 #-----------------------------------------------------------------------
 #
-# Call a function to generate the array ALL_CDATES containing the cycle 
-# dates/hours for which to run forecasts.  The elements of this array
-# will have the form YYYYMMDDHH.  They are the starting dates/times of 
-# the forecasts that will be run in the experiment.  Then set NUM_CYCLES
-# to the number of elements in this array.
-#
-#-----------------------------------------------------------------------
-#
-set_cycle_dates \
-  date_start="${DATE_FIRST_CYCL}" \
-  date_end="${DATE_LAST_CYCL}" \
-  cycle_hrs="${CYCL_HRS_str}" \
-  output_varname_all_cdates="ALL_CDATES"
-
-NUM_CYCLES="${#ALL_CDATES[@]}"
-#
-#-----------------------------------------------------------------------
-#
 # Set various directories.
 #
 # HOMErrfs:
@@ -2588,18 +2570,6 @@ EXTRN_MDL_LBCS_OFFSET_HRS="${EXTRN_MDL_LBCS_OFFSET_HRS}"
 #-----------------------------------------------------------------------
 #
 LBC_SPEC_FCST_HRS=(${LBC_SPEC_FCST_HRS[@]})
-#
-#-----------------------------------------------------------------------
-#
-# The number of cycles for which to make forecasts and the list of starting
-# dates/hours of these cycles.
-#
-#-----------------------------------------------------------------------
-#
-NUM_CYCLES="${NUM_CYCLES}"
-ALL_CDATES=( \\
-$( printf "\"%s\" \\\\\n" "${ALL_CDATES[@]}" )
-)
 #
 #-----------------------------------------------------------------------
 #
