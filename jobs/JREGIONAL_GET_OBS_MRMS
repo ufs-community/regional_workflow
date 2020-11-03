@@ -3,11 +3,7 @@
 #
 #-----------------------------------------------------------------------
 #
-# This script pulls CCPA observation data for comparison to the model for 
-# the requested accumulations. Supported accumulations: 01h, 03h, and 06h. 
-# NOTE: Accumulation is currently hardcoded to 01h.
-# The verification uses MET/pcp-combine to sum 01h files into 
-# desired accumulations.
+# This script pulls MRMS observation data for comparison to the model.
 #
 #-----------------------------------------------------------------------
 #
@@ -54,7 +50,7 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the J-job script for the task that pulls CCPA observation data
+This is the J-job script for the task that pulls MRMS observation data
 for verification purposes.
 ========================================================================"
 
@@ -67,7 +63,7 @@ for verification purposes.
 #
 #-----------------------------------------------------------------------
 #
-$SCRIPTSDIR/exregional_get_ccpa_files.sh || \
+$SCRIPTSDIR/exregional_get_mrms_files.sh || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #
