@@ -343,11 +343,11 @@ machine=${MACHINE,,}
 
 cd_vrfy "${MODULES_DIR}/tasks/$machine"
 
-cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/README.${machine}.intel.txt" "${MAKE_GRID_TN}"
-cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/README.${machine}.intel.txt" "${MAKE_OROG_TN}"
-cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/README.${machine}.intel.txt" "${MAKE_SFC_CLIMO_TN}"
-cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/README.${machine}.intel.txt" "${MAKE_ICS_TN}"
-cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/README.${machine}.intel.txt" "${MAKE_LBCS_TN}"
+cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${MAKE_GRID_TN}"
+cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${MAKE_OROG_TN}"
+cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${MAKE_SFC_CLIMO_TN}"
+cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${MAKE_ICS_TN}"
+cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/modulefiles/README.${machine}.intel.txt" "${MAKE_LBCS_TN}"
 if [ $MACHINE = "WCOSS_CRAY" -o $MACHINE = "WCOSS_DELL_P3" ] ; then
   cp_vrfy -f "${UFS_WTHR_MDL_DIR}/modulefiles/${machine}/fv3" "${RUN_FCST_TN}"
 else
