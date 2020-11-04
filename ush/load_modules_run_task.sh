@@ -278,12 +278,35 @@ Call to \"module use\" command failed."
      module use -a "${modules_dir}" || print_err_msg_exit "\
 Call to \"module use\" command failed."
     
-     module load "${modulefile_name}" || print_err_msg_exit "\
-Loading of module file (modulefile_name; in directory specified by mod-
+     #module load "${modulefile_name}" || print_err_msg_exit "\
+#Loading of module file (modulefile_name; in directory specified by mod-
+#ules_dir) for the specified task (task_name) failed:
+#  task_name = \"${task_name}\"
+#  modulefile_name = \"${modulefile_name}\"
+#  modules_dir = \"${modules_dir}\""
+
+    #
+    #Source the README file copied from the ufs-srweather-app repo
+    #
+    source "${modulefile_name}" || print_err_msg_exit "\
+Sourcing ufs-srweather-app README file (in directory specified by mod-
 ules_dir) for the specified task (task_name) failed:
   task_name = \"${task_name}\"
   modulefile_name = \"${modulefile_name}\"
   modules_dir = \"${modules_dir}\""
+
+    #
+    # Load the .local module file if available for the given task
+    #
+    modulefile_local="${task_name}.local"
+    if [ -f ${modulefile_local} ]; then
+      module load "${modulefile_local}" || print_err_msg_exit "\
+Loading .local module file (in directory specified by mod-
+ules_dir) for the specified task (task_name) failed:
+  task_name = \"${task_name}\"
+  modulefile_name = \"${modulefile_name}\"
+  modules_dir = \"${modules_dir}\""    
+    fi
 
   else # using default modulefile
 
