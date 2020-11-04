@@ -153,7 +153,7 @@ jjob_fp="$2"
 #-----------------------------------------------------------------------
 #
 machine=${MACHINE,,}
-  env_fn="README_${machine}_${compiler}.txt"
+  env_fn="README_${machine}_${COMPILER}.txt"
   env_fp="${SR_WX_APP_TOP_DIR}/docs/${env_fn}"
   source "${env_fp}" || print_err_msg_exit "\
 Sourcing platform- and compiler-specific environment file (env_fp) for the 
