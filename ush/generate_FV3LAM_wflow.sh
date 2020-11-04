@@ -360,15 +360,16 @@ task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_
 # Only some platforms build EMC_post using modules, and some machines 
 # require a different EMC_post modulefile name.
 #
-#if [ "${MACHINE}" = "CHEYENNE" ]; then
-#  print_info_msg "No post modulefile needed for ${MACHINE}"
-#elif [ "${MACHINE}" = "WCOSS_CRAY" ]; then
+if [ "${MACHINE}" = "CHEYENNE" ]; then
+  print_info_msg "No post modulefile needed for ${MACHINE}"
+elif [ "${MACHINE}" = "WCOSS_CRAY" ]; then
 #  cp_vrfy -f "${EMC_POST_DIR}/modulefiles/post/v8.0.0-cray-intel" "${RUN_POST_TN}"
-#  task_names+=("${RUN_POST_TN}")
-#else
-#  cp_vrfy -f "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" "${RUN_POST_TN}"
-#  task_names+=("${RUN_POST_TN}")
-#fi
+  cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${RUN_POST_TN}"
+  task_names+=("${RUN_POST_TN}")
+else
+  cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${RUN_POST_TN}"
+  task_names+=("${RUN_POST_TN}")
+fi
 
 #for task in "${task_names[@]}"; do
 #  modulefile_local="${task}.local"
