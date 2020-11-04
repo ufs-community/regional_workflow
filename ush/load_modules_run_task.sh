@@ -147,6 +147,21 @@ jjob_fp="$2"
 #
 #-----------------------------------------------------------------------
 #
+# Sourcing ufs-srweather-app README file (in directory specified by mod-
+# ules_dir) for the specified task
+#
+#-----------------------------------------------------------------------
+#
+  env_fn="README_${machine}_${COMPILER}.txt"
+  env_fp="${SR_WX_APP_TOP_DIR}/docs/${env_fn}"
+  source "${env_fp}" || print_err_msg_exit "\
+Sourcing platform- and compiler-specific environment file (env_fp) for the 
+workflow task specified by task_name failed:
+  task_name = \"${task_name}\"
+  env_fp = \"${env_fp}\""
+#
+#-----------------------------------------------------------------------
+#
 # Set the directory (modules_dir) in which the module files for the va-
 # rious workflow tasks are located.  Also, set the name of the module
 # file for the specified task.
@@ -257,15 +272,12 @@ does not exist:
 #
 #-----------------------------------------------------------------------
 #
-# Purge modules and load the module file for the specified task on the
-# current machine.
+# Load the module file for the specified task on the current machine.
 #
 #-----------------------------------------------------------------------
 #
   print_info_msg "$VERBOSE" "
 Loading modules for task \"${task_name}\" ..."
-
-  module purge
 
   module use "${modules_dir}" || print_err_msg_exit "\
 Call to \"module use\" command failed."
@@ -278,23 +290,6 @@ Call to \"module use\" command failed."
      module use -a "${modules_dir}" || print_err_msg_exit "\
 Call to \"module use\" command failed."
     
-     #module load "${modulefile_name}" || print_err_msg_exit "\
-#Loading of module file (modulefile_name; in directory specified by mod-
-#ules_dir) for the specified task (task_name) failed:
-#  task_name = \"${task_name}\"
-#  modulefile_name = \"${modulefile_name}\"
-#  modules_dir = \"${modules_dir}\""
-
-    #
-    #Source the README file copied from the ufs-srweather-app repo
-    #
-    source "${modules_dir}/${modulefile_name}" || print_err_msg_exit "\
-Sourcing ufs-srweather-app README file (in directory specified by mod-
-ules_dir) for the specified task (task_name) failed:
-  task_name = \"${task_name}\"
-  modulefile_name = \"${modulefile_name}\"
-  modules_dir = \"${modules_dir}\""
-
     #
     # Load the .local module file if available for the given task
     #
