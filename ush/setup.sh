@@ -334,27 +334,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that COMPILER is set to a valid value and assign directory
-# and file names.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "COMPILER" "valid_vals_COMPILER"
-#
-# Set COMPILER to either "INTEL" or "GNU" so we don't have to consider
-# other valid values later on.
-#
-COMPILER=${COMPILER^^}
-if [ "$COMPILER" = "intel" ] || \
-   [ "$COMPILER" = "INTEL" ]; then
-  COMPILER="INTEL"
-elif [ "$COMPILER" = "gnu" ] || \
-     [ "$COMPILER" = "GNU" ]; then
-  COMPILER="GNU"
-fi
-#
-#-----------------------------------------------------------------------
-#
 # Make sure that DOT_OR_USCORE is set to a valid value.
 #
 #-----------------------------------------------------------------------
