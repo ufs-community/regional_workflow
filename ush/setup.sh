@@ -310,7 +310,6 @@ fi
 if [ "${DO_SPPT}" = "FALSE" ]; then
   SPPT_MAG=-999.0
 fi
-
 #
 #-----------------------------------------------------------------------
 #
@@ -331,6 +330,27 @@ if [ "$USE_FVCOM" = "TRUE" ] || \
 elif [ "$USE_FVCOM" = "FALSE" ] || \
      [ "$USE_FVCOM" = "NO" ]; then
   USE_FVCOM="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that COMPILER is set to a valid value and assign directory
+# and file names.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "COMPILER" "valid_vals_COMPILER"
+#
+# Set COMPILER to either "INTEL" or "GNU" so we don't have to consider
+# other valid values later on.
+#
+COMPILER=${COMPILER^^}
+if [ "$COMPILER" = "intel" ] || \
+   [ "$COMPILER" = "INTEL" ]; then
+  COMPILER="INTEL"
+elif [ "$COMPILER" = "gnu" ] || \
+     [ "$COMPILER" = "GNU" ]; then
+  COMPILER="GNU"
 fi
 #
 #-----------------------------------------------------------------------
