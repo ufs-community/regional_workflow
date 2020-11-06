@@ -327,6 +327,11 @@ for (( i=0; i<${NUM_CYCLES}; i++ )); do
   cycle_dir="${CYCLE_BASEDIR}/$cdate"
   mkdir_vrfy -p "${cycle_dir}"
 done
+#######
+####### The following lines (333-384) can be removed once we confirm
+####### that the new method of setting environment variables and loading
+####### modules will remain permanent.
+#######
 #
 #-----------------------------------------------------------------------
 #
@@ -355,7 +360,7 @@ done
 #fi
 #cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${RUN_FCST_TN}"
 
-task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_ICS_TN}" "${MAKE_LBCS_TN}" "${RUN_FCST_TN}" )
+#task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_ICS_TN}" "${MAKE_LBCS_TN}" "${RUN_FCST_TN}" )
 #
 # Only some platforms build EMC_post using modules, and some machines 
 # require a different EMC_post modulefile name.
