@@ -153,9 +153,9 @@ jjob_fp="$2"
 #-----------------------------------------------------------------------
 #
 machine=${MACHINE,,}
-  env_fn="README_${machine}_${COMPILER}.txt"
-  env_fp="${SR_WX_APP_TOP_DIR}/docs/${env_fn}"
-  source "${env_fp}" || print_err_msg_exit "\
+env_fn="README_${machine}_${COMPILER}.txt"
+env_fp="${SR_WX_APP_TOP_DIR}/docs/${env_fn}"
+source "${env_fp}" || print_err_msg_exit "\
 Sourcing platform- and compiler-specific environment file (env_fp) for the 
 workflow task specified by task_name failed:
   task_name = \"${task_name}\"
@@ -191,6 +191,11 @@ modulefile_name="${task_name}"
 default_modules_dir="$HOMErrfs/modulefiles"
 default_modulefile_name="${machine}.default"
 use_default_modulefile=0
+#######
+####### The following lines (199-276) can be removed once we confirm
+####### that the new method of setting environment variables and loading
+####### modules will remain permanent.
+#######
 #
 #-----------------------------------------------------------------------
 #
