@@ -328,7 +328,7 @@ for (( i=0; i<${NUM_CYCLES}; i++ )); do
   mkdir_vrfy -p "${cycle_dir}"
 done
 #######
-####### The following lines (333-384) can be removed once we confirm
+####### The following lines (335-386) can be removed once we confirm
 ####### that the new method of setting environment variables and loading
 ####### modules will remain permanent.
 #######

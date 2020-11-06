@@ -191,6 +191,11 @@ modulefile_name="${task_name}"
 default_modules_dir="$HOMErrfs/modulefiles"
 default_modulefile_name="${machine}.default"
 use_default_modulefile=0
+#######
+####### The following lines (199-276) can be removed once we confirm
+####### that the new method of setting environment variables and loading
+####### modules will remain permanent.
+#######
 #
 #-----------------------------------------------------------------------
 #
