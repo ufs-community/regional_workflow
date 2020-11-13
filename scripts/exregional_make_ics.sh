@@ -421,12 +421,18 @@ case "${EXTRN_MDL_NAME_ICS}" in
     nsoill_out="9"
   fi
 #
-# These geogrid files need to be moved to more permanent locations.
+# Paths to the geogrid file for the HRRRX.
 #
   if [ "${MACHINE}" = "HERA" ]; then
     geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-LAM/geo_em.d01.nc_HRRRX"
   elif [ "${MACHINE}" = "JET" ]; then
-    geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
+    geogrid_file_input_grid="/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_HRRRX"
+  elif [ "${MACHINE}" = "ORION" ]; then
+    geogrid_file_input_grid="/work/noaa/global/glopara/fix/fix_am/geo_em.d01.nc_HRRRX"
+  elif [ "${MACHINE}" = "WCOSS_CRAY" ]; then
+    geogrid_file_input_grid="/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_HRRRX"
+  elif [ "${MACHINE}" = "WCOSS_DELL_P3" ]; then
+    geogrid_file_input_grid="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_HRRRX"
   fi
 
   #Note that vgfrc, shdmin/shdmax (minmax_vgfrc), and lai fields are only available in HRRRX 
@@ -463,14 +469,18 @@ case "${EXTRN_MDL_NAME_ICS}" in
     nsoill_out="9"
   fi
 #
-# These geogrid files need to be moved to more permanent locations.
+# Paths to the geogrid file for the RAPX.
 #
   if [ "${MACHINE}" = "HERA" ]; then
     geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-LAM/geo_em.d01.nc_RAPX"
   elif [ "${MACHINE}" = "JET" ]; then
-    geogrid_file_input_grid="/misc/whome/rtrr/HRRR/static/WPS/geo_em.d01.nc"
-  elif [ "${MACHINE}" = "CHEYENNE" ]; then
-    geogrid_file_input_grid="/glade/p/ral/jntp/UFS_CAM/fix/geo_em.d01.nc_RAPX"
+    geogrid_file_input_grid="/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_RAPX"
+  elif [ "${MACHINE}" = "ORION" ]; then
+    geogrid_file_input_grid="/work/noaa/global/glopara/fix/fix_am/geo_em.d01.nc_RAPX"
+  elif [ "${MACHINE}" = "WCOSS_CRAY" ]; then
+    geogrid_file_input_grid="/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_RAPX"
+  elif [ "${MACHINE}" = "WCOSS_DELL_P3" ]; then
+    geogrid_file_input_grid="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_RAPX"
   fi
 
   vgtyp_from_climo=True
