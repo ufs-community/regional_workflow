@@ -424,7 +424,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
 # Paths to the geogrid file for the HRRRX.
 #
   if [ "${MACHINE}" = "HERA" ]; then
-    geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-LAM/geo_em.d01.nc_HRRRX"
+    geogrid_file_input_grid="/scratch1/NCEPDEV/global/glopara/fix/fix_am/geo_em.d01.nc_HRRRX"
   elif [ "${MACHINE}" = "JET" ]; then
     geogrid_file_input_grid="/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_HRRRX"
   elif [ "${MACHINE}" = "ORION" ]; then
@@ -472,7 +472,7 @@ case "${EXTRN_MDL_NAME_ICS}" in
 # Paths to the geogrid file for the RAPX.
 #
   if [ "${MACHINE}" = "HERA" ]; then
-    geogrid_file_input_grid="/scratch2/BMC/det/beck/FV3-LAM/geo_em.d01.nc_RAPX"
+    geogrid_file_input_grid="/scratch1/NCEPDEV/global/glopara/fix/fix_am/geo_em.d01.nc_RAPX"
   elif [ "${MACHINE}" = "JET" ]; then
     geogrid_file_input_grid="/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_RAPX"
   elif [ "${MACHINE}" = "ORION" ]; then
