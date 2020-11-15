@@ -421,19 +421,9 @@ case "${EXTRN_MDL_NAME_ICS}" in
     nsoill_out="9"
   fi
 #
-# Paths to the geogrid file for the HRRRX.
+# Path to the HRRRX geogrid file.
 #
-  if [ "${MACHINE}" = "HERA" ]; then
-    geogrid_file_input_grid="/scratch1/NCEPDEV/global/glopara/fix/fix_am/geo_em.d01.nc_HRRRX"
-  elif [ "${MACHINE}" = "JET" ]; then
-    geogrid_file_input_grid="/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_HRRRX"
-  elif [ "${MACHINE}" = "ORION" ]; then
-    geogrid_file_input_grid="/work/noaa/global/glopara/fix/fix_am/geo_em.d01.nc_HRRRX"
-  elif [ "${MACHINE}" = "WCOSS_CRAY" ]; then
-    geogrid_file_input_grid="/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_HRRRX"
-  elif [ "${MACHINE}" = "WCOSS_DELL_P3" ]; then
-    geogrid_file_input_grid="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_HRRRX"
-  fi
+  geogrid_file_input_grid="${FIXgsm}/geo_em.d01.nc_HRRRX"
 
   #Note that vgfrc, shdmin/shdmax (minmax_vgfrc), and lai fields are only available in HRRRX 
   #files after mid-July 2019, and only so long as the record order didn't change afterward
@@ -469,19 +459,9 @@ case "${EXTRN_MDL_NAME_ICS}" in
     nsoill_out="9"
   fi
 #
-# Paths to the geogrid file for the RAPX.
+# Path to the RAPX geogrid file.
 #
-  if [ "${MACHINE}" = "HERA" ]; then
-    geogrid_file_input_grid="/scratch1/NCEPDEV/global/glopara/fix/fix_am/geo_em.d01.nc_RAPX"
-  elif [ "${MACHINE}" = "JET" ]; then
-    geogrid_file_input_grid="/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_RAPX"
-  elif [ "${MACHINE}" = "ORION" ]; then
-    geogrid_file_input_grid="/work/noaa/global/glopara/fix/fix_am/geo_em.d01.nc_RAPX"
-  elif [ "${MACHINE}" = "WCOSS_CRAY" ]; then
-    geogrid_file_input_grid="/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_RAPX"
-  elif [ "${MACHINE}" = "WCOSS_DELL_P3" ]; then
-    geogrid_file_input_grid="/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am/geo_em.d01.nc_RAPX"
-  fi
+  geogrid_file_input_grid="${FIXgsm}/geo_em.d01.nc_RAPX"
 
   vgtyp_from_climo=True
   sotyp_from_climo=False
