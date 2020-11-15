@@ -1627,6 +1627,7 @@ check_var_valid_value \
   "GRID_GEN_METHOD" "valid_vals_GRID_GEN_METHOD" "${err_msg}"
 #
 #-----------------------------------------------------------------------
+#
 # Set parameters according to the type of horizontal grid generation me-
 # thod specified.  First consider GFDL's global-parent-grid based me-
 # thod.
