@@ -221,9 +221,9 @@ face climatology files does not exist:
   SFC_CLIMO_DIR = \"${SFC_CLIMO_DIR}\""
 fi
 #
-# If RUN_TASK_MAKE_SFC_CLIMO is set to "TRUE" and the variable specify- 
-# ing the directory in which to look for pregenerated grid and orography 
-# files (i.e. SFC_CLIMO_DIR) is not empty, then for clarity reset the
+# If RUN_TASK_MAKE_SFC_CLIMO is set to "TRUE" and the variable specify-
+# ing the directory in which to look for pregenerated grid and orography
+# files (i.e. SFC_CLIMO_DIR) is not empty, then for clarity reset the 
 # latter to an empty string (because it will not be used).
 #
 if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] && \
