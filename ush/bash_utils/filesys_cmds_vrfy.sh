@@ -28,11 +28,7 @@ function filesys_cmd_vrfy() {
 #
 #-----------------------------------------------------------------------
 #
-  if [[ $(uname -s) == Darwin ]]; then
-    scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
-  else
-    scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
-  fi
+  scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
   local scrfunc_fn=$( basename "${scrfunc_fp}" )
   local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -70,11 +66,7 @@ function filesys_cmd_vrfy() {
 #
 #-----------------------------------------------------------------------
 #
-  if [[ $(uname -s) == Darwin ]]; then
-    local caller_fp=$( greadlink -f "${BASH_SOURCE[2]}" )
-  else
-    local caller_fp=$( readlink -f "${BASH_SOURCE[2]}" )
-  fi
+  local caller_fp=$( $READLINK -f "${BASH_SOURCE[2]}" )
   local caller_fn=$( basename "${caller_fp}" )
   local caller_dir=$( dirname "${caller_fp}" )
   local caller_name="${FUNCNAME[2]}"
