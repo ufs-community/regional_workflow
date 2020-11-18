@@ -213,7 +213,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-  anl_or_fcst="${anl_or_fcst^^}"
+  anl_or_fcst=`echo $anl_or_fcst| tr '[a-z]' '[A-Z]'`
   valid_vals_anl_or_fcst=( "ANL" "FCST" )
   check_var_valid_value "anl_or_fcst" "valid_vals_anl_or_fcst"
 #
