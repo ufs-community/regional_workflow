@@ -370,7 +370,7 @@ Copying contents of user cron table to backup file:
 # CRONTAB_LINE with backslashes.  Do this next.
 #
   crontab_line_esc_astr=$( printf "%s" "${CRONTAB_LINE}" | \
-                           sed -r -e "s%[*]%\\\\*%g" )
+                           $SED -r -e "s%[*]%\\\\*%g" )
 #
 # In the grep command below, the "^" at the beginning of the string be-
 # ing passed to grep is a start-of-line anchor while the "$" at the end
@@ -589,9 +589,9 @@ for (( i=0; i<${num_nml_vars}; i++ )); do
 
   mapping="${FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[$i]}"
   nml_var_name=$( printf "%s\n" "$mapping" | \
-                  sed -n -r -e "s/${regex_search}/\1/p" )
+                  $SED -n -r -e "s/${regex_search}/\1/p" )
   FIXam_fn=$( printf "%s\n" "$mapping" |
-              sed -n -r -e "s/${regex_search}/\2/p" )
+              $SED -n -r -e "s/${regex_search}/\2/p" )
 
   fp="\"\""
   if [ ! -z "${FIXam_fn}" ]; then

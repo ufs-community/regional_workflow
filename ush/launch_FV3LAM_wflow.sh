@@ -306,8 +306,8 @@ while read -r line; do
 #
   if [ $i -gt 0 ]; then
     im1=$((i-1))
-    cycle_str[im1]=$( echo "$line" | sed -r -n -e "s/${regex_search}/\1/p" )
-    cycle_status[im1]=$( echo "$line" | sed -r -n -e "s/${regex_search}/\2/p" )
+    cycle_str[im1]=$( echo "$line" | $SED -r -n -e "s/${regex_search}/\1/p" )
+    cycle_status[im1]=$( echo "$line" | $SED -r -n -e "s/${regex_search}/\2/p" )
   fi
   i=$((i+1))
 done <<< "${rocotostat_output}"
@@ -402,7 +402,7 @@ launch script for this experiment:
 # CRONTAB_LINE with backslashes.  Do this next.
 #
     crontab_line_esc_astr=$( printf "%s" "${CRONTAB_LINE}" | \
-                             sed -r -e "s%[*]%\\\\*%g" )
+                             $SED -r -e "s%[*]%\\\\*%g" )
 #
 # In the string passed to the grep command below, we use the line start
 # and line end anchors ("^" and "$", respectively) to ensure that we on-

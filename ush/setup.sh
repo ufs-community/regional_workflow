@@ -353,7 +353,7 @@ check_var_valid_value "DOT_OR_USCORE" "valid_vals_DOT_OR_USCORE"
 #
 #-----------------------------------------------------------------------
 #
-MACHINE=$( printf "%s" "$MACHINE" | sed -e 's/\(.*\)/\U\1/' )
+MACHINE=$( printf "%s" "$MACHINE" | $SED -e 's/\(.*\)/\U\1/' )
 check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #
 #-----------------------------------------------------------------------
@@ -535,7 +535,7 @@ check_var_valid_value \
 #-----------------------------------------------------------------------
 #
 DATE_OR_NULL=$( printf "%s" "${DATE_FIRST_CYCL}" | \
-                sed -n -r -e "s/^([0-9]{8})$/\1/p" )
+                $SED -n -r -e "s/^([0-9]{8})$/\1/p" )
 if [ -z "${DATE_OR_NULL}" ]; then
   print_err_msg_exit "\
 DATE_FIRST_CYCL must be a string consisting of exactly 8 digits of the 
@@ -545,7 +545,7 @@ month, and DD is the 2-digit day-of-month.
 fi
 
 DATE_OR_NULL=$( printf "%s" "${DATE_LAST_CYCL}" | \
-                sed -n -r -e "s/^([0-9]{8})$/\1/p" )
+                $SED -n -r -e "s/^([0-9]{8})$/\1/p" )
 if [ -z "${DATE_OR_NULL}" ]; then
   print_err_msg_exit "\
 DATE_LAST_CYCL must be a string consisting of exactly 8 digits of the 
@@ -567,7 +567,7 @@ CYCL_HRS_str="( $CYCL_HRS_str)"
 i=0
 for CYCL in "${CYCL_HRS[@]}"; do
 
-  CYCL_OR_NULL=$( printf "%s" "$CYCL" | sed -n -r -e "s/^([0-9]{2})$/\1/p" )
+  CYCL_OR_NULL=$( printf "%s" "$CYCL" | $SED -n -r -e "s/^([0-9]{2})$/\1/p" )
 
   if [ -z "${CYCL_OR_NULL}" ]; then
     print_err_msg_exit "\
@@ -1744,7 +1744,7 @@ pattern glob_pattern:
 
   fn=$( ls -1 ${glob_pattern} )
   RES_IN_FIXLAM_FILENAMES=$( \
-    printf "%s" $fn | sed -n -r -e "s/^C([0-9]*)$suffix/\1/p" )
+    printf "%s" $fn | $SED -n -r -e "s/^C([0-9]*)$suffix/\1/p" )
   if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ] && \
      [ "${GFDLgrid_RES}" -ne "${RES_IN_FIXLAM_FILENAMES}" ]; then
     print_err_msg_exit "\
@@ -2034,7 +2034,7 @@ cp_vrfy $USHDIR/${EXPT_DEFAULT_CONFIG_FN} ${GLOBAL_VAR_DEFNS_FP}
 #
 
 # Read all lines of GLOBAL_VAR_DEFNS file into the variable line_list.
-line_list=$( sed -r -e "s/(.*)/\1/g" ${GLOBAL_VAR_DEFNS_FP} )
+line_list=$( $SED -r -e "s/(.*)/\1/g" ${GLOBAL_VAR_DEFNS_FP} )
 #
 # Loop through the lines in line_list and concatenate lines ending with
 # the line bash continuation character "\".
@@ -2075,7 +2075,7 @@ done <<< "${line_list}"
 #-----------------------------------------------------------------------
 #
 # Also should remove trailing whitespace...
-line_list=$( sed -r \
+line_list=$( $SED -r \
              -e "s/^([ ]*)([^ ]+.*)/\2/g" \
              -e "/^#.*/d" \
              -e "/^$/d" \
@@ -2121,7 +2121,7 @@ str_to_insert=${str_to_insert//$'\n'/\\n}
 # the string "#!", e.g. "#!/bin/bash").
 #
 regexp="(^#!.*)"
-sed -i -r -e "s|$regexp|\1\n\n${str_to_insert}\n|g" ${GLOBAL_VAR_DEFNS_FP}
+$SED -i -r -e "s|$regexp|\1\n\n${str_to_insert}\n|g" ${GLOBAL_VAR_DEFNS_FP}
 
 
 
@@ -2141,7 +2141,7 @@ while read crnt_line; do
 # or more characters representing the value that the variable is being
 # set to.
 #
-  var_name=$( printf "%s" "${crnt_line}" | sed -n -r -e "s/^([^ ]*)=.*/\1/p" )
+  var_name=$( printf "%s" "${crnt_line}" | $SED -n -r -e "s/^([^ ]*)=.*/\1/p" )
 #echo
 #echo "============================"
 #printf "%s\n" "var_name = \"${var_name}\""

@@ -69,7 +69,7 @@ local func_name="${FUNCNAME[0]}"
 #-----------------------------------------------------------------------
 #
 var_list_default=$( \
-sed -r \
+$SED -r \
     -e "s/^([ ]*)([^ ]+.*)/\2/g" \
     -e "/^#.*/d" \
     -e "/^$/d" \
@@ -77,7 +77,7 @@ sed -r \
 )
 
 var_list_local=$( \
-sed -r \
+$SED -r \
     -e "s/^([ ]*)([^ ]+.*)/\2/g" \
     -e "/^#.*/d" \
     -e "/^$/d" \
@@ -99,7 +99,7 @@ while read crnt_line; do
 # Note that a variable name will be found only if the equal sign immed-
 # iately follows the variable name.
 # 
-  var_name=$( printf "%s" "${crnt_line}" | sed -n -r -e "s/^([^ =\"]*)=.*/\1/p")
+  var_name=$( printf "%s" "${crnt_line}" | $SED -n -r -e "s/^([^ =\"]*)=.*/\1/p")
 
   if [ -z "${var_name}" ]; then
 

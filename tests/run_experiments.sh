@@ -230,20 +230,20 @@ for (( i=0; i<=$((num_lines-1)); i++ )); do
 # all_lines.
 #
   all_lines[$i]=$( printf "%s" "${all_lines[$i]}" | \
-                   sed -r -e "s/^[ ]*//" -e "s/[ ]*$//" )
+                   $SED -r -e "s/^[ ]*//" -e "s/[ ]*$//" )
 #
 # Remove spaces before and after all field separators in the current
 # element of all_lines.  Note that we use the pipe symbol, "|", as the
 # field separator.
 #
   all_lines[$i]=$( printf "%s" "${all_lines[$i]}" | \
-                   sed -r -e "s/[ ]*${field_separator}[ ]*/${field_separator}/g" )
+                   $SED -r -e "s/[ ]*${field_separator}[ ]*/${field_separator}/g" )
 #
 # If the last character of the current line is a field separator, remove
 # it.
 #
   all_lines[$i]=$( printf "%s" "${all_lines[$i]}" | \
-                   sed -r -e "s/${field_separator}$//g" )
+                   $SED -r -e "s/${field_separator}$//g" )
 #
 # If after the processing above the current element of all_lines is not
 # empty, save it as the next element of expts_list.
@@ -294,9 +294,9 @@ Processing experiment \"${expts_list[$i]}\" ..."
 #
   regex_search="^([^${field_separator}]*)(${field_separator}(.*)|)"
   baseline_name=$( printf "%s" "${expts_list[$i]}" | \
-                   sed -r -n -e "s/${regex_search}/\1/p" )
+                   $SED -r -n -e "s/${regex_search}/\1/p" )
   remainder=$( printf "%s" "${expts_list[$i]}" | \
-               sed -r -n -e "s/${regex_search}/\3/p" )
+               $SED -r -n -e "s/${regex_search}/\3/p" )
 #
 # Get the names and corresponding values of the variables that need to
 # be modified in the current baseline to obtain the current experiment.
@@ -312,18 +312,18 @@ Processing experiment \"${expts_list[$i]}\" ..."
 # of remainder back into itself.
 #
     next_field=$( printf "%s" "$remainder" | \
-                  sed -r -e "s/${regex_search}/\1/" )
+                  $SED -r -e "s/${regex_search}/\1/" )
     remainder=$( printf "%s" "$remainder" | \
-                 sed -r -e "s/${regex_search}/\3/" )
+                 $SED -r -e "s/${regex_search}/\3/" )
 #
 # Save the name of the variable in the variable-value pair obtained
 # above in the array modvar_name.  Then save the value in the variable-
 # value pair in the array modvar_value.
 #
     modvar_name[${num_mod_vars}]=$( printf "%s" "${next_field}" | \
-                                    sed -r -e "s/^([^=]*)=(.*)/\1/" )
+                                    $SED -r -e "s/^([^=]*)=(.*)/\1/" )
     modvar_value[${num_mod_vars}]=$( printf "%s" "${next_field}" | \
-                                     sed -r -e "s/^([^=]*)=(\")?([^\"]+*)(\")?/\3/" )
+                                     $SED -r -e "s/^([^=]*)=(\")?([^\"]+*)(\")?/\3/" )
 #
 # Increment the index that keeps track of the number of variables that
 # need to be modified in the current baseline to obtain the current ex-

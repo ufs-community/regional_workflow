@@ -133,7 +133,7 @@ lar expression (regex_search):
   regex_search = ${regex_search}"
     }; 
 
-  sed -i -r -e "s%${regex_search}%${regex_replace}%" "${file_full_path}"
+  $SED -i -r -e "s%${regex_search}%${regex_replace}%" "${file_full_path}"
 #
 #-----------------------------------------------------------------------
 #

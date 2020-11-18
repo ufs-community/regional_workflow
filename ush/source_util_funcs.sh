@@ -44,6 +44,15 @@ function source_util_funcs() {
 #
 #-----------------------------------------------------------------------
 #
+# Source the file that defines MacOS-specific UNIX command-line
+# utilities, that mimic the functionality of the GNU equivalents
+#
+#-----------------------------------------------------------------------
+#
+  . ${bashutils_dir}/define_macos_utilities.sh
+#
+#-----------------------------------------------------------------------
+#
 # Source the file containing the functions that print out messages.
 #
 #-----------------------------------------------------------------------

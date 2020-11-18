@@ -175,7 +175,7 @@ specified for this file:
   grep -q -E "${regex_search}" "${file_full_path}"
 
   if [ $? -eq 0 ]; then
-    sed -i -r -e "s%${regex_search}%${regex_replace}%" "${file_full_path}"
+    $SED -i -r -e "s%${regex_search}%${regex_replace}%" "${file_full_path}"
   else
     print_err_msg_exit "\
 Specified file (file_full_path) does not contain the searched-for regu-

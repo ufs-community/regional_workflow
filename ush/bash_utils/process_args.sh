@@ -267,7 +267,7 @@ ments (num_valid_args) specified in the array valid_arg_names:
 
 # Remove spaces (if any exist) from the current valid argument name.
     valid_arg_name_no_spaces=$( \
-      printf "%s\n" "${valid_arg_name}" | sed -r -e 's/[[:space:]]//g' )
+      printf "%s\n" "${valid_arg_name}" | $SED -r -e 's/[[:space:]]//g' )
 
     if [ "${valid_arg_name_no_spaces}" != "${valid_arg_name}" ]; then
       print_err_msg_exit "\
