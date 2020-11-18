@@ -75,8 +75,13 @@ function cmp_ncfiles_one_dir() {
 #
 #set -x
 
-rundir1="$( readlink -f $1 )"
-rundir2="$( readlink -f $2 )"
+if [[ $(uname -s) == Darwin ]]; then
+  rundir1="$( greadlink -f $1 )"
+  rundir2="$( greadlink -f $2 )"
+else
+  rundir1="$( readlink -f $1 )"
+  rundir2="$( readlink -f $2 )"
+fi
 
 printf "\n"
 printf "%s\n" "rundir1 = \"$rundir1\""

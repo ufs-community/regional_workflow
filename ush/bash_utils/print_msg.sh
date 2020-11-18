@@ -33,7 +33,11 @@ function print_info_msg() {
 #
 #-----------------------------------------------------------------------
 #
-  local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+  if [[ $(uname -s) == Darwin ]]; then
+    scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+  else
+    scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+  fi
   local scrfunc_fn=$( basename "${scrfunc_fp}" )
   local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -64,7 +68,11 @@ function print_info_msg() {
 #
 #-----------------------------------------------------------------------
 #
-  local caller_fp=$( readlink -f "${BASH_SOURCE[1]}" )
+  if [[ $(uname -s) == Darwin ]]; then
+    local caller_fp=$( greadlink -f "${BASH_SOURCE[1]}" )
+  else
+    local caller_fp=$( readlink -f "${BASH_SOURCE[1]}" )
+  fi
   local caller_fn=$( basename "${caller_fp}" )
   local caller_dir=$( dirname "${caller_fp}" )
   local caller_name="${FUNCNAME[1]}"
@@ -182,7 +190,11 @@ function print_err_msg_exit() {
 #
 #-----------------------------------------------------------------------
 #
-  local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+  if [[ $(uname -s) == Darwin ]]; then
+    local scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+  else
+    local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+  fi
   local scrfunc_fn=$( basename "${scrfunc_fp}" )
   local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -213,7 +225,11 @@ function print_err_msg_exit() {
 #
 #-----------------------------------------------------------------------
 #
-  local caller_fp=$( readlink -f "${BASH_SOURCE[1]}" )
+  if [[ $(uname -s) == Darwin ]]; then
+    local caller_fp=$( greadlink -f "${BASH_SOURCE[1]}" )
+  else
+    local caller_fp=$( readlink -f "${BASH_SOURCE[1]}" )
+  fi
   local caller_fn=$( basename "${caller_fp}" )
   local caller_dir=$( dirname "${caller_fp}" )
   local caller_name="${FUNCNAME[1]}"

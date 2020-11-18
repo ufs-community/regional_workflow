@@ -9,7 +9,11 @@
 #
 #-----------------------------------------------------------------------
 #
-scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+if [[ $(uname -s) == Darwin ]]; then
+  scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+else
+  scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+fi
 scrfunc_fn=$( basename "${scrfunc_fp}" )
 scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -150,7 +154,11 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-expts_list_fp=$( readlink -f "${expts_file}" )
+if [[ $(uname -s) == Darwin ]]; then
+  expts_list_fp=$( greadlink -f "${expts_file}" )
+else
+  expts_list_fp=$( readlink -f "${expts_file}" )
+fi
 
 if [ ! -f "${expts_list_fp}" ]; then
   print_err_msg_exit "\
@@ -678,7 +686,11 @@ COMINgfs=\"${COMINgfs}\""
 #
 # Set STMP and PTMP.
 #
-    nco_basedir=$( readlink -f "$homerrfs/../../nco_dirs" )
+    if [[ $(uname -s) == Darwin ]]; then
+      nco_basedir=$( greadlink -f "$homerrfs/../../nco_dirs" )
+    else
+      nco_basedir=$( readlink -f "$homerrfs/../../nco_dirs" )
+    fi
     STMP=${stmp:-"${nco_basedir}/stmp"}
     PTMP=${ptmp:-"${nco_basedir}/ptmp"}
 

@@ -17,7 +17,11 @@ set -u
 #
 #-----------------------------------------------------------------------
 #
-scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+if [[ $(uname -s) == Darwin ]]; then
+  scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+else
+  scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+fi
 scrfunc_fn=$( basename "${scrfunc_fp}" )
 scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -65,7 +69,11 @@ scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #-----------------------------------------------------------------------
 #
 exptdir=$( dirname "$0" )
-exptdir=$( readlink -f "$exptdir" )
+if [[ $(uname -s) == Darwin ]]; then
+  exptdir=$( greadlink -f "$exptdir" )
+else
+  exptdir=$( readlink -f "$exptdir" )
+fi
 #
 #-----------------------------------------------------------------------
 #

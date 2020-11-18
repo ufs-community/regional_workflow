@@ -24,7 +24,11 @@ function setup() {
 #
 #-----------------------------------------------------------------------
 #
-local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+if [[ $(uname -s) == Darwin ]]; then
+  scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+else
+  scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+fi
 local scrfunc_fn=$( basename "${scrfunc_fp}" )
 local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -739,7 +743,11 @@ esac
 #
 #-----------------------------------------------------------------------
 #
-mng_extrns_cfg_fn=$( readlink -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
+if [[ $(uname -s) == Darwin ]]; then
+  mng_extrns_cfg_fn=$( greadlink -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
+else
+  mng_extrns_cfg_fn=$( readlink -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
+fi
 property_name="local_path"
 #
 # Get the base directory of the FV3 forecast model code.
@@ -927,7 +935,11 @@ fi
 if [ "${EXPT_BASEDIR:0:1}" != "/" ]; then
   EXPT_BASEDIR="${SR_WX_APP_TOP_DIR}/../expt_dirs/${EXPT_BASEDIR}"
 fi
-EXPT_BASEDIR="$( readlink -m ${EXPT_BASEDIR} )"
+  if [[ $(uname -s) == Darwin ]]; then
+    EXPT_BASEDIR="$( greadlink -m ${EXPT_BASEDIR} )"
+  else
+    EXPT_BASEDIR="$( readlink -m ${EXPT_BASEDIR} )"
+  fi
 mkdir_vrfy -p "${EXPT_BASEDIR}"
 #
 #-----------------------------------------------------------------------
@@ -1012,7 +1024,11 @@ if [ "${RUN_ENVIR}" = "nco" ]; then
 # to such a directory.  Resolve any symlinks in the path specified by 
 # FIXam and check that this is the case.
 #
-  path_resolved=$( readlink -m "$FIXam" )
+  if [[ $(uname -s) == Darwin ]]; then
+    path_resolved=$( greadlink -m "$FIXam" )
+  else
+    path_resolved=$( readlink -m "$FIXam" )
+  fi
   if [ ! -d "${path_resolved}" ]; then
     print_err_msg_exit "\
 In order to be able to generate a forecast experiment in NCO mode (i.e. 
@@ -1035,7 +1051,11 @@ the experiment generation script."
 # symlink to such a directory.  Resolve any symlinks in the path specified
 # by FIXLAM and check that this is the case.
 #
-  path_resolved=$( readlink -m "$FIXLAM" )
+  if [[ $(uname -s) == Darwin ]]; then
+    path_resolved=$( greadlink -m "$FIXLAM" )
+  else
+    path_resolved=$( readlink -m "$FIXLAM" )
+  fi
   if [ ! -d "${path_resolved}" ]; then
     print_err_msg_exit "\
 In order to be able to generate a forecast experiment in NCO mode (i.e. 
@@ -2326,7 +2346,11 @@ FV3_NML_ENSMEM_FPS=( $( printf "\"%s\" " "${FV3_NML_ENSMEM_FPS[@]}" ))
 GLOBAL_VAR_DEFNS_FP="${GLOBAL_VAR_DEFNS_FP}"
 # Try this at some point instead of hard-coding it as above; it's a more
 # flexible approach (if it works).
-#GLOBAL_VAR_DEFNS_FP=$( readlink -f "${BASH_SOURCE[0]}" )
+#if [[ $(uname -s) == Darwin ]]; then
+#  GLOBAL_VAR_DEFNS_FP=$( greadlink -f "${BASH_SOURCE[0]}" )
+#else
+#  GLOBAL_VAR_DEFNS_FP=$( readlink -f "${BASH_SOURCE[0]}" )
+#fi
 
 DATA_TABLE_TMPL_FN="${DATA_TABLE_TMPL_FN}"
 DIAG_TABLE_TMPL_FN="${DIAG_TABLE_TMPL_FN}"
