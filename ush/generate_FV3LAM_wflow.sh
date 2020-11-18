@@ -885,27 +885,29 @@ echo "$retval" >> "${tmp_fp}"
 # place in a subshell (due to the fact that we are then piping its out-
 # put to the "tee" command).  Then remove the temporary file.
 #
-exptdir=$( sed "1q;d" "${tmp_fp}" )
-retval=$( sed "2q;d" "${tmp_fp}" )
-rm "${tmp_fp}"
+if [ -f "${tmp_fp}" ]; then
+  exptdir=$( sed "1q;d" "${tmp_fp}" )
+  retval=$( sed "2q;d" "${tmp_fp}" )
+  rm "${tmp_fp}"
 #
 # If the call to the generate_FV3LAM_wflow function above was success-
 # ful, move the log file in which the "tee" command saved the output of
 # the function to the experiment directory.
 #
-if [ $retval -eq 0 ]; then
-  mv "${log_fp}" "$exptdir"
+  if [ $retval -eq 0 ]; then
+    mv "${log_fp}" "$exptdir"
 #
 # If the call to the generate_FV3LAM_wflow function above was not suc-
 # cessful, print out an error message and exit with a nonzero return
 # code.
 #
-else
-  printf "
-Experiment/workflow generation failed.  Check the log file from the ex-
-periment/workflow generation script in the file specified by log_fp:
-  log_fp = \"${log_fp}\"
-Stopping.
-"
-  exit 1
+  else
+    printf "
+  Experiment/workflow generation failed.  Check the log file from the ex-
+  periment/workflow generation script in the file specified by log_fp:
+    log_fp = \"${log_fp}\"
+  Stopping.
+  "
+    exit 1
+  fi
 fi
