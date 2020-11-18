@@ -10,6 +10,7 @@
 #-----------------------------------------------------------------------
 #
 if [[ $(uname -s) == Darwin ]]; then
+  command -v greadlink >/dev/null 2>&1 || { echo >&2 "For Darwin-based operating systems (MacOS), the 'greadlink' utility is required to run the UFS SRW Application. Reference the User's Guide for more information about platform requirements. Aborting."; exit 1; }
   scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
 else
   scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
@@ -154,11 +155,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-if [[ $(uname -s) == Darwin ]]; then
-  expts_list_fp=$( greadlink -f "${expts_file}" )
-else
-  expts_list_fp=$( readlink -f "${expts_file}" )
-fi
+expts_list_fp=$( $READLINK -f "${expts_file}" )
 
 if [ ! -f "${expts_list_fp}" ]; then
   print_err_msg_exit "\
@@ -686,11 +683,7 @@ COMINgfs=\"${COMINgfs}\""
 #
 # Set STMP and PTMP.
 #
-    if [[ $(uname -s) == Darwin ]]; then
-      nco_basedir=$( greadlink -f "$homerrfs/../../nco_dirs" )
-    else
-      nco_basedir=$( readlink -f "$homerrfs/../../nco_dirs" )
-    fi
+    nco_basedir=$( $READLINK -f "$homerrfs/../../nco_dirs" )
     STMP=${stmp:-"${nco_basedir}/stmp"}
     PTMP=${ptmp:-"${nco_basedir}/ptmp"}
 
