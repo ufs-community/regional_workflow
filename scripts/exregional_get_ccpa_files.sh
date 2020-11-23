@@ -29,6 +29,14 @@ accum=01
 
 # Initialization
 init=${CDATE}${hh}
+yyyymmdd=${CDATE:0:8}
+hh=${CDATE:8:2}
+cyc=$hh
+
+fhr_last=`echo ${FHR}  | awk '{ print $NF }'`
+
+fhr_list=`echo ${FHR} | sed "s/ /,/g"`
+
 
 # Forecast length
 fcst_length=${fhr_last}
