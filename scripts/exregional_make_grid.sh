@@ -147,6 +147,12 @@ case $MACHINE in
     ulimit -a
     ;;
 
+  "MACOS")
+    export APRUN="time"
+    ulimit -s unlimited
+    ulimit -a
+    ;;
+
   *)
     print_err_msg_exit "\
 Run command has not been specified for this machine:
@@ -437,7 +443,7 @@ code:
 # so that it can be used both here and in the exregional_make_orog.sh
 # script.
 res_equiv=$( ncdump -h "${grid_fp}" | \
-             grep -o ":RES_equiv = [0-9]\+" | grep -o "[0-9]" ) || \
+             grep -o ":RES_equiv = [0-9]\+" | sed 's/[^0-9]*//g' ) || \
 print_err_msg_exit "\
 Attempt to extract the equivalent global uniform cubed-sphere grid reso-
 lution from the grid file (grid_fp) failed:
