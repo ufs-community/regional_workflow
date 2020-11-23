@@ -234,7 +234,7 @@ fi
   hh=${cdate_FV3LAM:8:2}
   yyyymmdd=${cdate_FV3LAM:0:8}
 
-  cdate=$( date --utc --date "${yyyymmdd} ${hh} UTC - ${time_offset_hrs} hours" "+%Y%m%d%H" )
+  cdate=$( $DATE_UTIL --utc --date "${yyyymmdd} ${hh} UTC - ${time_offset_hrs} hours" "+%Y%m%d%H" )
 #
 #-----------------------------------------------------------------------
 #
@@ -298,7 +298,7 @@ fi
 # Get the Julian day-of-year of the starting date and time of the exter-
 # nal model forecast.
 #
-    ddd=$( date --utc --date "${yyyy}-${mm}-${dd} ${hh}:${mn} UTC" "+%j" )
+    ddd=$( DATE_UTIL --utc --date "${yyyy}-${mm}-${dd} ${hh}:${mn} UTC" "+%j" )
 #
 # Get the last two digits of the year of the starting date and time of 
 # the external model forecast.
