@@ -174,7 +174,7 @@ have been set as follows:
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -v VERBOSE ]; then
+  if [ ! -z {$VERBOSE+x} ]; then
     print_info_msg "$msg"
   else
     print_info_msg "$VERBOSE" "$msg"
