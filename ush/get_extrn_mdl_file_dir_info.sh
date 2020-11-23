@@ -592,11 +592,13 @@ bination of external model (extrn_mdl_name) and analysis or forecast
       sysdir="$sysbasedir"
       ;;
     *)
-      print_err_msg_exit "\
+      if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+        print_err_msg_exit "\
 The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
+      fi
       ;;
     esac
     ;;
@@ -629,11 +631,13 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     *)
-      print_err_msg_exit "\
+      if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+        print_err_msg_exit "\
 The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
+      fi
       ;;
     esac
     ;;
@@ -663,11 +667,13 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     *)
-      print_err_msg_exit "\
+      if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+        print_err_msg_exit "\
 The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
+      fi
       ;;
     esac
     ;;
@@ -697,11 +703,13 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     *)
-      print_err_msg_exit "\
+      if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+        print_err_msg_exit "\
 The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
+      fi
       ;;
     esac
     ;;
@@ -730,22 +738,25 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     *)
-      print_err_msg_exit "\
+      if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+        print_err_msg_exit "\
 The system directory in which to look for external model output files
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
+      fi
       ;;
     esac
     ;;
 
 
   *)
-    print_err_msg_exit "\
+    if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+      print_err_msg_exit "\
 The system directory in which to look for external model output files 
 has not been specified for this external model:
   extrn_mdl_name = \"${extrn_mdl_name}\""
-
+    fi
   esac
 #
 #-----------------------------------------------------------------------
