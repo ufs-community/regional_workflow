@@ -46,6 +46,11 @@ RUN_ENVIR="nco"
 # ACCOUNT:
 # The account under which to submit jobs to the queue.
 #
+# WORKFLOW_MANAGER:
+# The workflow manager to use (e.g. rocoto). This is set to "none" by
+# default, but if the machine name is set to a platform that supports
+# rocoto, this will be overwritten and set to "rocoto".
+#
 # SCHED:
 # The job scheduler to use (e.g. slurm).  Set this to an empty string in
 # order for the experiment generation script to set it depending on the
@@ -103,6 +108,7 @@ RUN_ENVIR="nco"
 #
 MACHINE="BIG_COMPUTER"
 ACCOUNT="project_name"
+WORKFLOW_MANAGER="none"
 SCHED=""
 PARTITION_DEFAULT=""
 QUEUE_DEFAULT=""

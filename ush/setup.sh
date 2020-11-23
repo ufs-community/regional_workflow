@@ -360,10 +360,12 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #
 #-----------------------------------------------------------------------
 #
+NCORES_PER_NODE=""
 case $MACHINE in
 
   "WCOSS_CRAY")
-    NCORES_PER_NODE="24"
+    WORKFLOW_MANAGER="rocoto"
+    NCORES_PER_NODE=24
     SCHED="lsfcray"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
     QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
@@ -371,6 +373,7 @@ case $MACHINE in
     ;;
 
   "WCOSS_DELL_P3")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=24
     SCHED="lsf"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
@@ -379,6 +382,7 @@ case $MACHINE in
     ;;
 
   "HERA")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=40
     SCHED="${SCHED:-slurm}"
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"hera"}
@@ -390,6 +394,7 @@ case $MACHINE in
     ;;
 
   "ORION")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=40
     SCHED="${SCHED:-slurm}"
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"orion"}
@@ -401,6 +406,7 @@ case $MACHINE in
     ;;
 
   "JET")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=24
     SCHED="${SCHED:-slurm}"
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"sjet,vjet,kjet,xjet"}
@@ -412,6 +418,7 @@ case $MACHINE in
     ;;
 
   "ODIN")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=24
     SCHED="${SCHED:-slurm}"
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"workq"}
@@ -423,6 +430,7 @@ case $MACHINE in
     ;;
 
   "CHEYENNE")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=36
     SCHED="${SCHED:-pbspro}"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
@@ -431,6 +439,7 @@ case $MACHINE in
     ;;
 
   "STAMPEDE")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=68
     SCHED="slurm"
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"normal"}
@@ -441,6 +450,10 @@ case $MACHINE in
     QUEUE_FCST=${QUEUE_FCST:-"normal"}
     ;;
 
+  "MACOS")
+    WORKFLOW_MANAGER="none"
+    SCHED="none"
+    ;;
 esac
 #
 #-----------------------------------------------------------------------
@@ -716,13 +729,15 @@ case $MACHINE in
     ;;
 
   *)
-    print_err_msg_exit "\
+  if [ -z "$FIXgsm" -o -z "$TOPO_DIR" -o -z "$SFC_CLIMO_INPUT_DIR" ]; then 
+      print_err_msg_exit "\
 One or more fix file directories have not been specified for this machine:
   MACHINE = \"$MACHINE\"
   FIXgsm = \"${FIXgsm:-\"\"}
   TOPO_DIR = \"${TOPO_DIR:-\"\"}
   SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
 You can specify the missing location(s) in config.sh"
+  fi
     ;;
 
 esac
