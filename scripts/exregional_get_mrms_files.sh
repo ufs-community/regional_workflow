@@ -20,7 +20,13 @@ if [[ ! -d "$mrms_proc" ]]; then
 fi
 
 # Initialization
+yyyymmdd=${CDATE:0:8}
+hh=${CDATE:8:2}
+cyc=$hh
+
 start_valid=${CDATE}${hh}
+
+fhr_last=`echo ${FHR}  | awk '{ print $NF }'`
 
 # Forecast length
 fcst_length=${fhr_last}
