@@ -147,6 +147,11 @@ case $MACHINE in
     export APRUN="time"
     ;;
 
+  "MACOS")
+    ulimit -a
+    export APRUN="time"
+    ;;
+
   *)
     print_err_msg_exit "\
 Run command has not been specified for this machine:

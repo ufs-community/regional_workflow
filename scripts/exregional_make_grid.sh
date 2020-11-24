@@ -149,7 +149,6 @@ case $MACHINE in
 
   "MACOS")
     export APRUN="time"
-    ulimit -s unlimited
     ulimit -a
     ;;
 
