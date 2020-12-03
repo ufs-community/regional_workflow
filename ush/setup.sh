@@ -454,6 +454,11 @@ case $MACHINE in
     WORKFLOW_MANAGER="none"
     SCHED="none"
     ;;
+
+  "LINUX")
+    WORKFLOW_MANAGER="none"
+    SCHED="none"
+    ;;
 esac
 #
 #-----------------------------------------------------------------------
