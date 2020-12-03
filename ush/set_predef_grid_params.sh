@@ -84,7 +84,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "RRFS_CONUS_25km")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-97.5
   ESGgrid_LAT_CTR=38.5
@@ -128,7 +128,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "RRFS_CONUS_13km")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-97.5
   ESGgrid_LAT_CTR=38.5
@@ -172,7 +172,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "RRFS_CONUS_3km")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-97.5
   ESGgrid_LAT_CTR=38.5
@@ -216,7 +216,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "RRFS_SUBCONUS_3km")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-97.5
   ESGgrid_LAT_CTR=35.0
@@ -263,7 +263,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "RRFS_AK_13km")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-161.5
   ESGgrid_LAT_CTR=63.0
@@ -379,7 +379,7 @@ case ${PREDEF_GRID_NAME} in
 #
 #  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-161.5
   ESGgrid_LAT_CTR=63.0
@@ -428,7 +428,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "CONUS_25km_GFDLgrid")
 
-  GRID_GEN_METHOD= "GFDLgrid"
+  GRID_GEN_METHOD="GFDLgrid"
 
   GFDLgrid_LON_T6_CTR=-97.5
   GFDLgrid_LAT_T6_CTR=38.5
@@ -483,7 +483,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "CONUS_3km_GFDLgrid")
 
-  GRID_GEN_METHOD= "GFDLgrid"
+  GRID_GEN_METHOD="GFDLgrid"
 
   GFDLgrid_LON_T6_CTR=-97.5
   GFDLgrid_LAT_T6_CTR=38.5
@@ -600,7 +600,7 @@ case ${PREDEF_GRID_NAME} in
 #
 #  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
@@ -676,7 +676,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "EMC_HI")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/hi/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
@@ -751,7 +751,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "EMC_PR")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/pr/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
@@ -826,7 +826,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "EMC_GU")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/guam/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
@@ -900,7 +900,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "GSL_HAFSV0.A_25km")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-62.0
   ESGgrid_LAT_CTR=22.0
@@ -942,7 +942,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "GSL_HAFSV0.A_13km")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-62.0
   ESGgrid_LAT_CTR=22.0
@@ -984,7 +984,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "GSL_HAFSV0.A_3km")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-62.0
   ESGgrid_LAT_CTR=22.0
@@ -1026,7 +1026,7 @@ case ${PREDEF_GRID_NAME} in
 #
 "GSD_HRRR_AK_50km")
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-163.5
   ESGgrid_LAT_CTR=62.8
@@ -1114,7 +1114,7 @@ case ${PREDEF_GRID_NAME} in
 #
 #  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
-  GRID_GEN_METHOD= "ESGgrid"
+  GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-106.0
   ESGgrid_LAT_CTR=54.0
