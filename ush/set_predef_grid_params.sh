@@ -10,7 +10,7 @@ function set_predef_grid_params() {
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located 
+# Get the full path to the file in which this script/function is located
 # (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
 # which the file is located (scrfunc_dir).
 #
@@ -31,7 +31,7 @@ local func_name="${FUNCNAME[0]}"
 #-----------------------------------------------------------------------
 #
 # Set grid and other parameters according to the value of the predefined
-# domain (PREDEF_GRID_NAME).  Note that the code will enter this script 
+# domain (PREDEF_GRID_NAME).  Note that the code will enter this script
 # only if PREDEF_GRID_NAME has a valid (and non-empty) value.
 #
 ####################
@@ -111,10 +111,10 @@ case ${PREDEF_GRID_NAME} in
     WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
     WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
     WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-    WRTCMP_nx="199"                                                    
-    WRTCMP_ny="111"                                                    
-    WRTCMP_lon_lwr_left="-121.23349066"                                
-    WRTCMP_lat_lwr_left="23.41731593"                                  
+    WRTCMP_nx="199"
+    WRTCMP_ny="111"
+    WRTCMP_lon_lwr_left="-121.23349066"
+    WRTCMP_lat_lwr_left="23.41731593"
     WRTCMP_dx="${ESGgrid_DELX}"
     WRTCMP_dy="${ESGgrid_DELY}"
   fi
@@ -155,10 +155,10 @@ case ${PREDEF_GRID_NAME} in
     WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
     WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
     WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-    WRTCMP_nx="393"                                                    
-    WRTCMP_ny="225"                                                    
-    WRTCMP_lon_lwr_left="-121.70231097"                                
-    WRTCMP_lat_lwr_left="22.57417972"                                  
+    WRTCMP_nx="393"
+    WRTCMP_ny="225"
+    WRTCMP_lon_lwr_left="-121.70231097"
+    WRTCMP_lat_lwr_left="22.57417972"
     WRTCMP_dx="${ESGgrid_DELX}"
     WRTCMP_dy="${ESGgrid_DELY}"
   fi
@@ -199,10 +199,10 @@ case ${PREDEF_GRID_NAME} in
     WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
     WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
     WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-    WRTCMP_nx="1746"                                                   
-    WRTCMP_ny="1014"                                                   
-    WRTCMP_lon_lwr_left="-122.17364391"                                
-    WRTCMP_lat_lwr_left="21.88588562"                                  
+    WRTCMP_nx="1746"
+    WRTCMP_ny="1014"
+    WRTCMP_lon_lwr_left="-122.17364391"
+    WRTCMP_lat_lwr_left="21.88588562"
     WRTCMP_dx="${ESGgrid_DELX}"
     WRTCMP_dy="${ESGgrid_DELY}"
   fi
@@ -333,23 +333,23 @@ case ${PREDEF_GRID_NAME} in
 #
 "RRFS_AK_3km")
 
-#  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then 
+#  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 #
 #    GFDLgrid_LON_T6_CTR=-160.8
 #    GFDLgrid_LAT_T6_CTR=63.0
 #    GFDLgrid_STRETCH_FAC=1.161
 #    GFDLgrid_RES="768"
 #    GFDLgrid_REFINE_RATIO=4
-#  
+#
 #    num_margin_cells_T6_left=204
 #    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
-#  
+#
 #    num_margin_cells_T6_right=204
 #    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
-#  
+#
 #    num_margin_cells_T6_bottom=249
 #    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
-#  
+#
 #    num_margin_cells_T6_top=249
 #    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
 #
@@ -575,16 +575,16 @@ case ${PREDEF_GRID_NAME} in
 #    GFDLgrid_STRETCH_FAC=1.0  # ???
 #    GFDLgrid_RES="768"
 #    GFDLgrid_REFINE_RATIO=3   # ???
-#  
+#
 #    num_margin_cells_T6_left=61
 #    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
-#  
+#
 #    num_margin_cells_T6_right=67
 #    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
-#  
+#
 #    num_margin_cells_T6_bottom=165
 #    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
-#  
+#
 #    num_margin_cells_T6_top=171
 #    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
 #
@@ -627,7 +627,7 @@ case ${PREDEF_GRID_NAME} in
 # 'ksplit' is the factor that determines the timestep for this process (divided
 
 # Physics timestep in seconds, actual dynamics timestep can be a subset of this.
-# This is the time step for the largest atmosphere model loop.  It corresponds to the frequency with which the 
+# This is the time step for the largest atmosphere model loop.  It corresponds to the frequency with which the
 # top-level routine in the dynamics is called as well as the frequency with which the physics is called.
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
@@ -702,7 +702,7 @@ case ${PREDEF_GRID_NAME} in
 # 'ksplit' is the factor that determines the timestep for this process (divided
 
 # Physics timestep in seconds, actual dynamics timestep can be a subset of this.
-# This is the time step for the largest atmosphere model loop.  It corresponds to the frequency with which the 
+# This is the time step for the largest atmosphere model loop.  It corresponds to the frequency with which the
 # top-level routine in the dynamics is called as well as the frequency with which the physics is called.
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
@@ -777,7 +777,7 @@ case ${PREDEF_GRID_NAME} in
 # 'ksplit' is the factor that determines the timestep for this process (divided
 
 # Physics timestep in seconds, actual dynamics timestep can be a subset of this.
-# This is the time step for the largest atmosphere model loop.  It corresponds to the frequency with which the 
+# This is the time step for the largest atmosphere model loop.  It corresponds to the frequency with which the
 # top-level routine in the dynamics is called as well as the frequency with which the physics is called.
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
@@ -852,7 +852,7 @@ case ${PREDEF_GRID_NAME} in
 # 'ksplit' is the factor that determines the timestep for this process (divided
 
 # Physics timestep in seconds, actual dynamics timestep can be a subset of this.
-# This is the time step for the largest atmosphere model loop.  It corresponds to the frequency with which the 
+# This is the time step for the largest atmosphere model loop.  It corresponds to the frequency with which the
 # top-level routine in the dynamics is called as well as the frequency with which the physics is called.
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
@@ -884,7 +884,7 @@ case ${PREDEF_GRID_NAME} in
 #Write component grid must always be <= compute grid (without haloes)
     WRTCMP_nx="420"
     WRTCMP_ny="348"
-#Lower left latlon (southwest corner) Used /scratch2/NCEPDEV/fv3-cam/Dusan.Jovic/dbrowse/fv3grid utility to find best value 
+#Lower left latlon (southwest corner) Used /scratch2/NCEPDEV/fv3-cam/Dusan.Jovic/dbrowse/fv3grid utility to find best value
     WRTCMP_lon_lwr_left="140"
     WRTCMP_lat_lwr_left="10"
     WRTCMP_dx="$ESGgrid_DELX"
@@ -1077,16 +1077,16 @@ case ${PREDEF_GRID_NAME} in
 #    GFDLgrid_STRETCH_FAC=0.63
 #    GFDLgrid_RES="384"
 #    GFDLgrid_REFINE_RATIO=3
-#  
+#
 #    num_margin_cells_T6_left=10
 #    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
-#  
+#
 #    num_margin_cells_T6_right=10
 #    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
-#  
+#
 #    num_margin_cells_T6_bottom=10
 #    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
-#  
+#
 #    num_margin_cells_T6_top=10
 #    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
 #
