@@ -28,5 +28,6 @@
     export READLINK=readlink
     export SED=sed
     export DATE_UTIL=date
+    export LN_UTIL=ln
   fi
 
