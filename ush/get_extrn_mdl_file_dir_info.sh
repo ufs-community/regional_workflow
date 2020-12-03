@@ -166,7 +166,7 @@ where the arguments are defined as follows:
  
   varname_extrn_mdl_sysdir:
   Name of the global variable that will contain the system directory in
-  which the externaml model output files may be stored.
+  which the external model output files may be stored.
  
   varname_extrn_mdl_arcv_fmt:
   Name of the global variable that will contain the format of the ar-
@@ -559,6 +559,7 @@ bination of external model (extrn_mdl_name) and analysis or forecast
     sysbasedir="${EXTRN_MDL_SYSBASEDIR_LBCS}"
   fi
 
+  sysdir=""
   case "${extrn_mdl_name}" in
 
 #
