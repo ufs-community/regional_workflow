@@ -591,6 +591,9 @@ bination of external model (extrn_mdl_name) and analysis or forecast
     "STAMPEDE")
       sysdir="$sysbasedir"
       ;;
+    "GAEA")
+      sysdir=""
+      ;;
     *)
       print_err_msg_exit "\
 The system directory in which to look for external model output files 
@@ -628,6 +631,9 @@ has not been specified for this external model and machine combination:
     "STAMPEDE")
       sysdir="$sysbasedir"
       ;;
+    "GAEA")
+      sysdir="$sysbasedir"
+      ;;
     *)
       print_err_msg_exit "\
 The system directory in which to look for external model output files 
@@ -660,6 +666,12 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     "CHEYENNE")
+      sysdir="$sysbasedir"
+      ;;
+    "STAMPEDE")
+      sysdir="$sysbasedir"
+      ;;
+    "GAEA")
       sysdir="$sysbasedir"
       ;;
     *)
@@ -696,6 +708,12 @@ has not been specified for this external model and machine combination:
     "CHEYENNE")
       sysdir="$sysbasedir"
       ;;
+    "STAMPEDE")
+      sysdir="$sysbasedir"
+      ;;
+    "GAEA")
+      sysdir="$sysbasedir"
+      ;;
     *)
       print_err_msg_exit "\
 The system directory in which to look for external model output files 
@@ -727,6 +745,12 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     "CHEYENNE")
+      sysdir="$sysbasedir"
+      ;;
+    "STAMPEDE")
+      sysdir="$sysbasedir"
+      ;;
+    "GAEA")
       sysdir="$sysbasedir"
       ;;
     *)
