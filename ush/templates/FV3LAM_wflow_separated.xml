@@ -557,10 +557,11 @@ MODULES_RUN_TASK_FP script.
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
     <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>APCP</value></envar>
     <envar><name>ACCUM</name><value>01</value></envar>
 
     <dependency>
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      <taskdep task="&GET_OBS_CCPA_TN;"/>
     </dependency>
 
   </task>
@@ -591,7 +592,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>VAR</name><value>REFC</value></envar>
 
     <dependency>
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      <taskdep task="&GET_OBS_MRMS_TN;"/>
     </dependency>
 
   </task>
@@ -718,7 +719,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
 
     <dependency>
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      <taskdep task="&GET_OBS_NDAS_TN;"/>
     </dependency>
 
   </task>
