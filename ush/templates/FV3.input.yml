@@ -11,11 +11,14 @@
 
 
 FV3_GSD_v0:
+  gfs_physics_nml:
+    effr_in: True
 
 FV3_GSD_SAR: 
   gfs_physics_nml: &gsd_sar_phys
     cnvcld: false
     cnvgwd: false
+    effr_in: True
     imfdeepcnv: 0
     imfshalcnv: 0
     iopt_alb: 2
@@ -33,28 +36,29 @@ FV3_GSD_SAR:
     shal_cnv: false
     do_deep: False
 
-FV3_GSD_SAR_v1:
+FV3_RRFS_v1alpha:
   gfs_physics_nml:
     <<: *gsd_sar_phys
-    lsm: 1
-    lsoil_lsm: 4
-
-FV3_RRFS_v0:
-  gfs_physics_nml:
-    <<: *gsd_sar_phys
+    do_deep: False
+    do_mynnsfclay: False
+    effr_in: True
+    imfdeepcnv: -1
+    imfshalcnv: -1
     lsm: 2
     lsoil_lsm: 4
-    do_deep: False
+  atmos_model_nml:
+    fdiag: 3
 
 FV3_RRFS_v1beta:
   gfs_physics_nml:
     <<: *gsd_sar_phys
+    do_deep: False
+    do_mynnsfclay: True
+    effr_in: True
+    imfdeepcnv: -1
+    imfshalcnv: -1
     lsm: 2
     lsoil_lsm: 4
-    imfshalcnv: -1
-    IMFDEEPCNV: -1
-    DO_MYNNSFCLAY: true
-    do_deep: False
   atmos_model_nml:
     fdiag: 3
 
