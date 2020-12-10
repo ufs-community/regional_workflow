@@ -208,6 +208,7 @@
     sfc_lscale = 500000
     sfc_tau = 21600
     sppt_land = .false.
+    effr_in = .true.
 /
 
 &nam_stochy

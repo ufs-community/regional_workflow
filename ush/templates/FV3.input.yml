@@ -444,6 +444,5 @@ FV3_CPT_v0:
     xkzm_h: 0.5
     xkzm_m: 0.5
     xkzm_s: 1.0
-  nam_sfcperts: !!python/none
   surf_map_nml: !!python/none
 
