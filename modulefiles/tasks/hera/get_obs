@@ -1,5 +1,6 @@
 #%Module#####################################################
-## Module file for get_obs_ccpa task.
+## Module file for get_obs_ccpa, get_obs_mrms, and 
+## get_obs_ndas task.
 #############################################################
 
 module purge

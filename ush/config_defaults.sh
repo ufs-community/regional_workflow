@@ -504,8 +504,10 @@ CCPP_PHYS_SUITE="FV3_GSD_v0"
 #-----------------------------------------------------------------------
 #
 # Set GRID_GEN_METHOD.  This variable specifies the method to use to 
-# generate a regional grid in the horizontal.  The values that it can 
-# take on are:
+# generate a regional grid in the horizontal, or, if using pregenerated
+# grid files instead of running the grid generation task, the grid generation
+# method that was used to generate those files.  The values that 
+# GRID_GEN_METHOD can take on are:
 #
 # * "GFDLgrid":
 #   This setting will generate a regional grid by first generating a 
@@ -518,10 +520,6 @@ CCPP_PHYS_SUITE="FV3_GSD_v0"
 # * "ESGgrid":
 #   This will generate a regional grid using the map projection developed
 #   by Jim Purser of EMC.
-#
-# Note that if using a predefined grid (PREDEDF_GRID_NAME set to a valid
-# non-empty value), this parameter is overwritten by the method used to
-# generate that grid.  
 #
 #-----------------------------------------------------------------------
 #
@@ -834,18 +832,16 @@ WRTCMP_dy=""
 # Set PREDEF_GRID_NAME.  This parameter specifies a predefined regional
 # grid, as follows:
 #
-# * If PREDEF_GRID_NAME is set to an empty string, the grid generation
-#   method (GRID_GEN_METHOD), grid parameters, time step (DT_ATMOS), 
-#   computational parameters (e.g. LAYOUT_X, LAYOUT_Y), and write component 
-#   parameters set above (and possibly overwritten by values in the user-
-#   specified workflow configuration file) are used.
+# * If PREDEF_GRID_NAME is set to an empty string, the grid parameters,
+#   time step (DT_ATMOS), computational parameters (e.g. LAYOUT_X, LAYOUT_Y),
+#   and write component parameters set above (and possibly overwritten by
+#   values in the user-specified configuration file) are used.
 #
-# * If PREDEF_GRID_NAME is set to a valid predefined grid name, the grid 
-#   generation method (GRID_GEN_METHOD), grid parameters, time step 
-#   (DT_ATMOS), computational parameters (e.g. LAYOUT_X, LAYOUT_Y), and 
-#   write component parameters set above (and possibly overwritten by 
-#   values in the user-specified workflow configuration file) are overwritten 
-#   by predefined values for the specified grid.
+# * If PREDEF_GRID_NAME is set to a valid grid name, the grid parameters, 
+#   time step (DT_ATMOS), computational parameters (e.g. LAYOUT_X, LAYOUT_Y),
+#   and write component parameters set above (and possibly overwritten by
+#   values in the user-specified configuration file) are overwritten by 
+#   predefined values for the specified grid.
 #
 # This is simply a convenient way to quickly specify a set of parameters
 # that depend on the grid.
@@ -1163,6 +1159,7 @@ MAKE_ICS_TN="make_ics"
 MAKE_LBCS_TN="make_lbcs"
 RUN_FCST_TN="run_fcst"
 RUN_POST_TN="run_post"
+GET_OBS_TN="get_obs"
 GET_OBS_CCPA_TN="get_obs_ccpa"
 GET_OBS_MRMS_TN="get_obs_mrms"
 GET_OBS_NDAS_TN="get_obs_ndas"
@@ -1322,7 +1319,7 @@ USE_ZMTNBLCK="false"
 #
 #-----------------------------------------------------------------------
 #
-HALO_BLEND=10
+HALO_BLEND=0
 #
 #-----------------------------------------------------------------------
 #
@@ -1342,18 +1339,8 @@ HALO_BLEND=10
 # Name of file located in FVCOM_DIR that has FVCOM data interpolated to 
 # FV3-LAM grid. This file will be copied later to a new location and name
 # changed to fvcom.nc
-#
 #------------------------------------------------------------------------
 #
 USE_FVCOM="FALSE"
 FVCOM_DIR="/user/defined/dir/to/fvcom/data"
 FVCOM_FILE="fvcom.nc"
-#
-#-----------------------------------------------------------------------
-#
-# COMPILER:
-# Type of compiler invoked during the build step. 
-#
-#------------------------------------------------------------------------
-#
-COMPILER="intel"

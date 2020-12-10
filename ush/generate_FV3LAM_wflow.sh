@@ -184,6 +184,7 @@ settings="\
   'make_lbcs_tn': ${MAKE_LBCS_TN}
   'run_fcst_tn': ${RUN_FCST_TN}
   'run_post_tn': ${RUN_POST_TN}
+  'get_obs_tn': ${GET_OBS_TN}
   'get_obs_ccpa_tn': ${GET_OBS_CCPA_TN}
   'get_obs_ndas_tn': ${GET_OBS_NDAS_TN}
   'get_obs_mrms_tn': ${GET_OBS_MRMS_TN}
@@ -375,55 +376,54 @@ done
 #
 #-----------------------------------------------------------------------
 #
-# For select workflow tasks, copy the system-specific environment and
-# module settings README file from the ufs-srweather-app repository to 
-# the appropriate subdirectory under the workflow directory tree.  In 
-# principle, sourcing this file is better than having hard-coded module
-# files for tasks because the copied module files will always be 
-# up-to-date.
+# For select workflow tasks, copy module files from the various cloned
+# external repositories to the appropriate subdirectory under the workflow
+# directory tree.  In principle, this is better than having hard-coded
+# module files for tasks because the copied module files will always be
+# up-to-date.  However, it does require that these module files in the
+# external repositories be coded correctly, e.g. that they really be lua
+# module files and not contain any shell commands (like "export SOME_VARIABLE").
 #
 #-----------------------------------------------------------------------
 #
-#machine=${MACHINE,,}
+machine=${MACHINE,,}
 
-#cd_vrfy "${MODULES_DIR}/tasks/$machine"
+cd_vrfy "${MODULES_DIR}/tasks/$machine"
 
-#cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${MAKE_GRID_TN}"
-#cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${MAKE_OROG_TN}"
-#cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${MAKE_SFC_CLIMO_TN}"
-#cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${MAKE_ICS_TN}"
-#cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${MAKE_LBCS_TN}"
-#if [ $MACHINE = "WCOSS_CRAY" -o $MACHINE = "WCOSS_DELL_P3" ] ; then
-#  cp_vrfy -f "${UFS_WTHR_MDL_DIR}/modulefiles/${machine}/fv3" "${RUN_FCST_TN}"
-#else
-#  cp_vrfy -f "${UFS_WTHR_MDL_DIR}/modulefiles/${machine}.intel/fv3" "${RUN_FCST_TN}"
-#fi
-#cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${RUN_FCST_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_GRID_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_OROG_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_SFC_CLIMO_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_ICS_TN}"
+cp_vrfy -f "${UFS_UTILS_DIR}/modulefiles/build.$machine" "${MAKE_LBCS_TN}"
+if [ $MACHINE = "WCOSS_CRAY" -o $MACHINE = "WCOSS_DELL_P3" ] ; then
+  cp_vrfy -f "${UFS_WTHR_MDL_DIR}/modulefiles/$machine/fv3" "${RUN_FCST_TN}"
+else
+  cp_vrfy -f "${UFS_WTHR_MDL_DIR}/modulefiles/$machine.intel/fv3" "${RUN_FCST_TN}"
+fi
 
 task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_ICS_TN}" "${MAKE_LBCS_TN}" "${RUN_FCST_TN}" )
 #
 # Only some platforms build EMC_post using modules, and some machines 
 # require a different EMC_post modulefile name.
 #
-#if [ "${MACHINE}" = "CHEYENNE" ]; then
-#  print_info_msg "No post modulefile needed for ${MACHINE}"
-#elif [ "${MACHINE}" = "WCOSS_CRAY" ]; then
-#  cp_vrfy -f "${EMC_POST_DIR}/modulefiles/post/v8.0.0-cray-intel" "${RUN_POST_TN}"
-#  cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${RUN_POST_TN}"
-#  task_names+=("${RUN_POST_TN}")
-#else
-#  cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${RUN_POST_TN}"
-#  task_names+=("${RUN_POST_TN}")
-#fi
+if [ "${MACHINE}" = "CHEYENNE" ]; then
+  print_info_msg "No post modulefile needed for ${MACHINE}"
+elif [ "${MACHINE}" = "WCOSS_CRAY" ]; then
+  cp_vrfy -f "${EMC_POST_DIR}/modulefiles/post/v8.0.0-cray-intel" "${RUN_POST_TN}"
+  task_names+=("${RUN_POST_TN}")
+else
+  cp_vrfy -f "${EMC_POST_DIR}/modulefiles/post/v8.0.0-$machine" "${RUN_POST_TN}"
+  task_names+=("${RUN_POST_TN}")
+fi
 
-#for task in "${task_names[@]}"; do
-#  modulefile_local="${task}.local"
-#  if [ -f ${modulefile_local} ]; then
-#    cat "${modulefile_local}" >> "${task}"
-#  fi
-#done
+for task in "${task_names[@]}"; do
+  modulefile_local="${task}.local"
+  if [ -f ${modulefile_local} ]; then
+    cat "${modulefile_local}" >> "${task}"
+  fi
+done
 
-#cd_vrfy -
+cd_vrfy -
 #
 #-----------------------------------------------------------------------
 #
@@ -654,14 +654,14 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
      [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ] || \
      [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
     lsoil=4
-  elif [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ] || \
-       [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ]; then
+  elif [ "${EXTRN_MDL_NAME_ICS}" = "RAPX" ] || \
+       [ "${EXTRN_MDL_NAME_ICS}" = "HRRRX" ]; then
     lsoil=9
   else
     print_err_msg_exit "\
 The value to set the variable lsoil to in the FV3 namelist file (FV3_NML_FP)
 has not been specified for the following combination of physics suite and
-external model for ICs:
+external model ICs:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
 Please change one or more of these parameters or provide a value for lsoil
