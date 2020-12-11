@@ -27,9 +27,11 @@
 #                          -More information regarding files needed to setup
 #                            display maps in Cartopy, see SRW App Users' Guide
 #
-#           		To create plots for forecast hour 24 from 5/7 00Z cycle:
-#                        python plot_allvars.py 2020050700 24 /path/to/expt_dirs
-#                        /experiment/name /path/to/base/cartopy/maps 
+#           		To create plots for forecast hours 20-24 from 5/7 00Z 
+#                        cycle with hourly output:
+#                          python plot_allvars.py 2020050700 20 24 1 \
+#                          /path/to/expt_dirs/experiment/name \
+#                          /path/to/base/cartopy/maps 
 #
 #                       The variable domains in this script can be set to either
 #                         'conus' for a CONUS map or 'regional' where the map
@@ -245,8 +247,8 @@ increment_fhr = int(sys.argv[4])
 if (start_fhr == end_fhr) or (increment_fhr == 0):
   fhours = [start_fhr]
 else:
-  num = ((end_fhr - start_fhr) / increment_fhr) + 1
-  fhours = np.linspace(start_fhr,end_fhr,num)
+  num = int(((end_fhr - start_fhr) / increment_fhr) + 1)
+  fhours = np.linspace(start_fhr,end_fhr,num,dtype='int')
 print(fhours)
 
 EXPT_DIR = str(sys.argv[5])
@@ -364,7 +366,7 @@ for fhr in fhours:
   wspd250 = np.sqrt(u250**2 + v250**2)
 
 # Total precipitation
-  qpf = data1.select(name='Total Precipitation',lengthOfTimeRange=fhr)[0].values * 0.0393701
+#  qpf = data1.select(name='Total Precipitation',lengthOfTimeRange=fhr)[0].values * 0.0393701
 
 # Composite reflectivity
   refc = data1.select(name='Maximum/Composite radar reflectivity')[0].values 
