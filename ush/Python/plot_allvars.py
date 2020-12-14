@@ -11,8 +11,8 @@
 # Instructions:		Make sure all the necessary modules can be imported.
 #                       Five command line arguments are needed:
 #                       1. Cycle date/time in YYYYMMDDHH format
-#                       2. Starting forecast hour in HHH format
-#                       3. Ending forecast hour in HHH format
+#                       2. Starting forecast hour
+#                       3. Ending forecast hour
 #                       4. Forecast hour increment
 #                       5. EXPT_DIR: Experiment directory
 #                          -Postprocessed data should be found in the directory:
@@ -223,8 +223,8 @@ def rotate_wind(true_lat,lov_lon,earth_lons,uin,vin,proj,inverse=False):
 # Define required positional arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("Cycle date/time in YYYYMMDDHH format")
-parser.add_argument("Starting forecast hour in HHH format")
-parser.add_argument("Ending forecast hour in HHH format")
+parser.add_argument("Starting forecast hour")
+parser.add_argument("Ending forecast hour")
 parser.add_argument("Forecast hour increment")
 parser.add_argument("Path to experiment directory")
 parser.add_argument("Path to base directory of cartopy shapefiles")
@@ -366,7 +366,7 @@ for fhr in fhours:
   wspd250 = np.sqrt(u250**2 + v250**2)
 
 # Total precipitation
-#  qpf = data1.select(name='Total Precipitation',lengthOfTimeRange=fhr)[0].values * 0.0393701
+  qpf = data1.select(name='Total Precipitation',lengthOfTimeRange=fhr)[0].values * 0.0393701
 
 # Composite reflectivity
   refc = data1.select(name='Maximum/Composite radar reflectivity')[0].values 
