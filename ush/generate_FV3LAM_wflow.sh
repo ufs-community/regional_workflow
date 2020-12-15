@@ -379,7 +379,7 @@ done
 # For select workflow tasks, copy the system-specific environment and
 # module settings README file from the ufs-srweather-app repository to 
 # the appropriate subdirectory under the workflow directory tree.  In 
-# principle, sourcing this file is better than having hard-coded module 
+# principle, sourcing this file is better than having hard-coded module
 # files for tasks because the copied module files will always be 
 # up-to-date.
 #
@@ -400,7 +400,6 @@ done
 #  cp_vrfy -f "${UFS_WTHR_MDL_DIR}/modulefiles/${machine}.intel/fv3" "${RUN_FCST_TN}"
 #fi
 #cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${RUN_FCST_TN}"
-
 task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_ICS_TN}" "${MAKE_LBCS_TN}" "${RUN_FCST_TN}" )
 #
 # Only some platforms build EMC_post using modules, and some machines 
@@ -422,7 +421,6 @@ task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_
 #    cat "${modulefile_local}" >> "${task}"
 #  fi
 #done
-#
 #cd_vrfy -
 #
 #-----------------------------------------------------------------------
