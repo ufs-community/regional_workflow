@@ -31,6 +31,7 @@ Workflow task names.
 <!ENTITY MAKE_LBCS_TN       "{{ make_lbcs_tn }}">
 <!ENTITY RUN_FCST_TN        "{{ run_fcst_tn }}">
 <!ENTITY RUN_POST_TN        "{{ run_post_tn }}">
+<!ENTITY GET_OBS_TN         "{{ get_obs_tn }}">
 <!ENTITY GET_OBS_CCPA_TN    "{{ get_obs_ccpa_tn }}">
 <!ENTITY GET_OBS_NDAS_TN    "{{ get_obs_ndas_tn }}">
 <!ENTITY GET_OBS_MRMS_TN    "{{ get_obs_mrms_tn }}">
@@ -447,7 +448,7 @@ MODULES_RUN_TASK_FP script.
   <task name="&GET_OBS_CCPA_TN;" maxtries="2">
 
     &RSRV_HPSS;
-    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS_CCPA_TN;" "&JOBSDIR;/JREGIONAL_GET_OBS_CCPA"</command>
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS_TN;" "&JOBSDIR;/JREGIONAL_GET_OBS_CCPA"</command>
     <nodes>{{ nnodes_get_obs_ccpa }}:ppn={{ ppn_get_obs_ccpa }}</nodes>
     <walltime>{{ wtime_get_obs_ccpa }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
@@ -479,7 +480,7 @@ MODULES_RUN_TASK_FP script.
   <task name="&GET_OBS_MRMS_TN;" maxtries="2">
 
     &RSRV_HPSS;
-    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS_MRMS_TN;" "&JOBSDIR;/JREGIONAL_GET_OBS_MRMS"</command>
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS_TN;" "&JOBSDIR;/JREGIONAL_GET_OBS_MRMS"</command>
     <nodes>{{ nnodes_get_obs_mrms }}:ppn={{ ppn_get_obs_mrms }}</nodes>
     <walltime>{{ wtime_get_obs_mrms }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
@@ -511,7 +512,7 @@ MODULES_RUN_TASK_FP script.
   <task name="&GET_OBS_NDAS_TN;" maxtries="2">
 
     &RSRV_HPSS;
-    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS_NDAS_TN;" "&JOBSDIR;/JREGIONAL_GET_OBS_NDAS"</command>
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS_TN;" "&JOBSDIR;/JREGIONAL_GET_OBS_NDAS"</command>
     <nodes>{{ nnodes_get_obs_ndas }}:ppn={{ ppn_get_obs_ndas }}</nodes>
     <walltime>{{ wtime_get_obs_ndas }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
@@ -719,7 +720,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
 
     <dependency>
-      <taskdep task="&GET_OBS_NDAS_TN;"/>
+      <metataskdep metatask="&GET_OBS_NDAS_TN;"/>
     </dependency>
 
   </task>
