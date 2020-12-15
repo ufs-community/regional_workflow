@@ -503,7 +503,7 @@ CCPP_PHYS_SUITE="FV3_GSD_v0"
 #
 #-----------------------------------------------------------------------
 #
-# Set GRID_GEN_METHOD.  This variable specifies the method to use to 
+# Set GRID_GEN_METHOD. This variable specifies the method to use to 
 # generate a regional grid in the horizontal. The values that it can 
 # take on are:
 #
@@ -519,9 +519,9 @@ CCPP_PHYS_SUITE="FV3_GSD_v0"
 #   This will generate a regional grid using the map projection developed
 #   by Jim Purser of EMC.
 #
-# Note that if using a predefined grid (PREDEDF_GRID_NAME set to a valid	
+# Note that if using a predefined grid (PREDEDF_GRID_NAME) set to a valid
 # non-empty value), this parameter is overwritten by the method used to	
-# generate that grid.  
+# generate that grid.
 #
 #-----------------------------------------------------------------------
 #
@@ -835,17 +835,17 @@ WRTCMP_dy=""
 # grid, as follows:
 #
 # * If PREDEF_GRID_NAME is set to an empty string, the grid generation
-#   method (GRID_GEN_METHOD), grid parameters, time step (DT_ATMOS)
-#   computational parameters (e.g. LAYOUT_X, LAYOUT_Y), and write component
+#   method (GRID_GEN_METHOD), grid parameters, time step (DT_ATMOS),
+#   computational parameters (e.g. LAYOUT_X, LAYOUT_Y), and write component 
 #   parameters set above (and possibly overwritten by values in the user-
 #   specified workflow configuration file) are used.
 #
-# * If PREDEF_GRID_NAME is set to a valid predefined grid name, the grid
+# * If PREDEF_GRID_NAME is set to a valid predefined grid name, the grid 
 #   generation method (GRID_GEN_METHOD), grid parameters, time step 
 #   (DT_ATMOS), computational parameters (e.g. LAYOUT_X, LAYOUT_Y), and 
 #   write component parameters set above (and possibly overwritten by 
-#   values in the user-specified workflow configuration file) are overwritten
-#   by predefined values for the specified grid. 
+#   values in the user-specified workflow configuration file) are overwritten 
+#   by predefined values for the specified grid.
 # 
 # This is simply a convenient way to quickly specify a set of parameters
 # that depend on the grid.
@@ -1343,6 +1343,7 @@ HALO_BLEND=10
 # Name of file located in FVCOM_DIR that has FVCOM data interpolated to 
 # FV3-LAM grid. This file will be copied later to a new location and name
 # changed to fvcom.nc
+#
 #------------------------------------------------------------------------
 #
 USE_FVCOM="FALSE"
