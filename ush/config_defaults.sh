@@ -503,8 +503,8 @@ CCPP_PHYS_SUITE="FV3_GSD_v0"
 #
 #-----------------------------------------------------------------------
 #
-# Set GRID_GEN_METHOD. This variable specifies the method to use to 
-# generate a regional grid in the horizontal. The values that it can 
+# Set GRID_GEN_METHOD.  This variable specifies the method to use to 
+# generate a regional grid in the horizontal.  The values that it can 
 # take on are:
 #
 # * "GFDLgrid":
@@ -521,7 +521,7 @@ CCPP_PHYS_SUITE="FV3_GSD_v0"
 #
 # Note that if using a predefined grid (PREDEDF_GRID_NAME) set to a valid
 # non-empty value), this parameter is overwritten by the method used to	
-# generate that grid.
+# generate that grid. 
 #
 #-----------------------------------------------------------------------
 #
@@ -835,7 +835,7 @@ WRTCMP_dy=""
 # grid, as follows:
 #
 # * If PREDEF_GRID_NAME is set to an empty string, the grid generation
-#   method (GRID_GEN_METHOD), grid parameters, time step (DT_ATMOS),
+#   method (GRID_GEN_METHOD), grid parameters, time step (DT_ATMOS), 
 #   computational parameters (e.g. LAYOUT_X, LAYOUT_Y), and write component 
 #   parameters set above (and possibly overwritten by values in the user-
 #   specified workflow configuration file) are used.
@@ -846,7 +846,7 @@ WRTCMP_dy=""
 #   write component parameters set above (and possibly overwritten by 
 #   values in the user-specified workflow configuration file) are overwritten 
 #   by predefined values for the specified grid.
-# 
+#
 # This is simply a convenient way to quickly specify a set of parameters
 # that depend on the grid.
 #
