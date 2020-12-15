@@ -519,9 +519,9 @@ CCPP_PHYS_SUITE="FV3_GSD_v0"
 #   This will generate a regional grid using the map projection developed
 #   by Jim Purser of EMC.
 #
-# Note that if using a predefined grid (PREDEDF_GRID_NAME) set to a valid
-# non-empty value), this parameter is overwritten by the method used to	
-# generate that grid. 
+# Note that if using a predefined grid (PREDEDF_GRID_NAME set to a valid
+# non-empty value), this parameter is overwritten by the method used to
+# generate that grid.  
 #
 #-----------------------------------------------------------------------
 #
