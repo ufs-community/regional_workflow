@@ -400,6 +400,7 @@ done
 #  cp_vrfy -f "${UFS_WTHR_MDL_DIR}/modulefiles/${machine}.intel/fv3" "${RUN_FCST_TN}"
 #fi
 #cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${RUN_FCST_TN}"
+
 task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_ICS_TN}" "${MAKE_LBCS_TN}" "${RUN_FCST_TN}" )
 #
 # Only some platforms build EMC_post using modules, and some machines 
@@ -415,12 +416,14 @@ task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_
 #  cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${RUN_POST_TN}"
 #  task_names+=("${RUN_POST_TN}")
 #fi
+
 #for task in "${task_names[@]}"; do
 #  modulefile_local="${task}.local"
 #  if [ -f ${modulefile_local} ]; then
 #    cat "${modulefile_local}" >> "${task}"
 #  fi
 #done
+
 #cd_vrfy -
 #
 #-----------------------------------------------------------------------
