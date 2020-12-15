@@ -720,7 +720,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
 
     <dependency>
-      <metataskdep metatask="&GET_OBS_NDAS_TN;"/>
+      <taskdep task="&GET_OBS_NDAS_TN;"/>
     </dependency>
 
   </task>
