@@ -957,6 +957,12 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
 
+RUN_TASK_GET_OBS_CCPA="TRUE"
+
+RUN_TASK_GET_OBS_MRMS="TRUE"
+
+RUN_TASK_GET_OBS_NDAS="TRUE"
+
 RUN_TASK_VX_GRIDSTAT="TRUE"
 
 RUN_TASK_VX_POINTSTAT="TRUE"
@@ -1157,6 +1163,10 @@ MAKE_ICS_TN="make_ics"
 MAKE_LBCS_TN="make_lbcs"
 RUN_FCST_TN="run_fcst"
 RUN_POST_TN="run_post"
+GET_OBS_TN="get_obs"
+GET_OBS_CCPA_TN="get_obs_ccpa"
+GET_OBS_MRMS_TN="get_obs_mrms"
+GET_OBS_NDAS_TN="get_obs_ndas"
 VX_TN="run_vx"
 VX_GRIDSTAT_TN="run_gridstatvx"
 VX_GRIDSTAT_REFC_TN="run_gridstatvx_refc"
@@ -1176,6 +1186,9 @@ NNODES_MAKE_ICS="4"
 NNODES_MAKE_LBCS="4"
 NNODES_RUN_FCST=""  # This is calculated in the workflow generation scripts, so no need to set here.
 NNODES_RUN_POST="2"
+NNODES_GET_OBS_CCPA="1"
+NNODES_GET_OBS_MRMS="1"
+NNODES_GET_OBS_NDAS="1"
 NNODES_VX_GRIDSTAT="1"
 NNODES_VX_POINTSTAT="1"
 #
@@ -1190,6 +1203,9 @@ PPN_MAKE_ICS="12"
 PPN_MAKE_LBCS="12"
 PPN_RUN_FCST="24"  # This may have to be changed depending on the number of threads used.
 PPN_RUN_POST="24"
+PPN_GET_OBS_CCPA="1"
+PPN_GET_OBS_MRMS="1"
+PPN_GET_OBS_NDAS="1"
 PPN_VX_GRIDSTAT="1"
 PPN_VX_POINTSTAT="1"
 #
@@ -1204,6 +1220,9 @@ WTIME_MAKE_ICS="00:30:00"
 WTIME_MAKE_LBCS="00:30:00"
 WTIME_RUN_FCST="04:30:00"
 WTIME_RUN_POST="00:15:00"
+WTIME_GET_OBS_CCPA="00:45:00"
+WTIME_GET_OBS_MRMS="00:45:00"
+WTIME_GET_OBS_NDAS="00:45:00"
 WTIME_VX_GRIDSTAT="01:00:00"
 WTIME_VX_POINTSTAT="01:00:00"
 #

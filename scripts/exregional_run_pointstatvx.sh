@@ -103,16 +103,6 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-# Run exregional_get_ccpa_files.sh script to reorganize the files into
-# a more intuitive structure for this purpose.
-#
-#-----------------------------------------------------------------------
-#
-${SCRIPTSDIR}/exregional_get_ndas_files.sh
-
-#
-#-----------------------------------------------------------------------
-#
 # Export some environment variables passed in by the XML and run METplus 
 #
 #-----------------------------------------------------------------------

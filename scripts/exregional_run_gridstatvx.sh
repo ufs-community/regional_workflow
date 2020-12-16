@@ -118,21 +118,6 @@ export OBS_DIR
 export VAR
 export MODEL
 export NET
-#
-#-----------------------------------------------------------------------
-#
-# Run exregional_get_ccpa_files.sh script to reorganize the files into
-# a more intuitive structure for this purpose.
-#
-#-----------------------------------------------------------------------
-#
-if [ ${VAR} == "APCP" ]; then
-  ${SCRIPTSDIR}/exregional_get_ccpa_files.sh
-elif [ ${VAR} == "REFC" ]; then
-  ${SCRIPTSDIR}/exregional_get_mrms_files.sh
-else
-  echo "No variable defined"
-fi
 
 #
 #-----------------------------------------------------------------------

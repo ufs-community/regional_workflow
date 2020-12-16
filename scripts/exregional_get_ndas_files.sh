@@ -22,9 +22,15 @@ if [[ ! -d "$ndas_proc" ]]; then
 fi
 
 # Initialization
+yyyymmdd=${CDATE:0:8}
+hh=${CDATE:8:2}
+cyc=$hh
+
 init=${CDATE}${hh}
 
 # Forecast length
+fhr_last=`echo ${FHR}  | awk '{ print $NF }'`
+
 fcst_length=${fhr_last}
 
 current_fcst=00

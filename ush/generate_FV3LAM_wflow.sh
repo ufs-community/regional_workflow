@@ -184,6 +184,10 @@ settings="\
   'make_lbcs_tn': ${MAKE_LBCS_TN}
   'run_fcst_tn': ${RUN_FCST_TN}
   'run_post_tn': ${RUN_POST_TN}
+  'get_obs_tn': ${GET_OBS_TN}
+  'get_obs_ccpa_tn': ${GET_OBS_CCPA_TN}
+  'get_obs_ndas_tn': ${GET_OBS_NDAS_TN}
+  'get_obs_mrms_tn': ${GET_OBS_MRMS_TN}
   'vx_tn': ${VX_TN}
   'vx_gridstat_tn': ${VX_GRIDSTAT_TN}
   'vx_gridstat_refc_tn': ${VX_GRIDSTAT_REFC_TN}
@@ -203,6 +207,9 @@ settings="\
   'nnodes_make_lbcs': ${NNODES_MAKE_LBCS}
   'nnodes_run_fcst': ${NNODES_RUN_FCST}
   'nnodes_run_post': ${NNODES_RUN_POST}
+  'nnodes_get_obs_ccpa': ${NNODES_GET_OBS_CCPA}
+  'nnodes_get_obs_mrms': ${NNODES_GET_OBS_MRMS}
+  'nnodes_get_obs_ndas': ${NNODES_GET_OBS_NDAS}
   'nnodes_vx_gridstat': ${NNODES_VX_GRIDSTAT}
   'nnodes_vx_pointstat': ${NNODES_VX_POINTSTAT}
 
@@ -224,6 +231,9 @@ settings="\
   'ppn_make_lbcs': ${PPN_MAKE_LBCS}
   'ppn_run_fcst': ${PPN_RUN_FCST}
   'ppn_run_post': ${PPN_RUN_POST}
+  'ppn_get_obs_ccpa': ${PPN_GET_OBS_CCPA}
+  'ppn_get_obs_mrms': ${PPN_GET_OBS_MRMS}
+  'ppn_get_obs_ndas': ${PPN_GET_OBS_NDAS}
   'ppn_vx_gridstat': ${PPN_VX_GRIDSTAT}
   'ppn_vx_pointstat': ${PPN_VX_POINTSTAT}
 
@@ -239,6 +249,9 @@ settings="\
   'wtime_make_lbcs': ${WTIME_MAKE_LBCS}
   'wtime_run_fcst': ${WTIME_RUN_FCST}
   'wtime_run_post': ${WTIME_RUN_POST}
+  'wtime_get_obs_ccpa': ${WTIME_GET_OBS_CCPA}
+  'wtime_get_obs_mrms': ${WTIME_GET_OBS_MRMS}
+  'wtime_get_obs_ndas': ${WTIME_GET_OBS_NDAS}
   'wtime_vx_gridstat': ${WTIME_VX_GRIDSTAT}
   'wtime_vx_pointstat': ${WTIME_VX_POINTSTAT}
 #
@@ -259,6 +272,9 @@ settings="\
   'run_task_make_grid': ${RUN_TASK_MAKE_GRID}
   'run_task_make_orog': ${RUN_TASK_MAKE_OROG}
   'run_task_make_sfc_climo': ${RUN_TASK_MAKE_SFC_CLIMO}
+  'run_task_get_obs_ccpa': ${RUN_TASK_GET_OBS_CCPA}
+  'run_task_get_obs_mrms': ${RUN_TASK_GET_OBS_MRMS}
+  'run_task_get_obs_ndas': ${RUN_TASK_GET_OBS_NDAS}
   'run_task_vx_gridstat': ${RUN_TASK_VX_GRIDSTAT}
   'run_task_vx_pointstat': ${RUN_TASK_VX_POINTSTAT}
 #
