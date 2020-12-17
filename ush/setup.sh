@@ -669,48 +669,56 @@ case $MACHINE in
     FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
+    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "WCOSS_DELL_P3")
     FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
+    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "HERA")
     FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_sfc_climo"}
+    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/FV3LAM_pregen"}
     ;;
 
   "ORION")
     FIXgsm=${FIXgsm:-"/work/noaa/global/glopara/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/work/noaa/global/glopara/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/noaa/global/glopara/fix/fix_sfc_climo"}
+    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "JET")
     FIXgsm=${FIXgsm:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_sfc_climo"}
+    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "ODIN")
     FIXgsm=${FIXgsm:-"/scratch/ywang/fix/theia_fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
+    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "CHEYENNE")
     FIXgsm=${FIXgsm:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"}
+    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "STAMPEDE")
     FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
+    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   *)
@@ -720,6 +728,7 @@ One or more fix file directories have not been specified for this machine:
   FIXgsm = \"${FIXgsm:-\"\"}
   TOPO_DIR = \"${TOPO_DIR:-\"\"}
   SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
+  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR:-\"\"}
 You can specify the missing location(s) in config.sh"
     ;;
 
@@ -1014,57 +1023,10 @@ LOGDIR="${EXPTDIR}/log"
 if [ "${RUN_ENVIR}" = "nco" ]; then
 
   FIXam="${FIXrrfs}/fix_am"
-#
-# In NCO mode (i.e. if RUN_ENVIR set to "nco"), it is assumed that before
-# running the experiment generation script, the path specified in FIXam 
-# already exists and is either itself the directory in which various fixed
-# files (but not the ones containing the regional grid and the orography
-# and surface climatology on that grid) are located, or it is a symlink 
-# to such a directory.  Resolve any symlinks in the path specified by 
-# FIXam and check that this is the case.
-#
-  path_resolved=$( readlink -m "$FIXam" )
-  if [ ! -d "${path_resolved}" ]; then
-    print_err_msg_exit "\
-In order to be able to generate a forecast experiment in NCO mode (i.e. 
-when RUN_ENVIR set to \"nco\"), the path specified by FIXam after resolving 
-all symlinks (path_resolved) must be an existing directory (but in this
-case isn't):
-  RUN_ENVIR = \"${RUN_ENVIR}\"
-  FIXam = \"$FIXam\"
-  path_resolved = \"${path_resolved}\"
-Please ensure that path_resolved is an existing directory and then rerun 
-the experiment generation script."
-  fi
-
-  FIXLAM="${FIXrrfs}/fix_lam/${PREDEF_GRID_NAME}"
-#
-# In NCO mode (i.e. if RUN_ENVIR set to "nco"), it is assumed that before
-# running the experiment generation script, the path specified in FIXLAM 
-# already exists and is either itself the directory in which the fixed 
-# grid, orography, and surface climatology files are located, or it is a
-# symlink to such a directory.  Resolve any symlinks in the path specified
-# by FIXLAM and check that this is the case.
-#
-  path_resolved=$( readlink -m "$FIXLAM" )
-  if [ ! -d "${path_resolved}" ]; then
-    print_err_msg_exit "\
-In order to be able to generate a forecast experiment in NCO mode (i.e. 
-when RUN_ENVIR set to \"nco\"), the path specified by FIXLAM after resolving 
-all symlinks (path_resolved) must be an existing directory (but in this
-case isn't):
-  RUN_ENVIR = \"${RUN_ENVIR}\"
-  FIXLAM = \"$FIXLAM\"
-  path_resolved = \"${path_resolved}\"
-Please ensure that path_resolved is an existing directory and then rerun 
-the experiment generation script."
-  fi
-
+  FIXLAM="${FIXrrfs}/fix_lam"
   CYCLE_BASEDIR="$STMP/tmpnwprd/$RUN"
   check_for_preexist_dir_file "${CYCLE_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
-
   COMROOT="$PTMP/com"
-
   COMOUT_BASEDIR="$COMROOT/$NET/$envir"
   check_for_preexist_dir_file "${COMOUT_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
 
@@ -1685,6 +1647,73 @@ elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
     output_varname_neg_ny_of_dom_with_wide_halo="NEG_NY_OF_DOM_WITH_WIDE_HALO"
 
 fi
+
+
+
+#
+#-----------------------------------------------------------------------
+#
+# If running in NCO mode, create necessary symlinks under FIXrrfs to the
+# fixed-file directories.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${RUN_ENVIR}" = "nco" ]; then
+
+  mkdir_vrfy -p "$FIXrrfs"
+
+  ln_vrfy -fsn "$FIXgsm" "$FIXam" 
+#
+# In NCO mode (i.e. if RUN_ENVIR set to "nco"), it is assumed that before
+# running the experiment generation script, the path specified in FIXam 
+# already exists and is either itself the directory in which various fixed
+# files (but not the ones containing the regional grid and the orography
+# and surface climatology on that grid) are located, or it is a symlink 
+# to such a directory.  Resolve any symlinks in the path specified by 
+# FIXam and check that this is the case.
+#
+  path_resolved=$( readlink -m "$FIXam" )
+  if [ ! -d "${path_resolved}" ]; then
+    print_err_msg_exit "\
+In order to be able to generate a forecast experiment in NCO mode (i.e. 
+when RUN_ENVIR set to \"nco\"), the path specified by FIXam after resolving 
+all symlinks (path_resolved) must be an existing directory (but in this
+case isn't):
+  RUN_ENVIR = \"${RUN_ENVIR}\"
+  FIXam = \"$FIXam\"
+  path_resolved = \"${path_resolved}\"
+Please ensure that path_resolved is an existing directory and then rerun 
+the experiment generation script."
+  fi
+
+  ln_vrfy -fsn "${FIXLAM_NCO_BASEDIR}/${PREDEF_GRID_NAME}" "$FIXLAM" 
+#
+# In NCO mode (i.e. if RUN_ENVIR set to "nco"), it is assumed that before
+# running the experiment generation script, the path specified in FIXLAM 
+# already exists and is either itself the directory in which the fixed 
+# grid, orography, and surface climatology files are located, or it is a
+# symlink to such a directory.  Resolve any symlinks in the path specified
+# by FIXLAM and check that this is the case.
+#
+  path_resolved=$( readlink -m "$FIXLAM" )
+  if [ ! -d "${path_resolved}" ]; then
+    print_err_msg_exit "\
+In order to be able to generate a forecast experiment in NCO mode (i.e. 
+when RUN_ENVIR set to \"nco\"), the path specified by FIXLAM after resolving 
+all symlinks (path_resolved) must be an existing directory (but in this
+case isn't):
+  RUN_ENVIR = \"${RUN_ENVIR}\"
+  FIXLAM = \"$FIXLAM\"
+  path_resolved = \"${path_resolved}\"
+Please ensure that path_resolved is an existing directory and then rerun 
+the experiment generation script."
+  fi
+
+fi
+
+
+
+
 #
 #-----------------------------------------------------------------------
 #
@@ -1708,7 +1737,7 @@ if [ "${RUN_ENVIR}" = "nco" ]; then
 
   suffix="${DOT_OR_USCORE}mosaic.halo${NH3}.nc"
   glob_pattern="C*$suffix"
-  cd_vrfy $FIXLAM
+  cd_vrfy "$FIXLAM"
   num_files=$( ls -1 ${glob_pattern} 2>/dev/null | wc -l )
 
   if [ "${num_files}" -ne "1" ]; then

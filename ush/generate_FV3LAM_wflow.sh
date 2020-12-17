@@ -407,15 +407,11 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Copy fixed files from system directory to the FIXam directory (which
-# is under the experiment directory).  Note that some of these files get
-# renamed during the copy process.
+# If running in non-NCO mode, copy fixed files from system directory to
+# the FIXam directory (which is under the experiment directory).
 #
 #-----------------------------------------------------------------------
 #
-
-# In NCO mode, we assume the following copy operation is done beforehand,
-# but that can be changed.
 if [ "${RUN_ENVIR}" != "nco" ]; then
 
   print_info_msg "$VERBOSE" "
