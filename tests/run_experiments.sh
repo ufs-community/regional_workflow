@@ -629,9 +629,11 @@ for this machine (MACHINE):
 #
 COMINgfs=\"${COMINgfs}\"
 #
-# Directory in which the pregenerated grid, orography, and surface 
-# climatology \"fixed\" files are located.  In NCO mode, a symlink will
-# be created under FIXrrfs that points to this directory.
+# The base directory in which the pregenerated grid, orography, and surface 
+# climatology \"fixed\" files used in NCO mode are located.  In NCO mode,
+# the workflow scripts will create a symlink (at the location specified 
+# by FIXLAM) to a subdirectory under FIXLAM_NCO_BASDEDIR.  (The name of 
+# the subdirectory is the name of the grid specified by PREDEF_GRID_NAME.)
 #
 FIXLAM_NCO_BASEDIR=\"${FIXLAM_NCO_BASEDIR}\""
 

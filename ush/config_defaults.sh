@@ -182,10 +182,11 @@ EXPT_SUBDIR=""
 #
 #   ${FIXLAM_NCO_BASEDIR}/${PREDEF_GRID_NAME}
 #
-# The workflow scripts will create a symlink under FIXrrfs that will point 
-# to this directory.  This variable should be set to a null string in 
-# this file, but it can be specified in the user-specified workflow 
-# configuration file (EXPT_CONFIG_FN)
+# The workflow scripts will create a symlink in the experiment directory
+# that will point to a subdirectory (having the name of the grid being
+# used) under this directory.  This variable should be set to a null 
+# string in this file, but it can be specified in the user-specified 
+# workflow configuration file (EXPT_CONFIG_FN)
 #
 # STMP:
 # The beginning portion of the directory that will contain cycle-dependent

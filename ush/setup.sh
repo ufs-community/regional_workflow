@@ -660,7 +660,6 @@ SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
 PARMDIR="$HOMErrfs/parm"
 MODULES_DIR="$HOMErrfs/modulefiles"
 EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
-FIXrrfs="$HOMErrfs/fix"
 TEMPLATE_DIR="$USHDIR/templates"
 
 case $MACHINE in
@@ -1020,10 +1019,11 @@ check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 #
 LOGDIR="${EXPTDIR}/log"
 
+FIXam="${EXPTDIR}/fix_am"
+FIXLAM="${EXPTDIR}/fix_lam"
+
 if [ "${RUN_ENVIR}" = "nco" ]; then
 
-  FIXam="${FIXrrfs}/fix_am"
-  FIXLAM="${FIXrrfs}/fix_lam"
   CYCLE_BASEDIR="$STMP/tmpnwprd/$RUN"
   check_for_preexist_dir_file "${CYCLE_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
   COMROOT="$PTMP/com"
@@ -1032,8 +1032,6 @@ if [ "${RUN_ENVIR}" = "nco" ]; then
 
 else
 
-  FIXam="${EXPTDIR}/fix_am"
-  FIXLAM="${EXPTDIR}/fix_lam"
   CYCLE_BASEDIR="$EXPTDIR"
   COMROOT=""
   COMOUT_BASEDIR=""
@@ -1647,20 +1645,26 @@ elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
     output_varname_neg_ny_of_dom_with_wide_halo="NEG_NY_OF_DOM_WITH_WIDE_HALO"
 
 fi
-
+#
+#-----------------------------------------------------------------------
+#
+# Create a new experiment directory.  Note that at this point we are 
+# guaranteed that there is no preexisting experiment directory.
+#
+#-----------------------------------------------------------------------
+#
+mkdir_vrfy -p "$EXPTDIR"
 
 
 #
 #-----------------------------------------------------------------------
 #
-# If running in NCO mode, create necessary symlinks under FIXrrfs to the
+# If running in NCO mode, create necessary symlinks that point to the
 # fixed-file directories.
 #
 #-----------------------------------------------------------------------
 #
 if [ "${RUN_ENVIR}" = "nco" ]; then
-
-  mkdir_vrfy -p "$FIXrrfs"
 
   ln_vrfy -fsn "$FIXgsm" "$FIXam" 
 #
@@ -1712,24 +1716,19 @@ the experiment generation script."
 fi
 
 
-
-
 #
 #-----------------------------------------------------------------------
 #
-#
+# Set RES_IN_FIXLAM_FILENAMES.  The way this is set depends on whether
+# the workflow is running in NCO mode or community mode.
 #
 #-----------------------------------------------------------------------
 #
 RES_IN_FIXLAM_FILENAMES=""
-
-if [ "${RUN_ENVIR}" != "nco" ]; then
-  mkdir_vrfy -p "$FIXLAM"
-fi
 #
 #-----------------------------------------------------------------------
 #
-#
+# First, consider NCO mode.
 #
 #-----------------------------------------------------------------------
 #
@@ -1760,8 +1759,16 @@ does not match the resolution specified by GFDLgrid_RES:
   GFDLgrid_RES = ${GFDLgrid_RES}
   RES_IN_FIXLAM_FILENAMES = ${RES_IN_FIXLAM_FILENAMES}"
   fi
-
+#
+#-----------------------------------------------------------------------
+#
+# Now consider community mode.
+#
+#-----------------------------------------------------------------------
+#
 else
+
+  mkdir_vrfy -p "$FIXLAM"
 #
 #-----------------------------------------------------------------------
 #
@@ -1966,17 +1973,6 @@ fi
 #-----------------------------------------------------------------------
 #
 NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
-#
-#-----------------------------------------------------------------------
-#
-# Create a new experiment directory.  Note that at this point we are 
-# guaranteed that there is no preexisting experiment directory.
-#
-#-----------------------------------------------------------------------
-#
-mkdir_vrfy -p "$EXPTDIR"
-
-
 
 
 
@@ -2319,7 +2315,6 @@ SRC_DIR="$SRC_DIR"
 PARMDIR="$PARMDIR"
 MODULES_DIR="${MODULES_DIR}"
 EXECDIR="$EXECDIR"
-FIXrrfs="$FIXrrfs"
 FIXam="$FIXam"
 FIXLAM="$FIXLAM"
 FIXgsm="$FIXgsm"
