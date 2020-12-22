@@ -1,4 +1,4 @@
-#%Modul
+#%Module
 
 module use /opt/cray/ari/modulefiles
 module load alps
@@ -12,3 +12,4 @@ module load xpmem
 module use /usrx/local/nceplibs/modulefiles
 module load srw-app-python/1.0.0
 
+module list
