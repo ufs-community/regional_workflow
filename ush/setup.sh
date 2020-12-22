@@ -682,7 +682,7 @@ case $MACHINE in
     FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_sfc_climo"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/FV3LAM_pregen"}
+    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch2/BMC/det/FV3LAM_pregen"}
     ;;
 
   "ORION")
@@ -1341,7 +1341,7 @@ of FIXLAM.  Reset values are:"
 "
 
     print_info_msg "$msg"
-  
+
   fi
 
   if [ "${RUN_TASK_MAKE_OROG}" = "TRUE" ] || \
@@ -1369,7 +1369,7 @@ of FIXLAM.  Reset values are:"
 "
 
     print_info_msg "$msg"
-  
+
   fi
 
   if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] || \
@@ -1397,7 +1397,7 @@ contents of FIXLAM.  Reset values are:"
 "
 
     print_info_msg "$msg"
-  
+
   fi
 
 else
@@ -1452,14 +1452,12 @@ files does not exist:
 #-----------------------------------------------------------------------
 #
   if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ]; then
-
     if [ ! -d "${SFC_CLIMO_DIR}" ]; then
       print_err_msg_exit "\
 The directory (SFC_CLIMO_DIR) that should contain the pre-generated orography
 files does not exist:
   SFC_CLIMO_DIR = \"${SFC_CLIMO_DIR}\""
     fi
-
   else
     SFC_CLIMO_DIR="$EXPTDIR/sfc_climo"
   fi
@@ -1786,7 +1784,7 @@ else
       file_group="grid" \
       output_varname_res_in_filenames="res_in_grid_fns" || \
     print_err_msg_exit "\
-  Call to function to create links to grid files failed."
+Call to function to create links to grid files failed."
 
     RES_IN_FIXLAM_FILENAMES="${res_in_grid_fns}"
 
@@ -1808,16 +1806,16 @@ else
       file_group="orog" \
       output_varname_res_in_filenames="res_in_orog_fns" || \
     print_err_msg_exit "\
-  Call to function to create links to orography files failed."
+Call to function to create links to orography files failed."
 
     if [ ! -z "${RES_IN_FIXLAM_FILENAMES}" ] && \
        [ "${res_in_orog_fns}" -ne "${RES_IN_FIXLAM_FILENAMES}" ]; then
       print_err_msg_exit "\
-  The resolution extracted from the orography file names (res_in_orog_fns)
-  does not match the resolution in other groups of files already consi-
-  dered (RES_IN_FIXLAM_FILENAMES):
-    res_in_orog_fns = ${res_in_orog_fns}
-    RES_IN_FIXLAM_FILENAMES = ${RES_IN_FIXLAM_FILENAMES}"
+The resolution extracted from the orography file names (res_in_orog_fns)
+does not match the resolution in other groups of files already consi-
+dered (RES_IN_FIXLAM_FILENAMES):
+  res_in_orog_fns = ${res_in_orog_fns}
+  RES_IN_FIXLAM_FILENAMES = ${RES_IN_FIXLAM_FILENAMES}"
     else
       RES_IN_FIXLAM_FILENAMES="${res_in_orog_fns}"
     fi
@@ -1841,16 +1839,16 @@ else
       file_group="sfc_climo" \
       output_varname_res_in_filenames="res_in_sfc_climo_fns" || \
     print_err_msg_exit "\
-  Call to function to create links to surface climatology files failed."
+Call to function to create links to surface climatology files failed."
 
     if [ ! -z "${RES_IN_FIXLAM_FILENAMES}" ] && \
        [ "${res_in_sfc_climo_fns}" -ne "${RES_IN_FIXLAM_FILENAMES}" ]; then
       print_err_msg_exit "\
-  The resolution extracted from the surface climatology file names (res_-
-  in_sfc_climo_fns) does not match the resolution in other groups of files
-  already considered (RES_IN_FIXLAM_FILENAMES):
-    res_in_sfc_climo_fns = ${res_in_sfc_climo_fns}
-    RES_IN_FIXLAM_FILENAMES = ${RES_IN_FIXLAM_FILENAMES}"
+The resolution extracted from the surface climatology file names (res_-
+in_sfc_climo_fns) does not match the resolution in other groups of files
+already considered (RES_IN_FIXLAM_FILENAMES):
+  res_in_sfc_climo_fns = ${res_in_sfc_climo_fns}
+  RES_IN_FIXLAM_FILENAMES = ${RES_IN_FIXLAM_FILENAMES}"
     else
       RES_IN_FIXLAM_FILENAMES="${res_in_sfc_climo_fns}"
     fi
