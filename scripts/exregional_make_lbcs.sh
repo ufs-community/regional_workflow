@@ -160,7 +160,8 @@ case "${CCPP_PHYS_SUITE}" in
   "FV3_GSD_v0" | \
   "FV3_GSD_SAR" | \
   "FV3_RRFS_v1alpha" | \
-  "FV3_RRFS_v1beta" )
+  "FV3_RRFS_v1beta" | \
+  "FV3_HRRR" )
     if [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ] || \
        [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ]; then
       varmap_file="GSDphys_var_map.txt"
@@ -276,13 +277,9 @@ thomp_mp_climo_file=""
 
 case "${EXTRN_MDL_NAME_LBCS}" in
 
-
 "GSMGFS")
-
   external_model="GSMGFS"
-
   input_type="gfs_gaussian_nemsio" # For spectral GFS Gaussian grid in nemsio format.
-
   tracers_input="[\"spfh\",\"clwmr\",\"o3mr\"]"
   tracers="[\"sphum\",\"liq_wat\",\"o3mr\"]"
 # 
@@ -297,20 +294,20 @@ case "${EXTRN_MDL_NAME_LBCS}" in
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
   else
     print_err_msg_exit "\
-    The chosen CCPP physics suite is unsupported at this time:
-    CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
+The variable \"thomp_mp_climo_file\" has not yet been specified for this
+external LBC model (EXTRN_MDL_NAME_LBCS) and physics suite (CCPP_PHYS_SUITE)
+combination:
+  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
+  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
   fi
-
-
   ;;
 
-
 "FV3GFS")
-
 #
 # Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
 #
@@ -323,52 +320,41 @@ case "${EXTRN_MDL_NAME_LBCS}" in
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
   else
     print_err_msg_exit "\
-    The chosen CCPP physics suite is unsupported at this time:
-    CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
+The variable \"thomp_mp_climo_file\" has not yet been specified for this
+external LBC model (EXTRN_MDL_NAME_LBCS) and physics suite (CCPP_PHYS_SUITE)
+combination:
+  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
+  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
   fi
 
   if [ "${FV3GFS_FILE_FMT_LBCS}" = "nemsio" ]; then
-
     external_model="FV3GFS"
-
     input_type="gaussian_nemsio"     # For FV3-GFS Gaussian grid in nemsio format.
-
     tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
     tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
-
   elif [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
-
     external_model="GFS"
-
     fn_grib2="${EXTRN_MDL_FNS[0]}"
     input_type="grib2"
-
   fi
-
   ;;
 
-
 "RAP")
-
   external_model="RAP"
   input_type="grib2"
-
   ;;
 
 "HRRR")
-
   external_model="HRRR"
   input_type="grib2"
-
   ;;
 
-
 "NAM")
-
   external_model="NAM"
   input_type="grib2"
 #
@@ -383,23 +369,25 @@ case "${EXTRN_MDL_NAME_LBCS}" in
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
+       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
+       [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
   else
     print_err_msg_exit "\
-    The chosen CCPP physics suite is unsupported at this time:
-    CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
+The variable \"thomp_mp_climo_file\" has not yet been specified for this
+external LBC model (EXTRN_MDL_NAME_LBCS) and physics suite (CCPP_PHYS_SUITE)
+combination:
+  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
+  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
   fi
-
   ;;
 
 *)
   print_err_msg_exit "\
 External-model-dependent namelist variables have not yet been specified
-for this external model:
+for this external LBC model (EXTRN_MDL_NAME_LBCS):
   EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
   ;;
-
 
 esac
 #
@@ -444,11 +432,11 @@ for (( i=0; i<${num_fhrs}; i++ )); do
     fn_atm_nemsio="${EXTRN_MDL_FNS[$i]}"
     ;;
   "FV3GFS")
-     if [ "${FV3GFS_FILE_FMT_LBCS}" = "nemsio" ]; then
-       fn_atm_nemsio="${EXTRN_MDL_FNS[$i]}"
-     elif [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
-       fn_grib2="${EXTRN_MDL_FNS[$i]}"
-     fi
+    if [ "${FV3GFS_FILE_FMT_LBCS}" = "nemsio" ]; then
+      fn_atm_nemsio="${EXTRN_MDL_FNS[$i]}"
+    elif [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
+      fn_grib2="${EXTRN_MDL_FNS[$i]}"
+    fi
     ;;
   "RAP")
     fn_grib2="${EXTRN_MDL_FNS[$i]}"
@@ -462,7 +450,7 @@ for (( i=0; i<${num_fhrs}; i++ )); do
   *)
     print_err_msg_exit "\
 The external model output file name to use in the chgres_cube FORTRAN name-
-list file has not specified for this external model:
+list file has not specified for this external LBC model (EXTRN_MDL_NAME_LBCS):
   EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
     ;;
   esac
