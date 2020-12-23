@@ -350,7 +350,22 @@ fn_suffix_with_halo="tile${TILE_RGNL}.halo${NHW}.nc"
 raw_orog_fn="${raw_orog_fn_prefix}.${fn_suffix_with_halo}"
 raw_orog_fp="${raw_dir}/${raw_orog_fn}"
 mv_vrfy "${raw_orog_fp_orig}" "${raw_orog_fp}"
-
+#
+#-----------------------------------------------------------------------
+#
+# Copy the two orography files needed for the drag suite in the FV3_HRRR
+# physics suite.
+#
+# Note that the following is a temporary fix.  We need a long-term solution
+# that calls a script or program to generates the necessary files (instead
+# of copying them).
+#
+#-----------------------------------------------------------------------
+#
+if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
+  cp_vrfy ${GWD_HRRRsuite_DIR}/${CRES}*_ls.*.nc ${OROG_DIR}
+  cp_vrfy ${GWD_HRRRsuite_DIR}/${CRES}*_ss.*.nc ${OROG_DIR}
+fi
 #
 #-----------------------------------------------------------------------
 #
