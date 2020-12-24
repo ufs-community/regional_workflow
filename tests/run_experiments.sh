@@ -493,6 +493,13 @@ VERBOSE=\"${VERBOSE}\""
      [ ${RUN_TASK_MAKE_OROG} = "FALSE" ] || \
      [ ${RUN_TASK_MAKE_SFC_CLIMO} = "FALSE" ]; then
 
+# Note:
+# Now that the "grid", "orog", and "sfc_climo" sub-subdirectories under
+# pregen_basedir have been removed, we don't need the variable pregen_basedir
+# and can instead have the variable "pregen_dir" that gets set to 
+# ${pregen_basedir}/${PREDEF_GRID_NAME}, and pregen_dir can then be used
+# to set GRID_DIR, OROG_DIR, and/or SFC_CLIMO_DIR below.
+
     if [ "$MACHINE" = "HERA" ]; then
       pregen_basedir="/scratch2/BMC/det/FV3LAM_pregen"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
@@ -510,7 +517,7 @@ specified for this machine (MACHINE):
 # Directory for pregenerated grid files.
 #
   if [ ${RUN_TASK_MAKE_GRID} = "FALSE" ]; then
-    GRID_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}/grid"
+    GRID_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}"
     str=${str}"
 #
 # Directory containing the pregenerated grid files.
@@ -522,7 +529,7 @@ GRID_DIR=\"${GRID_DIR}\""
 # Directory for pregenerated orography files.
 #
   if [ ${RUN_TASK_MAKE_OROG} = "FALSE" ]; then
-    OROG_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}/orog"
+    OROG_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}"
     str=${str}"
 #
 # Directory containing the pregenerated orography files.
@@ -534,7 +541,7 @@ OROG_DIR=\"${OROG_DIR}\""
 # Directory for pregenerated surface climatology files.
 #
   if [ ${RUN_TASK_MAKE_SFC_CLIMO} = "FALSE" ]; then
-    SFC_CLIMO_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}/sfc_climo"
+    SFC_CLIMO_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}"
     str=${str}"
 #
 # Directory containing the pregenerated surface climatology files.
