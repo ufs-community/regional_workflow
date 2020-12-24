@@ -84,8 +84,6 @@ case ${PREDEF_GRID_NAME} in
 #
 "RRFS_CONUS_25km")
 
-if [ 1 = 1 ]; then
-
   GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-97.5
@@ -99,7 +97,6 @@ if [ 1 = 1 ]; then
 
   ESGgrid_WIDE_HALO_WIDTH=6
 
-#  DT_ATMOS="300"
   DT_ATMOS="40"
 
   LAYOUT_X="5"
@@ -121,47 +118,6 @@ if [ 1 = 1 ]; then
     WRTCMP_dx="${ESGgrid_DELX}"
     WRTCMP_dy="${ESGgrid_DELY}"
   fi
-
-else
-
-  GRID_GEN_METHOD="ESGgrid"
-
-  ESGgrid_LON_CTR=-97.5
-  ESGgrid_LAT_CTR=38.5
-
-    ESGgrid_DELX="25000.0"
-    ESGgrid_DELY="25000.0"
-
-    ESGgrid_NX=200
-    ESGgrid_NY=110
-
-    ESGgrid_WIDE_HALO_WIDTH=6
-
-    DT_ATMOS="300"
-
-    LAYOUT_X="20"
-    LAYOUT_Y="2"
-    BLOCKSIZE="10"
-
-    if [ "$QUILTING" = "TRUE" ]; then
-      WRTCMP_write_groups="1"
-      WRTCMP_write_tasks_per_group="2"
-      WRTCMP_output_grid="lambert_conformal"
-      WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
-      WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
-      WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
-      WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-      WRTCMP_nx="191"
-      WRTCMP_ny="97"
-      WRTCMP_lon_lwr_left="-120.72962370"
-      WRTCMP_lat_lwr_left="25.11648583"
-      WRTCMP_dx="${ESGgrid_DELX}"
-      WRTCMP_dy="${ESGgrid_DELY}"
-    fi
-
-fi
-
-
   ;;
 #
 #-----------------------------------------------------------------------
@@ -216,8 +172,6 @@ fi
 #
 "RRFS_CONUS_3km")
 
-if [ 1 = 1 ]; then
-
   GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR=-97.5
@@ -252,46 +206,6 @@ if [ 1 = 1 ]; then
     WRTCMP_dx="${ESGgrid_DELX}"
     WRTCMP_dy="${ESGgrid_DELY}"
   fi
-
-else
-
-  GRID_GEN_METHOD="ESGgrid"
-
-  ESGgrid_LON_CTR=-97.5
-  ESGgrid_LAT_CTR=38.5
-
-    ESGgrid_DELX="3000.0"
-    ESGgrid_DELY="3000.0"
-
-    ESGgrid_NX=1728
-    ESGgrid_NY=1008
-
-    ESGgrid_WIDE_HALO_WIDTH=6
-
-    DT_ATMOS="40"
-
-    LAYOUT_X="32"
-    LAYOUT_Y="16"
-    BLOCKSIZE="27"
-
-    if [ "$QUILTING" = "TRUE" ]; then
-      WRTCMP_write_groups="1"
-      WRTCMP_write_tasks_per_group="24"
-      WRTCMP_output_grid="lambert_conformal"
-      WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
-      WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
-      WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
-      WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-      WRTCMP_nx="1726"
-      WRTCMP_ny="974"
-      WRTCMP_lon_lwr_left="-122.21414225"
-      WRTCMP_lat_lwr_left="22.41403305"
-      WRTCMP_dx="${ESGgrid_DELX}"
-      WRTCMP_dy="${ESGgrid_DELY}"
-    fi
-
-fi
-
   ;;
 #
 #-----------------------------------------------------------------------
