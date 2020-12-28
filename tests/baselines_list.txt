@@ -2,6 +2,8 @@ DOT_OR_USCORE
 GST_release_public_v1
 community_ensemble_008mems
 community_ensemble_2mems
+community_wcoss_dell_p3
+community_wcoss_cray
 get_extrn_files_from_hpss_FV3GFS_FV3GFS
 get_extrn_files_from_hpss_GSMGFS_GSMGFS
 get_extrn_files_from_hpss_HRRR_RAP
