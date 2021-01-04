@@ -273,7 +273,18 @@ fn_grib2=""
 input_type=""
 tracers_input="\"\""
 tracers="\"\""
+#
+# If the external model for LBCs is one that does not contain the fields
+# needed for Thompson microphysics to work properly, set the variable
+# thomp_mp_climo_file to the full path of the file containing climatology
+# data that can be used to generate approximate versions of these fields
+# in the LBCs files.
+#
 thomp_mp_climo_file=""
+if [ "${EXTRN_MDL_NAME_ICS}" != "HRRR" ] && \
+   [ "${EXTRN_MDL_NAME_ICS}" != "RAP" ]; then
+  thomp_mp_climo_file="${THOMPSON_MP_CLIMO_FP}"
+fi
 
 case "${EXTRN_MDL_NAME_LBCS}" in
 
@@ -282,56 +293,9 @@ case "${EXTRN_MDL_NAME_LBCS}" in
   input_type="gfs_gaussian_nemsio" # For spectral GFS Gaussian grid in nemsio format.
   tracers_input="[\"spfh\",\"clwmr\",\"o3mr\"]"
   tracers="[\"sphum\",\"liq_wat\",\"o3mr\"]"
-# 
-# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
-#
-  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-     thomp_mp_climo_file=""
-  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
-     thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-  else
-    print_err_msg_exit "\
-The variable \"thomp_mp_climo_file\" has not yet been specified for this
-external LBC model (EXTRN_MDL_NAME_LBCS) and physics suite (CCPP_PHYS_SUITE)
-combination:
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-  fi
   ;;
 
 "FV3GFS")
-#
-# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
-#
-  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-     thomp_mp_climo_file=""
-  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
-     thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-  else
-    print_err_msg_exit "\
-The variable \"thomp_mp_climo_file\" has not yet been specified for this
-external LBC model (EXTRN_MDL_NAME_LBCS) and physics suite (CCPP_PHYS_SUITE)
-combination:
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-  fi
-
   if [ "${FV3GFS_FILE_FMT_LBCS}" = "nemsio" ]; then
     external_model="FV3GFS"
     input_type="gaussian_nemsio"     # For FV3-GFS Gaussian grid in nemsio format.
@@ -357,29 +321,6 @@ combination:
 "NAM")
   external_model="NAM"
   input_type="grib2"
-#
-# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
-#
-  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-     thomp_mp_climo_file=""
-  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
-     thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-  else
-    print_err_msg_exit "\
-The variable \"thomp_mp_climo_file\" has not yet been specified for this
-external LBC model (EXTRN_MDL_NAME_LBCS) and physics suite (CCPP_PHYS_SUITE)
-combination:
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-  fi
   ;;
 
 *)

@@ -1366,24 +1366,37 @@ LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task.sh"
 #
 #-----------------------------------------------------------------------
 #
+# Name of the climatology file containing data that can be used to generate
+# (approximate versons of) the fields that must be present in the IC and
+# LBC files in order for the Thompson microphysics parameterization to
+# work properly.  This file is used ONLY IF the necessary fields are not
+# already present in the external model files from which the ICs and/or
+# LBCs on the native grid will be generated.
+#
+#-----------------------------------------------------------------------
+#
+THOMPSON_MP_CLIMO_FN="Thompson_MP_MONTHLY_CLIMO.nc"
+#
+#-----------------------------------------------------------------------
+#
 # Define the various work subdirectories under the main work directory.
 # Each of these corresponds to a different step/substep/task in the pre-
 # processing, as follows:
 #
 # GRID_DIR:
-# Directory in which the grid files will be placed (if RUN_TASK_MAKE_-
-# GRID is set to "TRUE") or searched for (if RUN_TASK_MAKE_GRID is set
-# to "FALSE").
+# Directory in which the grid files will be placed (if RUN_TASK_MAKE_GRID 
+# is set to "TRUE") or searched for (if RUN_TASK_MAKE_GRID is set to 
+# "FALSE").
 #
 # OROG_DIR:
-# Directory in which the orography files will be placed (if RUN_TASK_-
-# MAKE_OROG is set to "TRUE") or searched for (if RUN_TASK_MAKE_OROG is
-# set to "FALSE").
+# Directory in which the orography files will be placed (if RUN_TASK_MAKE_OROG 
+# is set to "TRUE") or searched for (if RUN_TASK_MAKE_OROG is set to 
+# "FALSE").
 #
 # SFC_CLIMO_DIR:
 # Directory in which the surface climatology files will be placed (if
-# RUN_TASK_MAKE_SFC_CLIMO is set to "TRUE") or searched for (if RUN_-
-# TASK_MAKE_SFC_CLIMO is set to "FALSE").
+# RUN_TASK_MAKE_SFC_CLIMO is set to "TRUE") or searched for (if 
+# RUN_TASK_MAKE_SFC_CLIMO is set to "FALSE").
 #
 #----------------------------------------------------------------------
 #
@@ -1479,8 +1492,8 @@ else
 #
 # If RUN_TASK_MAKE_GRID is set to "FALSE", the workflow will look for 
 # the pre-generated grid files in GRID_DIR.  In this case, make sure 
-# that GRID_DIR exists.  Otherwise, set it to a predefined location un-
-# der the experiment directory (EXPTDIR).
+# that GRID_DIR exists.  Otherwise, set it to a predefined location under 
+# the experiment directory (EXPTDIR).
 #
 #-----------------------------------------------------------------------
 #
@@ -1661,9 +1674,9 @@ NH4=4
 #
 #-----------------------------------------------------------------------
 #
-# Set parameters according to the type of horizontal grid generation me-
-# thod specified.  First consider GFDL's global-parent-grid based me-
-# thod.
+# Set parameters according to the type of horizontal grid generation 
+# method specified.  First consider GFDL's global-parent-grid based 
+# method.
 #
 #-----------------------------------------------------------------------
 #
@@ -2387,6 +2400,8 @@ NEMS_CONFIG_FP="${NEMS_CONFIG_FP}"
 FV3_EXEC_FP="${FV3_EXEC_FP}"
 
 LOAD_MODULES_RUN_TASK_FP="${LOAD_MODULES_RUN_TASK_FP}"
+
+THOMPSON_MP_CLIMO_FN="${THOMPSON_MP_CLIMO_FN}"
 #
 #-----------------------------------------------------------------------
 #

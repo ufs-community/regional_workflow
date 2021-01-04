@@ -3,11 +3,30 @@
 #
 # This file defins a function that first checks whether the Thompson 
 # microphysics parameterization is being called by the selected physics 
-# suite.  If not, it does nothing else.  If so, it modifies the workflow 
-# arrays FIXgsm_FILES_TO_COPY_TO_FIXam and CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING
-# to ensure that fixed files needed by this parameterization are copied
-# to the FIXam directory and that appropriate symlinks to these files 
-# are created in the run directories.
+# suite.  If not, it does nothing else.  If so, it:
+#
+# 1) Modifies the workflow arrays FIXgsm_FILES_TO_COPY_TO_FIXam and 
+#    CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING to ensure that fixed files 
+#    needed by th Thompson microphysics parameterization are copied to 
+#    the FIXam directory and that appropriate symlinks to these files
+#    are created in the run directories.
+#
+# 2) Sets the workflow variable THOMPSON_MP_CLIMO_FP containing the full 
+#    path to the climatology file containing data that can be used to 
+#    generate (approximate versons of) the fields needed in the ICs and
+#    LBCs files for the Thompson microphysics parameterization to work 
+#    properly IF those fields are not already present in the external 
+#    model files for ICS and/or LBCS.
+
+# 2) Sets the workflow variable THOMPSON_MP_CLIMO_FP containing the full
+#    path to the climatology file containing data that can be used to 
+#    generate (approximate versons of) the fields that must be present 
+#    in the IC and LBC files in order for the Thompson microphysics 
+#    parameterization to work properly.  The file that this variable 
+#    points to will be used (by the MAKE_ICS_TN and/or MAKE_LBCS_TN tasks) 
+#    ONLY IF the necessary fields are not already present in the external 
+#    model files from which the ICs and/or LBCs on the native grid will 
+#    be generated.
 #
 #-----------------------------------------------------------------------
 #
@@ -122,12 +141,10 @@ string."
       "qr_acr_qg.dat" \
       "qr_acr_qs.dat" \
       )
-   
+
     if [ "${EXTRN_MDL_NAME_ICS}" != "HRRR" -a "${EXTRN_MDL_NAME_ICS}" != "RAP" ] || \
        [ "${EXTRN_MDL_NAME_LBCS}" != "HRRR" -a "${EXTRN_MDL_NAME_LBCS}" != "RAP" ]; then
-
-      thompson_mp_fix_files+=( "Thompson_MP_MONTHLY_CLIMO.nc" )
-
+      thompson_mp_fix_files+=( "${THOMPSON_MP_CLIMO_FN}" )
     fi  
 
     FIXgsm_FILES_TO_COPY_TO_FIXam+=( "${thompson_mp_fix_files[@]}" )
@@ -160,6 +177,21 @@ values of these parameters are as follows:
     msg="$msg"$( printf "\"%s\" \\\\\n" "${CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING[@]}" )
     msg="$msg"$( printf "\n)" )
     print_info_msg "$msg"
+#
+#-----------------------------------------------------------------------
+#
+# Set the workflow variable THOMPSON_MP_CLIMO_FP containing the full path
+# to the climatology file containing data that can be used to generate
+# (approximate versons of) the fields that must be present in the IC and 
+# LBC files in order for the Thompson microphysics parameterization to 
+# work properly.  The file that this variable points to will be used (by 
+# the MAKE_ICS_TN and/or MAKE_LBCS_TN tasks) ONLY IF the necessary fields 
+# are not already present in the external model files from which the ICs 
+# and/or LBCs on the native grid will be generated.
+#
+#-----------------------------------------------------------------------
+#
+    THOMPSON_MP_CLIMO_FP="$FIXam/${THOMPSON_MP_CLIMO_FN}"
 
   fi
 #

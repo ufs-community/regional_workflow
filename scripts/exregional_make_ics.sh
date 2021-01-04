@@ -302,7 +302,18 @@ minmax_vgfrc_from_climo=""
 lai_from_climo=""
 tg3_from_soil=""
 convert_nst=""
+#
+# If the external model for ICs is one that does not contain the fields
+# needed for Thompson microphysics to work properly, set the variable 
+# thomp_mp_climo_file to the full path of the file containing climatology
+# data that can be used to generate approximate versions of these fields
+# in the ICs file.
+#
 thomp_mp_climo_file=""
+if [ "${EXTRN_MDL_NAME_ICS}" != "HRRR" ] && \
+   [ "${EXTRN_MDL_NAME_ICS}" != "RAP" ]; then
+  thomp_mp_climo_file="${THOMPSON_MP_CLIMO_FP}"
+fi
 
 case "${EXTRN_MDL_NAME_ICS}" in
 
@@ -314,30 +325,6 @@ case "${EXTRN_MDL_NAME_ICS}" in
   convert_nst=False
   tracers_input="[\"spfh\",\"clwmr\",\"o3mr\"]"
   tracers="[\"sphum\",\"liq_wat\",\"o3mr\"]"
-#
-# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
-#    
-  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-    thomp_mp_climo_file=""
-  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
-    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-  else
-    print_err_msg_exit "\
-The variable \"thomp_mp_climo_file\" has not yet been specified for this
-external IC model (EXTRN_MDL_NAME_ICS) and physics suite (CCPP_PHYS_SUITE)
-combination:
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-  fi
-
   nsoill_out="4" #If the CCPP suites uses RUC-LSM, the scheme will interpolate from 4 to 9 soil levels.
   vgtyp_from_climo=True
   sotyp_from_climo=True
@@ -347,32 +334,7 @@ combination:
   tg3_from_soil=False
   ;;
 
-
 "FV3GFS")
-#
-# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
-#
-  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-    thomp_mp_climo_file=""
-  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
-    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-  else
-    print_err_msg_exit "\
-The variable \"thomp_mp_climo_file\" has not yet been specified for this
-external IC model (EXTRN_MDL_NAME_ICS) and physics suite (CCPP_PHYS_SUITE)
-combination:
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-  fi
-
   if [ "${FV3GFS_FILE_FMT_ICS}" = "nemsio" ]; then
     external_model="FV3GFS"
     tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
@@ -387,7 +349,6 @@ combination:
     input_type="grib2"
     convert_nst=False
   fi
- 
   nsoill_out="4" #If the CCPP suites uses RUC-LSM, the scheme will interpolate from 4 to 9 soil levels.
   vgtyp_from_climo=True
   sotyp_from_climo=True
@@ -481,31 +442,6 @@ IC model (EXTRN_MDL_NAME_ICS) and physics suite (CCPP_PHYS_SUITE) combination:
   external_model="NAM"
   fn_grib2="${EXTRN_MDL_FNS[0]}"
   input_type="grib2"
-#
-# Use Thompson climatology for ice- and water-friendly aerosols if CCPP 
-# suite uses Thompson MP
-#
-  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \       
-     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-    thomp_mp_climo_file=""
-  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
-    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-  else
-    print_err_msg_exit "\
-The variable \"thomp_mp_climo_file\" has not yet been specified for this
-external IC model (EXTRN_MDL_NAME_ICS) and physics suite (CCPP_PHYS_SUITE)
-combination:
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-  fi
-
   nsoill_out="4" #If the CCPP suites uses RUC-LSM, the scheme will interpolate from 4 to 9 soil levels.
   vgtyp_from_climo=True
   sotyp_from_climo=True
