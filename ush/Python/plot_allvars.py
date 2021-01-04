@@ -9,7 +9,7 @@
 #           David Wright 	Org: University of Michigan
 #
 # Instructions:		Make sure all the necessary modules can be imported.
-#                       Five command line arguments are needed:
+#                       Four command line arguments are needed:
 #                       1. Cycle date/time in YYYYMMDDHH format
 #                       2. Forecast hour in HHH format
 #                       3. EXPT_DIR: Experiment directory
