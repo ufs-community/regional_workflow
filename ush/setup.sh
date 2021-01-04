@@ -1894,6 +1894,10 @@ if [ "$QUILTING" = "TRUE" ]; then
   PE_MEMBER01=$(( ${PE_MEMBER01} + ${WRTCMP_write_groups}*${WRTCMP_write_tasks_per_group} ))
 fi
 
+if [ "$MACHINE" -eq "WCOSS_CRAY" ] && [ ${PE_MEMBER01} -lt 24 ]; then
+  PE_MEMBER01=24
+fi
+
 print_info_msg "$VERBOSE" "
 The number of MPI tasks for the forecast (including those for the write
 component if it is being used) are:
