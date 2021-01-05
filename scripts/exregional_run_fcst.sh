@@ -92,7 +92,12 @@ case $MACHINE in
   "WCOSS_CRAY")
     ulimit -s unlimited
     ulimit -a
-    APRUN="aprun -b -j1 -n${PE_MEMBER01} -N24 -d1 -cc depth"
+
+    if [ ${PE_MEMBER01} -gt 24 ];then
+      APRUN="aprun -b -j1 -n${PE_MEMBER01} -N24 -d1 -cc depth"
+    else
+      APRUN="aprun -b -j1 -n24 -N24 -d1 -cc depth"
+    fi
     ;;
 
   "WCOSS_DELL_P3")
