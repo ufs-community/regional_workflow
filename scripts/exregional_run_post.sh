@@ -185,7 +185,7 @@ cp_vrfy ${EXECDIR}/ncep_post .
 yyyymmdd=${cdate:0:8}
 hh=${cdate:8:2}
 cyc=$hh
-tmmark="tm$hh"
+tmmark="tm00"
 #
 #-----------------------------------------------------------------------
 #
