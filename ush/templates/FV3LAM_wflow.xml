@@ -133,7 +133,11 @@ MODULES_RUN_TASK_FP script.
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&MAKE_GRID_TN;" "&JOBSDIR;/JREGIONAL_MAKE_GRID"</command>
+  {% if machine in ["WCOSS_DELL_P3", "WCOSS_CRAY"]  %}
+    <nodes>{{ nnodes_make_grid }}:ppn=1</nodes>
+  {% else %}
     <nodes>{{ nnodes_make_grid }}:ppn={{ ppn_make_grid }}</nodes>
+  {% endif %}
     <walltime>{{ wtime_make_grid }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
     <jobname>&MAKE_GRID_TN;</jobname>
@@ -153,7 +157,11 @@ MODULES_RUN_TASK_FP script.
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&MAKE_OROG_TN;" "&JOBSDIR;/JREGIONAL_MAKE_OROG"</command>
+  {% if machine in ["WCOSS_DELL_P3", "WCOSS_CRAY"]  %}
+    <nodes>{{ nnodes_make_orog }}:ppn=1</nodes>
+  {% else %}
     <nodes>{{ nnodes_make_orog }}:ppn={{ ppn_make_orog }}</nodes>
+  {% endif %}
     <walltime>{{ wtime_make_orog }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
     <jobname>&MAKE_OROG_TN;</jobname>
