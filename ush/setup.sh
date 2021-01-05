@@ -1366,19 +1366,6 @@ LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task.sh"
 #
 #-----------------------------------------------------------------------
 #
-# Name of the climatology file containing data that can be used to generate
-# (approximate versons of) the fields that must be present in the IC and
-# LBC files in order for the Thompson microphysics parameterization to
-# work properly.  This file is used ONLY IF the necessary fields are not
-# already present in the external model files from which the ICs and/or
-# LBCs on the native grid will be generated.
-#
-#-----------------------------------------------------------------------
-#
-THOMPSON_MP_CLIMO_FN="Thompson_MP_MONTHLY_CLIMO.nc"
-#
-#-----------------------------------------------------------------------
-#
 # Define the various work subdirectories under the main work directory.
 # Each of these corresponds to a different step/substep/task in the pre-
 # processing, as follows:
@@ -2011,11 +1998,8 @@ mkdir_vrfy -p "$EXPTDIR"
 #-----------------------------------------------------------------------
 #
 set_thompson_mp_fix_files \
-  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" 
-
-
-
-
+  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
+  output_varname_thompson_mp_climo_fp="THOMPSON_MP_CLIMO_FP"
 #
 #-----------------------------------------------------------------------
 #
@@ -2401,7 +2385,7 @@ FV3_EXEC_FP="${FV3_EXEC_FP}"
 
 LOAD_MODULES_RUN_TASK_FP="${LOAD_MODULES_RUN_TASK_FP}"
 
-THOMPSON_MP_CLIMO_FN="${THOMPSON_MP_CLIMO_FN}"
+THOMPSON_MP_CLIMO_FP="${THOMPSON_MP_CLIMO_FP}"
 #
 #-----------------------------------------------------------------------
 #
