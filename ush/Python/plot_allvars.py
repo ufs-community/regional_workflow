@@ -55,7 +55,6 @@ import numpy as np
 import time,os,sys,multiprocessing
 import multiprocessing.pool
 from scipy import ndimage
-from netCDF4 import Dataset
 import pyproj
 import argparse
 import cartopy
