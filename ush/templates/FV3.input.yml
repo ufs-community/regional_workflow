@@ -33,6 +33,12 @@ FV3_GSD_SAR:
     iopt_snf: 4
     iopt_stc: 1
     iopt_tbot: 2
+# As of 20210108, kice should not be set if using the ufs-community
+# version of ufs-weather-model and should be set to 9 if using the 
+# NOAA-GSL version.  Once the changes in NOAA-GSL are merged into 
+# ufs-community, then kice should be set to 9 when using any suite that 
+# includes RUC-LSM.
+    kice: 9
     shal_cnv: false
     do_deep: False
 
@@ -62,18 +68,64 @@ FV3_RRFS_v1beta:
   atmos_model_nml:
     fdiag: 3
 
+#FV3_HRRR:
+#  fv_core_nml:
+#    nrows_blend: 10
+#    regional_bcs_from_gsi: False
+#    write_restart_with_bcs: False
+#  gfs_physics_nml:
+#    <<: *gsd_sar_phys
+#    do_mynnsfclay: True
+#    gwd_opt: 3
+#    imfdeepcnv: -1
+#    imfshalcnv: -1
+
 FV3_HRRR:
   fv_core_nml:
+    hord_dp: -5
+    hord_mt: 5
+    hord_tm: 5
+    hord_vt: 5
+    kord_mt: 9
+    kord_tm: -9
+    kord_tr: 9
+    kord_wz: 9
+    nord_tr: 2
     nrows_blend: 10
     regional_bcs_from_gsi: False
     write_restart_with_bcs: False
   gfs_physics_nml:
     <<: *gsd_sar_phys
+    cdmbgwd: [3.5, 1.0]
     do_mynnsfclay: True
+    do_sfcperts: !!python/none
+    effr_in: True
+    gwd_opt: 3
+    iaer: 5111
+    icliq_sw: 2
     imfdeepcnv: -1
     imfshalcnv: -1
-    gwd_opt: 3
-
+    iovr: 3
+# Probably don't need to set lsoil at all because it is a pre-CCPP variable.
+# If using CCPP (which we now always do), the correct parameter to set
+# is lsoil_lsm.  That parameter (along with lsm) are set in the base
+# namelist file input.nml.FV3.  As of 20210108, they are set as follows:
+#   lsm = 3
+#   lsoil_lsm = 9
+# These are the correct values for the FV3_HRRR suite, so they do not
+# need to be reset here.  Probably both lsm and lsoil_lsm should be 
+# removed from input.nml.FV3 and set by the workflow scripts according 
+# to the LSM that is used in the SDF (suite definition file).  And lsoil 
+# should just not be set at all (by setting it to !!python/none in 
+# input.nml.FV3 and not setting it in this file at all, probably for all 
+# suites).
+    lsoil: 9
+# As of 20210108, kice should not be set if using the ufs-community
+# version of ufs-weather-model and should be set to 9 if using the 
+# NOAA-GSL version.  Once the changes in NOAA-GSL are merged into 
+# ufs-community, then kice should be set to 9 when using any suite that 
+# includes RUC-LSM.
+    kice: 9
 
 FV3_GFS_2017_gfdlmp:
   atmos_model_nml:

@@ -511,8 +511,18 @@ npy=$((NY+1))
 # For the physics suites that use RUC-LSM, set the parameter
 # lsoil according to the external models used to obtain ICs and LBCs.
 #
+# This code needs to be replaced by one that checks the SDF for use of 
+# the RUC-LSM and acts accrodingly (instead of having this top-level if-
+# statement that checks the physic suite).
+#
+# Actually, probably should not set lsm at all since it is a pre-CCPP
+# variable.  Use lsoil_lsm, which is the equivalent variable if using
+# CCPP (which is now always).  So, probalby remove lsoil from this script
+# completely.
+#
 if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-   [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+   [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
+   [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
 
   if [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] || \
      [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ] || \
@@ -533,12 +543,63 @@ Please change one or more of these parameters or provide a value for lsoil
   fi
 
 fi
+
+
+
+
+#
+# As of 20210108, kice should not be set if using the ufs-community
+# version of ufs-weather-model and should be set to 9 if using the
+# NOAA-GSL version.  Once the changes in NOAA-GSL are merged into
+# ufs-community, then kice should be set to 9 when using any suite that
+# includes RUC-LSM.
+#
+
+#
+#-----------------------------------------------------------------------
+#
+# Check the suite definition file to see whether the RUC land surface 
+# model (LSM) is being used.
+#
+#-----------------------------------------------------------------------
+#
+RUC_LSM_name="lsm_ruc"
+regex_search="^[ ]*<scheme>(${RUC_LSM_name})<\/scheme>[ ]*$"
+RUC_LSM_name_or_null=$( sed -r -n -e "s/${regex_search}/\1/p" "${ccpp_phys_suite_fp}" )
+
+if [ "${RUC_LSM_name_or_null}" = "${RUC_LSM_name}" ]; then
+  RUC_LSM_is_used="TRUE"
+elif [ -z "${RUC_LSM_name_or_null}" ]; then
+  RUC_LSM_is_used="FALSE"
+else
+  print_err_msg_exit "\
+Unexpected value returned for RUC_LSM_name_or_null:
+  RUC_LSM_name_or_null = \"${RUC_LSM_name_or_null}\"
+This variable should be set to either \"${RUC_LSM_name}\" or an empty
+string."
+fi
+
+kice=""
+if [ "${RUC_LSM_is_used}" = "TRUE" ]; then
+  kice="9"
+fi
 #
 # Create a multiline variable that consists of a yaml-compliant string
 # specifying the values that the namelist variables that are physics-
 # suite-independent need to be set to.  Below, this variable will be
 # passed to a python script that will in turn set the values of these
 # variables in the namelist file.
+#
+# IMPORTANT:
+# If we want a namelist variable to be removed from the namelist file,
+# in the "settings" variable below, we need to set its value to the
+# string "null".  This is equivalent to setting its value to 
+#    !!python/none
+# in the base namelist file specified by FV3_NML_BASE_SUITE_FP or the 
+# suite-specific yaml settings file specified by FV3_NML_YAML_CONFIG_FP.
+#
+# It turns out that setting the variable to an empty string also works
+# to remove it from the namelist!  Which is better to use??
 #
 settings="\
 'atmos_model_nml': {
@@ -564,6 +625,7 @@ settings="\
     'bc_update_interval': ${LBC_SPEC_INTVL_HRS},
   }
 'gfs_physics_nml': {
+    'kice': ${kice},
     'lsoil': ${lsoil:-null},
     'do_shum': ${DO_SHUM},
     'do_sppt': ${DO_SPPT},
