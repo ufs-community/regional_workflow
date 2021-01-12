@@ -144,7 +144,7 @@ case ${PREDEF_GRID_NAME} in
   DT_ATMOS="${DT_ATMOS:-45}"
 
   LAYOUT_X="${LAYOUT_X:-16}"
-  LAYOUT_Y="${LAYOUT_Y:-8}"
+  LAYOUT_Y="${LAYOUT_Y:-10}"
   BLOCKSIZE="${BLOCKSIZE:-32}"
 
   if [ "$QUILTING" = "TRUE" ]; then
