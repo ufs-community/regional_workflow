@@ -833,21 +833,25 @@ WRTCMP_dy=""
 # Set PREDEF_GRID_NAME.  This parameter specifies a predefined regional
 # grid, as follows:
 #
-# * If PREDEF_GRID_NAME is set to an empty string, the grid generation
-#   method (GRID_GEN_METHOD), grid parameters, time step (DT_ATMOS), 
-#   computational parameters (e.g. LAYOUT_X, LAYOUT_Y), and write component 
-#   parameters set above (and possibly overwritten by values in the user-
-#   specified workflow configuration file) are used.
-#
 # * If PREDEF_GRID_NAME is set to a valid predefined grid name, the grid 
-#   generation method (GRID_GEN_METHOD), grid parameters, time step 
-#   (DT_ATMOS), computational parameters (e.g. LAYOUT_X, LAYOUT_Y), and 
-#   write component parameters set above (and possibly overwritten by 
-#   values in the user-specified workflow configuration file) are overwritten 
-#   by predefined values for the specified grid.
+#   generation method GRID_GEN_METHOD, the (native) grid parameters, and 
+#   the write-component grid parameters are set to predefined values for 
+#   the specified grid, overwriting any settings of these parameters in 
+#   the user-specified experiment configuration file.  In addition, if 
+#   the time step DT_ATMOS and the computational parameters LAYOUT_X, 
+#   LAYOUT_Y, and BLOCKSIZE are not specified in that configuration file, 
+#   they are also set to predefined values for the specified grid.
 #
-# This is simply a convenient way to quickly specify a set of parameters
-# that depend on the grid.
+# * If PREDEF_GRID_NAME is set to an empty string, the grid generation
+#   method GRID_GEN_METHOD, the (native) grid parameters, and the write-
+#   component grid parameters as well as the time step DT_ATMOS and the 
+#   computational parameters LAYOUT_X, LAYOUT_Y, and BLOCKSIZE must be 
+#   set in the user-specified experiment configuration file; otherwise,
+#   the values of these parameters in this default experiment configuration
+#   file will be used.
+#
+# Setting PREDEF_GRID_NAME provides a convenient method of specifying a
+# commonly used set of grid-dependent parameters.
 #
 #-----------------------------------------------------------------------
 #
