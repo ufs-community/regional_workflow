@@ -187,7 +187,7 @@
     shal_cnv = .true.
     swhtr = .true.
     trans_trac = .true.
-    ttendlim = 50.0
+    ttendlim = -999
     use_ufo = .true.
 /
 
