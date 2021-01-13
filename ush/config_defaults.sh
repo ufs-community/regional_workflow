@@ -175,19 +175,6 @@ EXPT_SUBDIR=""
 #
 #   $COMINgfs/gfs.$yyyymmdd/$hh
 #
-# FIXLAM_NCO_BASEDIR:
-# The base directory containing pregenerated grid, orography, and surface 
-# climatology files.  For the pregenerated grid specified by PREDEF_GRID_NAME, 
-# these "fixed" files are located in:
-#
-#   ${FIXLAM_NCO_BASEDIR}/${PREDEF_GRID_NAME}
-#
-# The workflow scripts will create a symlink in the experiment directory
-# that will point to a subdirectory (having the name of the grid being
-# used) under this directory.  This variable should be set to a null 
-# string in this file, but it can be specified in the user-specified 
-# workflow configuration file (EXPT_CONFIG_FN)
-#
 # STMP:
 # The beginning portion of the directory that will contain cycle-dependent
 # model input files, symlinks to cycle-independent input files, and raw 
@@ -227,7 +214,6 @@ EXPT_SUBDIR=""
 #-----------------------------------------------------------------------
 #
 COMINgfs="/base/path/of/directory/containing/gfs/input/files"
-FIXLAM_NCO_BASEDIR=""
 STMP="/base/path/of/directory/containing/model/input/and/raw/output/files"
 NET="rrfs"
 envir="para"
@@ -344,7 +330,7 @@ FV3_NML_YAML_CONFIG_FN="FV3.input.yml"
 FV3_NML_BASE_ENS_FN="input.nml.base_ens"
 MODEL_CONFIG_FN="model_configure"
 NEMS_CONFIG_FN="nems.configure"
-FV3_EXEC_FN="ufs_model"
+FV3_EXEC_FN="fv3_gfs.x"
 
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
@@ -756,14 +742,6 @@ ESGgrid_WIDE_HALO_WIDTH="6"
 # As described in the forecast model documentation, "It corresponds to
 # the frequency with which the top level routine in the dynamics is called
 # as well as the frequency with which the physics is called."
-#
-# Note that if using one of the predefined grids (i.e. if PREDEF_GRID_NAME
-# is not set to a null string, either below or in the custom workflow
-# configuration file specified by EXPT_CONFIG_FN), then DT_ATMOS is 
-# overwritten by the value for that predefined grid.  The predefined
-# grid parameters are specified in the script 
-#
-#   $HOMErrfs/ush/set_predef_grid_params.sh
 #
 #-----------------------------------------------------------------------
 #

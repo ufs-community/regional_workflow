@@ -190,26 +190,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that RUN_TASK_MAKE_OROG is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "RUN_TASK_MAKE_OROG" "valid_vals_RUN_TASK_MAKE_OROG"
-#
-# Set RUN_TASK_MAKE_OROG to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
-#
-RUN_TASK_MAKE_OROG=${RUN_TASK_MAKE_OROG^^}
-if [ "${RUN_TASK_MAKE_OROG}" = "TRUE" ] || \
-   [ "${RUN_TASK_MAKE_OROG}" = "YES" ]; then
-  RUN_TASK_MAKE_OROG="TRUE"
-elif [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ] || \
-     [ "${RUN_TASK_MAKE_OROG}" = "NO" ]; then
-  RUN_TASK_MAKE_OROG="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
 # Make sure that RUN_TASK_MAKE_SFC_CLIMO is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -227,6 +207,28 @@ if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] || \
 elif [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ] || \
      [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "NO" ]; then
   RUN_TASK_MAKE_SFC_CLIMO="FALSE"
+fi
+#
+# If RUN_TASK_MAKE_SFC_CLIMO is set to "FALSE", make sure that the di-
+# rectory SFC_CLIMO_DIR that should contain the pre-generated surface 
+# climatology files exists.
+#
+if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ] && \
+   [ ! -d "${SFC_CLIMO_DIR}" ]; then
+  print_err_msg_exit "\
+The directory (SFC_CLIMO_DIR) that should contain the pre-generated sur-
+face climatology files does not exist:
+  SFC_CLIMO_DIR = \"${SFC_CLIMO_DIR}\""
+fi
+#
+# If RUN_TASK_MAKE_SFC_CLIMO is set to "TRUE" and the variable specifying 
+# the directory in which to look for pregenerated grid and orography files 
+# (i.e. SFC_CLIMO_DIR) is not empty, then for clarity reset the latter to 
+# an empty string (because it will not be used).
+#
+if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] && \
+   [ -n "${SFC_CLIMO_DIR}" ]; then
+  SFC_CLIMO_DIR=""
 fi
 #
 #-----------------------------------------------------------------------
@@ -248,7 +250,6 @@ elif [ "${RUN_TASK_VX_GRIDSTAT}" = "FALSE" ] || \
      [ "${RUN_TASK_VX_GRIDSTAT}" = "NO" ]; then
   RUN_TASK_VX_GRIDSTAT="FALSE"
 fi
-
 #
 #-----------------------------------------------------------------------
 #
@@ -269,8 +270,6 @@ elif [ "${RUN_TASK_VX_POINTSTAT}" = "FALSE" ] || \
      [ "${RUN_TASK_VX_POINTSTAT}" = "NO" ]; then
   RUN_TASK_VX_POINTSTAT="FALSE"
 fi
-
-#
 #
 #-----------------------------------------------------------------------
 #
@@ -701,6 +700,7 @@ SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
 PARMDIR="$HOMErrfs/parm"
 MODULES_DIR="$HOMErrfs/modulefiles"
 EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
+FIXrrfs="$HOMErrfs/fix"
 TEMPLATE_DIR="$USHDIR/templates"
 VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
 METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
@@ -712,56 +712,48 @@ case $MACHINE in
     FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "WCOSS_DELL_P3")
     FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "HERA")
     FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_sfc_climo"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch2/BMC/det/FV3LAM_pregen"}
     ;;
 
   "ORION")
     FIXgsm=${FIXgsm:-"/work/noaa/global/glopara/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/work/noaa/global/glopara/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/noaa/global/glopara/fix/fix_sfc_climo"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "JET")
     FIXgsm=${FIXgsm:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_sfc_climo"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "ODIN")
     FIXgsm=${FIXgsm:-"/scratch/ywang/fix/theia_fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "CHEYENNE")
     FIXgsm=${FIXgsm:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   "STAMPEDE")
     FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   *)
@@ -771,7 +763,6 @@ One or more fix file directories have not been specified for this machine:
   FIXgsm = \"${FIXgsm:-\"\"}
   TOPO_DIR = \"${TOPO_DIR:-\"\"}
   SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR:-\"\"}
 You can specify the missing location(s) in config.sh"
     ;;
 
@@ -1063,19 +1054,67 @@ check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 #
 LOGDIR="${EXPTDIR}/log"
 
-FIXam="${EXPTDIR}/fix_am"
-FIXLAM="${EXPTDIR}/fix_lam"
-
 if [ "${RUN_ENVIR}" = "nco" ]; then
+
+  FIXam="${FIXrrfs}/fix_am"
+#
+# In NCO mode (i.e. if RUN_ENVIR set to "nco"), it is assumed that before
+# running the experiment generation script, the path specified in FIXam 
+# already exists and is either itself the directory in which various fixed
+# files (but not the ones containing the regional grid and the orography
+# and surface climatology on that grid) are located, or it is a symlink 
+# to such a directory.  Resolve any symlinks in the path specified by 
+# FIXam and check that this is the case.
+#
+  path_resolved=$( readlink -m "$FIXam" )
+  if [ ! -d "${path_resolved}" ]; then
+    print_err_msg_exit "\
+In order to be able to generate a forecast experiment in NCO mode (i.e. 
+when RUN_ENVIR set to \"nco\"), the path specified by FIXam after resolving 
+all symlinks (path_resolved) must be an existing directory (but in this
+case isn't):
+  RUN_ENVIR = \"${RUN_ENVIR}\"
+  FIXam = \"$FIXam\"
+  path_resolved = \"${path_resolved}\"
+Please ensure that path_resolved is an existing directory and then rerun 
+the experiment generation script."
+  fi
+
+  FIXLAM="${FIXrrfs}/fix_lam/${PREDEF_GRID_NAME}"
+#
+# In NCO mode (i.e. if RUN_ENVIR set to "nco"), it is assumed that before
+# running the experiment generation script, the path specified in FIXLAM 
+# already exists and is either itself the directory in which the fixed 
+# grid, orography, and surface climatology files are located, or it is a
+# symlink to such a directory.  Resolve any symlinks in the path specified
+# by FIXLAM and check that this is the case.
+#
+  path_resolved=$( readlink -m "$FIXLAM" )
+  if [ ! -d "${path_resolved}" ]; then
+    print_err_msg_exit "\
+In order to be able to generate a forecast experiment in NCO mode (i.e. 
+when RUN_ENVIR set to \"nco\"), the path specified by FIXLAM after resolving 
+all symlinks (path_resolved) must be an existing directory (but in this
+case isn't):
+  RUN_ENVIR = \"${RUN_ENVIR}\"
+  FIXLAM = \"$FIXLAM\"
+  path_resolved = \"${path_resolved}\"
+Please ensure that path_resolved is an existing directory and then rerun 
+the experiment generation script."
+  fi
 
   CYCLE_BASEDIR="$STMP/tmpnwprd/$RUN"
   check_for_preexist_dir_file "${CYCLE_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
+
   COMROOT="$PTMP/com"
+
   COMOUT_BASEDIR="$COMROOT/$NET/$envir"
   check_for_preexist_dir_file "${COMOUT_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
 
 else
 
+  FIXam="${EXPTDIR}/fix_am"
+  FIXLAM="${EXPTDIR}/fix_lam"
   CYCLE_BASEDIR="$EXPTDIR"
   COMROOT=""
   COMOUT_BASEDIR=""
@@ -1356,49 +1395,28 @@ LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task.sh"
 # RUN_TASK_MAKE_SFC_CLIMO is set to "TRUE") or searched for (if RUN_-
 # TASK_MAKE_SFC_CLIMO is set to "FALSE").
 #
-# First, consider NCO mode.
-#
 #----------------------------------------------------------------------
 #
 if [ "${RUN_ENVIR}" = "nco" ]; then
 
-  nco_fix_dir="${FIXLAM_NCO_BASEDIR}/${PREDEF_GRID_NAME}"
-  if [ ! -d "${nco_fix_dir}" ]; then
-    print_err_msg_exit "\
-The directory (nco_fix_dir) that should contain the pregenerated grid,
-orography, and surface climatology files does not exist:
-  nco_fix_dir = \"${nco_fix_dir}\""
-  fi
-
   if [ "${RUN_TASK_MAKE_GRID}" = "TRUE" ] || \
      [ "${RUN_TASK_MAKE_GRID}" = "FALSE" -a \
-       "${GRID_DIR}" != "${nco_fix_dir}" ]; then
+       "${GRID_DIR}" != "$FIXLAM" ]; then
 
     msg="
-When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
-grid files already exist in the directory 
-
-  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
-
-where
-
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
-  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
-
-Thus, the MAKE_GRID_TN task must not be run (i.e. RUN_TASK_MAKE_GRID must 
-be set to \"FALSE\"), and the directory in which to look for the grid 
-files (i.e. GRID_DIR) must be set to the one above.  Current values for 
-these quantities are:
-
+When RUN_ENVIR is set to \"nco\", it is assumed that grid files already
+exist in the directory specified by FIXLAM.  Thus, the grid file genera-
+tion task must not be run (i.e. RUN_TASK_MAKE_GRID must be set to 
+FALSE), and the directory in which to look for the grid files (i.e. 
+GRID_DIR) must be set to FIXLAM.  Current values for these quantities
+are:
   RUN_TASK_MAKE_GRID = \"${RUN_TASK_MAKE_GRID}\"
   GRID_DIR = \"${GRID_DIR}\"
-
-Resetting RUN_TASK_MAKE_GRID to \"FALSE\" and GRID_DIR to the one above.
-Reset values are:
-"
+Resetting RUN_TASK_MAKE_GRID to \"FALSE\" and GRID_DIR to the contents
+of FIXLAM.  Reset values are:"
 
     RUN_TASK_MAKE_GRID="FALSE"
-    GRID_DIR="${nco_fix_dir}"
+    GRID_DIR="$FIXLAM"
 
     msg="$msg""
   RUN_TASK_MAKE_GRID = \"${RUN_TASK_MAKE_GRID}\"
@@ -1406,38 +1424,27 @@ Reset values are:
 "
 
     print_info_msg "$msg"
-
+  
   fi
 
   if [ "${RUN_TASK_MAKE_OROG}" = "TRUE" ] || \
      [ "${RUN_TASK_MAKE_OROG}" = "FALSE" -a \
-       "${OROG_DIR}" != "${nco_fix_dir}" ]; then
+       "${OROG_DIR}" != "$FIXLAM" ]; then
 
     msg="
-When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
-orography files already exist in the directory 
-
-  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
-
-where
-
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
-  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
-
-Thus, the MAKE_OROG_TN task must not be run (i.e. RUN_TASK_MAKE_OROG must 
-be set to \"FALSE\"), and the directory in which to look for the orography 
-files (i.e. OROG_DIR) must be set to the one above.  Current values for 
-these quantities are:
-
+When RUN_ENVIR is set to \"nco\", it is assumed that orography files al-
+ready exist in the directory specified by FIXLAM.  Thus, the orography 
+file generation task must not be run (i.e. RUN_TASK_MAKE_OROG must be 
+set to FALSE), and the directory in which to look for the orography 
+files (i.e. OROG_DIR) must be set to FIXLAM.  Current values for these
+quantities are:
   RUN_TASK_MAKE_OROG = \"${RUN_TASK_MAKE_OROG}\"
   OROG_DIR = \"${OROG_DIR}\"
-
-Resetting RUN_TASK_MAKE_OROG to \"FALSE\" and OROG_DIR to the one above.
-Reset values are:
-"
+Resetting RUN_TASK_MAKE_OROG to \"FALSE\" and OROG_DIR to the contents
+of FIXLAM.  Reset values are:"
 
     RUN_TASK_MAKE_OROG="FALSE"
-    OROG_DIR="${nco_fix_dir}"
+    OROG_DIR="$FIXLAM"
 
     msg="$msg""
   RUN_TASK_MAKE_OROG = \"${RUN_TASK_MAKE_OROG}\"
@@ -1445,38 +1452,27 @@ Reset values are:
 "
 
     print_info_msg "$msg"
-
+  
   fi
 
   if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] || \
      [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" -a \
-       "${SFC_CLIMO_DIR}" != "${nco_fix_dir}" ]; then
+       "${SFC_CLIMO_DIR}" != "$FIXLAM" ]; then
 
     msg="
-When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
-surface climatology files already exist in the directory 
-
-  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
-
-where
-
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
-  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
-
-Thus, the MAKE_SFC_CLIMO_TN task must not be run (i.e. RUN_TASK_MAKE_SFC_CLIMO 
-must be set to \"FALSE\"), and the directory in which to look for the 
-surface climatology files (i.e. SFC_CLIMO_DIR) must be set to the one 
-above.  Current values for these quantities are:
-
+When RUN_ENVIR is set to \"nco\", it is assumed that surface climatology
+files already exist in the directory specified by FIXLAM.  Thus, the 
+surface climatology file generation task must not be run (i.e. RUN_-
+TASK_MAKE_SFC_CLIMO must be set to FALSE), and the directory in which to
+look for the surface climatology files (i.e. SFC_CLIMO_DIR) must be set
+to FIXLAM.  Current values for these quantities are:
   RUN_TASK_MAKE_SFC_CLIMO = \"${RUN_TASK_MAKE_SFC_CLIMO}\"
   SFC_CLIMO_DIR = \"${SFC_CLIMO_DIR}\"
-
-Resetting RUN_TASK_MAKE_SFC_CLIMO to \"FALSE\" and SFC_CLIMO_DIR to the 
-one above.  Reset values are:
-"
+Resetting RUN_TASK_MAKE_SFC_CLIMO to \"FALSE\" and SFC_CLIMO_DIR to the
+contents of FIXLAM.  Reset values are:"
 
     RUN_TASK_MAKE_SFC_CLIMO="FALSE"
-    SFC_CLIMO_DIR="${nco_fix_dir}"
+    SFC_CLIMO_DIR="$FIXLAM"
 
     msg="$msg""
   RUN_TASK_MAKE_SFC_CLIMO = \"${RUN_TASK_MAKE_SFC_CLIMO}\"
@@ -1484,7 +1480,7 @@ one above.  Reset values are:
 "
 
     print_info_msg "$msg"
-
+  
   fi
 
   if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
@@ -1494,7 +1490,7 @@ one above.  Reset values are:
 When RUN_ENVIR is set to \"nco\", it is assumed that the verification
 will not be run.
   RUN_TASK_VX_GRIDSTAT = \"${RUN_TASK_VX_GRIDSTAT}\"
-Resetting RUN_TASK_VX_GRIDSTAT to \"FALSE\" 
+Resetting RUN_TASK_VX_GRIDSTAT to \"FALSE\"
 Reset value is:"
 
     RUN_TASK_VX_GRIDSTAT="FALSE"
@@ -1514,7 +1510,7 @@ Reset value is:"
 When RUN_ENVIR is set to \"nco\", it is assumed that the verification
 will not be run.
   RUN_TASK_VX_POINTSTAT = \"${RUN_TASK_VX_POINTSTAT}\"
-Resetting RUN_TASK_VX_POINTSTAT to \"FALSE\" 
+Resetting RUN_TASK_VX_POINTSTAT to \"FALSE\"
 Reset value is:"
 
     RUN_TASK_VX_POINTSTAT="FALSE"
@@ -1527,40 +1523,41 @@ Reset value is:"
 
   fi
 
-#
-#-----------------------------------------------------------------------
-#
-# Now consider community mode.
-#
-#-----------------------------------------------------------------------
-#
 else
 #
+#-----------------------------------------------------------------------
+#
 # If RUN_TASK_MAKE_GRID is set to "FALSE", the workflow will look for 
-# the pregenerated grid files in GRID_DIR.  In this case, make sure that 
-# GRID_DIR exists.  Otherwise, set it to a predefined location under the 
-# experiment directory (EXPTDIR).
+# the pre-generated grid files in GRID_DIR.  In this case, make sure 
+# that GRID_DIR exists.  Otherwise, set it to a predefined location un-
+# der the experiment directory (EXPTDIR).
+#
+#-----------------------------------------------------------------------
 #
   if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
     if [ ! -d "${GRID_DIR}" ]; then
       print_err_msg_exit "\
-The directory (GRID_DIR) that should contain the pregenerated grid files 
-does not exist:
+The directory (GRID_DIR) that should contain the pre-generated grid 
+files does not exist:
   GRID_DIR = \"${GRID_DIR}\""
     fi
   else
     GRID_DIR="$EXPTDIR/grid"
   fi
 #
+#-----------------------------------------------------------------------
+#
 # If RUN_TASK_MAKE_OROG is set to "FALSE", the workflow will look for 
-# the pregenerated orography files in OROG_DIR.  In this case, make sure 
-# that OROG_DIR exists.  Otherwise, set it to a predefined location under 
-# the experiment directory (EXPTDIR).
+# the pre-generated orography files in OROG_DIR.  In this case, make 
+# sure that OROG_DIR exists.  Otherwise, set it to a predefined location
+# under the experiment directory (EXPTDIR).
+#
+#-----------------------------------------------------------------------
 #
   if [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ]; then
     if [ ! -d "${OROG_DIR}" ]; then
       print_err_msg_exit "\
-The directory (OROG_DIR) that should contain the pregenerated orography
+The directory (OROG_DIR) that should contain the pre-generated orography
 files does not exist:
   OROG_DIR = \"${OROG_DIR}\""
     fi
@@ -1568,18 +1565,24 @@ files does not exist:
     OROG_DIR="$EXPTDIR/orog"
   fi
 #
+#-----------------------------------------------------------------------
+#
 # If RUN_TASK_MAKE_SFC_CLIMO is set to "FALSE", the workflow will look 
-# for the pregenerated surface climatology files in SFC_CLIMO_DIR.  In
+# for the pre-generated surface climatology files in SFC_CLIMO_DIR.  In
 # this case, make sure that SFC_CLIMO_DIR exists.  Otherwise, set it to
 # a predefined location under the experiment directory (EXPTDIR).
 #
+#-----------------------------------------------------------------------
+#
   if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ]; then
+
     if [ ! -d "${SFC_CLIMO_DIR}" ]; then
       print_err_msg_exit "\
-The directory (SFC_CLIMO_DIR) that should contain the pregenerated surface
-climatology files does not exist:
+The directory (SFC_CLIMO_DIR) that should contain the pre-generated orography
+files does not exist:
   SFC_CLIMO_DIR = \"${SFC_CLIMO_DIR}\""
     fi
+
   else
     SFC_CLIMO_DIR="$EXPTDIR/sfc_climo"
   fi
@@ -1768,28 +1771,51 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Create a new experiment directory.  Note that at this point we are 
-# guaranteed that there is no preexisting experiment directory.
+#
 #
 #-----------------------------------------------------------------------
 #
-mkdir_vrfy -p "$EXPTDIR"
-
-
-#
-#-----------------------------------------------------------------------
-#
-# If not running the MAKE_GRID_TN, MAKE_OROG_TN, and/or MAKE_SFC_CLIMO
-# tasks, create symlinks under the FIXLAM directory to pregenerated grid,
-# orography, and surface climatology files.  In the process, also set 
-# RES_IN_FIXLAM_FILENAMES, which is the resolution of the grid (in units
-# of number of grid points on an equivalent global uniform cubed-sphere
-# grid) used in the names of the fixed files in the FIXLAM directory.
-#
-#-----------------------------------------------------------------------
-#
-mkdir_vrfy -p "$FIXLAM"
 RES_IN_FIXLAM_FILENAMES=""
+
+if [ "${RUN_ENVIR}" != "nco" ]; then
+  mkdir_vrfy -p "$FIXLAM"
+fi
+#
+#-----------------------------------------------------------------------
+#
+#
+#
+#-----------------------------------------------------------------------
+#
+if [ "${RUN_ENVIR}" = "nco" ]; then
+
+  suffix="${DOT_OR_USCORE}mosaic.halo${NH3}.nc"
+  glob_pattern="C*$suffix"
+  cd_vrfy $FIXLAM
+  num_files=$( ls -1 ${glob_pattern} 2>/dev/null | wc -l )
+
+  if [ "${num_files}" -ne "1" ]; then
+    print_err_msg_exit "\
+Exactly one file must exist in directory FIXLAM matching the globbing
+pattern glob_pattern:
+  FIXLAM = \"${FIXLAM}\"
+  glob_pattern = \"${glob_pattern}\"
+  num_files = ${num_files}"
+  fi
+
+  fn=$( ls -1 ${glob_pattern} )
+  RES_IN_FIXLAM_FILENAMES=$( \
+    printf "%s" $fn | sed -n -r -e "s/^C([0-9]*)$suffix/\1/p" )
+  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ] && \
+     [ "${GFDLgrid_RES}" -ne "${RES_IN_FIXLAM_FILENAMES}" ]; then
+    print_err_msg_exit "\
+The resolution extracted from the fixed file names (RES_IN_FIXLAM_FILENAMES)
+does not match the resolution specified by GFDLgrid_RES:
+  GFDLgrid_RES = ${GFDLgrid_RES}
+  RES_IN_FIXLAM_FILENAMES = ${RES_IN_FIXLAM_FILENAMES}"
+  fi
+
+else
 #
 #-----------------------------------------------------------------------
 #
@@ -1799,19 +1825,19 @@ RES_IN_FIXLAM_FILENAMES=""
 #
 #-----------------------------------------------------------------------
 #
-res_in_grid_fns=""
-if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
+  res_in_grid_fns=""
+  if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
 
-  link_fix \
-    verbose="$VERBOSE" \
-    file_group="grid" \
-    output_varname_res_in_filenames="res_in_grid_fns" || \
-  print_err_msg_exit "\
-Call to function to create links to grid files failed."
+    link_fix \
+      verbose="$VERBOSE" \
+      file_group="grid" \
+      output_varname_res_in_filenames="res_in_grid_fns" || \
+    print_err_msg_exit "\
+  Call to function to create links to grid files failed."
 
-  RES_IN_FIXLAM_FILENAMES="${res_in_grid_fns}"
+    RES_IN_FIXLAM_FILENAMES="${res_in_grid_fns}"
 
-fi
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1821,29 +1847,29 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-res_in_orog_fns=""
-if [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ]; then
+  res_in_orog_fns=""
+  if [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ]; then
 
-  link_fix \
-    verbose="$VERBOSE" \
-    file_group="orog" \
-    output_varname_res_in_filenames="res_in_orog_fns" || \
-  print_err_msg_exit "\
-Call to function to create links to orography files failed."
-
-  if [ ! -z "${RES_IN_FIXLAM_FILENAMES}" ] && \
-     [ "${res_in_orog_fns}" -ne "${RES_IN_FIXLAM_FILENAMES}" ]; then
+    link_fix \
+      verbose="$VERBOSE" \
+      file_group="orog" \
+      output_varname_res_in_filenames="res_in_orog_fns" || \
     print_err_msg_exit "\
-The resolution extracted from the orography file names (res_in_orog_fns)
-does not match the resolution in other groups of files already consi-
-dered (RES_IN_FIXLAM_FILENAMES):
-  res_in_orog_fns = ${res_in_orog_fns}
-  RES_IN_FIXLAM_FILENAMES = ${RES_IN_FIXLAM_FILENAMES}"
-  else
-    RES_IN_FIXLAM_FILENAMES="${res_in_orog_fns}"
-  fi
+  Call to function to create links to orography files failed."
 
-fi
+    if [ ! -z "${RES_IN_FIXLAM_FILENAMES}" ] && \
+       [ "${res_in_orog_fns}" -ne "${RES_IN_FIXLAM_FILENAMES}" ]; then
+      print_err_msg_exit "\
+  The resolution extracted from the orography file names (res_in_orog_fns)
+  does not match the resolution in other groups of files already consi-
+  dered (RES_IN_FIXLAM_FILENAMES):
+    res_in_orog_fns = ${res_in_orog_fns}
+    RES_IN_FIXLAM_FILENAMES = ${RES_IN_FIXLAM_FILENAMES}"
+    else
+      RES_IN_FIXLAM_FILENAMES="${res_in_orog_fns}"
+    fi
+
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1854,26 +1880,28 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-res_in_sfc_climo_fns=""
-if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ]; then
+  res_in_sfc_climo_fns=""
+  if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ]; then
 
-  link_fix \
-    verbose="$VERBOSE" \
-    file_group="sfc_climo" \
-    output_varname_res_in_filenames="res_in_sfc_climo_fns" || \
-  print_err_msg_exit "\
-Call to function to create links to surface climatology files failed."
-
-  if [ ! -z "${RES_IN_FIXLAM_FILENAMES}" ] && \
-     [ "${res_in_sfc_climo_fns}" -ne "${RES_IN_FIXLAM_FILENAMES}" ]; then
+    link_fix \
+      verbose="$VERBOSE" \
+      file_group="sfc_climo" \
+      output_varname_res_in_filenames="res_in_sfc_climo_fns" || \
     print_err_msg_exit "\
-The resolution extracted from the surface climatology file names (res_-
-in_sfc_climo_fns) does not match the resolution in other groups of files
-already considered (RES_IN_FIXLAM_FILENAMES):
-  res_in_sfc_climo_fns = ${res_in_sfc_climo_fns}
-  RES_IN_FIXLAM_FILENAMES = ${RES_IN_FIXLAM_FILENAMES}"
-  else
-    RES_IN_FIXLAM_FILENAMES="${res_in_sfc_climo_fns}"
+  Call to function to create links to surface climatology files failed."
+
+    if [ ! -z "${RES_IN_FIXLAM_FILENAMES}" ] && \
+       [ "${res_in_sfc_climo_fns}" -ne "${RES_IN_FIXLAM_FILENAMES}" ]; then
+      print_err_msg_exit "\
+  The resolution extracted from the surface climatology file names (res_-
+  in_sfc_climo_fns) does not match the resolution in other groups of files
+  already considered (RES_IN_FIXLAM_FILENAMES):
+    res_in_sfc_climo_fns = ${res_in_sfc_climo_fns}
+    RES_IN_FIXLAM_FILENAMES = ${RES_IN_FIXLAM_FILENAMES}"
+    else
+      RES_IN_FIXLAM_FILENAMES="${res_in_sfc_climo_fns}"
+    fi
+
   fi
 
 fi
@@ -1956,6 +1984,63 @@ component if it is being used) are:
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that the number of cells in the x and y direction are divi-
+# sible by the MPI task dimensions LAYOUT_X and LAYOUT_Y, respectively.
+#
+#-----------------------------------------------------------------------
+#
+rem=$(( NX%LAYOUT_X ))
+if [ $rem -ne 0 ]; then
+  print_err_msg_exit "\
+The number of grid cells in the x direction (NX) is not evenly divisible
+by the number of MPI tasks in the x direction (LAYOUT_X):
+  NX = $NX
+  LAYOUT_X = ${LAYOUT_X}"
+fi
+
+rem=$(( NY%LAYOUT_Y ))
+if [ $rem -ne 0 ]; then
+  print_err_msg_exit "\
+The number of grid cells in the y direction (NY) is not evenly divisible
+by the number of MPI tasks in the y direction (LAYOUT_Y):
+  NY = $NY
+  LAYOUT_Y = ${LAYOUT_Y}"
+fi
+
+print_info_msg "$VERBOSE" "
+The MPI task layout is:
+  LAYOUT_X = ${LAYOUT_X}
+  LAYOUT_Y = ${LAYOUT_Y}"
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that, for a given MPI task, the number columns (which is 
+# equal to the number of horizontal cells) is divisible by BLOCKSIZE.
+#
+#-----------------------------------------------------------------------
+#
+nx_per_task=$(( NX/LAYOUT_X ))
+ny_per_task=$(( NY/LAYOUT_Y ))
+num_cols_per_task=$(( $nx_per_task*$ny_per_task ))
+
+rem=$(( num_cols_per_task%BLOCKSIZE ))
+if [ $rem -ne 0 ]; then
+  prime_factors_num_cols_per_task=$( factor $num_cols_per_task | sed -r -e 's/^[0-9]+: (.*)/\1/' )
+  print_err_msg_exit "\
+The number of columns assigned to a given MPI task must be divisible by
+BLOCKSIZE:
+  nx_per_task = NX/LAYOUT_X = $NX/${LAYOUT_X} = ${nx_per_task}
+  ny_per_task = NY/LAYOUT_Y = $NY/${LAYOUT_Y} = ${ny_per_task}
+  num_cols_per_task = nx_per_task*ny_per_task = ${num_cols_per_task}
+  BLOCKSIZE = $BLOCKSIZE
+  rem = num_cols_per_task%%BLOCKSIZE = $rem
+The prime factors of num_cols_per_task are (useful for determining a va-
+lid BLOCKSIZE): 
+  prime_factors_num_cols_per_task: ${prime_factors_num_cols_per_task}"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # If the write-component is going to be used to write output files to 
 # disk (i.e. if QUILTING is set to "TRUE"), make sure that the grid type 
 # used by the write-component (WRTCMP_output_grid) is set to a valid value.
@@ -1969,6 +2054,35 @@ in WRTCMP_output_grid is not supported:
   WRTCMP_output_grid = \"${WRTCMP_output_grid}\""
   check_var_valid_value \
     "WRTCMP_output_grid" "valid_vals_WRTCMP_output_grid" "${err_msg}"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# If the write component is going to be used, make sure that the number
+# of grid cells in the y direction (NY) is divisible by the number of
+# write tasks per group.  This is because the NY rows of the grid must
+# be distributed evenly among the write_tasks_per_group tasks in a given
+# write group, i.e. each task must receive the same number of rows.  
+# This implies that NY must be evenly divisible by WRTCMP_write_tasks_-
+# per_group.  If it isn't, the write component will hang or fail.  We
+# check for this below.
+#
+#-----------------------------------------------------------------------
+#
+if [ "$QUILTING" = "TRUE" ]; then
+
+  rem=$(( NY%WRTCMP_write_tasks_per_group ))
+
+  if [ $rem -ne 0 ]; then
+    print_err_msg_exit "\
+The number of grid points in the y direction on the regional grid (ny_-
+T7) must be evenly divisible by the number of tasks per write group 
+(WRTCMP_write_tasks_per_group):
+  NY = $NY
+  WRTCMP_write_tasks_per_group = ${WRTCMP_write_tasks_per_group}
+  NY%%write_tasks_per_group = $rem"
+  fi
+
 fi
 #
 #-----------------------------------------------------------------------
@@ -1992,6 +2106,17 @@ fi
 #-----------------------------------------------------------------------
 #
 NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
+#
+#-----------------------------------------------------------------------
+#
+# Create a new experiment directory.  Note that at this point we are 
+# guaranteed that there is no preexisting experiment directory.
+#
+#-----------------------------------------------------------------------
+#
+mkdir_vrfy -p "$EXPTDIR"
+
+
 
 
 
@@ -2334,6 +2459,7 @@ SRC_DIR="$SRC_DIR"
 PARMDIR="$PARMDIR"
 MODULES_DIR="${MODULES_DIR}"
 EXECDIR="$EXECDIR"
+FIXrrfs="$FIXrrfs"
 FIXam="$FIXam"
 FIXLAM="$FIXLAM"
 FIXgsm="$FIXgsm"
@@ -2348,6 +2474,7 @@ UFS_UTILS_DIR="${UFS_UTILS_DIR}"
 SFC_CLIMO_INPUT_DIR="${SFC_CLIMO_INPUT_DIR}"
 TOPO_DIR="${TOPO_DIR}"
 EMC_POST_DIR="${EMC_POST_DIR}"
+
 EXPTDIR="$EXPTDIR"
 LOGDIR="$LOGDIR"
 CYCLE_BASEDIR="${CYCLE_BASEDIR}"
