@@ -734,13 +734,10 @@ ESGgrid_WIDE_HALO_WIDTH="6"
 # the frequency with which the top level routine in the dynamics is called
 # as well as the frequency with which the physics is called."
 #
-# Note that if using one of the predefined grids (i.e. if PREDEF_GRID_NAME
-# is not set to a null string, either below or in the custom workflow
-# configuration file specified by EXPT_CONFIG_FN), then DT_ATMOS is 
-# overwritten by the value for that predefined grid.  The predefined
-# grid parameters are specified in the script 
-#
-#   $HOMErrfs/ush/set_predef_grid_params.sh
+# Note that if using one of the predefined grids and if DT_ATMOS is not 
+# explicitly set in the user-specified experiment configuration file 
+# (EXPT_CONFIG_FN), then the default value of DT_ATMOS specified here 
+# will be overwritten by its default value for that predefined grid. 
 #
 #-----------------------------------------------------------------------
 #
@@ -752,6 +749,12 @@ DT_ATMOS="18"
 # to use in the two horizontal directions (x and y) of the regional grid
 # when running the forecast model.
 #
+# Note that if using one of the predefined grids and if LAYOUT_X and/or
+# LAYOUT_Y are not explicitly set in the user-specified experiment 
+# configuration file (EXPT_CONFIG_FN), then the default values of LAYOUT_X
+# and/or LAYOUT_Y specified here will be overwritten by their default 
+# values for that predefined grid. 
+#
 #-----------------------------------------------------------------------
 #
 LAYOUT_X="20"
@@ -759,15 +762,13 @@ LAYOUT_Y="20"
 #
 #-----------------------------------------------------------------------
 #
-# Set BLOCKSIZE.  This is the amount of data that is passed into the cache
-# at a time.  The number of vertical columns per MPI task needs to be 
-# divisible by BLOCKSIZE; otherwise, unexpected results may occur.
+# Set BLOCKSIZE.  This is the amount of data that is passed into the 
+# cache at a time.
 #
-# GSK: IMPORTANT NOTE:
-# I think Dom fixed the code so that the number of columns per MPI task
-# no longer needs to be divisible by BLOCKSIZE.  If so, remove the check
-# on blocksize in the experiment generation scripts.  Note that BLOCKSIZE
-# still needs to be set to a value (probably machine-dependent).
+# Note that if using one of the predefined grids and if BLOCKSIZE is not 
+# explicitly set in the user-specified experiment configuration file 
+# (EXPT_CONFIG_FN), then the default value of BLOCKSIZE specified here 
+# will be overwritten by its default value for that predefined grid. 
 #
 #-----------------------------------------------------------------------
 #
@@ -790,11 +791,11 @@ BLOCKSIZE="24"
 #
 # PRINT_ESMF:
 # Flag for whether or not to output extra (debugging) information from
-# ESMF routines.  Must be ".true." or ".false.".  Note that the write
+# ESMF routines.  Must be "TRUE" or "FALSE".  Note that the write
 # component uses ESMF library routines to interpolate from the native
-# forecast model grid to the user-specified output grid (which is defined in the
-# model configuration file MODEL_CONFIG_FN in the forecast's run direc-
-# tory).
+# forecast model grid to the user-specified output grid (which is defined 
+# in the model configuration file MODEL_CONFIG_FN in the forecast's run 
+# directory).
 #
 #-----------------------------------------------------------------------
 #
@@ -851,7 +852,10 @@ WRTCMP_dy=""
 #   file will be used.
 #
 # Setting PREDEF_GRID_NAME provides a convenient method of specifying a
-# commonly used set of grid-dependent parameters.
+# commonly used set of grid-dependent parameters.  The predefined grid 
+# parameters are specified in the script 
+#
+#   $HOMErrfs/ush/set_predef_grid_params.sh
 #
 #-----------------------------------------------------------------------
 #
