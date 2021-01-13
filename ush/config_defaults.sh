@@ -843,13 +843,15 @@ WRTCMP_dy=""
 #   LAYOUT_Y, and BLOCKSIZE are not specified in that configuration file, 
 #   they are also set to predefined values for the specified grid.
 #
-# * If PREDEF_GRID_NAME is set to an empty string, the grid generation
-#   method GRID_GEN_METHOD, the (native) grid parameters, and the write-
-#   component grid parameters as well as the time step DT_ATMOS and the 
-#   computational parameters LAYOUT_X, LAYOUT_Y, and BLOCKSIZE must be 
-#   set in the user-specified experiment configuration file; otherwise,
-#   the values of these parameters in this default experiment configuration
-#   file will be used.
+# * If PREDEF_GRID_NAME is set to an empty string, it implies the user
+#   is providing the native grid parameters in the user-specified 
+#   experiment configuration file (EXPT_CONFIG_FN).  In this case, the 
+#   grid generation method GRID_GEN_METHOD, the native grid parameters, 
+#   and the write-component grid parameters as well as the time step 
+#   forecast model's main time step DT_ATMOS and the computational 
+#   parameters LAYOUT_X, LAYOUT_Y, and BLOCKSIZE must be set in that 
+#   configuration file; otherwise, the values of all of these parameters 
+#   in this default experiment configuration file will be used.
 #
 # Setting PREDEF_GRID_NAME provides a convenient method of specifying a
 # commonly used set of grid-dependent parameters.  The predefined grid 
