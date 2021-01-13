@@ -98,10 +98,10 @@ run directory (run_dir):
 # Set parameters in the model configure file.
 #
 
-  QUILTING=`echo $QUILTING| tr '[A-Z]' '[a-z]'`
-  PRINT_ESMF=`echo $PRINT_ESMF| tr '[A-Z]' '[a-z]'`
-  dot_quilting_dot="."${QUILTING}"."
-  dot_print_esmf_dot="."${PRINT_ESMF}"."
+  QUILTING_LC=`echo $QUILTING| tr '[A-Z]' '[a-z]'`
+  PRINT_ESMF_LC=`echo $PRINT_ESMF| tr '[A-Z]' '[a-z]'`
+  dot_quilting_dot="."${QUILTING_LC}"."
+  dot_print_esmf_dot="."${PRINT_ESMF_LC}"."
 #
 #-----------------------------------------------------------------------
 #
