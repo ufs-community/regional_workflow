@@ -442,6 +442,14 @@ uniform cubed-sphere grid equivalent resolution returned with nonzero exit
 code:
   exec_fp = \"${exec_fp}\""
 
+# Make sure 'ncdump' is available before we try to use it
+if ! command -v ncdump &> /dev/null
+then
+  print_err_msg_exit "\
+The utility 'ncdump' was not found in the environment. Be sure to add the
+netCDF 'bin/' directory to your PATH."
+fi
+
 # Make the following (reading of res_equiv) a function in another file
 # so that it can be used both here and in the exregional_make_orog.sh
 # script.
