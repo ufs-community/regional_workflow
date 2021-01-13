@@ -569,6 +569,7 @@ settings="\
     'do_sppt': ${DO_SPPT},
     'do_skeb': ${DO_SKEB},
     'do_spp': ${DO_SPP},
+    'n_var_spp': ${N_VAR_SPP},
   }
 'nam_spperts': {
     'spp_lscale': [ $( printf %s, "${SPP_LSCALE[@]}" ) ],

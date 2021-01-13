@@ -208,7 +208,7 @@
 /
 
 &nam_spperts
-    iseed_spp = 13
+    iseed_spp = 4
     spp_lscale = 150000.0
     spp_prt_list = 0.2
     spp_sigtop1 = 0.1
