@@ -21,7 +21,7 @@ FCST_PCP_COMBINE_OUTPUT_TEMPLATE = {ENV[NET]}.t{init?fmt=%H}z.bgdawpf{lead?fmt=%
 FCST_GRID_STAT_INPUT_TEMPLATE = {FCST_PCP_COMBINE_OUTPUT_TEMPLATE}
 
 # ANLYS
-OBS_GRID_STAT_INPUT_TEMPLATE = {OBS_GRID_STAT_INPUT_DIR}/{valid?fmt=%Y%m%d}/ccpa.t{valid?fmt=%H}z.03h.hrap.conus.gb2
+OBS_GRID_STAT_INPUT_TEMPLATE = {valid?fmt=%Y%m%d}/ccpa.t{valid?fmt=%H}z.03h.hrap.conus.gb2
 
 GRID_STAT_OUTPUT_TEMPLATE = {init?fmt=%Y%m%d%H}/metprd/grid_stat
 
