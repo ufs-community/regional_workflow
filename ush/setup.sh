@@ -702,9 +702,9 @@ case $MACHINE in
     ;;
 
   "CHEYENNE")
-    FIXgsm=${FIXgsm:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_am"}
-    TOPO_DIR=${TOPO_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"}
-    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"}
+    FIXgsm=${FIXgsm:-"/glade/p/ral/jntp/UFS_SRW_app/fix/fix_am"}
+    TOPO_DIR=${TOPO_DIR:-"/glade/p/ral/jntp/UFS_SRW_app/fix/fix_orog"}
+    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_SRW_app/fix/climo_fields_netcdf"}
     ;;
 
   "STAMPEDE")
