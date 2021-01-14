@@ -3,7 +3,6 @@
 # This script pulls MRMS data from the NOAA HPSS
 # Top-level MRMS directory
 mrms_dir=${OBS_DIR}/..
-echo $mrms_dir
 if [[ ! -d "$mrms_dir" ]]; then
   mkdir -p $mrms_dir
 fi
