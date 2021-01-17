@@ -469,18 +469,24 @@ esac
 #
 SCHED=`echo $SCHED| tr '[A-Z]' '[a-z]'`
 check_var_valid_value "SCHED" "valid_vals_SCHED"
+#-----------------------------------------------------------------------
+#
+# If we are using a workflow manager, run some checks. First, 
+# verify that the ACCOUNT variable is not empty. Second, ensure that the
+# custom RUN_CMD variables are not set.
 #
 #-----------------------------------------------------------------------
 #
-# Verify that the ACCOUNT variable is not empty.  If it is, print out an
-# error message and exit.
-#
-#-----------------------------------------------------------------------
-#
-if [ -z "$ACCOUNT" ]; then
-  print_err_msg_exit "\
-The variable ACCOUNT cannot be empty:
-  ACCOUNT = \"$ACCOUNT\""
+if [ "$WORKFLOW_MANAGER" != "none" ]; then
+  if [ -z "$ACCOUNT" ]; then
+    print_err_msg_exit "\
+The variable ACCOUNT cannot be empty if you are using a workflow manager:
+  ACCOUNT = \"$ACCOUNT\"
+  WORKFLOW_MANAGER = \"$WORKFLOW_MANAGER\""
+  fi
+  RUN_CMD_UTILS=""
+  RUN_CMD_FCST=""
+  RUN_CMD_POST=""
 fi
 #
 #-----------------------------------------------------------------------

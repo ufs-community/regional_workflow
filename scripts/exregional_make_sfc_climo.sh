@@ -170,9 +170,12 @@ case $MACHINE in
     APRUN="ibrun -np ${nprocs}"
     ;;
 
+  "MACOS")
+    APRUN=$RUN_CMD_UTILS
+    ;;
+
   "LINUX")
-    nprocs=18
-    APRUN="mpirun -np $nprocs"
+    APRUN=$RUN_CMD_UTILS
     ;;
 
   *)

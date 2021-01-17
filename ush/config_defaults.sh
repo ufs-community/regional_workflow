@@ -119,6 +119,29 @@ QUEUE_FCST=""
 #
 #-----------------------------------------------------------------------
 #
+# Set run commands for platforms without a workflow manager. These values
+# will be ignored unless WORKFLOW_MANAGER="none".  Definitions:
+#
+# RUN_CMD_UTILS:
+# The run command for pre-processing utilities (shave, orog, sfc_climo_gen, etc.)
+# Can be left blank for smaller domains, in which case the executables will run
+# without MPI.
+#
+# RUN_CMD_FCST:
+# The run command for the model forecast step.
+#
+# RUN_CMD_POST:
+# The run command for post-processing (UPP). Can be left blank for smaller 
+# domains, in which case UPP will run without MPI.
+#
+#-----------------------------------------------------------------------
+#
+RUN_CMD_UTILS="mpirun -np 1"
+RUN_CMD_FCST="mpirun -np 4"
+RUN_CMD_POST="mpirun -np 1"
+#
+#-----------------------------------------------------------------------
+#
 # Set cron-associated parameters.  Definitions:
 #
 # USE_CRON_TO_RELAUNCH:

@@ -144,10 +144,14 @@ case $MACHINE in
     APRUN="ibrun -np ${PE_MEMBER01}"
     ;;
 
-  "LINUX")
-    nprocs=18
-    APRUN="mpirun -np $nprocs"
+  "MACOS")
+    APRUN=$RUN_CMD_FCST
     ;;
+
+  "LINUX")
+    APRUN=$RUN_CMD_FCST
+    ;;
+
 
   *)
     print_err_msg_exit "\

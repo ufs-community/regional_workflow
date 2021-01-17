@@ -135,10 +135,14 @@ case $MACHINE in
     APRUN="ibrun -n $nprocs"
     ;;
 
-  "LINUX")
-    nprocs=1
-    APRUN="mpirun -np $nprocs"
+  "MACOS")
+    APRUN=$RUN_CMD_POST
     ;;
+
+  "LINUX")
+    APRUN=$RUN_CMD_POST
+    ;;
+
 
   *)
     print_err_msg_exit "\

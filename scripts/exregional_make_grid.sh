@@ -148,12 +148,11 @@ case $MACHINE in
     ;;
 
   "MACOS")
-    export APRUN="time"
-    ulimit -a
+    APRUN=time
     ;;
 
   "LINUX")
-    APRUN="time"
+    APRUN=time
     ;;
 
   *)
