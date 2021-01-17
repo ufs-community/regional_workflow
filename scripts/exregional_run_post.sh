@@ -135,6 +135,11 @@ case $MACHINE in
     APRUN="ibrun -n $nprocs"
     ;;
 
+  "LINUX")
+    nprocs=1
+    APRUN="mpirun -np $nprocs"
+    ;;
+
   *)
     print_err_msg_exit "\
 Run command has not been specified for this machine:
