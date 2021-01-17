@@ -422,7 +422,7 @@ Please correct and rerun."
 #
 #-----------------------------------------------------------------------
 #
-  MACHINE=`echo $MACHINE| tr '[a-z]' '[A-Z]'`
+  MACHINE=`echo $machine| tr '[a-z]' '[A-Z]'`
   ACCOUNT="${account}"
 
 # Note that if expt_basedir is a null (or unset) string, ${expt_basedir:+/} 
