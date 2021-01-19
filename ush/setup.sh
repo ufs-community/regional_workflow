@@ -201,7 +201,7 @@ check_var_valid_value \
 # Set RUN_TASK_MAKE_SFC_CLIMO to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
 #
-RUN_TASK_MAKE_SFC_CLIMO=$`echo $RUN_TASK_MAKE_SFC_CLIMO| tr '[a-z]' '[A-Z]'`
+RUN_TASK_MAKE_SFC_CLIMO=`echo $RUN_TASK_MAKE_SFC_CLIMO| tr '[a-z]' '[A-Z]'`
 if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] || \
    [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "YES" ]; then
   RUN_TASK_MAKE_SFC_CLIMO="TRUE"
