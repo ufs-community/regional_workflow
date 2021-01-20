@@ -2563,6 +2563,7 @@ FVCOM_FILE="${FVCOM_FILE}"
 #
 NCORES_PER_NODE="${NCORES_PER_NODE}"
 PE_MEMBER01="${PE_MEMBER01}"
+RUN_CMD_FCST="${RUN_CMD_FCST}"
 EOM
 } || print_err_msg_exit "\
 Heredoc (cat) command to append new variable definitions to variable 

@@ -128,7 +128,8 @@ QUEUE_FCST=""
 # without MPI.
 #
 # RUN_CMD_FCST:
-# The run command for the model forecast step.
+# The run command for the model forecast step. This will be appended to the end
+# of the variable definitions file, so it can reference other variables.
 #
 # RUN_CMD_POST:
 # The run command for post-processing (UPP). Can be left blank for smaller 
@@ -137,7 +138,7 @@ QUEUE_FCST=""
 #-----------------------------------------------------------------------
 #
 RUN_CMD_UTILS="mpirun -np 1"
-RUN_CMD_FCST="mpirun -np 4"
+RUN_CMD_FCST="mpirun -np \${PE_MEMBER01}"
 RUN_CMD_POST="mpirun -np 1"
 #
 #-----------------------------------------------------------------------
