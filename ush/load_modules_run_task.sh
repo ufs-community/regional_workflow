@@ -147,7 +147,7 @@ jjob_fp="$2"
 #
 #-----------------------------------------------------------------------
 #
-# Sourcing ufs-srweather-app README file (in directory specified by mod-
+# Sourcing ufs-srweather-app build-environment file (in directory specified by mod-
 # ules_dir) for the specified task
 #
 #-----------------------------------------------------------------------
