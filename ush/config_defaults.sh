@@ -1265,6 +1265,10 @@ USE_ZMTNBLCK="false"
 # ( "pbl" "lsm" "mp" ). Both commas and single quotes will be added by
 # Jinja when creating the namelist.
 #
+# Note that SPP is currently only available for specific physics schemes 
+# used in the RAP/HRRR physics suite.  Users need to be aware of which SDF
+# is chosen when turning this option on. 
+#
 #-----------------------------------------------------------------------
 #
 DO_SPP="false"
