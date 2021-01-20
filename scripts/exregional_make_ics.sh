@@ -410,8 +410,7 @@ combination:
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
+     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
     nsoill_out="4"
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
@@ -452,8 +451,7 @@ IC model (EXTRN_MDL_NAME_ICS) and physics suite (CCPP_PHYS_SUITE) combination:
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ] || \
      [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
+     [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
     nsoill_out="4"
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
