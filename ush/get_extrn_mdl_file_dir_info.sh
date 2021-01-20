@@ -375,6 +375,29 @@ fi
 #        fns=( "gfs.t${hh}z.pgrb2.0p25.f000" )  # Get only 0.25 degree files for now.
         fns_on_disk=( "gfs.t${hh}z.pgrb2.0p25.f000" )  # Get only 0.25 degree files for now.
         fns_in_arcv=( "gfs.t${hh}z.pgrb2.0p25.f000" )  # Get only 0.25 degree files for now.
+     
+      elif [ "${fv3gfs_file_fmt}" = "netcdf" ]; then
+     
+#
+#This whole section needs to be set based on what is in HPSS. They are placeholders for now.
+#
+
+        fns=( "atm" "sfc" )
+        suffix="anl.nc"
+        fns=( "${fns[@]/%/$suffix}" )
+       
+# Set names of external files if searching on disk.
+        if [ "${MACHINE}" = "JET" ]; then
+          prefix="${yy}${ddd}${hh}00.gfs.t${hh}z."
+        else
+          prefix="gfs.t${hh}z."
+        fi
+        fns_on_disk=( "${fns[@]/#/$prefix}" )
+
+# Set names of external files if searching in an archive file, e.g. from
+# HPSS.
+        prefix="gfs.t${hh}z."
+        fns_in_arcv=( "${fns[@]/#/$prefix}" )
 
       fi
       ;;
@@ -470,6 +493,27 @@ and analysis or forecast (anl_or_fcst):
         prefix="gfs.t${hh}z.pgrb2.0p25.f"
         fns_on_disk=( "${fcst_hhh[@]/#/$prefix}" )
         fns_in_arcv=( "${fcst_hhh[@]/#/$prefix}" )
+
+
+      elif [ "${fv3gfs_file_fmt}" = "netcdf" ]; then
+
+#
+#This whole section needs to be set based on what is in HPSS. They are placeholders for now.
+#
+
+        fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
+        suffix=".nc"
+        fns=( "${fcst_hhh[@]/%/$suffix}" )
+
+        if [ "${MACHINE}" = "JET" ]; then
+          prefix="${yy}${ddd}${hh}00.gfs.t${hh}z.atmf"
+        else
+          prefix="gfs.t${hh}z.atmf"
+        fi
+        fns_on_disk=( "${fns[@]/#/$prefix}" )
+
+        prefix="gfs.t${hh}z.atmf"
+        fns_in_arcv=( "${fns[@]/#/$prefix}" )
 
       fi
       ;;
@@ -815,6 +859,27 @@ has not been specified for this external model:
     elif [ "${fv3gfs_file_fmt}" = "grib2" ]; then
 
       arcv_fns="${arcv_fns}gfs_pgrb2"
+
+    elif [ "${fv3gfs_file_fmt}" = "netcdf" ]; then
+
+#
+#This whole section needs to be set based on what is in HPSS. They are placeholders for now.
+#
+
+      if [ "${anl_or_fcst}" = "ANL" ]; then
+        arcv_fns="${arcv_fns}gfs_netcdf"
+      elif [ "${anl_or_fcst}" = "FCST" ]; then
+        last_fhr_in_netcdfa="39"
+        first_lbc_fhr="${lbc_spec_fhrs[0]}"
+        last_lbc_fhr="${lbc_spec_fhrs[-1]}"
+        if [ "${last_lbc_fhr}" -le "${last_fhr_in_netcdfa}" ]; then
+          arcv_fns="${arcv_fns}gfs_netcdfa"
+        elif [ "${first_lbc_fhr}" -gt "${last_fhr_in_netcdfa}" ]; then
+          arcv_fns="${arcv_fns}gfs_netcdfb"
+        else
+          arcv_fns=( "${arcv_fns}gfs_netcdfa" "${arcv_fns}gfs_netcdfb" )
+        fi
+      fi
 
     fi
 
