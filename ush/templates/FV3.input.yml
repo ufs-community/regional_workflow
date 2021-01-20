@@ -37,7 +37,6 @@ FV3_GSD_SAR:
 # ufs-community, then kice should be set to 9 when using any suite that 
 # includes RUC-LSM.
     kice: 9
-    shal_cnv: false
     do_deep: False
 
 FV3_RRFS_v1alpha:
