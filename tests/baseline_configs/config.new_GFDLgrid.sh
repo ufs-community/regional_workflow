@@ -3,26 +3,26 @@ PREEXISTING_DIR_METHOD="rename"
 
 GRID_GEN_METHOD="GFDLgrid"
 
-GFDLgrid_LON_T6_CTR=-97.5
-GFDLgrid_LAT_T6_CTR=38.5
-GFDLgrid_STRETCH_FAC=1.0001  # Cannot be exactly 1.0 because then FV3 thinnks it's a global grid.  This needs to be fixed in the ufs_weather_model repo.
+GFDLgrid_LON_T6_CTR="-97.5"
+GFDLgrid_LAT_T6_CTR="38.5"
+GFDLgrid_STRETCH_FAC="1.0001"  # Cannot be exactly 1.0 because then FV3 thinnks it's a global grid.  This needs to be fixed in the ufs_weather_model repo.
 GFDLgrid_RES="96"
-GFDLgrid_REFINE_RATIO=2
+GFDLgrid_REFINE_RATIO="2"
   
-#num_margin_cells_T6_left=9
+#num_margin_cells_T6_left="9"
 #GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
 GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G="10"
 
-#num_margin_cells_T6_right=9
+#num_margin_cells_T6_right="9"
 #GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
 GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G="87"
 
-#num_margin_cells_T6_bottom=9
+#num_margin_cells_T6_bottom="9"
 #GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
 #GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G="10"
 GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G="19"
 
-#num_margin_cells_T6_top=9
+#num_margin_cells_T6_top="9"
 #GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
 #GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G="87"
 GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G="78"
@@ -52,7 +52,7 @@ if [ "$QUILTING" = "TRUE" ]; then
   WRTCMP_dlat="0.24"
 fi
 
-CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp"
+CCPP_PHYS_SUITE="FV3_GFS_v15p2"
 
 FCST_LEN_HRS="06"
 LBC_SPEC_INTVL_HRS="3"
