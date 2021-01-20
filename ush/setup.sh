@@ -928,6 +928,54 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Check to make sure that various computational parameters needed by the 
+# forecast model are set to non-empty values.  At this point in the 
+# experiment generation, all of these should be set to valid (non-empty) 
+# values.
+#
+#-----------------------------------------------------------------------
+#
+if [ -z "${DT_ATMOS}" ]; then
+  print_err_msg_exit "\
+The forecast model main time step (DT_ATMOS) is set to a null string:
+  DT_ATMOS = ${DT_ATMOS}
+Please set this to a valid numerical value in the user-specified experiment
+configuration file (EXPT_CONFIG_FP) and rerun:
+  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
+fi
+
+if [ -z "${LAYOUT_X}" ]; then
+  print_err_msg_exit "\
+The number of MPI processes to be used in the x direction (LAYOUT_X) by 
+the forecast job is set to a null string:
+  LAYOUT_X = ${LAYOUT_X}
+Please set this to a valid numerical value in the user-specified experiment
+configuration file (EXPT_CONFIG_FP) and rerun:
+  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
+fi
+
+if [ -z "${LAYOUT_Y}" ]; then
+  print_err_msg_exit "\
+The number of MPI processes to be used in the y direction (LAYOUT_Y) by 
+the forecast job is set to a null string:
+  LAYOUT_Y = ${LAYOUT_Y}
+Please set this to a valid numerical value in the user-specified experiment
+configuration file (EXPT_CONFIG_FP) and rerun:
+  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
+fi
+
+if [ -z "${BLOCKSIZE}" ]; then
+  print_err_msg_exit "\
+The cache size to use for each MPI task of the forecast (BLOCKSIZE) is 
+set to a null string:
+  BLOCKSIZE = ${BLOCKSIZE}
+Please set this to a valid numerical value in the user-specified experiment
+configuration file (EXPT_CONFIG_FP) and rerun:
+  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
+fi
+#
+#-----------------------------------------------------------------------
+#
 # If using the FV3_HRRR physics suite, make sure that the directory from 
 # which certain fixed orography files will be copied to the experiment 
 # directory actually exists.  Note that this is temporary code.  It should
