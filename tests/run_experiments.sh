@@ -495,8 +495,6 @@ VERBOSE=\"${VERBOSE}\""
 
     if [ "$MACHINE" = "HERA" ]; then
       pregen_basedir="/scratch2/BMC/det/FV3LAM_pregen"
-    elif [ "$MACHINE" = "JET" ]; then
-      pregen_basedir="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
       pregen_basedir="/glade/p/ral/jntp/UFS_SRW_app/FV3LAM_pregen"
     else
@@ -645,33 +643,6 @@ envir=\"\${EXPT_SUBDIR}\"
 #
 # where PREDEF_GRID_NAME has the value set above.
 #"
-#
-# Set FIXLAM_NCO_BASEDIR.
-#
-    if [ "$MACHINE" = "HERA" ]; then
-      FIXLAM_NCO_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"
-    elif [ "$MACHINE" = "JET" ]; then
-      FIXLAM_NCO_BASEDIR="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/FV3LAM_pregen"
-    elif [ "$MACHINE" = "CHEYENNE" ]; then
-      FIXLAM_NCO_BASEDIR="/needs/to/be/specified"
-    else
-      print_err_msg_exit "\
-The base directory (FIXLAM_NCO_BASEDIR) in which the pregenerated grid, 
-orography, and surface climatology \"fixed\" files used in NCO mode are 
-located has not been specified for this machine (MACHINE):
-  MACHINE= \"${MACHINE}\""
-    fi
-
-    str=${str}"
-#
-# The base directory in which the pregenerated grid, orography, and surface 
-# climatology \"fixed\" files used in NCO mode are located.  In NCO mode,
-# the workflow scripts will create symlinks (in the directory specified 
-# by FIXLAM) to files in a subdirectory under FIXLAM_NCO_BASDEDIR, where
-# the name of the subdirectory is the name of the predefined grid specified 
-# by PREDEF_GRID_NAME.
-#
-FIXLAM_NCO_BASEDIR=\"${FIXLAM_NCO_BASEDIR}\""
 #
 # Set COMINgfs if using the FV3GFS or the GSMGFS as the external model 
 # for ICs or LBCs.
