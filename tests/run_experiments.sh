@@ -496,7 +496,7 @@ VERBOSE=\"${VERBOSE}\""
     if [ "$MACHINE" = "HERA" ]; then
       pregen_basedir="/scratch2/BMC/det/FV3LAM_pregen"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
-      pregen_basedir="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen"
+      pregen_basedir="/glade/p/ral/jntp/UFS_SRW_app/FV3LAM_pregen"
     else
       print_err_msg_exit "\
 The base directory (pregen_basedir) in which the pregenerated grid,
@@ -515,7 +515,7 @@ specified for this machine (MACHINE):
     if [ "$MACHINE" = "HERA" ]; then
       GRID_DIR="/scratch2/BMC/det/FV3LAM_pregen/grid/${PREDEF_GRID_NAME}"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
-      GRID_DIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen/grid/${PREDEF_GRID_NAME}"
+      GRID_DIR="/glade/p/ral/jntp/UFS_SRW_app/FV3LAM_pregen/grid/${PREDEF_GRID_NAME}"
     else
       print_err_msg_exit "\
 The directory (GRID_DIR) in which the pregenerated grid files are located
@@ -538,7 +538,7 @@ GRID_DIR=\"${GRID_DIR}\""
     if [ "$MACHINE" = "HERA" ]; then
       OROG_DIR="/scratch2/BMC/det/FV3LAM_pregen/orog/${PREDEF_GRID_NAME}"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
-      OROG_DIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen/orog/${PREDEF_GRID_NAME}"
+      OROG_DIR="/glade/p/ral/jntp/UFS_SRW_app/FV3LAM_pregen/orog/${PREDEF_GRID_NAME}"
     else
       print_err_msg_exit "\
 The directory (OROG_DIR) in which the pregenerated grid files are located
@@ -561,7 +561,7 @@ OROG_DIR=\"${OROG_DIR}\""
     if [ "$MACHINE" = "HERA" ]; then
       SFC_CLIMO_DIR="/scratch2/BMC/det/FV3LAM_pregen/sfc_climo/${PREDEF_GRID_NAME}"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
-      SFC_CLIMO_DIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen/sfc_climo/${PREDEF_GRID_NAME}"
+      SFC_CLIMO_DIR="/glade/p/ral/jntp/UFS_SRW_app/FV3LAM_pregen/sfc_climo/${PREDEF_GRID_NAME}"
     else
       print_err_msg_exit "\
 The directory (SFC_CLIMO_DIR) in which the pregenerated grid files are
@@ -644,7 +644,8 @@ envir=\"\${EXPT_SUBDIR}\"
 # where PREDEF_GRID_NAME has the value set above.
 #"
 #
-# Set COMINgfs.
+# Set COMINgfs if using the FV3GFS or the GSMGFS as the external model 
+# for ICs or LBCs.
 #
     if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
        [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ] || \
@@ -705,7 +706,7 @@ PTMP=\"${PTMP}\""
     elif [ "$MACHINE" = "JET" ]; then
       extrn_mdl_source_basedir="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
-      extrn_mdl_source_basedir="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files"
+      extrn_mdl_source_basedir="/glade/p/ral/jntp/UFS_SRW_app/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "ORION" ]; then
       extrn_mdl_source_basedir="/work/noaa/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files"
     else
