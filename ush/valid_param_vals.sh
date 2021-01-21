@@ -22,15 +22,22 @@ valid_vals_PREDEF_GRID_NAME=( \
 "GSD_RAP13km" \
 )
 valid_vals_CCPP_PHYS_SUITE=( \
+"FV3_CPT_v0" \
+"FV3_GFS_2017_gfdlmp" \
+"FV3_GFS_2017_gfdlmp_regional" \
+"FV3_GSD_SAR" \
+"FV3_GSD_v0" \
 "FV3_GFS_v15p2" \
+"FV3_GFS_v16beta" \
+"FV3_RRFS_v1beta" \
 "FV3_RRFS_v1alpha" \
 ) 
 valid_vals_GFDLgrid_RES=("48" "96" "192" "384" "768" "1152" "3072")
 valid_vals_EXTRN_MDL_NAME_ICS=("GSMGFS" "FV3GFS" "RAP" "HRRR" "NAM")
 valid_vals_EXTRN_MDL_NAME_LBCS=("GSMGFS" "FV3GFS" "RAP" "HRRR" "NAM")
 valid_vals_USE_USER_STAGED_EXTRN_FILES=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
-valid_vals_FV3GFS_FILE_FMT_ICS=("nemsio" "grib2")
-valid_vals_FV3GFS_FILE_FMT_LBCS=("nemsio" "grib2")
+valid_vals_FV3GFS_FILE_FMT_ICS=("nemsio" "grib2" "netcdf")
+valid_vals_FV3GFS_FILE_FMT_LBCS=("nemsio" "grib2" "netcdf")
 valid_vals_GRID_GEN_METHOD=("GFDLgrid" "ESGgrid")
 valid_vals_PREEXISTING_DIR_METHOD=("delete" "rename" "quit")
 valid_vals_GTYPE=("regional")
