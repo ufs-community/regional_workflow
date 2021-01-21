@@ -22,14 +22,7 @@ valid_vals_PREDEF_GRID_NAME=( \
 "GSD_RAP13km" \
 )
 valid_vals_CCPP_PHYS_SUITE=( \
-"FV3_CPT_v0" \
-"FV3_GFS_2017_gfdlmp" \
-"FV3_GFS_2017_gfdlmp_regional" \
-"FV3_GSD_SAR" \
-"FV3_GSD_v0" \
 "FV3_GFS_v15p2" \
-"FV3_GFS_v16beta" \
-"FV3_RRFS_v1beta" \
 "FV3_RRFS_v1alpha" \
 ) 
 valid_vals_GFDLgrid_RES=("48" "96" "192" "384" "768" "1152" "3072")
