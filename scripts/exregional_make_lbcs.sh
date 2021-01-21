@@ -173,7 +173,8 @@ case "${CCPP_PHYS_SUITE}" in
 #
   *)
   print_err_msg_exit "\
-A variable mapping table has not yet been defined for this physics suite:
+The variable \"varmap_file\" has not yet been specified for this physics
+suite (CCPP_PHYS_SUITE):
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
   ;;
 #
