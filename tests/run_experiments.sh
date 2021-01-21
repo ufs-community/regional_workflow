@@ -565,7 +565,7 @@ SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
     if [ "$MACHINE" = "HERA" ]; then
       GWD_HRRRsuite_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"
     elif [ "$MACHINE" = "JET" ]; then
-      GWD_HRRRsuite_BASEDIR="/lfs4/BMC/wrfruc/FV3LAM_pregen"
+      GWD_HRRRsuite_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
       GWD_HRRRsuite_BASEDIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen"
     else
@@ -645,7 +645,7 @@ envir=\"\${EXPT_SUBDIR}\""
     if [ "$MACHINE" = "HERA" ]; then
       FIXLAM_NCO_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"
     elif [ "$MACHINE" = "JET" ]; then
-      FIXLAM_NCO_BASEDIR="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/FV3LAM_pregen"
+      FIXLAM_NCO_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
       FIXLAM_NCO_BASEDIR="/needs/to/be/specified"
     else
