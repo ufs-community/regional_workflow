@@ -173,7 +173,8 @@ case "${CCPP_PHYS_SUITE}" in
 #
   *)
     print_err_msg_exit "\
-A variable mapping table has not yet been defined for this physics suite:
+The variable \"varmap_file\" has not yet been specified for this physics 
+suite (CCPP_PHYS_SUITE):
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
     ;;
 #
@@ -300,42 +301,29 @@ minmax_vgfrc_from_climo=""
 lai_from_climo=""
 tg3_from_soil=""
 convert_nst=""
+#
+# If the external model for ICs is one that does not contain the fields
+# needed for Thompson microphysics to work properly, set the variable 
+# thomp_mp_climo_file to the full path of the file containing climatology
+# data that can be used to generate approximate versions of these fields
+# in the ICs file.
+#
 thomp_mp_climo_file=""
+if [ "${EXTRN_MDL_NAME_ICS}" != "HRRR" ] && \
+   [ "${EXTRN_MDL_NAME_ICS}" != "RAP" ]; then
+  thomp_mp_climo_file="${THOMPSON_MP_CLIMO_FP}"
+fi
 
 case "${EXTRN_MDL_NAME_ICS}" in
 
-
 "GSMGFS")
-
   external_model="GSMGFS"
-
   fn_atm_nemsio="${EXTRN_MDL_FNS[0]}"
   fn_sfc_nemsio="${EXTRN_MDL_FNS[1]}"
   input_type="gfs_gaussian_nemsio" # For spectral GFS Gaussian grid in nemsio format.
   convert_nst=False
-
   tracers_input="[\"spfh\",\"clwmr\",\"o3mr\"]"
   tracers="[\"sphum\",\"liq_wat\",\"o3mr\"]"
-#
-# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
-#    
-    if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-      thomp_mp_climo_file=""
-    elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-         [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
-      thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-    else
-      print_err_msg_exit "\
-      The chosen CCPP physics suite is unsupported at this time:
-      CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-    fi
-
   nsoill_out="4" #If the CCPP suites uses RUC-LSM, the scheme will interpolate from 4 to 9 soil levels.
   vgtyp_from_climo=True
   sotyp_from_climo=True
@@ -343,54 +331,23 @@ case "${EXTRN_MDL_NAME_ICS}" in
   minmax_vgfrc_from_climo=True
   lai_from_climo=True
   tg3_from_soil=False
-
   ;;
 
-
 "FV3GFS")
-
-#
-# Use Thompson climatology for ice- and water-friendly aerosols if CCPP suite uses Thompson MP
-#
-  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-    thomp_mp_climo_file=""
-  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
-    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-  else
-    print_err_msg_exit "\
-    The chosen CCPP physics suite is unsupported as this time:
-    CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
-  fi
-
   if [ "${FV3GFS_FILE_FMT_ICS}" = "nemsio" ]; then
-
     external_model="FV3GFS"
-
     tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
     tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
-
     fn_atm_nemsio="${EXTRN_MDL_FNS[0]}"
     fn_sfc_nemsio="${EXTRN_MDL_FNS[1]}"
     input_type="gaussian_nemsio"     # For FV3-GFS Gaussian grid in nemsio format.
     convert_nst=True
-
   elif [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
-
     external_model="GFS"
-
     fn_grib2="${EXTRN_MDL_FNS[0]}"
     input_type="grib2"
     convert_nst=False
-   
   fi
- 
   nsoill_out="4" #If the CCPP suites uses RUC-LSM, the scheme will interpolate from 4 to 9 soil levels.
   vgtyp_from_climo=True
   sotyp_from_climo=True
@@ -398,14 +355,10 @@ case "${EXTRN_MDL_NAME_ICS}" in
   minmax_vgfrc_from_climo=True
   lai_from_climo=True
   tg3_from_soil=False
-
   ;;
 
-
 "HRRR")
-
   external_model="HRRR"
-
   fn_grib2="${EXTRN_MDL_FNS[0]}"
   input_type="grib2"
 #
@@ -422,15 +375,19 @@ case "${EXTRN_MDL_NAME_ICS}" in
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
     nsoill_out="9"
+  else
+    print_err_msg_exit "\
+The variable \"nsoill_out\" has not yet been specified for this external 
+IC model (EXTRN_MDL_NAME_ICS) and physics suite (CCPP_PHYS_SUITE) combination:
+  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
+  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
   fi
 #
 # Path to the HRRRX geogrid file.
 #
   geogrid_file_input_grid="${FIXgsm}/geo_em.d01.nc_HRRRX"
-
-  #Note that vgfrc, shdmin/shdmax (minmax_vgfrc), and lai fields are only available in HRRRX 
-  #files after mid-July 2019, and only so long as the record order didn't change afterward
-
+# Note that vgfrc, shdmin/shdmax (minmax_vgfrc), and lai fields are only available in HRRRX 
+# files after mid-July 2019, and only so long as the record order didn't change afterward
   vgtyp_from_climo=True
   sotyp_from_climo=True
   vgfrc_from_climo=True 
@@ -438,13 +395,10 @@ case "${EXTRN_MDL_NAME_ICS}" in
   lai_from_climo=True
   tg3_from_soil=True
   convert_nst=False
-
   ;;
 
 "RAP")
-
   external_model="RAP"
-
   fn_grib2="${EXTRN_MDL_FNS[0]}"
   input_type="grib2"
 #
@@ -461,12 +415,17 @@ case "${EXTRN_MDL_NAME_ICS}" in
   elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
        [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
     nsoill_out="9"
+  else
+    print_err_msg_exit "\
+The variable \"nsoill_out\" has not yet been specified for this external 
+IC model (EXTRN_MDL_NAME_ICS) and physics suite (CCPP_PHYS_SUITE) combination:
+  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
+  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
   fi
 #
 # Path to the RAPX geogrid file.
 #
   geogrid_file_input_grid="${FIXgsm}/geo_em.d01.nc_RAPX"
-
   vgtyp_from_climo=True
   sotyp_from_climo=False
   vgfrc_from_climo=True
@@ -474,33 +433,12 @@ case "${EXTRN_MDL_NAME_ICS}" in
   lai_from_climo=True
   tg3_from_soil=True
   convert_nst=False
-
   ;;
 
 "NAM")
-
   external_model="NAM"
-
   fn_grib2="${EXTRN_MDL_FNS[0]}"
   input_type="grib2"
-
-#
-# Use Thompson climatology for ice- and water-friendly aerosols if CCPP 
-# suite uses Thompson MP
-#
-  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp_regional" ] || \       
-     [ "${CCPP_PHYS_SUITE}" = "FV3_CPT_v0" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ] || \
-     [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v16beta" ]; then
-    thomp_mp_climo_file=""
-  elif [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ] || \
-       [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1beta" ]; then
-    thomp_mp_climo_file="${FIXam}/Thompson_MP_MONTHLY_CLIMO.nc"
-  fi
-
   nsoill_out="4" #If the CCPP suites uses RUC-LSM, the scheme will interpolate from 4 to 9 soil levels.
   vgtyp_from_climo=True
   sotyp_from_climo=True
@@ -509,13 +447,12 @@ case "${EXTRN_MDL_NAME_ICS}" in
   lai_from_climo=True
   tg3_from_soil=False
   convert_nst=False  
-
   ;;
 
 *)
   print_err_msg_exit "\
 External-model-dependent namelist variables have not yet been specified
-for this external model:
+for this external IC model (EXTRN_MDL_NAME_ICS):
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\""
   ;;
 
