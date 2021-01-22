@@ -133,6 +133,11 @@ case $MACHINE in
     export APRUN="time"
     ;;
 
+  "GAEA")
+    APRUN="time"
+    ulimit -a
+    ;;
+
   "ODIN")
     export APRUN="srun -n 1"
     ulimit -s unlimited
@@ -322,7 +327,7 @@ with nonzero exit code:
   exec_fp = \"${exec_fp}\""
     ;;
 
-  "CHEYENNE" | "HERA" | "ORION" | "JET" | "ODIN" | "STAMPEDE")
+  "CHEYENNE" | "HERA" | "ORION" | "JET" | "GAEA" | "ODIN" | "STAMPEDE")
     $APRUN "${exec_fp}" < "${input_redirect_fn}" || \
       print_err_msg_exit "\
 Call to executable (exec_fp) that generates the raw orography file returned

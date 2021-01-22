@@ -155,6 +155,10 @@ case $MACHINE in
     APRUN="srun"
     ;;
 
+  "GAEA")
+    APRUN="srun"
+    ;;
+
   "CHEYENNE")
     nprocs=$(( NNODES_MAKE_SFC_CLIMO*PPN_MAKE_SFC_CLIMO ))
     APRUN="mpirun -np $nprocs"
