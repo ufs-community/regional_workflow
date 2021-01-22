@@ -1,24 +1,15 @@
 #
 #-----------------------------------------------------------------------
 #
-# This file defins a function that first checks whether the Thompson 
-# microphysics parameterization is being called by the selected physics 
-# suite.  If not, it does nothing else.  If so, it:
-#
-# 1) Sets the variable thompson_mp_climo_fp containing the full path to 
-#    the climatology file containing data that can be used to generate 
-#    (approximate versons of) the fields that must be present in the IC 
-#    and LBC files in order for the Thompson microphysics parameterization 
-#    to work properly.  The file that this variable points to will be used
-#    (by the MAKE_ICS_TN and/or MAKE_LBCS_TN tasks) ONLY IF the necessary 
-#    fields are not already present in the external model files from which 
-#    the ICs and/or LBCs on the native grid will be generated.
-#
-# 2) Modifies the workflow arrays FIXgsm_FILES_TO_COPY_TO_FIXam and 
-#    CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING to ensure that fixed files 
-#    needed by th Thompson microphysics parameterization are copied to 
-#    the FIXam directory and that appropriate symlinks to these files
-#    are created in the run directories.
+# This file defins a function that first checks whether the Thompson
+# microphysics parameterization is being called by the selected physics
+# suite.  If not, it sets the output variable specified by
+# output_varname_thompson_mp_used to "FALSE" and exits.  If so, it sets
+# this variable to "TRUE" and modifies the workflow arrays
+# FIXgsm_FILES_TO_COPY_TO_FIXam and CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING
+# to ensure that fixed files needed by the Thompson microphysics
+# parameterization are copied to the FIXam directory and that appropriate
+# symlinks to these files are created in the run directories.
 #
 #-----------------------------------------------------------------------
 #
@@ -63,7 +54,8 @@ function set_thompson_mp_fix_files() {
 #
   local valid_args=( \
     "ccpp_phys_suite_fp" \
-    "output_varname_thompson_mp_climo_fp" \
+    "thompson_mp_climo_fn" \
+    "output_varname_thompson_mp_used" \
     )
   process_args valid_args "$@"
 #
@@ -86,9 +78,7 @@ function set_thompson_mp_fix_files() {
   local thompson_mp_name \
         regex_search \
         thompson_mp_name_or_null \
-        thompson_mp_is_used \
-        thompson_mp_climo_fn \
-        thompson_mp_climo_fp \
+        thompson_mp_used \
         thompson_mp_fix_files \
         num_files \
         mapping \
@@ -106,9 +96,9 @@ function set_thompson_mp_fix_files() {
   thompson_mp_name_or_null=$( sed -r -n -e "s/${regex_search}/\1/p" "${ccpp_phys_suite_fp}" )
 
   if [ "${thompson_mp_name_or_null}" = "${thompson_mp_name}" ]; then
-    thompson_mp_is_used="TRUE"
+    thompson_mp_used="TRUE"
   elif [ -z "${thompson_mp_name_or_null}" ]; then
-    thompson_mp_is_used="FALSE"
+    thompson_mp_used="FALSE"
   else
     print_err_msg_exit "\
 Unexpected value returned for thompson_mp_name_or_null:
@@ -119,40 +109,11 @@ string."
 #
 #-----------------------------------------------------------------------
 #
-# Set the name of the climatology file containing data that can be used
-# to generate (approximate versons of) the fields that must be present 
-# in the IC and LBC files in order for the Thompson MP parameterization 
-# to work properly.  Also, initialize to a null string the full path to
-# this file.
-#
-#-----------------------------------------------------------------------
-#
-  thompson_mp_climo_fn="Thompson_MP_MONTHLY_CLIMO.nc"                      
-  thompson_mp_climo_fp=""
-#
-#-----------------------------------------------------------------------
-#
 # If the Thompson microphysics parameterization is being used, then...
 #
 #-----------------------------------------------------------------------
 #
-  if [ "${thompson_mp_is_used}" = "TRUE" ]; then
-#
-#-----------------------------------------------------------------------
-#
-# Set the variable thompson_mp_climo_fp containing the full path to the
-# climatology file containing data that can be used to generate (approximate 
-# versons of) the fields that must be present in the IC and LBC files in 
-# order for the Thompson microphysics parameterization to work properly.  
-# The file that this variable points to will be used (by the MAKE_ICS_TN 
-# and/or MAKE_LBCS_TN tasks) only if the physics suite uses Thompson MP
-# and if the necessary fields are not already present in the external
-# model files from which the ICs and/or LBCs on the native grid will be 
-# generated.
-#
-#-----------------------------------------------------------------------
-#
-    thompson_mp_climo_fp="$FIXam/${thompson_mp_climo_fn}"
+  if [ "${thompson_mp_used}" = "TRUE" ]; then
 #
 #-----------------------------------------------------------------------
 #
@@ -208,14 +169,14 @@ values of these parameters are as follows:
     print_info_msg "$msg"
 
   fi
-#                                                                        
-#----------------------------------------------------------------------- 
-#                                                                        
-# Set output variables.                                                  
-#                                                                        
-#----------------------------------------------------------------------- 
-#                                                                        
-  eval ${output_varname_thompson_mp_climo_fp}="${thompson_mp_climo_fp}"                            
+#
+#-----------------------------------------------------------------------
+#
+# Set output variables.
+#
+#-----------------------------------------------------------------------
+#
+  eval ${output_varname_thompson_mp_used}="${thompson_mp_used}"
 #
 #-----------------------------------------------------------------------
 #

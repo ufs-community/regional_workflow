@@ -274,15 +274,19 @@ input_type=""
 tracers_input="\"\""
 tracers="\"\""
 #
-# If the external model for LBCs is one that does not contain the fields
-# needed for Thompson microphysics to work properly, set the variable
-# thomp_mp_climo_file to the full path of the file containing climatology
-# data that can be used to generate approximate versions of these fields
-# in the LBCs files.
+# If the physics suite uses Thompson microphysics and if the external 
+# model for LBCs is one that does not provide the aerosol fields needed 
+# by Thompson microphysics (currently only the HRRR and RAP provide
+# aerosol data), set the variable thomp_mp_climo_file in the chgres_cube 
+# namelist to the full path of the file containing aerosol climatology 
+# data.  In this case, this file will be used to generate approximate 
+# aerosol fields in the LBCs that Thompson MP can use.  Otherwise, set 
+# thomp_mp_climo_file to a null string.
 #
 thomp_mp_climo_file=""
-if [ "${EXTRN_MDL_NAME_ICS}" != "HRRR" ] && \
-   [ "${EXTRN_MDL_NAME_ICS}" != "RAP" ]; then
+if [ "${THOMPSON_MP_USED}" = "TRUE" ] && \
+   [ "${EXTRN_MDL_NAME_LBCS}" != "HRRR" -a \
+     "${EXTRN_MDL_NAME_LBCS}" != "RAP" ]; then
   thomp_mp_climo_file="${THOMPSON_MP_CLIMO_FP}"
 fi
 
@@ -381,7 +385,7 @@ for (( i=0; i<${num_fhrs}; i++ )); do
     ;;
   "RAP")
     fn_grib2="${EXTRN_MDL_FNS[$i]}"
-    ;;  
+    ;;
   "HRRR")
     fn_grib2="${EXTRN_MDL_FNS[$i]}"
     ;;
@@ -423,17 +427,17 @@ list file has not specified for this external LBC model (EXTRN_MDL_NAME_LBCS):
 # (one namelist variable per line, plus a header and footer).  Below,
 # this variable will be passed to a python script that will create the
 # namelist file.
-#                                                                        
-# IMPORTANT:                                                             
-# If we want a namelist variable to be removed from the namelist file,   
-# in the "settings" variable below, we need to set its value to the         
-# string "null".  This is equivalent to setting its value to             
-#    !!python/none                                                       
-# in the base namelist file specified by FV3_NML_BASE_SUITE_FP or the    
-# suite-specific yaml settings file specified by FV3_NML_YAML_CONFIG_FP. 
-#                                                                        
-# It turns out that setting the variable to an empty string also works   
-# to remove it from the namelist!  Which is better to use??              
+#
+# IMPORTANT:
+# If we want a namelist variable to be removed from the namelist file,
+# in the "settings" variable below, we need to set its value to the
+# string "null".  This is equivalent to setting its value to
+#    !!python/none
+# in the base namelist file specified by FV3_NML_BASE_SUITE_FP or the
+# suite-specific yaml settings file specified by FV3_NML_YAML_CONFIG_FP.
+#
+# It turns out that setting the variable to an empty string also works
+# to remove it from the namelist!  Which is better to use??
 #
 settings="
 'config': {

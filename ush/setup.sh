@@ -1954,8 +1954,21 @@ NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 
 
 
-
-
+#
+#-----------------------------------------------------------------------
+#
+# Set the name of the file containing aerosol climatology data that, if
+# necessary, can be used to generate approximate versions of the aerosol 
+# fields needed by Thompson microphysics.  This file will be used to 
+# generate such approximate aerosol fields in the ICs and LBCs if Thompson 
+# MP is included in the physics suite and if the exteranl model for ICs
+# or LBCs does not already provide these fields.  Also, set the full path
+# to this file.
+#
+#-----------------------------------------------------------------------
+#
+THOMPSON_MP_CLIMO_FN="Thompson_MP_MONTHLY_CLIMO.nc"
+THOMPSON_MP_CLIMO_FP="$FIXam/${THOMPSON_MP_CLIMO_FN}"
 #
 #-----------------------------------------------------------------------
 #
@@ -1963,13 +1976,16 @@ NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 # is being called by the physics suite, modifies certain workflow arrays
 # to ensure that fixed files needed by this parameterization are copied
 # to the FIXam directory and appropriate symlinks to them are created in
-# the run directories. 
+# the run directories.  This function also sets the workflow variable
+# THOMPSON_MP_USED that indicates whether Thompson MP is called by the
+# physics suite.
 #
 #-----------------------------------------------------------------------
 #
 set_thompson_mp_fix_files \
   ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
-  output_varname_thompson_mp_climo_fp="THOMPSON_MP_CLIMO_FP"
+  thompson_mp_climo_fn="${THOMPSON_MP_CLIMO_FN}" \
+  output_varname_thompson_mp_used="THOMPSON_MP_USED"
 #
 #-----------------------------------------------------------------------
 #
@@ -2353,7 +2369,17 @@ FV3_EXEC_FP="${FV3_EXEC_FP}"
 
 LOAD_MODULES_RUN_TASK_FP="${LOAD_MODULES_RUN_TASK_FP}"
 
+THOMPSON_MP_CLIMO_FN="${THOMPSON_MP_CLIMO_FN}"
 THOMPSON_MP_CLIMO_FP="${THOMPSON_MP_CLIMO_FP}"
+#
+#-----------------------------------------------------------------------
+#
+# Parameters that indicate whether or not various parameterizations are 
+# included in and called by the phsics suite.
+#
+#-----------------------------------------------------------------------
+#
+THOMPSON_MP_USED="${THOMPSON_MP_USED}"
 #
 #-----------------------------------------------------------------------
 #
