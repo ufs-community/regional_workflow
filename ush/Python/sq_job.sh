@@ -57,7 +57,7 @@ export FCST_END=${FCST_LEN_HRS}
 export FCST_INC=6
 
 # Usage statement:	Make sure all the necessary modules can be imported.
-#                       Five command line arguments are needed:
+#                       Six command line arguments are needed:
 #                       1. Cycle date/time in YYYYMMDDHH format
 #                       2. Starting forecast hour in HHH format
 #                       3. Ending forecast hour in HHH format
