@@ -72,7 +72,7 @@ else
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch/ywang/EPIC/GDAS/2019053000_mem001"
       ;;
     "CHEYENNE")
-      EXTRN_MDL_SYSBASEDIR_ICS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
+      EXTRN_MDL_SYSBASEDIR_ICS="/glade/p/ral/jntp/UFS_SRW_app/COMGFS"
       ;;
     "STAMPEDE")
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
@@ -107,7 +107,7 @@ else
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
       ;;
     "CHEYENNE")
-      EXTRN_MDL_SYSBASEDIR_ICS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
+      EXTRN_MDL_SYSBASEDIR_ICS="/glade/p/ral/jntp/UFS_SRW_app/COMGFS"
       ;;
     "GAEA")
       EXTRN_MDL_SYSBASEDIR_ICS=""
@@ -238,7 +238,7 @@ else
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch/ywang/EPIC/GDAS/2019053000_mem001"
       ;;
     "CHEYENNE")
-      EXTRN_MDL_SYSBASEDIR_LBCS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
+      EXTRN_MDL_SYSBASEDIR_LBCS="/glade/p/ral/jntp/UFS_SRW_app/COMGFS"
       ;;
     "STAMPEDE")
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
@@ -267,7 +267,7 @@ else
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch/ywang/test_runs/FV3_regional/gfs"
       ;;
     "CHEYENNE")
-      EXTRN_MDL_SYSBASEDIR_LBCS="/glade/p/ral/jntp/UFS_CAM/COMGFS"
+      EXTRN_MDL_SYSBASEDIR_LBCS="/glade/p/ral/jntp/UFS_SRW_app/COMGFS"
       ;;
     "STAMPEDE")
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
