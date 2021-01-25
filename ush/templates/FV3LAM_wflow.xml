@@ -439,12 +439,12 @@ MODULES_RUN_TASK_FP script.
 
   </metatask>
 
+{% if run_task_get_obs_ccpa %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
 
-{% if run_task_get_obs_ccpa %}
   <task name="&GET_OBS_CCPA_TN;" maxtries="2">
 
     &RSRV_HPSS;
@@ -471,12 +471,12 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_get_obs_mrms %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
 
-{% if run_task_get_obs_mrms %}
   <task name="&GET_OBS_MRMS_TN;" maxtries="2">
 
     &RSRV_HPSS;
@@ -504,12 +504,12 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_get_obs_ndas %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
 
-{% if run_task_get_obs_ndas %}
   <task name="&GET_OBS_NDAS_TN;" maxtries="2">
 
     &RSRV_HPSS;
@@ -536,12 +536,12 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
 
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_TN;" maxtries="2">
 
     &RSRV_HPSS;
@@ -573,11 +573,11 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_REFC_TN;" maxtries="2">
 
     &RSRV_HPSS;
@@ -608,11 +608,11 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_03h_TN;" maxtries="2">
 
     &RSRV_DEFAULT;
@@ -640,11 +640,11 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_06h_TN;" maxtries="2">
 
     &RSRV_DEFAULT;
@@ -672,11 +672,11 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_24h_TN;" maxtries="2">
 
     &RSRV_DEFAULT;
@@ -704,11 +704,11 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_pointstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_pointstat %}
   <task name="&VX_POINTSTAT_TN;" maxtries="2">
 
     &RSRV_HPSS;
