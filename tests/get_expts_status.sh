@@ -96,8 +96,8 @@ actually a directory:
   expts_basedir = \"${expts_basedir}\""
 else
   print_info_msg "
-Checking the workflow status of all forecast experiments in the experiments
-base directory: 
+Checking the workflow status of all forecast experiments in the following
+specified experiments base directory: 
   expts_basedir = \"${expts_basedir}\""
 fi
 #
@@ -144,14 +144,14 @@ ${expts_list_str}
 #-----------------------------------------------------------------------
 #
 yyyymmddhhmn=$( date +%Y%m%d%H%M )
-status_report_fn="wflows_status_${yyyymmddhhmn}.txt"
-status_report_fp="${expts_basedir}/${status_report_fn}"
+expts_status_fn="expts_status_${yyyymmddhhmn}.txt"
+expts_status_fp="${expts_basedir}/${expts_status_fn}"
 
 # Note that the check_for_preexist_dir_file function assumes that there
 # is a variable named "VERBOSE" in the environment.  Set that before 
 # calling the function.
 VERBOSE="TRUE"
-check_for_preexist_dir_file "${status_report_fp}" "rename"
+check_for_preexist_dir_file "${expts_status_fp}" "rename"
 #
 #-----------------------------------------------------------------------
 #
@@ -184,8 +184,8 @@ Checking workflow status of experiment: \"${expt_subdir}\""
 #
 # Record the tail from the log file into the status report file.
 #
-  print_info_msg "$msg" >> "${status_report_fp}"
-  print_info_msg "${log_tail}" >> "${status_report_fp}"
+  print_info_msg "$msg" >> "${expts_status_fp}"
+  print_info_msg "${log_tail}" >> "${expts_status_fp}"
 #
 # Print the workflow status to the screen.
   wflow_status=$( printf "${log_tail}" | grep "Workflow status:" )
