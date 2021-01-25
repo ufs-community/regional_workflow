@@ -422,7 +422,7 @@ Please correct and rerun."
 #
 #-----------------------------------------------------------------------
 #
-  MACHINE=`echo $machine| tr '[a-z]' '[A-Z]'`
+  MACHINE=$(echo $machine| tr '[a-z]' '[A-Z]')
   ACCOUNT="${account}"
 
 # Note that if expt_basedir is a null (or unset) string, ${expt_basedir:+/} 
@@ -731,7 +731,7 @@ machine (MACHINE):
       fi
     elif [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ]; then
-      EXTRN_MDL_NAME_ICS_LC=`echo $EXTRN_MDL_NAME_ICS| tr '[A-Z]' '[a-z]'`
+      EXTRN_MDL_NAME_ICS_LC=$(echo $EXTRN_MDL_NAME_ICS| tr '[A-Z]' '[a-z]')
       EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS_LC}.out.for_f000" )
     fi
 
@@ -762,7 +762,7 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
       fi
     elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ]; then
-      EXTRN_MDL_NAME_LBCS_LC=`echo $EXTRN_MDL_NAME_LBCS| tr '[A-Z]' '[a-z]'`
+      EXTRN_MDL_NAME_LBCS_LC=$(echo $EXTRN_MDL_NAME_LBCS| tr '[A-Z]' '[a-z]')
       EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS_LC}.out.for_f}" )
     fi
 

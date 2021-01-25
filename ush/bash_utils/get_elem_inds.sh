@@ -123,7 +123,7 @@ The arguments to this function are defined as follows:
 #
 #-----------------------------------------------------------------------
 #
-  inds_to_return=`echo $inds_to_return| tr '[A-Z]' '[a-z]'`
+  inds_to_return=$(echo $inds_to_return| tr '[A-Z]' '[a-z]')
   valid_vals_inds_to_return=( "first" "last" "all" )
   check_var_valid_value "inds_to_return" "valid_vals_inds_to_return"
 #
