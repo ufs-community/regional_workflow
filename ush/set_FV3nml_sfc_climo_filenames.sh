@@ -30,7 +30,7 @@ function set_FV3nml_sfc_climo_filenames() {
 #
 #-----------------------------------------------------------------------
 #
-  scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
+  local scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
   local scrfunc_fn=$( basename "${scrfunc_fp}" )
   local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
