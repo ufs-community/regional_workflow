@@ -1,7 +1,7 @@
 #
 #-----------------------------------------------------------------------
 #
-# This file defins a function that first checks whether the Thompson
+# This file defines a function that first checks whether the Thompson
 # microphysics parameterization is being called by the selected physics
 # suite.  If not, it sets the output variable specified by
 # output_varname_thompson_mp_used to "FALSE" and exits.  If so, it sets
