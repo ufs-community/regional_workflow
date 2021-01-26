@@ -508,12 +508,21 @@ Setting parameters in FV3 namelist file (FV3_NML_FP):
 npx=$((NX+1))
 npy=$((NY+1))
 #
-# For the physics suites that use RUC-LSM, set the parameter
-# lsoil according to the external models used to obtain ICs and LBCs.
+# For the physics suites that use RUC LSM, set the parameter kice to 9,
+# and set the parameter lsoil according to the external models used for
+# generating the ICs.
 #
-if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-   [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
+kice=""
+if [ "${SDF_USES_RUC_LSM}" = "TRUE" ]; then
 
+  kice="9"
+
+# Is lsoil needed at all?  It may be a variable that is not used in FV3
+# if CCPP is being used.  There may be other variables that supersede it
+# when using CCPP (which is now all the time), like lsoil_lsm.  Check 
+# into this.
+# Also, possibly remove from FV3.input.yml (and maybe input.nml.FV3) the
+# variables set here, like kice, lsoil, etc.
   if [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] || \
      [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ] || \
      [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
@@ -540,6 +549,17 @@ fi
 # passed to a python script that will in turn set the values of these
 # variables in the namelist file.
 #
+# IMPORTANT:
+# If we want a namelist variable to be removed from the namelist file,
+# in the "settings" variable below, we need to set its value to the
+# string "null".  This is equivalent to setting its value to 
+#    !!python/none
+# in the base namelist file specified by FV3_NML_BASE_SUITE_FP or the 
+# suite-specific yaml settings file specified by FV3_NML_YAML_CONFIG_FP.
+#
+# It turns out that setting the variable to an empty string also works
+# to remove it from the namelist!  Which is better to use??
+#
 settings="\
 'atmos_model_nml': {
     'blocksize': $BLOCKSIZE,
@@ -564,6 +584,7 @@ settings="\
     'bc_update_interval': ${LBC_SPEC_INTVL_HRS},
   }
 'gfs_physics_nml': {
+    'kice': ${kice:-null},
     'lsoil': ${lsoil:-null},
     'do_shum': ${DO_SHUM},
     'do_sppt': ${DO_SPPT},
