@@ -152,7 +152,6 @@ case $MACHINE in
     APRUN=$RUN_CMD_FCST
     ;;
 
-
   *)
     print_err_msg_exit "\
 Run command has not been specified for this machine:
