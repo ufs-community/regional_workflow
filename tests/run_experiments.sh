@@ -649,7 +649,8 @@ envir=\"\${EXPT_SUBDIR}\"
 # where PREDEF_GRID_NAME has the value set above.
 #"
 #
-# Set COMINgfs.
+# Set COMINgfs if using the FV3GFS or the GSMGFS as the external model 
+# for ICs or LBCs.
 #
     if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
        [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ] || \
