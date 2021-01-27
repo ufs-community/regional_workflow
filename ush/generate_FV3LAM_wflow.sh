@@ -508,80 +508,35 @@ Setting parameters in FV3 namelist file (FV3_NML_FP):
 npx=$((NX+1))
 npy=$((NY+1))
 #
-# For the physics suites that use RUC-LSM, set the parameter
-# lsoil according to the external models used to obtain ICs and LBCs.
+# For the physics suites that use RUC LSM, set the parameter kice to 9,
+# Otherwise, leave it unspecified (which means it gets set to the default
+# value in the forecast model).
 #
-# This code needs to be replaced by one that checks the SDF for use of 
-# the RUC-LSM and acts accrodingly (instead of having this top-level if-
-# statement that checks the physic suite).
+# NOTE:
+# May want to remove kice from FV3.input.yml (and maybe input.nml.FV3).
 #
-# Actually, probably should not set lsm at all since it is a pre-CCPP
-# variable.  Use lsoil_lsm, which is the equivalent variable if using
-# CCPP (which is now always).  So, probalby remove lsoil from this script
-# completely.
-#
-if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-   [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ] || \
-   [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
-
-  if [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] || \
-     [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ] || \
-     [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
-    lsoil=4
-  elif [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ] || \
-       [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ]; then
-    lsoil=9
-  else
-    print_err_msg_exit "\
-The value to set the variable lsoil to in the FV3 namelist file (FV3_NML_FP)
-has not been specified for the following combination of physics suite and
-external model for ICs:
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
-Please change one or more of these parameters or provide a value for lsoil
-(and change workflow generation script(s) accordingly) and rerun."
-  fi
-
-fi
-
-
-
-
-#
-# As of 20210108, kice should not be set if using the ufs-community
-# version of ufs-weather-model and should be set to 9 if using the
-# NOAA-GSL version.  Once the changes in NOAA-GSL are merged into
-# ufs-community, then kice should be set to 9 when using any suite that
-# includes RUC-LSM.
-#
-
-#
-#-----------------------------------------------------------------------
-#
-# Check the suite definition file to see whether the RUC land surface 
-# model (LSM) is being used.
-#
-#-----------------------------------------------------------------------
-#
-RUC_LSM_name="lsm_ruc"
-regex_search="^[ ]*<scheme>(${RUC_LSM_name})<\/scheme>[ ]*$"
-RUC_LSM_name_or_null=$( sed -r -n -e "s/${regex_search}/\1/p" "${ccpp_phys_suite_fp}" )
-
-if [ "${RUC_LSM_name_or_null}" = "${RUC_LSM_name}" ]; then
-  RUC_LSM_is_used="TRUE"
-elif [ -z "${RUC_LSM_name_or_null}" ]; then
-  RUC_LSM_is_used="FALSE"
-else
-  print_err_msg_exit "\
-Unexpected value returned for RUC_LSM_name_or_null:
-  RUC_LSM_name_or_null = \"${RUC_LSM_name_or_null}\"
-This variable should be set to either \"${RUC_LSM_name}\" or an empty
-string."
-fi
-
 kice=""
-if [ "${RUC_LSM_is_used}" = "TRUE" ]; then
+if [ "${SDF_USES_RUC_LSM}" = "TRUE" ]; then
   kice="9"
+fi
+#
+# Set lsoil, which is the number of input soil levels provided in the 
+# chgres_cube output NetCDF file.  This is the same as the parameter 
+# nsoill_out in the namelist file for chgres_cube.  [On the other hand, 
+# the parameter lsoil_lsm (not set here but set in input.nml.FV3 and/or 
+# FV3.input.yml) is the number of soil levels that the LSM scheme in the
+# forecast model will run with.]  Here, we use the same approach to set
+# lsoil as the one used to set nsoill_out in exregional_make_ics.sh.  
+# See that script for details.
+#
+# NOTE:
+# May want to remove lsoil from FV3.input.yml (and maybe input.nml.FV3).
+#
+lsoil="4"
+if [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" -o \
+     "${EXTRN_MDL_NAME_ICS}" = "RAP" ] && \
+   [ "${SDF_USES_RUC_LSM}" = "TRUE" ]; then
+  lsoil="9"
 fi
 #
 # Create a multiline variable that consists of a yaml-compliant string
@@ -625,7 +580,7 @@ settings="\
     'bc_update_interval': ${LBC_SPEC_INTVL_HRS},
   }
 'gfs_physics_nml': {
-    'kice': ${kice},
+    'kice': ${kice:-null},
     'lsoil': ${lsoil:-null},
     'do_shum': ${DO_SHUM},
     'do_sppt': ${DO_SPPT},

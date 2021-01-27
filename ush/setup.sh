@@ -63,6 +63,7 @@ cd_vrfy ${scrfunc_dir}
 . ./link_fix.sh
 . ./set_ozone_param.sh
 . ./set_thompson_mp_fix_files.sh
+. ./check_ruc_lsm.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -1377,21 +1378,19 @@ LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task.sh"
 # processing, as follows:
 #
 # GRID_DIR:
-# Directory in which the grid files will be placed (if RUN_TASK_MAKE_-
-# GRID is set to "TRUE") or searched for (if RUN_TASK_MAKE_GRID is set
-# to "FALSE").
+# Directory in which the grid files will be placed (if RUN_TASK_MAKE_GRID 
+# is set to "TRUE") or searched for (if RUN_TASK_MAKE_GRID is set to 
+# "FALSE").
 #
 # OROG_DIR:
-# Directory in which the orography files will be placed (if RUN_TASK_-
-# MAKE_OROG is set to "TRUE") or searched for (if RUN_TASK_MAKE_OROG is
-# set to "FALSE").
+# Directory in which the orography files will be placed (if RUN_TASK_MAKE_OROG 
+# is set to "TRUE") or searched for (if RUN_TASK_MAKE_OROG is set to 
+# "FALSE").
 #
 # SFC_CLIMO_DIR:
 # Directory in which the surface climatology files will be placed (if
-# RUN_TASK_MAKE_SFC_CLIMO is set to "TRUE") or searched for (if RUN_-
-# TASK_MAKE_SFC_CLIMO is set to "FALSE").
-#
-# First, consider NCO mode.
+# RUN_TASK_MAKE_SFC_CLIMO is set to "TRUE") or searched for (if 
+# RUN_TASK_MAKE_SFC_CLIMO is set to "FALSE").
 #
 #----------------------------------------------------------------------
 #
@@ -1702,9 +1701,9 @@ NH4=4
 #
 #-----------------------------------------------------------------------
 #
-# Set parameters according to the type of horizontal grid generation me-
-# thod specified.  First consider GFDL's global-parent-grid based me-
-# thod.
+# Set parameters according to the type of horizontal grid generation 
+# method specified.  First consider GFDL's global-parent-grid based 
+# method.
 #
 #-----------------------------------------------------------------------
 #
@@ -1988,9 +1987,33 @@ fi
 NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 
 
-
-
-
+#
+#-----------------------------------------------------------------------
+#
+# Call the function that checks whether the RUC land surface model (LSM)
+# is being called by the physics suite and sets the workflow variable 
+# SDF_USES_RUC_LSM to "TRUE" or "FALSE" accordingly.
+#
+#-----------------------------------------------------------------------
+#
+check_ruc_lsm \
+  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
+  output_varname_sdf_uses_ruc_lsm="SDF_USES_RUC_LSM"
+#
+#-----------------------------------------------------------------------
+#
+# Set the name of the file containing aerosol climatology data that, if
+# necessary, can be used to generate approximate versions of the aerosol 
+# fields needed by Thompson microphysics.  This file will be used to 
+# generate such approximate aerosol fields in the ICs and LBCs if Thompson 
+# MP is included in the physics suite and if the exteranl model for ICs
+# or LBCs does not already provide these fields.  Also, set the full path
+# to this file.
+#
+#-----------------------------------------------------------------------
+#
+THOMPSON_MP_CLIMO_FN="Thompson_MP_MONTHLY_CLIMO.nc"
+THOMPSON_MP_CLIMO_FP="$FIXam/${THOMPSON_MP_CLIMO_FN}"
 #
 #-----------------------------------------------------------------------
 #
@@ -1998,16 +2021,16 @@ NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 # is being called by the physics suite, modifies certain workflow arrays
 # to ensure that fixed files needed by this parameterization are copied
 # to the FIXam directory and appropriate symlinks to them are created in
-# the run directories. 
+# the run directories.  This function also sets the workflow variable
+# SDF_USES_THOMPSON_MP that indicates whether Thompson MP is called by 
+# the physics suite.
 #
 #-----------------------------------------------------------------------
 #
 set_thompson_mp_fix_files \
-  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" 
-
-
-
-
+  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
+  thompson_mp_climo_fn="${THOMPSON_MP_CLIMO_FN}" \
+  output_varname_sdf_uses_thompson_mp="SDF_USES_THOMPSON_MP"
 #
 #-----------------------------------------------------------------------
 #
@@ -2391,6 +2414,19 @@ NEMS_CONFIG_FP="${NEMS_CONFIG_FP}"
 FV3_EXEC_FP="${FV3_EXEC_FP}"
 
 LOAD_MODULES_RUN_TASK_FP="${LOAD_MODULES_RUN_TASK_FP}"
+
+THOMPSON_MP_CLIMO_FN="${THOMPSON_MP_CLIMO_FN}"
+THOMPSON_MP_CLIMO_FP="${THOMPSON_MP_CLIMO_FP}"
+#
+#-----------------------------------------------------------------------
+#
+# Parameters that indicate whether or not various parameterizations are 
+# included in and called by the phsics suite.
+#
+#-----------------------------------------------------------------------
+#
+SDF_USES_RUC_LSM="${SDF_USES_RUC_LSM}"
+SDF_USES_THOMPSON_MP="${SDF_USES_THOMPSON_MP}"
 #
 #-----------------------------------------------------------------------
 #
