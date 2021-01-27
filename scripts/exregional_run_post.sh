@@ -215,7 +215,7 @@ tmmark="tm00"
 dyn_file="${run_dir}/dynf${fhr}.nc"
 phy_file="${run_dir}/phyf${fhr}.nc"
 
-post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours" "+%Y%m%d%H" )
+post_time=$( $DATE_UTIL --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours" "+%Y%m%d%H" )
 post_yyyy=${post_time:0:4}
 post_mm=${post_time:4:2}
 post_dd=${post_time:6:2}
@@ -287,7 +287,7 @@ mv_vrfy BGRD3D.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}.${tm
 # space inserted between the dd and hh.  If so, just use "$yyyymmdd $hh"
 # instead of calling sed.
 start_date=$( echo "${cdate}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/' )
-basetime=$( date +%y%j%H%M -d "${start_date}" )
+basetime=$( $DATE_UTIL +%y%j%H%M -d "${start_date}" )
 ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}.${tmmark}.grib2 \
             ${postprd_dir}/BGDAWP_${basetime}f${fhr}00
 ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}.${tmmark}.grib2 \
