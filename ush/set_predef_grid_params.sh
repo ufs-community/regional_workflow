@@ -97,6 +97,11 @@ case ${PREDEF_GRID_NAME} in
 
   ESGgrid_WIDE_HALO_WIDTH="6"
 
+#  if [ "${SDF_USES_THOMPSON_MP}" = "TRUE" ]; then
+#    DT_ATMOS="${DT_ATMOS:-40}"
+#  else
+#    DT_ATMOS="${DT_ATMOS:-300}"
+#  fi
   DT_ATMOS="${DT_ATMOS:-300}"
 
   LAYOUT_X="${LAYOUT_X:-5}"
