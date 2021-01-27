@@ -298,7 +298,7 @@ fi
 # Get the Julian day-of-year of the starting date and time of the exter-
 # nal model forecast.
 #
-    ddd=$( DATE_UTIL --utc --date "${yyyy}-${mm}-${dd} ${hh}:${mn} UTC" "+%j" )
+    ddd=$( $DATE_UTIL --utc --date "${yyyy}-${mm}-${dd} ${hh}:${mn} UTC" "+%j" )
 #
 # Get the last two digits of the year of the starting date and time of 
 # the external model forecast.
