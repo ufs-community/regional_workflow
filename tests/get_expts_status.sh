@@ -6,8 +6,12 @@
 # This script checks the workflow status of all forecast experiments 
 # with directories located under a given base directory (expts_subdir).
 # It must be supplied exactly one argument -- the experiments base 
-# directory.  It assumes that all subdirectories under this base directory
-# are experiment directories and checks each one's workflow status.
+# directory.  It checks each subdirectory in that base directory for a
+# rocoto workflow XML file.  If it finds one, it assumes that the 
+# subdirectory is an experiment directory and calls the workflow 
+# (re)launch script to update the status of the workflow.  If it doesn't
+# find an XML, it assumes the subdirectory is not an experiment directory
+# and moves on to the next subdirectory.
 #
 #-----------------------------------------------------------------------
 #
@@ -164,6 +168,8 @@ check_for_preexist_dir_file "${expts_status_fp}" "rename"
 #
 #-----------------------------------------------------------------------
 #
+rocoto_xml_fn="FV3LAM_wflow.xml"
+launch_wflow_fn="launch_FV3LAM_wflow.sh"
 num_tail_lines="40"
 
 for (( i=0; i<=$((num_expts-1)); i++ )); do
@@ -179,27 +185,48 @@ Checking workflow status of experiment: \"${expt_subdir}\""
 # call.
 #
   cd_vrfy "${expt_subdir}"
-  launch_msg=$( launch_FV3LAM_wflow.sh 2>&1 )
-  log_tail=$( tail -n ${num_tail_lines} log.launch_FV3LAM_wflow )
+  if [ ! -f "${rocoto_xml_fn}" ]; then
+
+    print_info_msg "
+The current subdirectory (expt_subdir) in the experiments base directory
+(expts_basedir) does not contain a rocoto workflow xml file (rocoto_xml_fn).
+Thus, it is not considered to be an experiment directory, so this script
+will not try to (re)launch the workflow launch script (launch_wflow_fn)
+in this directory:
+  expts_basedir = \"${expts_basedir}\"
+  expt_subdir = \"${expt_subdir}\"
+  rocoto_xml_fn = \"${rocoto_xml_fn}\"
+  launch_wflow_fn = \"${launch_wflow_fn}\"
+Moving on to the next subdirectory."
+
+  else
+
+    launch_msg=$( "${launch_wflow_fn}" 2>&1 )
+    log_tail=$( tail -n ${num_tail_lines} log.launch_FV3LAM_wflow )
 #
 # Record the tail from the log file into the status report file.
 #
-  print_info_msg "$msg" >> "${expts_status_fp}"
-  print_info_msg "${log_tail}" >> "${expts_status_fp}"
+    print_info_msg "$msg" >> "${expts_status_fp}"
+    print_info_msg "${log_tail}" >> "${expts_status_fp}"
 #
 # Print the workflow status to the screen.
-  wflow_status=$( printf "${log_tail}" | grep "Workflow status:" )
-#  wflow_status="${wflow_status## }"  # Not sure why this doesn't work to strip leading spaces.
-  wflow_status=$( printf "${wflow_status}" "%s" | sed -r 's|^[ ]*||g' )
+#
+    wflow_status=$( printf "${log_tail}" | grep "Workflow status:" )
+#    wflow_status="${wflow_status## }"  # Not sure why this doesn't work to strip leading spaces.
+    wflow_status=$( printf "${wflow_status}" "%s" | sed -r 's|^[ ]*||g' )
+    msg="${wflow_status}"
+    print_info_msg "$msg"
+
+  fi
+
   msg="\
-${wflow_status}
 ======================================
 "
   print_info_msg "$msg"
 #
 # Change location back to the experiments base directory.
 #
-  cd_vrfy "${expts_basedir}"
+    cd_vrfy "${expts_basedir}"
 
 done
 
