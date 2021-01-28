@@ -63,6 +63,7 @@ cd_vrfy ${scrfunc_dir}
 . ./link_fix.sh
 . ./set_ozone_param.sh
 . ./set_thompson_mp_fix_files.sh
+. ./check_ruc_lsm.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -960,6 +961,87 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Check to make sure that various computational parameters needed by the 
+# forecast model are set to non-empty values.  At this point in the 
+# experiment generation, all of these should be set to valid (non-empty) 
+# values.
+#
+#-----------------------------------------------------------------------
+#
+if [ -z "${DT_ATMOS}" ]; then
+  print_err_msg_exit "\
+The forecast model main time step (DT_ATMOS) is set to a null string:
+  DT_ATMOS = ${DT_ATMOS}
+Please set this to a valid numerical value in the user-specified experiment
+configuration file (EXPT_CONFIG_FP) and rerun:
+  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
+fi
+
+if [ -z "${LAYOUT_X}" ]; then
+  print_err_msg_exit "\
+The number of MPI processes to be used in the x direction (LAYOUT_X) by 
+the forecast job is set to a null string:
+  LAYOUT_X = ${LAYOUT_X}
+Please set this to a valid numerical value in the user-specified experiment
+configuration file (EXPT_CONFIG_FP) and rerun:
+  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
+fi
+
+if [ -z "${LAYOUT_Y}" ]; then
+  print_err_msg_exit "\
+The number of MPI processes to be used in the y direction (LAYOUT_Y) by 
+the forecast job is set to a null string:
+  LAYOUT_Y = ${LAYOUT_Y}
+Please set this to a valid numerical value in the user-specified experiment
+configuration file (EXPT_CONFIG_FP) and rerun:
+  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
+fi
+
+if [ -z "${BLOCKSIZE}" ]; then
+  print_err_msg_exit "\
+The cache size to use for each MPI task of the forecast (BLOCKSIZE) is 
+set to a null string:
+  BLOCKSIZE = ${BLOCKSIZE}
+Please set this to a valid numerical value in the user-specified experiment
+configuration file (EXPT_CONFIG_FP) and rerun:
+  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
+fi
+#
+#-----------------------------------------------------------------------
+#
+# If using the FV3_HRRR physics suite, make sure that the directory from 
+# which certain fixed orography files will be copied to the experiment 
+# directory actually exists.  Note that this is temporary code.  It should
+# be removed once there is a script or code available that will create 
+# these orography files for any grid.
+#
+#-----------------------------------------------------------------------
+#
+GWD_HRRRsuite_DIR="${GWD_HRRRsuite_BASEDIR}/${PREDEF_GRID_NAME}"
+if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
+  if [ -z "${PREDEF_GRID_NAME}" ]; then
+    print_err_msg_exit "\
+A predefined grid name (PREDEF_GRID_NAME) must be specified when using 
+the FV3_HRRR physics suite:
+  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
+  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\""
+  else        
+    if [ ! -d "${GWD_HRRRsuite_DIR}" ]; then
+      print_err_msg_exit "\
+The directory (GWD_HRRRsuite_DIR) that should contain the gravity wave 
+drag-related orography files for the FV3_HRRR suite does not exist:
+  GWD_HRRRsuite_DIR = \"${GWD_HRRRsuite_DIR}\""
+    elif [ ! "$( ls -A ${GWD_HRRRsuite_DIR} )" ]; then
+      print_err_msg_exit "\
+The directory (GWD_HRRRsuite_DIR) that should contain the gravity wave 
+drag related orography files for the FV3_HRRR suite is empty:
+  GWD_HRRRsuite_DIR = \"${GWD_HRRRsuite_DIR}\""
+    fi      
+  fi
+fi
+#
+#-----------------------------------------------------------------------
+#
 # If the base directory (EXPT_BASEDIR) in which the experiment subdirectory 
 # (EXPT_SUBDIR) will be located does not start with a "/", then it is 
 # either set to a null string or contains a relative directory.  In both 
@@ -1328,21 +1410,19 @@ LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task.sh"
 # processing, as follows:
 #
 # GRID_DIR:
-# Directory in which the grid files will be placed (if RUN_TASK_MAKE_-
-# GRID is set to "TRUE") or searched for (if RUN_TASK_MAKE_GRID is set
-# to "FALSE").
+# Directory in which the grid files will be placed (if RUN_TASK_MAKE_GRID 
+# is set to "TRUE") or searched for (if RUN_TASK_MAKE_GRID is set to 
+# "FALSE").
 #
 # OROG_DIR:
-# Directory in which the orography files will be placed (if RUN_TASK_-
-# MAKE_OROG is set to "TRUE") or searched for (if RUN_TASK_MAKE_OROG is
-# set to "FALSE").
+# Directory in which the orography files will be placed (if RUN_TASK_MAKE_OROG 
+# is set to "TRUE") or searched for (if RUN_TASK_MAKE_OROG is set to 
+# "FALSE").
 #
 # SFC_CLIMO_DIR:
 # Directory in which the surface climatology files will be placed (if
-# RUN_TASK_MAKE_SFC_CLIMO is set to "TRUE") or searched for (if RUN_-
-# TASK_MAKE_SFC_CLIMO is set to "FALSE").
-#
-# First, consider NCO mode.
+# RUN_TASK_MAKE_SFC_CLIMO is set to "TRUE") or searched for (if 
+# RUN_TASK_MAKE_SFC_CLIMO is set to "FALSE").
 #
 #----------------------------------------------------------------------
 #
@@ -1653,9 +1733,9 @@ NH4=4
 #
 #-----------------------------------------------------------------------
 #
-# Set parameters according to the type of horizontal grid generation me-
-# thod specified.  First consider GFDL's global-parent-grid based me-
-# thod.
+# Set parameters according to the type of horizontal grid generation 
+# method specified.  First consider GFDL's global-parent-grid based 
+# method.
 #
 #-----------------------------------------------------------------------
 #
@@ -1939,9 +2019,33 @@ fi
 NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 
 
-
-
-
+#
+#-----------------------------------------------------------------------
+#
+# Call the function that checks whether the RUC land surface model (LSM)
+# is being called by the physics suite and sets the workflow variable 
+# SDF_USES_RUC_LSM to "TRUE" or "FALSE" accordingly.
+#
+#-----------------------------------------------------------------------
+#
+check_ruc_lsm \
+  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
+  output_varname_sdf_uses_ruc_lsm="SDF_USES_RUC_LSM"
+#
+#-----------------------------------------------------------------------
+#
+# Set the name of the file containing aerosol climatology data that, if
+# necessary, can be used to generate approximate versions of the aerosol 
+# fields needed by Thompson microphysics.  This file will be used to 
+# generate such approximate aerosol fields in the ICs and LBCs if Thompson 
+# MP is included in the physics suite and if the exteranl model for ICs
+# or LBCs does not already provide these fields.  Also, set the full path
+# to this file.
+#
+#-----------------------------------------------------------------------
+#
+THOMPSON_MP_CLIMO_FN="Thompson_MP_MONTHLY_CLIMO.nc"
+THOMPSON_MP_CLIMO_FP="$FIXam/${THOMPSON_MP_CLIMO_FN}"
 #
 #-----------------------------------------------------------------------
 #
@@ -1949,16 +2053,16 @@ NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 # is being called by the physics suite, modifies certain workflow arrays
 # to ensure that fixed files needed by this parameterization are copied
 # to the FIXam directory and appropriate symlinks to them are created in
-# the run directories. 
+# the run directories.  This function also sets the workflow variable
+# SDF_USES_THOMPSON_MP that indicates whether Thompson MP is called by 
+# the physics suite.
 #
 #-----------------------------------------------------------------------
 #
 set_thompson_mp_fix_files \
-  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" 
-
-
-
-
+  ccpp_phys_suite_fp="${CCPP_PHYS_SUITE_IN_CCPP_FP}" \
+  thompson_mp_climo_fn="${THOMPSON_MP_CLIMO_FN}" \
+  output_varname_sdf_uses_thompson_mp="SDF_USES_THOMPSON_MP"
 #
 #-----------------------------------------------------------------------
 #
@@ -2297,6 +2401,7 @@ CYCLE_BASEDIR="${CYCLE_BASEDIR}"
 GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
+GWD_HRRRsuite_DIR="${GWD_HRRRsuite_DIR}"
 
 NDIGITS_ENSMEM_NAMES="${NDIGITS_ENSMEM_NAMES}"
 ENSMEM_NAMES=( $( printf "\"%s\" " "${ENSMEM_NAMES[@]}" ))
@@ -2341,6 +2446,19 @@ NEMS_CONFIG_FP="${NEMS_CONFIG_FP}"
 FV3_EXEC_FP="${FV3_EXEC_FP}"
 
 LOAD_MODULES_RUN_TASK_FP="${LOAD_MODULES_RUN_TASK_FP}"
+
+THOMPSON_MP_CLIMO_FN="${THOMPSON_MP_CLIMO_FN}"
+THOMPSON_MP_CLIMO_FP="${THOMPSON_MP_CLIMO_FP}"
+#
+#-----------------------------------------------------------------------
+#
+# Parameters that indicate whether or not various parameterizations are 
+# included in and called by the phsics suite.
+#
+#-----------------------------------------------------------------------
+#
+SDF_USES_RUC_LSM="${SDF_USES_RUC_LSM}"
+SDF_USES_THOMPSON_MP="${SDF_USES_THOMPSON_MP}"
 #
 #-----------------------------------------------------------------------
 #
