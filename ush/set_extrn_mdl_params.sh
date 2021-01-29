@@ -124,7 +124,7 @@ fi
 # none of these avenues for getting data are available, print out an error message and 
 # exit.
 #
-if [ "$USE_USER_STAGED_EXTRN_FILES" = "FALSE" -a -z "${EXTRN_MDL_SYSBASEDIR_ICS}" -a -z "QUEUE_HPSS" ]; then
+if [ "${USE_USER_STAGED_EXTRN_FILES}" = "FALSE" -a -z "${EXTRN_MDL_SYSBASEDIR_ICS}" -a -z "${QUEUE_HPSS}" ]; then
   print_err_msg_exit "\
 
 No source of initial condition files has been set for this combination
@@ -257,7 +257,7 @@ fi
 # none of these avenues for getting data are available, print out an error message and 
 # exit.
 #
-if [ "$USE_USER_STAGED_EXTRN_FILES" = "FALSE" -a -z "${EXTRN_MDL_SYSBASEDIR_LBCS}" -a -z "QUEUE_HPSS" ]; then
+if [ "${USE_USER_STAGED_EXTRN_FILES}" = "FALSE" -a -z "${EXTRN_MDL_SYSBASEDIR_LBCS}" -a -z "${QUEUE_HPSS}" ]; then
   print_err_msg_exit "\
 of machine (MACHINE) and external model (EXTRN_MDL_NAME_LBCS), and there
 is no HPSS_QUEUE specified to pull data from HPSS. Check those values
