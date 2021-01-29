@@ -422,7 +422,7 @@ Please correct and rerun."
 #
 #-----------------------------------------------------------------------
 #
-  MACHINE=$(echo $machine| tr '[a-z]' '[A-Z]')
+  MACHINE=$(echo $machine| tr '[a-z]' '[A-Z]') # This syntax required for older bash
   ACCOUNT="${account}"
 
 # Note that if expt_basedir is a null (or unset) string, ${expt_basedir:+/} 
@@ -763,8 +763,8 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
       fi
     elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ]; then
-      EXTRN_MDL_NAME_LBCS_LC=$(echo $EXTRN_MDL_NAME_LBCS| tr '[A-Z]' '[a-z]')
-      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS_LC}.out.for_f}" )
+      extrn_mdl_name_lbcs_lcc=$(echo $EXTRN_MDL_NAME_LBCS| tr '[A-Z]' '[a-z]')
+      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${extrn_mdl_name_lbcs_lcc}.out.for_f}" )
     fi
 
     str=${str}"
