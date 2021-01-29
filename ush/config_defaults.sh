@@ -61,6 +61,16 @@ RUN_ENVIR="nco"
 # machine-dependent value.  This is not used if SCHED is not set to 
 # "slurm".
 #
+# CLUSTERS_DEFAULT:
+# If using the slurm job scheduler (i.e. if SCHED is set to "slurm"), 
+# the default clusters to which to submit workflow tasks.  If a task 
+# does not have a specific variable that specifies the partition to which 
+# it will be submitted (e.g. CLUSTERS_HPSS, CLUSTERS_FCST; see below), 
+# it will be submitted to the clusters specified by this variable.  If 
+# this is not set or is set to an empty string, it will be (re)set to a 
+# machine-dependent value.  This is not used if SCHED is not set to 
+# "slurm".
+#
 # QUEUE_DEFAULT:
 # The default queue or QOS (if using the slurm job scheduler, where QOS
 # is Quality of Service) to which workflow tasks are submitted.  If a 
@@ -73,6 +83,14 @@ RUN_ENVIR="nco"
 # PARTITION_HPSS:
 # If using the slurm job scheduler (i.e. if SCHED is set to "slurm"), 
 # the partition to which the tasks that get or create links to external 
+# model files [which are needed to generate initial conditions (ICs) and 
+# lateral boundary conditions (LBCs)] are submitted.  If this is not set 
+# or is set to an empty string, it will be (re)set to a machine-dependent 
+# value.  This is not used if SCHED is not set to "slurm".
+#
+# CLUSTERS_HPSS:
+# If using the slurm job scheduler (i.e. if SCHED is set to "slurm"), 
+# the clusters to which the tasks that get or create links to external 
 # model files [which are needed to generate initial conditions (ICs) and 
 # lateral boundary conditions (LBCs)] are submitted.  If this is not set 
 # or is set to an empty string, it will be (re)set to a machine-dependent 
@@ -92,6 +110,13 @@ RUN_ENVIR="nco"
 # machine-dependent value.  This is not used if SCHED is not set to 
 # "slurm".
 #
+# CLUSTERS_FCST:
+# If using the slurm job scheduler (i.e. if SCHED is set to "slurm"), 
+# the clusters to which the task that runs forecasts is submitted.  If 
+# this is not set or set to an empty string, it will be (re)set to a 
+# machine-dependent value.  This is not used if SCHED is not set to 
+# "slurm".
+#
 # QUEUE_FCST:
 # The queue or QOS to which the task that runs a forecast is submitted.  
 # If this is not set or set to an empty string, it will be (re)set to a 
@@ -105,10 +130,13 @@ MACHINE="BIG_COMPUTER"
 ACCOUNT="project_name"
 SCHED=""
 PARTITION_DEFAULT=""
+CLUSTERS_DEFAULT=""
 QUEUE_DEFAULT=""
 PARTITION_HPSS=""
+CLUSTERS_HPSS=""
 QUEUE_HPSS=""
 PARTITION_FCST=""
+CLUSTERS_FCST=""
 QUEUE_FCST=""
 #
 #-----------------------------------------------------------------------

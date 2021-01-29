@@ -439,6 +439,18 @@ case $MACHINE in
     QUEUE_FCST=${QUEUE_FCST:-"normal"}
     ;;
 
+  "GAEA")
+    NCORES_PER_NODE=36
+    SCHED="slurm"
+    CLUSTERS_DEFAULT=${CLUSTERS_DEFAULT:-"c4"}
+    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
+    PARTITION_HPSS=${PARTITION_HPSS:-"rdtn"}
+    CLUSTERS_HPSS=${CLUSTERS_HPSS:-"es"}
+    QUEUE_HPSS=${QUEUE_HPSS:-"normal"}
+    CLUSTERS_FCST=${CLUSTERS_FCST:-"c4"}
+    QUEUE_FCST=${QUEUE_FCST:-"normal"}
+    ;;
+
 esac
 #
 #-----------------------------------------------------------------------
@@ -711,6 +723,12 @@ case $MACHINE in
     FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
+    ;;
+
+  "GAEA")
+    FIXgsm=${FIXgsm:-"/lustre/f2/pdata/esrl/gsd/ufs/ufs-srw-release-v1.0.0/fix"}
+    TOPO_DIR=${TOPO_DIR:-"/lustre/f2/pdata/esrl/gsd/ufs/ufs-srw-release-v1.0.0/fix/fix_orog"}
+    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lustre/f2/pdata/esrl/gsd/ufs/ufs-srw-release-v1.0.0/fix/sfc_climo"}
     ;;
 
   *)

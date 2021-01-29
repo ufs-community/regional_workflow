@@ -66,16 +66,22 @@ tasks; and the "FCST" type is used for the RUN_FCST_TN task.
 
 {%- if partition_default is not none %}
 <!ENTITY RSRV_DEFAULT "<account>&ACCOUNT;</account><queue>&QUEUE_DEFAULT;</queue><partition>{{ partition_default }}</partition>">
+{% elif clusters_default is not none %}
+<!ENTITY RSRV_DEFAULT "<account>&ACCOUNT;</account><queue>&QUEUE_DEFAULT;</queue><native>--clusters={{ clusters_default }}</native>">
 {%- else %}
 <!ENTITY RSRV_DEFAULT "<account>&ACCOUNT;</account><queue>&QUEUE_DEFAULT;</queue>">
 {%- endif %}
 {%- if partition_hpss is not none %}
 <!ENTITY RSRV_HPSS    "<account>&ACCOUNT;</account><queue>&QUEUE_HPSS;</queue><partition>{{ partition_hpss }}</partition>">
+{% elif clusters_hpss is not none %}
+<!ENTITY RSRV_HPSS    "<account>&ACCOUNT;</account><queue>&QUEUE_HPSS;</queue><native>--clusters={{ clusters_hpss }}</native>">
 {%- else %}
 <!ENTITY RSRV_HPSS    "<account>&ACCOUNT;</account><queue>&QUEUE_HPSS;</queue>">
 {%- endif %}
 {%- if partition_fcst is not none %}
 <!ENTITY RSRV_FCST    "<account>&ACCOUNT;</account><queue>&QUEUE_FCST;</queue><partition>{{ partition_fcst }}</partition>">
+{% elif clusters_fcst is not none %}
+<!ENTITY RSRV_FCST    "<account>&ACCOUNT;</account><queue>&QUEUE_FCST;</queue><native>--clusters={{ clusters_fcst }}</native>">
 {%- else %}
 <!ENTITY RSRV_FCST    "<account>&ACCOUNT;</account><queue>&QUEUE_FCST;</queue>">
 {%- endif %}

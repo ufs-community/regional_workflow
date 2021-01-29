@@ -126,6 +126,10 @@ case $MACHINE in
     OMP_NUM_THREADS=4
     ;;
 
+  "GAEA")
+    APRUN="srun"
+    ;;
+
   "ODIN")
     module list
     ulimit -s unlimited

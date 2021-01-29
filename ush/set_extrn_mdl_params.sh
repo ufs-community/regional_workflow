@@ -77,6 +77,9 @@ else
     "STAMPEDE")
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
       ;;
+    "GAEA")
+      EXTRN_MDL_SYSBASEDIR_ICS=""
+      ;;
     esac
     ;;
 
@@ -106,6 +109,9 @@ else
     "CHEYENNE")
       EXTRN_MDL_SYSBASEDIR_ICS="/glade/p/ral/jntp/UFS_SRW_app/COMGFS"
       ;;
+    "GAEA")
+      EXTRN_MDL_SYSBASEDIR_ICS=""
+      ;;
     esac
     ;;
 
@@ -123,6 +129,9 @@ else
     "CHEYENNE")
       EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
       ;;
+    "GAEA")
+      EXTRN_MDL_SYSBASEDIR_ICS=""
+      ;;
     esac
     ;;
 
@@ -139,6 +148,9 @@ else
       ;;
     "CHEYENNE")
       EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
+      ;;
+    "GAEA")
+      EXTRN_MDL_SYSBASEDIR_ICS=""
       ;;
     esac
     ;;
@@ -259,6 +271,9 @@ else
       ;;
     "STAMPEDE")
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001"
+      ;;
+    "GAEA")
+      EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;;
     esac
     ;;
