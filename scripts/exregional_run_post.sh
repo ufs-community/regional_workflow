@@ -286,7 +286,7 @@ mv_vrfy BGRD3D.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}.${tm
 # and hh are calculated above, i.e. start_date is just cdate but with a
 # space inserted between the dd and hh.  If so, just use "$yyyymmdd $hh"
 # instead of calling sed.
-start_date=$( echo "${cdate}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/' )
+start_date=$( echo "${cdate}" | $SED 's/\([[:digit:]]\{2\}\)$/ \1/' )
 basetime=$( $DATE_UTIL +%y%j%H%M -d "${start_date}" )
 ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}.${tmmark}.grib2 \
             ${postprd_dir}/BGDAWP_${basetime}f${fhr}00

@@ -453,7 +453,7 @@ fi
 # so that it can be used both here and in the exregional_make_orog.sh
 # script.
 res_equiv=$( ncdump -h "${grid_fp}" | \
-             grep -o ":RES_equiv = [0-9]\+" | sed 's/[^0-9]*//g' ) || \
+             grep -o ":RES_equiv = [0-9]\+" | $SED 's/[^0-9]*//g' ) || \
 print_err_msg_exit "\
 Attempt to extract the equivalent global uniform cubed-sphere grid reso-
 lution from the grid file (grid_fp) failed:

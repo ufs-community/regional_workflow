@@ -880,8 +880,8 @@ echo "$retval" >> "${tmp_fp}"
 # put to the "tee" command).  Then remove the temporary file.
 #
 if [ -f "${tmp_fp}" ]; then
-  exptdir=$( sed "1q;d" "${tmp_fp}" )
-  retval=$( sed "2q;d" "${tmp_fp}" )
+  exptdir=$( $SED "1q;d" "${tmp_fp}" )
+  retval=$( $SED "2q;d" "${tmp_fp}" )
   rm "${tmp_fp}"
 #
 # If the call to the generate_FV3LAM_wflow function above was success-
