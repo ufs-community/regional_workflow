@@ -106,6 +106,9 @@ elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
   module load xt-lsfhpc/9.1.3
   module use -a /usrx/local/emc_rocoto/modulefiles
   module load rocoto/1.2.4
+elif [ "$MACHINE" = "GAEA" ]; then
+  module use /lustre/f2/pdata/esrl/gsd/contrib/modulefiles
+  module load rocoto/1.3.3
 else
   module purge
   module load rocoto
