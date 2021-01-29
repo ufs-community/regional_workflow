@@ -732,8 +732,7 @@ machine (MACHINE):
       fi
     elif [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ]; then
-      EXTRN_MDL_NAME_ICS_LC=$(echo_lowercase $EXTRN_MDL_NAME_ICS)
-      EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS_LC}.out.for_f000" )
+      EXTRN_MDL_FILES_ICS=( "$(echo_lowercase $EXTRN_MDL_NAME_ICS).out.for_f000" )
     fi
 
     EXTRN_MDL_SOURCE_BASEDIR_LBCS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_LBCS}"
@@ -763,8 +762,7 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
       fi
     elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ]; then
-      extrn_mdl_name_lbcs_lcc=$(echo_lowercase $EXTRN_MDL_NAME_LBCS)
-      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${extrn_mdl_name_lbcs_lcc}.out.for_f}" )
+      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/$(echo_lowercase $EXTRN_MDL_NAME_LBCS).out.for_f}" )
     fi
 
     str=${str}"
