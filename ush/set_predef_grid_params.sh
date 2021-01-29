@@ -87,13 +87,13 @@ case ${PREDEF_GRID_NAME} in
   GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR="-97.5"
-  ESGgrid_LAT_CTR="38.5"
+  ESGgrid_LAT_CTR="38.55"
 
   ESGgrid_DELX="25000.0"
   ESGgrid_DELY="25000.0"
 
   ESGgrid_NX="202"
-  ESGgrid_NY="116"
+  ESGgrid_NY="117"
 
   ESGgrid_WIDE_HALO_WIDTH="6"
 
@@ -108,13 +108,13 @@ case ${PREDEF_GRID_NAME} in
     WRTCMP_write_tasks_per_group="2"
     WRTCMP_output_grid="lambert_conformal"
     WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
-    WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
-    WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
-    WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-    WRTCMP_nx="199"
-    WRTCMP_ny="111"
-    WRTCMP_lon_lwr_left="-121.23349066"
-    WRTCMP_lat_lwr_left="23.41731593"
+    WRTCMP_cen_lat="38.52"
+    WRTCMP_stdlat1="${WRTCMP_cen_lat}"
+    WRTCMP_stdlat2="${WRTCMP_cen_lat}"
+    WRTCMP_nx="201"
+    WRTCMP_ny="115"
+    WRTCMP_lon_lwr_left="-121.34461033"
+    WRTCMP_lat_lwr_left="22.95987123"
     WRTCMP_dx="${ESGgrid_DELX}"
     WRTCMP_dy="${ESGgrid_DELY}"
   fi
