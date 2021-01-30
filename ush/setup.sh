@@ -2017,15 +2017,14 @@ NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 #-----------------------------------------------------------------------
 #
 # Create a new experiment directory.  Note that at this point we are 
-# guaranteed that there is no preexisting experiment directory.
+# guaranteed that there is no preexisting experiment directory. For
+# platforms with no workflow manager, we need to create LOGDIR as well,
+# since it won't be created later at runtime.
 #
 #-----------------------------------------------------------------------
 #
 mkdir_vrfy -p "$EXPTDIR"
 mkdir_vrfy -p "$LOGDIR"
-
-
-
 
 
 
