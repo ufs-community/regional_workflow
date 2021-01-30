@@ -72,9 +72,9 @@ scrfunc_dir=$( dirname "${scrfunc_fp}" )
 exptdir=$( dirname "$0" )
 if [[ $(uname -s) == Darwin ]]; then
   command -v greadlink >/dev/null 2>&1 || { echo >&2 "For Darwin-based operating systems (MacOS), the 'greadlink' utility is required to run the UFS SRW Application. Reference the User's Guide for more information about platform requirements. Aborting."; exit 1; }
-  scrfunc_fp=$( greadlink -f "$exptdir" )
+  exptdir=$( greadlink -f "$exptdir" )
 else
-  scrfunc_fp=$( readlink -f "$exptdir" )
+  exptdir=$( readlink -f "$exptdir" )
 fi
 #
 #-----------------------------------------------------------------------
