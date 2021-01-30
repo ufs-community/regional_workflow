@@ -592,6 +592,9 @@ bination of external model (extrn_mdl_name) and analysis or forecast
     "STAMPEDE")
       sysdir="$sysbasedir"
       ;;
+    "GAEA")
+      sysdir=""
+      ;;
     *)
       if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
         print_err_msg_exit "\
@@ -631,6 +634,9 @@ has not been specified for this external model and machine combination:
     "STAMPEDE")
       sysdir="$sysbasedir"
       ;;
+    "GAEA")
+      sysdir="$sysbasedir"
+      ;;
     *)
       if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
         print_err_msg_exit "\
@@ -665,6 +671,12 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     "CHEYENNE")
+      sysdir="$sysbasedir"
+      ;;
+    "STAMPEDE")
+      sysdir="$sysbasedir"
+      ;;
+    "GAEA")
       sysdir="$sysbasedir"
       ;;
     *)
@@ -703,6 +715,12 @@ has not been specified for this external model and machine combination:
     "CHEYENNE")
       sysdir="$sysbasedir"
       ;;
+    "STAMPEDE")
+      sysdir="$sysbasedir"
+      ;;
+    "GAEA")
+      sysdir="$sysbasedir"
+      ;;
     *)
       if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
         print_err_msg_exit "\
@@ -736,6 +754,12 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     "CHEYENNE")
+      sysdir="$sysbasedir"
+      ;;
+    "STAMPEDE")
+      sysdir="$sysbasedir"
+      ;;
+    "GAEA")
       sysdir="$sysbasedir"
       ;;
     *)

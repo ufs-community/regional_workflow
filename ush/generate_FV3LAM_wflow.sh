@@ -170,10 +170,13 @@ settings="\
   'account': $ACCOUNT
   'sched': $SCHED
   'partition_default': ${PARTITION_DEFAULT}
+  'clusters_default': ${CLUSTERS_DEFAULT}
   'queue_default': ${QUEUE_DEFAULT}
   'partition_hpss': ${PARTITION_HPSS}
+  'clusters_hpss': ${CLUSTERS_HPSS}
   'queue_hpss': ${QUEUE_HPSS}
   'partition_fcst': ${PARTITION_FCST}
+  'clusters_fcst': ${CLUSTERS_FCST}
   'queue_fcst': ${QUEUE_FCST}
   'machine': ${MACHINE}
 #

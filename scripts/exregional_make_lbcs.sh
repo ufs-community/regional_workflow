@@ -103,6 +103,10 @@ case "$MACHINE" in
     APRUN="srun"
     ;;
 
+  "GAEA")
+    APRUN="srun"
+    ;;
+
   "ODIN")
     APRUN="srun"
     ;;

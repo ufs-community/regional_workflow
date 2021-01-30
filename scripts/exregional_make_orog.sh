@@ -133,6 +133,11 @@ case $MACHINE in
     export APRUN="time"
     ;;
 
+  "GAEA")
+    APRUN="time"
+    ulimit -a
+    ;;
+
   "ODIN")
     export APRUN="srun -n 1"
     ulimit -s unlimited
