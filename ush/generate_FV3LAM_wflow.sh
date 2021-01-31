@@ -363,7 +363,7 @@ if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ]; then
 #
 # Make a backup copy of the user's crontab file and save it in a file.
 #
-  time_stamp=$( date "+%F_%T" )
+  time_stamp=$( $DATE_UTIL "+%F_%T" )
   crontab_backup_fp="$EXPTDIR/crontab.bak.${time_stamp}"
   print_info_msg "
 Copying contents of user cron table to backup file:

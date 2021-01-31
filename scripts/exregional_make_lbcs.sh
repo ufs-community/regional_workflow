@@ -495,7 +495,7 @@ list file has not specified for this external model:
   dd="${EXTRN_MDL_CDATE:6:2}"
   hh="${EXTRN_MDL_CDATE:8:2}"
 
-  cdate_crnt_fhr=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours" "+%Y%m%d%H" )
+  cdate_crnt_fhr=$( $DATE_UTIL --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours" "+%Y%m%d%H" )
 #
 # Get the month, day, and hour corresponding to the current forecast time
 # of the the external model.
