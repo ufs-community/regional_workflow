@@ -9,7 +9,12 @@
 #
 #-----------------------------------------------------------------------
 #
-scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+if [[ $(uname -s) == Darwin ]]; then
+  command -v greadlink >/dev/null 2>&1 || { echo >&2 "For Darwin-based operating systems (MacOS), the 'greadlink' utility is required to run the UFS SRW Application. Reference the User's Guide for more information about platform requirements. Aborting."; exit 1; }
+  scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+else
+  scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+fi
 scrfunc_fn=$( basename "${scrfunc_fp}" )
 scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -150,7 +155,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-expts_list_fp=$( readlink -f "${expts_file}" )
+expts_list_fp=$( $READLINK -f "${expts_file}" )
 
 if [ ! -f "${expts_list_fp}" ]; then
   print_err_msg_exit "\
@@ -222,20 +227,20 @@ for (( i=0; i<=$((num_lines-1)); i++ )); do
 # all_lines.
 #
   all_lines[$i]=$( printf "%s" "${all_lines[$i]}" | \
-                   sed -r -e "s/^[ ]*//" -e "s/[ ]*$//" )
+                   $SED -r -e "s/^[ ]*//" -e "s/[ ]*$//" )
 #
 # Remove spaces before and after all field separators in the current
 # element of all_lines.  Note that we use the pipe symbol, "|", as the
 # field separator.
 #
   all_lines[$i]=$( printf "%s" "${all_lines[$i]}" | \
-                   sed -r -e "s/[ ]*${field_separator}[ ]*/${field_separator}/g" )
+                   $SED -r -e "s/[ ]*${field_separator}[ ]*/${field_separator}/g" )
 #
 # If the last character of the current line is a field separator, remove
 # it.
 #
   all_lines[$i]=$( printf "%s" "${all_lines[$i]}" | \
-                   sed -r -e "s/${field_separator}$//g" )
+                   $SED -r -e "s/${field_separator}$//g" )
 #
 # If after the processing above the current element of all_lines is not
 # empty, save it as the next element of expts_list.
@@ -286,9 +291,9 @@ Processing experiment \"${expts_list[$i]}\" ..."
 #
   regex_search="^([^${field_separator}]*)(${field_separator}(.*)|)"
   baseline_name=$( printf "%s" "${expts_list[$i]}" | \
-                   sed -r -n -e "s/${regex_search}/\1/p" )
+                   $SED -r -n -e "s/${regex_search}/\1/p" )
   remainder=$( printf "%s" "${expts_list[$i]}" | \
-               sed -r -n -e "s/${regex_search}/\3/p" )
+               $SED -r -n -e "s/${regex_search}/\3/p" )
 #
 # Get the names and corresponding values of the variables that need to
 # be modified in the current baseline to obtain the current experiment.
@@ -304,18 +309,18 @@ Processing experiment \"${expts_list[$i]}\" ..."
 # of remainder back into itself.
 #
     next_field=$( printf "%s" "$remainder" | \
-                  sed -r -e "s/${regex_search}/\1/" )
+                  $SED -r -e "s/${regex_search}/\1/" )
     remainder=$( printf "%s" "$remainder" | \
-                 sed -r -e "s/${regex_search}/\3/" )
+                 $SED -r -e "s/${regex_search}/\3/" )
 #
 # Save the name of the variable in the variable-value pair obtained
 # above in the array modvar_name.  Then save the value in the variable-
 # value pair in the array modvar_value.
 #
     modvar_name[${num_mod_vars}]=$( printf "%s" "${next_field}" | \
-                                    sed -r -e "s/^([^=]*)=(.*)/\1/" )
+                                    $SED -r -e "s/^([^=]*)=(.*)/\1/" )
     modvar_value[${num_mod_vars}]=$( printf "%s" "${next_field}" | \
-                                     sed -r -e "s/^([^=]*)=(\")?([^\"]+*)(\")?/\3/" )
+                                     $SED -r -e "s/^([^=]*)=(\")?([^\"]+*)(\")?/\3/" )
 #
 # Increment the index that keeps track of the number of variables that
 # need to be modified in the current baseline to obtain the current ex-
@@ -417,7 +422,7 @@ Please correct and rerun."
 #
 #-----------------------------------------------------------------------
 #
-  MACHINE="${machine^^}"
+  MACHINE=$(echo_uppercase $machine)
   ACCOUNT="${account}"
 
 # Note that if expt_basedir is a null (or unset) string, ${expt_basedir:+/} 
@@ -679,7 +684,7 @@ COMINgfs=\"${COMINgfs}\""
 #
 # Set STMP and PTMP.
 #
-    nco_basedir=$( readlink -f "$homerrfs/../../nco_dirs" )
+    nco_basedir=$( $READLINK -f "$homerrfs/../../nco_dirs" )
     STMP=${stmp:-"${nco_basedir}/stmp"}
     PTMP=${ptmp:-"${nco_basedir}/ptmp"}
 
@@ -729,7 +734,7 @@ machine (MACHINE):
       fi
     elif [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ]; then
-      EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
+      EXTRN_MDL_FILES_ICS=( "$(echo_lowercase $EXTRN_MDL_NAME_ICS).out.for_f000" )
     fi
 
     EXTRN_MDL_SOURCE_BASEDIR_LBCS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_LBCS}"
@@ -759,7 +764,7 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
       fi
     elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ]; then
-      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
+      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/$(echo_lowercase $EXTRN_MDL_NAME_LBCS).out.for_f}" )
     fi
 
     str=${str}"

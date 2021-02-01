@@ -37,7 +37,7 @@ function get_extrn_mdl_file_dir_info() {
 #
 #-----------------------------------------------------------------------
 #
-  local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+  local scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
   local scrfunc_fn=$( basename "${scrfunc_fp}" )
   local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -166,7 +166,7 @@ where the arguments are defined as follows:
  
   varname_extrn_mdl_sysdir:
   Name of the global variable that will contain the system directory in
-  which the externaml model output files may be stored.
+  which the external model output files may be stored.
  
   varname_extrn_mdl_arcv_fmt:
   Name of the global variable that will contain the format of the ar-
@@ -213,7 +213,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-  anl_or_fcst="${anl_or_fcst^^}"
+  anl_or_fcst=$(echo_uppercase $anl_or_fcst)
   valid_vals_anl_or_fcst=( "ANL" "FCST" )
   check_var_valid_value "anl_or_fcst" "valid_vals_anl_or_fcst"
 #
@@ -234,7 +234,7 @@ fi
   hh=${cdate_FV3LAM:8:2}
   yyyymmdd=${cdate_FV3LAM:0:8}
 
-  cdate=$( date --utc --date "${yyyymmdd} ${hh} UTC - ${time_offset_hrs} hours" "+%Y%m%d%H" )
+  cdate=$( $DATE_UTIL --utc --date "${yyyymmdd} ${hh} UTC - ${time_offset_hrs} hours" "+%Y%m%d%H" )
 #
 #-----------------------------------------------------------------------
 #
@@ -298,7 +298,7 @@ fi
 # Get the Julian day-of-year of the starting date and time of the exter-
 # nal model forecast.
 #
-    ddd=$( date --utc --date "${yyyy}-${mm}-${dd} ${hh}:${mn} UTC" "+%j" )
+    ddd=$( $DATE_UTIL --utc --date "${yyyy}-${mm}-${dd} ${hh}:${mn} UTC" "+%j" )
 #
 # Get the last two digits of the year of the starting date and time of 
 # the external model forecast.
@@ -559,6 +559,7 @@ bination of external model (extrn_mdl_name) and analysis or forecast
     sysbasedir="${EXTRN_MDL_SYSBASEDIR_LBCS}"
   fi
 
+  sysdir=""
   case "${extrn_mdl_name}" in
 
 #
@@ -595,11 +596,13 @@ bination of external model (extrn_mdl_name) and analysis or forecast
       sysdir=""
       ;;
     *)
-      print_err_msg_exit "\
+      if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+        print_err_msg_exit "\
 The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
+      fi
       ;;
     esac
     ;;
@@ -635,11 +638,13 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     *)
-      print_err_msg_exit "\
+      if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+        print_err_msg_exit "\
 The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
+      fi
       ;;
     esac
     ;;
@@ -675,11 +680,13 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     *)
-      print_err_msg_exit "\
+      if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+        print_err_msg_exit "\
 The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
+      fi
       ;;
     esac
     ;;
@@ -715,11 +722,13 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     *)
-      print_err_msg_exit "\
+      if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+        print_err_msg_exit "\
 The system directory in which to look for external model output files 
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
+      fi
       ;;
     esac
     ;;
@@ -754,22 +763,25 @@ has not been specified for this external model and machine combination:
       sysdir="$sysbasedir"
       ;;
     *)
-      print_err_msg_exit "\
+      if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+        print_err_msg_exit "\
 The system directory in which to look for external model output files
 has not been specified for this external model and machine combination:
   extrn_mdl_name = \"${extrn_mdl_name}\"
   MACHINE = \"$MACHINE\""
+      fi
       ;;
     esac
     ;;
 
 
   *)
-    print_err_msg_exit "\
+    if [ "${USE_USER_STAGED_EXTRN_FILES}" != "TRUE" ]; then
+      print_err_msg_exit "\
 The system directory in which to look for external model output files 
 has not been specified for this external model:
   extrn_mdl_name = \"${extrn_mdl_name}\""
-
+    fi
   esac
 #
 #-----------------------------------------------------------------------

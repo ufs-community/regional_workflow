@@ -35,7 +35,7 @@
 #
 #-----------------------------------------------------------------------
 #
-scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
 scrfunc_fn=$( basename "${scrfunc_fp}" )
 scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -146,6 +146,14 @@ case $MACHINE in
   "STAMPEDE")
     module list
     APRUN="ibrun -np ${PE_MEMBER01}"
+    ;;
+
+  "MACOS")
+    APRUN=$RUN_CMD_FCST
+    ;;
+
+  "LINUX")
+    APRUN=$RUN_CMD_FCST
     ;;
 
   *)
@@ -364,9 +372,9 @@ for (( i=0; i<${num_symlinks}; i++ )); do
 
   mapping="${CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING[$i]}"
   symlink=$( printf "%s\n" "$mapping" | \
-             sed -n -r -e "s/${regex_search}/\1/p" )
+             $SED -n -r -e "s/${regex_search}/\1/p" )
   target=$( printf "%s\n" "$mapping" | \
-            sed -n -r -e "s/${regex_search}/\2/p" )
+            $SED -n -r -e "s/${regex_search}/\2/p" )
 
   symlink="${run_dir}/$symlink"
   target="$FIXam/$target"

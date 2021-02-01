@@ -30,7 +30,7 @@ function set_thompson_mp_fix_files() {
 #
 #-----------------------------------------------------------------------
 #
-  local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+  local scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
   local scrfunc_fn=$( basename "${scrfunc_fp}" )
   local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -89,7 +89,7 @@ function set_thompson_mp_fix_files() {
 #
   thompson_mp_name="mp_thompson"
   regex_search="^[ ]*<scheme>(${thompson_mp_name})<\/scheme>[ ]*$"
-  thompson_mp_name_or_null=$( sed -r -n -e "s/${regex_search}/\1/p" "${ccpp_phys_suite_fp}" )
+  thompson_mp_name_or_null=$( $SED -r -n -e "s/${regex_search}/\1/p" "${ccpp_phys_suite_fp}" )
 
   if [ "${thompson_mp_name_or_null}" = "${thompson_mp_name}" ]; then
     thompson_mp_is_used="TRUE"
