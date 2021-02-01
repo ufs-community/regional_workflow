@@ -148,6 +148,9 @@ else
     "HERA")
       EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
       ;;
+    "CHEYENNE")
+      EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
+      ;;
     esac
     ;;
 
@@ -302,12 +305,18 @@ else
     "JET")
       EXTRN_MDL_SYSBASEDIR_LBCS="/misc/whome/rtrr/hrrr"
       ;;
+    "CHEYENNE")
+      EXTRN_MDL_SYSBASEDIR_LBCS="dummy_value"
+      ;;
     esac
     ;;
 
   "NAM")
     case $MACHINE in
     "HERA")
+      EXTRN_MDL_SYSBASEDIR_LBCS="dummy_value"
+      ;;
+    "CHEYENNE")
       EXTRN_MDL_SYSBASEDIR_LBCS="dummy_value"
       ;;
     esac
