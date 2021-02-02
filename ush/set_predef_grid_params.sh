@@ -87,17 +87,32 @@ case ${PREDEF_GRID_NAME} in
   GRID_GEN_METHOD="ESGgrid"
 
   ESGgrid_LON_CTR="-97.5"
-  ESGgrid_LAT_CTR="38.5"
+  ESGgrid_LAT_CTR="38.55"
 
   ESGgrid_DELX="25000.0"
   ESGgrid_DELY="25000.0"
 
   ESGgrid_NX="202"
-  ESGgrid_NY="116"
+  ESGgrid_NY="117"
 
   ESGgrid_WIDE_HALO_WIDTH="6"
-
-  DT_ATMOS="${DT_ATMOS:-300}"
+#
+# Make the default value of DT_ATMOS dependent on the suite.  For the 
+# FV3_GFS_v15p2 suite, tests indicate that 300 sec is stable.  For the
+# FV3_RRFS_v1alpha suite, tests indicate that 300 sec is unstable while
+# 40 sec is stable (although the 40 sec value is a guess; the upper limit
+# of DT_ATMOS for the FV3_RRFS_v1alpha suite has not been throughly 
+# explored).  For all other suites, set to 40 sec to be safe.  Note that
+# the user can override these default DT_ATMOS values via the experiment
+# configuration file (config.sh).
+#
+  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ]; then
+    DT_ATMOS="${DT_ATMOS:-300}"
+  elif [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ]; then
+    DT_ATMOS="${DT_ATMOS:-40}"
+  else
+    DT_ATMOS="${DT_ATMOS:-40}"
+  fi
 
   LAYOUT_X="${LAYOUT_X:-5}"
   LAYOUT_Y="${LAYOUT_Y:-2}"
@@ -108,13 +123,13 @@ case ${PREDEF_GRID_NAME} in
     WRTCMP_write_tasks_per_group="2"
     WRTCMP_output_grid="lambert_conformal"
     WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
-    WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
-    WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
-    WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-    WRTCMP_nx="199"
-    WRTCMP_ny="111"
-    WRTCMP_lon_lwr_left="-121.23349066"
-    WRTCMP_lat_lwr_left="23.41731593"
+    WRTCMP_cen_lat="38.52"
+    WRTCMP_stdlat1="${WRTCMP_cen_lat}"
+    WRTCMP_stdlat2="${WRTCMP_cen_lat}"
+    WRTCMP_nx="201"
+    WRTCMP_ny="115"
+    WRTCMP_lon_lwr_left="-121.34461033"
+    WRTCMP_lat_lwr_left="22.95987123"
     WRTCMP_dx="${ESGgrid_DELX}"
     WRTCMP_dy="${ESGgrid_DELY}"
   fi
