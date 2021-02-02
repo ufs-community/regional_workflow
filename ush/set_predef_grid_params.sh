@@ -96,8 +96,23 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NY="117"
 
   ESGgrid_WIDE_HALO_WIDTH="6"
-
-  DT_ATMOS="${DT_ATMOS:-300}"
+#
+# Make the default value of DT_ATMOS dependent on the suite.  For the 
+# FV3_GFS_v15p2 suite, tests indicate that 300 sec is stable.  For the
+# FV3_RRFS_v1alpha suite, tests indicate that 300 sec is unstable while
+# 40 sec is stable (although the 40 sec value is a guess; the upper limit
+# of DT_ATMOS for the FV3_RRFS_v1alpha suite has not been throughly 
+# explored).  For all other suites, set to 40 sec to be safe.  Note that
+# the user can override these default DT_ATMOS values via the experiment
+# configuration file (config.sh).
+#
+  if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15p2" ]; then
+    DT_ATMOS="${DT_ATMOS:-300}"
+  elif [ "${CCPP_PHYS_SUITE}" = "FV3_RRFS_v1alpha" ]; then
+    DT_ATMOS="${DT_ATMOS:-40}"
+  else
+    DT_ATMOS="${DT_ATMOS:-40}"
+  fi
 
   LAYOUT_X="${LAYOUT_X:-5}"
   LAYOUT_Y="${LAYOUT_Y:-2}"
