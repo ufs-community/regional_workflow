@@ -609,7 +609,7 @@ for fhr in fhours:
 
     cs_1 = plt.pcolormesh(lon_shift,lat_shift,cape,transform=transform,cmap=cm,vmin=100,norm=norm)
     cs_1.cmap.set_under('white',alpha=0.)
-    cs_1.cmap.set_over('darkviolet')
+    cs_1.cmap.set_over('black')
     cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,ticks=clevs,extend='max')
     cbar1.set_label(units,fontsize=8)
     cbar1.ax.tick_params(labelsize=8)
