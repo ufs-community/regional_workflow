@@ -237,9 +237,6 @@ FV3_GFS_v15p2:
     range_warn: False
     rf_cutoff: 750.0
     rf_fast: False
-    stretch_fac: 0.999
-    target_lat: 38.5
-    target_lon: -97.5
   gfdl_cloud_microphysics_nml:
     <<: *gfs_gfdl_cloud_mp
     sedi_transport: True
