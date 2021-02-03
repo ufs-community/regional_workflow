@@ -1031,18 +1031,17 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
       GWD_HRRRsuite_BASEDIR="${FIXLAM_NCO_BASEDIR}"
 
       if [ ! -z "${gwd_hrrrsuite_basedir_orig}" ]; then
-        msg="
+        print_err_msg_exit "
 When RUN_ENVIR is set to \"nco\", the workflow assumes that the base 
 directory (GWD_HRRRsuite_BASEDIR) under which the grid-specific 
-subdirectories containing the gravity wave drag-related orography files 
-for the FV3_HRRR suite are located is the same as the base directory 
-(FIXLAM_NCO_BASEDIR) under which the other fixed files are located.
-Currently, this is not the case:
+subdirectories containing the gravity wave drag-related orography 
+statistics files for the FV3_HRRR suite are located is the same as the 
+base directory (FIXLAM_NCO_BASEDIR) under which the other fixed files 
+are located.  Currently, this is not the case:
   GWD_HRRRsuite_BASEDIR = \"${gwd_hrrrsuite_basedir_orig}\"
   FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
 Resetting GWD_HRRRsuite_BASEDIR to FIXLAM_NCO_BASEDIR.  Reset value is:
-  GWD_HRRRsuite_BASEDIR = \"${GWD_HRRRsuite_BASEDIR}\"
-"
+  GWD_HRRRsuite_BASEDIR = \"${GWD_HRRRsuite_BASEDIR}\""
       fi
 
     fi
