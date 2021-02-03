@@ -603,7 +603,7 @@ for fhr in fhours:
     units = 'J/kg'
     clevs = [100,250,500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
     clevs2 = [-2000,-500,-250,-100,-25]
-    colorlist = ['blue','blue','dodgerblue','cyan','mediumspringgreen','#FAFAD2','#EEEE00','#EEC900','darkorange','crimson','darkred']
+    colorlist = ['blue','dodgerblue','cyan','mediumspringgreen','#FAFAD2','#EEEE00','#EEC900','darkorange','crimson','darkred','darkviolet']
     cm = matplotlib.colors.ListedColormap(colorlist)
     norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
