@@ -763,7 +763,7 @@ for fhr in fhours:
     clevs = [100,250,500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
     clevs2 = [-2000,-500,-250,-100,-25]
     clevsdiff = [-2000,-1500,-1000,-500,-250,-100,0,100,250,500,1000,1500,2000]
-    colorlist = ['blue','dodgerblue','cyan','mediumspringgreen','#FAFAD2','#EEEE00','#EEC900','darkorange','crimson','darkred']
+    colorlist = ['blue','blue','dodgerblue','cyan','mediumspringgreen','#FAFAD2','#EEEE00','#EEC900','darkorange','crimson','darkred']
     cm = matplotlib.colors.ListedColormap(colorlist)
     norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
     normdiff = matplotlib.colors.BoundaryNorm(clevsdiff, cmdiff.N)
