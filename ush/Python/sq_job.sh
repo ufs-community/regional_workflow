@@ -45,9 +45,11 @@ conda activate pygraf
 #Hera:
 SHAPE_FILES=/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/tools/NaturalEarth
 #Jet: 
+#SHAPE_FILES=/lfs4/BMC/wrfruc/FV3-LAM/NaturalEarth
 #Orion: 
 #SHAPE_FILES=/home/chjeon/tools/NaturalEarth
 #Gaea: 
+#SHAPE_FILES=/lustre/f2/pdata/esrl/gsd/ufs/NaturalEarth
 
 export GLOBAL_VAR_DEFNS_FP="${EXPTDIR}/var_defns.sh"
 source ${GLOBAL_VAR_DEFNS_FP}
