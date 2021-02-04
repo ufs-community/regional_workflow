@@ -11,7 +11,6 @@
 
 
 FV3_GSD_v0:
-  gfs_physics_nml:
 
 FV3_GSD_SAR: 
   gfs_physics_nml: &gsd_sar_phys
