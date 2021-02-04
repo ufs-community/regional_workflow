@@ -603,13 +603,13 @@ for fhr in fhours:
     units = 'J/kg'
     clevs = [100,250,500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
     clevs2 = [-2000,-500,-250,-100,-25]
-    colorlist = ['blue','dodgerblue','cyan','mediumspringgreen','#FAFAD2','#EEEE00','#EEC900','darkorange','crimson','darkred']
+    colorlist = ['blue','dodgerblue','cyan','mediumspringgreen','#FAFAD2','#EEEE00','#EEC900','darkorange','crimson','darkred','darkviolet']
     cm = matplotlib.colors.ListedColormap(colorlist)
     norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
 
     cs_1 = plt.pcolormesh(lon_shift,lat_shift,cape,transform=transform,cmap=cm,vmin=100,norm=norm)
     cs_1.cmap.set_under('white',alpha=0.)
-    cs_1.cmap.set_over('darkviolet')
+    cs_1.cmap.set_over('black')
     cbar1 = plt.colorbar(cs_1,orientation='horizontal',pad=0.05,shrink=0.6,ticks=clevs,extend='max')
     cbar1.set_label(units,fontsize=8)
     cbar1.ax.tick_params(labelsize=8)

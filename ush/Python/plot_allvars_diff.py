@@ -763,14 +763,14 @@ for fhr in fhours:
     clevs = [100,250,500,1000,1500,2000,2500,3000,3500,4000,4500,5000]
     clevs2 = [-2000,-500,-250,-100,-25]
     clevsdiff = [-2000,-1500,-1000,-500,-250,-100,0,100,250,500,1000,1500,2000]
-    colorlist = ['blue','dodgerblue','cyan','mediumspringgreen','#FAFAD2','#EEEE00','#EEC900','darkorange','crimson','darkred']
+    colorlist = ['blue','dodgerblue','cyan','mediumspringgreen','#FAFAD2','#EEEE00','#EEC900','darkorange','crimson','darkred','darkviolet']
     cm = matplotlib.colors.ListedColormap(colorlist)
     norm = matplotlib.colors.BoundaryNorm(clevs, cm.N)
     normdiff = matplotlib.colors.BoundaryNorm(clevsdiff, cmdiff.N)
 
     cs_1 = ax1.pcolormesh(lon_shift,lat_shift,cape_1,transform=transform,cmap=cm,vmin=100,norm=norm)
     cs_1.cmap.set_under('white',alpha=0.)
-    cs_1.cmap.set_over('darkviolet')
+    cs_1.cmap.set_over('black')
     cbar1 = plt.colorbar(cs_1,ax=ax1,orientation='horizontal',pad=0.05,shrink=0.6,ticks=clevs,extend='max')
     cbar1.set_label(units,fontsize=6)
     cbar1.ax.tick_params(labelsize=4)
@@ -779,7 +779,7 @@ for fhr in fhours:
 
     cs_2 = ax2.pcolormesh(lon2_shift,lat2_shift,cape_2,transform=transform,cmap=cm,vmin=100,norm=norm)
     cs_2.cmap.set_under('white',alpha=0.)
-    cs_2.cmap.set_over('darkviolet')
+    cs_2.cmap.set_over('black')
     cbar2 = plt.colorbar(cs_2,ax=ax2,orientation='horizontal',pad=0.05,shrink=0.6,ticks=clevs,extend='max')
     cbar2.set_label(units,fontsize=6)
     cbar2.ax.tick_params(labelsize=4)
