@@ -186,7 +186,7 @@ EXPT_SUBDIR=""
 # that will point to a subdirectory (having the name of the grid being
 # used) under this directory.  This variable should be set to a null 
 # string in this file, but it can be specified in the user-specified 
-# workflow configuration file (EXPT_CONFIG_FN)
+# workflow configuration file (EXPT_CONFIG_FN).
 #
 # STMP:
 # The beginning portion of the directory that will contain cycle-dependent
@@ -1307,7 +1307,7 @@ NUM_ENS_MEMBERS="1"
 #
 #-----------------------------------------------------------------------
 #
-# Set default stochastic physics options
+# Set default ad-hoc stochastic physics options.
 # For detailed documentation of these parameters, see:
 # https://stochastic-physics.readthedocs.io/en/ufs_public_release/namelist_options.html
 #
@@ -1330,6 +1330,30 @@ SKEB_TSCALE="21600" #Variable "skeb_tau" in input.nml
 SKEB_INT="3600" #Variable "skebint" in input.nml
 SKEB_VDOF="10"
 USE_ZMTNBLCK="false"
+#
+#-----------------------------------------------------------------------
+#
+# Set default SPP stochastic physics options.
+# Each SPP option is an array, applicable (in order) to the scheme/parameter
+# listed in SPP_VAR_LIST. Enter each value of the array in config.sh as 
+# shown below without commas or single quotes (e.g., SPP_VAR_LIST=
+# ( "pbl" "lsm" "mp" ). Both commas and single quotes will be added by
+# Jinja when creating the namelist.
+#
+# Note that SPP is currently only available for specific physics schemes 
+# used in the RAP/HRRR physics suite.  Users need to be aware of which SDF
+# is chosen when turning this option on. 
+#
+#-----------------------------------------------------------------------
+#
+DO_SPP="false"
+SPP_VAR_LIST=( "pbl" )
+SPP_MAG_LIST=( "0.2" ) #Variable "spp_prt_list" in input.nml
+SPP_LSCALE=( "150000.0" )
+SPP_TSCALE=( "21600.0" ) #Variable "spp_tau" in input.nml
+SPP_SIGTOP1=( "0.1" )
+SPP_SIGTOP2=( "0.025" )
+SPP_STDDEV_CUTOFF=( "1.5" )
 #
 #-----------------------------------------------------------------------
 # 
@@ -1374,3 +1398,24 @@ FVCOM_FILE="fvcom.nc"
 #------------------------------------------------------------------------
 #
 COMPILER="intel"
+#
+#-----------------------------------------------------------------------
+#
+# GWD_HRRRsuite_BASEDIR:
+# Temporary workflow variable specifies the base directory in which to 
+# look for certain fixed orography statistics files needed only by the 
+# gravity wave drag parameterization in the FV3_HRRR physics suite.  This 
+# variable is added in order to avoid including hard-coded paths in the 
+# workflow scripts.  Currently, the workflow simply copies the necessary 
+# files from a subdirectory under this directory (named according to the 
+# specified predefined grid) to the orography directory (OROG_DIR) under 
+# the experiment directory.  
+#
+# Note that this variable is only used when using the FV3_HRRR physics 
+# suite.  It should be removed from the workflow once there is a script 
+# or code available that generates these files for any grid.
+#
+#-----------------------------------------------------------------------
+#
+GWD_HRRRsuite_BASEDIR=""
+
