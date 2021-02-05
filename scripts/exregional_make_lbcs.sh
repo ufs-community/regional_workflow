@@ -385,7 +385,7 @@ for (( i=0; i<${num_fhrs}; i++ )); do
     ;;
   "FV3GFS")
     if [ "${FV3GFS_FILE_FMT_LBCS}" = "nemsio" ]; then
-      fn_atm_nemsio="${EXTRN_MDL_FNS[$i]}"
+      fn_atm="${EXTRN_MDL_FNS[$i]}"
     elif [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
       fn_grib2="${EXTRN_MDL_FNS[$i]}"
     fi
