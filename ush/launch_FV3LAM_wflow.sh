@@ -87,6 +87,14 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Source bash utility functions.
+#
+#-----------------------------------------------------------------------
+#
+. $USHDIR/source_util_funcs.sh
+#
+#-----------------------------------------------------------------------
+#
 # Set the name of the experiment.  We take this to be the name of the 
 # experiment subdirectory (i.e. the string after the last "/" in the 
 # full path to the experiment directory).
