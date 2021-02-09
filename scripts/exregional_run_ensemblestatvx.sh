@@ -118,6 +118,7 @@ export OBS_DIR
 export VAR
 export MODEL
 export NET
+export NUM_ENS_MEMBERS 
 
 #
 #-----------------------------------------------------------------------
