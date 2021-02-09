@@ -2,8 +2,8 @@
 {{ starttime.strftime("%Y %m %d %H %M %S") }}
 
 "grid_spec",              -1,  "months",  1, "days",  "time"
-"atmos_4xdaily",           6,  "hours",   1, "days",  "time"
 "atmos_static",           -1,  "hours",   1, "hours", "time"
+"atmos_4xdaily",           6,  "hours",   1, "days",  "time"
 "fv3_history",             1,  "years",   1, "hours", "time"
 "fv3_history2d",           1,  "years",   1, "hours", "time"
 
@@ -54,16 +54,18 @@
  "dynamics",  "t50",         "t50",        "atmos_4xdaily", "all", .false.,  "none", 2
  "dynamics",  "t10",         "t10",        "atmos_4xdaily", "all", .false.,  "none", 2
 ####
- "dynamics",  "h1000",       "h1000",      "atmos_4xdaily", "all", .false.,  "none", 2
- "dynamics",  "h850",        "h850",       "atmos_4xdaily", "all", .false.,  "none", 2
- "dynamics",  "h700",        "h700",       "atmos_4xdaily", "all", .false.,  "none", 2
- "dynamics",  "h500",        "h500",       "atmos_4xdaily", "all", .false.,  "none", 2
- "dynamics",  "h200",        "h200",       "atmos_4xdaily", "all", .false.,  "none", 2
- "dynamics",  "h100",        "h100",       "atmos_4xdaily", "all", .false.,  "none", 2
- "dynamics",  "h50",         "h50",        "atmos_4xdaily", "all", .false.,  "none", 2
- "dynamics",  "h10",         "h10",        "atmos_4xdaily", "all", .false.,  "none", 2
+ "dynamics",  "z1000",       "z1000",      "atmos_4xdaily", "all", .false.,  "none", 2
+ "dynamics",  "z850",        "z850",       "atmos_4xdaily", "all", .false.,  "none", 2
+ "dynamics",  "z700",        "z700",       "atmos_4xdaily", "all", .false.,  "none", 2
+ "dynamics",  "z500",        "z500",       "atmos_4xdaily", "all", .false.,  "none", 2
+ "dynamics",  "z200",        "z200",       "atmos_4xdaily", "all", .false.,  "none", 2
+ "dynamics",  "z100",        "z100",       "atmos_4xdaily", "all", .false.,  "none", 2
+ "dynamics",  "z50",         "z50",        "atmos_4xdaily", "all", .false.,  "none", 2
+ "dynamics",  "z10",         "z10",        "atmos_4xdaily", "all", .false.,  "none", 2
 ####
-#"dynamics",  "w1000",       "w1000",      "atmos_4xdaily", "all", .false.,  "none", 2
+# Note that w on the 1000mb surface (i.e. w1000) is not output in FV3 
+# (probably because the 1000mb surface intersects the topography in many
+# locations) and thus should not be included here.
  "dynamics",  "w850",        "w850",       "atmos_4xdaily", "all", .false.,  "none", 2
  "dynamics",  "w700",        "w700",       "atmos_4xdaily", "all", .false.,  "none", 2
  "dynamics",  "w500",        "w500",       "atmos_4xdaily", "all", .false.,  "none", 2
