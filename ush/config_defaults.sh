@@ -889,14 +889,11 @@ BLOCKSIZE=""
 #
 # QUILTING:
 # Flag that determines whether or not to use the write component for 
-# writing output files to disk.
-#
-# WRTCMP_write_groups:
-# The number of write groups (i.e. groups of MPI tasks) to use in the
-# write component.
-#
-# WRTCMP_write_tasks_per_group:
-# The number of MPI tasks to allocate for each write group.
+# writing forecast output files to disk.  Note that if this is set to 
+# "FALSE", the RUN_POST_TN (meta)task cannot be run because the Unified
+# Post Processor (UPP) code that this task calls cannot process the 
+# native grid.  In that case, the RUN_POST_TN (meta)task will be 
+# automatically removed from the rocoto workflow XML.                                                           
 #
 # PRINT_ESMF:
 # Flag for whether or not to output extra (debugging) information from
@@ -905,6 +902,13 @@ BLOCKSIZE=""
 # forecast model grid to the user-specified output grid (which is defined 
 # in the model configuration file MODEL_CONFIG_FN in the forecast's run 
 # directory).
+#
+# WRTCMP_write_groups:
+# The number of write groups (i.e. groups of MPI tasks) to use in the
+# write component.
+#
+# WRTCMP_write_tasks_per_group:
+# The number of MPI tasks to allocate for each write group.
 #
 #-----------------------------------------------------------------------
 #

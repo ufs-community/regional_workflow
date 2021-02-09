@@ -252,6 +252,11 @@ settings="\
   'run_task_make_orog': ${RUN_TASK_MAKE_OROG}
   'run_task_make_sfc_climo': ${RUN_TASK_MAKE_SFC_CLIMO}
 #
+# Flag that specifies whether the write-component (quilting) is being 
+# used to generate forecast output files.
+#
+  'quilting': ${QUILTING}
+#
 # Number of physical cores per node for the current machine.
 #
   'ncores_per_node': ${NCORES_PER_NODE}
