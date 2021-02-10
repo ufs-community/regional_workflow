@@ -1,14 +1,12 @@
 {{ starttime.strftime("%Y%m%d.%H") }}Z.{{ cres }}.32bit.non-hydro.regional
 {{ starttime.strftime("%Y %m %d %H %M %S") }}
 
-#output files
-"grid_spec",     -1,  "months",  1,  "days",   "time"
-"atmos_static",  -1,  "hours",   1,  "hours",  "time"
-#"atmos_4xdaily",  1,  "hours",   1,  "days",   "time"
-"fv3_history",    0,  "hours",   1,  "hours",  "time"
-"fv3_history2d",  0,  "hours",   1,  "hours",  "time"
-#"ref3D",          0,  "hours",   1,  "hours",  "time"
-#"maxmin2D",       1,  "hours",   1,  "hours",  "time"
+"grid_spec",       -1,  "months",  1,  "days",   "time"
+"atmos_static",    -1,  "hours",   1,  "hours",  "time"
+#"atmos_4xdaily",    6,  "hours",   1,  "hours",  "time"
+"fv3_history",      1,  "hours",   1,  "hours",  "time"
+"fv3_history2d",    1,  "hours",   1,  "hours",  "time"
+#"maxmin2D",         1,  "hours",   1,  "hours",  "time"
 
 #
 #=======================
