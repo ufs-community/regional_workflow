@@ -493,8 +493,17 @@ VERBOSE=\"${VERBOSE}\""
      [ ${RUN_TASK_MAKE_OROG} = "FALSE" ] || \
      [ ${RUN_TASK_MAKE_SFC_CLIMO} = "FALSE" ]; then
 
+# Note:
+# Now that the "grid", "orog", and "sfc_climo" sub-subdirectories under
+# pregen_basedir have been removed, we don't need the variable pregen_basedir
+# and can instead have the variable "pregen_dir" that gets set to 
+# ${pregen_basedir}/${PREDEF_GRID_NAME}, and pregen_dir can then be used
+# to set GRID_DIR, OROG_DIR, and/or SFC_CLIMO_DIR below.
+
     if [ "$MACHINE" = "HERA" ]; then
       pregen_basedir="/scratch2/BMC/det/FV3LAM_pregen"
+    elif [ "$MACHINE" = "JET" ]; then
+      pregen_basedir="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
       pregen_basedir="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen"
     else
@@ -510,19 +519,7 @@ specified for this machine (MACHINE):
 # Directory for pregenerated grid files.
 #
   if [ ${RUN_TASK_MAKE_GRID} = "FALSE" ]; then
-
-    GRID_DIR="${pregen_basedir}/grid/${PREDEF_GRID_NAME}"
-    if [ "$MACHINE" = "HERA" ]; then
-      GRID_DIR="/scratch2/BMC/det/FV3LAM_pregen/grid/${PREDEF_GRID_NAME}"
-    elif [ "$MACHINE" = "CHEYENNE" ]; then
-      GRID_DIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen/grid/${PREDEF_GRID_NAME}"
-    else
-      print_err_msg_exit "\
-The directory (GRID_DIR) in which the pregenerated grid files are located
-has not been specified for this machine (MACHINE):
-  MACHINE= \"${MACHINE}\""
-    fi
-
+    GRID_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}"
     str=${str}"
 #
 # Directory containing the pregenerated grid files.
@@ -534,18 +531,7 @@ GRID_DIR=\"${GRID_DIR}\""
 # Directory for pregenerated orography files.
 #
   if [ ${RUN_TASK_MAKE_OROG} = "FALSE" ]; then
-
-    if [ "$MACHINE" = "HERA" ]; then
-      OROG_DIR="/scratch2/BMC/det/FV3LAM_pregen/orog/${PREDEF_GRID_NAME}"
-    elif [ "$MACHINE" = "CHEYENNE" ]; then
-      OROG_DIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen/orog/${PREDEF_GRID_NAME}"
-    else
-      print_err_msg_exit "\
-The directory (OROG_DIR) in which the pregenerated grid files are located
-has not been specified for this machine (MACHINE):
-  MACHINE= \"${MACHINE}\""
-    fi
-
+    OROG_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}"
     str=${str}"
 #
 # Directory containing the pregenerated orography files.
@@ -557,23 +543,47 @@ OROG_DIR=\"${OROG_DIR}\""
 # Directory for pregenerated surface climatology files.
 #
   if [ ${RUN_TASK_MAKE_SFC_CLIMO} = "FALSE" ]; then
-
-    if [ "$MACHINE" = "HERA" ]; then
-      SFC_CLIMO_DIR="/scratch2/BMC/det/FV3LAM_pregen/sfc_climo/${PREDEF_GRID_NAME}"
-    elif [ "$MACHINE" = "CHEYENNE" ]; then
-      SFC_CLIMO_DIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen/sfc_climo/${PREDEF_GRID_NAME}"
-    else
-      print_err_msg_exit "\
-The directory (SFC_CLIMO_DIR) in which the pregenerated grid files are
-located has not been specified for this machine (MACHINE):
-  MACHINE= \"${MACHINE}\""
-    fi
-
+    SFC_CLIMO_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}"
     str=${str}"
 #
 # Directory containing the pregenerated surface climatology files.
 #
 SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
+
+  fi
+#
+#-----------------------------------------------------------------------
+#
+# If using the FV3_HRRR physics suite, set the base directory in which 
+# the pregenerated orography statistics files needed by the gravity wave 
+# drag parameterization in this suite are located.
+#
+#-----------------------------------------------------------------------
+#
+  if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
+
+    if [ "$MACHINE" = "HERA" ]; then
+      GWD_HRRRsuite_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"
+    elif [ "$MACHINE" = "JET" ]; then
+      GWD_HRRRsuite_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
+    elif [ "$MACHINE" = "CHEYENNE" ]; then
+      GWD_HRRRsuite_BASEDIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen"
+    else
+      print_err_msg_exit "\
+The base directory (GWD_HRRRsuite_BASEDIR) containing the pregenerated 
+orography statistics files needed by the gravity wave drag parameterization
+in the FV3_HRRR physics suite has not been specified for this machine 
+(MACHINE):
+  MACHINE= \"${MACHINE}\""
+    fi
+
+    str=${str}"
+#
+# Base directory containing the pregenerated orography statistics files 
+# needed by the gravity wave drag parameterization in the FV3_HRRR physics 
+# suite.
+#
+GWD_HRRRsuite_BASEDIR=\"${GWD_HRRRsuite_BASEDIR}\""
 
   fi
 #
@@ -628,23 +638,37 @@ SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
 #   \$PTMP/com/\$NET/\$RUN/\$RUN.\$yyyymmdd/\$hh
 #
 RUN=\"\${EXPT_SUBDIR}\"
-envir=\"\${EXPT_SUBDIR}\"
+envir=\"\${EXPT_SUBDIR}\""
 #
-# In NCO mode, the user must manually (e.g. after doing the build step)
-# create the symlink \"\${FIXrrfs}/fix_sar\" that points to EMC's FIXsar
-# directory on the machine.  For example, on hera, the symlink's target
-# needs to be
+# Set FIXLAM_NCO_BASEDIR.
 #
-#   /scratch2/NCEPDEV/fv3-cam/emc.campara/fix_fv3cam/fix_sar
+    if [ "$MACHINE" = "HERA" ]; then
+      FIXLAM_NCO_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"
+    elif [ "$MACHINE" = "JET" ]; then
+      FIXLAM_NCO_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
+    elif [ "$MACHINE" = "CHEYENNE" ]; then
+      FIXLAM_NCO_BASEDIR="/needs/to/be/specified"
+    else
+      print_err_msg_exit "\
+The base directory (FIXLAM_NCO_BASEDIR) in which the pregenerated grid, 
+orography, and surface climatology \"fixed\" files used in NCO mode are 
+located has not been specified for this machine (MACHINE):
+  MACHINE= \"${MACHINE}\""
+    fi
+
+    str=${str}"
 #
-# The experiment generation script will then set FIXsar to
+# The base directory in which the pregenerated grid, orography, and surface 
+# climatology \"fixed\" files used in NCO mode are located.  In NCO mode,
+# the workflow scripts will create symlinks (in the directory specified 
+# by FIXLAM) to files in a subdirectory under FIXLAM_NCO_BASDEDIR, where
+# the name of the subdirectory is the name of the predefined grid specified 
+# by PREDEF_GRID_NAME.
 #
-#   FIXsar=\"\${FIXrrfs}/fix_sar/\${PREDEF_GRID_NAME}\"
+FIXLAM_NCO_BASEDIR=\"${FIXLAM_NCO_BASEDIR}\""
 #
-# where PREDEF_GRID_NAME has the value set above.
-#"
-#
-# Set COMINgfs.
+# Set COMINgfs if using the FV3GFS or the GSMGFS as the external model 
+# for ICs or LBCs.
 #
     if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
        [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ] || \
@@ -727,6 +751,8 @@ machine (MACHINE):
     elif [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ]; then
       EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
+    elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ]; then
+      EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
     fi
 
     EXTRN_MDL_SOURCE_BASEDIR_LBCS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_LBCS}"
@@ -748,14 +774,16 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
     EXTRN_MDL_FILES_LBCS=( $( printf "%03d " "${lbc_spec_times_hrs[@]}" ) ) 
     if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
        [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then
-      if [ "${FV3GFS_FILE_FMT_ICS}" = "nemsio" ]; then
+      if [ "${FV3GFS_FILE_FMT_LBCS}" = "nemsio" ]; then
         EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/gfs.atmf}" )
         EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/%/.nemsio}" )
-      elif [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
+      elif [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
         EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/gfs.pgrb2.0p25.f}" )
       fi
     elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ]; then
+      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
+    elif [ "${EXTRN_MDL_NAME_LBCS}" = "NAM" ]; then
       EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
     fi
 

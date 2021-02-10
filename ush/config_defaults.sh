@@ -175,6 +175,19 @@ EXPT_SUBDIR=""
 #
 #   $COMINgfs/gfs.$yyyymmdd/$hh
 #
+# FIXLAM_NCO_BASEDIR:
+# The base directory containing pregenerated grid, orography, and surface 
+# climatology files.  For the pregenerated grid specified by PREDEF_GRID_NAME, 
+# these "fixed" files are located in:
+#
+#   ${FIXLAM_NCO_BASEDIR}/${PREDEF_GRID_NAME}
+#
+# The workflow scripts will create a symlink in the experiment directory
+# that will point to a subdirectory (having the name of the grid being
+# used) under this directory.  This variable should be set to a null 
+# string in this file, but it can be specified in the user-specified 
+# workflow configuration file (EXPT_CONFIG_FN).
+#
 # STMP:
 # The beginning portion of the directory that will contain cycle-dependent
 # model input files, symlinks to cycle-independent input files, and raw 
@@ -214,6 +227,7 @@ EXPT_SUBDIR=""
 #-----------------------------------------------------------------------
 #
 COMINgfs="/base/path/of/directory/containing/gfs/input/files"
+FIXLAM_NCO_BASEDIR=""
 STMP="/base/path/of/directory/containing/model/input/and/raw/output/files"
 NET="rrfs"
 envir="para"
@@ -330,7 +344,7 @@ FV3_NML_YAML_CONFIG_FN="FV3.input.yml"
 FV3_NML_BASE_ENS_FN="input.nml.base_ens"
 MODEL_CONFIG_FN="model_configure"
 NEMS_CONFIG_FN="nems.configure"
-FV3_EXEC_FN="fv3_gfs.x"
+FV3_EXEC_FN="ufs_model"
 
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
@@ -415,10 +429,12 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 # Set NOMADS online data associated parameters. Definitions:
 #
 # NOMADS:
-# Flag controlling whether or not using NOMADS online data
+# Flag controlling whether or not using NOMADS online data.
 #
-# NOMADS_file_type
-# Flag controlling the format of data
+# NOMADS_file_type:
+# Flag controlling the format of data.
+#
+#-----------------------------------------------------------------------
 #
 NOMADS="FALSE"
 NOMADS_file_type="nemsio"
@@ -476,7 +492,7 @@ EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
 #
 #-----------------------------------------------------------------------
 #
-CCPP_PHYS_SUITE="FV3_GSD_v0"
+CCPP_PHYS_SUITE="FV3_GFS_v15p2"
 #
 #-----------------------------------------------------------------------
 #
@@ -496,13 +512,26 @@ CCPP_PHYS_SUITE="FV3_GSD_v0"
 #   This will generate a regional grid using the map projection developed
 #   by Jim Purser of EMC.
 #
-# Note that if using a predefined grid (PREDEDF_GRID_NAME set to a valid
-# non-empty value), this parameter is overwritten by the method used to
-# generate that grid.  
+# Note that:
+#
+# 1) If the experiment is using one of the predefined grids (i.e. if 
+#    PREDEF_GRID_NAME is set to the name of one of the valid predefined 
+#    grids), then GRID_GEN_METHOD will be reset to the value of 
+#    GRID_GEN_METHOD for that grid.  This will happen regardless of 
+#    whether or not GRID_GEN_METHOD is assigned a value in the user-
+#    specified experiment configuration file, i.e. any value it may be
+#    assigned in the experiment configuration file will be overwritten.
+#
+# 2) If the experiment is not using one of the predefined grids (i.e. if 
+#    PREDEF_GRID_NAME is set to a null string), then GRID_GEN_METHOD must 
+#    be set in the experiment configuration file.  Otherwise, it will 
+#    remain set to a null string, and the experiment generation will 
+#    fail because the generation scripts check to ensure that it is set 
+#    to a non-empty string before creating the experiment directory.
 #
 #-----------------------------------------------------------------------
 #
-GRID_GEN_METHOD="ESGgrid"
+GRID_GEN_METHOD=""
 #
 #-----------------------------------------------------------------------
 #
@@ -642,18 +671,46 @@ GRID_GEN_METHOD="ESGgrid"
 # in the file names, so we allow for that here by setting this flag to
 # "TRUE".
 #
+# Note that:
+#
+# 1) If the experiment is using one of the predefined grids (i.e. if 
+#    PREDEF_GRID_NAME is set to the name of one of the valid predefined
+#    grids), then:
+#
+#    a) If the value of GRID_GEN_METHOD for that grid is "GFDLgrid", then
+#       these parameters will get reset to the values for that grid.  
+#       This will happen regardless of whether or not they are assigned 
+#       values in the user-specified experiment configuration file, i.e. 
+#       any values they may be assigned in the experiment configuration 
+#       file will be overwritten.
+#
+#    b) If the value of GRID_GEN_METHOD for that grid is "ESGgrid", then
+#       these parameters will not be used and thus do not need to be reset
+#       to non-empty strings.
+#
+# 2) If the experiment is not using one of the predefined grids (i.e. if 
+#    PREDEF_GRID_NAME is set to a null string), then:
+#
+#    a) If GRID_GEN_METHOD is set to "GFDLgrid" in the user-specified 
+#       experiment configuration file, then these parameters must be set
+#       in that configuration file.
+#
+#    b) If GRID_GEN_METHOD is set to "ESGgrid" in the user-specified 
+#       experiment configuration file, then these parameters will not be 
+#       used and thus do not need to be reset to non-empty strings.
+#
 #-----------------------------------------------------------------------
 #
-GFDLgrid_LON_T6_CTR=-97.5
-GFDLgrid_LAT_T6_CTR=35.5
-GFDLgrid_RES="384"
-GFDLgrid_STRETCH_FAC=1.5
-GFDLgrid_REFINE_RATIO=3
-GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=10
-GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=374
-GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=10
-GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=374
-GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="TRUE"
+GFDLgrid_LON_T6_CTR=""
+GFDLgrid_LAT_T6_CTR=""
+GFDLgrid_RES=""
+GFDLgrid_STRETCH_FAC=""
+GFDLgrid_REFINE_RATIO=""
+GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=""
+GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=""
+GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=""
+GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=""
+GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES=""
 #
 #-----------------------------------------------------------------------
 #
@@ -697,59 +754,90 @@ GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="TRUE"
 # 4-cell-wide halos that we will eventually end up with.  Note that the
 # grid and orography files with the wide halo are only needed as intermediates
 # in generating the files with 0-cell-, 3-cell-, and 4-cell-wide halos;
-# they are not needed by the forecast model.  Usually, there is no reason
-# to change this parameter from its default value set here.
+# they are not needed by the forecast model.  
+# NOTE: Probably don't need to make ESGgrid_WIDE_HALO_WIDTH a user-specified 
+#       variable.  Just set it in the function set_gridparams_ESGgrid.sh.
 #
-#   NOTE: Probably don't need to make this a user-specified variable.  
-#         Just set it in the function set_gridparams_ESGgrid.sh.
+# Note that:
 #
-#-----------------------------------------------------------------------
+# 1) If the experiment is using one of the predefined grids (i.e. if 
+#    PREDEF_GRID_NAME is set to the name of one of the valid predefined
+#    grids), then:
 #
-ESGgrid_LON_CTR="-97.5"
-ESGgrid_LAT_CTR="35.5"
-ESGgrid_DELX="3000.0"
-ESGgrid_DELY="3000.0"
-ESGgrid_NX="1000"
-ESGgrid_NY="1000"
-ESGgrid_WIDE_HALO_WIDTH="6"
+#    a) If the value of GRID_GEN_METHOD for that grid is "GFDLgrid", then
+#       these parameters will not be used and thus do not need to be reset
+#       to non-empty strings.
 #
-#-----------------------------------------------------------------------
+#    b) If the value of GRID_GEN_METHOD for that grid is "ESGgrid", then
+#       these parameters will get reset to the values for that grid.  
+#       This will happen regardless of whether or not they are assigned 
+#       values in the user-specified experiment configuration file, i.e. 
+#       any values they may be assigned in the experiment configuration 
+#       file will be overwritten.
 #
-# Set DT_ATMOS.  This is the main forecast model integraton time step.  
-# As described in the forecast model documentation, "It corresponds to
-# the frequency with which the top level routine in the dynamics is called
-# as well as the frequency with which the physics is called."
+# 2) If the experiment is not using one of the predefined grids (i.e. if 
+#    PREDEF_GRID_NAME is set to a null string), then:
 #
-#-----------------------------------------------------------------------
+#    a) If GRID_GEN_METHOD is set to "GFDLgrid" in the user-specified 
+#       experiment configuration file, then these parameters will not be 
+#       used and thus do not need to be reset to non-empty strings.
 #
-DT_ATMOS="18"
-#
-#-----------------------------------------------------------------------
-#
-# Set LAYOUT_X and LAYOUT_Y.  These are the number of MPI tasks (processes)
-# to use in the two horizontal directions (x and y) of the regional grid
-# when running the forecast model.
-#
-#-----------------------------------------------------------------------
-#
-LAYOUT_X="20"
-LAYOUT_Y="20"
+#    b) If GRID_GEN_METHOD is set to "ESGgrid" in the user-specified 
+#       experiment configuration file, then these parameters must be set
+#       in that configuration file.
 #
 #-----------------------------------------------------------------------
 #
-# Set BLOCKSIZE.  This is the amount of data that is passed into the cache
-# at a time.  The number of vertical columns per MPI task needs to be 
-# divisible by BLOCKSIZE; otherwise, unexpected results may occur.
-#
-# GSK: IMPORTANT NOTE:
-# I think Dom fixed the code so that the number of columns per MPI task
-# no longer needs to be divisible by BLOCKSIZE.  If so, remove the check
-# on blocksize in the experiment generation scripts.  Note that BLOCKSIZE
-# still needs to be set to a value (probably machine-dependent).
+ESGgrid_LON_CTR=""
+ESGgrid_LAT_CTR=""
+ESGgrid_DELX=""
+ESGgrid_DELY=""
+ESGgrid_NX=""
+ESGgrid_NY=""
+ESGgrid_WIDE_HALO_WIDTH=""
 #
 #-----------------------------------------------------------------------
 #
-BLOCKSIZE="24"
+# Set computational parameters for the forecast.  Definitions:
+#
+# DT_ATMOS:
+# The main forecast model integraton time step.  As described in the 
+# forecast model documentation, "It corresponds to the frequency with 
+# which the top level routine in the dynamics is called as well as the 
+# frequency with which the physics is called."
+#
+# LAYOUT_X, LAYOUT_Y:
+# The number of MPI tasks (processes) to use in the two horizontal 
+# directions (x and y) of the regional grid when running the forecast 
+# model.
+#
+# BLOCKSIZE:
+# The amount of data that is passed into the cache at a time.
+#
+# Here, we set these parameters to null strings.  This is so that, for 
+# any one of these parameters:
+#
+# 1) If the experiment is using a predefined grid, then if the user 
+#    sets the parameter in the user-specified experiment configuration 
+#    file (EXPT_CONFIG_FN), that value will be used in the forecast(s).
+#    Otherwise, the default value of the parameter for that predefined 
+#    grid will be used.
+#
+# 2) If the experiment is not using a predefined grid (i.e. it is using
+#    a custom grid whose parameters are specified in the experiment 
+#    configuration file), then the user must specify a value for the 
+#    parameter in that configuration file.  Otherwise, the parameter 
+#    will remain set to a null string, and the experiment generation 
+#    will fail because the generation scripts check to ensure that all 
+#    the parameters defined in this section are set to non-empty strings
+#    before creating the experiment directory.
+#
+#-----------------------------------------------------------------------
+#
+DT_ATMOS=""
+LAYOUT_X=""
+LAYOUT_Y=""
+BLOCKSIZE=""
 #
 #-----------------------------------------------------------------------
 #
@@ -768,11 +856,11 @@ BLOCKSIZE="24"
 #
 # PRINT_ESMF:
 # Flag for whether or not to output extra (debugging) information from
-# ESMF routines.  Must be ".true." or ".false.".  Note that the write
+# ESMF routines.  Must be "TRUE" or "FALSE".  Note that the write
 # component uses ESMF library routines to interpolate from the native
-# forecast model grid to the user-specified output grid (which is defined in the
-# model configuration file MODEL_CONFIG_FN in the forecast's run direc-
-# tory).
+# forecast model grid to the user-specified output grid (which is defined 
+# in the model configuration file MODEL_CONFIG_FN in the forecast's run 
+# directory).
 #
 #-----------------------------------------------------------------------
 #
@@ -811,21 +899,30 @@ WRTCMP_dy=""
 # Set PREDEF_GRID_NAME.  This parameter specifies a predefined regional
 # grid, as follows:
 #
-# * If PREDEF_GRID_NAME is set to an empty string, the grid generation
-#   method (GRID_GEN_METHOD), grid parameters, time step (DT_ATMOS), 
-#   computational parameters (e.g. LAYOUT_X, LAYOUT_Y), and write component 
-#   parameters set above (and possibly overwritten by values in the user-
-#   specified workflow configuration file) are used.
-#
 # * If PREDEF_GRID_NAME is set to a valid predefined grid name, the grid 
-#   generation method (GRID_GEN_METHOD), grid parameters, time step 
-#   (DT_ATMOS), computational parameters (e.g. LAYOUT_X, LAYOUT_Y), and 
-#   write component parameters set above (and possibly overwritten by 
-#   values in the user-specified workflow configuration file) are overwritten 
-#   by predefined values for the specified grid.
+#   generation method GRID_GEN_METHOD, the (native) grid parameters, and 
+#   the write-component grid parameters are set to predefined values for 
+#   the specified grid, overwriting any settings of these parameters in 
+#   the user-specified experiment configuration file.  In addition, if 
+#   the time step DT_ATMOS and the computational parameters LAYOUT_X, 
+#   LAYOUT_Y, and BLOCKSIZE are not specified in that configuration file, 
+#   they are also set to predefined values for the specified grid.
 #
-# This is simply a convenient way to quickly specify a set of parameters
-# that depend on the grid.
+# * If PREDEF_GRID_NAME is set to an empty string, it implies the user
+#   is providing the native grid parameters in the user-specified 
+#   experiment configuration file (EXPT_CONFIG_FN).  In this case, the 
+#   grid generation method GRID_GEN_METHOD, the native grid parameters, 
+#   and the write-component grid parameters as well as the time step 
+#   forecast model's main time step DT_ATMOS and the computational 
+#   parameters LAYOUT_X, LAYOUT_Y, and BLOCKSIZE must be set in that 
+#   configuration file; otherwise, the values of all of these parameters 
+#   in this default experiment configuration file will be used.
+#
+# Setting PREDEF_GRID_NAME provides a convenient method of specifying a
+# commonly used set of grid-dependent parameters.  The predefined grid 
+# parameters are specified in the script 
+#
+#   $HOMErrfs/ush/set_predef_grid_params.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -1210,7 +1307,7 @@ NUM_ENS_MEMBERS="1"
 #
 #-----------------------------------------------------------------------
 #
-# Set default stochastic physics options
+# Set default ad-hoc stochastic physics options.
 # For detailed documentation of these parameters, see:
 # https://stochastic-physics.readthedocs.io/en/ufs_public_release/namelist_options.html
 #
@@ -1233,6 +1330,30 @@ SKEB_TSCALE="21600" #Variable "skeb_tau" in input.nml
 SKEB_INT="3600" #Variable "skebint" in input.nml
 SKEB_VDOF="10"
 USE_ZMTNBLCK="false"
+#
+#-----------------------------------------------------------------------
+#
+# Set default SPP stochastic physics options.
+# Each SPP option is an array, applicable (in order) to the scheme/parameter
+# listed in SPP_VAR_LIST. Enter each value of the array in config.sh as 
+# shown below without commas or single quotes (e.g., SPP_VAR_LIST=
+# ( "pbl" "lsm" "mp" ). Both commas and single quotes will be added by
+# Jinja when creating the namelist.
+#
+# Note that SPP is currently only available for specific physics schemes 
+# used in the RAP/HRRR physics suite.  Users need to be aware of which SDF
+# is chosen when turning this option on. 
+#
+#-----------------------------------------------------------------------
+#
+DO_SPP="false"
+SPP_VAR_LIST=( "pbl" )
+SPP_MAG_LIST=( "0.2" ) #Variable "spp_prt_list" in input.nml
+SPP_LSCALE=( "150000.0" )
+SPP_TSCALE=( "21600.0" ) #Variable "spp_tau" in input.nml
+SPP_SIGTOP1=( "0.1" )
+SPP_SIGTOP2=( "0.025" )
+SPP_STDDEV_CUTOFF=( "1.5" )
 #
 #-----------------------------------------------------------------------
 # 
@@ -1277,3 +1398,24 @@ FVCOM_FILE="fvcom.nc"
 #------------------------------------------------------------------------
 #
 COMPILER="intel"
+#
+#-----------------------------------------------------------------------
+#
+# GWD_HRRRsuite_BASEDIR:
+# Temporary workflow variable specifies the base directory in which to 
+# look for certain fixed orography statistics files needed only by the 
+# gravity wave drag parameterization in the FV3_HRRR physics suite.  This 
+# variable is added in order to avoid including hard-coded paths in the 
+# workflow scripts.  Currently, the workflow simply copies the necessary 
+# files from a subdirectory under this directory (named according to the 
+# specified predefined grid) to the orography directory (OROG_DIR) under 
+# the experiment directory.  
+#
+# Note that this variable is only used when using the FV3_HRRR physics 
+# suite.  It should be removed from the workflow once there is a script 
+# or code available that generates these files for any grid.
+#
+#-----------------------------------------------------------------------
+#
+GWD_HRRRsuite_BASEDIR=""
+

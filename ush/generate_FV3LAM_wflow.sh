@@ -311,31 +311,6 @@ are:
   Namelist settings specified on command line:
     settings =
 $settings"
-
-task_names=( "${MAKE_GRID_TN}" "${MAKE_OROG_TN}" "${MAKE_SFC_CLIMO_TN}" "${MAKE_ICS_TN}" "${MAKE_LBCS_TN}" "${RUN_FCST_TN}" )
-#
-# Only some platforms build EMC_post using modules, and some machines 
-# require a different EMC_post modulefile name.
-#
-#if [ "${MACHINE}" = "CHEYENNE" ]; then
-#  print_info_msg "No post modulefile needed for ${MACHINE}"
-#elif [ "${MACHINE}" = "WCOSS_CRAY" ]; then
-#  cp_vrfy -f "${EMC_POST_DIR}/modulefiles/post/v8.0.0-cray-intel" "${RUN_POST_TN}"
-#  cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${RUN_POST_TN}"
-#  task_names+=("${RUN_POST_TN}")
-#else
-#  cp_vrfy -f "${SR_WX_APP_TOP_DIR}/docs/README_${machine}_intel.txt" "${RUN_POST_TN}"
-#  task_names+=("${RUN_POST_TN}")
-#fi
-
-#for task in "${task_names[@]}"; do
-#  modulefile_local="${task}.local"
-#  if [ -f ${modulefile_local} ]; then
-#    cat "${modulefile_local}" >> "${task}"
-#  fi
-#done
-
-#cd_vrfy -
 #
 #-----------------------------------------------------------------------
 #
@@ -416,16 +391,39 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Copy fixed files from system directory to the FIXam directory (which
-# is under the experiment directory).  Note that some of these files get
-# renamed during the copy process.
+# Create the FIXam directory under the experiment directory.  In NCO mode,
+# this will be a symlink to the directory specified in FIXgsm, while in
+# community mode, it will be an actual directory with files copied into
+# it from FIXgsm.
 #
 #-----------------------------------------------------------------------
 #
+# First, consider NCO mode.
+#
+if [ "${RUN_ENVIR}" = "nco" ]; then
 
-# In NCO mode, we assume the following copy operation is done beforehand,
-# but that can be changed.
-if [ "${RUN_ENVIR}" != "nco" ]; then
+  ln_vrfy -fsn "$FIXgsm" "$FIXam"
+#
+# Resolve the target directory that the FIXam symlink points to and check 
+# that it exists.
+#
+  path_resolved=$( readlink -m "$FIXam" )
+  if [ ! -d "${path_resolved}" ]; then
+    print_err_msg_exit "\
+In order to be able to generate a forecast experiment in NCO mode (i.e.
+when RUN_ENVIR set to \"nco\"), the path specified by FIXam after resolving
+all symlinks (path_resolved) must be an existing directory (but in this
+case isn't):
+  RUN_ENVIR = \"${RUN_ENVIR}\"
+  FIXam = \"$FIXam\"
+  path_resolved = \"${path_resolved}\"
+Please ensure that path_resolved is an existing directory and then rerun
+the experiment generation script."
+  fi
+#
+# Now consider community mode.
+#
+else
 
   print_info_msg "$VERBOSE" "
 Copying fixed files from system directory (FIXgsm) to a subdirectory
@@ -478,68 +476,6 @@ cp_vrfy "${CCPP_PHYS_SUITE_IN_CCPP_FP}" "${CCPP_PHYS_SUITE_FP}"
 #
 #-----------------------------------------------------------------------
 #
-# Copy the forecast model executable from its location in the directory
-# in which the forecast model repository was cloned (UFS_WTHR_MDL_DIR)
-# to the executables directory (EXECDIR).
-#
-# Note that if there is already an experiment that is running the forecast
-# task (so that the forecast model executable in EXECDIR is in use) and
-# the user tries to generate another experiment, the generation of this
-# second experiment will fail because the operating system won't allow
-# the existing executable in EXECDIR to be overwritten (because it is
-# "busy", i.e. in use by the first experiment).  For this reason, below,
-# we try to prevent this situation by comparing the ages of the source
-# and target executables and attempting the copy only if the source one
-# is newer (or if the target doesn't exist).  This will very likely prevent
-# the situation described above, but it doesn't guarantee that it will
-# never happen (it will still happen if an experiment is running a forecast
-# while the user rebuilts the forecast model and attempts to generate a
-# new experiment.  For this reason, this copy operation should really be
-# performed duirng the build step, not here.
-#
-# Question:
-# Why doesn't the build script(s) perform this action?  It should...
-#
-#-----------------------------------------------------------------------
-#
-exec_fn="NEMS.exe"
-exec_fp="${SR_WX_APP_TOP_DIR}/bin/${exec_fn}"
-#Check for the old build location for fv3 executable
-if [ ! -f "${exec_fp}" ]; then
-  exec_fp_alt="${UFS_WTHR_MDL_DIR}/build/${exec_fn}"
-  if [ ! -f "${exec_fp_alt}" ]; then
-    print_err_msg_exit "\
-The executable (exec_fp) for running the forecast model does not exist:
-  exec_fp = \"${exec_fp}\"
-Please ensure that you've built this executable."
-  else
-    exec_fp="${exec_fp_alt}"
-  fi
-fi
-
-if [ ! -f "${exec_fp}" ]; then
-  print_err_msg_exit "\
-The executable (exec_fp) for running the forecast model does not exist:
-  exec_fp = \"${exec_fp}\"
-Please ensure that you've built this executable."
-fi
-#
-# Make a copy of the executable in the executables directory only if a
-# copy doens't already exist or if a copy does exist but is older than
-# the original.
-#
-if [ ! -e "${FV3_EXEC_FP}" ] || \
-   [ "${exec_fp}" -nt "${FV3_EXEC_FP}" ]; then
-  print_info_msg "$VERBOSE" "
-Copying the FV3-LAM executable (exec_fp) to the executables directory
-(EXECDIR):
-  exec_fp = \"${exec_fp}\"
-  EXECDIR = \"$EXECDIR\""
-  cp_vrfy "${exec_fp}" "${FV3_EXEC_FP}"
-fi
-#
-#-----------------------------------------------------------------------
-#
 # Set parameters in the FV3-LAM namelist file.
 #
 #-----------------------------------------------------------------------
@@ -556,30 +492,36 @@ Setting parameters in FV3 namelist file (FV3_NML_FP):
 npx=$((NX+1))
 npy=$((NY+1))
 #
-# For the physics suites that use RUC-LSM, set the parameter
-# lsoil according to the external models used to obtain ICs and LBCs.
+# For the physics suites that use RUC LSM, set the parameter kice to 9,
+# Otherwise, leave it unspecified (which means it gets set to the default
+# value in the forecast model).
 #
-if [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_v0" ] || \
-   [ "${CCPP_PHYS_SUITE}" = "FV3_GSD_SAR" ]; then
-
-  if [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] || \
-     [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ] || \
-     [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
-    lsoil=4
-  elif [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ] || \
-       [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ]; then
-    lsoil=9
-  else
-    print_err_msg_exit "\
-The value to set the variable lsoil to in the FV3 namelist file (FV3_NML_FP)
-has not been specified for the following combination of physics suite and
-external model for ICs:
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
-Please change one or more of these parameters or provide a value for lsoil
-(and change workflow generation script(s) accordingly) and rerun."
-  fi
-
+# NOTE:
+# May want to remove kice from FV3.input.yml (and maybe input.nml.FV3).
+#
+kice=""
+if [ "${SDF_USES_RUC_LSM}" = "TRUE" ]; then
+  kice="9"
+fi
+#
+# Set lsoil, which is the number of input soil levels provided in the 
+# chgres_cube output NetCDF file.  This is the same as the parameter 
+# nsoill_out in the namelist file for chgres_cube.  [On the other hand, 
+# the parameter lsoil_lsm (not set here but set in input.nml.FV3 and/or 
+# FV3.input.yml) is the number of soil levels that the LSM scheme in the
+# forecast model will run with.]  Here, we use the same approach to set
+# lsoil as the one used to set nsoill_out in exregional_make_ics.sh.  
+# See that script for details.
+#
+# NOTE:
+# May want to remove lsoil from FV3.input.yml (and maybe input.nml.FV3).
+# Also, may want to set lsm here as well depending on SDF_USES_RUC_LSM.
+#
+lsoil="4"
+if [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" -o \
+     "${EXTRN_MDL_NAME_ICS}" = "RAP" ] && \
+   [ "${SDF_USES_RUC_LSM}" = "TRUE" ]; then
+  lsoil="9"
 fi
 #
 # Create a multiline variable that consists of a yaml-compliant string
@@ -587,6 +529,17 @@ fi
 # suite-independent need to be set to.  Below, this variable will be
 # passed to a python script that will in turn set the values of these
 # variables in the namelist file.
+#
+# IMPORTANT:
+# If we want a namelist variable to be removed from the namelist file,
+# in the "settings" variable below, we need to set its value to the
+# string "null".  This is equivalent to setting its value to 
+#    !!python/none
+# in the base namelist file specified by FV3_NML_BASE_SUITE_FP or the 
+# suite-specific yaml settings file specified by FV3_NML_YAML_CONFIG_FP.
+#
+# It turns out that setting the variable to an empty string also works
+# to remove it from the namelist!  Which is better to use??
 #
 settings="\
 'atmos_model_nml': {
@@ -612,6 +565,7 @@ settings="\
     'bc_update_interval': ${LBC_SPEC_INTVL_HRS},
   }
 'gfs_physics_nml': {
+    'kice': ${kice:-null},
     'lsoil': ${lsoil:-null},
     'do_shum': ${DO_SHUM},
     'do_sppt': ${DO_SPPT},
@@ -869,6 +823,10 @@ fi
 { restore_shell_opts; } > /dev/null 2>&1
 
 }
+
+
+
+
 #
 #-----------------------------------------------------------------------
 #
