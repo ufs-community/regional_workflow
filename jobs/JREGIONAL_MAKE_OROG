@@ -58,7 +58,7 @@ Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #
 #-----------------------------------------------------------------------
 #
-# Create a flag file to make rocoto aware that the make_orog task has 
+# Create a flag file to make rocoto aware that the MAKE_OROG_TN task has 
 # successfully completed (so that other tasks that depend on it can be
 # launched).  
 #
@@ -78,7 +78,7 @@ Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #
 #-----------------------------------------------------------------------
 #
-touch "$LOGDIR/make_orog_task_complete.txt"
+touch "$LOGDIR/${MAKE_OROG_TN}_task_complete.txt"
 #
 #-----------------------------------------------------------------------
 #

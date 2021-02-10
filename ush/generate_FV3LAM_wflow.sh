@@ -19,11 +19,11 @@ function generate_FV3LAM_wflow() {
 #
 #-----------------------------------------------------------------------
 #
-  if [[ $(uname -s) == Darwin ]]; then
-    local scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
-  else
-    local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
-  fi
+if [[ $(uname -s) == Darwin ]]; then
+  local scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+else
+  local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+fi
 local scrfunc_fn=$( basename "${scrfunc_fp}" )
 local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -251,6 +251,11 @@ settings="\
   'run_task_make_grid': ${RUN_TASK_MAKE_GRID}
   'run_task_make_orog': ${RUN_TASK_MAKE_OROG}
   'run_task_make_sfc_climo': ${RUN_TASK_MAKE_SFC_CLIMO}
+#
+# Flag that specifies whether the write-component (quilting) is being 
+# used to generate forecast output files.
+#
+  'quilting': ${QUILTING}
 #
 # Number of physical cores per node for the current machine.
 #

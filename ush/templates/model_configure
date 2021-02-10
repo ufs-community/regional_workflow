@@ -19,8 +19,8 @@ ncores_per_node:         {{ ncores_per_node }}
 debug_affinity:          .true.
 restart_interval:        0
 output_1st_tstep_rst:    .false.
-print_esmf:              {{ print_esmf }}
-quilting:                {{ quilting }}
+quilting:                .{{ quilting }}.
+print_esmf:              .{{ print_esmf }}.
 
 {% if quilting  %}
 #
@@ -60,7 +60,7 @@ output_grid:  '{{ output_grid }}'
 #
 # Parameter definitions for an output grid of type "{{ output_grid }}":
 #
-  {%- if output_grid == "lambert_conformal" %}
+  {% if output_grid in ["lambert_conformal"] %}
 # cen_lon:
 # Longitude of center of grid (degrees).
 #
@@ -91,7 +91,7 @@ output_grid:  '{{ output_grid }}'
 # dy:
 # Grid cell size in y direction (meters).
 #
-  {%- elif output_grid == "regional_latlon" %}
+  {%- elif output_grid in ["regional_latlon"] %}
 # cen_lon:
 # Longitude of center of grid (degrees).
 #
@@ -116,7 +116,7 @@ output_grid:  '{{ output_grid }}'
 # dlat:
 # Latitudinal grid size (degrees).
 #
-  {%- elif output_grid == "rotated_latlon" %}
+  {%- elif output_grid in ["rotated_latlon"] %}
 # cen_lon:
 # Longitude of center of grid, expressed in the NON-ROTATED latlon
 # coordinate system (degrees).  This is also the longitude of the point 
@@ -154,7 +154,7 @@ output_grid:  '{{ output_grid }}'
 # Latitudinal grid size in the ROTATED latlon coordinate system (degrees).
 #
   {%- endif %}
-  {%- if output_grid == "lambert_conformal" %}
+  {%- if output_grid in ["lambert_conformal"] %}
 cen_lon:  {{ cen_lon }}
 cen_lat:  {{ cen_lat }}
 stdlat1:  {{ stdlat1 }}
@@ -165,7 +165,7 @@ lon1:     {{ lon1 }}
 lat1:     {{ lat1 }}
 dx:       {{ dx }}
 dy:       {{ dy }}
-  {%- elif (output_grid == "regional_latlon") or (output_grid == "rotated_latlon") %}
+  {%- elif output_grid in ["regional_latlon", "rotated_latlon"] %}
 cen_lon:  {{ cen_lon }}
 cen_lat:  {{ cen_lat }}
 lon1:     {{ lon1 }}            

@@ -68,14 +68,104 @@ nthreads \
 #
 #-----------------------------------------------------------------------
 #
-  local yyyy \
+  local write_groups \
+        write_tasks_per_group \
+        cen_lon \
+        cen_lat \
+        lon_lwr_left \
+        lat_lwr_left \
+        lon_upr_rght \
+        lat_upr_rght \
+        stdlat1 \
+        stdlat2 \
+        nx \
+        ny \
+        dx \
+        dy \
+        dlon \
+        dlat \
+        yyyy \
         mm \
         dd \
         hh \
-        dot_quilting_dot \
-        dot_print_esmf_dot \
+        quilting \
+        print_esmf \
         settings \
         model_config_fp
+#
+#-----------------------------------------------------------------------
+#
+# Set write-component computational and grid parameters to be used in the 
+# jinja template model_configure file to null strings.  Then, if the write-
+# component is to be used, reset these appropriately according to the type
+# (coordinate system) of the grid that the write-component will be using.
+#
+#-----------------------------------------------------------------------
+#
+  write_groups=""
+  write_tasks_per_group=""
+  cen_lon=""
+  cen_lat=""
+  lon_lwr_left=""
+  lat_lwr_left=""
+  lon_upr_rght=""
+  lat_upr_rght=""
+  stdlat1=""
+  stdlat2=""
+  nx=""
+  ny=""
+  dx=""
+  dy=""
+  dlon=""
+  dlat=""
+
+  if [ "$QUILTING" = "TRUE" ]; then
+
+    write_groups="${WRTCMP_write_groups}"
+    write_tasks_per_group="${WRTCMP_write_tasks_per_group}"
+    cen_lon="${WRTCMP_cen_lon}"
+    cen_lat="${WRTCMP_cen_lat}"
+    lon_lwr_left="${WRTCMP_lon_lwr_left}"
+    lat_lwr_left="${WRTCMP_lat_lwr_left}"
+
+    if [ "${WRTCMP_output_grid}" = "lambert_conformal" ]; then
+
+      stdlat1="${WRTCMP_stdlat1}"
+      stdlat2="${WRTCMP_stdlat2}"
+      nx="${WRTCMP_nx}"
+      ny="${WRTCMP_ny}"
+      dx="${WRTCMP_dx}"
+      dy="${WRTCMP_dy}"
+
+    elif [ "${WRTCMP_output_grid}" = "regional_latlon" ] || \
+         [ "${WRTCMP_output_grid}" = "rotated_latlon" ]; then
+
+      lon_upr_rght="${WRTCMP_lon_upr_rght}"
+      lat_upr_rght="${WRTCMP_lat_upr_rght}"
+      dlon="${WRTCMP_dlon}"
+      dlat="${WRTCMP_dlat}"
+
+    fi
+
+  fi
+#
+#-----------------------------------------------------------------------
+#
+# Set convenience variables needed below.
+#
+#-----------------------------------------------------------------------
+#
+# Extract from cdate the starting year, month, day, and hour of the forecast.
+#
+  yyyy=${cdate:0:4}
+  mm=${cdate:4:2}
+  dd=${cdate:6:2}
+  hh=${cdate:8:2}
+#
+# Set parameters in the model configure file.
+#
+  quilting=$(echo_lowercase $QUILTING)
+  print_esmf=$(echo_lowercase ${PRINT_ESMF})
 #
 #-----------------------------------------------------------------------
 #
@@ -88,26 +178,9 @@ Creating a model configuration file (\"${MODEL_CONFIG_FN}\") in the specified
 run directory (run_dir):
   run_dir = \"${run_dir}\""
 #
-# Extract from cdate the starting year, month, day, and hour of the forecast.
-#
-  yyyy=${cdate:0:4}
-  mm=${cdate:4:2}
-  dd=${cdate:6:2}
-  hh=${cdate:8:2}
-#
-# Set parameters in the model configure file.
-#
-
-  dot_quilting_dot="."$(echo_lowercase $QUILTING)"."
-  dot_print_esmf_dot="."$(echo_lowercase $PRINT_ESMF)"."
-#
-#-----------------------------------------------------------------------
-#
 # Create a multiline variable that consists of a yaml-compliant string
 # specifying the values that the jinja variables in the template 
 # model_configure file should be set to.
-#
-#-----------------------------------------------------------------------
 #
   settings="\
   'PE_MEMBER01': ${PE_MEMBER01}
@@ -119,57 +192,25 @@ run directory (run_dir):
   'dt_atmos': ${DT_ATMOS}
   'atmos_nthreads': ${nthreads:-1}
   'ncores_per_node': ${NCORES_PER_NODE}
-  'quilting': ${dot_quilting_dot}
-  'print_esmf': ${dot_print_esmf_dot}
-  'output_grid': ${WRTCMP_output_grid}"
-#  'output_grid': \'${WRTCMP_output_grid}\'"
-#
-# If the write-component is to be used, then specify a set of computational
-# parameters and a set of grid parameters.  The latter depends on the type
-# (coordinate system) of the grid that the write-component will be using.
-#
-  if [ "$QUILTING" = "TRUE" ]; then
-
-    settings="${settings}
-  'write_groups': ${WRTCMP_write_groups}
-  'write_tasks_per_group': ${WRTCMP_write_tasks_per_group}
-  'cen_lon': ${WRTCMP_cen_lon}
-  'cen_lat': ${WRTCMP_cen_lat}
-  'lon1': ${WRTCMP_lon_lwr_left}
-  'lat1': ${WRTCMP_lat_lwr_left}"
-
-    if [ "${WRTCMP_output_grid}" = "lambert_conformal" ]; then
-
-      settings="${settings}
-  'stdlat1': ${WRTCMP_stdlat1}
-  'stdlat2': ${WRTCMP_stdlat2}
-  'nx': ${WRTCMP_nx}
-  'ny': ${WRTCMP_ny}
-  'dx': ${WRTCMP_dx}
-  'dy': ${WRTCMP_dy}
-  'lon2': \"\"
-  'lat2': \"\"
-  'dlon': \"\"
-  'dlat': \"\""
-
-    elif [ "${WRTCMP_output_grid}" = "regional_latlon" ] || \
-         [ "${WRTCMP_output_grid}" = "rotated_latlon" ]; then
-
-      settings="${settings}
-  'lon2': ${WRTCMP_lon_upr_rght}
-  'lat2': ${WRTCMP_lat_upr_rght}
-  'dlon': ${WRTCMP_dlon}
-  'dlat': ${WRTCMP_dlat}
-  'stdlat1': \"\"
-  'stdlat2': \"\"
-  'nx': \"\"
-  'ny': \"\"
-  'dx': \"\"
-  'dy': \"\""
-
-    fi
-
-  fi
+  'quilting': ${quilting}
+  'print_esmf': ${print_esmf}
+  'output_grid': ${WRTCMP_output_grid}
+  'write_groups': ${write_groups}
+  'write_tasks_per_group': ${write_tasks_per_group}
+  'cen_lon': ${cen_lon}
+  'cen_lat': ${cen_lat}
+  'lon1': ${lon_lwr_left}
+  'lat1': ${lat_lwr_left}
+  'stdlat1': ${stdlat1}
+  'stdlat2': ${stdlat2}
+  'nx': ${nx}
+  'ny': ${ny}
+  'dx': ${dx}
+  'dy': ${dy}
+  'lon2': ${lon_upr_rght}
+  'lat2': ${lat_upr_rght}
+  'dlon': ${dlon}
+  'dlat': ${dlat}"
 
   print_info_msg $VERBOSE "
 The variable \"settings\" specifying values to be used in the \"${MODEL_CONFIG_FN}\"
@@ -178,12 +219,8 @@ file has been set as follows:
 settings =
 $settings"
 #
-#-----------------------------------------------------------------------
-#
 # Call a python script to generate the experiment's actual MODEL_CONFIG_FN
 # file from the template file.
-#
-#-----------------------------------------------------------------------
 #
   model_config_fp="${run_dir}/${MODEL_CONFIG_FN}"
   $USHDIR/fill_jinja_template.py -q \

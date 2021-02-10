@@ -80,7 +80,7 @@ Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #
 #-----------------------------------------------------------------------
 #
-# Create a flag file to make rocoto aware that the make_sfc_climo task
+# Create a flag file to make rocoto aware that the MAKE_SFC_CLIMO_TN task
 # has successfully completed (so that other tasks that depend on it can
 # be launched).  
 #
@@ -100,7 +100,7 @@ Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #
 #-----------------------------------------------------------------------
 #
-touch "$LOGDIR/make_sfc_climo_task_complete.txt"
+touch "$LOGDIR/${MAKE_SFC_CLIMO_TN}_task_complete.txt"
 #
 #-----------------------------------------------------------------------
 #

@@ -405,6 +405,7 @@ MODULES_RUN_TASK_FP script.
     </dependency>
 
   </task>
+{%- if quilting -%}
 <!--
 ************************************************************************
 ************************************************************************
@@ -444,6 +445,7 @@ MODULES_RUN_TASK_FP script.
     </task>
 
   </metatask>
+{%- endif -%}
 
 {% if do_ensemble %}
   </metatask>
