@@ -330,7 +330,7 @@ FV3_NML_YAML_CONFIG_FN="FV3.input.yml"
 FV3_NML_BASE_ENS_FN="input.nml.base_ens"
 MODEL_CONFIG_FN="model_configure"
 NEMS_CONFIG_FN="nems.configure"
-FV3_EXEC_FN="ufs_model"
+FV3_EXEC_FN="fv3_gfs.x"
 
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
@@ -373,20 +373,86 @@ FCST_LEN_HRS="24"
 # Set METplus parameters.  Definitions:
 #
 # MODEL: 
+# String that specifies a descriptive name for the model being verified.
+#
 # MET_INSTALL_DIR:
+# Location to top-level directory of MET installation.
+#
 # METPLUS_PATH:
-# VX_CONFIG_DIR:
-# METPLUS_CONF:
-# MET_CONFIG:
+# Location to top-level directory of METplus installation.
+#
 # CCPA_OBS_DIR:
+# User-specified location of top-level directory where CCPA hourly
+# precipitation files used by METplus are located. This parameter needs
+# to be set for both user-provided observations and for observations 
+# that are retrieved from the NOAA HPSS (if the user has access) via
+# the get_obs_ccpa_tn task (activated in workflow by setting 
+# RUN_TASK_GET_OBS_CCPA="TRUE"). METplus is configured to verify 01-, 
+# 03-, 06-, and 24-h accumulated precipitation using hourly CCPA files. 
+# METplus configuration files require the use of predetermined directory 
+# structure and file names. Therefore, if the CCPA files are user 
+# provided, they need to follow the anticipated naming structure: 
+# {YYYYMMDD}/ccpa.t{HH}z.01h.hrap.conus.gb2, where YYYY is the 4-digit 
+# valid year, MM the 2-digit valid month, DD the 2-digit valid day of 
+# the month, and HH the 2-digit valid hour of the day. In addition, a 
+# caveat is noted for using hourly CCPA data. There is a problem with 
+# the valid time in the metadata for files valid from 19 - 00 UTC (or 
+# files  under the '00' directory). The script to pull the CCPA data 
+# from the NOAA HPSS has an example of how to account for this as well
+# as organizing the data into a more intuitive format: 
+# regional_workflow/scripts/exregional_get_ccpa_files.sh. When a fix
+# is provided, it will be accounted for in the
+# exregional_get_ccpa_files.sh script.
+#
 # MRMS_OBS_DIR:
-# NDAS_OBS_DIR: 
+# User-specified location of top-level directory where MRMS composite
+# reflectivity files used by METplus are located. This parameter needs
+# to be set for both user-provided observations and for observations
+# that are retrieved from the NOAA HPSS (if the user has access) via the
+# get_obs_mrms_tn task (activated in workflow by setting 
+# RUN_TASK_GET_OBS_MRMS="TRUE"). METplus configuration files require the
+# use of predetermined directory structure and file names. Therefore, if
+# the MRMS files are user provided, they need to follow the anticipated 
+# naming structure:
+# {YYYYMMDD}/MergedReflectivityQComposite_00.00_{YYYYMMDD}-{HH}{mm}{SS}.grib2,
+# where YYYY is the 4-digit valid year, MM the 2-digit valid month, DD 
+# the 2-digit valid day of the month, HH the 2-digit valid hour of the 
+# day, mm the 2-digit valid minutes of the hour, and SS is the two-digit
+# valid seconds of the hour. In addition, METplus is configured to look
+# for a MRMS composite reflectivity file for the valid time of the 
+# forecast being verified; since MRMS composite reflectivity files do 
+# not always exactly match the valid time, a script, within the main 
+# script to retrieve MRMS data from the NOAA HPSS, is used to identify
+# and rename the MRMS composite reflectivity file to match the valid
+# time of the forecast. The script to pull the MRMS data from the NOAA 
+# HPSS has an example of the expected file naming structure: 
+# regional_workflow/scripts/exregional_get_mrms_files.sh. This script 
+# calls the script used to identify the MRMS file closest to the valid 
+# time: regional_workflow/scripts/mrms_pull_topofhour.py.
+#
+# NDAS_OBS_DIR:
+# User-specified location of top-level directory where NDAS prepbufr 
+# files used by METplus are located. This parameter needs to be set for
+# both user-provided observations and for observations that are 
+# retrieved from the NOAA HPSS (if the user has access) via the 
+# get_obs_ndas_tn task (activated in workflow by setting 
+# RUN_TASK_GET_OBS_NDAS="TRUE"). METplus is configured to verify 
+# near-surface variables hourly and upper-air variables at times valid 
+# at 00 and 12 UTC with NDAS prepbufr files. METplus configuration files
+# require the use of predetermined file names. Therefore, if the NDAS 
+# files are user provided, they need to follow the anticipated naming 
+# structure: prepbufr.ndas.{YYYYMMDDHH}, where YYYY is the 4-digit valid
+# year, MM the 2-digit valid month, DD the 2-digit valid day of the 
+# month, and HH the 2-digit valid hour of the day. The script to pull 
+# the NDAS data from the NOAA HPSS has an example of how to rename the
+# NDAS data into a more intuitive format with the valid time listed in 
+# the file name: regional_workflow/scripts/exregional_get_ndas_files.sh
 #
 #-----------------------------------------------------------------------
 #
 MODEL=""
-MET_INSTALL_DIR="path/to/MET"
-METPLUS_PATH="path/to/METPlus"
+MET_INSTALL_DIR="/path/to/MET"
+METPLUS_PATH="/path/to/METPlus"
 CCPA_OBS_DIR="/path/to/processed/CCPA/data"
 MRMS_OBS_DIR="/path/to/processed/MRMS/data"
 NDAS_OBS_DIR="/path/to/processed/NDAS/data"
@@ -743,14 +809,6 @@ ESGgrid_WIDE_HALO_WIDTH="6"
 # the frequency with which the top level routine in the dynamics is called
 # as well as the frequency with which the physics is called."
 #
-# Note that if using one of the predefined grids (i.e. if PREDEF_GRID_NAME
-# is not set to a null string, either below or in the custom workflow
-# configuration file specified by EXPT_CONFIG_FN), then DT_ATMOS is 
-# overwritten by the value for that predefined grid.  The predefined
-# grid parameters are specified in the script 
-#
-#   $HOMErrfs/ush/set_predef_grid_params.sh
-#
 #-----------------------------------------------------------------------
 #
 DT_ATMOS="18"
@@ -901,19 +959,6 @@ PREEXISTING_DIR_METHOD="delete"
 #
 VERBOSE="TRUE"
 #
-#-----------------------------------------------------------------------
-# Set paths for METplus variables.
-#
-#-----------------------------------------------------------------------
-MODEL=""
-MET_INSTALL_DIR=""
-METPLUS_PATH=""
-VX_CONFIG_DIR=""
-METPLUS_CONF=""
-MET_CONFIG=""
-CCPA_OBS_DIR=""
-MRMS_OBS_DIR=""
-NDAS_OBS_DIR=""
 #-----------------------------------------------------------------------
 #
 # Set flags (and related directories) that determine whether the grid, 
@@ -1242,7 +1287,7 @@ WTIME_RUN_FCST="04:30:00"
 WTIME_RUN_POST="00:15:00"
 WTIME_GET_OBS_CCPA="00:45:00"
 WTIME_GET_OBS_MRMS="00:45:00"
-WTIME_GET_OBS_NDAS="00:45:00"
+WTIME_GET_OBS_NDAS="02:00:00"
 WTIME_VX_GRIDSTAT="01:00:00"
 WTIME_VX_POINTSTAT="01:00:00"
 WTIME_VX_ENSEMBLESTAT="01:00:00"

@@ -230,7 +230,6 @@ if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] && \
    [ -n "${SFC_CLIMO_DIR}" ]; then
   SFC_CLIMO_DIR=""
 fi
-
 #
 #-----------------------------------------------------------------------
 #
@@ -251,7 +250,6 @@ elif [ "${RUN_TASK_VX_GRIDSTAT}" = "FALSE" ] || \
      [ "${RUN_TASK_VX_GRIDSTAT}" = "NO" ]; then
   RUN_TASK_VX_GRIDSTAT="FALSE"
 fi
-
 #
 #-----------------------------------------------------------------------
 #
@@ -271,27 +269,6 @@ if [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ] || \
 elif [ "${RUN_TASK_VX_POINTSTAT}" = "FALSE" ] || \
      [ "${RUN_TASK_VX_POINTSTAT}" = "NO" ]; then
   RUN_TASK_VX_POINTSTAT="FALSE"
-fi
-
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_VX_ENSEMBLESTAT is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "RUN_TASK_VX_ENSEMBLESTAT" "valid_vals_RUN_TASK_VX_ENSEMBLESTAT"
-#
-# Set RUN_TASK_VX_ENSEMBLESTAT to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
-#
-RUN_TASK_VX_ENSEMBLESTAT=${RUN_TASK_VX_ENSEMBLESTAT^^}
-if [ "${RUN_TASK_VX_ENSEMBLESTAT}" = "TRUE" ] || \
-   [ "${RUN_TASK_VX_ENSEMBLESTAT}" = "YES" ]; then
-  RUN_TASK_VX_ENSEMBLESTAT="TRUE"
-elif [ "${RUN_TASK_VX_ENSEMBLESTAT}" = "FALSE" ] || \
-     [ "${RUN_TASK_VX_ENSEMBLESTAT}" = "NO" ]; then
-  RUN_TASK_VX_ENSEMBLESTAT="FALSE"
 fi
 
 
@@ -1516,7 +1493,7 @@ contents of FIXLAM.  Reset values are:"
 When RUN_ENVIR is set to \"nco\", it is assumed that the verification
 will not be run.
   RUN_TASK_VX_GRIDSTAT = \"${RUN_TASK_VX_GRIDSTAT}\"
-Resetting RUN_TASK_VX_GRIDSTAT to \"FALSE\" 
+Resetting RUN_TASK_VX_GRIDSTAT to \"FALSE\"
 Reset value is:"
 
     RUN_TASK_VX_GRIDSTAT="FALSE"
@@ -1536,7 +1513,7 @@ Reset value is:"
 When RUN_ENVIR is set to \"nco\", it is assumed that the verification
 will not be run.
   RUN_TASK_VX_POINTSTAT = \"${RUN_TASK_VX_POINTSTAT}\"
-Resetting RUN_TASK_VX_POINTSTAT to \"FALSE\" 
+Resetting RUN_TASK_VX_POINTSTAT to \"FALSE\"
 Reset value is:"
 
     RUN_TASK_VX_POINTSTAT="FALSE"
@@ -2031,6 +2008,63 @@ component if it is being used) are:
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that the number of cells in the x and y direction are divi-
+# sible by the MPI task dimensions LAYOUT_X and LAYOUT_Y, respectively.
+#
+#-----------------------------------------------------------------------
+#
+rem=$(( NX%LAYOUT_X ))
+if [ $rem -ne 0 ]; then
+  print_err_msg_exit "\
+The number of grid cells in the x direction (NX) is not evenly divisible
+by the number of MPI tasks in the x direction (LAYOUT_X):
+  NX = $NX
+  LAYOUT_X = ${LAYOUT_X}"
+fi
+
+rem=$(( NY%LAYOUT_Y ))
+if [ $rem -ne 0 ]; then
+  print_err_msg_exit "\
+The number of grid cells in the y direction (NY) is not evenly divisible
+by the number of MPI tasks in the y direction (LAYOUT_Y):
+  NY = $NY
+  LAYOUT_Y = ${LAYOUT_Y}"
+fi
+
+print_info_msg "$VERBOSE" "
+The MPI task layout is:
+  LAYOUT_X = ${LAYOUT_X}
+  LAYOUT_Y = ${LAYOUT_Y}"
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that, for a given MPI task, the number columns (which is 
+# equal to the number of horizontal cells) is divisible by BLOCKSIZE.
+#
+#-----------------------------------------------------------------------
+#
+nx_per_task=$(( NX/LAYOUT_X ))
+ny_per_task=$(( NY/LAYOUT_Y ))
+num_cols_per_task=$(( $nx_per_task*$ny_per_task ))
+
+rem=$(( num_cols_per_task%BLOCKSIZE ))
+if [ $rem -ne 0 ]; then
+  prime_factors_num_cols_per_task=$( factor $num_cols_per_task | sed -r -e 's/^[0-9]+: (.*)/\1/' )
+  print_err_msg_exit "\
+The number of columns assigned to a given MPI task must be divisible by
+BLOCKSIZE:
+  nx_per_task = NX/LAYOUT_X = $NX/${LAYOUT_X} = ${nx_per_task}
+  ny_per_task = NY/LAYOUT_Y = $NY/${LAYOUT_Y} = ${ny_per_task}
+  num_cols_per_task = nx_per_task*ny_per_task = ${num_cols_per_task}
+  BLOCKSIZE = $BLOCKSIZE
+  rem = num_cols_per_task%%BLOCKSIZE = $rem
+The prime factors of num_cols_per_task are (useful for determining a va-
+lid BLOCKSIZE): 
+  prime_factors_num_cols_per_task: ${prime_factors_num_cols_per_task}"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # If the write-component is going to be used to write output files to 
 # disk (i.e. if QUILTING is set to "TRUE"), make sure that the grid type 
 # used by the write-component (WRTCMP_output_grid) is set to a valid value.
@@ -2044,6 +2078,35 @@ in WRTCMP_output_grid is not supported:
   WRTCMP_output_grid = \"${WRTCMP_output_grid}\""
   check_var_valid_value \
     "WRTCMP_output_grid" "valid_vals_WRTCMP_output_grid" "${err_msg}"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# If the write component is going to be used, make sure that the number
+# of grid cells in the y direction (NY) is divisible by the number of
+# write tasks per group.  This is because the NY rows of the grid must
+# be distributed evenly among the write_tasks_per_group tasks in a given
+# write group, i.e. each task must receive the same number of rows.  
+# This implies that NY must be evenly divisible by WRTCMP_write_tasks_-
+# per_group.  If it isn't, the write component will hang or fail.  We
+# check for this below.
+#
+#-----------------------------------------------------------------------
+#
+if [ "$QUILTING" = "TRUE" ]; then
+
+  rem=$(( NY%WRTCMP_write_tasks_per_group ))
+
+  if [ $rem -ne 0 ]; then
+    print_err_msg_exit "\
+The number of grid points in the y direction on the regional grid (ny_-
+T7) must be evenly divisible by the number of tasks per write group 
+(WRTCMP_write_tasks_per_group):
+  NY = $NY
+  WRTCMP_write_tasks_per_group = ${WRTCMP_write_tasks_per_group}
+  NY%%write_tasks_per_group = $rem"
+  fi
+
 fi
 #
 #-----------------------------------------------------------------------
@@ -2435,6 +2498,7 @@ UFS_UTILS_DIR="${UFS_UTILS_DIR}"
 SFC_CLIMO_INPUT_DIR="${SFC_CLIMO_INPUT_DIR}"
 TOPO_DIR="${TOPO_DIR}"
 EMC_POST_DIR="${EMC_POST_DIR}"
+
 EXPTDIR="$EXPTDIR"
 LOGDIR="$LOGDIR"
 CYCLE_BASEDIR="${CYCLE_BASEDIR}"

@@ -439,12 +439,12 @@ MODULES_RUN_TASK_FP script.
 
   </metatask>
 
+{% if run_task_get_obs_ccpa %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
 
-{% if run_task_get_obs_ccpa %}
   <task name="&GET_OBS_CCPA_TN;" maxtries="2">
 
     &RSRV_HPSS;
@@ -471,12 +471,12 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_get_obs_mrms %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
 
-{% if run_task_get_obs_mrms %}
   <task name="&GET_OBS_MRMS_TN;" maxtries="2">
 
     &RSRV_HPSS;
@@ -494,6 +494,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
     <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>SCRIPTSDIR</name><value>&SCRIPTSDIR;</value></envar>
     <envar><name>VAR</name><value>REFC</value></envar>
  
     <dependency>
@@ -503,12 +504,12 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_get_obs_ndas %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
 
-{% if run_task_get_obs_ndas %}
   <task name="&GET_OBS_NDAS_TN;" maxtries="2">
 
     &RSRV_HPSS;
@@ -535,12 +536,12 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
 
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_TN;" maxtries="2">
 
     &RSRV_HPSS;
@@ -557,7 +558,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(1, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>VAR</name><value>APCP</value></envar>
     <envar><name>ACCUM</name><value>01</value></envar>
 
@@ -572,11 +573,11 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_REFC_TN;" maxtries="2">
 
     &RSRV_HPSS;
@@ -593,7 +594,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(1, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>VAR</name><value>REFC</value></envar>
 
     <dependency>
@@ -607,11 +608,11 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_03h_TN;" maxtries="2">
 
     &RSRV_DEFAULT;
@@ -628,7 +629,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1, 3) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(3, fcst_len_hrs+1, 3) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>VAR</name><value>APCP</value></envar>
     <envar><name>ACCUM</name><value>03</value></envar>
 
@@ -639,11 +640,11 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_06h_TN;" maxtries="2">
 
     &RSRV_DEFAULT;
@@ -660,7 +661,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1, 6) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(6, fcst_len_hrs+1, 6) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>VAR</name><value>APCP</value></envar>
     <envar><name>ACCUM</name><value>06</value></envar>
 
@@ -671,11 +672,11 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_24h_TN;" maxtries="2">
 
     &RSRV_DEFAULT;
@@ -692,7 +693,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
-    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1, 24) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(24, fcst_len_hrs+1, 24) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>VAR</name><value>APCP</value></envar>
     <envar><name>ACCUM</name><value>24</value></envar>
 
@@ -703,11 +704,11 @@ MODULES_RUN_TASK_FP script.
   </task>
 {% endif %}
 
+{% if run_task_vx_pointstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_pointstat %}
   <task name="&VX_POINTSTAT_TN;" maxtries="2">
 
     &RSRV_HPSS;

@@ -103,6 +103,18 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
+# Check for existence of top-level OBS_DIR 
+#
+#-----------------------------------------------------------------------
+#
+if [[ ! -d "$OBS_DIR" ]]; then
+  print_err_msg_exit "\
+  Exiting: OBS_DIR does not exist."
+fi
+
+#
+#-----------------------------------------------------------------------
+#
 # Export some environment variables passed in by the XML and run METplus 
 #
 #-----------------------------------------------------------------------
