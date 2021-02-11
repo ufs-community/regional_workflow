@@ -395,6 +395,21 @@ fi
         prefix=""
         fns_in_arcv=( "" )
 
+        fns_on_disk_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}")")"
+        fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}")")"
+
+        print_info_msg "
+Fetching of external model files from NOAA HPSS is not yet supported for
+this external model (extrn_mdl_name) and file format (fv3gfs_file_fmt)
+combination:
+  extrn_mdl_name = \"${extrn_mdl_name}\"
+  fv3gfs_file_fmt = \"${fv3gfs_file_fmt}\"
+Setting fns_on_disk and fns_in_arcv to arrays containing empty elements:
+  fns_on_disk = ${fns_on_disk_str}
+  fns_in_arcv = ${fns_in_arcv_str}
+If USE_USER_STAGED_EXTRN_FILES is set to \"TRUE\", this will allow the
+workflow to look for the external model files in a user-staged directory."
+
       fi
       ;;
   
@@ -506,6 +521,21 @@ and analysis or forecast (anl_or_fcst):
 
         prefix=""
         fns_in_arcv=( "" )
+        
+        fns_on_disk_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}")")"
+        fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}")")"
+
+        print_info_msg "
+Fetching of external model files from NOAA HPSS is not yet supported for
+this external model (extrn_mdl_name) and file format (fv3gfs_file_fmt)
+combination:
+  extrn_mdl_name = \"${extrn_mdl_name}\"
+  fv3gfs_file_fmt = \"${fv3gfs_file_fmt}\"
+Setting fns_on_disk and fns_in_arcv to arrays containing empty elements:
+  fns_on_disk = ${fns_on_disk_str}
+  fns_in_arcv = ${fns_in_arcv_str}
+If USE_USER_STAGED_EXTRN_FILES is set to \"TRUE\", this will allow the
+workflow to look for the external model files in a user-staged directory."
 
       fi
       ;;
@@ -904,6 +934,19 @@ has not been specified for this external model:
           arcv_fns=( "${arcv_fns}" "${arcv_fns}" )
         fi
       fi
+
+        arcv_fns_str="( "$( printf "\"%s\" " "${arcv_fns[@]}")")"
+
+        print_info_msg "
+Fetching of external model files from NOAA HPSS is not yet supported for
+this external model (extrn_mdl_name) and file format (fv3gfs_file_fmt)
+combination:
+  extrn_mdl_name = \"${extrn_mdl_name}\"
+  fv3gfs_file_fmt = \"${fv3gfs_file_fmt}\"
+Setting arcv_fns to an array containing empty elements:
+  arcv_fns = ${arcv_fns_str}
+If USE_USER_STAGED_EXTRN_FILES is set to \"TRUE\", this will allow the
+workflow to look for the external model files in a user-staged directory."
 
     fi
 
