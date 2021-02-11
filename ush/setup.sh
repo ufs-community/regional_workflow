@@ -2539,6 +2539,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Because RUN_CMD_FCST can include PE_MEMBER01 (and theoretically other
+# variables calculated in this script), delete the first occurance of it
+# in the var_defns file, and write it again at the end.
+#
+#-----------------------------------------------------------------------
+$SED -i '/^RUN_CMD_FCST=/d' $GLOBAL_VAR_DEFNS_FP
+#
+#-----------------------------------------------------------------------
+#
 # Continue appending variable defintions to the variable definitions 
 # file.
 #
