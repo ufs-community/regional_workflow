@@ -1132,6 +1132,8 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "global_zorclim.1x1.grb" \
 "global_sfc_emissivity_idx.txt" \
 "global_solarconstant_noaa_an.txt" \
+"geo_em.d01.lat-lon.2.5m.HGT_M.nc" \
+"HGT.Beljaars_filtered.lat-lon.30s_res.nc" \
 "replace_with_FIXgsm_ozone_prodloss_filename" \
 )
 
@@ -1417,5 +1419,5 @@ COMPILER="intel"
 #
 #-----------------------------------------------------------------------
 #
-GWD_HRRRsuite_BASEDIR=""
+#GWD_HRRRsuite_BASEDIR=""
 
