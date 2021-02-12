@@ -43,9 +43,9 @@ Workflow task names.
 <!ENTITY VX_GRIDSTAT_24h_TN "{{ vx_gridstat_24h_tn }}">
 <!ENTITY VX_POINTSTAT_TN    "{{ vx_pointstat_tn }}">
 <!ENTITY VX_ENSEMBLESTAT_TN "{{ vx_ensemblestat_tn}}">
-<!ENTITY VX_ENSEMBLESTAT_03h_TN "{{ vx_ensemblestat_03h_tn}}"
-<!ENTITY VX_ENSEMBLESTAT_06h_TN "{{ vx_ensemblestat_06h_tn}}"
-<!ENTITY VX_ENSEMBLESTAT_24h_TN "{{ vx_ensemblestat_24h_tn}}"
+<!ENTITY VX_ENSEMBLESTAT_03h_TN "{{ vx_ensemblestat_03h_tn}}">
+<!ENTITY VX_ENSEMBLESTAT_06h_TN "{{ vx_ensemblestat_06h_tn}}">
+<!ENTITY VX_ENSEMBLESTAT_24h_TN "{{ vx_ensemblestat_24h_tn}}">
 <!--
 Flags that specify whether to run the preprocessing and/or verification tasks.
 -->
