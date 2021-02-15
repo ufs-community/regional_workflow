@@ -86,22 +86,22 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "ESGgrid"
 
-  ESGgrid_LON_CTR=-97.5
-  ESGgrid_LAT_CTR=38.5
+  ESGgrid_LON_CTR="-97.5"
+  ESGgrid_LAT_CTR="38.5"
 
   ESGgrid_DELX="25000.0"
   ESGgrid_DELY="25000.0"
 
-  ESGgrid_NX=200
-  ESGgrid_NY=112
+  ESGgrid_NX="202"
+  ESGgrid_NY="116"
 
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
-  DT_ATMOS="300"
+  DT_ATMOS="${DT_ATMOS:-40}"
 
-  LAYOUT_X="5"
-  LAYOUT_Y="2"
-  BLOCKSIZE="40"
+  LAYOUT_X="${LAYOUT_X:-5}"
+  LAYOUT_Y="${LAYOUT_Y:-2}"
+  BLOCKSIZE="${BLOCKSIZE:-40}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -130,22 +130,22 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "ESGgrid"
 
-  ESGgrid_LON_CTR=-97.5
-  ESGgrid_LAT_CTR=38.5
+  ESGgrid_LON_CTR="-97.5"
+  ESGgrid_LAT_CTR="38.5"
 
   ESGgrid_DELX="13000.0"
   ESGgrid_DELY="13000.0"
 
-  ESGgrid_NX=384
-  ESGgrid_NY=224
+  ESGgrid_NX="396"
+  ESGgrid_NY="232"
 
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
-  DT_ATMOS="45"
+  DT_ATMOS="${DT_ATMOS:-45}"
 
-  LAYOUT_X="16"
-  LAYOUT_Y="8"
-  BLOCKSIZE="32"
+  LAYOUT_X="${LAYOUT_X:-16}"
+  LAYOUT_Y="${LAYOUT_Y:-10}"
+  BLOCKSIZE="${BLOCKSIZE:-32}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -174,22 +174,22 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "ESGgrid"
 
-  ESGgrid_LON_CTR=-97.5
-  ESGgrid_LAT_CTR=38.5
+  ESGgrid_LON_CTR="-97.5"
+  ESGgrid_LAT_CTR="38.5"
 
   ESGgrid_DELX="3000.0"
   ESGgrid_DELY="3000.0"
 
-  ESGgrid_NX=1680
-  ESGgrid_NY=1024
+  ESGgrid_NX="1748"
+  ESGgrid_NY="1038"
 
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
-  DT_ATMOS="40"
+  DT_ATMOS="${DT_ATMOS:-40}"
 
-  LAYOUT_X="30"
-  LAYOUT_Y="16"
-  BLOCKSIZE="32"
+  LAYOUT_X="${LAYOUT_X:-30}"
+  LAYOUT_Y="${LAYOUT_Y:-16}"
+  BLOCKSIZE="${BLOCKSIZE:-32}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -218,22 +218,22 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "ESGgrid"
 
-  ESGgrid_LON_CTR=-97.5
-  ESGgrid_LAT_CTR=35.0
+  ESGgrid_LON_CTR="-97.5"
+  ESGgrid_LAT_CTR="35.0"
 
   ESGgrid_DELX="3000.0"
   ESGgrid_DELY="3000.0"
 
-  ESGgrid_NX=840
-  ESGgrid_NY=600
+  ESGgrid_NX="840"
+  ESGgrid_NY="600"
 
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
-  DT_ATMOS="40"
+  DT_ATMOS="${DT_ATMOS:-40}"
 
-  LAYOUT_X="30"
-  LAYOUT_Y="24"
-  BLOCKSIZE="35"
+  LAYOUT_X="${LAYOUT_X:-30}"
+  LAYOUT_Y="${LAYOUT_Y:-24}"
+  BLOCKSIZE="${BLOCKSIZE:-35}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -265,23 +265,23 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "ESGgrid"
 
-  ESGgrid_LON_CTR=-161.5
-  ESGgrid_LAT_CTR=63.0
+  ESGgrid_LON_CTR="-161.5"
+  ESGgrid_LAT_CTR="63.0"
 
   ESGgrid_DELX="13000.0"
   ESGgrid_DELY="13000.0"
 
-  ESGgrid_NX=320
-  ESGgrid_NY=240
+  ESGgrid_NX="320"
+  ESGgrid_NY="240"
 
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
-#  DT_ATMOS="50"
-  DT_ATMOS="10"
+#  DT_ATMOS="${DT_ATMOS:-50}"
+  DT_ATMOS="${DT_ATMOS:-10}"
 
-  LAYOUT_X="16"
-  LAYOUT_Y="12"
-  BLOCKSIZE="40"
+  LAYOUT_X="${LAYOUT_X:-16}"
+  LAYOUT_Y="${LAYOUT_Y:-12}"
+  BLOCKSIZE="${BLOCKSIZE:-40}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -335,31 +335,31 @@ case ${PREDEF_GRID_NAME} in
 
 #  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then 
 #
-#    GFDLgrid_LON_T6_CTR=-160.8
-#    GFDLgrid_LAT_T6_CTR=63.0
-#    GFDLgrid_STRETCH_FAC=1.161
+#    GFDLgrid_LON_T6_CTR="-160.8"
+#    GFDLgrid_LAT_T6_CTR="63.0"
+#    GFDLgrid_STRETCH_FAC="1.161"
 #    GFDLgrid_RES="768"
-#    GFDLgrid_REFINE_RATIO=4
-#  
-#    num_margin_cells_T6_left=204
+#    GFDLgrid_REFINE_RATIO="4"
+#
+#    num_margin_cells_T6_left="204"
 #    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
-#  
-#    num_margin_cells_T6_right=204
+#
+#    num_margin_cells_T6_right="204"
 #    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
-#  
-#    num_margin_cells_T6_bottom=249
+#
+#    num_margin_cells_T6_bottom="249"
 #    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
-#  
-#    num_margin_cells_T6_top=249
+#
+#    num_margin_cells_T6_top="249"
 #    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
 #
 #    GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="FALSE"
 #
-#    DT_ATMOS="18"
+#    DT_ATMOS="${DT_ATMOS:-18}"
 #
-#    LAYOUT_X="24"
-#    LAYOUT_Y="24"
-#    BLOCKSIZE="15"
+#    LAYOUT_X="${LAYOUT_X:-24}"
+#    LAYOUT_Y="${LAYOUT_Y:-24}"
+#    BLOCKSIZE="${BLOCKSIZE:-15}"
 #
 #    if [ "$QUILTING" = "TRUE" ]; then
 #      WRTCMP_write_groups="1"
@@ -381,23 +381,23 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "ESGgrid"
 
-  ESGgrid_LON_CTR=-161.5
-  ESGgrid_LAT_CTR=63.0
+  ESGgrid_LON_CTR="-161.5"
+  ESGgrid_LAT_CTR="63.0"
 
   ESGgrid_DELX="3000.0"
   ESGgrid_DELY="3000.0"
 
-  ESGgrid_NX=1380
-  ESGgrid_NY=1020
+  ESGgrid_NX="1380"
+  ESGgrid_NY="1020"
 
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
-#  DT_ATMOS="50"
-  DT_ATMOS="10"
+#  DT_ATMOS="${DT_ATMOS:-50}"
+  DT_ATMOS="${DT_ATMOS:-10}"
 
-  LAYOUT_X="30"
-  LAYOUT_Y="17"
-  BLOCKSIZE="40"
+  LAYOUT_X="${LAYOUT_X:-30}"
+  LAYOUT_Y="${LAYOUT_Y:-17}"
+  BLOCKSIZE="${BLOCKSIZE:-40}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -430,31 +430,31 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "GFDLgrid"
 
-  GFDLgrid_LON_T6_CTR=-97.5
-  GFDLgrid_LAT_T6_CTR=38.5
-  GFDLgrid_STRETCH_FAC=1.4
+  GFDLgrid_LON_T6_CTR="-97.5"
+  GFDLgrid_LAT_T6_CTR="38.5"
+  GFDLgrid_STRETCH_FAC="1.4"
   GFDLgrid_RES="96"
-  GFDLgrid_REFINE_RATIO=3
+  GFDLgrid_REFINE_RATIO="3"
 
-  num_margin_cells_T6_left=12
+  num_margin_cells_T6_left="12"
   GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
 
-  num_margin_cells_T6_right=12
+  num_margin_cells_T6_right="12"
   GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
 
-  num_margin_cells_T6_bottom=16
+  num_margin_cells_T6_bottom="16"
   GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
 
-  num_margin_cells_T6_top=16
+  num_margin_cells_T6_top="16"
   GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
 
-#  GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="FALSE"
+  GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="TRUE"
 
-  DT_ATMOS="225"
+  DT_ATMOS="${DT_ATMOS:-225}"
 
-  LAYOUT_X="6"
-  LAYOUT_Y="4"
-  BLOCKSIZE="36"
+  LAYOUT_X="${LAYOUT_X:-6}"
+  LAYOUT_Y="${LAYOUT_Y:-4}"
+  BLOCKSIZE="${BLOCKSIZE:-36}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -485,31 +485,31 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "GFDLgrid"
 
-  GFDLgrid_LON_T6_CTR=-97.5
-  GFDLgrid_LAT_T6_CTR=38.5
-  GFDLgrid_STRETCH_FAC=1.5
+  GFDLgrid_LON_T6_CTR="-97.5"
+  GFDLgrid_LAT_T6_CTR="38.5"
+  GFDLgrid_STRETCH_FAC="1.5"
   GFDLgrid_RES="768"
-  GFDLgrid_REFINE_RATIO=3
+  GFDLgrid_REFINE_RATIO="3"
 
-  num_margin_cells_T6_left=69
+  num_margin_cells_T6_left="69"
   GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
 
-  num_margin_cells_T6_right=69
+  num_margin_cells_T6_right="69"
   GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
 
-  num_margin_cells_T6_bottom=164
+  num_margin_cells_T6_bottom="164"
   GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
 
-  num_margin_cells_T6_top=164
+  num_margin_cells_T6_top="164"
   GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
 
-#  GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="FALSE"
+  GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="TRUE"
 
-  DT_ATMOS="18"
+  DT_ATMOS="${DT_ATMOS:-18}"
 
-  LAYOUT_X="30"
-  LAYOUT_Y="22"
-  BLOCKSIZE="35"
+  LAYOUT_X="${LAYOUT_X:-30}"
+  LAYOUT_Y="${LAYOUT_Y:-22}"
+  BLOCKSIZE="${BLOCKSIZE:-35}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -570,33 +570,33 @@ case ${PREDEF_GRID_NAME} in
 #dlon=0.03
 #dlat=0.03
 
-#    GFDLgrid_LON_T6_CTR=-153.0
-#    GFDLgrid_LAT_T6_CTR=61.0
-#    GFDLgrid_STRETCH_FAC=1.0  # ???
+#    GFDLgrid_LON_T6_CTR="-153.0"
+#    GFDLgrid_LAT_T6_CTR="61.0"
+#    GFDLgrid_STRETCH_FAC="1.0"  # ???
 #    GFDLgrid_RES="768"
-#    GFDLgrid_REFINE_RATIO=3   # ???
-#  
-#    num_margin_cells_T6_left=61
+#    GFDLgrid_REFINE_RATIO="3"   # ???
+#
+#    num_margin_cells_T6_left="61"
 #    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
-#  
-#    num_margin_cells_T6_right=67
+#
+#    num_margin_cells_T6_right="67"
 #    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
-#  
-#    num_margin_cells_T6_bottom=165
+#
+#    num_margin_cells_T6_bottom="165"
 #    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
-#  
-#    num_margin_cells_T6_top=171
+#
+#    num_margin_cells_T6_top="171"
 #    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
 #
 #    GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="TRUE"
 #
-#    DT_ATMOS="18"
+#    DT_ATMOS="${DT_ATMOS:-18}"
 #
-#    LAYOUT_X="16"
-#    LAYOUT_Y="48"
+#    LAYOUT_X="${LAYOUT_X:-16}"
+#    LAYOUT_Y="${LAYOUT_Y:-48}"
 #    WRTCMP_write_groups="2"
 #    WRTCMP_write_tasks_per_group="24"
-#    BLOCKSIZE=32
+#    BLOCKSIZE="${BLOCKSIZE:-32}"
 #
 #  elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 
@@ -606,8 +606,8 @@ case ${PREDEF_GRID_NAME} in
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
 
 # Longitude and latitude for center of domain
-  ESGgrid_LON_CTR=-153.0
-  ESGgrid_LAT_CTR=61.0
+  ESGgrid_LON_CTR="-153.0"
+  ESGgrid_LAT_CTR="61.0"
 
 # Projected grid spacing in meters...in the static files (e.g. "C768_grid.tile7.nc"), the "dx" is actually the resolution
 # of the supergrid, which is HALF of this dx
@@ -616,12 +616,12 @@ case ${PREDEF_GRID_NAME} in
 
 # Number of x and y points for your domain (halo not included);
 # Divide "supergrid" values from /scratch2/BMC/det/kavulich/fix/fix_sar/ak/C768_grid.tile7.halo4.nc by 2 and subtract 8 to eliminate halo
-  ESGgrid_NX=1344 # Supergrid value 2704
-  ESGgrid_NY=1152 # Supergrid value 2320
+  ESGgrid_NX="1344" # Supergrid value 2704
+  ESGgrid_NY="1152" # Supergrid value 2320
 
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
 # Side note: FV3 is lagrangian and vertical coordinates are dynamically remapped during model integration
 # 'ksplit' is the factor that determines the timestep for this process (divided
@@ -632,17 +632,17 @@ case ${PREDEF_GRID_NAME} in
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
 
-  DT_ATMOS="18"
+  DT_ATMOS="${DT_ATMOS:-18}"
 
 #Factors for MPI decomposition. ESGgrid_NX must be divisible by LAYOUT_X, ESGgrid_NY must be divisible by LAYOUT_Y
-  LAYOUT_X="28"
-  LAYOUT_Y="16"
+  LAYOUT_X="${LAYOUT_X:-28}"
+  LAYOUT_Y="${LAYOUT_Y:-16}"
 
 #Take number of points on a tile (nx/lx*ny/ly), must divide by block size to get an integer.
 #This integer must be small enough to fit into a processor's cache, so it is machine-dependent magic
 # For Theia, must be ~40 or less
 # Check setup.sh for more details
-  BLOCKSIZE="24"
+  BLOCKSIZE="${BLOCKSIZE:-24}"
 
 #This section is all for the write component, which you need for output during model integration
   if [ "$QUILTING" = "TRUE" ]; then
@@ -681,8 +681,8 @@ case ${PREDEF_GRID_NAME} in
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/hi/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
 # Longitude and latitude for center of domain
-  ESGgrid_LON_CTR=-157.0
-  ESGgrid_LAT_CTR=20.0
+  ESGgrid_LON_CTR="-157.0"
+  ESGgrid_LAT_CTR="20.0"
 
 # Projected grid spacing in meters...in the static files (e.g. "C768_grid.tile7.nc"), the "dx" is actually the resolution
 # of the supergrid, which is HALF of this dx (plus or minus some grid stretch factor)
@@ -691,12 +691,12 @@ case ${PREDEF_GRID_NAME} in
 
 # Number of x and y points for your domain (halo not included);
 # Divide "supergrid" values from /scratch2/BMC/det/kavulich/fix/fix_sar/hi/C768_grid.tile7.halo4.nc by 2 and subtract 8 to eliminate halo
-  ESGgrid_NX=432 # Supergrid value 880
-  ESGgrid_NY=360 # Supergrid value 736
+  ESGgrid_NX="432" # Supergrid value 880
+  ESGgrid_NY="360" # Supergrid value 736
 
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
 # Side note: FV3 is lagrangian and vertical coordinates are dynamically remapped during model integration
 # 'ksplit' is the factor that determines the timestep for this process (divided
@@ -707,16 +707,16 @@ case ${PREDEF_GRID_NAME} in
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
 
-  DT_ATMOS="18"
+  DT_ATMOS="${DT_ATMOS:-18}"
 
 #Factors for MPI decomposition. ESGgrid_NX must be divisible by LAYOUT_X, ESGgrid_NY must be divisible by LAYOUT_Y
-  LAYOUT_X="8"
-  LAYOUT_Y="8"
+  LAYOUT_X="${LAYOUT_X:-8}"
+  LAYOUT_Y="${LAYOUT_Y:-8}"
 #Take number of points on a tile (nx/lx*ny/ly), must divide by block size to get an integer.
 #This integer must be small enough to fit into a processor's cache, so it is machine-dependent magic
 # For Theia, must be ~40 or less
 # Check setup.sh for more details
-  BLOCKSIZE="27"
+  BLOCKSIZE="${BLOCKSIZE:-27}"
 
 #This section is all for the write component, which you need for output during model integration
   if [ "$QUILTING" = "TRUE" ]; then
@@ -756,8 +756,8 @@ case ${PREDEF_GRID_NAME} in
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/pr/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
 # Longitude and latitude for center of domain
-  ESGgrid_LON_CTR=-69.0
-  ESGgrid_LAT_CTR=18.0
+  ESGgrid_LON_CTR="-69.0"
+  ESGgrid_LAT_CTR="18.0"
 
 # Projected grid spacing in meters...in the static files (e.g. "C768_grid.tile7.nc"), the "dx" is actually the resolution
 # of the supergrid, which is HALF of this dx (plus or minus some grid stretch factor)
@@ -766,12 +766,12 @@ case ${PREDEF_GRID_NAME} in
 
 # Number of x and y points for your domain (halo not included);
 # Divide "supergrid" values from /scratch2/BMC/det/kavulich/fix/fix_sar/pr/C768_grid.tile7.halo4.nc by 2 and subtract 8 to eliminate halo
-  ESGgrid_NX=576 # Supergrid value 1168
-  ESGgrid_NY=432 # Supergrid value 880
+  ESGgrid_NX="576" # Supergrid value 1168
+  ESGgrid_NY="432" # Supergrid value 880
 
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
 # Side note: FV3 is lagrangian and vertical coordinates are dynamically remapped during model integration
 # 'ksplit' is the factor that determines the timestep for this process (divided
@@ -782,17 +782,17 @@ case ${PREDEF_GRID_NAME} in
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
 
-  DT_ATMOS="18"
+  DT_ATMOS="${DT_ATMOS:-18}"
 
 #Factors for MPI decomposition. ESGgrid_NX must be divisible by LAYOUT_X, ESGgrid_NY must be divisible by LAYOUT_Y
-  LAYOUT_X="16"
-  LAYOUT_Y="8"
+  LAYOUT_X="${LAYOUT_X:-16}"
+  LAYOUT_Y="${LAYOUT_Y:-8}"
 
 #Take number of points on a tile (nx/lx*ny/ly), must divide by block size to get an integer.
 #This integer must be small enough to fit into a processor's cache, so it is machine-dependent magic
 # For Theia, must be ~40 or less
 # Check setup.sh for more details
-  BLOCKSIZE="24"
+  BLOCKSIZE="${BLOCKSIZE:-24}"
 
 #This section is all for the write component, which you need for output during model integration
   if [ "$QUILTING" = "TRUE" ]; then
@@ -831,8 +831,8 @@ case ${PREDEF_GRID_NAME} in
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/guam/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
 # Longitude and latitude for center of domain
-  ESGgrid_LON_CTR=146.0
-  ESGgrid_LAT_CTR=15.0
+  ESGgrid_LON_CTR="146.0"
+  ESGgrid_LAT_CTR="15.0"
 
 # Projected grid spacing in meters...in the static files (e.g. "C768_grid.tile7.nc"), the "dx" is actually the resolution
 # of the supergrid, which is HALF of this dx (plus or minus some grid stretch factor)
@@ -841,12 +841,12 @@ case ${PREDEF_GRID_NAME} in
 
 # Number of x and y points for your domain (halo not included);
 # Divide "supergrid" values from /scratch2/BMC/det/kavulich/fix/fix_sar/guam/C768_grid.tile7.halo4.nc by 2 and subtract 8 to eliminate halo
-  ESGgrid_NX=432 # Supergrid value 880
-  ESGgrid_NY=360 # Supergrid value 736
+  ESGgrid_NX="432" # Supergrid value 880
+  ESGgrid_NY="360" # Supergrid value 736
 
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
 # Side note: FV3 is lagrangian and vertical coordinates are dynamically remapped during model integration
 # 'ksplit' is the factor that determines the timestep for this process (divided
@@ -857,16 +857,16 @@ case ${PREDEF_GRID_NAME} in
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
 
-  DT_ATMOS="18"
+  DT_ATMOS="${DT_ATMOS:-18}"
 
 #Factors for MPI decomposition. ESGgrid_NX must be divisible by LAYOUT_X, ESGgrid_NY must be divisible by LAYOUT_Y
-  LAYOUT_X="16"
-  LAYOUT_Y="12"
+  LAYOUT_X="${LAYOUT_X:-16}"
+  LAYOUT_Y="${LAYOUT_Y:-12}"
 #Take number of points on a tile (nx/lx*ny/ly), must divide by block size to get an integer.
 #This integer must be small enough to fit into a processor's cache, so it is machine-dependent magic
 # For Theia, must be ~40 or less
 # Check setup.sh for more details
-  BLOCKSIZE="27"
+  BLOCKSIZE="${BLOCKSIZE:-27}"
 
 #This section is all for the write component, which you need for output during model integration
   if [ "$QUILTING" = "TRUE" ]; then
@@ -902,22 +902,22 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "ESGgrid"
 
-  ESGgrid_LON_CTR=-62.0
-  ESGgrid_LAT_CTR=22.0
+  ESGgrid_LON_CTR="-62.0"
+  ESGgrid_LAT_CTR="22.0"
 
   ESGgrid_DELX="25000.0"
   ESGgrid_DELY="25000.0"
 
-  ESGgrid_NX=345
-  ESGgrid_NY=230
+  ESGgrid_NX="345"
+  ESGgrid_NY="230"
 
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
-  DT_ATMOS="300"
+  DT_ATMOS="${DT_ATMOS:-300}"
 
-  LAYOUT_X="5"
-  LAYOUT_Y="5"
-  BLOCKSIZE="6"
+  LAYOUT_X="${LAYOUT_X:-5}"
+  LAYOUT_Y="${LAYOUT_Y:-5}"
+  BLOCKSIZE="${BLOCKSIZE:-6}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -944,22 +944,22 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "ESGgrid"
 
-  ESGgrid_LON_CTR=-62.0
-  ESGgrid_LAT_CTR=22.0
+  ESGgrid_LON_CTR="-62.0"
+  ESGgrid_LAT_CTR="22.0"
 
   ESGgrid_DELX="13000.0"
   ESGgrid_DELY="13000.0"
 
-  ESGgrid_NX=665
-  ESGgrid_NY=444
+  ESGgrid_NX="665"
+  ESGgrid_NY="444"
 
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
-  DT_ATMOS="180"
+  DT_ATMOS="${DT_ATMOS:-180}"
 
-  LAYOUT_X="19"
-  LAYOUT_Y="12"
-  BLOCKSIZE="35"
+  LAYOUT_X="${LAYOUT_X:-19}"
+  LAYOUT_Y="${LAYOUT_Y:-12}"
+  BLOCKSIZE="${BLOCKSIZE:-35}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -986,22 +986,22 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "ESGgrid"
 
-  ESGgrid_LON_CTR=-62.0
-  ESGgrid_LAT_CTR=22.0
+  ESGgrid_LON_CTR="-62.0"
+  ESGgrid_LAT_CTR="22.0"
 
   ESGgrid_DELX="3000.0"
   ESGgrid_DELY="3000.0"
 
-  ESGgrid_NX=2880
-  ESGgrid_NY=1920
+  ESGgrid_NX="2880"
+  ESGgrid_NY="1920"
 
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
-  DT_ATMOS="40"
+  DT_ATMOS="${DT_ATMOS:-40}"
 
-  LAYOUT_X="32"
-  LAYOUT_Y="24"
-  BLOCKSIZE="32"
+  LAYOUT_X="${LAYOUT_X:-32}"
+  LAYOUT_Y="${LAYOUT_Y:-24}"
+  BLOCKSIZE="${BLOCKSIZE:-32}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -1028,22 +1028,22 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "ESGgrid"
 
-  ESGgrid_LON_CTR=-163.5
-  ESGgrid_LAT_CTR=62.8
+  ESGgrid_LON_CTR="-163.5"
+  ESGgrid_LAT_CTR="62.8"
 
   ESGgrid_DELX="50000.0"
   ESGgrid_DELY="50000.0"
 
-  ESGgrid_NX=74
-  ESGgrid_NY=51
+  ESGgrid_NX="74"
+  ESGgrid_NY="51"
 
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
-  DT_ATMOS="600"
+  DT_ATMOS="${DT_ATMOS:-600}"
 
-  LAYOUT_X="2"
-  LAYOUT_Y="3"
-  BLOCKSIZE="37"
+  LAYOUT_X="${LAYOUT_X:-2}"
+  LAYOUT_Y="${LAYOUT_Y:-3}"
+  BLOCKSIZE="${BLOCKSIZE:-37}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
@@ -1072,22 +1072,22 @@ case ${PREDEF_GRID_NAME} in
 
 #  if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 #
-#    GFDLgrid_LON_T6_CTR=-106.0
-#    GFDLgrid_LAT_T6_CTR=54.0
-#    GFDLgrid_STRETCH_FAC=0.63
+#    GFDLgrid_LON_T6_CTR="-106.0"
+#    GFDLgrid_LAT_T6_CTR="54.0"
+#    GFDLgrid_STRETCH_FAC="0.63"
 #    GFDLgrid_RES="384"
-#    GFDLgrid_REFINE_RATIO=3
-#  
-#    num_margin_cells_T6_left=10
+#    GFDLgrid_REFINE_RATIO="3"
+#
+#    num_margin_cells_T6_left="10"
 #    GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
-#  
-#    num_margin_cells_T6_right=10
+#
+#    num_margin_cells_T6_right="10"
 #    GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
-#  
-#    num_margin_cells_T6_bottom=10
+#
+#    num_margin_cells_T6_bottom="10"
 #    GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_bottom + 1 ))
-#  
-#    num_margin_cells_T6_top=10
+#
+#    num_margin_cells_T6_top="10"
 #    GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
 #
 #    GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="FALSE"
@@ -1116,22 +1116,22 @@ case ${PREDEF_GRID_NAME} in
 
   GRID_GEN_METHOD= "ESGgrid"
 
-  ESGgrid_LON_CTR=-106.0
-  ESGgrid_LAT_CTR=54.0
+  ESGgrid_LON_CTR="-106.0"
+  ESGgrid_LAT_CTR="54.0"
 
   ESGgrid_DELX="13000.0"
   ESGgrid_DELY="13000.0"
 
-  ESGgrid_NX=960
-  ESGgrid_NY=960
+  ESGgrid_NX="960"
+  ESGgrid_NY="960"
 
-  ESGgrid_WIDE_HALO_WIDTH=6
+  ESGgrid_WIDE_HALO_WIDTH="6"
 
-  DT_ATMOS="50"
+  DT_ATMOS="${DT_ATMOS:-50}"
 
-  LAYOUT_X="16"
-  LAYOUT_Y="16"
-  BLOCKSIZE="30"
+  LAYOUT_X="${LAYOUT_X:-16}"
+  LAYOUT_Y="${LAYOUT_Y:-16}"
+  BLOCKSIZE="${BLOCKSIZE:-30}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
