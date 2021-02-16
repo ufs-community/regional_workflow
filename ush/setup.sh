@@ -274,6 +274,26 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that RUN_TASK_VX_ENSPOINT is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_VX_ENSPOINT" "valid_vals_RUN_TASK_VX_ENSPOINT"
+#
+# Set RUN_TASK_VX_ENSPOINT to either "TRUE" or "FALSE" so we don't have to
+# consider other valid values later on.
+#
+RUN_TASK_VX_ENSPOINT=${RUN_TASK_VX_ENSPOINT^^}
+if [ "${RUN_TASK_VX_ENSPOINT}" = "TRUE" ] || \
+   [ "${RUN_TASK_VX_ENSPOINT}" = "YES" ]; then
+  RUN_TASK_VX_ENSPOINT="TRUE"
+elif [ "${RUN_TASK_VX_ENSPOINT}" = "FALSE" ] || \
+     [ "${RUN_TASK_VX_ENSPOINT}" = "NO" ]; then
+  RUN_TASK_VX_ENSPOINT="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that DO_SHUM is set to a valid value.
 #
 #-----------------------------------------------------------------------

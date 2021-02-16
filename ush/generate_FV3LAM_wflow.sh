@@ -195,6 +195,7 @@ settings="\
   'vx_gridstat_06h_tn': ${VX_GRIDSTAT_06h_TN}
   'vx_gridstat_24h_tn': ${VX_GRIDSTAT_24h_TN}
   'vx_pointstat_tn': ${VX_POINTSTAT_TN}
+  'vx_enspoint_tn': ${VX_ENSPOINT_TN}
 #
 # Number of nodes to use for each task.
 #
@@ -212,6 +213,7 @@ settings="\
   'nnodes_get_obs_ndas': ${NNODES_GET_OBS_NDAS}
   'nnodes_vx_gridstat': ${NNODES_VX_GRIDSTAT}
   'nnodes_vx_pointstat': ${NNODES_VX_POINTSTAT}
+  'nnodes_vx_enspoint': ${NNODES_VX_ENSPOINT}
 
 #
 # Number of cores used for a task
@@ -236,6 +238,7 @@ settings="\
   'ppn_get_obs_ndas': ${PPN_GET_OBS_NDAS}
   'ppn_vx_gridstat': ${PPN_VX_GRIDSTAT}
   'ppn_vx_pointstat': ${PPN_VX_POINTSTAT}
+  'ppn_vx_enspoint': ${PPN_VX_ENSPOINT}
 
 #
 # Maximum wallclock time for each task.
@@ -254,6 +257,7 @@ settings="\
   'wtime_get_obs_ndas': ${WTIME_GET_OBS_NDAS}
   'wtime_vx_gridstat': ${WTIME_VX_GRIDSTAT}
   'wtime_vx_pointstat': ${WTIME_VX_POINTSTAT}
+  'wtime_vx_enspoint': ${WTIME_VX_ENSPOINT}
 #
 # Maximum number of tries for each task.
 #
@@ -277,6 +281,7 @@ settings="\
   'run_task_get_obs_ndas': ${RUN_TASK_GET_OBS_NDAS}
   'run_task_vx_gridstat': ${RUN_TASK_VX_GRIDSTAT}
   'run_task_vx_pointstat': ${RUN_TASK_VX_POINTSTAT}
+  'run_task_vx_enspoint': ${RUN_TASK_VX_ENSPOINT}
 #
 # Number of physical cores per node for the current machine.
 #
