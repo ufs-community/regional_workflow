@@ -580,7 +580,6 @@ EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
 # directory or the cycle directories under it.
 #
 #-----------------------------------------------------------------------
-#
 CCPP_PHYS_SUITE="FV3_GFS_v15p2"
 #
 #-----------------------------------------------------------------------
