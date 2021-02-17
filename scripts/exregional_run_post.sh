@@ -61,6 +61,8 @@ valid_args=( \
 "postprd_dir" \
 "fhr_dir" \
 "fhr" \
+"fmin" \
+"dt_atmos" \
 )
 process_args valid_args "$@"
 #
@@ -204,20 +206,32 @@ tmmark="tm00"
 #
 #-----------------------------------------------------------------------
 #
-dyn_file="${run_dir}/dynf${fhr}.nc"
-phy_file="${run_dir}/phyf${fhr}.nc"
+if [ ! "${fmin}" ]; then
+  dyn_file="${run_dir}/dynf${fhr}.nc"
+  phy_file="${run_dir}/phyf${fhr}.nc"
+  post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours" "+%Y%m%d%H%M" )
+else
+  if [ ${fhr} == 000 ]; then
+    dyn_file="${run_dir}/dynf${fhr}:${fmin}:45.nc"
+    phy_file="${run_dir}/phyf${fhr}:${fmin}:45.nc"
+  else
+    dyn_file="${run_dir}/dynf${fhr}:${fmin}:00.nc"
+    phy_file="${run_dir}/phyf${fhr}:${fmin}:00.nc"
+  fi
+  post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours +${fmin} minutes" "+%Y%m%d%H%M" )
+fi
 
-post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours" "+%Y%m%d%H" )
 post_yyyy=${post_time:0:4}
 post_mm=${post_time:4:2}
 post_dd=${post_time:6:2}
 post_hh=${post_time:8:2}
+post_min=${post_time:10:2}
 
 cat > itag <<EOF
 ${dyn_file}
 netcdf
 grib2
-${post_yyyy}-${post_mm}-${post_dd}_${post_hh}:00:00
+${post_yyyy}-${post_mm}-${post_dd}_${post_hh}:${post_min}:00
 FV3R
 ${phy_file}
 
@@ -268,8 +282,29 @@ The \${fhr} variable contains too few or too many characters:
   fhr = \"$fhr\""
 fi
 
-mv_vrfy BGDAWP.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}.${tmmark}.grib2
-mv_vrfy BGRD3D.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}.${tmmark}.grib2
+len_fmin=${#fmin}
+if [ ${len_fmin} -eq 2 ]; then
+  post_fmin=${fmin}
+elif [ ${len_fmin} -eq 3 ]; then
+  if [ "${fmin:0:1}" = "0" ]; then
+    post_fmin="${fmin:1}"
+  fi
+else
+  print_err_msg_exit "\
+The \${fmin} variable contains too few or too many characters:
+  fmin = \"$fmin\""
+fi
+
+ls -l BGDAWP.GrbF${post_fhr}*
+ls -l BGRD3D.GrbF${post_fhr}*
+
+if [[ ! "${fmin}" ]] || [[ ${fmin} -eq 00 ]]; then
+  mv_vrfy BGDAWP.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}00.${tmmark}.grib2
+  mv_vrfy BGRD3D.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}00.${tmmark}.grib2
+else
+  mv_vrfy BGDAWP.GrbF${post_fhr}.${fmin} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}${fmin}.${tmmark}.grib2
+  mv_vrfy BGRD3D.GrbF${post_fhr}.${fmin} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}${fmin}.${tmmark}.grib2
+fi
 
 #Link output for transfer to Jet
 # Should the following be done only if on jet??
@@ -280,9 +315,9 @@ mv_vrfy BGRD3D.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}.${tm
 # instead of calling sed.
 start_date=$( echo "${cdate}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/' )
 basetime=$( date +%y%j%H%M -d "${start_date}" )
-ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}.${tmmark}.grib2 \
+ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}00.${tmmark}.grib2 \
             ${postprd_dir}/BGDAWP_${basetime}f${fhr}00
-ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}.${tmmark}.grib2 \
+ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}00.${tmmark}.grib2 \
             ${postprd_dir}/BGRD3D_${basetime}f${fhr}00
 
 rm_vrfy -rf ${fhr_dir}

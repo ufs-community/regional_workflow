@@ -365,6 +365,29 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that SUB_HOURLY_POST is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "SUB_HOURLY_POST" "valid_vals_SUB_HOURLY_POST"
+#
+# Set SUB_HOURLY_POST to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+SUB_HOURLY_POST=${SUB_HOURLY_POST^^}
+if [ "$SUB_HOURLY_POST" = "TRUE" ] || \
+   [ "$SUB_HOURLY_POST" = "YES" ]; then
+  SUB_HOURLY_POST="TRUE"
+elif [ "$SUB_HOURLY_POST" = "FALSE" ] || \
+     [ "$SUB_HOURLY_POST" = "NO" ]; then
+  SUB_HOURLY_POST="FALSE"
+fi
+if [ ${DELTA_MIN} == 00 ]; then
+  SUB_HOURLY_POST="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that DOT_OR_USCORE is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -577,6 +600,20 @@ DATE_LAST_CYCL must be a string consisting of exactly 8 digits of the
 form \"YYYYMMDD\", where YYYY is the 4-digit year, MM is the 2-digit 
 month, and DD is the 2-digit day-of-month.
   DATE_LAST_CYCL = \"${DATE_LAST_CYCL}\""
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Check that DELTA_MIN is a string consisting of exactly 2 digits between "00" and "59"
+#
+#-----------------------------------------------------------------------
+#
+MIN_OR_NULL=$( printf "%s" "${DELTA_MIN}" | \
+                sed -n -r -e "s/^([0-5][0-9])$/\1/p" )
+if [ -z "${MIN_OR_NULL}" ]; then
+  print_err_msg_exit "\
+DELTA_MIN must be a 2-digit integer between 00 and 59 inclusive, as "MM".
+  DELTA_MIN = \"${DELTA_MIN}\""
 fi
 #
 #-----------------------------------------------------------------------
@@ -975,6 +1012,18 @@ The forecast model main time step (DT_ATMOS) is set to a null string:
 Please set this to a valid numerical value in the user-specified experiment
 configuration file (EXPT_CONFIG_FP) and rerun:
   EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
+else
+  ((val = (DELTA_MIN*60) % DT_ATMOS))
+  if [ ${val} -ne 0 ]; then
+   print_err_msg_exit "\
+PROBLEM: Your selections of DELTA_MIN (${DELTA_MIN}) and DT_ATMOS (${DT_ATMOS}) are inconsistent,
+and thus there will be a mismatch between the valid time of FV3 output files 
+and the requested post-processed output times. Re-set either DT_ATMOS or DELTA_MIN
+so that 
+
+       60*DELTA_MIN/DT_ATMOS = integer
+"
+  fi
 fi
 
 if [ -z "${LAYOUT_X}" ]; then

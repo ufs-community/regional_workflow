@@ -282,6 +282,11 @@ settings="\
   'ensmem_indx_name': ${ensmem_indx_name}
   'uscore_ensmem_name': ${uscore_ensmem_name}
   'slash_ensmem_subdir': ${slash_ensmem_subdir}
+#
+# Parameters associated with subhourly post-processed output
+#
+  'sub_hourly_post': ${SUB_HOURLY_POST}
+  'del_min': ${DELTA_MIN}
 " # End of "settings" variable.
 
 print_info_msg $VERBOSE "
