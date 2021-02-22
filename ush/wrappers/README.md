@@ -1,6 +1,6 @@
 Each workflow task has a wrapper script to set environment variables and run the job script
 
-The experiment-generation step MUST be done FIRST!  generate_FV3SAR_wflow.sh
+The experiment-generation step (generate_FV3LAM_wflow.sh) MUST be done FIRST!
 
 There is an example batch-submit script for hera (Slurm) and cheyenne (PBS).  These examples set the build and run environment for hera or cheyenne, so that run-time libraries match the compiled libraries (i.e. netcdf, mpi). 
 
