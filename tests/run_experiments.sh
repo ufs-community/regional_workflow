@@ -506,6 +506,10 @@ VERBOSE=\"${VERBOSE}\""
       pregen_basedir="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
       pregen_basedir="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen"
+    elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      pregen_basedir="/gpfs/hps3/emc/meso/noscrub/Chan-Hoo.Jeon/00_DATA/FV3LAM_pregen"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      pregen_basedir="/gpfs/dell2/emc/modeling/noscrub/Chan-Hoo.Jeon/00_DATA/FV3LAM_pregen"
     else
       print_err_msg_exit "\
 The base directory (pregen_basedir) in which the pregenerated grid,
@@ -568,6 +572,10 @@ SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
       GWD_HRRRsuite_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
       GWD_HRRRsuite_BASEDIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen"
+    elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      GWD_HRRRsuite_BASEDIR="/gpfs/hps3/emc/meso/noscrub/Chan-Hoo.Jeon/00_DATA/FV3LAM_pregen"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      GWD_HRRRsuite_BASEDIR="/gpfs/dell2/emc/modeling/noscrub/Chan-Hoo.Jeon/00_DATA/FV3LAM_pregen"
     else
       print_err_msg_exit "\
 The base directory (GWD_HRRRsuite_BASEDIR) containing the pregenerated 
@@ -648,6 +656,10 @@ envir=\"\${EXPT_SUBDIR}\""
       FIXLAM_NCO_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
       FIXLAM_NCO_BASEDIR="/needs/to/be/specified"
+    elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      FIXLAM_NCO_BASEDIR="/gpfs/hps3/emc/meso/noscrub/Chan-Hoo.Jeon/00_DATA/FV3LAM_pregen"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      FIXLAM_NCO_BASEDIR="/gpfs/dell2/emc/modeling/noscrub/Chan-Hoo.Jeon/00_DATA/FV3LAM_pregen"
     else
       print_err_msg_exit "\
 The base directory (FIXLAM_NCO_BASEDIR) in which the pregenerated grid, 
@@ -681,6 +693,10 @@ FIXLAM_NCO_BASEDIR=\"${FIXLAM_NCO_BASEDIR}\""
         COMINgfs="/lfs1/HFIP/hwrf-data/hafs-input/COMGFS"
       elif [ "$MACHINE" = "CHEYENNE" ]; then
         COMINgfs="/glade/scratch/ketefian/NCO_dirs/COMGFS"
+      elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
+        COMINgfs="/gpfs/hps3/emc/meso/noscrub/Chan-Hoo.Jeon/00_DATA/COMGFS"
+      elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+        COMINgfs="/gpfs/dell2/emc/modeling/noscrub/Chan-Hoo.Jeon/00_DATA/COMGFS"
       else
         print_err_msg_exit "\
 The directory (COMINgfs) that needs to be specified when running the
@@ -732,6 +748,10 @@ PTMP=\"${PTMP}\""
       extrn_mdl_source_basedir="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "ORION" ]; then
       extrn_mdl_source_basedir="/work/noaa/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files"
+    elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      extrn_mdl_source_basedir="/gpfs/hps3/emc/meso/noscrub/Chan-Hoo.Jeon/00_DATA/extrn_mdl_files"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      extrn_mdl_source_basedir="/gpfs/dell2/emc/modeling/noscrub/Chan-Hoo.Jeon/00_DATA/extrn_mdl_files"
     else
       print_err_msg_exit "\
 The base directory (extrn_mdl_source_basedir) in which the user-staged
