@@ -753,7 +753,7 @@ case $MACHINE in
     ;;
 
   "GAEA")
-    FIXgsm=${FIXgsm:-"/lustre/f2/pdata/esrl/gsd/ufs/ufs-srw-release-v1.0.0/fix"}
+    FIXgsm=${FIXgsm:-"/lustre/f2/pdata/esrl/gsd/ufs/ufs-srw-release-v1.0.0/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/lustre/f2/pdata/esrl/gsd/ufs/ufs-srw-release-v1.0.0/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lustre/f2/pdata/esrl/gsd/ufs/ufs-srw-release-v1.0.0/fix/sfc_climo"}
     ;;
