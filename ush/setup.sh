@@ -753,7 +753,7 @@ case $MACHINE in
     ;;
 
   "GAEA")
-    FIXgsm=${FIXgsm:-"/lustre/f2/pdata/esrl/gsd/ufs/ufs-srw-release-v1.0.0/fix"}
+    FIXgsm=${FIXgsm:-"/lustre/f2/pdata/esrl/gsd/ufs/ufs-srw-release-v1.0.0/fix/fix_am"}
     TOPO_DIR=${TOPO_DIR:-"/lustre/f2/pdata/esrl/gsd/ufs/ufs-srw-release-v1.0.0/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lustre/f2/pdata/esrl/gsd/ufs/ufs-srw-release-v1.0.0/fix/sfc_climo"}
     ;;
@@ -2536,6 +2536,15 @@ Heredoc (cat) command to append grid parameters to variable definitions
 file returned with a nonzero status."
 
 fi
+#
+#-----------------------------------------------------------------------
+#
+# Because RUN_CMD_FCST can include PE_MEMBER01 (and theoretically other
+# variables calculated in this script), delete the first occurance of it
+# in the var_defns file, and write it again at the end.
+#
+#-----------------------------------------------------------------------
+$SED -i '/^RUN_CMD_FCST=/d' $GLOBAL_VAR_DEFNS_FP
 #
 #-----------------------------------------------------------------------
 #

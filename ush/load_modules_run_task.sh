@@ -128,7 +128,7 @@ case "$MACHINE" in
     ;;
 #
   "GAEA")
-    . /lustre/f2/pdata/esrl/gsd/contrib/lua-5.1.4.9/init/init_lmod.sh
+    . /opt/modules/default/init/sh
     ;;
 #
   *)
