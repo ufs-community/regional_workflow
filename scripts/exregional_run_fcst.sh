@@ -122,7 +122,8 @@ case $MACHINE in
   "JET")
     ulimit -s unlimited
     ulimit -a
-    APRUN="srun"
+    nprocs=$(( NNODES_RUN_FCST*PPN_RUN_FCST ))
+    APRUN="mpirun -np $nprocs"
     OMP_NUM_THREADS=4
     ;;
 

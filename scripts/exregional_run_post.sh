@@ -117,7 +117,8 @@ case $MACHINE in
     ;;
 
   "JET")
-    APRUN="srun"
+    nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
+    APRUN="mpirun -np $nprocs"
     ;;
 
   "GAEA")
