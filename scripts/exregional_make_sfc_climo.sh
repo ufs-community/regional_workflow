@@ -152,7 +152,8 @@ case $MACHINE in
     ;;
 
   "JET")
-    APRUN="srun"
+    nprocs=$(( NNODES_MAKE_SFC_CLIMO*PPN_MAKE_SFC_CLIMO ))
+    APRUN="mpirun -np $nprocs"
     ;;
 
   "GAEA")
