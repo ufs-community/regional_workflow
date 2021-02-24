@@ -382,8 +382,7 @@ DATE_LAST_CYCL="YYYYMMDD"
 CYCL_HRS=( "HH1" "HH2" )
 FCST_LEN_HRS="24"
 SUB_HOURLY_POST="FALSE"
-DELTA_MIN="15"
-#
+DT_SUBHOURLY_POST_MNTS="00"
 #-----------------------------------------------------------------------
 #
 # Set initial and lateral boundary condition generation parameters.  

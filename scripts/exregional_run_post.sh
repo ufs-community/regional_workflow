@@ -61,7 +61,7 @@ valid_args=( \
 "postprd_dir" \
 "fhr_dir" \
 "fhr" \
-"fmin" \
+"fmn" \
 "dt_atmos" \
 )
 process_args valid_args "$@"
@@ -206,20 +206,20 @@ tmmark="tm00"
 #
 #-----------------------------------------------------------------------
 #
-if [ ! "${fmin}" ]; then
-  dyn_file="${run_dir}/dynf${fhr}.nc"
-  phy_file="${run_dir}/phyf${fhr}.nc"
-  post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours" "+%Y%m%d%H%M" )
-else
-  if [ ${fhr} == 000 ]; then
-    dyn_file="${run_dir}/dynf${fhr}:${fmin}:45.nc"
-    phy_file="${run_dir}/phyf${fhr}:${fmin}:45.nc"
+mnts_secs_str=""
+if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
+  if [ ${fhr}${fmn} = "00000" ]; then
+    mnts_secs_str=":${fmn}:${dt_atmos}"
   else
-    dyn_file="${run_dir}/dynf${fhr}:${fmin}:00.nc"
-    phy_file="${run_dir}/phyf${fhr}:${fmin}:00.nc"
+    mnts_secs_str=":${fmn}:00"
   fi
-  post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours +${fmin} minutes" "+%Y%m%d%H%M" )
+else
+  fmn="00"
 fi
+
+dyn_file="${run_dir}/dynf${fhr}${mnts_secs_str}.nc"
+phy_file="${run_dir}/phyf${fhr}${mnts_secs_str}.nc"
+post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours +${fmn} minutes" "+%Y%m%d%H%M" )
 
 post_yyyy=${post_time:0:4}
 post_mm=${post_time:4:2}
@@ -282,28 +282,21 @@ The \${fhr} variable contains too few or too many characters:
   fhr = \"$fhr\""
 fi
 
-len_fmin=${#fmin}
+len_fmin=${#fmn}
 if [ ${len_fmin} -eq 2 ]; then
-  post_fmin=${fmin}
-elif [ ${len_fmin} -eq 3 ]; then
-  if [ "${fmin:0:1}" = "0" ]; then
-    post_fmin="${fmin:1}"
-  fi
+  post_fmn=${fmn}
 else
   print_err_msg_exit "\
-The \${fmin} variable contains too few or too many characters:
-  fmin = \"$fmin\""
+The \${fmn} variable contains too few or too many characters:
+  fmn = \"$fmn\""
 fi
 
-ls -l BGDAWP.GrbF${post_fhr}*
-ls -l BGRD3D.GrbF${post_fhr}*
-
-if [[ ! "${fmin}" ]] || [[ ${fmin} -eq 00 ]]; then
+if [ "${fmn}" = "00" ]; then
   mv_vrfy BGDAWP.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}00.${tmmark}.grib2
   mv_vrfy BGRD3D.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}00.${tmmark}.grib2
 else
-  mv_vrfy BGDAWP.GrbF${post_fhr}.${fmin} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}${fmin}.${tmmark}.grib2
-  mv_vrfy BGRD3D.GrbF${post_fhr}.${fmin} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}${fmin}.${tmmark}.grib2
+  mv_vrfy BGDAWP.GrbF${post_fhr}.${fmn} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}${fmn}.${tmmark}.grib2
+  mv_vrfy BGRD3D.GrbF${post_fhr}.${fmn} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}${fmn}.${tmmark}.grib2
 fi
 
 #Link output for transfer to Jet
@@ -316,9 +309,9 @@ fi
 start_date=$( echo "${cdate}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/' )
 basetime=$( date +%y%j%H%M -d "${start_date}" )
 ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}00.${tmmark}.grib2 \
-            ${postprd_dir}/BGDAWP_${basetime}f${fhr}00
+            ${postprd_dir}/BGDAWP_${basetime}f${fhr}${fmn}
 ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}00.${tmmark}.grib2 \
-            ${postprd_dir}/BGRD3D_${basetime}f${fhr}00
+            ${postprd_dir}/BGRD3D_${basetime}f${fhr}${fmn}
 
 rm_vrfy -rf ${fhr_dir}
 #

@@ -382,7 +382,7 @@ elif [ "$SUB_HOURLY_POST" = "FALSE" ] || \
      [ "$SUB_HOURLY_POST" = "NO" ]; then
   SUB_HOURLY_POST="FALSE"
 fi
-if [ ${DELTA_MIN} == 00 ]; then
+if [ ${DT_SUBHOURLY_POST_MNTS} == 00 ]; then
   SUB_HOURLY_POST="FALSE"
 fi
 #
@@ -604,16 +604,16 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Check that DELTA_MIN is a string consisting of exactly 2 digits between "00" and "59"
+# Check that DT_SUBHOURLY_POST_MNTS is a string consisting of exactly 2 digits between "00" and "59"
 #
 #-----------------------------------------------------------------------
 #
-MIN_OR_NULL=$( printf "%s" "${DELTA_MIN}" | \
+min_or_null=$( printf "%s" "${DT_SUBHOURLY_POST_MNTS}" | \
                 sed -n -r -e "s/^([0-5][0-9])$/\1/p" )
-if [ -z "${MIN_OR_NULL}" ]; then
+if [ -z "${min_or_null}" ]; then
   print_err_msg_exit "\
-DELTA_MIN must be a 2-digit integer between 00 and 59 inclusive, as "MM".
-  DELTA_MIN = \"${DELTA_MIN}\""
+DT_SUBHOURLY_POST_MNTS must be a 2-digit integer between 00 and 59 inclusive, as "MM".
+  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\""
 fi
 #
 #-----------------------------------------------------------------------
@@ -1013,16 +1013,20 @@ Please set this to a valid numerical value in the user-specified experiment
 configuration file (EXPT_CONFIG_FP) and rerun:
   EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
 else
-  ((val = (DELTA_MIN*60) % DT_ATMOS))
-  if [ ${val} -ne 0 ]; then
-   print_err_msg_exit "\
-PROBLEM: Your selections of DELTA_MIN (${DELTA_MIN}) and DT_ATMOS (${DT_ATMOS}) are inconsistent,
-and thus there will be a mismatch between the valid time of FV3 output files 
-and the requested post-processed output times. Re-set either DT_ATMOS or DELTA_MIN
-so that 
-
-       60*DELTA_MIN/DT_ATMOS = integer
-"
+  if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
+    ((val = (DT_SUBHOURLY_POST_MNTS*60) % DT_ATMOS))
+    if [ ${val} -ne 0 ]; then
+      print_err_msg_exit "\
+When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), the time
+interval specified by DT_SUBHOURLY_POST_MNTS (after converting to seconds) must be evenly divisible 
+by the time step DT_ATMOS used in the forecast model, i.e. the remainder (rem) must 
+be zero.  In this case, it is not:
+  SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
+  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\"
+  DT_ATMOS = \"${DT_ATMOS}\"
+  rem = \$(( (DT_SUBHOURLY_POST_MNTS*60) % DT_ATMOS )) = $rem
+Please reset DT_SUBHOURLY_POST_MNTS and/or DT_ATMOS so that the remainder is zero."
+    fi
   fi
 fi
 

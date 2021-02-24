@@ -286,7 +286,8 @@ settings="\
 # Parameters associated with subhourly post-processed output
 #
   'sub_hourly_post': ${SUB_HOURLY_POST}
-  'del_min': ${DELTA_MIN}
+  'delta_min': ${DT_SUBHOURLY_POST_MNTS}
+  'dt_atmos': ${DT_ATMOS}
 " # End of "settings" variable.
 
 print_info_msg $VERBOSE "

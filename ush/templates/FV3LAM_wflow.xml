@@ -390,7 +390,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>SLASH_ENSMEM_SUBDIR</name><value><cyclestr>{{ slash_ensmem_subdir }}</cyclestr></value></envar>
     <envar><name>ENSMEM_INDX</name><value><cyclestr>#{{ ensmem_indx_name }}#</cyclestr></value></envar>
-  
+
     <dependency>
       <and>
         <taskdep task="&MAKE_ICS_TN;{{ uscore_ensmem_name }}"/>
@@ -409,7 +409,7 @@ MODULES_RUN_TASK_FP script.
 
     <metatask>
       {% if sub_hourly_post %}
-      <var name="fmin">{% for min in range(0, 60,del_min) %}{{ " %02d" % min  }}{% endfor %}</var>
+      <var name="fmin">{% for min in range(0, 60,delta_min) %}{{ " %02d" % min  }}{% endfor %}</var>
       {% else %}
       <var name="fmin">00</var>
       {% endif %}
@@ -430,15 +430,21 @@ MODULES_RUN_TASK_FP script.
         <envar><name>SLASH_ENSMEM_SUBDIR</name><value><cyclestr>{{ slash_ensmem_subdir }}</cyclestr></value></envar>
         <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
         <envar><name>fhr</name><value>#fhr#</value></envar>
-        <envar><name>fmin</name><value>#fmin#</value></envar>
+        <envar><name>fmn</name><value>#fmin#</value></envar>
 
         <dependency>
           <or>
             <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
-            <and>
-              <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H{{ slash_ensmem_subdir }}/dynf#fhr#:#fmin#:00.nc</cyclestr></datadep>
-              <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H{{ slash_ensmem_subdir }}/phyf#fhr#:#fmin#:00.nc</cyclestr></datadep>
-            </and>
+            <or>
+              <and>
+                <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H{{ slash_ensmem_subdir }}/dynf#fhr#:#fmin#:{{ dt_atmos }}.nc</cyclestr></datadep>
+                <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H{{ slash_ensmem_subdir }}/phyf#fhr#:#fmin#:{{ dt_atmos }}.nc</cyclestr></datadep>
+              </and>
+              <and>
+                <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H{{ slash_ensmem_subdir }}/dynf#fhr#:#fmin#:00.nc</cyclestr></datadep>
+                <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H{{ slash_ensmem_subdir }}/phyf#fhr#:#fmin#:00.nc</cyclestr></datadep>
+              </and>
+            </or>
             <and>
               <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H{{ slash_ensmem_subdir }}/dynf#fhr#.nc</cyclestr></datadep>
               <datadep age="05:00"><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H{{ slash_ensmem_subdir }}/phyf#fhr#.nc</cyclestr></datadep>

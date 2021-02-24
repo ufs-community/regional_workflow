@@ -49,6 +49,9 @@ function create_model_configure_file() {
 cdate \
 run_dir \
 nthreads \
+sub_hourly_post \
+delta_fmin \
+dt_atmos \
   )
   process_args valid_args "$@"
 #
@@ -75,7 +78,7 @@ nthreads \
         dot_quilting_dot \
         dot_print_esmf_dot \
         settings \
-        model_config_fp
+        model_config_fp 
 #
 #-----------------------------------------------------------------------
 #
@@ -169,6 +172,17 @@ run directory (run_dir):
     fi
 
   fi
+
+  if [ "${sub_hourly_post}" = "TRUE" ]; then
+   ((nsout = delta_fmin*60 / dt_atmos))
+   nfhout=0
+  else
+   nfhout=1
+   nsout=-1
+  fi
+  settings="${settings}
+  'nfhout': ${nfhout}
+  'nsout': ${nsout}"
 
   print_info_msg $VERBOSE "
 The variable \"settings\" specifying values to be used in the \"${MODEL_CONFIG_FN}\"

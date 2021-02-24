@@ -88,7 +88,7 @@ else
 fi
 mkdir_vrfy -p "${postprd_dir}"
 
-fhr_dir="${postprd_dir}/$fhr$fmin"
+fhr_dir="${postprd_dir}/$fhr$fmn"
 check_for_preexist_dir_file "${fhr_dir}" "delete"
 mkdir_vrfy -p "${fhr_dir}"
 
@@ -108,14 +108,18 @@ digits:
   fhr = \"${fhr}\""
 fi
 #
-#-------------- check if all necessary environmental variables are included -----
-if [[ "${fmin}" ]] && [[ ! "${dt_atmos}" ]]; then
-  echo "ERROR: You set environmental variable \"fmin\" but did not supply \"dt_atmos\""
-  echo "  as well (same as in FV3 namelist). Both of these need to be set so that "
-  echo "  UPP will process the correct file for the first output timestep model fields."
-  exit 2
+#-----------------------------------------------------------------------
+#
+# check if all necessary environmental variables are included
+#
+#-----------------------------------------------------------------------
+#
+if [[ "${fmn}" ]] && [[ ! "${DT_ATMOS}" ]]; then
+  print_err_msg_exit "\
+ERROR: Environmental variable \$fmn is present, so \$dt_atmos is also required
+to be set (use same value as in FV3 namelist). This is needed so that
+UPP will process the correct file for the first output timestep model fields."
 fi
-#-------------------------------------------------------------------------
 #
 #-----------------------------------------------------------------------
 #
@@ -130,8 +134,8 @@ $SCRIPTSDIR/exregional_run_post.sh \
   postprd_dir="${postprd_dir}" \
   fhr_dir="${fhr_dir}" \
   fhr="${fhr}" \
-  fmin="${fmin}" \
-  dt_atmos="${dt_atmos}" || \
+  fmn="${fmn}" \
+  dt_atmos="${DT_ATMOS}" || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #
