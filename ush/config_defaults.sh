@@ -375,6 +375,15 @@ WFLOW_LAUNCH_LOG_FN="log.launch_FV3LAM_wflow"
 # FCST_LEN_HRS:
 # The length of each forecast, in integer hours.
 #
+# SUB_HOURLY_POST:
+# Logical flag to indicate whether sub-hourly FV3 output should be
+# post-processed. If TRUE, then DT_SUBHOURLY_POST_MNTS should also be specified.
+#
+# DT_SUB_HOURLY_POST_MNTS:
+# Temporal spacing in minutes for post-processed output files. This needs
+# to be a two-digit integer between 00 and 59. Setting to 00 will override
+# the value of SUB_HOURLY_POST to FALSE.
+#
 #-----------------------------------------------------------------------
 #
 DATE_FIRST_CYCL="YYYYMMDD"
