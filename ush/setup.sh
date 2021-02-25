@@ -1024,7 +1024,7 @@ be zero.  In this case, it is not:
   SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
   DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\"
   DT_ATMOS = \"${DT_ATMOS}\"
-  rem = \$(( (DT_SUBHOURLY_POST_MNTS*60) % DT_ATMOS )) = $rem
+  rem = ${val}
 Please reset DT_SUBHOURLY_POST_MNTS and/or DT_ATMOS so that the remainder is zero."
     fi
   fi
