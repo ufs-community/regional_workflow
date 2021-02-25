@@ -308,9 +308,9 @@ fi
 # instead of calling sed.
 start_date=$( echo "${cdate}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/' )
 basetime=$( date +%y%j%H%M -d "${start_date}" )
-ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}00.${tmmark}.grib2 \
+ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}${fmn}.${tmmark}.grib2 \
             ${postprd_dir}/BGDAWP_${basetime}f${fhr}${fmn}
-ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}00.${tmmark}.grib2 \
+ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}${fmn}.${tmmark}.grib2 \
             ${postprd_dir}/BGRD3D_${basetime}f${fhr}${fmn}
 
 rm_vrfy -rf ${fhr_dir}
