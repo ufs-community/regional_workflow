@@ -271,6 +271,26 @@ elif [ "${RUN_TASK_VX_POINTSTAT}" = "FALSE" ] || \
   RUN_TASK_VX_POINTSTAT="FALSE"
 fi
 
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_VX_ENSEMBLESTAT is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_VX_ENSEMBLESTAT" "valid_vals_RUN_TASK_VX_ENSEMBLESTAT"
+#
+# Set RUN_TASK_VX_ENSEMBLESTAT to either "TRUE" or "FALSE" so we don't have to
+# consider other valid values later on.
+#
+RUN_TASK_VX_ENSEMBLESTAT=${RUN_TASK_VX_ENSEMBLESTAT^^}
+if [ "${RUN_TASK_VX_ENSEMBLESTAT}" = "TRUE" ] || \
+   [ "${RUN_TASK_VX_ENSEMBLESTAT}" = "YES" ]; then
+  RUN_TASK_VX_ENSEMBLESTAT="TRUE"
+elif [ "${RUN_TASK_VX_ENSEMBLESTAT}" = "FALSE" ] || \
+     [ "${RUN_TASK_VX_ENSEMBLESTAT}" = "NO" ]; then
+  RUN_TASK_VX_ENSEMBLESTAT="FALSE"
+fi
 
 #
 #

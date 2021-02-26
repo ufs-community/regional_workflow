@@ -4,7 +4,7 @@
 #-----------------------------------------------------------------------
 #
 # This script runs METplus for ensemble-stat on the UPP output files by 
-# initialization time for all forecast hours.
+# initialization time for all forecast hours for gridded analysis.
 #
 #-----------------------------------------------------------------------
 #
@@ -52,7 +52,7 @@ Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
 This is the J-job script for the task that runs METplus for ensemble-stat
-by initialization time for all forecast hours.
+on gridded fields by initialization time for all forecast hours.
 ========================================================================"
 #
 #-----------------------------------------------------------------------
@@ -97,7 +97,7 @@ cd_vrfy "${ensemblestat_dir}"
 #
 #-----------------------------------------------------------------------
 #
-$SCRIPTSDIR/exregional_run_ensemblestatvx.sh \
+$SCRIPTSDIR/exregional_run_ensgridvx.sh \
   cycle_dir="${CYCLE_DIR}" \
   postprd_dir="${postprd_dir}" \
   vx_dir="${vx_dir}" \

@@ -44,7 +44,8 @@ Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
 This is the ex-script for the task that runs METplus for ensemble-stat on
-the UPP output files by initialization time for all forecast hours.
+the UPP output files by initialization time for all forecast hours for 
+gridded data.
 ========================================================================"
 
 #
@@ -149,7 +150,7 @@ fi
 #
 print_info_msg "
 ========================================================================
-METplus ensemble-stat completed successfully.
+METplus ensemble-stat grid completed successfully.
 
 Exiting script:  \"${scrfunc_fn}\"
 In directory:    \"${scrfunc_dir}\"

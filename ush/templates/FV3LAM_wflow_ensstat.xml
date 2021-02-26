@@ -42,10 +42,10 @@ Workflow task names.
 <!ENTITY VX_GRIDSTAT_06h_TN "{{ vx_gridstat_06h_tn }}">
 <!ENTITY VX_GRIDSTAT_24h_TN "{{ vx_gridstat_24h_tn }}">
 <!ENTITY VX_POINTSTAT_TN    "{{ vx_pointstat_tn }}">
-<!ENTITY VX_ENSEMBLESTAT_TN "{{ vx_ensemblestat_tn}}">
-<!ENTITY VX_ENSEMBLESTAT_03h_TN "{{ vx_ensemblestat_03h_tn}}">
-<!ENTITY VX_ENSEMBLESTAT_06h_TN "{{ vx_ensemblestat_06h_tn}}">
-<!ENTITY VX_ENSEMBLESTAT_24h_TN "{{ vx_ensemblestat_24h_tn}}">
+<!ENTITY VX_ENSGRID_TN "{{ vx_ensgrid_tn}}">
+<!ENTITY VX_ENSGRID_03h_TN "{{ vx_ensgrid_03h_tn}}">
+<!ENTITY VX_ENSGRID_06h_TN "{{ vx_ensgrid_06h_tn}}">
+<!ENTITY VX_ENSGRID_24h_TN "{{ vx_ensgrid_24h_tn}}">
 <!--
 Flags that specify whether to run the preprocessing and/or verification tasks.
 -->
@@ -747,16 +747,16 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 -->
 
-{% if run_task_vx_ensemblestat %}
+{% if run_task_vx_ensgrid %}
   <task name="&VX_ENSEMBLESTAT_TN;" maxtries="2">
 
     &RSRV_HPSS;
-    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSEMBLESTAT"</command>
-    <nodes>{{ nnodes_vx_ensemblestat }}:ppn={{ ppn_vx_ensemblestat }}</nodes>
-    <walltime>{{ wtime_vx_ensemblestat }}</walltime>
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
+    <nodes>{{ nnodes_vx_ensgrid }}:ppn={{ ppn_vx_ensgrid }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
-    <jobname>&VX_ENSEMBLESTAT_TN;</jobname>
-    <join><cyclestr>&LOGDIR;/&VX_ENSEMBLESTAT_TN;_@Y@m@d@H.log</cyclestr></join>
+    <jobname>&VX_ENSGRID_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_TN;_@Y@m@d@H.log</cyclestr></join>
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
@@ -784,16 +784,16 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 -->
 
-{% if run_task_vx_ensemblestat %}
-  <task name="&VX_ENSEMBLESTAT_03h_TN;" maxtries="2">
+{% if run_task_vx_ensgrid %}
+  <task name="&VX_ENSGRID_03h_TN;" maxtries="2">
 
     &RSRV_HPSS;
-    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSEMBLESTAT"</command>
-    <nodes>{{ nnodes_vx_ensemblestat }}:ppn={{ ppn_vx_ensemblestat }}</nodes>
-    <walltime>{{ wtime_vx_ensemblestat }}</walltime>
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
+    <nodes>{{ nnodes_vx_ensgrid }}:ppn={{ ppn_vx_ensgrid }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
-    <jobname>&VX_ENSEMBLESTAT_03h_TN;</jobname>
-    <join><cyclestr>&LOGDIR;/&VX_ENSEMBLESTAT_03h_TN;_@Y@m@d@H.log</cyclestr></join>
+    <jobname>&VX_ENSGRID_03h_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_03h_TN;_@Y@m@d@H.log</cyclestr></join>
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
@@ -806,7 +806,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>ACCUM</name><value>03</value></envar>
 
     <dependency>
-      <taskdep task="&VX_ENSEMBLESTAT_TN;"/>
+      <taskdep task="&VX_ENSGRID_TN;"/>
     </dependency>
 
   </task>
@@ -817,16 +817,16 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 -->
 
-{% if run_task_vx_ensemblestat %}
-  <task name="&VX_ENSEMBLESTAT_06h_TN;" maxtries="2">
+{% if run_task_vx_ensgrid %}
+  <task name="&VX_ENSGRID_06h_TN;" maxtries="2">
 
     &RSRV_HPSS;
-    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSEMBLESTAT"</command>
-    <nodes>{{ nnodes_vx_ensemblestat }}:ppn={{ ppn_vx_ensemblestat }}</nodes>
-    <walltime>{{ wtime_vx_ensemblestat }}</walltime>
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
+    <nodes>{{ nnodes_vx_ensgrid }}:ppn={{ ppn_vx_ensgrid }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
-    <jobname>&VX_ENSEMBLESTAT_06h_TN;</jobname>
-    <join><cyclestr>&LOGDIR;/&VX_ENSEMBLESTAT_06h_TN;_@Y@m@d@H.log</cyclestr></join>
+    <jobname>&VX_ENSGRID_06h_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_06h_TN;_@Y@m@d@H.log</cyclestr></join>
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
@@ -839,7 +839,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>ACCUM</name><value>06</value></envar>
 
     <dependency>
-      <taskdep task="&VX_ENSEMBLESTAT_TN;"/>
+      <taskdep task="&VX_ENSGRID_TN;"/>
     </dependency>
 
   </task>
@@ -850,16 +850,16 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 -->
 
-{% if run_task_vx_ensemblestat %}
-  <task name="&VX_ENSEMBLESTAT_24h_TN;" maxtries="2">
+{% if run_task_vx_ensgrid %}
+  <task name="&VX_ENSGRID_24h_TN;" maxtries="2">
 
     &RSRV_HPSS;
-    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSEMBLESTAT"</command>
-    <nodes>{{ nnodes_vx_ensemblestat }}:ppn={{ ppn_vx_ensemblestat }}</nodes>
-    <walltime>{{ wtime_vx_ensemblestat }}</walltime>
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
+    <nodes>{{ nnodes_vx_ensgrid }}:ppn={{ ppn_vx_ensgrid }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
-    <jobname>&VX_ENSEMBLESTAT_24h_TN;</jobname>
-    <join><cyclestr>&LOGDIR;/&VX_ENSEMBLESTAT_24h_TN;_@Y@m@d@H.log</cyclestr></join>
+    <jobname>&VX_ENSGRID_24h_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_24h_TN;_@Y@m@d@H.log</cyclestr></join>
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
@@ -872,7 +872,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>ACCUM</name><value>24</value></envar>
 
     <dependency>
-      <taskdep task="&VX_ENSEMBLESTAT_TN;"/>
+      <taskdep task="&VX_ENSGRID_TN;"/>
     </dependency>
 
   </task>
