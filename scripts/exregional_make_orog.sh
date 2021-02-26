@@ -333,19 +333,16 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
   mosaic_fp="$FIXLAM/${mosaic_fn}"
   grid_fn=$( get_charvar_from_netcdf "${mosaic_fp}" "gridfiles" )
   grid_fp="${FIXLAM}/${grid_fn}"
+  ls_fn="geo_em.d01.lat-lon.2.5m.HGT_M.nc"
+  ss_fn="HGT.Beljaars_filtered.lat-lon.30s_res.nc"
   if [ "${MACHINE}" = "WCOSS_CRAY" ]; then
-    ln_vrfy -fs "${grid_fp}" "${tmp_dir}/${grid_fn}"
-    fn="geo_em.d01.lat-lon.2.5m.HGT_M.nc"
-    ln_vrfy -fs "${FIXam}/$fn" "${tmp_dir}/$fn"
-    fn="HGT.Beljaars_filtered.lat-lon.30s_res.nc"
-    ln_vrfy -fs "${FIXam}/$fn" "${tmp_dir}/$fn"
+    relative_or_null=""
   else
-    ln_vrfy -fs --relative "${grid_fp}" "${tmp_dir}/${grid_fn}"
-    fn="geo_em.d01.lat-lon.2.5m.HGT_M.nc"
-    ln_vrfy -fs --relative "${FIXam}/$fn" "${tmp_dir}/$fn"
-    fn="HGT.Beljaars_filtered.lat-lon.30s_res.nc"
-    ln_vrfy -fs --relative "${FIXam}/$fn" "${tmp_dir}/$fn"
+    relative_or_null="--relative"
   fi
+  ln_vrfy -fs ${relative_or_null} "${grid_fp}" "${tmp_dir}/${grid_fn}"
+  ln_vrfy -fs ${relative_or_null} "${FIXam}/${ls_fn}" "${tmp_dir}/${ls_fn}"
+  ln_vrfy -fs ${relative_or_null} "${FIXam}/${ss_fn}" "${tmp_dir}/${ss_fn}"
 
   input_redirect_fn="grid_info.dat"
   cat > "${input_redirect_fn}" <<EOF
