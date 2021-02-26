@@ -16,8 +16,7 @@ FV3_GSD_v0:
 
 FV3_GSD_SAR: 
   gfs_physics_nml: &gsd_sar_phys
-    cnvcld: false
-    cnvgwd: false
+    do_deep: False
     effr_in: True
     imfdeepcnv: 0
     imfshalcnv: 0
@@ -33,8 +32,6 @@ FV3_GSD_SAR:
     iopt_snf: 4
     iopt_stc: 1
     iopt_tbot: 2
-    shal_cnv: false
-    do_deep: False
 
 FV3_RRFS_v1alpha:
   gfs_physics_nml:
@@ -62,6 +59,33 @@ FV3_RRFS_v1beta:
   atmos_model_nml:
     fdiag: 3
 
+FV3_HRRR:
+  fv_core_nml:
+    hord_dp: -5
+    hord_mt: 5
+    hord_tm: 5
+    hord_vt: 5
+    kord_mt: 9
+    kord_tm: -9
+    kord_tr: 9
+    kord_wz: 9
+    nord_tr: 2
+    nrows_blend: 10
+    regional_bcs_from_gsi: False
+    write_restart_with_bcs: False
+  gfs_physics_nml:
+    <<: *gsd_sar_phys
+    cdmbgwd: [3.5, 1.0]
+    do_mynnsfclay: True
+    do_sfcperts: !!python/none
+    effr_in: True
+    gwd_opt: 3
+    iaer: 5111
+    icliq_sw: 2
+    imfdeepcnv: -1
+    imfshalcnv: -1
+    iovr: 3
+
 FV3_GFS_2017_gfdlmp:
   atmos_model_nml:
     avg_max_length: 3600.0
@@ -85,14 +109,10 @@ FV3_GFS_2017_gfdlmp:
     bl_mynn_edmf: !!python/none
     bl_mynn_edmf_mom: !!python/none
     cdmbgwd: [3.5, 0.01]
-    cnvcld: False
-    cnvgwd: False
     cplflx: !!python/none
     do_deep: False
     do_mynnedmf: !!python/none
     do_mynnsfclay: !!python/none
-    lndp_type: !!python/none
-    n_var_lndp: !!python/none
     effr_in: True
     fhcyc: 0.0
     fhlwr: 3600.0
@@ -104,14 +124,16 @@ FV3_GFS_2017_gfdlmp:
     imp_physics: 11
     lgfdlmprad: True
     lheatstrg: !!python/none
-    ltaerosol: !!python/none
+    lndp_type: !!python/none
     lsm: !!python/none
     lsoil: !!python/none
     lsoil_lsm: !!python/none
+    ltaerosol: !!python/none
+    n_var_lndp: !!python/none
     oz_phys: True
     oz_phys_2015: False
     satmedmf: !!python/none
-    shal_cnv: False
+    shal_cnv: True
     ttendlim: !!python/none
   gfdl_cloud_microphysics_nml: &gfs_gfdl_cloud_mp
     c_cracw: 0.8
@@ -172,8 +194,6 @@ FV3_GFS_2017_gfdlmp_regional:
   gfs_physics_nml:
     <<: *gfs_2017_gfdlmp_phys
     cplflx: False
-    lndp_type: 0
-    n_var_lndp: 0
     iopt_alb: 2
     iopt_btr: 1
     iopt_crs: 1
@@ -188,7 +208,9 @@ FV3_GFS_2017_gfdlmp_regional:
     iopt_tbot: 2
     lgfdlmprad: True
     lheatstrg: False
+    lndp_type: 0
     lsm: 1
+    n_var_lndp: 0
     nstf_name: [2, 0, 0, 0, 0]
     oz_phys: False
     oz_phys_2015: True
@@ -234,6 +256,8 @@ FV3_GFS_v15p2:
     bl_mynn_edmf: !!python/none
     bl_mynn_edmf_mom: !!python/none
     bl_mynn_tkeadvect: !!python/none
+    cnvcld: True
+    cnvgwd: True    
     cplflx: !!python/none
     do_myjpbl: False
     do_myjsfc: False
@@ -272,6 +296,7 @@ FV3_GFS_v15p2:
     lsoil: !!python/none
     lsoil_lsm: !!python/none
     ltaerosol: !!python/none
+    shal_cnv: True
     shinhong: False
     trans_trac: False
     ttendlim: !!python/none
@@ -326,8 +351,6 @@ FV3_GFS_v16beta:
     cdmbgwd: [4.0, 0.15, 1.0, 1.0]
     do_myjpbl: !!python/none
     do_myjsfc: !!python/none
-    lndp_type: !!python/none
-    n_var_lndp: !!python/none
     do_tofd: True
     do_ysu: !!python/none
     effr_in: True
@@ -339,7 +362,9 @@ FV3_GFS_v16beta:
     isatmedmf: 1
     lgfdlmprad: True
     lheatstrg: True
+    lndp_type: !!python/none
     lsoil: 4
+    n_var_lndp: !!python/none
     nstf_name: [2, 1, 0, 0, 0]
     prautco: [0.00015, 0.00015]
     psautco: [0.0008, 0.0005]
@@ -394,8 +419,6 @@ FV3_CPT_v0:
     do_sb_physics: True
     do_mynnedmf: !!python/none
     do_mynnsfclay: !!python/none
-    lndp_type: !!python/none
-    n_var_lndp: !!python/none
     do_shoc: False
     effr_in: True
     fhcyc: 0.0
@@ -420,6 +443,7 @@ FV3_CPT_v0:
     iopt_snf: 4
     iopt_stc: 1
     iopt_tbot: 2
+    lndp_type: !!python/none
     lradar: False
     lsm: 1
     lsoil: !!python/none
@@ -434,11 +458,13 @@ FV3_CPT_v0:
     mg_do_liq_liu: True
     mg_qcvar: 1.0
     mg_ts_auto_ice: [180.0, 900.0]
+    n_var_lndp: !!python/none
     ncld: 2
     pdfflag: 4
     random_clds: True
     ras: False
     rhcmax: 0.9999999
+    shal_cnv: True
     shcnvcw: False
     shoc_cld: False
     shoc_parm: [7000.0, 1.0, 2.0, 0.7, -999.0]
