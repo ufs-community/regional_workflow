@@ -335,8 +335,16 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
   grid_fp="${FIXLAM}/${grid_fn}"
   if [ "${MACHINE}" = "WCOSS_CRAY" ]; then
     ln_vrfy -fs "${grid_fp}" "${tmp_dir}/${grid_fn}"
+    fn="geo_em.d01.lat-lon.2.5m.HGT_M.nc"
+    ln_vrfy -fs "${FIXam}/$fn" "${tmp_dir}/$fn"
+    fn="HGT.Beljaars_filtered.lat-lon.30s_res.nc"
+    ln_vrfy -fs "${FIXam}/$fn" "${tmp_dir}/$fn"
   else
     ln_vrfy -fs --relative "${grid_fp}" "${tmp_dir}/${grid_fn}"
+    fn="geo_em.d01.lat-lon.2.5m.HGT_M.nc"
+    ln_vrfy -fs --relative "${FIXam}/$fn" "${tmp_dir}/$fn"
+    fn="HGT.Beljaars_filtered.lat-lon.30s_res.nc"
+    ln_vrfy -fs --relative "${FIXam}/$fn" "${tmp_dir}/$fn"
   fi
 
   input_redirect_fn="grid_info.dat"
