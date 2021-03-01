@@ -209,7 +209,7 @@ tmmark="tm00"
 mnts_secs_str=""
 if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
   if [ ${fhr}${fmn} = "00000" ]; then
-    mnts_secs_str=":${fmn}:${dt_atmos}"
+    mnts_secs_str=":"`date --utc --date "${yyyymmdd} ${hh} UTC + ${dt_atmos} seconds" +%M:%S`
   else
     mnts_secs_str=":${fmn}:00"
   fi
