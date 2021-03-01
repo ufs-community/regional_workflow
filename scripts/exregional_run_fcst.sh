@@ -453,7 +453,7 @@ create_model_configure_file \
   nthreads=${OMP_NUM_THREADS:-1} \
   run_dir="${run_dir}" \
   sub_hourly_post="${SUB_HOURLY_POST}" \
-  delta_fmin="${DT_SUBHOURLY_POST_MNTS}" \
+  dt_subhourly_post_mnts="${DT_SUBHOURLY_POST_MNTS}" \
   dt_atmos="${DT_ATMOS}" || print_err_msg_exit "\
 Call to function to create a model configuration file for the current
 cycle's (cdate) run directory (run_dir) failed:

@@ -50,7 +50,7 @@ cdate \
 run_dir \
 nthreads \
 sub_hourly_post \
-delta_fmin \
+dt_subhourly_post_mnts \
 dt_atmos \
   )
   process_args valid_args "$@"
@@ -173,8 +173,11 @@ run directory (run_dir):
 
   fi
 
+  # nfhout is the forecast hour output interval (provided forecast length is at most 60 hours)
+  # nsout is the output interval in multiples of dt_atmos; it is useful for controlling sub-hourly FV3 output
+  # in the below formulation, it is explicitly designed for minute-specific (rather than second-specifc) output
   if [ "${sub_hourly_post}" = "TRUE" ]; then
-   ((nsout = delta_fmin*60 / dt_atmos))
+   nsout=$(( dt_subhourly_post_mnts*60 / dt_atmos ))
    nfhout=0
   else
    nfhout=1

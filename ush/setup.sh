@@ -384,6 +384,9 @@ elif [ "$SUB_HOURLY_POST" = "FALSE" ] || \
 fi
 if [ ${DT_SUBHOURLY_POST_MNTS} == 00 ]; then
   SUB_HOURLY_POST="FALSE"
+  print_info_msg "NOTE: since you have set DT_SUBHOURLY_POST_MNTS to '00', then 
+  SUB_HOURLY_POST is being overwritten to FALSE. If you do not want this, you 
+  must set DT_SUBHOURLY_POST_MNTS to something other than '00.'"
 fi
 #
 #-----------------------------------------------------------------------
@@ -1024,7 +1027,7 @@ be zero.  In this case, it is not:
   SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
   DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\"
   DT_ATMOS = \"${DT_ATMOS}\"
-  rem = ${val}
+  rem = \$(( (DT_SUBHOURLY_POST_MNTS*60) %% DT_ATMOS )) = $rem
 Please reset DT_SUBHOURLY_POST_MNTS and/or DT_ATMOS so that the remainder is zero."
     fi
   fi

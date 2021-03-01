@@ -114,7 +114,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-if [[ "${fmn}" ]] && [[ ! "${DT_ATMOS}" ]]; then
+if [ -n "${fmn}" ] && [ -z "${DT_ATMOS}" ]; then
   print_err_msg_exit "\
 ERROR: Environmental variable \$fmn is present, so \$dt_atmos is also required
 to be set (use same value as in FV3 namelist). This is needed so that

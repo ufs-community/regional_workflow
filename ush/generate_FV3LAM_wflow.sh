@@ -287,7 +287,7 @@ settings="\
 #
   'sub_hourly_post': ${SUB_HOURLY_POST}
   'delta_min': ${DT_SUBHOURLY_POST_MNTS}
-  'dt_atmos': ${DT_ATMOS}
+  'first_fv3_file_tstr': "000:"`date -d "${DATE_FIRST_CYCL} +${DT_ATMOS} seconds" +%M:%S`
 " # End of "settings" variable.
 
 print_info_msg $VERBOSE "

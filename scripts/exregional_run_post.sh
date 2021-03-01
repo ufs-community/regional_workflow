@@ -225,13 +225,13 @@ post_yyyy=${post_time:0:4}
 post_mm=${post_time:4:2}
 post_dd=${post_time:6:2}
 post_hh=${post_time:8:2}
-post_min=${post_time:10:2}
+post_mn=${post_time:10:2}
 
 cat > itag <<EOF
 ${dyn_file}
 netcdf
 grib2
-${post_yyyy}-${post_mm}-${post_dd}_${post_hh}:${post_min}:00
+${post_yyyy}-${post_mm}-${post_dd}_${post_hh}:${post_mn}:00
 FV3R
 ${phy_file}
 
@@ -282,22 +282,13 @@ The \${fhr} variable contains too few or too many characters:
   fhr = \"$fhr\""
 fi
 
-len_fmin=${#fmn}
-if [ ${len_fmin} -eq 2 ]; then
-  post_fmn=${fmn}
-else
-  print_err_msg_exit "\
-The \${fmn} variable contains too few or too many characters:
-  fmn = \"$fmn\""
+dot_post_mn_or_null=""
+if [ "${post_mn}" != "00" ]; then
+  dot_post_mn_or_null=".${post_mn}"
 fi
-
-if [ "${fmn}" = "00" ]; then
-  mv_vrfy BGDAWP.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}00.${tmmark}.grib2
-  mv_vrfy BGRD3D.GrbF${post_fhr} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}00.${tmmark}.grib2
-else
-  mv_vrfy BGDAWP.GrbF${post_fhr}.${fmn} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}${fmn}.${tmmark}.grib2
-  mv_vrfy BGRD3D.GrbF${post_fhr}.${fmn} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}${fmn}.${tmmark}.grib2
-fi
+post_fn_suffix=".GrbF${dot_post_mn_or_null}"
+mv_vrfy BGDAWP.${post_fn_suffix} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}${post_mn}.${tmmark}.grib2
+mv_vrfy BGRD3D.${post_fn_suffix} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}${post_mn}.${tmmark}.grib2
 
 #Link output for transfer to Jet
 # Should the following be done only if on jet??
@@ -308,10 +299,10 @@ fi
 # instead of calling sed.
 start_date=$( echo "${cdate}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/' )
 basetime=$( date +%y%j%H%M -d "${start_date}" )
-ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}${fmn}.${tmmark}.grib2 \
-            ${postprd_dir}/BGDAWP_${basetime}f${fhr}${fmn}
-ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}${fmn}.${tmmark}.grib2 \
-            ${postprd_dir}/BGRD3D_${basetime}f${fhr}${fmn}
+ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}${post_mn}.${tmmark}.grib2 \
+            ${postprd_dir}/BGDAWP_${basetime}f${fhr}${post_mn}
+ln_vrfy -fs ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}${post_mn}.${tmmark}.grib2 \
+            ${postprd_dir}/BGRD3D_${basetime}f${fhr}${post_mn}
 
 rm_vrfy -rf ${fhr_dir}
 #
