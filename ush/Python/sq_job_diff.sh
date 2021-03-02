@@ -22,6 +22,7 @@ module load hpss
 
 ############
 # Python environment for Jet and Hera
+############
 module use -a /contrib/miniconda3/modulefiles
 module load miniconda3
 conda activate pygraf
@@ -36,19 +37,18 @@ conda activate pygraf
 ############
 # Python environment for Gaea
 ############
-#module use -a /apps/contrib/miniconda3-noaa-gsl/modulefiles
-#module load miniconda3
-#conda activate pygraf
+#module use /lustre/f2/pdata/esrl/gsd/contrib/modulefiles
+#module load miniconda3/4.8.3-regional-workflow
 
 ############
 # Path to shape files
 ############
 #Hera:
-SHAPE_FILES=/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/tools/NaturalEarth
+SHAPE_FILES=/scratch2/BMC/det/UFS_SRW_app/v1p0/fix_files/NaturalEarth
 #Jet: 
 #SHAPE_FILES=/lfs4/BMC/wrfruc/FV3-LAM/NaturalEarth
 #Orion: 
-#SHAPE_FILES=/home/chjeon/tools/NaturalEarth
+#SHAPE_FILES=/work/noaa/gsd-fv3-dev/UFS_SRW_App/v1p0/fix_files/NaturalEarth
 #Gaea: 
 #SHAPE_FILES=/lustre/f2/pdata/esrl/gsd/ufs/NaturalEarth
 
