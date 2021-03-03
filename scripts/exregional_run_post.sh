@@ -286,7 +286,7 @@ dot_post_mn_or_null=""
 if [ "${post_mn}" != "00" ]; then
   dot_post_mn_or_null=".${post_mn}"
 fi
-post_fn_suffix="GrbF${fhr}${dot_post_mn_or_null}"
+post_fn_suffix="GrbF${post_fhr}${dot_post_mn_or_null}"
 mv_vrfy BGDAWP.${post_fn_suffix} ${postprd_dir}/${NET}.t${cyc}z.bgdawpf${fhr}${post_mn}.${tmmark}.grib2
 mv_vrfy BGRD3D.${post_fn_suffix} ${postprd_dir}/${NET}.t${cyc}z.bgrd3df${fhr}${post_mn}.${tmmark}.grib2
 
