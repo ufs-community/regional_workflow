@@ -173,9 +173,10 @@ run directory (run_dir):
 
   fi
 
-  # nfhout is the forecast hour output interval (provided forecast length is at most 60 hours)
-  # nsout is the output interval in multiples of dt_atmos; it is useful for controlling sub-hourly FV3 output
-  # in the below formulation, it is explicitly designed for minute-specific (rather than second-specifc) output
+  # IF using sub-hourly FV3/UPP output, then the FV3 output interval needs to be specified in
+  # units of multiples of model time steps (nsout). nsout is guaranteed to be an integer because 
+  # consistency between ${DT_SUBHOURLY_POST_MNTS} and ${DT_ATMOS} was enforced at the time of script generation.
+  # ELSE only nfhout is used and set to 1-hour output.
   if [ "${sub_hourly_post}" = "TRUE" ]; then
    nsout=$(( dt_subhourly_post_mnts*60 / dt_atmos ))
    nfhout=0

@@ -1017,8 +1017,8 @@ configuration file (EXPT_CONFIG_FP) and rerun:
   EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
 else
   if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
-    ((val = (DT_SUBHOURLY_POST_MNTS*60) % DT_ATMOS))
-    if [ ${val} -ne 0 ]; then
+    ((rem = (DT_SUBHOURLY_POST_MNTS*60) % DT_ATMOS))
+    if [ ${rem} -ne 0 ]; then
       print_err_msg_exit "\
 When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), the time
 interval specified by DT_SUBHOURLY_POST_MNTS (after converting to seconds) must be evenly divisible 
