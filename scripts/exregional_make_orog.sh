@@ -315,8 +315,9 @@ mv_vrfy "${raw_orog_fp_orig}" "${raw_orog_fp}"
 #
 #-----------------------------------------------------------------------
 #
-# Call script to generate the two orography files needed for the drag
-# suite in the FV3_HRRR physics suite.
+# Call the code to generate the two orography statistics files (large-
+# and small-scale) needed for the drag suite in the FV3_HRRR physics
+# suite.
 #
 #-----------------------------------------------------------------------
 #
