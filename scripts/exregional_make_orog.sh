@@ -315,12 +315,8 @@ mv_vrfy "${raw_orog_fp_orig}" "${raw_orog_fp}"
 #
 #-----------------------------------------------------------------------
 #
-# Copy the two orography files needed for the drag suite in the FV3_HRRR
-# physics suite.
-#
-# Note that the following is a temporary fix.  We need a long-term solution
-# that calls a script or program to generates the necessary files (instead
-# of copying them).
+# Call script to generate the two orography files needed for the drag
+# suite in the FV3_HRRR physics suite.
 #
 #-----------------------------------------------------------------------
 #
