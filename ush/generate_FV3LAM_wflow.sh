@@ -216,10 +216,7 @@ settings="\
   'nnodes_get_obs_ndas': ${NNODES_GET_OBS_NDAS}
   'nnodes_vx_gridstat': ${NNODES_VX_GRIDSTAT}
   'nnodes_vx_pointstat': ${NNODES_VX_POINTSTAT}
-<<<<<<< HEAD
   'nnodes_vx_ensgrid': ${NNODES_VX_ENSGRID}
-=======
->>>>>>> upstream/feature/add_metplus
 #
 # Number of cores used for a task
 #

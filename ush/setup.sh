@@ -1712,7 +1712,6 @@ Reset value is:"
 
   fi
 
-<<<<<<< HEAD
   if [ "${RUN_TASK_VX_ENSEMBLESTAT}" = "TRUE" ] || \
      [ "${RUN_TASK_VX_ENSEMBLESTAT}" = "FALSE" ]; then
 
@@ -1735,8 +1734,6 @@ Reset value is:"
 
 
 else
-=======
->>>>>>> upstream/feature/add_metplus
 #
 #-----------------------------------------------------------------------
 #
