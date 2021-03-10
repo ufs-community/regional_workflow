@@ -227,6 +227,7 @@ EXPT_SUBDIR=""
 #-----------------------------------------------------------------------
 #
 COMINgfs="/base/path/of/directory/containing/gfs/input/files"
+FIXLAM_NCO_BASEDIR=""
 STMP="/base/path/of/directory/containing/model/input/and/raw/output/files"
 NET="rrfs"
 envir="para"
@@ -343,7 +344,7 @@ FV3_NML_YAML_CONFIG_FN="FV3.input.yml"
 FV3_NML_BASE_ENS_FN="input.nml.base_ens"
 MODEL_CONFIG_FN="model_configure"
 NEMS_CONFIG_FN="nems.configure"
-FV3_EXEC_FN="fv3_gfs.x"
+FV3_EXEC_FN="ufs_model"
 
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
@@ -579,7 +580,6 @@ EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
 # directory or the cycle directories under it.
 #
 #-----------------------------------------------------------------------
-#
 CCPP_PHYS_SUITE="FV3_GFS_v15p2"
 #
 #-----------------------------------------------------------------------
@@ -1110,15 +1110,15 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
 
-RUN_TASK_GET_OBS_CCPA="TRUE"
+RUN_TASK_GET_OBS_CCPA="FALSE"
 
-RUN_TASK_GET_OBS_MRMS="TRUE"
+RUN_TASK_GET_OBS_MRMS="FALSE"
 
-RUN_TASK_GET_OBS_NDAS="TRUE"
+RUN_TASK_GET_OBS_NDAS="FALSE"
 
-RUN_TASK_VX_GRIDSTAT="TRUE"
+RUN_TASK_VX_GRIDSTAT="FALSE"
 
-RUN_TASK_VX_POINTSTAT="TRUE"
+RUN_TASK_VX_POINTSTAT="FALSE"
 
 RUN_TASK_VX_ENSPOINT="TRUE"
 
