@@ -382,7 +382,8 @@ elif [ "$SUB_HOURLY_POST" = "FALSE" ] || \
      [ "$SUB_HOURLY_POST" = "NO" ]; then
   SUB_HOURLY_POST="FALSE"
 fi
-if [ ${DT_SUBHOURLY_POST_MNTS} == 00 ]; then
+
+if [ "${DT_SUBHOURLY_POST_MNTS}" -eq "0" ]; then
   SUB_HOURLY_POST="FALSE"
   print_info_msg "NOTE: since you have set DT_SUBHOURLY_POST_MNTS to '00', then 
   SUB_HOURLY_POST is being overwritten to FALSE. If you do not want this, you 
