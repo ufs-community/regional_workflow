@@ -345,6 +345,7 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
   cat > "${input_redirect_fn}" <<EOF
 ${TILE_RGNL}
 ${CRES:1}
+${NH4}
 EOF
 
   exec_fn="orog_gsl"
