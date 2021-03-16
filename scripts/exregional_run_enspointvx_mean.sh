@@ -57,7 +57,7 @@ the UPP output files by initialization time for all forecast hours.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "cycle_dir" "postprd_dir" "vx_dir" "pointstat_dir" )
+valid_args=( "cycle_dir" "vx_dir" "ensemblestat_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -77,7 +77,7 @@ print_input_args valid_args
 #
 print_info_msg "$VERBOSE" "Starting point-stat verification"
 
-cd ${pointstat_dir}
+cd ${pointstat_mean_dir}
 
 #
 #-----------------------------------------------------------------------
@@ -103,19 +103,6 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-# Create INPUT_BASE to read into METplus conf files.
-#
-#-----------------------------------------------------------------------
-#
-if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
-  INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
-elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
-  INPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}/postprd
-fi
-
-#
-#-----------------------------------------------------------------------
-#
 # Check for existence of top-level OBS_DIR 
 #
 #-----------------------------------------------------------------------
@@ -133,7 +120,6 @@ fi
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
-export INPUT_BASE
 export MET_INSTALL_DIR
 export METPLUS_PATH
 export METPLUS_CONF
@@ -144,12 +130,11 @@ export NET
 
 ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common.conf \
-  -c ${METPLUS_CONF}/PointStat_conus_sfc.conf
+  -c ${METPLUS_CONF}/PointStat_mean_conus_sfc.conf
 
 ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common.conf \
-  -c ${METPLUS_CONF}/PointStat_upper_air.conf
-
+  -c ${METPLUS_CONF}/PointStat_mean_upper_air.conf
 #
 #-----------------------------------------------------------------------
 #
@@ -159,7 +144,7 @@ ${METPLUS_PATH}/ush/master_metplus.py \
 #
 print_info_msg "
 ========================================================================
-METplus point-stat completed successfully.
+METplus ensemble-stat completed successfully.
 
 Exiting script:  \"${scrfunc_fn}\"
 In directory:    \"${scrfunc_dir}\"
