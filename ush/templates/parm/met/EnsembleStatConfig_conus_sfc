@@ -207,9 +207,9 @@ obs_window = {
 // Verification masking regions
 //
 mask = {
-   grid  = ${ENSEMBLE_STAT_GRID};
-   poly  = ${ENSEMBLE_STAT_POLY};
-   sid   = ${ENSEMBLE_STAT_STATION_ID};
+   grid  = [];
+   poly  = ["${MET_INSTALL_DIR}/share/met/poly/CONUS.poly" ];
+   sid   = [];
    llpnt = [];
 }
 
@@ -245,7 +245,7 @@ interp = {
 //
 output_flag = {
    ecnt  = STAT;
-   rps   = STAT;
+   rps   = NONE;
    rhist = STAT;
    phist = STAT;
    orank = STAT;

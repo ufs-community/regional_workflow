@@ -238,7 +238,6 @@ settings="\
   'ppn_vx_gridstat': ${PPN_VX_GRIDSTAT}
   'ppn_vx_pointstat': ${PPN_VX_POINTSTAT}
   'ppn_vx_enspoint': ${PPN_VX_ENSPOINT}
-
 #
 # Maximum wallclock time for each task.
 #

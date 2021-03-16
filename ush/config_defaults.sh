@@ -1120,7 +1120,7 @@ RUN_TASK_VX_GRIDSTAT="FALSE"
 
 RUN_TASK_VX_POINTSTAT="FALSE"
 
-RUN_TASK_VX_ENSPOINT="TRUE"
+RUN_TASK_VX_ENSPOINT="FALSE"
 
 #
 #-----------------------------------------------------------------------
@@ -1445,8 +1445,8 @@ CUSTOM_POST_CONFIG_FP=""
 # 
 #-----------------------------------------------------------------------
 #
-DO_ENSEMBLE="FALSE"
-NUM_ENS_MEMBERS="1"
+DO_ENSEMBLE="TRUE"
+NUM_ENS_MEMBERS="10"
 #
 #-----------------------------------------------------------------------
 #
