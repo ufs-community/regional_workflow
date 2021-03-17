@@ -22,27 +22,29 @@ Parameters needed by the job scheduler.
 <!--
 Workflow task names.
 -->
-<!ENTITY MAKE_GRID_TN       "{{ make_grid_tn }}">
-<!ENTITY MAKE_OROG_TN       "{{ make_orog_tn }}">
-<!ENTITY MAKE_SFC_CLIMO_TN  "{{ make_sfc_climo_tn }}">
-<!ENTITY GET_EXTRN_ICS_TN   "{{ get_extrn_ics_tn }}">
-<!ENTITY GET_EXTRN_LBCS_TN  "{{ get_extrn_lbcs_tn }}">
-<!ENTITY MAKE_ICS_TN        "{{ make_ics_tn }}">
-<!ENTITY MAKE_LBCS_TN       "{{ make_lbcs_tn }}">
-<!ENTITY RUN_FCST_TN        "{{ run_fcst_tn }}">
-<!ENTITY RUN_POST_TN        "{{ run_post_tn }}">
-<!ENTITY GET_OBS_TN         "{{ get_obs_tn }}">
-<!ENTITY GET_OBS_CCPA_TN    "{{ get_obs_ccpa_tn }}">
-<!ENTITY GET_OBS_NDAS_TN    "{{ get_obs_ndas_tn }}">
-<!ENTITY GET_OBS_MRMS_TN    "{{ get_obs_mrms_tn }}">
-<!ENTITY VX_TN              "{{ vx_tn }}">
-<!ENTITY VX_GRIDSTAT_TN     "{{ vx_gridstat_tn }}">
+<!ENTITY MAKE_GRID_TN        "{{ make_grid_tn }}">
+<!ENTITY MAKE_OROG_TN        "{{ make_orog_tn }}">
+<!ENTITY MAKE_SFC_CLIMO_TN   "{{ make_sfc_climo_tn }}">
+<!ENTITY GET_EXTRN_ICS_TN    "{{ get_extrn_ics_tn }}">
+<!ENTITY GET_EXTRN_LBCS_TN   "{{ get_extrn_lbcs_tn }}">
+<!ENTITY MAKE_ICS_TN         "{{ make_ics_tn }}">
+<!ENTITY MAKE_LBCS_TN        "{{ make_lbcs_tn }}">
+<!ENTITY RUN_FCST_TN         "{{ run_fcst_tn }}">
+<!ENTITY RUN_POST_TN         "{{ run_post_tn }}">
+<!ENTITY GET_OBS_TN          "{{ get_obs_tn }}">
+<!ENTITY GET_OBS_CCPA_TN     "{{ get_obs_ccpa_tn }}">
+<!ENTITY GET_OBS_NDAS_TN     "{{ get_obs_ndas_tn }}">
+<!ENTITY GET_OBS_MRMS_TN     "{{ get_obs_mrms_tn }}">
+<!ENTITY VX_TN               "{{ vx_tn }}">
+<!ENTITY VX_GRIDSTAT_TN      "{{ vx_gridstat_tn }}">
 <!ENTITY VX_GRIDSTAT_REFC_TN "{{ vx_gridstat_refc_tn }}">
-<!ENTITY VX_GRIDSTAT_03h_TN "{{ vx_gridstat_03h_tn }}">
-<!ENTITY VX_GRIDSTAT_06h_TN "{{ vx_gridstat_06h_tn }}">
-<!ENTITY VX_GRIDSTAT_24h_TN "{{ vx_gridstat_24h_tn }}">
-<!ENTITY VX_POINTSTAT_TN    "{{ vx_pointstat_tn }}">
-<!ENTITY VX_ENSPOINT_TN     "{{ vx_enspoint_tn }}">
+<!ENTITY VX_GRIDSTAT_03h_TN  "{{ vx_gridstat_03h_tn }}">
+<!ENTITY VX_GRIDSTAT_06h_TN  "{{ vx_gridstat_06h_tn }}">
+<!ENTITY VX_GRIDSTAT_24h_TN  "{{ vx_gridstat_24h_tn }}">
+<!ENTITY VX_POINTSTAT_TN     "{{ vx_pointstat_tn }}">
+<!ENTITY VX_ENSPOINT_TN      "{{ vx_enspoint_tn }}">
+<!ENTITY VX_ENSPOINT_MEAN_TN "{{ vx_enspoint_mean_tn }}">
+<!ENTITY VX_ENSPOINT_PROB_TN "{{ vx_enspoint_prob_tn }}">
 
 <!--
 Flags that specify whether to run the preprocessing and/or verification tasks.

@@ -104,6 +104,19 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
+# Create INPUT_BASE to read into METplus conf files.
+#
+#-----------------------------------------------------------------------
+#
+if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
+  INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
+elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
+  INPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}/postprd
+fi
+
+#
+#-----------------------------------------------------------------------
+#
 # Check for existence of top-level OBS_DIR 
 #
 #-----------------------------------------------------------------------

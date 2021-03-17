@@ -57,7 +57,7 @@ the UPP output files by initialization time for all forecast hours.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "cycle_dir" "vx_dir" "ensemblestat_dir" )
+valid_args=( "cycle_dir" "vx_dir" "pointstat_prob_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------

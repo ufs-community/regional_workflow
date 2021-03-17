@@ -288,8 +288,6 @@ settings="\
   'run_task_vx_gridstat': ${RUN_TASK_VX_GRIDSTAT}
   'run_task_vx_pointstat': ${RUN_TASK_VX_POINTSTAT}
   'run_task_vx_enspoint': ${RUN_TASK_VX_ENSPOINT}
-  'run_task_vx_enspoint_mean': ${RUN_TASK_VX_ENSPOINT_MEAN}
-  'run_task_vx_enspoint_prob': ${RUN_TASK_VX_ENSPOINT_PROB}
 #
 # Number of physical cores per node for the current machine.
 #

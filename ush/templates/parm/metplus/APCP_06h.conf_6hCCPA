@@ -2,7 +2,7 @@
 
 [dir]
 # Input and output data directories
-INPUT_BASE = {ENV[EXPTDIR]}/{ENV[CDATE]}/postprd
+INPUT_BASE = {ENV[INPUT_BASE]}
 OUTPUT_BASE = {ENV[EXPTDIR]}
 FCST_PCP_COMBINE_INPUT_DIR = {INPUT_BASE}
 FCST_PCP_COMBINE_OUTPUT_DIR = {ENV[EXPTDIR]}/{ENV[CDATE]}/metprd/pcp_combine

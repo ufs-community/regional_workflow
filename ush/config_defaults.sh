@@ -1097,7 +1097,8 @@ VERBOSE="TRUE"
 #
 # RUN_TASK_VX_ENSPOINT:
 # Flag that determines whether the ensemble point verification task is
-# to be run.
+# to be run. If this flag is set, both ensemble-stat point verification
+# and point verification of ensemble-stat output is computed.
 #
 #-----------------------------------------------------------------------
 #
@@ -1330,6 +1331,8 @@ VX_GRIDSTAT_06h_TN="run_gridstatvx_06h"
 VX_GRIDSTAT_24h_TN="run_gridstatvx_24h"
 VX_POINTSTAT_TN="run_pointstatvx"
 VX_ENSPOINT_TN="run_enspointvx"
+VX_ENSPOINT_MEAN_TN="run_enspointvx_mean"
+VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
 #
 # Number of nodes.
 #
@@ -1348,6 +1351,8 @@ NNODES_GET_OBS_NDAS="1"
 NNODES_VX_GRIDSTAT="1"
 NNODES_VX_POINTSTAT="1"
 NNODES_VX_ENSPOINT="1"
+NNODES_VX_ENSPOINT_MEAN="1"
+NNODES_VX_ENSPOINT_PROB="1"
 #
 # Number of MPI processes per node.
 #
@@ -1366,6 +1371,8 @@ PPN_GET_OBS_NDAS="1"
 PPN_VX_GRIDSTAT="1"
 PPN_VX_POINTSTAT="1"
 PPN_VX_ENSPOINT="1"
+PPN_VX_ENSPOINT_MEAN="1"
+PPN_VX_ENSPOINT_PROB="1"
 #
 # Walltimes.
 #
@@ -1384,6 +1391,8 @@ WTIME_GET_OBS_NDAS="02:00:00"
 WTIME_VX_GRIDSTAT="01:00:00"
 WTIME_VX_POINTSTAT="01:00:00"
 WTIME_VX_ENSPOINT="01:00:00"
+WTIME_VX_ENSPOINT_MEAN="01:00:00"
+WTIME_VX_ENSPOINT_PROB="01:00:00"
 #
 # Maximum number of attempts.
 #
