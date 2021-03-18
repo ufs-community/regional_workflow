@@ -401,7 +401,10 @@ FCST_LEN_HRS="24"
 # to be set for both user-provided observations and for observations 
 # that are retrieved from the NOAA HPSS (if the user has access) via
 # the get_obs_ccpa_tn task (activated in workflow by setting 
-# RUN_TASK_GET_OBS_CCPA="TRUE"). METplus is configured to verify 01-, 
+# RUN_TASK_GET_OBS_CCPA="TRUE"). In the case of pulling observations 
+# directly from NOAA HPSS, the data retrieved will be placed in this 
+# directory. Please note, this path must be defind as 
+# /full-path-to-obs/ccpa/proc. METplus is configured to verify 01-, 
 # 03-, 06-, and 24-h accumulated precipitation using hourly CCPA files. 
 # METplus configuration files require the use of predetermined directory 
 # structure and file names. Therefore, if the CCPA files are user 
@@ -424,7 +427,10 @@ FCST_LEN_HRS="24"
 # to be set for both user-provided observations and for observations
 # that are retrieved from the NOAA HPSS (if the user has access) via the
 # get_obs_mrms_tn task (activated in workflow by setting 
-# RUN_TASK_GET_OBS_MRMS="TRUE"). METplus configuration files require the
+# RUN_TASK_GET_OBS_MRMS="TRUE"). In the case of pulling observations 
+# directly from NOAA HPSS, the data retrieved will be placed in this 
+# directory. Please note, this path must be defind as 
+# /full-path-to-obs/mrms/proc. METplus configuration files require the
 # use of predetermined directory structure and file names. Therefore, if
 # the MRMS files are user provided, they need to follow the anticipated 
 # naming structure:
@@ -450,7 +456,10 @@ FCST_LEN_HRS="24"
 # both user-provided observations and for observations that are 
 # retrieved from the NOAA HPSS (if the user has access) via the 
 # get_obs_ndas_tn task (activated in workflow by setting 
-# RUN_TASK_GET_OBS_NDAS="TRUE"). METplus is configured to verify 
+# RUN_TASK_GET_OBS_NDAS="TRUE"). In the case of pulling observations 
+# directly from NOAA HPSS, the data retrieved will be placed in this 
+# directory. Please note, this path must be defind as 
+# /full-path-to-obs/ndas/proc. METplus is configured to verify 
 # near-surface variables hourly and upper-air variables at times valid 
 # at 00 and 12 UTC with NDAS prepbufr files. METplus configuration files
 # require the use of predetermined file names. Therefore, if the NDAS 
@@ -467,9 +476,9 @@ FCST_LEN_HRS="24"
 MODEL=""
 MET_INSTALL_DIR="/path/to/MET"
 METPLUS_PATH="/path/to/METPlus"
-CCPA_OBS_DIR="/path/to/processed/CCPA/data"
-MRMS_OBS_DIR="/path/to/processed/MRMS/data"
-NDAS_OBS_DIR="/path/to/processed/NDAS/data"
+CCPA_OBS_DIR="/path/to/observation-directory/ccpa/proc"
+MRMS_OBS_DIR="/path/to/observation-directory/mrms/proc"
+NDAS_OBS_DIR="/path/to/observation-directory/ndas/proc"
 #
 #-----------------------------------------------------------------------
 #
@@ -1372,7 +1381,7 @@ WTIME_RUN_POST="00:15:00"
 WTIME_GET_OBS_CCPA="00:45:00"
 WTIME_GET_OBS_MRMS="00:45:00"
 WTIME_GET_OBS_NDAS="02:00:00"
-WTIME_VX_GRIDSTAT="01:00:00"
+WTIME_VX_GRIDSTAT="02:00:00"
 WTIME_VX_POINTSTAT="01:00:00"
 #
 # Maximum number of attempts.
@@ -1386,6 +1395,15 @@ MAXTRIES_MAKE_ICS="1"
 MAXTRIES_MAKE_LBCS="1"
 MAXTRIES_RUN_FCST="1"
 MAXTRIES_RUN_POST="1"
+MAXTRIES_GET_OBS_CCPA="1"
+MAXTRIES_GET_OBS_MRMS="1"
+MAXTRIES_GET_OBS_NDAS="1"
+MAXTRIES_VX_GRIDSTAT="1"
+MAXTRIES_VX_GRIDSTAT_REFC="1"
+MAXTRIES_VX_GRIDSTAT_03h="1"
+MAXTRIES_VX_GRIDSTAT_06h="1"
+MAXTRIES_VX_GRIDSTAT_24h="1"
+MAXTRIES_VX_POINTSTAT="1"
 #
 #-----------------------------------------------------------------------
 #

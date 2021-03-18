@@ -184,7 +184,7 @@ settings="\
   'make_lbcs_tn': ${MAKE_LBCS_TN}
   'run_fcst_tn': ${RUN_FCST_TN}
   'run_post_tn': ${RUN_POST_TN}
-  'get_obs_tn': ${GET_OBS_TN}
+  'get_obs': ${GET_OBS}
   'get_obs_ccpa_tn': ${GET_OBS_CCPA_TN}
   'get_obs_ndas_tn': ${GET_OBS_NDAS_TN}
   'get_obs_mrms_tn': ${GET_OBS_MRMS_TN}
@@ -195,6 +195,10 @@ settings="\
   'vx_gridstat_06h_tn': ${VX_GRIDSTAT_06h_TN}
   'vx_gridstat_24h_tn': ${VX_GRIDSTAT_24h_TN}
   'vx_pointstat_tn': ${VX_POINTSTAT_TN}
+#
+# Entity used to load the module file for each GET_OBS_* task.
+#
+  'get_obs': ${GET_OBS}
 #
 # Number of nodes to use for each task.
 #
@@ -265,6 +269,15 @@ settings="\
   'maxtries_make_lbcs': ${MAXTRIES_MAKE_LBCS}
   'maxtries_run_fcst': ${MAXTRIES_RUN_FCST}
   'maxtries_run_post': ${MAXTRIES_RUN_POST}
+  'maxtries_get_obs_ccpa': ${MAXTRIES_GET_OBS_CCPA}
+  'maxtries_get_obs_mrms': ${MAXTRIES_GET_OBS_MRMS}
+  'maxtries_get_obs_ndas': ${MAXTRIES_GET_OBS_NDAS}
+  'maxtries_vx_gridstat': ${MAXTRIES_VX_GRIDSTAT}
+  'maxtries_vx_gridstat_refc': ${MAXTRIES_VX_GRIDSTAT_REFC}
+  'maxtries_vx_gridstat_03h': ${MAXTRIES_VX_GRIDSTAT_03h}
+  'maxtries_vx_gridstat_06h': ${MAXTRIES_VX_GRIDSTAT_06h}
+  'maxtries_vx_gridstat_24h': ${MAXTRIES_VX_GRIDSTAT_24h}
+  'maxtries_vx_pointstat': ${MAXTRIES_VX_POINTSTAT}
 #
 # Flags that specify whether to run the preprocessing tasks.
 #

@@ -31,7 +31,6 @@ Workflow task names.
 <!ENTITY MAKE_LBCS_TN       "{{ make_lbcs_tn }}">
 <!ENTITY RUN_FCST_TN        "{{ run_fcst_tn }}">
 <!ENTITY RUN_POST_TN        "{{ run_post_tn }}">
-<!ENTITY GET_OBS_TN         "{{ get_obs_tn }}">
 <!ENTITY GET_OBS_CCPA_TN    "{{ get_obs_ccpa_tn }}">
 <!ENTITY GET_OBS_NDAS_TN    "{{ get_obs_ndas_tn }}">
 <!ENTITY GET_OBS_MRMS_TN    "{{ get_obs_mrms_tn }}">
@@ -42,6 +41,11 @@ Workflow task names.
 <!ENTITY VX_GRIDSTAT_06h_TN "{{ vx_gridstat_06h_tn }}">
 <!ENTITY VX_GRIDSTAT_24h_TN "{{ vx_gridstat_24h_tn }}">
 <!ENTITY VX_POINTSTAT_TN    "{{ vx_pointstat_tn }}">
+
+<!--
+Entity used to load the module file for each GET_OBS_* task.
+-->
+<!ENTITY GET_OBS            "{{ get_obs }}">
 
 <!--
 Flags that specify whether to run the preprocessing and/or verification tasks.
@@ -465,10 +469,10 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 -->
 
-  <task name="&GET_OBS_CCPA_TN;" maxtries="2">
+  <task name="&GET_OBS_CCPA_TN;" maxtries="{{ maxtries_get_obs_ccpa }}">
 
     &RSRV_HPSS;
-    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS_TN;" "&JOBSDIR;/JREGIONAL_GET_OBS_CCPA"</command>
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS;" "&JOBSDIR;/JREGIONAL_GET_OBS_CCPA"</command>
     <nodes>{{ nnodes_get_obs_ccpa }}:ppn={{ ppn_get_obs_ccpa }}</nodes>
     <walltime>{{ wtime_get_obs_ccpa }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
@@ -497,10 +501,10 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 -->
 
-  <task name="&GET_OBS_MRMS_TN;" maxtries="2">
+  <task name="&GET_OBS_MRMS_TN;" maxtries="{{ maxtries_get_obs_mrms }}">
 
     &RSRV_HPSS;
-    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS_TN;" "&JOBSDIR;/JREGIONAL_GET_OBS_MRMS"</command>
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS;" "&JOBSDIR;/JREGIONAL_GET_OBS_MRMS"</command>
     <nodes>{{ nnodes_get_obs_mrms }}:ppn={{ ppn_get_obs_mrms }}</nodes>
     <walltime>{{ wtime_get_obs_mrms }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
@@ -530,10 +534,10 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 -->
 
-  <task name="&GET_OBS_NDAS_TN;" maxtries="2">
+  <task name="&GET_OBS_NDAS_TN;" maxtries="{{ maxtries_get_obs_ndas }}">
 
     &RSRV_HPSS;
-    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS_TN;" "&JOBSDIR;/JREGIONAL_GET_OBS_NDAS"</command>
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&GET_OBS;" "&JOBSDIR;/JREGIONAL_GET_OBS_NDAS"</command>
     <nodes>{{ nnodes_get_obs_ndas }}:ppn={{ ppn_get_obs_ndas }}</nodes>
     <walltime>{{ wtime_get_obs_ndas }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>
@@ -562,7 +566,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 -->
 
-  <task name="&VX_GRIDSTAT_TN;" maxtries="2">
+  <task name="&VX_GRIDSTAT_TN;" maxtries="{{ maxtries_vx_gridstat }}">
 
     &RSRV_HPSS;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_GRIDSTAT"</command>
@@ -598,7 +602,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_GRIDSTAT_REFC_TN;" maxtries="2">
+  <task name="&VX_GRIDSTAT_REFC_TN;" maxtries="{{ maxtries_vx_gridstat_refc }}">
 
     &RSRV_HPSS;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_GRIDSTAT"</command>
@@ -633,7 +637,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_GRIDSTAT_03h_TN;" maxtries="2">
+  <task name="&VX_GRIDSTAT_03h_TN;" maxtries="{{ maxtries_vx_gridstat_03h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_GRIDSTAT"</command>
@@ -665,7 +669,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_GRIDSTAT_06h_TN;" maxtries="2">
+  <task name="&VX_GRIDSTAT_06h_TN;" maxtries="{{ maxtries_vx_gridstat_06h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_GRIDSTAT"</command>
@@ -697,7 +701,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_GRIDSTAT_24h_TN;" maxtries="2">
+  <task name="&VX_GRIDSTAT_24h_TN;" maxtries="{{ maxtries_vx_gridstat_24h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_GRIDSTAT"</command>
@@ -729,7 +733,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_POINTSTAT_TN;" maxtries="2">
+  <task name="&VX_POINTSTAT_TN;" maxtries="{{ maxtries_vx_pointstat }}">
 
     &RSRV_HPSS;
 
