@@ -114,7 +114,7 @@ message_type_group_map = [
 // Ensemble bin sizes
 // May be set separately in each "obs.field" entry
 //
-ens_ssvar_bin_size = ${ENSEMBLE_STAT_ENS_THRESH};
+ens_ssvar_bin_size = 1.0;
 ens_phist_bin_size = 0.05;
 
 //
@@ -166,8 +166,8 @@ climo_cdf = {
 // Point observation time window
 //
 obs_window = {
-   beg = ${OBS_ENSEMBLE_STAT_WINDOW_BEGIN};
-   end = ${OBS_ENSEMBLE_STAT_WINDOW_END};
+   beg = ${OBS_WINDOW_BEGIN};
+   end = ${OBS_WINDOW_END};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -177,7 +177,7 @@ obs_window = {
 //
 mask = {
    grid = [];
-   poly = [ ${VERIF_MASK} ];
+   poly = [ "${MET_INSTALL_DIR}/share/met/poly/CONUS.poly" ];
    sid = [];
 }
 
@@ -250,7 +250,7 @@ rng = {
 ////////////////////////////////////////////////////////////////////////////////
 
 grid_weight_flag = NONE;
-output_prefix    = "${ENSEMBLE_STAT_OUTPUT_PREFIX}";
-version          = "V9.0.2";
+output_prefix    = "${OUTPUT_PREFIX}";
+version          = "V9.1";
 
 ////////////////////////////////////////////////////////////////////////////////
