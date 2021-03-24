@@ -103,6 +103,15 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
+# Create INPUT_BASE to read into METplus conf files.
+#
+#-----------------------------------------------------------------------
+#
+INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
+
+#
+#-----------------------------------------------------------------------
+#
 # Check for existence of top-level OBS_DIR 
 #
 #-----------------------------------------------------------------------
@@ -120,6 +129,7 @@ fi
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
+export INPUT_BASE
 export MET_INSTALL_DIR
 export METPLUS_PATH
 export METPLUS_CONF
@@ -130,11 +140,11 @@ export NET
 
 ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common.conf \
-  -c ${METPLUS_CONF}/PointStat_mean_conus_sfc.conf
+  -c ${METPLUS_CONF}/PointStat_conus_sfc_mean.conf
 
 ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common.conf \
-  -c ${METPLUS_CONF}/PointStat_mean_upper_air.conf
+  -c ${METPLUS_CONF}/PointStat_upper_air_mean.conf
 #
 #-----------------------------------------------------------------------
 #

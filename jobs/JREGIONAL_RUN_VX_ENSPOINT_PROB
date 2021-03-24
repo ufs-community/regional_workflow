@@ -91,7 +91,6 @@ cd_vrfy "${pointstat_prob_dir}"
 $SCRIPTSDIR/exregional_run_enspointvx_prob.sh \
   cycle_dir="${CYCLE_DIR}" \
   vx_dir="${vx_dir}" \
-  ensemblestat_dir="${ensemblestat_dir}"
   pointstat_prob_dir="${pointstat_prob_dir}" || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."

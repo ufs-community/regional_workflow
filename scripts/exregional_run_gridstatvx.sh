@@ -112,6 +112,8 @@ if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
   INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
 elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
   INPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}/postprd
+  ENSMEM=`echo ${SLASH_ENSMEM_SUBDIR} | cut -d"/" -f2`
+  MODEL=${MODEL}_${ENSMEM}
 fi
 
 #
