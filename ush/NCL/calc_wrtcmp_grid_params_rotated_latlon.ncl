@@ -235,18 +235,6 @@ end if
 ;
   y_S_native_max = max((/y_SW_native, y_S_native, y_SE_native/))
   y_N_native_min = min((/y_NW_native, y_N_native, y_NE_native/))
-;print("")
-;print("y_SW_native = " + y_SW_native)
-;print("y_S_native = " + y_S_native)
-;print("y_SE_native = " + y_SE_native)
-;print("y_S_native_max = " + y_S_native_max)
-;
-;print("")
-;print("y_NW_native = " + y_NW_native)
-;print("y_N_native = " + y_N_native)
-;print("y_NE_native = " + y_NE_native)
-;print("y_N_native_min = " + y_N_native_min)
-
 
 ;
 ; The following code is for the case in which in the xy-plane [i.e. in the 
@@ -275,19 +263,7 @@ if (True) then
     inds_sort := dim_pqsort(x_bdy_native_bot, 2)
     y_bdy_native_bot := y_bdy_native_bot(inds_sort)
 
-;print("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
-;print("dimsizes(x_bdy_native_bot) = " + dimsizes(x_bdy_native_bot))
-;pause
-;print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
-;print(x_bdy_native_bot)
-;pause
-
     indx_nearest = ind_nearest_coord(x_W_native_max, x_bdy_native_bot, 0)
-;print("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
-;print("x_W_native_max = " + x_W_native_max)
-;print("indx_nearest = " + indx_nearest)
-;print("x_bdy_native_bot(indx_nearest) = " + x_bdy_native_bot(indx_nearest))
-;pause
     if (x_W_native_max .lt. x_bdy_native_bot(indx_nearest)) then
       indx_1 = indx_nearest - 1
       indx_2 = indx_nearest
@@ -296,19 +272,11 @@ if (True) then
       indx_2 = indx_nearest + 1
     end if
     end if
-;print("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
-;print("indx_1 = " + indx_1)
-;print("x_bdy_native_bot(indx_1) = " + x_bdy_native_bot(indx_1))
-;print("y_bdy_native_bot(indx_1) = " + y_bdy_native_bot(indx_1))
-;print("indx_2 = " + indx_2)
-;print("x_bdy_native_bot(indx_2) = " + x_bdy_native_bot(indx_2))
-;print("y_bdy_native_bot(indx_2) = " + y_bdy_native_bot(indx_2))
-;pause
 
-    y_S_native_max_linear := interpol_extrapol_linear( \
-                     x_SW_native, y_SW_native, \
-                     x_S_native, y_S_native, \
-                     x_W_native_max)
+;    y_S_native_max_linear := interpol_extrapol_linear( \
+;                     x_SW_native, y_SW_native, \
+;                     x_S_native, y_S_native, \
+;                     x_W_native_max)
     y_S_native_max = interpol_extrapol_linear( \
                      x_bdy_native_bot(indx_1), y_bdy_native_bot(indx_1), \
                      x_bdy_native_bot(indx_2), y_bdy_native_bot(indx_2), \
@@ -331,19 +299,7 @@ if (True) then
     inds_sort := dim_pqsort(x_bdy_native_top, 2)
     y_bdy_native_top := y_bdy_native_top(inds_sort)
 
-;print("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
-;print("dimsizes(x_bdy_native_top) = " + dimsizes(x_bdy_native_top))
-;pause
-;print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
-;print("x_bdy_native_top = " + x_bdy_native_top + ";    y_bdy_native_top = " + y_bdy_native_top)
-;pause
-
     indx_nearest = ind_nearest_coord(x_W_native_max, x_bdy_native_top, 0)
-;print("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
-;print("x_W_native_max = " + x_W_native_max)
-;print("indx_nearest = " + indx_nearest)
-;print("x_bdy_native_top(indx_nearest) = " + x_bdy_native_top(indx_nearest))
-;pause
     if (x_W_native_max .lt. x_bdy_native_top(indx_nearest)) then
       indx_1 = indx_nearest - 1
       indx_2 = indx_nearest
@@ -352,14 +308,6 @@ if (True) then
       indx_2 = indx_nearest + 1
     end if
     end if
-;print("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
-;print("indx_1 = " + indx_1)
-;print("x_bdy_native_top(indx_1) = " + x_bdy_native_top(indx_1))
-;print("y_bdy_native_top(indx_1) = " + y_bdy_native_top(indx_1))
-;print("indx_2 = " + indx_2)
-;print("x_bdy_native_top(indx_2) = " + x_bdy_native_top(indx_2))
-;print("y_bdy_native_top(indx_2) = " + y_bdy_native_top(indx_2))
-;pause
 
 ;    y_N_native_min_linear := interpol_extrapol_linear( \
 ;                     x_NW_native, y_NW_native, \
@@ -400,7 +348,7 @@ print("y_N = " + y_N)
 ; **********************************************************************
 ;
 ; Calculate the spherical coordinates of the southwest corner of the 
-; native grid from its Lambert coordinates.
+; native grid from its rotated latlon coordinates.
 ;
 ; **********************************************************************
 ;
