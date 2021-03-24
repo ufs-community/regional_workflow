@@ -1347,13 +1347,14 @@ USE_ZMTNBLCK="false"
 #-----------------------------------------------------------------------
 #
 DO_SPP="false"
-SPP_VAR_LIST=( "pbl" )
-SPP_MAG_LIST=( "0.2" ) #Variable "spp_prt_list" in input.nml
-SPP_LSCALE=( "150000.0" )
-SPP_TSCALE=( "21600.0" ) #Variable "spp_tau" in input.nml
-SPP_SIGTOP1=( "0.1" )
-SPP_SIGTOP2=( "0.025" )
-SPP_STDDEV_CUTOFF=( "1.5" )
+SPP_VAR_LIST=( "pbl" "sfc" )
+SPP_MAG_LIST=( "0.2" "0.2" ) #Variable "spp_prt_list" in input.nml
+SPP_LSCALE=( "150000.0" "150000.0" )
+SPP_TSCALE=( "21600.0" "21600.0" ) #Variable "spp_tau" in input.nml
+SPP_SIGTOP1=( "0.1" "0.1" )
+SPP_SIGTOP2=( "0.025" "0.025" )
+SPP_STDDEV_CUTOFF=( "1.5" "1.5" )
+ISEED_SPP=( "4" "4" )
 #
 #-----------------------------------------------------------------------
 # 

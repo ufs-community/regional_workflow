@@ -121,16 +121,25 @@ for (( i=0; i<${NUM_ENS_MEMBERS}; i++ )); do
   iseed_shum=$(( cdate*1000 + ip1*10 + 2 ))
   iseed_skeb=$(( cdate*1000 + ip1*10 + 3 ))
   iseed_sppt=$(( cdate*1000 + ip1*10 + 1 ))
-  iseed_spp=$(( cdate*1000 + ip1*10 + 4 ))
+  iseed_spp_i=$(( cdate*1000 + ip1*10 + 4 ))
 
   settings="\
 'nam_stochy': {
     'iseed_shum': ${iseed_shum},
     'iseed_skeb': ${iseed_skeb},
     'iseed_sppt': ${iseed_sppt},
-  }
+  }"
+
+  iseed_spp=()
+
+  for (( j=0; j<${#SPP_VAR_LIST[@]}; j++ )); do
+    iseed_spp+=($iseed_spp_i)
+  done
+  echo "iseed_spp is: ${iseed_spp[@]}"
+
+  settings="${settings}
 'nam_spperts': {
-    'iseed_spp': ${iseed_spp},
+    'iseed_spp': [ $( printf %s, "${iseed_spp[@]}" ) ],
   }"
 
   $USHDIR/set_namelist.py -q \
