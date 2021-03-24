@@ -344,6 +344,29 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# If running with SPP, confirm that each SPP-related namelist value 
+# contains the same number of entries as N_VAR_SPP (set above to be equal
+# to the number of entries in SPP_VAR_LIST).
+#
+#-----------------------------------------------------------------------
+#
+if [ "${DO_SPP}" = "TRUE" ]; then
+  if [ "${#SPP_MAG_LIST[@]}" != "${N_VAR_SPP}" ] || \
+     [ "${#SPP_LSCALE[@]}" != "${N_VAR_SPP}" ] || \
+     [ "${#SPP_TSCALE[@]}" != "${N_VAR_SPP}" ] || \
+     [ "${#SPP_SIGTOP1[@]}" != "${N_VAR_SPP}" ] || \
+     [ "${#SPP_SIGTOP2[@]}" != "${N_VAR_SPP}" ] || \
+     [ "${#SPP_STDDEV_CUTOFF[@]}" != "${N_VAR_SPP}" ] || \
+     [ "${#ISEED_SPP[@]}" != "${N_VAR_SPP}" ]; then
+  print_err_msg_exit "\
+All SPP-related namelist variables set in config.sh must be equal in number
+of entries to what is found in SPP_VAR_LIST:
+  Number of entries in SPP_VAR_LIST = \"${#SPP_VAR_LIST[@]}\""
+  fi     
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that USE_FVCOM is set to a valid value and assign directory
 # and file names.
 #

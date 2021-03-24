@@ -587,6 +587,7 @@ settings="\
     'do_sppt': ${DO_SPPT},
     'do_skeb': ${DO_SKEB},
     'do_spp': ${DO_SPP},
+    'n_var_spp': ${N_VAR_SPP},
   }
 'nam_stochy': {
     'shum': ${SHUM_MAG},
@@ -666,6 +667,7 @@ settings="$settings
 'nam_spperts': {"
 if [ "${DO_SPP}" = "TRUE" ]; then 
 settings="$settings
+    'iseed_spp': [ $( printf %s, "${ISEED_SPP[@]}" ) ],
     'spp_lscale': [ $( printf %s, "${SPP_LSCALE[@]}" ) ],
     'spp_prt_list': [ $( printf %s, "${SPP_MAG_LIST[@]}" ) ],
     'spp_sigtop1': [ $( printf %s, "${SPP_SIGTOP1[@]}" ) ],
@@ -676,12 +678,6 @@ settings="$settings
 fi
 settings="$settings
   }"
-if [ "${DO_SPP}" = "TRUE" ]; then
-settings="$settings
-'gfs_physics_nml': {
-    'n_var_spp': ${N_VAR_SPP},
-  }"
-fi
 
 print_info_msg $VERBOSE "
 The variable \"settings\" specifying values of the namelist variables
