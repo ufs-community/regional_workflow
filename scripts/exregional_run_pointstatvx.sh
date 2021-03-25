@@ -111,6 +111,7 @@ if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
   INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
 elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
   INPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}/postprd
+  OUTPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}
   ENSMEM=`echo ${SLASH_ENSMEM_SUBDIR} | cut -d"/" -f2`
   MODEL=${MODEL}_${ENSMEM}
 fi
@@ -136,6 +137,7 @@ fi
 #
 export EXPTDIR
 export INPUT_BASE
+export OUTPUT_BASE
 export MET_INSTALL_DIR
 export METPLUS_PATH
 export METPLUS_CONF
