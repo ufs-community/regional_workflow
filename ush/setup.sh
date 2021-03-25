@@ -1741,8 +1741,6 @@ else
 #
 #-----------------------------------------------------------------------
 #
-#else
-#
 # If RUN_TASK_MAKE_GRID is set to "FALSE", the workflow will look for 
 # the pregenerated grid files in GRID_DIR.  In this case, make sure that 
 # GRID_DIR exists.  Otherwise, set it to a predefined location under the 
