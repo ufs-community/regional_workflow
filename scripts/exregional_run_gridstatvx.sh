@@ -104,17 +104,31 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-# Create INPUT_BASE to read into METplus conf files.
+# Create INPUT_BASE and LOG_SUFFIX to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
 #
 if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
   INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
+  if [ ${VAR} == "APCP" ]; then
+    LOG_SUFFIX=gridstat_${CDATE}_${VAR}_${ACCUM}h
+  elif [ ${VAR} == "REFC" ]; then
+    LOG_SUFFIX=gridstat_${CDATE}_${VAR}
+  else
+    echo "No variable defined"
+  fi
 elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
   INPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}/postprd
   OUTPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}
   ENSMEM=`echo ${SLASH_ENSMEM_SUBDIR} | cut -d"/" -f2`
   MODEL=${MODEL}_${ENSMEM}
+  if [ ${VAR} == "APCP" ]; then
+    LOG_SUFFIX=gridstat_${CDATE}_${ENSMEM}_${VAR}_${ACCUM}h
+  elif [ ${VAR} == "REFC" ]; then
+    LOG_SUFFIX=gridstat_${CDATE}_${ENSMEM}_${VAR}
+  else
+    echo "No variable defined"
+  fi
 fi
 
 #
@@ -141,6 +155,7 @@ export SCRIPTSDIR
 export EXPTDIR
 export INPUT_BASE
 export OUTPUT_BASE
+export LOG_SUFFIX
 export MET_INSTALL_DIR
 export METPLUS_PATH
 export METPLUS_CONF

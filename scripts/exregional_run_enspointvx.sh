@@ -103,6 +103,15 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
+# Create LOG_SUFFIX to read into METplus conf files.
+#
+#-----------------------------------------------------------------------
+#
+LOG_SUFFIX=enspoint_${CDATE}
+
+#
+#-----------------------------------------------------------------------
+#
 # Check for existence of top-level OBS_DIR 
 #
 #-----------------------------------------------------------------------
@@ -120,6 +129,7 @@ fi
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
+export LOG_SUFFIX
 export MET_INSTALL_DIR
 export METPLUS_PATH
 export METPLUS_CONF

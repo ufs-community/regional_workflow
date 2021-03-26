@@ -41,6 +41,7 @@ RUN_TASK_GET_OBS_MRMS="FALSE"
 RUN_TASK_GET_OBS_NDAS="FALSE"
 RUN_TASK_VX_GRIDSTAT="FALSE"
 RUN_TASK_VX_POINTSTAT="FALSE"
+RUN_TASK_VX_ENSPOINT="FALSE"
 
 #
 # Uncomment the following line in order to use user-staged external model 

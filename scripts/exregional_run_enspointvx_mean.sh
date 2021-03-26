@@ -103,11 +103,12 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-# Create INPUT_BASE to read into METplus conf files.
+# Create INPUT_BASE and LOG_SUFFIX to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
 #
 INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
+LOG_SUFFIX=enspoint_mean_${CDATE}
 
 #
 #-----------------------------------------------------------------------
@@ -130,6 +131,7 @@ fi
 #
 export EXPTDIR
 export INPUT_BASE
+export LOG_SUFFIX
 export MET_INSTALL_DIR
 export METPLUS_PATH
 export METPLUS_CONF
