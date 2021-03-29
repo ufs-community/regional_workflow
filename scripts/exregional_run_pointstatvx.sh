@@ -103,6 +103,24 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
+# Create INPUT_BASE to read into METplus conf files.
+#
+#-----------------------------------------------------------------------
+#
+if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
+  INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
+  LOG_SUFFIX=pointstat_${CDATE}
+elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
+  INPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}/postprd
+  OUTPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}
+  ENSMEM=`echo ${SLASH_ENSMEM_SUBDIR} | cut -d"/" -f2`
+  MODEL=${MODEL}_${ENSMEM}
+  LOG_SUFFIX=pointstat_${CDATE}_${ENSMEM}
+fi
+
+#
+#-----------------------------------------------------------------------
+#
 # Check for existence of top-level OBS_DIR 
 #
 #-----------------------------------------------------------------------
@@ -120,6 +138,9 @@ fi
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
+export INPUT_BASE
+export OUTPUT_BASE
+export LOG_SUFFIX
 export MET_INSTALL_DIR
 export METPLUS_PATH
 export METPLUS_CONF

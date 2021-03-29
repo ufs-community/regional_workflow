@@ -199,6 +199,11 @@ settings="\
   'vx_ensgrid_03h_tn': ${VX_ENSGRID_03h_TN}
   'vx_ensgrid_06h_tn': ${VX_ENSGRID_06h_TN}
   'vx_ensgrid_24h_tn': ${VX_ENSGRID_24h_TN}
+  'vx_ensgrid_mean_tn': ${VX_ENSGRID_MEAN_TN}
+  'vx_ensgrid_prob_tn': ${VX_ENSGRID_PROB_TN}
+  'vx_enspoint_tn': ${VX_ENSPOINT_TN}
+  'vx_enspoint_mean_tn': ${VX_ENSPOINT_MEAN_TN}
+  'vx_enspoint_prob_tn': ${VX_ENSPOINT_PROB_TN}
 #
 # Number of nodes to use for each task.
 #
@@ -217,6 +222,11 @@ settings="\
   'nnodes_vx_gridstat': ${NNODES_VX_GRIDSTAT}
   'nnodes_vx_pointstat': ${NNODES_VX_POINTSTAT}
   'nnodes_vx_ensgrid': ${NNODES_VX_ENSGRID}
+  'nnodes_vx_ensgrid_mean': ${NNODES_VX_ENSGRID_MEAN}
+  'nnodes_vx_ensgrid_prob': ${NNODES_VX_ENSGRID_PROB}
+  'nnodes_vx_enspoint': ${NNODES_VX_ENSPOINT}
+  'nnodes_vx_enspoint_mean': ${NNODES_VX_ENSPOINT_MEAN}
+  'nnodes_vx_enspoint_prob': ${NNODES_VX_ENSPOINT_PROB}
 #
 # Number of cores used for a task
 #
@@ -241,7 +251,11 @@ settings="\
   'ppn_vx_gridstat': ${PPN_VX_GRIDSTAT}
   'ppn_vx_pointstat': ${PPN_VX_POINTSTAT}
   'ppn_vx_ensgrid': ${PPN_VX_ENSGRID}
-
+  'ppn_vx_ensgrid_mean': ${PPN_VX_ENSGRID_MEAN}
+  'ppn_vx_ensgrid_prob': ${PPN_VX_ENSGRID_PROB}
+  'ppn_vx_enspoint': ${PPN_VX_ENSPOINT}
+  'ppn_vx_enspoint_mean': ${PPN_VX_ENSPOINT_MEAN}
+  'ppn_vx_enspoint_prob': ${PPN_VX_ENSPOINT_PROB}
 #
 # Maximum wallclock time for each task.
 #
@@ -260,6 +274,11 @@ settings="\
   'wtime_vx_gridstat': ${WTIME_VX_GRIDSTAT}
   'wtime_vx_pointstat': ${WTIME_VX_POINTSTAT}
   'wtime_vx_ensgrid': ${WTIME_VX_ENSGRID}
+  'wtime_vx_ensgrid_mean': ${WTIME_VX_ENSGRID_MEAN}
+  'wtime_vx_ensgrid_prob': ${WTIME_VX_ENSGRID_PROB}
+  'wtime_vx_enspoint': ${WTIME_VX_ENSPOINT}
+  'wtime_vx_enspoint_mean': ${WTIME_VX_ENSPOINT_MEAN}
+  'wtime_vx_enspoint_prob': ${WTIME_VX_ENSPOINT_PROB}
 #
 # Maximum number of tries for each task.
 #
@@ -284,6 +303,7 @@ settings="\
   'run_task_vx_gridstat': ${RUN_TASK_VX_GRIDSTAT}
   'run_task_vx_pointstat': ${RUN_TASK_VX_POINTSTAT}
   'run_task_vx_ensgrid': ${RUN_TASK_VX_ENSGRID}
+  'run_task_vx_enspoint': ${RUN_TASK_VX_ENSPOINT}
 #
 # Number of physical cores per node for the current machine.
 #

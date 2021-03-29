@@ -43,7 +43,7 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the ex-script for the task that runs METplus for grid-stat on
+This is the ex-script for the task that runs METplus for point-stat on
 the UPP output files by initialization time for all forecast hours.
 ========================================================================"
 
@@ -57,7 +57,7 @@ the UPP output files by initialization time for all forecast hours.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "cycle_dir" "postprd_dir" "vx_dir" "gridstat_dir" )
+valid_args=( "cycle_dir" "vx_dir" "pointstat_prob_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -69,16 +69,15 @@ process_args valid_args "$@"
 #-----------------------------------------------------------------------
 #
 print_input_args valid_args
-
 #-----------------------------------------------------------------------
 #
-# Remove any files from previous runs and stage necessary files in gridstat_dir.
+# Remove any files from previous runs and stage necessary files in pointstat_dir.
 #
 #-----------------------------------------------------------------------
 #
-print_info_msg "$VERBOSE" "Starting grid-stat verification"
+print_info_msg "$VERBOSE" "Starting point-stat verification"
 
-cd ${gridstat_dir}
+cd ${pointstat_prob_dir}
 
 #
 #-----------------------------------------------------------------------
@@ -108,28 +107,8 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
-  INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
-  if [ ${VAR} == "APCP" ]; then
-    LOG_SUFFIX=gridstat_${CDATE}_${VAR}_${ACCUM}h
-  elif [ ${VAR} == "REFC" ]; then
-    LOG_SUFFIX=gridstat_${CDATE}_${VAR}
-  else
-    echo "No variable defined"
-  fi
-elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
-  INPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}/postprd
-  OUTPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}
-  ENSMEM=`echo ${SLASH_ENSMEM_SUBDIR} | cut -d"/" -f2`
-  MODEL=${MODEL}_${ENSMEM}
-  if [ ${VAR} == "APCP" ]; then
-    LOG_SUFFIX=gridstat_${CDATE}_${ENSMEM}_${VAR}_${ACCUM}h
-  elif [ ${VAR} == "REFC" ]; then
-    LOG_SUFFIX=gridstat_${CDATE}_${ENSMEM}_${VAR}
-  else
-    echo "No variable defined"
-  fi
-fi
+INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
+LOG_SUFFIX=enspoint_prob_${CDATE}
 
 #
 #-----------------------------------------------------------------------
@@ -141,50 +120,33 @@ fi
 if [[ ! -d "$OBS_DIR" ]]; then
   print_err_msg_exit "\
   Exiting: OBS_DIR does not exist."
-  exit
 fi
 
 #
 #-----------------------------------------------------------------------
 #
-# Export some environment variables passed in by the XML 
+# Export some environment variables passed in by the XML and run METplus 
 #
 #-----------------------------------------------------------------------
 #
-export SCRIPTSDIR
 export EXPTDIR
 export INPUT_BASE
-export OUTPUT_BASE
 export LOG_SUFFIX
 export MET_INSTALL_DIR
 export METPLUS_PATH
 export METPLUS_CONF
 export MET_CONFIG
 export OBS_DIR
-export VAR
 export MODEL
 export NET
 
-#
-#-----------------------------------------------------------------------
-#
-# Run METplus 
-#
-#-----------------------------------------------------------------------
-#
-if [ ${VAR} == "APCP" ]; then
-  export acc="${ACCUM}h" # for stats output prefix in GridStatConfig
-  ${METPLUS_PATH}/ush/master_metplus.py \
-    -c ${METPLUS_CONF}/common.conf \
-    -c ${METPLUS_CONF}/${VAR}_${acc}.conf
-elif [ ${VAR} == "REFC" ]; then
-  ${METPLUS_PATH}/ush/master_metplus.py \
-    -c ${METPLUS_CONF}/common.conf \
-    -c ${METPLUS_CONF}/${VAR}.conf
-else
-  echo "No variable defined"
-fi
+${METPLUS_PATH}/ush/master_metplus.py \
+  -c ${METPLUS_CONF}/common.conf \
+  -c ${METPLUS_CONF}/PointStat_conus_sfc_prob.conf
 
+${METPLUS_PATH}/ush/master_metplus.py \
+  -c ${METPLUS_CONF}/common.conf \
+  -c ${METPLUS_CONF}/PointStat_upper_air_prob.conf
 #
 #-----------------------------------------------------------------------
 #
@@ -194,7 +156,7 @@ fi
 #
 print_info_msg "
 ========================================================================
-METplus grid-stat completed successfully.
+METplus ensemble-stat completed successfully.
 
 Exiting script:  \"${scrfunc_fn}\"
 In directory:    \"${scrfunc_dir}\"
