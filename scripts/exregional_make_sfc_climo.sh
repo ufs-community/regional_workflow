@@ -78,6 +78,16 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
+# Set and export OpenMP variables.
+#
+#-----------------------------------------------------------------------
+#
+export KMP_AFFINITY=${KMP_AFFINITY_MAKE_ICS}
+export OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_ICS}
+export OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_ICS}
+#
+#-----------------------------------------------------------------------
+#
 # Are these machine dependent??
 #
 #-----------------------------------------------------------------------
