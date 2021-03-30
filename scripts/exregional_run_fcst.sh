@@ -83,6 +83,17 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
+# Set and export variables.
+#
+#-----------------------------------------------------------------------
+#
+export KMP_AFFINITY=${KMP_AFFINITY_RUN_FCST}
+export OMP_NUM_THREADS=${OMP_NUM_THREADS_RUN_FCST} #Needs to be 1 for 
+# dynamic build of CCPP with GFDL fast physics, was 2 before.
+export OMP_STACKSIZE=${OMP_STACKSIZE_RUN_FCST}
+#
+#-----------------------------------------------------------------------
+#
 # Load modules.
 #
 #-----------------------------------------------------------------------
@@ -477,17 +488,6 @@ if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
   diag_table_fp="${cycle_dir}/${DIAG_TABLE_FN}"
   ln_vrfy -sf ${relative_or_null} ${diag_table_fp} ${run_dir}
 fi
-#
-#-----------------------------------------------------------------------
-#
-# Set and export variables.
-#
-#-----------------------------------------------------------------------
-#
-export KMP_AFFINITY=${KMP_AFFINITY_RUN_FCST}
-export OMP_NUM_THREADS=${OMP_NUM_THREADS_RUN_FCST} #Needs to be 1 for 
-# dynamic build of CCPP with GFDL fast physics, was 2 before.
-export OMP_STACKSIZE=${OMP_STACKSIZE_RUN_FCST}
 #
 #-----------------------------------------------------------------------
 #
