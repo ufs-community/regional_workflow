@@ -78,6 +78,16 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
+# Set and export OpenMP variables.
+#
+#-----------------------------------------------------------------------
+#
+export KMP_AFFINITY=${KMP_AFFINITY_RUN_POST}
+export OMP_NUM_THREADS=${OMP_NUM_THREADS_RUN_POST}
+export OMP_STACKSIZE=${OMP_STACKSIZE_RUN_POST}
+#
+#-----------------------------------------------------------------------
+#
 # Load modules.
 #
 #-----------------------------------------------------------------------

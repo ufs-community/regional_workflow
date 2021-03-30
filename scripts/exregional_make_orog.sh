@@ -76,13 +76,15 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-# The orography code runs with threads.  On Cray, the code is optimized
-# for six threads.  Do not change.
+# Set and export OpenMP variables.  The orography code runs with threads.
+# On Cray, the orog code is optimized for six threads, so is reset below 
+# this block.
 #
 #-----------------------------------------------------------------------
 #
-export OMP_NUM_THREADS=6
-export OMP_STACKSIZE=2048m
+export KMP_AFFINITY=${KMP_AFFINITY_MAKE_OROG}
+export OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_OROG}
+export OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_OROG}
 #
 #-----------------------------------------------------------------------
 #

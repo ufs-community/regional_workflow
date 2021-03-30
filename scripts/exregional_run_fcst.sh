@@ -110,7 +110,6 @@ case $MACHINE in
     ulimit -s unlimited
     ulimit -a
     APRUN="srun"
-    OMP_NUM_THREADS=4
     ;;
 
   "ORION")
@@ -122,8 +121,7 @@ case $MACHINE in
   "JET")
     ulimit -s unlimited
     ulimit -a
-    APRUN="srun"
-    OMP_NUM_THREADS=4
+    APRUN="mpiexec"
     ;;
 
   "ODIN")
@@ -450,7 +448,7 @@ fi
 #
 create_model_configure_file \
   cdate="$cdate" \
-  nthreads=${OMP_NUM_THREADS:-1} \
+  nthreads=${OMP_NUM_THREADS} \
   run_dir="${run_dir}" \
   sub_hourly_post="${SUB_HOURLY_POST}" \
   dt_subhourly_post_mnts="${DT_SUBHOURLY_POST_MNTS}" \
@@ -486,10 +484,10 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-export KMP_AFFINITY=scatter
-export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1} #Needs to be 1 for dynamic build of CCPP with GFDL fast physics, was 2 before.
-export OMP_STACKSIZE=1024m
-
+export KMP_AFFINITY=${KMP_AFFINITY_RUN_FCST}
+export OMP_NUM_THREADS=${OMP_NUM_THREADS_RUN_FCST} #Needs to be 1 for 
+# dynamic build of CCPP with GFDL fast physics, was 2 before.
+export OMP_STACKSIZE=${OMP_STACKSIZE_RUN_FCST}
 #
 #-----------------------------------------------------------------------
 #
