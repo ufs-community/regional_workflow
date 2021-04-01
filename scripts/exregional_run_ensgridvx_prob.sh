@@ -43,7 +43,7 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the ex-script for the task that runs METplus for ensemble-stat on
+This is the ex-script for the task that runs METplus for grid-stat on
 the UPP output files by initialization time for all forecast hours for 
 gridded data.
 ========================================================================"
@@ -58,7 +58,7 @@ gridded data.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "cycle_dir" "postprd_dir" "vx_dir" "ensemblestat_dir" )
+valid_args=( "cycle_dir" "postprd_dir" "vx_dir" "gridstat_prob_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -73,13 +73,13 @@ print_input_args valid_args
 
 #-----------------------------------------------------------------------
 #
-# Remove any files from previous runs and stage necessary files in ensemblestat_dir.
+# Remove any files from previous runs and stage necessary files in gridstat_dir.
 #
 #-----------------------------------------------------------------------
 #
-print_info_msg "$VERBOSE" "Starting ensemble-stat verification"
+print_info_msg "$VERBOSE" "Starting grid-stat verification"
 
-cd ${ensemblestat_dir}
+cd ${gridstat_prob_dir}
 
 #
 #-----------------------------------------------------------------------
@@ -101,6 +101,28 @@ export fhr_last
 
 fhr_list=`echo ${FHR} | sed "s/ /,/g"`
 export fhr_list
+
+#
+#-----------------------------------------------------------------------
+#
+# Create INPUT_BASE and LOG_SUFFIX to read into METplus conf files.
+#
+#-----------------------------------------------------------------------
+#
+INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
+LOG_SUFFIX=ensgrid_prob_${CDATE}
+
+#
+#-----------------------------------------------------------------------
+#
+# Check for existence of top-level OBS_DIR 
+#
+#-----------------------------------------------------------------------
+#
+if [[ ! -d "$OBS_DIR" ]]; then
+  print_err_msg_exit "\
+  Exiting: OBS_DIR does not exist."
+fi
 
 #
 #-----------------------------------------------------------------------
@@ -129,14 +151,14 @@ export NUM_ENS_MEMBERS
 #-----------------------------------------------------------------------
 #
 if [ ${VAR} == "APCP" ]; then
-  export acc="${ACCUM}h" # for stats output prefix in EnsembleStatConfig
+  export acc="${ACCUM}h"
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
-    -c ${METPLUS_CONF}/EnsembleStat_${VAR}${acc}.conf
+    -c ${METPLUS_CONF}/GridStat_${VAR}${acc}_prob.conf
 elif [ ${VAR} == "REFC" ]; then
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
-    -c ${METPLUS_CONF}/EnsembleStat_${VAR}.conf
+    -c ${METPLUS_CONF}/GridStat_${VAR}_prob.conf
 else
   echo "No variable defined"
 fi
@@ -150,7 +172,7 @@ fi
 #
 print_info_msg "
 ========================================================================
-METplus ensemble-stat grid completed successfully.
+METplus grid-stat completed successfully.
 
 Exiting script:  \"${scrfunc_fn}\"
 In directory:    \"${scrfunc_dir}\"

@@ -43,11 +43,20 @@ Workflow task names.
 <!ENTITY VX_GRIDSTAT_24h_TN "{{ vx_gridstat_24h_tn }}">
 <!ENTITY VX_POINTSTAT_TN    "{{ vx_pointstat_tn }}">
 <!ENTITY VX_ENSGRID_TN "{{ vx_ensgrid_tn}}">
+<!ENTITY VX_ENSGRID_REFC_TN "{{ vx_ensgrid_refc_tn }}">
 <!ENTITY VX_ENSGRID_03h_TN "{{ vx_ensgrid_03h_tn}}">
 <!ENTITY VX_ENSGRID_06h_TN "{{ vx_ensgrid_06h_tn}}">
 <!ENTITY VX_ENSGRID_24h_TN "{{ vx_ensgrid_24h_tn}}">
 <!ENTITY VX_ENSGRID_MEAN_TN "{{ vx_ensgrid_mean_tn}}">
 <!ENTITY VX_ENSGRID_PROB_TN "{{ vx_ensgrid_prob_tn}}">
+<!ENTITY VX_ENSGRID_MEAN_03h_TN "{{ vx_ensgrid_mean_03h_tn}}">
+<!ENTITY VX_ENSGRID_PROB_03h_TN "{{ vx_ensgrid_prob_03h_tn}}">
+<!ENTITY VX_ENSGRID_MEAN_06h_TN "{{ vx_ensgrid_mean_06h_tn}}">
+<!ENTITY VX_ENSGRID_PROB_06h_TN "{{ vx_ensgrid_prob_06h_tn}}">
+<!ENTITY VX_ENSGRID_MEAN_24h_TN "{{ vx_ensgrid_mean_24h_tn}}">
+<!ENTITY VX_ENSGRID_PROB_24h_TN "{{ vx_ensgrid_prob_24h_tn}}">
+<!ENTITY VX_ENSGRID_REFC_MEAN_TN "{{ vx_ensgrid_refc_mean_tn}}">
+<!ENTITY VX_ENSGRID_REFC_PROB_TN "{{ vx_ensgrid_refc_prob_tn}}">
 <!ENTITY VX_ENSPOINT_TN      "{{ vx_enspoint_tn }}">
 <!ENTITY VX_ENSPOINT_MEAN_TN "{{ vx_enspoint_mean_tn }}">
 <!ENTITY VX_ENSPOINT_PROB_TN "{{ vx_enspoint_prob_tn }}">
@@ -767,7 +776,7 @@ MODULES_RUN_TASK_FP script.
 -->
 
 {% if run_task_vx_ensgrid %}
-  <task name="&VX_ENSEMBLESTAT_TN;" maxtries="2">
+  <task name="&VX_ENSGRID_TN;" maxtries="2">
 
     &RSRV_HPSS;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
@@ -862,14 +871,12 @@ MODULES_RUN_TASK_FP script.
     </dependency>
 
   </task>
-{% endif %}
 
 <!--
 ************************************************************************
 ************************************************************************
 -->
 
-{% if run_task_vx_ensgrid %}
   <task name="&VX_ENSGRID_24h_TN;" maxtries="2">
 
     &RSRV_HPSS;
@@ -895,10 +902,360 @@ MODULES_RUN_TASK_FP script.
     </dependency>
 
   </task>
-{% endif %}
+
+<!--
+************************************************************************
+************************************************************************
+-->
+{% if run_task_vx_ensgrid %}
+<task name="&VX_ENSGRID_REFC_TN;" maxtries="2">
+
+    &RSRV_HPSS;
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
+    <nodes>{{ nnodes_vx_ensgrid }}:ppn={{ ppn_vx_ensgrid }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&VX_ENSGRID_REFC_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_REFC_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>OBS_DIR</name><value>&MRMS_OBS_DIR;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>REFC</value></envar>
+
+    <dependency>
+      {% if run_task_get_obs_mrms %}
+      <taskdep task="&GET_OBS_MRMS_TN;"/>
+      {% else %}
+      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      {% endif %}
+    </dependency>
 
   </metatask>
 {% endif %}
+
+<!--
+************************************************************************
+************************************************************************
+-->
+  <task name="&VX_ENSGRID_MEAN_TN;" maxtries="2">
+
+    &RSRV_HPSS;
+
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_MEAN"</command>
+    <nodes>{{ nnodes_vx_ensgrid_mean }}:ppn={{ ppn_vx_ensgrid_mean }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid_mean }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&VX_ENSGRID_MEAN_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_MEAN_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>APCP</value></envar>
+    <envar><name>ACCUM</name><value>01</value></envar>
+
+    <dependency>
+      <taskdep task="&VX_ENSGRID_TN;"/>
+    </dependency>
+
+  </task>
+
+<!--
+************************************************************************
+************************************************************************
+-->
+
+  <task name="&VX_ENSGRID_PROB_TN;" maxtries="2">
+
+    &RSRV_HPSS;
+
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_PROB"</command>
+    <nodes>{{ nnodes_vx_ensgrid_prob }}:ppn={{ ppn_vx_ensgrid_prob }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid_prob }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&VX_ENSGRID_PROB_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_PROB_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>APCP</value></envar>
+    <envar><name>ACCUM</name><value>01</value></envar>
+
+    <dependency>
+      <taskdep task="&VX_ENSGRID_TN;"/>
+    </dependency>
+
+  </task>
+
+<!--
+************************************************************************
+************************************************************************
+-->
+
+  <task name="&VX_ENSGRID_MEAN_03h_TN;" maxtries="2">
+
+    &RSRV_HPSS;
+
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_MEAN"</command>
+    <nodes>{{ nnodes_vx_ensgrid_mean }}:ppn={{ ppn_vx_ensgrid_mean }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid_mean }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&VX_ENSGRID_MEAN_03h_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_MEAN_03h_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>APCP</value></envar>
+    <envar><name>ACCUM</name><value>03</value></envar>
+
+    <dependency>
+      <taskdep task="&VX_ENSGRID_03h_TN;"/>
+    </dependency>
+
+  </task>
+
+<!--
+************************************************************************
+************************************************************************
+-->
+
+  <task name="&VX_ENSGRID_PROB_03h_TN;" maxtries="2">
+
+    &RSRV_HPSS;
+
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_PROB"</command>
+    <nodes>{{ nnodes_vx_ensgrid_prob }}:ppn={{ ppn_vx_ensgrid_prob }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid_prob }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&VX_ENSGRID_PROB_03h_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_PROB_03h_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>APCP</value></envar>
+    <envar><name>ACCUM</name><value>03</value></envar>
+
+    <dependency>
+      <taskdep task="&VX_ENSGRID_03h_TN;"/>
+    </dependency>
+
+  </task>
+
+<!--
+************************************************************************
+************************************************************************
+-->
+
+  <task name="&VX_ENSGRID_MEAN_06h_TN;" maxtries="2">
+
+    &RSRV_HPSS;
+
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_MEAN"</command>
+    <nodes>{{ nnodes_vx_ensgrid_mean }}:ppn={{ ppn_vx_ensgrid_mean }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid_mean }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&VX_ENSGRID_MEAN_06h_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_MEAN_06h_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>APCP</value></envar>
+    <envar><name>ACCUM</name><value>06</value></envar>
+
+    <dependency>
+      <taskdep task="&VX_ENSGRID_06h_TN;"/>
+    </dependency>
+
+  </task>
+
+<!--
+************************************************************************
+************************************************************************
+-->
+
+  <task name="&VX_ENSGRID_PROB_06h_TN;" maxtries="2">
+
+    &RSRV_HPSS;
+
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_PROB"</command>
+    <nodes>{{ nnodes_vx_ensgrid_prob }}:ppn={{ ppn_vx_ensgrid_prob }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid_prob }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&VX_ENSGRID_PROB_06h_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_PROB_06h_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>APCP</value></envar>
+    <envar><name>ACCUM</name><value>06</value></envar>
+
+    <dependency>
+      <taskdep task="&VX_ENSGRID_06h_TN;"/>
+    </dependency>
+
+  </task>
+
+<!--
+************************************************************************
+************************************************************************
+-->
+
+  <task name="&VX_ENSGRID_MEAN_24h_TN;" maxtries="2">
+
+    &RSRV_HPSS;
+
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_MEAN"</command>
+    <nodes>{{ nnodes_vx_ensgrid_mean }}:ppn={{ ppn_vx_ensgrid_mean }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid_mean }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&VX_ENSGRID_MEAN_24h_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_MEAN_24h_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>APCP</value></envar>
+    <envar><name>ACCUM</name><value>24</value></envar>
+
+    <dependency>
+      <taskdep task="&VX_ENSGRID_24h_TN;"/>
+    </dependency>
+
+  </task>
+
+<!--
+************************************************************************
+************************************************************************
+-->
+
+  <task name="&VX_ENSGRID_PROB_24h_TN;" maxtries="2">
+
+    &RSRV_HPSS;
+
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_PROB"</command>
+    <nodes>{{ nnodes_vx_ensgrid_prob }}:ppn={{ ppn_vx_ensgrid_prob }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid_prob }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&VX_ENSGRID_PROB_24h_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_PROB_24h_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>APCP</value></envar>
+    <envar><name>ACCUM</name><value>24</value></envar>
+
+    <dependency>
+      <taskdep task="&VX_ENSGRID_24h_TN;"/>
+    </dependency>
+
+  </task>
+
+<!--
+************************************************************************
+************************************************************************
+-->
+
+  <task name="&VX_ENSGRID_MEAN_REFC_TN;" maxtries="2">
+
+    &RSRV_HPSS;
+
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_MEAN"</command>
+    <nodes>{{ nnodes_vx_ensgrid_mean }}:ppn={{ ppn_vx_ensgrid_mean }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid_mean }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&VX_ENSGRID_MEAN_REFC_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_MEAN_REFC_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>OBS_DIR</name><value>&MRMS_OBS_DIR;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>REFC</value></envar>
+
+    <dependency>
+      <taskdep task="&VX_ENSGRID_REFC_TN;"/>
+    </dependency>
+
+  </task>
+
+<!--
+************************************************************************
+************************************************************************
+-->
+
+  <task name="&VX_ENSGRID_PROB_REFC_TN;" maxtries="2">
+
+    &RSRV_HPSS;
+
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_PROB"</command>
+    <nodes>{{ nnodes_vx_ensgrid_prob }}:ppn={{ ppn_vx_ensgrid_prob }}</nodes>
+    <walltime>{{ wtime_vx_ensgrid_prob }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&VX_ENSGRID_PROB_REFC_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&VX_ENSGRID_PROB_REFC_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>OBS_DIR</name><value>&MRMS_OBS_DIR;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
+    <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
+    <envar><name>VAR</name><value>REFC</value></envar>
+
+    <dependency>
+      <taskdep task="&VX_ENSGRID_REFC_TN;"/>
+    </dependency>
+
+  </task>
+{% endif %}
+
 
 {% if run_task_vx_enspoint %}
 <!--

@@ -196,11 +196,20 @@ settings="\
   'vx_gridstat_24h_tn': ${VX_GRIDSTAT_24h_TN}
   'vx_pointstat_tn': ${VX_POINTSTAT_TN}
   'vx_ensgrid_tn': ${VX_ENSGRID_TN}
+  'vx_ensgrid_refc_tn': ${VX_ENSGRID_REFC_TN}'
   'vx_ensgrid_03h_tn': ${VX_ENSGRID_03h_TN}
   'vx_ensgrid_06h_tn': ${VX_ENSGRID_06h_TN}
   'vx_ensgrid_24h_tn': ${VX_ENSGRID_24h_TN}
   'vx_ensgrid_mean_tn': ${VX_ENSGRID_MEAN_TN}
   'vx_ensgrid_prob_tn': ${VX_ENSGRID_PROB_TN}
+  'vx_ensgrid_mean_03h_tn': ${VX_ENSGRID_MEAN_03h_TN}
+  'vx_ensgrid_prob_03h_tn': ${VX_ENSGRID_PROB_03h_TN}
+  'vx_ensgrid_mean_06h_tn': ${VX_ENSGRID_MEAN_06h_TN}
+  'vx_ensgrid_prob_06h_tn': ${VX_ENSGRID_PROB_06h_TN}
+  'vx_ensgrid_mean_24h_tn': ${VX_ENSGRID_MEAN_24h_TN}
+  'vx_ensgrid_prob_24h_tn': ${VX_ENSGRID_PROB_24h_TN}
+  'vx_ensgrid_mean_refc_tn': ${VX_ENSGRID_MEAN_REFC_TN}
+  'vx_ensgrid_prob_refc_tn': ${VX_ENSGRID_PROB_REFC_TN}
   'vx_enspoint_tn': ${VX_ENSPOINT_TN}
   'vx_enspoint_mean_tn': ${VX_ENSPOINT_MEAN_TN}
   'vx_enspoint_prob_tn': ${VX_ENSPOINT_PROB_TN}
