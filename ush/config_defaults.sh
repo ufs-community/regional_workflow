@@ -1583,7 +1583,7 @@ GWD_HRRRsuite_BASEDIR=""
 #-----------------------------------------------------------------------
 #
 # KMP_AFFINITY_*:
-# From Intel: "The Intel® runtime library has the ability to bind OpenP
+# From Intel: "The Intel® runtime library has the ability to bind OpenMP
 # threads to physical processing units. The interface is controlled using
 # the KMP_AFFINITY environment variable. Depending on the system (machine)
 # topology, application, and operating system, thread affinity can have a
@@ -1607,6 +1607,9 @@ GWD_HRRRsuite_BASEDIR=""
 # Controls the size of the stack for threads created by the OpenMP 
 # implementation.
 #
+# CPUS_PER_TASK_RUN_FCST:
+# Sets the number of MPI tasks per CPU for the RUN_FCST task. 
+#
 #-----------------------------------------------------------------------
 #
 KMP_AFFINITY_MAKE_GRID="scatter"
@@ -1625,8 +1628,9 @@ KMP_AFFINITY_MAKE_LBCS="scatter"
 OMP_NUM_THREADS_MAKE_LBCS="1"
 OMP_STACKSIZE_MAKE_LBCS="1024m"
 KMP_AFFINITY_RUN_FCST="scatter"
-OMP_NUM_THREADS_RUN_FCST="2"
+OMP_NUM_THREADS_RUN_FCST="4"
 OMP_STACKSIZE_RUN_FCST="1024m"
+CPUS_PER_TASK_RUN_FCST="4"
 KMP_AFFINITY_RUN_POST="scatter"
 OMP_NUM_THREADS_RUN_POST="1"
 OMP_STACKSIZE_RUN_POST="1024m"
