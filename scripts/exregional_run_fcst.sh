@@ -132,7 +132,7 @@ case $MACHINE in
   "JET")
     ulimit -s unlimited
     ulimit -a
-    APRUN="mpiexec"
+    APRUN="srun"
     ;;
 
   "ODIN")
