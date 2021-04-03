@@ -55,8 +55,8 @@ Workflow task names.
 <!ENTITY VX_ENSGRID_PROB_06h_TN "{{ vx_ensgrid_prob_06h_tn}}">
 <!ENTITY VX_ENSGRID_MEAN_24h_TN "{{ vx_ensgrid_mean_24h_tn}}">
 <!ENTITY VX_ENSGRID_PROB_24h_TN "{{ vx_ensgrid_prob_24h_tn}}">
-<!ENTITY VX_ENSGRID_REFC_MEAN_TN "{{ vx_ensgrid_refc_mean_tn}}">
-<!ENTITY VX_ENSGRID_REFC_PROB_TN "{{ vx_ensgrid_refc_prob_tn}}">
+<!ENTITY VX_ENSGRID_MEAN_REFC_TN "{{ vx_ensgrid_mean_refc_tn}}">
+<!ENTITY VX_ENSGRID_PROB_REFC_TN "{{ vx_ensgrid_prob_refc_tn}}">
 <!ENTITY VX_ENSPOINT_TN      "{{ vx_enspoint_tn }}">
 <!ENTITY VX_ENSPOINT_MEAN_TN "{{ vx_enspoint_mean_tn }}">
 <!ENTITY VX_ENSPOINT_PROB_TN "{{ vx_enspoint_prob_tn }}">
@@ -557,6 +557,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
+{% if run_task_vx_gridstat %}
 
   <task name="&VX_GRIDSTAT_TN;{{ uscore_ensmem_name }}" maxtries="2">
 
@@ -596,7 +597,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-
+{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_REFC_TN;{{ uscore_ensmem_name }}" maxtries="2">
 
     &RSRV_HPSS;
@@ -634,7 +635,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-
+{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_03h_TN;{{ uscore_ensmem_name }}" maxtries="2">
 
     &RSRV_DEFAULT;
@@ -669,6 +670,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
+{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_06h_TN;{{ uscore_ensmem_name }}" maxtries="2">
 
     &RSRV_DEFAULT;
@@ -703,6 +705,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
+{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_24h_TN;{{ uscore_ensmem_name }}" maxtries="2">
 
     &RSRV_DEFAULT;
@@ -737,6 +740,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
+{% if run_task_vx_pointstat %}
   <task name="&VX_POINTSTAT_TN;{{ uscore_ensmem_name }}" maxtries="2">
     &RSRV_HPSS;
 
@@ -769,7 +773,11 @@ MODULES_RUN_TASK_FP script.
   </task>
 
 {% endif %}
+
 {% if do_ensemble %}
+  </metatask>
+{% endif %}
+
 <!--
 ************************************************************************
 ************************************************************************
