@@ -17,6 +17,7 @@
 #-----------------------------------------------------------------------
 #
 . $USHDIR/create_model_configure_file.sh
+. $USHDIR/set_FV3nml_stoch_params.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -122,7 +123,8 @@ case $MACHINE in
   "JET")
     ulimit -s unlimited
     ulimit -a
-    APRUN="srun"
+    nprocs=$(( NNODES_RUN_FCST*PPN_RUN_FCST ))
+    APRUN="mpirun -np $nprocs" 
     OMP_NUM_THREADS=4
     ;;
 
@@ -436,7 +438,11 @@ ln_vrfy -sf ${relative_or_null} ${FIELD_TABLE_FP} ${run_dir}
 ln_vrfy -sf ${relative_or_null} ${NEMS_CONFIG_FP} ${run_dir}
 
 if [ "${DO_ENSEMBLE}" = TRUE ]; then
-  ln_vrfy -sf ${relative_or_null} "${FV3_NML_ENSMEM_FPS[$(( 10#${ensmem_indx}-1 ))]}" ${run_dir}/${FV3_NML_FN}
+  set_FV3nml_stoch_params cdate="$cdate" || print_err_msg_exit "\
+Call to function to create the ensemble-based namelist for the current
+cycle's (cdate) run directory (run_dir) failed:
+  cdate = \"${cdate}\"
+  run_dir = \"${run_dir}\""
 else
   ln_vrfy -sf ${relative_or_null} ${FV3_NML_FP} ${run_dir}
 fi
@@ -451,10 +457,7 @@ fi
 create_model_configure_file \
   cdate="$cdate" \
   nthreads=${OMP_NUM_THREADS:-1} \
-  run_dir="${run_dir}" \
-  sub_hourly_post="${SUB_HOURLY_POST}" \
-  dt_subhourly_post_mnts="${DT_SUBHOURLY_POST_MNTS}" \
-  dt_atmos="${DT_ATMOS}" || print_err_msg_exit "\
+  run_dir="${run_dir}" || print_err_msg_exit "\
 Call to function to create a model configuration file for the current
 cycle's (cdate) run directory (run_dir) failed:
   cdate = \"${cdate}\"
