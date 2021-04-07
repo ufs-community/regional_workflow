@@ -1615,6 +1615,10 @@ GWD_HRRRsuite_BASEDIR=""
 #
 #-----------------------------------------------------------------------
 #
+KMP_AFFINITY_MAKE_OROG="disabled"
+OMP_NUM_THREADS_MAKE_OROG="6"
+OMP_STACKSIZE_MAKE_OROG="2048m"
+
 KMP_AFFINITY_MAKE_SFC_CLIMO="scatter"
 OMP_NUM_THREADS_MAKE_SFC_CLIMO="1"
 OMP_STACKSIZE_MAKE_SFC_CLIMO="1024m"

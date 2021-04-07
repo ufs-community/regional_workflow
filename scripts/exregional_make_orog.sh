@@ -76,6 +76,17 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
+# Set and export OpenMP variables.  The orog executable runs with OMP. On
+# WCOSS (Cray), it is optimized for six threads, which is the default.
+#
+#-----------------------------------------------------------------------
+#
+KMP_AFFINITY=${KMP_AFFINITY_MAKE_OROG}
+OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_OROG}
+OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_OROG}
+#
+#-----------------------------------------------------------------------
+#
 # Load modules and set various computational parameters and directories.
 #
 # Note: 
