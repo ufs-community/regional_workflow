@@ -220,7 +220,7 @@
     skeb_vdof = 10
     skebint = 3600
     skebnorm = 1
-    sppt = 1.0
+    sppt = 0.7
     sppt_logit = .true.
     sppt_lscale = 150.E3
     sppt_sfclimit = .false.
