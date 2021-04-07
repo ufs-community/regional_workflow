@@ -17,7 +17,6 @@
 #-----------------------------------------------------------------------
 #
 . $USHDIR/create_model_configure_file.sh
-. $USHDIR/set_FV3nml_stoch_params.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -84,6 +83,16 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
+# Set OpenMP variables.
+#
+#-----------------------------------------------------------------------
+#
+KMP_AFFINITY=${KMP_AFFINITY_RUN_FCST}
+OMP_NUM_THREADS=${OMP_NUM_THREADS_RUN_FCST}
+OMP_STACKSIZE=${OMP_STACKSIZE_RUN_FCST}
+#
+#-----------------------------------------------------------------------
+#
 # Load modules.
 #
 #-----------------------------------------------------------------------
@@ -111,7 +120,6 @@ case $MACHINE in
     ulimit -s unlimited
     ulimit -a
     APRUN="srun"
-    OMP_NUM_THREADS=4
     ;;
 
   "ORION")
@@ -123,9 +131,7 @@ case $MACHINE in
   "JET")
     ulimit -s unlimited
     ulimit -a
-    nprocs=$(( NNODES_RUN_FCST*PPN_RUN_FCST ))
-    APRUN="mpirun -np $nprocs" 
-    OMP_NUM_THREADS=4
+    APRUN="srun"
     ;;
 
   "ODIN")
@@ -456,8 +462,11 @@ fi
 #
 create_model_configure_file \
   cdate="$cdate" \
-  nthreads=${OMP_NUM_THREADS:-1} \
-  run_dir="${run_dir}" || print_err_msg_exit "\
+  nthreads=${OMP_NUM_THREADS} \
+  run_dir="${run_dir}" \
+  sub_hourly_post="${SUB_HOURLY_POST}" \
+  dt_subhourly_post_mnts="${DT_SUBHOURLY_POST_MNTS}" \
+  dt_atmos="${DT_ATMOS}" || print_err_msg_exit "\
 Call to function to create a model configuration file for the current
 cycle's (cdate) run directory (run_dir) failed:
   cdate = \"${cdate}\"
@@ -482,17 +491,6 @@ if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
   diag_table_fp="${cycle_dir}/${DIAG_TABLE_FN}"
   ln_vrfy -sf ${relative_or_null} ${diag_table_fp} ${run_dir}
 fi
-#
-#-----------------------------------------------------------------------
-#
-# Set and export variables.
-#
-#-----------------------------------------------------------------------
-#
-export KMP_AFFINITY=scatter
-export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1} #Needs to be 1 for dynamic build of CCPP with GFDL fast physics, was 2 before.
-export OMP_STACKSIZE=1024m
-
 #
 #-----------------------------------------------------------------------
 #
