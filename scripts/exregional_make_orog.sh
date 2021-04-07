@@ -105,7 +105,6 @@ case $MACHINE in
     { restore_shell_opts; } > /dev/null 2>&1
     export NODES=1
     export APRUN="aprun -n 1 -N 1 -j 1 -d 1 -cc depth"
-    export KMP_AFFINITY=disabled
     ulimit -s unlimited
     ulimit -a
     ;;
