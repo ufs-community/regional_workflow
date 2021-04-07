@@ -76,7 +76,7 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-# Set and export OpenMP variables.  The orog executable runs with OMP. On
+# Set OpenMP variables.  The orog executable runs with OMP. On
 # WCOSS (Cray), it is optimized for six threads, which is the default.
 #
 #-----------------------------------------------------------------------
@@ -103,8 +103,8 @@ case $MACHINE in
     module load PrgEnv-intel cfp-intel-sandybridge/1.1.0
     module list
     { restore_shell_opts; } > /dev/null 2>&1
-    export NODES=1
-    export APRUN="aprun -n 1 -N 1 -j 1 -d 1 -cc depth"
+    NODES=1
+    APRUN="aprun -n 1 -N 1 -j 1 -d 1 -cc depth"
     ulimit -s unlimited
     ulimit -a
     ;;
@@ -130,11 +130,11 @@ case $MACHINE in
   "JET")
     ulimit -s unlimited
     ulimit -a
-    export APRUN="time"
+    APRUN="time"
     ;;
 
   "ODIN")
-    export APRUN="srun -n 1"
+    APRUN="srun -n 1"
     ulimit -s unlimited
     ulimit -a
     ;;
@@ -144,7 +144,7 @@ case $MACHINE in
     ;;
 
   "STAMPEDE")
-    export APRUN="time"
+    APRUN="time"
     ;;
 
   *)
