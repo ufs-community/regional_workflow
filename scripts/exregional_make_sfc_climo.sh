@@ -82,9 +82,9 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-export KMP_AFFINITY=${KMP_AFFINITY_MAKE_ICS}
-export OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_ICS}
-export OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_ICS}
+KMP_AFFINITY=${KMP_AFFINITY_MAKE_SFC_CLIMO}
+OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_SFC_CLIMO}
+OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_SFC_CLIMO}
 #
 #-----------------------------------------------------------------------
 #

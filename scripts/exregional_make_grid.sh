@@ -80,16 +80,6 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-# Set and export OpenMP variables.
-#
-#-----------------------------------------------------------------------
-#
-export KMP_AFFINITY=${KMP_AFFINITY_MAKE_GRID}
-export OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_GRID}
-export OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_GRID}
-#
-#-----------------------------------------------------------------------
-#
 # Set the machine-dependent run command.  Also, set resource limits as
 # necessary.
 #

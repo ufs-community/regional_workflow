@@ -87,10 +87,9 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-export KMP_AFFINITY=${KMP_AFFINITY_RUN_FCST}
-export OMP_NUM_THREADS=${OMP_NUM_THREADS_RUN_FCST} #Needs to be 1 for 
-# dynamic build of CCPP with GFDL fast physics, was 2 before.
-export OMP_STACKSIZE=${OMP_STACKSIZE_RUN_FCST}
+KMP_AFFINITY=${KMP_AFFINITY_RUN_FCST}
+OMP_NUM_THREADS=${OMP_NUM_THREADS_RUN_FCST}
+OMP_STACKSIZE=${OMP_STACKSIZE_RUN_FCST}
 #
 #-----------------------------------------------------------------------
 #

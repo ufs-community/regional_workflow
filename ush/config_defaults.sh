@@ -1610,27 +1610,29 @@ GWD_HRRRsuite_BASEDIR=""
 # CPUS_PER_TASK_RUN_FCST:
 # Sets the number of MPI tasks per CPU for the RUN_FCST task. 
 #
+# Note that settings for the make_grid and make_orog tasks are not 
+# included below as they do not use parallelized code.
+#
 #-----------------------------------------------------------------------
 #
-KMP_AFFINITY_MAKE_GRID="scatter"
-OMP_NUM_THREADS_MAKE_GRID="6"
-OMP_STACKSIZE_MAKE_GRID="2048m"
-KMP_AFFINITY_MAKE_OROG="scatter"
-OMP_NUM_THREADS_MAKE_OROG="6"
-OMP_STACKSIZE_MAKE_OROG="2048m"
 KMP_AFFINITY_MAKE_SFC_CLIMO="scatter"
 OMP_NUM_THREADS_MAKE_SFC_CLIMO="1"
 OMP_STACKSIZE_MAKE_SFC_CLIMO="1024m"
+
 KMP_AFFINITY_MAKE_ICS="scatter"
 OMP_NUM_THREADS_MAKE_ICS="1"
 OMP_STACKSIZE_MAKE_ICS="1024m"
+
 KMP_AFFINITY_MAKE_LBCS="scatter"
 OMP_NUM_THREADS_MAKE_LBCS="1"
 OMP_STACKSIZE_MAKE_LBCS="1024m"
+
 KMP_AFFINITY_RUN_FCST="scatter"
 OMP_NUM_THREADS_RUN_FCST="4"
 OMP_STACKSIZE_RUN_FCST="1024m"
+
 CPUS_PER_TASK_RUN_FCST="4"
+
 KMP_AFFINITY_RUN_POST="scatter"
 OMP_NUM_THREADS_RUN_POST="1"
 OMP_STACKSIZE_RUN_POST="1024m"
