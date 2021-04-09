@@ -74,7 +74,7 @@ function set_FV3nml_stoch_params() {
 #-----------------------------------------------------------------------
 #
   local i \
-        ip1 \
+        ensmem_num \
         fv3_nml_ens_fp \
         iseed_shum \
         iseed_skeb \
@@ -84,38 +84,37 @@ function set_FV3nml_stoch_params() {
 #
 #-----------------------------------------------------------------------
 #
-# Loop through the ensemble members for a given cycle and generate a 
-# namelist file for each member.
+# For a given cycle and member, generate a namelist file with unique 
+# seed values.
 #
 #-----------------------------------------------------------------------
 #
-for (( i=0; i<${NUM_ENS_MEMBERS}; i++ )); do
+ensmem_name="mem${ENSMEM_INDX}"
 
-  ensmem_name="mem${ENSMEM_INDX}"
+fv3_nml_ensmem_fp="${CYCLE_BASEDIR}/${cdate}/${ensmem_name}/${FV3_NML_FN}"
 
-  fv3_nml_ensmem_fp="${CYCLE_BASEDIR}/${cdate}/${ensmem_name}/${FV3_NML_FN}"
+ensmem_num=${ENSMEM_INDX}
 
-  ip1=$(( i+1 ))
-  iseed_shum=$(( cdate*1000 + ip1*10 + 2 ))
-  iseed_skeb=$(( cdate*1000 + ip1*10 + 3 ))
-  iseed_sppt=$(( cdate*1000 + ip1*10 + 1 ))
-  iseed_spp=$(( cdate*1000 + ip1*10 + 4 ))
+iseed_shum=$(( cdate*1000 + ensmem_num*10 + 2 ))
+iseed_skeb=$(( cdate*1000 + ensmem_num*10 + 3 ))
+iseed_sppt=$(( cdate*1000 + ensmem_num*10 + 1 ))
+iseed_spp=$(( cdate*1000 + ensmem_num*10 + 4 ))
 
-  settings="\
+settings="\
 'nam_stochy': {
-    'iseed_shum': ${iseed_shum},
-    'iseed_skeb': ${iseed_skeb},
-    'iseed_sppt': ${iseed_sppt},
+  'iseed_shum': ${iseed_shum},
+  'iseed_skeb': ${iseed_skeb},
+  'iseed_sppt': ${iseed_sppt},
   }
 'nam_spperts': {
-    'iseed_spp': ${iseed_spp},
+  'iseed_spp': ${iseed_spp},
   }"
 
-  $USHDIR/set_namelist.py -q \
-                          -n ${FV3_NML_FP} \
-                          -u "$settings" \
-                          -o ${fv3_nml_ensmem_fp} || \
-    print_err_msg_exit "\
+$USHDIR/set_namelist.py -q \
+                        -n ${FV3_NML_FP} \
+                        -u "$settings" \
+                        -o ${fv3_nml_ensmem_fp} || \
+  print_err_msg_exit "\
 Call to python script set_namelist.py to set the variables in the FV3
 namelist file that specify the paths to the surface climatology files
 failed.  Parameters passed to this script are:
@@ -126,8 +125,6 @@ failed.  Parameters passed to this script are:
   Namelist settings specified on command line (these have highest precedence):
     settings =
 $settings"
-
-done
 #
 #-----------------------------------------------------------------------
 #
