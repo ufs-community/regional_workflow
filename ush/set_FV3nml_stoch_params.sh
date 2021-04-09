@@ -5,9 +5,9 @@
 # (i.e. for an experiment for which the workflow configuration variable 
 # DO_ENSEMBLE has been set to "TRUE"), creates new namelist files with
 # unique stochastic "seed" parameters, using a base namelist file in the 
-# ${EXPTDIR} directory. These new namelist files are stored within each
-# member directory housed within each cycle directory in ${EXPTDIR}.
-# Files of any two ensemble members differ only in their stochastic "seed" 
+# ${EXPTDIR} directory as a template. These new namelist files are stored 
+# within each member directory housed within each cycle directory. Files 
+# of any two ensemble members differ only in their stochastic "seed" 
 # parameter values.  These namelist files are generated when this file is
 # called as part of the RUN_FCST_TN task.  
 #
@@ -93,7 +93,7 @@ for (( i=0; i<${NUM_ENS_MEMBERS}; i++ )); do
 
   ensmem_name="mem${ENSMEM_INDX}"
 
-  fv3_nml_ensmem_fp="${EXPTDIR}/${cdate}/${ensmem_name}/${FV3_NML_FN}"
+  fv3_nml_ensmem_fp="${CYCLE_BASEDIR}/${cdate}/${ensmem_name}/${FV3_NML_FN}"
 
   ip1=$(( i+1 ))
   iseed_shum=$(( cdate*1000 + ip1*10 + 2 ))
