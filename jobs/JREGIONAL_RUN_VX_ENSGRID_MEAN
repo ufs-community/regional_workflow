@@ -84,7 +84,8 @@ else
 fi
 mkdir_vrfy -p "${vx_dir}"
 
-ensemblestat_dir="${vx_dir}/ensemble_mean"
+ensemblestat_dir="${vx_dir}/ensemble_stat"
+gridstat_mean_dir="${ensemblestat_dir}/ensemble_mean"
 #check_for_preexist_dir "${ensemblestat_dir}" "delete"
 mkdir_vrfy -p "${gridstat_mean_dir}"
 

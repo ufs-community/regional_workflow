@@ -102,6 +102,20 @@ export fhr_last
 fhr_list=`echo ${FHR} | sed "s/ /,/g"`
 export fhr_list
 
+
+#
+#-----------------------------------------------------------------------
+#
+# Create INPUT_BASE and LOG_SUFFIX to read into METplus conf files.
+#
+#-----------------------------------------------------------------------
+#
+
+
+INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
+LOG_SUFFIX=ensgrid_mean_${CDATE}
+
+
 #
 #-----------------------------------------------------------------------
 #
