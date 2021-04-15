@@ -58,7 +58,7 @@ gridded data.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "cycle_dir" "postprd_dir" "vx_dir" "gridstat_mean_dir" )
+valid_args=( "cycle_dir" "vx_dir" "gridstat_mean_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -141,7 +141,8 @@ export OBS_DIR
 export VAR
 export MODEL
 export NET
-export NUM_ENS_MEMBERS 
+export INPUT_BASE
+export LOG_SUFFIX
 
 #
 #-----------------------------------------------------------------------

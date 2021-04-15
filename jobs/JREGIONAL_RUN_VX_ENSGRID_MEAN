@@ -70,14 +70,6 @@ on gridded fields by initialization time for all forecast hours.
 
 if [ "${RUN_ENVIR}" = "nco" ]; then
   COMOUT="$COMROOT/$NET/$envir/$RUN.$PDY/$cyc"
-  postprd_dir="$COMOUT"
-else
-  postprd_dir="${CYCLE_DIR}/postprd"
-fi
-mkdir_vrfy -p "${postprd_dir}"
-
-if [ "${RUN_ENVIR}" = "nco" ]; then
-  COMOUT="$COMROOT/$NET/$envir/$RUN.$PDY/$cyc"
   vx_dir="$COMOUT"
 else
   vx_dir="${CYCLE_DIR}/metprd"
@@ -100,7 +92,6 @@ cd_vrfy "${gridstat_mean_dir}"
 #
 $SCRIPTSDIR/exregional_run_ensgridvx_mean.sh \
   cycle_dir="${CYCLE_DIR}" \
-  postprd_dir="${postprd_dir}" \
   vx_dir="${vx_dir}" \
   gridstat_mean_dir="${gridstat_mean_dir}" || \
 print_err_msg_exit "\

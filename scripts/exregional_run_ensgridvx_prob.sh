@@ -58,7 +58,7 @@ gridded data.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "cycle_dir" "postprd_dir" "vx_dir" "gridstat_prob_dir" )
+valid_args=( "cycle_dir" "vx_dir" "gridstat_prob_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -132,6 +132,7 @@ fi
 #-----------------------------------------------------------------------
 #
 export SCRIPTSDIR
+export INPUT_BASE
 export EXPTDIR
 export MET_INSTALL_DIR
 export METPLUS_PATH
@@ -141,7 +142,7 @@ export OBS_DIR
 export VAR
 export MODEL
 export NET
-export NUM_ENS_MEMBERS 
+export LOG_SUFFIX
 
 #
 #-----------------------------------------------------------------------

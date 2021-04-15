@@ -58,7 +58,7 @@ gridded data.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "cycle_dir" "postprd_dir" "vx_dir" "ensemblestat_dir" )
+valid_args=( "cycle_dir" "vx_dir" "ensemblestat_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -113,7 +113,7 @@ export fhr_list
 
 
 INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
-LOG_SUFFIX=ensgrid_mean_${CDATE}
+LOG_SUFFIX=ensgrid_${CDATE}
 
 
 #
@@ -125,6 +125,7 @@ LOG_SUFFIX=ensgrid_mean_${CDATE}
 #
 export SCRIPTSDIR
 export EXPTDIR
+export INPUT_BASE
 export MET_INSTALL_DIR
 export METPLUS_PATH
 export METPLUS_CONF
@@ -134,6 +135,7 @@ export VAR
 export MODEL
 export NET
 export NUM_ENS_MEMBERS 
+export LOG_SUFFIX
 
 #
 #-----------------------------------------------------------------------
