@@ -236,14 +236,6 @@ if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
   fi
 fi
 #
-# If SUB_HOURLY_POST is not set to "TRUE", ensure that the forecast 
-# minutes (fmn) are set to "00".  This is necessary in order for the 
-# calculation of post_time below to be correct.
-#
-if [ "${SUB_HOURLY_POST}" != "TRUE" ]; then
-  fmn="00"
-fi
-#
 # Set the names of the forecast model's write-component output files.
 #
 dyn_file="${run_dir}/dynf${fhr}${mnts_secs_str}.nc"
