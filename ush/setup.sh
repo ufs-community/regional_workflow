@@ -1111,7 +1111,7 @@ inclusive but in this case is not:
 # Check that DT_SUBHOURLY_POST_MNTS (after converting to seconds) is 
 # evenly divisible by the forecast model's main time step DT_ATMOS.
 #
-  rem=$(( DT_SUBHOURLY_POST_MNTS % DT_ATMOS ))
+  rem=$(( DT_SUBHOURLY_POST_MNTS*60 % DT_ATMOS ))
   if [ ${rem} -ne 0 ]; then
     print_err_msg_exit "\
 When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
@@ -1161,6 +1161,7 @@ must set DT_SUBHOURLY_POST_MNTS to something other than zero."
   fi
 
 fi
+print_info_msg "hello!"
 #exit
 #
 #-----------------------------------------------------------------------
