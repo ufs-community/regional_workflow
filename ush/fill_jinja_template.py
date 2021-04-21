@@ -46,7 +46,7 @@ import os
 
 import argparse
 import jinja2 as j2
-from jinja2 import meta, StrictUndefined
+from jinja2 import meta
 import yaml
 
 
@@ -239,8 +239,7 @@ def main(cla):
     '''
 
     # Create a Jinja Environment to load the template.
-    template_dir = os.path.dirname(cla.template)
-    env = j2.Environment(loader=j2.FileSystemLoader([cla.template, template_dir]), undefined=StrictUndefined)
+    env = j2.Environment(loader=j2.FileSystemLoader(cla.template))
     template_source = env.loader.get_source(env, '')
     template = env.get_template('')
     parsed_content = env.parse(template_source)
@@ -267,21 +266,6 @@ def main(cla):
             print(f'{var:>25}: {cfg.get(var)}')
 
         tvars[var] = cfg.get(var)
-
-    # Sometimes when there are "include"s in the main jinja template file, 
-    # the call above to meta.find_undeclared_variables does not return
-    # all the undeclared variables in template_vars; more specifically,
-    # some of the variables in the included file are not returned in 
-    # templae_vars.  As a result, they are omitted from tvars in the 
-    # above loop.  Since the cfg argument to this script specifies all 
-    # the variables needed by the main template and any included ones, 
-    # in the loop below, we make sure that any variables specifications 
-    # that are in cfg but not yet in tvars get added to tvars.
-    # 
-    # This is a temporary fix.  Really we should understand why 
-    # meta.find_undeclared_variables is not behaving as expected.
-    for var in cfg:
-        value = tvars.setdefault(var, cfg[var])
 
     # Fill in XML template
     xml_contents = template.render(**tvars)

@@ -1161,8 +1161,6 @@ must set DT_SUBHOURLY_POST_MNTS to something other than zero."
   fi
 
 fi
-print_info_msg "hello!"
-#exit
 #
 #-----------------------------------------------------------------------
 #
