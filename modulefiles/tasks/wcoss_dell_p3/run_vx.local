@@ -1,0 +1,6 @@
+#%Module
+
+module unload netcdf
+
+module use /gpfs/dell1/nco/ops/nwprod/modulefiles/compiler_prod/ips/18.0.1
+module load met/9.1.3
