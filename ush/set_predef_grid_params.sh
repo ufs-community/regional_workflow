@@ -1165,6 +1165,7 @@ case ${PREDEF_GRID_NAME} in
     WRTCMP_dlon=$( printf "%.9f" $( bc -l <<< "(${ESGgrid_DELX}/${radius_Earth})*${degs_per_radian}" ) )
     WRTCMP_dlat=$( printf "%.9f" $( bc -l <<< "(${ESGgrid_DELY}/${radius_Earth})*${degs_per_radian}" ) )
   fi
+  ;;
 #
 #-----------------------------------------------------------------------
 #
