@@ -61,8 +61,19 @@ while [[ ${cur_ut} -le ${end_valid_ut} ]]; do
     mkdir -p $mrms_raw/${vyyyymmdd}
   fi
 
+  # Set field of interest from the MRMS products, including name and level information. 
+  if [ "${field}" = "REFC" ]; then
+    field_base_name="MergedReflectivityQComposite"
+    level="_00.00_"
+  elif [ "${field}" = "RETOP" ]; then
+    field_base_name="EchoTop"
+    level="_18_00.50_"
+  else
+    echo "Field is not set to REFC or RETOP"
+  fi
+
   # Check if file exists on disk; if not, pull it.
-  mrms_file="$mrms_proc/${vyyyymmdd}/MergedReflectivityQComposite_00.00_${vyyyy}${vmm}${vdd}-${vhh}0000.grib2"
+  mrms_file="$mrms_proc/${vyyyymmdd}/${field_base_name}${level}${vyyyy}${vmm}${vdd}-${vhh}0000.grib2"
   echo "MRMS FILE:${mrms_file}"
 
   if [[ ! -f "${mrms_file}" ]]; then
@@ -70,17 +81,19 @@ while [[ ${cur_ut} -le ${end_valid_ut} ]]; do
 
     # Name of MRMS tar file on HPSS is dependent on date. Logic accounts for files from 2019 until Sept. 2020.
     if [[ ${vyyyymmdd} -ge 20190101 && ${vyyyymmdd} -lt 20200303 ]]; then
-      CheckFile=`hsi "ls -1 /NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/ldmdata.gyre.${vyyyy}${vmm}${vdd}.tar" >& /dev/null &`
+      echo "GYRE"
+      CheckFile=`hsi "ls -1 /NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/ldmdata.gyre.${vyyyy}${vmm}${vdd}.tar" >& /dev/null`
       Status=$?
       if [[ ${Status} == 0 ]]; then
         TarFile="/NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/ldmdata.gyre.${vyyyy}${vmm}${vdd}.tar"
       else
-        CheckFile=`hsi "ls -1 /NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/ldmdata.tide.${vyyyy}${vmm}${vdd}.tar" >& /dev/null &`   
+	echo "TIDE"
+        CheckFile=`hsi "ls -1 /NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/ldmdata.tide.${vyyyy}${vmm}${vdd}.tar" >& /dev/null`   
         Status=$?
         if [[ ${Status} == 0 ]]; then
-          TarFile="/NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/ldmdata.gyre.${vyyyy}${vmm}${vdd}.tar" 
+          TarFile="/NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/ldmdata.tide.${vyyyy}${vmm}${vdd}.tar" 
         else
-          echo "ERROR: MRMR data not available for ${vyyyy}${vmm}${vdd}!"
+          echo "ERROR: MRMS data not available for ${vyyyy}${vmm}${vdd}!"
           exit 
         fi
       fi
@@ -92,8 +105,8 @@ while [[ ${cur_ut} -le ${end_valid_ut} ]]; do
 
     echo "TAR FILE:${TarFile}"
 
-    TarCommand="htar -xvf ${TarFile} \`htar -tf ${TarFile} | egrep \"MergedReflectivityQComposite_00.00_${vyyyy}${vmm}${vdd}-[0-9][0-9][0-9][0-9][0-9][0-9].grib2.gz\" | awk '{print $7}'\`"
-    htar -xvf ${TarFile} `htar -tf ${TarFile} | egrep "MergedReflectivityQComposite_00.00_${vyyyy}${vmm}${vdd}-[0-9][0-9][0-9][0-9][0-9][0-9].grib2.gz" | awk '{print $7}'`
+    TarCommand="htar -xvf ${TarFile} \`htar -tf ${TarFile} | egrep \"${field_base_name}${level}${vyyyy}${vmm}${vdd}-[0-9][0-9][0-9][0-9][0-9][0-9].grib2.gz\" | awk '{print $7}'\`"
+    htar -xvf ${TarFile} `htar -tf ${TarFile} | egrep "${field_base_name}${level}${vyyyy}${vmm}${vdd}-[0-9][0-9][0-9][0-9][0-9][0-9].grib2.gz" | awk '{print $7}'`
     Status=$?
 
     if [[ ${Status} != 0 ]]; then
@@ -107,20 +120,13 @@ while [[ ${cur_ut} -le ${end_valid_ut} ]]; do
       hour=0
       while [[ ${hour} -le 23 ]]; do
         echo "hour=${hour}"
-        python ${SCRIPTSDIR}/mrms_pull_topofhour.py ${vyyyy}${vmm}${vdd}${hour} ${mrms_proc} ${mrms_raw}
+        python ${SCRIPTSDIR}/mrms_pull_topofhour.py ${vyyyy}${vmm}${vdd}${hour} ${mrms_proc} ${mrms_raw} ${field_base_name} ${level}
       hour=$((${hour} + 1)) # hourly increment
       done
     fi
 
   else
-    # Check if file exists on disk; if not, pull it.
-    mrms_file="$mrms_proc/${vyyyymmdd}/MergedReflectivityQComposite_00.00_${vyyyy}${vmm}${vdd}-${vhh}0000.grib2"
-
-    if [[ ! -f "${mrms_file}" ]]; then
-      cd $mrms_raw/${vyyyymmdd}
-
-      python ${SCRIPTSDIR}/mrms_pull_topofhour.py ${vyyyy}${vmm}${vdd}${vhh} ${mrms_proc} ${mrms_raw}
-    fi
+    echo "mrms_file exists: \"$mrms_proc/${vyyyymmdd}/${field_base_name}${level}${vyyyy}${vmm}${vdd}-${vhh}0000.grib2\" No work to be done."
   fi
 
   # Increment
