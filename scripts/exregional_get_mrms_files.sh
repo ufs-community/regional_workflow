@@ -81,13 +81,11 @@ while [[ ${cur_ut} -le ${end_valid_ut} ]]; do
 
     # Name of MRMS tar file on HPSS is dependent on date. Logic accounts for files from 2019 until Sept. 2020.
     if [[ ${vyyyymmdd} -ge 20190101 && ${vyyyymmdd} -lt 20200303 ]]; then
-      echo "GYRE"
       CheckFile=`hsi "ls -1 /NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/ldmdata.gyre.${vyyyy}${vmm}${vdd}.tar" >& /dev/null`
       Status=$?
       if [[ ${Status} == 0 ]]; then
         TarFile="/NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/ldmdata.gyre.${vyyyy}${vmm}${vdd}.tar"
       else
-	echo "TIDE"
         CheckFile=`hsi "ls -1 /NCEPPROD/hpssprod/runhistory/rh${vyyyy}/${vyyyy}${vmm}/${vyyyy}${vmm}${vdd}/ldmdata.tide.${vyyyy}${vmm}${vdd}.tar" >& /dev/null`   
         Status=$?
         if [[ ${Status} == 0 ]]; then
