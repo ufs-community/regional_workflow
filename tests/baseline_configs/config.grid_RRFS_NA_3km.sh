@@ -22,15 +22,16 @@ USE_USER_STAGED_EXTRN_FILES="TRUE"
 # run/optimize end-to-end experiments using the 3-km NA grid            #
 #########################################################################
 
-# The model should be built in 32-bit mode (64-bit will result in much longer 
-# run times.
+# The model should be built in 32-bit mode (64-bit will result in much
+# longer run times.
 
-# Use k_split=5 and n_split=2, the previous namelist values (k_split=4 and n_split=5) 
-# will result in significantly longer run times.
+# Use k_split=5 and n_split=2, the previous namelist values (k_split=4
+# and n_split=5) will result in significantly longer run times.
 
-# With 64-bit and k_split=4/n_split=5, time steps with settings below = ~21 seconds
-# Changing to k_split=5/n_split=2, time steps with settings below = ~15 seconds
-# Changing to 32-bit built, time steps with settings below = ~6 seconds
+# For Hera:
+# 1) With 64-bit and k_split=4/n_split=5, each time step takes ~21 seconds
+# 2) 1) with k_split=5/n_split=2, each time step takes ~15 seconds
+# 3) 1) and 2) with 32-bit build, each time step takes ~6 seconds
 
 NNODES_MAKE_ICS="12"
 NNODES_MAKE_LBCS="12"
