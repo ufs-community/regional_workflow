@@ -29,9 +29,9 @@ USE_USER_STAGED_EXTRN_FILES="TRUE"
 # and n_split=5) will result in significantly longer run times.
 
 # For Hera:
-# 1) With 64-bit and k_split=4/n_split=5, each time step takes ~21 seconds
+# 1) With 64-bit build and k_split=4/n_split=5, each time step takes ~21 seconds
 # 2) 1) with k_split=5/n_split=2, each time step takes ~15 seconds
-# 3) 1) and 2) with 32-bit build, each time step takes ~6 seconds
+# 3) 2) with 32-bit build, each time step takes ~6 seconds
 
 NNODES_MAKE_ICS="12"
 NNODES_MAKE_LBCS="12"
