@@ -111,6 +111,12 @@ else
 
   "RAP")
     case $MACHINE in
+    "WCOSS_CRAY")
+      EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/hps/nco/ops/com/rap/prod"
+      ;;
+    "WCOSS_DELL_P3")
+      EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/hps/nco/ops/com/rap/prod"
+      ;;
     "HERA")
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch2/BMC/public/data/gsd/rap/full/wrfnat"
       ;;
@@ -128,6 +134,12 @@ else
 
   "HRRR")
     case $MACHINE in
+    "WCOSS_CRAY")
+      EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/hps/nco/ops/com/hrrr/prod"
+      ;;
+    "WCOSS_DELL_P3")
+      EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/hps/nco/ops/com/hrrr/prod"
+      ;;
     "HERA")
       EXTRN_MDL_SYSBASEDIR_ICS="/scratch2/BMC/public/data/gsd/hrrr/conus/wrfnat"
       ;;
@@ -136,6 +148,23 @@ else
       ;;
     "JET")
       EXTRN_MDL_SYSBASEDIR_ICS="/misc/whome/rtrr/hrrr"
+      ;;
+    "CHEYENNE")
+      EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
+      ;;
+    esac
+    ;;
+
+  "NAM")
+    case $MACHINE in
+    "WCOSS_CRAY")
+      EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/dell1/nco/ops/com/nam/prod"
+      ;;
+    "WCOSS_DELL_P3")
+      EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/dell1/nco/ops/com/nam/prod"
+      ;;
+    "HERA")
+      EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
       ;;
     "CHEYENNE")
       EXTRN_MDL_SYSBASEDIR_ICS="dummy_value"
@@ -179,6 +208,9 @@ case ${EXTRN_MDL_NAME_LBCS} in
     EXTRN_MDL_LBCS_OFFSET_HRS="3"
     ;;
   "HRRR")
+    EXTRN_MDL_LBCS_OFFSET_HRS="0"
+    ;;
+  "NAM")
     EXTRN_MDL_LBCS_OFFSET_HRS="0"
     ;;
 esac
@@ -265,6 +297,12 @@ else
 
   "RAP")
     case $MACHINE in
+    "WCOSS_CRAY")
+      EXTRN_MDL_SYSBASEDIR_LBCS="/gpfs/hps/nco/ops/com/rap/prod"
+      ;;
+    "WCOSS_DELL_P3")
+      EXTRN_MDL_SYSBASEDIR_LBCS="/gpfs/hps/nco/ops/com/rap/prod"
+      ;;
     "HERA")
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch2/BMC/public/data/gsd/rap/full/wrfnat"
       ;;
@@ -282,6 +320,12 @@ else
 
   "HRRR")
     case $MACHINE in
+    "WCOSS_CRAY")
+      EXTRN_MDL_SYSBASEDIR_LBCS="/gpfs/hps/nco/ops/com/hrrr/prod"
+      ;;
+    "WCOSS_DELL_P3")
+      EXTRN_MDL_SYSBASEDIR_LBCS="/gpfs/hps/nco/ops/com/hrrr/prod"
+      ;;
     "HERA")
       EXTRN_MDL_SYSBASEDIR_LBCS="/scratch2/BMC/public/data/gsd/hrrr/conus/wrfnat"
       ;;
@@ -290,6 +334,20 @@ else
       ;;
     "JET")
       EXTRN_MDL_SYSBASEDIR_LBCS="/misc/whome/rtrr/hrrr"
+      ;;
+    "CHEYENNE")
+      EXTRN_MDL_SYSBASEDIR_LBCS="dummy_value"
+      ;;
+    esac
+    ;;
+
+  "NAM")
+    case $MACHINE in
+    "HERA")
+      EXTRN_MDL_SYSBASEDIR_LBCS="dummy_value"
+      ;;
+    "CHEYENNE")
+      EXTRN_MDL_SYSBASEDIR_LBCS="dummy_value"
       ;;
     esac
     ;;

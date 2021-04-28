@@ -232,6 +232,46 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that RUN_TASK_VX_GRIDSTAT is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_VX_GRIDSTAT" "valid_vals_RUN_TASK_VX_GRIDSTAT"
+#
+# Set RUN_TASK_VX_GRIDSTAT to either "TRUE" or "FALSE" so we don't have to
+# consider other valid values later on.
+#
+RUN_TASK_VX_GRIDSTAT=${RUN_TASK_VX_GRIDSTAT^^}
+if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
+   [ "${RUN_TASK_VX_GRIDSTAT}" = "YES" ]; then
+  RUN_TASK_VX_GRIDSTAT="TRUE"
+elif [ "${RUN_TASK_VX_GRIDSTAT}" = "FALSE" ] || \
+     [ "${RUN_TASK_VX_GRIDSTAT}" = "NO" ]; then
+  RUN_TASK_VX_GRIDSTAT="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_VX_POINTSTAT is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_VX_POINTSTAT" "valid_vals_RUN_TASK_VX_POINTSTAT"
+#
+# Set RUN_TASK_VX_POINTSTAT to either "TRUE" or "FALSE" so we don't have to
+# consider other valid values later on.
+#
+RUN_TASK_VX_POINTSTAT=${RUN_TASK_VX_POINTSTAT^^}
+if [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ] || \
+   [ "${RUN_TASK_VX_POINTSTAT}" = "YES" ]; then
+  RUN_TASK_VX_POINTSTAT="TRUE"
+elif [ "${RUN_TASK_VX_POINTSTAT}" = "FALSE" ] || \
+     [ "${RUN_TASK_VX_POINTSTAT}" = "NO" ]; then
+  RUN_TASK_VX_POINTSTAT="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that DO_SHUM is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -384,6 +424,27 @@ if [ "$USE_FVCOM" = "TRUE" ] || \
 elif [ "$USE_FVCOM" = "FALSE" ] || \
      [ "$USE_FVCOM" = "NO" ]; then
   USE_FVCOM="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that SUB_HOURLY_POST and DT_SUBHOURLY_POST_MNTS are set to 
+# valid values.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "SUB_HOURLY_POST" "valid_vals_SUB_HOURLY_POST"
+#
+# Set SUB_HOURLY_POST to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+SUB_HOURLY_POST=${SUB_HOURLY_POST^^}
+if [ "${SUB_HOURLY_POST}" = "TRUE" ] || \
+   [ "${SUB_HOURLY_POST}" = "YES" ]; then
+  SUB_HOURLY_POST="TRUE"
+elif [ "${SUB_HOURLY_POST}" = "FALSE" ] || \
+     [ "${SUB_HOURLY_POST}" = "NO" ]; then
+  SUB_HOURLY_POST="FALSE"
 fi
 #
 #-----------------------------------------------------------------------
@@ -714,7 +775,11 @@ SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
 PARMDIR="$HOMErrfs/parm"
 MODULES_DIR="$HOMErrfs/modulefiles"
 EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
+FIXrrfs="$HOMErrfs/fix"
 TEMPLATE_DIR="$USHDIR/templates"
+VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
+METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
+MET_CONFIG="$TEMPLATE_DIR/parm/met"
 
 case $MACHINE in
 
@@ -1032,6 +1097,96 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# If performing sub-hourly model output and post-processing, check that
+# the output interval DT_SUBHOURLY_POST_MNTS (in minutes) is specified
+# correctly.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
+#
+# Check that DT_SUBHOURLY_POST_MNTS is a string consisting of one or two
+# digits.
+#
+  mnts_or_null=$( printf "%s" "${DT_SUBHOURLY_POST_MNTS}" | \
+                  sed -n -r -e "s/^([0-9])([0-9])?$/\1\2/p" )
+  if [ -z "${mnts_or_null}" ]; then
+    print_err_msg_exit "\
+When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
+DT_SUBHOURLY_POST_MNTS must be set to a one- or two-digit integer but 
+in this case is not:
+  SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
+  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\""
+  fi
+#
+# Check that DT_SUBHOURLY_POST_MNTS is between 0 and 59, inclusive.
+#
+  if [ ${DT_SUBHOURLY_POST_MNTS} -lt "0" ] || \
+     [ ${DT_SUBHOURLY_POST_MNTS} -gt "59" ]; then
+    print_err_msg_exit "\
+When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
+DT_SUBHOURLY_POST_MNTS must be set to an integer between 0 and 59, 
+inclusive but in this case is not:
+  SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
+  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\""
+  fi
+#
+# Check that DT_SUBHOURLY_POST_MNTS (after converting to seconds) is 
+# evenly divisible by the forecast model's main time step DT_ATMOS.
+#
+  rem=$(( DT_SUBHOURLY_POST_MNTS*60 % DT_ATMOS ))
+  if [ ${rem} -ne 0 ]; then
+    print_err_msg_exit "\
+When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
+the time interval specified by DT_SUBHOURLY_POST_MNTS (after converting 
+to seconds) must be evenly divisible by the time step DT_ATMOS used in 
+the forecast model, i.e. the remainder (rem) must be zero.  In this case, 
+it is not:
+  SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
+  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\"
+  DT_ATMOS = \"${DT_ATMOS}\"
+  rem = \$(( (DT_SUBHOURLY_POST_MNTS*60) %% DT_ATMOS )) = $rem
+Please reset DT_SUBHOURLY_POST_MNTS and/or DT_ATMOS so that this remainder 
+is zero."
+  fi
+#
+# If DT_SUBHOURLY_POST_MNTS is set to 0 (with SUB_HOURLY_POST set to 
+# "TRUE"), then we're not really performing subhourly post-processing.
+# In this case, reset SUB_HOURLY_POST to "FALSE" and print out an 
+# informational message that such a change was made.
+#
+  if [ "${DT_SUBHOURLY_POST_MNTS}" -eq "0" ]; then
+    print_info_msg "\
+When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
+DT_SUBHOURLY_POST_MNTS must be set to a value greater than 0; otherwise,
+sub-hourly output is not really being performed:
+  SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
+  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\"
+Resetting SUB_HOURLY_POST to \"FALSE\".  If you do not want this, you 
+must set DT_SUBHOURLY_POST_MNTS to something other than zero."
+    SUB_HOURLY_POST="FALSE"
+  fi
+#
+# For now, the sub-hourly capability is restricted to having values of 
+# DT_SUBHOURLY_POST_MNTS that evenly divide into 60 minutes.  This is 
+# because the jinja rocoto XML template (FV3LAM_wflow.xml) assumes that
+# model output is generated at the top of every hour (i.e. at 00 minutes).
+# This restricts DT_SUBHOURLY_POST_MNTS to the following values (inluding
+# both cases with and without a leading 0):
+#
+#   "1" "01" "2" "02" "3" "03" "4" "04" "5" "05" "6" "06" "10" "12" "15" "20" "30"
+#   
+# This restriction will be removed in a future version of the workflow, 
+# For now, check that DT_SUBHOURLY_POST_MNTS is one of the above values.
+#
+  if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
+    check_var_valid_value "DT_SUBHOURLY_POST_MNTS" "valid_vals_DT_SUBHOURLY_POST_MNTS"
+  fi
+
+fi
+#
+#-----------------------------------------------------------------------
+#
 # If using the FV3_HRRR physics suite, make sure that the directory from 
 # which certain fixed orography files will be copied to the experiment 
 # directory actually exists.  Note that this is temporary code.  It should
@@ -1040,8 +1195,54 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-GWD_HRRRsuite_DIR="${GWD_HRRRsuite_BASEDIR}/${PREDEF_GRID_NAME}"
+GWD_HRRRsuite_DIR=""
 if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
+#
+# If in NCO mode, make sure that GWD_HRRRsuite_BASEDIR is set equal to  
+# FIXLAM_NCO_BASEDIR
+#
+  if [ "${RUN_ENVIR}" = "nco" ]; then
+
+    if [ "${GWD_HRRRsuite_BASEDIR}" != "${FIXLAM_NCO_BASEDIR}" ]; then
+
+      gwd_hrrrsuite_basedir_orig="${GWD_HRRRsuite_BASEDIR}"
+      GWD_HRRRsuite_BASEDIR="${FIXLAM_NCO_BASEDIR}"
+
+      if [ ! -z "${gwd_hrrrsuite_basedir_orig}" ]; then
+        print_err_msg_exit "
+When RUN_ENVIR is set to \"nco\", the workflow assumes that the base 
+directory (GWD_HRRRsuite_BASEDIR) under which the grid-specific 
+subdirectories containing the gravity wave drag-related orography 
+statistics files for the FV3_HRRR suite are located is the same as the 
+base directory (FIXLAM_NCO_BASEDIR) under which the other fixed files 
+are located.  Currently, this is not the case:
+  GWD_HRRRsuite_BASEDIR = \"${gwd_hrrrsuite_basedir_orig}\"
+  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
+Resetting GWD_HRRRsuite_BASEDIR to FIXLAM_NCO_BASEDIR.  Reset value is:
+  GWD_HRRRsuite_BASEDIR = \"${GWD_HRRRsuite_BASEDIR}\""
+      fi
+
+    fi
+
+  fi
+#
+# Check that GWD_HRRRsuite_BASEDIR exists and is a directory.
+#
+  if [ ! -d "${GWD_HRRRsuite_BASEDIR}" ]; then
+    print_err_msg_exit "\
+The base directory (GWD_HRRRsuite_BASEDIR) under which the grid-specific
+subdirectories containing the gravity wave drag-related orography files 
+for the FV3_HRRR suite should be located does not exist (or is not a 
+directory):
+  GWD_HRRRsuite_BASEDIR = \"${GWD_HRRRsuite_BASEDIR}\""
+  fi
+  GWD_HRRRsuite_DIR="${GWD_HRRRsuite_BASEDIR}/${PREDEF_GRID_NAME}"
+#
+# Ensure that PREDEF_GRID_NAME is not set to a null string.  Currently,
+# only predefined grids can be used with the FV3_HRRR suite because 
+# orography statistics files required by this suite are available only
+# for (some of) the predefined grids.
+#
   if [ -z "${PREDEF_GRID_NAME}" ]; then
     print_err_msg_exit "\
 A predefined grid name (PREDEF_GRID_NAME) must be specified when using 
@@ -1049,6 +1250,11 @@ the FV3_HRRR physics suite:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\""
   else        
+#
+# Ensure that the directory GWD_HRRRsuite_DIR in which the orography
+# statistics files required by the FV3_HRRR suite are located actually
+# exists.
+#
     if [ ! -d "${GWD_HRRRsuite_DIR}" ]; then
       print_err_msg_exit "\
 The directory (GWD_HRRRsuite_DIR) that should contain the gravity wave 
@@ -1575,6 +1781,47 @@ one above.  Reset values are:
     print_info_msg "$msg"
 
   fi
+
+  if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
+     [ "${RUN_TASK_VX_GRIDSTAT}" = "FALSE" ]; then
+
+    msg="
+When RUN_ENVIR is set to \"nco\", it is assumed that the verification
+will not be run.
+  RUN_TASK_VX_GRIDSTAT = \"${RUN_TASK_VX_GRIDSTAT}\"
+Resetting RUN_TASK_VX_GRIDSTAT to \"FALSE\"
+Reset value is:"
+
+    RUN_TASK_VX_GRIDSTAT="FALSE"
+
+    msg="$msg""
+  RUN_TASK_VX_GRIDSTAT = \"${RUN_TASK_VX_GRIDSTAT}\"
+"
+
+    print_info_msg "$msg"
+
+  fi
+
+  if [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ] || \
+     [ "${RUN_TASK_VX_POINTSTAT}" = "FALSE" ]; then
+
+    msg="
+When RUN_ENVIR is set to \"nco\", it is assumed that the verification
+will not be run.
+  RUN_TASK_VX_POINTSTAT = \"${RUN_TASK_VX_POINTSTAT}\"
+Resetting RUN_TASK_VX_POINTSTAT to \"FALSE\"
+Reset value is:"
+
+    RUN_TASK_VX_POINTSTAT="FALSE"
+
+    msg="$msg""
+  RUN_TASK_VX_POINTSTAT = \"${RUN_TASK_VX_POINTSTAT}\"
+"
+
+    print_info_msg "$msg"
+
+  fi
+
 #
 #-----------------------------------------------------------------------
 #
@@ -2406,12 +2653,16 @@ SRC_DIR="$SRC_DIR"
 PARMDIR="$PARMDIR"
 MODULES_DIR="${MODULES_DIR}"
 EXECDIR="$EXECDIR"
+FIXrrfs="$FIXrrfs"
 FIXam="$FIXam"
 FIXLAM="$FIXLAM"
 FIXgsm="$FIXgsm"
 COMROOT="$COMROOT"
 COMOUT_BASEDIR="${COMOUT_BASEDIR}"
 TEMPLATE_DIR="${TEMPLATE_DIR}"
+VX_CONFIG_DIR="${VX_CONFIG_DIR}"
+METPLUS_CONF="${METPLUS_CONF}"
+MET_CONFIG="${MET_CONFIG}"
 UFS_WTHR_MDL_DIR="${UFS_WTHR_MDL_DIR}"
 UFS_UTILS_DIR="${UFS_UTILS_DIR}"
 SFC_CLIMO_INPUT_DIR="${SFC_CLIMO_INPUT_DIR}"

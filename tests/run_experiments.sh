@@ -500,7 +500,11 @@ VERBOSE=\"${VERBOSE}\""
 # ${pregen_basedir}/${PREDEF_GRID_NAME}, and pregen_dir can then be used
 # to set GRID_DIR, OROG_DIR, and/or SFC_CLIMO_DIR below.
 
-    if [ "$MACHINE" = "HERA" ]; then
+    if [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      pregen_basedir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/FV3LAM_pregen"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      pregen_basedir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/FV3LAM_pregen"
+    elif [ "$MACHINE" = "HERA" ]; then
       pregen_basedir="/scratch2/BMC/det/FV3LAM_pregen"
     elif [ "$MACHINE" = "JET" ]; then
       pregen_basedir="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
@@ -562,7 +566,11 @@ SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
 #
   if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
 
-    if [ "$MACHINE" = "HERA" ]; then
+    if [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      GWD_HRRRsuite_BASEDIR="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/FV3LAM_pregen"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      GWD_HRRRsuite_BASEDIR="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/FV3LAM_pregen"
+    elif [ "$MACHINE" = "HERA" ]; then
       GWD_HRRRsuite_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"
     elif [ "$MACHINE" = "JET" ]; then
       GWD_HRRRsuite_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
@@ -642,7 +650,11 @@ envir=\"\${EXPT_SUBDIR}\""
 #
 # Set FIXLAM_NCO_BASEDIR.
 #
-    if [ "$MACHINE" = "HERA" ]; then
+    if [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      FIXLAM_NCO_BASEDIR="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/FV3LAM_pregen"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      FIXLAM_NCO_BASEDIR="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/FV3LAM_pregen"
+    elif [ "$MACHINE" = "HERA" ]; then
       FIXLAM_NCO_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"
     elif [ "$MACHINE" = "JET" ]; then
       FIXLAM_NCO_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
@@ -675,8 +687,12 @@ FIXLAM_NCO_BASEDIR=\"${FIXLAM_NCO_BASEDIR}\""
        [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
        [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then
 
-      if [ "$MACHINE" = "HERA" ]; then
-        COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"
+      if [ "$MACHINE" = "WCOSS_CRAY" ]; then
+        COMINgfs="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/COMGFS"
+      elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+        COMINgfs="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/COMGFS"
+      elif [ "$MACHINE" = "HERA" ]; then
+        COMINgfs="/scratch2/NCEPDEV/fv3-cam/noscrub/UFS_SRW_App/COMGFS"
       elif [ "$MACHINE" = "JET" ]; then
         COMINgfs="/lfs1/HFIP/hwrf-data/hafs-input/COMGFS"
       elif [ "$MACHINE" = "CHEYENNE" ]; then
@@ -724,7 +740,11 @@ PTMP=\"${PTMP}\""
 #
   if [ ${USE_USER_STAGED_EXTRN_FILES} = "TRUE" ]; then
 
-    if [ "$MACHINE" = "HERA" ]; then
+    if [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      extrn_mdl_source_basedir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/extrn_mdl_files"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      extrn_mdl_source_basedir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/extrn_mdl_files"
+    elif [ "$MACHINE" = "HERA" ]; then
       extrn_mdl_source_basedir="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "JET" ]; then
       extrn_mdl_source_basedir="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
@@ -750,6 +770,8 @@ machine (MACHINE):
       fi
     elif [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ]; then
+      EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
+    elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ]; then
       EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
     fi
 
@@ -780,6 +802,8 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
       fi
     elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ]; then
+      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
+    elif [ "${EXTRN_MDL_NAME_LBCS}" = "NAM" ]; then
       EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
     fi
 
