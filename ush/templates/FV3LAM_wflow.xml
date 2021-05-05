@@ -717,7 +717,7 @@ the <task> tag to be identical to the ones above for other output times.
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
     <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>SCRIPTSDIR</name><value>&SCRIPTSDIR;</value></envar>
-    <envar><name>VAR</name><value>REFC</value></envar>
+    <envar><name>VAR</name><value>REFC RETOP</value></envar>
  
     <dependency>
       <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
