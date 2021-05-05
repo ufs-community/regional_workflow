@@ -1165,6 +1165,7 @@ case ${PREDEF_GRID_NAME} in
     WRTCMP_dlon=$( printf "%.9f" $( bc -l <<< "(${ESGgrid_DELX}/${radius_Earth})*${degs_per_radian}" ) )
     WRTCMP_dlat=$( printf "%.9f" $( bc -l <<< "(${ESGgrid_DELY}/${radius_Earth})*${degs_per_radian}" ) )
   fi
+  ;;
 #
 #-----------------------------------------------------------------------
 #
@@ -1189,13 +1190,13 @@ case ${PREDEF_GRID_NAME} in
 
   DT_ATMOS="${DT_ATMOS:-36}"
 
-  LAYOUT_X="${LAYOUT_X:-40}"
-  LAYOUT_Y="${LAYOUT_Y:-45}"
+  LAYOUT_X="${LAYOUT_X:-18}"
+  LAYOUT_Y="${LAYOUT_Y:-36}"
   BLOCKSIZE="${BLOCKSIZE:-28}"
 
   if [ "$QUILTING" = "TRUE" ]; then
-    WRTCMP_write_groups="2"
-    WRTCMP_write_tasks_per_group="90"
+    WRTCMP_write_groups="1"
+    WRTCMP_write_tasks_per_group="144"
     WRTCMP_output_grid="rotated_latlon"
     WRTCMP_cen_lon="-112.0" #${ESGgrid_LON_CTR}"
     WRTCMP_cen_lat="48.0" #${ESGgrid_LAT_CTR}"
