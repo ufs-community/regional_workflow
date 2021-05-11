@@ -52,7 +52,7 @@ else
   case ${EXTRN_MDL_NAME_ICS} in
 
   "GSMGFS")
-    case $MACHINE in
+    case "$MACHINE" in
     "WCOSS_CRAY")
       EXTRN_MDL_SYSBASEDIR_ICS=""
       ;;
@@ -81,7 +81,7 @@ else
     ;;
 
   "FV3GFS")
-    case $MACHINE in
+    case "$MACHINE" in
     "WCOSS_CRAY")
       EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/dell1/nco/ops/com/gfs/prod"
       ;;
@@ -110,7 +110,7 @@ else
     ;;
 
   "RAP")
-    case $MACHINE in
+    case "$MACHINE" in
     "WCOSS_CRAY")
       EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/hps/nco/ops/com/rap/prod"
       ;;
@@ -133,7 +133,7 @@ else
     ;;
 
   "HRRR")
-    case $MACHINE in
+    case "$MACHINE" in
     "WCOSS_CRAY")
       EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/hps/nco/ops/com/hrrr/prod"
       ;;
@@ -156,7 +156,7 @@ else
     ;;
 
   "NAM")
-    case $MACHINE in
+    case "$MACHINE" in
     "WCOSS_CRAY")
       EXTRN_MDL_SYSBASEDIR_ICS="/gpfs/dell1/nco/ops/com/nam/prod"
       ;;
@@ -238,7 +238,7 @@ else
   case ${EXTRN_MDL_NAME_LBCS} in
 
   "GSMGFS")
-    case $MACHINE in
+    case "$MACHINE" in
     "WCOSS_CRAY")
       EXTRN_MDL_SYSBASEDIR_LBCS=""
       ;;
@@ -267,7 +267,7 @@ else
     ;;
 
   "FV3GFS")
-    case $MACHINE in
+    case "$MACHINE" in
     "WCOSS_CRAY")
       EXTRN_MDL_SYSBASEDIR_LBCS="/gpfs/dell1/nco/ops/com/gfs/prod"
       ;;
@@ -296,7 +296,7 @@ else
     ;;
 
   "RAP")
-    case $MACHINE in
+    case "$MACHINE" in
     "WCOSS_CRAY")
       EXTRN_MDL_SYSBASEDIR_LBCS="/gpfs/hps/nco/ops/com/rap/prod"
       ;;
@@ -319,7 +319,7 @@ else
     ;;
 
   "HRRR")
-    case $MACHINE in
+    case "$MACHINE" in
     "WCOSS_CRAY")
       EXTRN_MDL_SYSBASEDIR_LBCS="/gpfs/hps/nco/ops/com/hrrr/prod"
       ;;
@@ -342,7 +342,7 @@ else
     ;;
 
   "NAM")
-    case $MACHINE in
+    case "$MACHINE" in
     "HERA")
       EXTRN_MDL_SYSBASEDIR_LBCS="dummy_value"
       ;;

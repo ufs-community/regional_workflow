@@ -839,7 +839,7 @@ The experiment directory is:
   > EXPTDIR=\"$EXPTDIR\"
 
 "
-case $MACHINE in
+case "$MACHINE" in
 
 "CHEYENNE")
   print_info_msg "\

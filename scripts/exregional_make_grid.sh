@@ -85,7 +85,7 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-case $MACHINE in
+case "$MACHINE" in
 
   "WCOSS_CRAY")
     { save_shell_opts; set +x; } > /dev/null 2>&1

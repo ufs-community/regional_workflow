@@ -95,7 +95,7 @@ export OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_OROG}
 #
 #-----------------------------------------------------------------------
 #
-case $MACHINE in
+case "$MACHINE" in
 
   "WCOSS_CRAY")
     { save_shell_opts; set +x; } > /dev/null 2>&1

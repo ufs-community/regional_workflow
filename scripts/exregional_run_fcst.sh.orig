@@ -97,7 +97,7 @@ export OMP_STACKSIZE=${OMP_STACKSIZE_RUN_FCST}
 #
 #-----------------------------------------------------------------------
 #
-case "$MACHINE" in
+case $MACHINE in
 
   "WCOSS_CRAY")
     ulimit -s unlimited
