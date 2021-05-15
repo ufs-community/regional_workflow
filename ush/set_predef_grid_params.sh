@@ -114,15 +114,15 @@ case ${PREDEF_GRID_NAME} in
 
   ESGgrid_WIDE_HALO_WIDTH="6"
 
-  DT_ATMOS="${DT_ATMOS:-40}"
+  DT_ATMOS="${DT_ATMOS:-300}"
 
-  LAYOUT_X="${LAYOUT_X:-5}"
-  LAYOUT_Y="${LAYOUT_Y:-2}"
+  LAYOUT_X="${LAYOUT_X:-10}"
+  LAYOUT_Y="${LAYOUT_Y:-11}"
   BLOCKSIZE="${BLOCKSIZE:-40}"
 
   if [ "$QUILTING" = "TRUE" ]; then
     WRTCMP_write_groups="1"
-    WRTCMP_write_tasks_per_group="2"
+    WRTCMP_write_tasks_per_group="10"
     WRTCMP_output_grid="lambert_conformal"
     WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
     WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"

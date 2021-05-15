@@ -1,0 +1,331 @@
+&amip_interp_nml
+     interp_oi_sst = .true.
+     use_ncep_sst = .true.
+     use_ncep_ice = .false.
+     no_anom_sst = .false.
+     data_set = 'reynolds_oi',
+     date_out_of_range = 'climo',
+/
+
+&atmos_model_nml
+     blocksize = <blocksize>
+     chksum_debug = .false.
+     dycore_only = .false.
+     fdiag = 1
+     avg_max_length = 3600.
+/
+
+&diag_manager_nml
+     prepend_date = .false.
+     max_output_fields = 422
+/
+
+&fms_io_nml
+     checksum_required   = .false.
+     max_files_r = 100,
+     max_files_w = 100,
+/
+
+&fms_nml
+     clock_grain = 'ROUTINE',
+     domains_stack_size = 12000000,
+     print_memory_usage = .false.
+/
+
+&fv_grid_nml
+     grid_file = 'INPUT/grid_spec.nc'
+/
+
+&fv_core_nml
+     layout   =  <layout_x>,<layout_y>
+     io_layout = 1,1
+     npx      = <npx>
+     npy      = <npy>
+     npz      = 64
+     ntiles   = 1
+     adjust_dry_mass = .F.
+     a_imp = 1.
+     bc_update_interval = <bc_update_interval>
+     beta = 0.
+     consv_am = .F.
+     consv_te = 0.
+     d2_bg = 0.
+     d2_bg_k1 = 0.16
+     d2_bg_k2 = 0.02
+     d4_bg = 0.08
+     d_con = 1.0
+     dddmp = 0.1
+     delt_max = 0.008
+     d_ext = 0.0
+     dnats = 4
+     do_schmidt = .true.
+     do_sat_adj = .true.
+     do_vort_damp = .T.
+     dwind_2d = .F.
+     external_eta = .T.
+     external_ic = .T.
+     fill = .T.
+     fv_debug = .F.
+     fv_sg_adj = 450
+     gfs_phil = .false.
+     hord_dp = -5
+     hord_mt =  6
+     hord_tm = -5
+     hord_tr = -8
+     hord_vt = -5
+     hydrostatic = .F.
+     ke_bg = 0.
+     kord_mt =  10
+     kord_tm = -10
+     kord_tr =  10
+     kord_wz =  10
+     k_split  = 2
+     make_nh = .T.
+     mountain = .F.
+     na_init = 1
+     ncep_ic = .F.
+     nggps_ic = .T.
+     no_dycore = .false.
+     nord =  2
+     nrows_blend = 0
+     n_split  = 6
+     n_sponge = 20
+     nudge_qv = .F.
+     nwat = 6
+     n_zs_filter = 0 ! safety
+     p_fac = 0.1
+     phys_hydrostatic = .F.
+     print_freq = 6
+     range_warn = .F.
+     read_increment = .F.
+     regional_bcs_from_gsi = .false.
+     regional = .true.
+     reset_eta = .F.
+     res_latlon_dynamics = "fv3_increment.nc"
+     rf_cutoff = 10.e2
+     stretch_fac = <stretch_fac>
+     target_lat = <target_lat>
+     target_lon = <target_lon>
+     tau = 5.
+     use_hydro_pressure = .F.
+     vtdm4 = 0.0
+     warm_start = .F.
+     z_tracer = .T.
+/
+
+&surf_map_nml
+     zero_ocean = .F.
+     cd4 = 0.12
+     cd2 = -1
+     n_del2_strong = 0
+     n_del2_weak = 2
+     n_del4 = 1
+     max_slope = 0.4
+     peak_fac = 1.
+/
+
+&external_ic_nml
+     filtered_terrain = .true.
+     levp = 65
+     gfs_dwinds = .true.
+     checker_tr = .F.
+     nt_checker = 0
+/
+
+&gfs_physics_nml
+     cal_pre        = .true.
+     cdmbgwd        = 2.0, 0.25       ! NCEP default
+     cnvcld         = .true.
+     cnvgwd         = .true.
+     cplaqm         = .true.
+     debug          = .false.
+     do_deep        = .true.
+     dspheat        = .true.
+     fhcyc          = 24.
+     fhlwr          = 3600.
+     fhswr          = 3600.
+     fhzero         = 6.
+     h2o_phys       = .true.
+     hybedmf        = .true.
+     IAER           = 111
+     ialb           = 1
+     iau_delthrs    = 6
+     iaufhrs        = 30
+     iau_inc_files  = ''
+     ico2           = 2
+     iems           = 1
+     imfdeepcnv     = 2
+     imfshalcnv     = 2
+     imp_physics    = 11
+     iopt_alb       = 2
+     iopt_btr       = 1
+     iopt_crs       = 1
+     iopt_dveg      = 2
+     iopt_frz       = 1
+     iopt_inf       = 1
+     iopt_rad       = 1
+     iopt_run       = 1
+     iopt_sfc       = 1
+     iopt_snf       = 4
+     iopt_stc       = 1
+     iopt_tbot      = 2
+     isol           = 2
+     isot           = 1
+     isubc_lw       = 2
+     isubc_sw       = 2
+     ivegsrc        = 1
+     ldiag3d        = .false.
+     lheatstrg      = .false.
+     lgfdlmprad     = .true.
+     lradar         = .true.
+     lsm            = 1
+     lwhtr          = .true.
+     ncld           = 5
+     nst_anl        = .true.
+     nstf_name      = 1,1,1,0,5
+     pdfcld         = .false.
+     pre_rad        = .false.
+     prslrd0        = 0.
+!    random_clds    = .true.
+     random_clds    = .false.
+     redrag         = .true.
+     satmedmf       = .false.
+     shal_cnv       = .true.
+     swhtr          = .true.
+     trans_trac     = .true.
+     use_ufo        = .true.
+     fscav_aero     = 'aacd:0.0', 'acet:0.0', 'acrolein:0.0', 'acro_primary:0.0',
+                      'ald2:0.0', 'ald2_primary:0.0', 'aldx:0.0', 'benzene:0.0',
+                      'butadiene13:0.0', 'cat1:0.0', 'cl2:0.0', 'clno2:0.0',
+                      'co:0.0', 'cres:0.0', 'cron:0.0', 'ech4:0.0', 'epox:0.0',
+                      'eth:0.0', 'etha:0.0', 'ethy:0.0', 'etoh:0.0', 'facd:0.0',
+                      'fmcl:0.0', 'form:0.0', 'form_primary:0.0', 'gly:0.0', 
+                      'glyd:0.0', 'h2o2:0.0', 'hcl:0.0', 'hg:0.0', 'hgiigas:0.0',
+                      'hno3:0.0', 'hocl:0.0', 'hono:0.0', 'hpld:0.0', 'intr:0.0',
+                      'iole:0.0', 'isop:0.0', 'ispd:0.0', 'ispx:0.0', 'ket:0.0',
+                      'meoh:0.0', 'mepx:0.0', 'mgly:0.0', 'n2o5:0.0', 'naph:0.0',
+                      'no:0.0', 'no2:0.0', 'no3:0.0', 'ntr1:0.0', 'ntr2:0.0', 
+                      'o3:0.0', 'ole:0.0', 'opan:0.0', 'open:0.0', 'opo3:0.0',
+                      'pacd:0.0', 'pan:0.0', 'panx:0.0', 'par:0.0', 'pcvoc:0.0',
+                      'pna:0.0', 'prpa:0.0', 'rooh:0.0', 'sesq:0.0', 'so2:0.0',
+                      'soaalk:0.0', 'sulf:0.0', 'terp:0.0', 'tol:0.0', 'tolu:0.0',
+                      'vivpo1:0.0', 'vlvoo1:0.0', 'vlvoo2:0.0', 'vlvpo1:0.0', 
+                      'vsvoo1:0.0', 'vsvoo2:0.0', 'vsvoo3:0.0', 'vsvpo1:0.0',
+                      'vsvpo2:0.0', 'vsvpo3:0.0', 'xopn:0.0', 'xylmn:0.0', '*:0.2'
+/
+
+&gfdl_cloud_microphysics_nml
+     sedi_transport = .false.
+     do_sedi_heat = .false.
+     rad_snow = .true.
+     rad_graupel = .true.
+     rad_rain = .true.
+     const_vi = .F.
+     const_vs = .F.
+     const_vg = .F.
+     const_vr = .F.
+     vi_max = 1.
+     vs_max = 2.
+     vg_max = 12.
+     vr_max = 12.
+     qi_lim = 1.
+     prog_ccn = .false.
+     do_qa = .true.
+     fast_sat_adj = .true.
+     tau_l2v = 180.
+     tau_v2l = 90.
+     tau_g2v = 900.
+     rthresh = 10.e-6  ! This is a key parameter for cloud water
+     dw_land  = 0.16
+     dw_ocean = 0.10
+     ql_gen = 1.0e-3
+     ql_mlt = 1.0e-3
+     qi0_crt = 8.0E-5
+     qs0_crt = 1.0e-3
+     tau_i2s = 1000.
+     c_psaci = 0.05
+     c_pgacs = 0.01
+     rh_inc = 0.30
+     rh_inr = 0.30
+     rh_ins = 0.30
+     ccn_l = 300.
+     ccn_o = 100.
+     c_paut = 0.5
+     c_cracw = 0.8
+     use_ppm = .false.
+     use_ccn = .true.
+     mono_prof = .true.
+     z_slope_liq  = .true.
+     z_slope_ice  = .true.
+     de_ice = .false.
+     fix_negative = .true.
+     icloud_f = 1
+     mp_time = 90.
+/
+
+&cires_ugwp_nml
+     knob_ugwp_solver  = 2
+     knob_ugwp_source  = 1,1,0,0
+     knob_ugwp_wvspec  = 1,25,25,25
+     knob_ugwp_azdir   = 2,4,4,4
+     knob_ugwp_stoch   = 0,0,0,0
+     knob_ugwp_effac   = 1,1,1,1
+     knob_ugwp_doaxyz  = 1
+     knob_ugwp_doheat  = 1
+     knob_ugwp_dokdis  = 1
+     knob_ugwp_ndx4lh  = 1
+     knob_ugwp_version = 0
+     launch_level      = 25
+/
+
+&interpolator_nml
+     interp_method = 'conserve_great_circle'
+/
+
+&namsfc
+     FNGLAC   = <FNGLAC>
+     FNMXIC   = <FNMXIC>
+     FNTSFC   = <FNTSFC>
+     FNSNOC   = <FNSNOC>
+     FNZORC   = <FNZORC>
+     FNALBC   = <FNALBC>
+     FNALBC2  = <FNALBC2>
+     FNAISC   = <FNAISC>
+     FNTG3C   = <FNTG3C>
+     FNVEGC   = <FNVEGC>
+     FNVETC   = <FNVETC>
+     FNSOTC   = <FNSOTC>
+     FNSMCC   = <FNSMCC>
+     FNMSKH   = <FNMSKH>
+     FNTSFA   = <FNTSFA>
+     FNACNA   = <FNACNA>
+     FNSNOA   = <FNSNOA>
+     FNVMNC   = <FNVMNC>
+     FNVMXC   = <FNVMXC>
+     FNSLPC   = <FNSLPC>
+     FNABSC   = <FNABSC>
+     LDEBUG   =.true.,
+     FSMCL(2) = 99999
+     FSMCL(3) = 99999
+     FSMCL(4) = 99999
+     FTSFS    = 90
+     FAISS    = 99999
+     FSNOL    = 99999
+     FSICL    = 99999
+     FTSFL    = 99999,
+     FAISL    = 99999,
+     FVETL    = 99999,
+     FSOTL    = 99999,
+     FvmnL    = 99999,
+     FvmxL    = 99999,
+     FSLPL    = 99999,
+     FABSL    = 99999,
+     FSNOS    = 99999,
+     FSICS    = 99999,
+/
+
+&nam_stochy
+/
+
+&nam_sfcperts
+/

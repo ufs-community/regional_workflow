@@ -173,6 +173,10 @@ function source_util_funcs() {
 #
   . ${bashutils_dir}/get_charvar_from_netcdf.sh
 
+##### RRFS-CMAQ ########## start #####
+  . ${scrfunc_dir}/get_platform_info.sh
+##### RRFS-CMAQ ########## end   #####
+
 }
 source_util_funcs
 

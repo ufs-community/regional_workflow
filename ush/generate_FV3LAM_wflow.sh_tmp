@@ -194,6 +194,13 @@ settings="\
   'vx_gridstat_06h_tn': ${VX_GRIDSTAT_06h_TN}
   'vx_gridstat_24h_tn': ${VX_GRIDSTAT_24h_TN}
   'vx_pointstat_tn': ${VX_POINTSTAT_TN}
+##### RRFS-CMAQ ########## start #####
+#  'add_aqm_ics_tn': ${ADD_AQM_ICS_TN}
+#  'add_aqm_lbcs_tn': ${ADD_AQM_LBCS_TN}
+#  'run_nexus_tn': ${RUN_NEXUS_TN}
+#  'restart_workflow': ${RESTART_WORKFLOW}
+#  'restart_cycle_dir': !!str ${RESTART_CYCLE_DIR}
+##### RRFS-CMAQ ########## end   #####
 #
 # Entity used to load the module file for each GET_OBS_* task.
 #
@@ -215,6 +222,11 @@ settings="\
   'nnodes_get_obs_ndas': ${NNODES_GET_OBS_NDAS}
   'nnodes_vx_gridstat': ${NNODES_VX_GRIDSTAT}
   'nnodes_vx_pointstat': ${NNODES_VX_POINTSTAT}
+##### RRFS-CMAQ ########## start #####
+#  'nnodes_add_aqm_ics': ${NNODES_ADD_AQM_ICS}
+#  'nnodes_add_aqm_lbcs': ${NNODES_ADD_AQM_LBCS}
+#  'nnodes_run_nexus': ${NNODES_RUN_NEXUS}
+##### RRFS-CMAQ ########## end   #####
 #
 # Number of cores used for a task
 #
@@ -238,6 +250,11 @@ settings="\
   'ppn_get_obs_ndas': ${PPN_GET_OBS_NDAS}
   'ppn_vx_gridstat': ${PPN_VX_GRIDSTAT}
   'ppn_vx_pointstat': ${PPN_VX_POINTSTAT}
+##### RRFS-CMAQ ########## start #####
+#  'ppn_add_aqm_ics': ${PPN_ADD_AQM_ICS}
+#  'ppn_add_aqm_lbcs': ${PPN_ADD_AQM_LBCS}
+#  'ppn_run_nexus': ${PPN_RUN_NEXUS}
+##### RRFS-CMAQ ########## end   #####
 #
 # Maximum wallclock time for each task.
 #
@@ -255,6 +272,11 @@ settings="\
   'wtime_get_obs_ndas': ${WTIME_GET_OBS_NDAS}
   'wtime_vx_gridstat': ${WTIME_VX_GRIDSTAT}
   'wtime_vx_pointstat': ${WTIME_VX_POINTSTAT}
+##### RRFS-CMAQ ########## start #####
+#  'wtime_add_aqm_ics': ${WTIME_ADD_AQM_ICS}
+#  'wtime_add_aqm_lbcs': ${WTIME_ADD_AQM_LBCS}
+#  'wtime_run_nexus': ${WTIME_RUN_NEXUS}
+##### RRFS-CMAQ ########## end   #####
 #
 # Maximum number of tries for each task.
 #
@@ -276,6 +298,11 @@ settings="\
   'maxtries_vx_gridstat_06h': ${MAXTRIES_VX_GRIDSTAT_06h}
   'maxtries_vx_gridstat_24h': ${MAXTRIES_VX_GRIDSTAT_24h}
   'maxtries_vx_pointstat': ${MAXTRIES_VX_POINTSTAT}
+##### RRFS-CMAQ ########## start #####
+#  'maxtries_add_aqm_ics': ${MAXTRIES_ADD_AQM_ICS}
+#  'maxtries_add_aqm_lbcs': ${MAXTRIES_ADD_AQM_LBCS}
+#  'maxtries_run_nexus': ${MAXTRIES_RUN_NEXUS}
+##### RRFS-CMAQ ########## start #####
 #
 # Flags that specify whether to run the preprocessing tasks.
 #
@@ -287,6 +314,11 @@ settings="\
   'run_task_get_obs_ndas': ${RUN_TASK_GET_OBS_NDAS}
   'run_task_vx_gridstat': ${RUN_TASK_VX_GRIDSTAT}
   'run_task_vx_pointstat': ${RUN_TASK_VX_POINTSTAT}
+##### RRFS-CMAQ ########## start #####
+#  'run_task_add_aqm_ics': ${RUN_TASK_ADD_AQM_ICS}
+#  'run_task_add_aqm_lbcs': ${RUN_TASK_ADD_AQM_LBCS}
+#  'run_task_run_nexus': ${RUN_TASK_RUN_NEXUS}
+##### RRFS-CMAQ ########## end   #####
 #
 # Number of physical cores per node for the current machine.
 #
@@ -330,32 +362,6 @@ settings="\
   'ccpa_obs_dir': ${CCPA_OBS_DIR}
   'mrms_obs_dir': ${MRMS_OBS_DIR}
   'ndas_obs_dir': ${NDAS_OBS_DIR}
-#
-#
-##### RRFS-CMAQ ########## start #####
-  'add_aqm_ics_tn': ${ADD_AQM_ICS_TN}
-  'add_aqm_lbcs_tn': ${ADD_AQM_LBCS_TN}
-  'run_nexus_tn': ${RUN_NEXUS_TN}
-  'restart_workflow': ${RESTART_WORKFLOW}
-  'restart_cycle_dir': !!str ${RESTART_CYCLE_DIR}
-  'cycl_incr': !!str ${CYCL_INC}:00:00
-  'nnodes_add_aqm_ics': ${NNODES_ADD_AQM_ICS}
-  'nnodes_add_aqm_lbcs': ${NNODES_ADD_AQM_LBCS}
-  'nnodes_run_nexus': ${NNODES_RUN_NEXUS}
-  'ppn_add_aqm_ics': ${PPN_ADD_AQM_ICS}
-  'ppn_add_aqm_lbcs': ${PPN_ADD_AQM_LBCS}
-  'ppn_run_nexus': ${PPN_RUN_NEXUS}
-  'wtime_add_aqm_ics': ${WTIME_ADD_AQM_ICS}
-  'wtime_add_aqm_lbcs': ${WTIME_ADD_AQM_LBCS}
-  'wtime_run_nexus': ${WTIME_RUN_NEXUS}
-  'maxtries_add_aqm_ics': ${MAXTRIES_ADD_AQM_ICS}
-  'maxtries_add_aqm_lbcs': ${MAXTRIES_ADD_AQM_LBCS}
-  'maxtries_run_nexus': ${MAXTRIES_RUN_NEXUS}
-  'run_task_add_aqm_ics': ${RUN_TASK_ADD_AQM_ICS}
-  'run_task_add_aqm_lbcs': ${RUN_TASK_ADD_AQM_LBCS}
-  'run_task_run_nexus': ${RUN_TASK_RUN_NEXUS}
-##### RRFS-CMAQ ########## end   #####
-#
 #
 # Ensemble-related parameters.
 #
@@ -581,12 +587,6 @@ print_info_msg "$VERBOSE" "
   Copying the template NEMS configuration file to the experiment direct-
   ory..."
 cp_vrfy "${NEMS_CONFIG_TMPL_FP}" "${NEMS_CONFIG_FP}"
-#
-##### RRFS-CMAQ ########## start #####
-print_info_msg "$VERBOSE" "
-  Copying the template AQM.RC file to the experiment directory..."
-cp_vrfy "${AQM_RC_TMPL_FP}" "${AQM_RC_FP}"
-##### RRFS-CMAQ ########## end   #####
 #
 # Copy the CCPP physics suite definition file from its location in the
 # clone of the FV3 code repository to the experiment directory (EXPT-

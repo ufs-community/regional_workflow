@@ -434,6 +434,122 @@ check_var_valid_value "DOT_OR_USCORE" "valid_vals_DOT_OR_USCORE"
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that RUN_TASK_ADD_AQM_LBCS is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+if [ ! -z "${RUN_TASK_ADD_AQM_ICS}" ]; then
+  check_var_valid_value \
+    "RUN_TASK_ADD_AQM_ICS" "valid_vals_RUN_TASK_ADD_AQM_ICS"
+  RUN_TASK_ADD_AQM_ICS=${RUN_TASK_ADD_AQM_ICS^^}
+  if [ "${RUN_TASK_ADD_AQM_ICS}" = "TRUE" ] || \
+     [ "${RUN_TASK_ADD_AQM_ICS}" = "YES" ]; then
+    RUN_TASK_ADD_AQM_ICS="TRUE"
+  elif [ "${RUN_TASK_ADD_AQM_ICS}" = "FALSE" ] || \
+       [ "${RUN_TASK_ADD_AQM_ICS}" = "NO" ]; then
+    RUN_TASK_ADD_AQM_ICS="FALSE"
+  fi
+#
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_ADD_AQM_LBCS is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value \
+  "RUN_TASK_ADD_AQM_LBCS" "valid_vals_RUN_TASK_ADD_AQM_LBCS"
+RUN_TASK_ADD_AQM_LBCS=${RUN_TASK_ADD_AQM_LBCS^^}
+if [ "${RUN_TASK_ADD_AQM_LBCS}" = "TRUE" ] || \
+   [ "${RUN_TASK_ADD_AQM_LBCS}" = "YES" ]; then
+  RUN_TASK_ADD_AQM_LBCS="TRUE"
+elif [ "${RUN_TASK_ADD_AQM_LBCS}" = "FALSE" ] || \
+     [ "${RUN_TASK_ADD_AQM_LBCS}" = "NO" ]; then
+  RUN_TASK_ADD_AQM_LBCS="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_RUN_NEXUS is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value \
+  "RUN_TASK_RUN_NEXUS" "valid_vals_RUN_TASK_RUN_NEXUS"
+RUN_TASK_RUN_NEXUS=${RUN_TASK_RUN_NEXUS^^}
+if [ "${RUN_TASK_RUN_NEXUS}" = "TRUE" ] || \
+   [ "${RUN_TASK_RUN_NEXUS}" = "YES" ]; then
+  RUN_TASK_RUN_NEXUS="TRUE"
+elif [ "${RUN_TASK_RUN_NEXUS}" = "FALSE" ] || \
+     [ "${RUN_TASK_RUN_NEXUS}" = "NO" ]; then
+  RUN_TASK_RUN_NEXUS="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that ENABLE_AQ is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value \
+  "ENABLE_AQ" "valid_vals_ENABLE_AQ"
+ENABLE_AQ=${ENABLE_AQ^^}
+if [ "${ENABLE_AQ}" = "TRUE" ] || \
+   [ "${ENABLE_AQ}" = "YES" ]; then
+  ENABLE_AQ="TRUE"
+elif [ "${ENABLE_AQ}" = "FALSE" ] || \
+     [ "${ENABLE_AQ}" = "NO" ]; then
+  ENABLE_AQ="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Disable air quality tasks if the forecast model does not require them.
+# Air quality workflow tasks are enabled by default.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${ENABLE_AQ}" == "FALSE" ]; then
+  RUN_TASK_ADD_AQM_ICS="FALSE"
+  RUN_TASK_ADD_AQM_LBCS="FALSE"
+  RUN_TASK_RUN_NEXUS="FALSE"
+  print_info_msg "
+Disabling air quality tasks since forecast model does not require them."
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RESTART_WORKFLOW is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value \
+  "RESTART_WORKFLOW" "valid_vals_RESTART_WORKFLOW"
+RESTART_WORKFLOW=${RESTART_WORKFLOW^^}
+if [ "${RESTART_WORKFLOW}" = "TRUE" ] || \
+   [ "${RESTART_WORKFLOW}" = "YES" ]; then
+  RESTART_WORKFLOW="TRUE"
+elif [ "${RESTART_WORKFLOW}" = "FALSE" ] || \
+     [ "${RESTART_WORKFLOW}" = "NO" ]; then
+  RESTART_WORKFLOW="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure RESTART_INTERVAL is set to an integer value if present
+#
+#-----------------------------------------------------------------------
+#
+if ! [[ "${RESTART_INTERVAL:-0}" =~ ^[0-9]+$ ]]; then
+  print_err_msg_exit "\
+RESTART_INTERVAL must be set to an integer number of hours.
+  RESTART_INTERVAL = \"${RESTART_INTERVAL}\""
+fi
+#
+#
+#-----------------------------------------------------------------------
+#
 # Convert machine name to upper case if necessary.  Then make sure that
 # MACHINE is set to a valid value.
 #
@@ -827,44 +943,6 @@ You can specify the missing location(s) in config.sh"
     ;;
 
 esac
-#
-##### RRFS-CMAQ ########## start #####
-case $MACHINE in
-
-"WCOSS_CRAY")
-
-  ;;
-
-"WCOSS_DELL_P3")
-  AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data"}
-  AQM_EMIS_DIR=${AQM_EMIS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/bio"}
-  AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emission"}
-  AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
-  NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions"}
-  ;;
-
-"HERA")
-  AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data"}
-  AQM_EMIS_DIR=${AQM_EMIS_DIR:-"/scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/bio"}
-  AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/scratch1/NCEPDEV/rstprod/nexus_emissions/LBCS"}
-  AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
-  NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/scratch1/NCEPDEV/rstprod/nexus_emissions"}
-  ;;
-
-  *)
-    print_err_msg_exit "\
-One or more AQM directories have not been specified for this machine:
-  MACHINE = \"$MACHINE\"
-  AQM_CONFIG_DIR = \"${AQM_CONFIG_DIR:-\"\"}
-  AQM_EMIS_DIR = \"${AQM_EMIS_DIR:-\"\"}
-  AQM_LBCS_DIR = \"${AQM_LBCS_DIR:-\"\"}
-  AQM_LBCS_FILES = \"${AQM_LBCS_FILES:-\"\"}
-  NEXUS_INPUT_DIR = \"${NUXUS_INPUT_DIR:-\"\"}
-You can specify the missing location(s) in config.sh"
-    ;;
-
-esac
-##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -1365,12 +1443,6 @@ FV3_NML_YAML_CONFIG_FP="${TEMPLATE_DIR}/${FV3_NML_YAML_CONFIG_FN}"
 FV3_NML_BASE_ENS_FP="${EXPTDIR}/${FV3_NML_BASE_ENS_FN}"
 MODEL_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${MODEL_CONFIG_TMPL_FN}"
 NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
-#
-##### RRFS-CMAQ ########## start #####
-AQM_RC_TMPL_FN="${AQM_RC_FN}"
-AQM_RC_TMPL_FP="${TEMPLATE_DIR}/${AQM_RC_TMPL_FN}"
-AQM_RC_FP="${EXPTDIR}/${AQM_RC_FN}"
-##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -2657,12 +2729,6 @@ LOAD_MODULES_RUN_TASK_FP="${LOAD_MODULES_RUN_TASK_FP}"
 
 THOMPSON_MP_CLIMO_FN="${THOMPSON_MP_CLIMO_FN}"
 THOMPSON_MP_CLIMO_FP="${THOMPSON_MP_CLIMO_FP}"
-#
-##### RRFS-CMAQ ########## start #####
-AQM_RC_TMPL_FN="${AQM_RC_TMPL_FN}"
-AQM_RC_TMPL_FP="${AQM_RC_TMPL_FP}"
-AQM_RC_FP="${AQM_RC_FP}"
-##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #

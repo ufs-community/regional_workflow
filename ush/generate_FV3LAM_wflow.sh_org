@@ -238,6 +238,7 @@ settings="\
   'ppn_get_obs_ndas': ${PPN_GET_OBS_NDAS}
   'ppn_vx_gridstat': ${PPN_VX_GRIDSTAT}
   'ppn_vx_pointstat': ${PPN_VX_POINTSTAT}
+
 #
 # Maximum wallclock time for each task.
 #
@@ -330,32 +331,6 @@ settings="\
   'ccpa_obs_dir': ${CCPA_OBS_DIR}
   'mrms_obs_dir': ${MRMS_OBS_DIR}
   'ndas_obs_dir': ${NDAS_OBS_DIR}
-#
-#
-##### RRFS-CMAQ ########## start #####
-  'add_aqm_ics_tn': ${ADD_AQM_ICS_TN}
-  'add_aqm_lbcs_tn': ${ADD_AQM_LBCS_TN}
-  'run_nexus_tn': ${RUN_NEXUS_TN}
-  'restart_workflow': ${RESTART_WORKFLOW}
-  'restart_cycle_dir': !!str ${RESTART_CYCLE_DIR}
-  'cycl_incr': !!str ${CYCL_INC}:00:00
-  'nnodes_add_aqm_ics': ${NNODES_ADD_AQM_ICS}
-  'nnodes_add_aqm_lbcs': ${NNODES_ADD_AQM_LBCS}
-  'nnodes_run_nexus': ${NNODES_RUN_NEXUS}
-  'ppn_add_aqm_ics': ${PPN_ADD_AQM_ICS}
-  'ppn_add_aqm_lbcs': ${PPN_ADD_AQM_LBCS}
-  'ppn_run_nexus': ${PPN_RUN_NEXUS}
-  'wtime_add_aqm_ics': ${WTIME_ADD_AQM_ICS}
-  'wtime_add_aqm_lbcs': ${WTIME_ADD_AQM_LBCS}
-  'wtime_run_nexus': ${WTIME_RUN_NEXUS}
-  'maxtries_add_aqm_ics': ${MAXTRIES_ADD_AQM_ICS}
-  'maxtries_add_aqm_lbcs': ${MAXTRIES_ADD_AQM_LBCS}
-  'maxtries_run_nexus': ${MAXTRIES_RUN_NEXUS}
-  'run_task_add_aqm_ics': ${RUN_TASK_ADD_AQM_ICS}
-  'run_task_add_aqm_lbcs': ${RUN_TASK_ADD_AQM_LBCS}
-  'run_task_run_nexus': ${RUN_TASK_RUN_NEXUS}
-##### RRFS-CMAQ ########## end   #####
-#
 #
 # Ensemble-related parameters.
 #
@@ -581,12 +556,6 @@ print_info_msg "$VERBOSE" "
   Copying the template NEMS configuration file to the experiment direct-
   ory..."
 cp_vrfy "${NEMS_CONFIG_TMPL_FP}" "${NEMS_CONFIG_FP}"
-#
-##### RRFS-CMAQ ########## start #####
-print_info_msg "$VERBOSE" "
-  Copying the template AQM.RC file to the experiment directory..."
-cp_vrfy "${AQM_RC_TMPL_FP}" "${AQM_RC_FP}"
-##### RRFS-CMAQ ########## end   #####
 #
 # Copy the CCPP physics suite definition file from its location in the
 # clone of the FV3 code repository to the experiment directory (EXPT-

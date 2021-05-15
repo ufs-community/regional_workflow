@@ -828,44 +828,6 @@ You can specify the missing location(s) in config.sh"
 
 esac
 #
-##### RRFS-CMAQ ########## start #####
-case $MACHINE in
-
-"WCOSS_CRAY")
-
-  ;;
-
-"WCOSS_DELL_P3")
-  AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data"}
-  AQM_EMIS_DIR=${AQM_EMIS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/bio"}
-  AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emission"}
-  AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
-  NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions"}
-  ;;
-
-"HERA")
-  AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data"}
-  AQM_EMIS_DIR=${AQM_EMIS_DIR:-"/scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/bio"}
-  AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/scratch1/NCEPDEV/rstprod/nexus_emissions/LBCS"}
-  AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
-  NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/scratch1/NCEPDEV/rstprod/nexus_emissions"}
-  ;;
-
-  *)
-    print_err_msg_exit "\
-One or more AQM directories have not been specified for this machine:
-  MACHINE = \"$MACHINE\"
-  AQM_CONFIG_DIR = \"${AQM_CONFIG_DIR:-\"\"}
-  AQM_EMIS_DIR = \"${AQM_EMIS_DIR:-\"\"}
-  AQM_LBCS_DIR = \"${AQM_LBCS_DIR:-\"\"}
-  AQM_LBCS_FILES = \"${AQM_LBCS_FILES:-\"\"}
-  NEXUS_INPUT_DIR = \"${NUXUS_INPUT_DIR:-\"\"}
-You can specify the missing location(s) in config.sh"
-    ;;
-
-esac
-##### RRFS-CMAQ ########## end   #####
-#
 #-----------------------------------------------------------------------
 #
 # Set the base directories in which codes obtained from external reposi-
@@ -1365,12 +1327,6 @@ FV3_NML_YAML_CONFIG_FP="${TEMPLATE_DIR}/${FV3_NML_YAML_CONFIG_FN}"
 FV3_NML_BASE_ENS_FP="${EXPTDIR}/${FV3_NML_BASE_ENS_FN}"
 MODEL_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${MODEL_CONFIG_TMPL_FN}"
 NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
-#
-##### RRFS-CMAQ ########## start #####
-AQM_RC_TMPL_FN="${AQM_RC_FN}"
-AQM_RC_TMPL_FP="${TEMPLATE_DIR}/${AQM_RC_TMPL_FN}"
-AQM_RC_FP="${EXPTDIR}/${AQM_RC_FN}"
-##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -2657,12 +2613,6 @@ LOAD_MODULES_RUN_TASK_FP="${LOAD_MODULES_RUN_TASK_FP}"
 
 THOMPSON_MP_CLIMO_FN="${THOMPSON_MP_CLIMO_FN}"
 THOMPSON_MP_CLIMO_FP="${THOMPSON_MP_CLIMO_FP}"
-#
-##### RRFS-CMAQ ########## start #####
-AQM_RC_TMPL_FN="${AQM_RC_TMPL_FN}"
-AQM_RC_TMPL_FP="${AQM_RC_TMPL_FP}"
-AQM_RC_FP="${AQM_RC_FP}"
-##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
