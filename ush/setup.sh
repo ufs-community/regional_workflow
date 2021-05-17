@@ -269,6 +269,29 @@ elif [ "${RUN_TASK_VX_POINTSTAT}" = "FALSE" ] || \
      [ "${RUN_TASK_VX_POINTSTAT}" = "NO" ]; then
   RUN_TASK_VX_POINTSTAT="FALSE"
 fi
+
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_VX_ENSGRID is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_VX_ENSGRID" "valid_vals_RUN_TASK_VX_ENSGRID"
+#
+# Set RUN_TASK_VX_ENSGRID to either "TRUE" or "FALSE" so we don't have to
+# consider other valid values later on.
+#
+RUN_TASK_VX_ENSGRID=${RUN_TASK_VX_ENSGRID^^}
+if [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" ] || \
+   [ "${RUN_TASK_VX_ENSGRID}" = "YES" ]; then
+  RUN_TASK_VX_ENSGRID="TRUE"
+elif [ "${RUN_TASK_VX_ENSGRID}" = "FALSE" ] || \
+     [ "${RUN_TASK_VX_ENSGRID}" = "NO" ]; then
+  RUN_TASK_VX_ENSGRID="FALSE"
+fi
+
+#
 #
 #-----------------------------------------------------------------------
 #
@@ -1709,14 +1732,34 @@ Reset value is:"
 
   fi
 
+  if [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" ] || \
+     [ "${RUN_TASK_VX_ENSGRID}" = "FALSE" ]; then
+
+    msg="
+When RUN_ENVIR is set to \"nco\", it is assumed that the verification
+will not be run.
+  RUN_TASK_VX_ENSGRID = \"${RUN_TASK_VX_ENSGRID}\"
+Resetting RUN_TASK_VX_ENSGRID to \"FALSE\" 
+Reset value is:"
+
+    RUN_TASK_VX_ENSGRID="FALSE"
+
+    msg="$msg""
+  RUN_TASK_VX_ENSGRID = \"${RUN_TASK_VX_ENSGRID}\"
+"
+
+    print_info_msg "$msg"
+
+  fi
+
+
+else
 #
 #-----------------------------------------------------------------------
 #
 # Now consider community mode.
 #
 #-----------------------------------------------------------------------
-#
-else
 #
 # If RUN_TASK_MAKE_GRID is set to "FALSE", the workflow will look for 
 # the pregenerated grid files in GRID_DIR.  In this case, make sure that 

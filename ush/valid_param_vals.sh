@@ -48,6 +48,7 @@ valid_vals_RUN_TASK_MAKE_OROG=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "n
 valid_vals_RUN_TASK_MAKE_SFC_CLIMO=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_VX_GRIDSTAT=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_VX_POINTSTAT=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
+valid_vals_RUN_TASK_VX_ENSGRID=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_VX_ENSPOINT=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_QUILTING=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_PRINT_ESMF=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
