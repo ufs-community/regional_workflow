@@ -17,7 +17,7 @@ atmos_nthreads:          {{ atmos_nthreads }}
 use_hyper_thread:        .false.
 ncores_per_node:         {{ ncores_per_node }}
 debug_affinity:          .true.
-restart_interval:        {{ restart_hrs }}
+restart_interval:        0
 output_1st_tstep_rst:    .false.
 print_esmf:              {{ print_esmf }}
 quilting:                {{ quilting }}
