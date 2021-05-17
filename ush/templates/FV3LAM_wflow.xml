@@ -550,8 +550,10 @@ MODULES_RUN_TASK_FP script.
       <and>
         <taskdep task="&MAKE_ICS_TN;{{ uscore_ensmem_name }}"/>
         <taskdep task="&MAKE_LBCS_TN;{{ uscore_ensmem_name }}"/>
+{%- if enable_aq %}
         <taskdep task="&RUN_NEXUS_TN;"/>
-        <taskdep task="&ADD_AQM_LBCS_TN;"/>        
+        <taskdep task="&ADD_AQM_LBCS_TN;"/>     
+{%- endif %}   
       </and>
     </dependency>
 

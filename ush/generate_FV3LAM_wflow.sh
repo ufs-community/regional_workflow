@@ -333,6 +333,8 @@ settings="\
 #
 #
 ##### RRFS-CMAQ ########## start #####
+#
+  'enable_aq': ${ENABLE_AQ}
   'add_aqm_ics_tn': ${ADD_AQM_ICS_TN}
   'add_aqm_lbcs_tn': ${ADD_AQM_LBCS_TN}
   'run_nexus_tn': ${RUN_NEXUS_TN}
@@ -354,6 +356,7 @@ settings="\
   'run_task_add_aqm_ics': ${RUN_TASK_ADD_AQM_ICS}
   'run_task_add_aqm_lbcs': ${RUN_TASK_ADD_AQM_LBCS}
   'run_task_run_nexus': ${RUN_TASK_RUN_NEXUS}
+#
 ##### RRFS-CMAQ ########## end   #####
 #
 #

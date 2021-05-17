@@ -698,6 +698,60 @@ set_cycle_dates \
 
 NUM_CYCLES="${#ALL_CDATES[@]}"
 #
+##### RRFS-CMAQ ########## start #####
+#
+if [ ${#ALL_CDATES[@]} -gt 1 ]; then
+  RUN_TASK_ADD_AQM_ICS="${RUN_TASK_ADD_AQM_ICS:-TRUE}"
+else
+  RUN_TASK_ADD_AQM_ICS="${RUN_TASK_ADD_AQM_ICS:-FALSE}"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Disable air quality tasks if the forecast model does not require them.
+# Air quality workflow tasks are enabled by default.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${ENABLE_AQ}" == "FALSE" ]; then
+  RUN_TASK_ADD_AQM_ICS="FALSE"
+  RUN_TASK_ADD_AQM_LBCS="FALSE"
+  RUN_TASK_RUN_NEXUS="FALSE"
+  print_info_msg "
+Disabling air quality tasks since forecast model does not require them."
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure RESTART_INTERVAL is set to an integer value if present
+#
+#-----------------------------------------------------------------------
+#
+if ! [[ "${RESTART_INTERVAL:-0}" =~ ^[0-9]+$ ]]; then
+  print_err_msg_exit "\
+RESTART_INTERVAL must be set to an integer number of hours.
+  RESTART_INTERVAL = \"${RESTART_INTERVAL}\""
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RESTART_WORKFLOW is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value \
+  "RESTART_WORKFLOW" "valid_vals_RESTART_WORKFLOW"
+RESTART_WORKFLOW=${RESTART_WORKFLOW^^}
+if [ "${RESTART_WORKFLOW}" = "TRUE" ] || \
+   [ "${RESTART_WORKFLOW}" = "YES" ]; then
+  RESTART_WORKFLOW="TRUE"
+elif [ "${RESTART_WORKFLOW}" = "FALSE" ] || \
+     [ "${RESTART_WORKFLOW}" = "NO" ]; then
+  RESTART_WORKFLOW="FALSE"
+fi
+#
+##### RRFS-cmAQ ########## end   #####
+#
 #-----------------------------------------------------------------------
 #
 # Set various directories.
@@ -829,6 +883,7 @@ You can specify the missing location(s) in config.sh"
 esac
 #
 ##### RRFS-CMAQ ########## start #####
+#
 case $MACHINE in
 
 "WCOSS_CRAY")
@@ -864,6 +919,7 @@ You can specify the missing location(s) in config.sh"
     ;;
 
 esac
+#
 ##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
