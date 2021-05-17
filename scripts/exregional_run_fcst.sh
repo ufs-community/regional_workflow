@@ -444,7 +444,7 @@ ln_vrfy -sf ${relative_or_null} ${FIELD_TABLE_FP} ${run_dir}
 ln_vrfy -sf ${relative_or_null} ${NEMS_CONFIG_FP} ${run_dir}
 
 ##### RRFS-CMAQ ########## start #####
-ln_vrfy -sf ${relative_or_null} ${ARM_RC_FP} ${run_dir}
+ln_vrfy -sf ${relative_or_null} ${AQM_RC_FP} ${run_dir}
 ##### RRFS-CMAQ ########## end   #####
 
 if [ "${DO_ENSEMBLE}" = TRUE ]; then
