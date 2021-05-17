@@ -1694,7 +1694,7 @@ AQM_LBCS_DIR="/path/to/boundary/condition/files"
 AQM_LBCS_FILES="gfs_bndy_chem_<MM>.tile7.000.nc"
 AQM_ARCHIVE="/NCEPDEV/emc-naqfc/5year/Barry.Baker/emissions/BOUNDARY_CONDITIONS/NAQFC_RRFS_CMAQ_C401.tar"
 
-ENABLE_AQ="FALSE"
+ENABLE_AQ="TRUE"
 
 ADD_AQM_ICS_TN="add_aqm_ics"
 ADD_AQM_LBCS_TN="add_aqm_lbcs"
