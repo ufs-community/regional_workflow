@@ -1721,6 +1721,6 @@ MAXTRIES_RUN_NEXUS="4"
 CYCL_INC="00"
 RESTART_WORKFLOW="FALSE"
 RESTART_CYCLE_DIR="/path/to/restart/cycle/dir"
-RESTART_INTERVAL=""
+RESTART_INTERVAL="0"
 #
 ##### RRFS-CMAQ ########## end   #####
