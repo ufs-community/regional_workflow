@@ -196,7 +196,7 @@ settings="\
   'vx_gridstat_24h_tn': ${VX_GRIDSTAT_24h_TN}
   'vx_pointstat_tn': ${VX_POINTSTAT_TN}
   'vx_ensgrid_tn': ${VX_ENSGRID_TN}
-  'vx_ensgrid_refc_tn': ${VX_ENSGRID_REFC_TN}'
+  'vx_ensgrid_refc_tn': ${VX_ENSGRID_REFC_TN}
   'vx_ensgrid_03h_tn': ${VX_ENSGRID_03h_TN}
   'vx_ensgrid_06h_tn': ${VX_ENSGRID_06h_TN}
   'vx_ensgrid_24h_tn': ${VX_ENSGRID_24h_TN}

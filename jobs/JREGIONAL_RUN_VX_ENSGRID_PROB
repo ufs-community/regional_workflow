@@ -76,7 +76,8 @@ else
 fi
 mkdir_vrfy -p "${vx_dir}"
 
-ensemblestat_dir="${vx_dir}/ensemble_prob"
+ensemblestat_dir="${vx_dir}/ensemble_stat"
+gridstat_prob_dir="${ensemblestat_dir}/ensemble_prob"
 #check_for_preexist_dir "${ensemblestat_dir}" "delete"
 mkdir_vrfy -p "${gridstat_prob_dir}"
 
@@ -92,7 +93,7 @@ cd_vrfy "${gridstat_prob_dir}"
 $SCRIPTSDIR/exregional_run_ensgridvx_prob.sh \
   cycle_dir="${CYCLE_DIR}" \
   vx_dir="${vx_dir}" \
-  gridstat_mean_dir="${gridstat_prob_dir}" || \
+  gridstat_prob_dir="${gridstat_prob_dir}" || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #

@@ -944,7 +944,7 @@ MODULES_RUN_TASK_FP script.
       {% endif %}
     </dependency>
 
-  </metatask>
+  </task>
 {% endif %}
 
 <!--
