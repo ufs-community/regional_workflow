@@ -14,6 +14,8 @@ GRID_STAT_OUTPUT_DIR = {OUTPUT_BASE}
 
 LOG_DIR = {ENV[EXPTDIR]}/log
 
+STAGING_DIR = {OUTPUT_BASE}/stage/APCP_06h
+
 [filename_templates]
 # format of filenames
 FCST_PCP_COMBINE_INPUT_TEMPLATE = {ENV[NET]}.t{init?fmt=%H}z.bgdawpf{lead?fmt=%HHH}.tm{init?fmt=%H}.grib2
@@ -29,8 +31,8 @@ GRID_STAT_OUTPUT_TEMPLATE = metprd/grid_stat
 GRID_STAT_VERIFICATION_MASK_TEMPLATE = {MET_INSTALL_DIR}/share/met/poly/CONUS.poly 
 
 [config]
-# Specify the name of the master_metplus.lof file
-LOG_METPLUS = {LOG_DIR}/master_metplus.log.{ENV[LOG_SUFFIX]}
+# Specify the name of the metplus.log file
+LOG_METPLUS = {LOG_DIR}/metplus.log.{ENV[LOG_SUFFIX]}
 
 # # Specify where the location and name of the final metplus_final.conf
 METPLUS_CONF={OUTPUT_BASE}/metprd/grid_stat/metplus_final.APCP_06h.conf

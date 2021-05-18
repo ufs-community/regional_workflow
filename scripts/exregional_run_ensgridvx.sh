@@ -113,8 +113,14 @@ export fhr_list
 
 
 INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
-LOG_SUFFIX=ensgrid_${CDATE}
 
+if [ ${VAR} == "APCP" ]; then
+  LOG_SUFFIX=ensgrid_${CDATE}_${VAR}_${ACCUM}h
+elif [ ${VAR} == "REFC" ]; then
+  LOG_SUFFIX=ensgrid_${CDATE}_${VAR}
+else
+  echo "No variable defined"
+fi
 
 #
 #-----------------------------------------------------------------------
