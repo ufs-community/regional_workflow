@@ -713,7 +713,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-if [ "${ENABLE_AQ}" == "FALSE" ]; then
+if [ "${ENABLE_AQ}" = "FALSE" ]; then
   RUN_TASK_ADD_AQM_ICS="FALSE"
   RUN_TASK_ADD_AQM_LBCS="FALSE"
   RUN_TASK_RUN_NEXUS="FALSE"
@@ -887,12 +887,20 @@ esac
 case $MACHINE in
 
 "WCOSS_CRAY")
-
+  AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data"}
+  AQM_EMIS_DIR=${AQM_EMIS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/bio"}
+  AQM_FIRE_DIR=${AQM_FIRE_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions/GSCE/GBBEPx.in.C401/Reprocessed"}
+  AQM_FIRE_FILE=${AQM_FIRE_FILE:-"GBBEPx_C401GRID.emissions_v003_20190804.nc"}
+  AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emission"}
+  AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
+  NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions"}
   ;;
 
 "WCOSS_DELL_P3")
   AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data"}
   AQM_EMIS_DIR=${AQM_EMIS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/bio"}
+  AQM_FIRE_DIR=${AQM_FIRE_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions/GSCE/GBBEPx.in.C401/Reprocessed"}
+  AQM_FIRE_FILE=${AQM_FIRE_FILE:-"GBBEPx_C401GRID.emissions_v003_20190804.nc"}
   AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emission"}
   AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
   NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions"}
@@ -901,6 +909,8 @@ case $MACHINE in
 "HERA")
   AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data"}
   AQM_EMIS_DIR=${AQM_EMIS_DIR:-"/scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/bio"}
+  AQM_FIRE_DIR=${AQM_FIRE_DIR:-"/scratch2/NCEPDEV/naqfc/Jianping.Huang/Data/emissions/GSCE/GBBEPx.in.C401/Reprocessed"}
+  AQM_FIRE_FILE=${AQM_FIRE_FILE:-"GBBEPx_C401GRID.emissions_v003_20190804.nc"}
   AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/scratch1/NCEPDEV/rstprod/nexus_emissions/LBCS"}
   AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
   NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/scratch1/NCEPDEV/rstprod/nexus_emissions"}
@@ -912,6 +922,8 @@ One or more AQM directories have not been specified for this machine:
   MACHINE = \"$MACHINE\"
   AQM_CONFIG_DIR = \"${AQM_CONFIG_DIR:-\"\"}
   AQM_EMIS_DIR = \"${AQM_EMIS_DIR:-\"\"}
+  AQM_FIRE_DIR = \"${AQM_FIRE_DIR:-\"\"}
+  AQM_FIRE_FILE = \"${AQM_FIRE_FILE:-\"\"}
   AQM_LBCS_DIR = \"${AQM_LBCS_DIR:-\"\"}
   AQM_LBCS_FILES = \"${AQM_LBCS_FILES:-\"\"}
   NEXUS_INPUT_DIR = \"${NUXUS_INPUT_DIR:-\"\"}
@@ -1421,7 +1433,6 @@ NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}"
 ##### RRFS-CMAQ ########## start #####
 AQM_RC_TMPL_FN="${AQM_RC_FN}"
 AQM_RC_TMPL_FP="${TEMPLATE_DIR}/${AQM_RC_TMPL_FN}"
-AQM_RC_FP="${EXPTDIR}/${AQM_RC_FN}"
 #--- replace template file names/paths
 if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   DIAG_TABLE_TMPL_FN="${DIAG_TABLE_FN}.${FCST_MODEL}"
@@ -2729,7 +2740,6 @@ THOMPSON_MP_CLIMO_FP="${THOMPSON_MP_CLIMO_FP}"
 ##### RRFS-CMAQ ########## start #####
 AQM_RC_TMPL_FN="${AQM_RC_TMPL_FN}"
 AQM_RC_TMPL_FP="${AQM_RC_TMPL_FP}"
-AQM_RC_FP="${AQM_RC_FP}"
 ##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------

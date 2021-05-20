@@ -585,12 +585,6 @@ print_info_msg "$VERBOSE" "
   ory..."
 cp_vrfy "${NEMS_CONFIG_TMPL_FP}" "${NEMS_CONFIG_FP}"
 #
-##### RRFS-CMAQ ########## start #####
-print_info_msg "$VERBOSE" "
-  Copying the template AQM.RC file to the experiment directory..."
-cp_vrfy "${AQM_RC_TMPL_FP}" "${AQM_RC_FP}"
-##### RRFS-CMAQ ########## end   #####
-#
 # Copy the CCPP physics suite definition file from its location in the
 # clone of the FV3 code repository to the experiment directory (EXPT-
 # DIR).
@@ -667,6 +661,26 @@ fi
 # It turns out that setting the variable to an empty string also works
 # to remove it from the namelist!  Which is better to use??
 #
+##### RRFS-CMAQ ########## start #####
+#
+if [[ "${FCST_MODEL}" == "fv3gfs_aqm" && "${CCPP_PHYS_SUITE}" == "FV3_GFS_2017_gfdlmp" ]]; then
+settings="\
+'atmos_model_nml': {
+    'blocksize': $BLOCKSIZE,
+  }
+'fv_core_nml': {
+    'target_lon': ${LON_CTR},
+    'target_lat': ${LAT_CTR},
+    'stretch_fac': ${STRETCH_FAC},
+    'npx': $npx,
+    'npy': $npy,
+    'layout': [${LAYOUT_X}, ${LAYOUT_Y}],
+    'bc_update_interval': ${LBC_SPEC_INTVL_HRS},
+  }"
+else
+#
+##### RRFS-CMAQ ########## end   #####
+#
 settings="\
 'atmos_model_nml': {
     'blocksize': $BLOCKSIZE,
@@ -713,6 +727,10 @@ settings="\
     'skeb_vdof': ${SKEB_VDOF},
     'use_zmtnblck': ${USE_ZMTNBLCK},
   }"
+#
+##### RRFS-CMAQ ########## start #####
+fi
+##### RRFS-CMAQ ########## end   #####
 #
 # Add to "settings" the values of those namelist variables that specify
 # the paths to fixed files in the FIXam directory.  As above, these namelist

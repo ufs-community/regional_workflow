@@ -443,9 +443,66 @@ ln_vrfy -sf ${relative_or_null} ${DATA_TABLE_FP} ${run_dir}
 ln_vrfy -sf ${relative_or_null} ${FIELD_TABLE_FP} ${run_dir}
 ln_vrfy -sf ${relative_or_null} ${NEMS_CONFIG_FP} ${run_dir}
 
+#
 ##### RRFS-CMAQ ########## start #####
-ln_vrfy -sf ${relative_or_null} ${AQM_RC_FP} ${run_dir}
+#
+AQM_RC_FP="${run_dir}/${AQM_RC_FN}"
+cp_vrfy ${AQM_RC_TMPL_FP} ${AQM_RC_FP}
+
+YYYY=${CDATE:0:4}
+MM=${CDATE:4:2}
+DD=${CDATE:6:2}
+HH=${CDATE:8:2}
+YYYYMMDD=${CDATE:0:8}
+#-----------------------------------------------------------------------
+#
+# Set atmosphere's restart interval
+#
+#-----------------------------------------------------------------------
+#
+if [ -z "${RESTART_INTERVAL}" ]; then
+  if [ "${CYCL_INC}" = "00" ]; then
+    restart_interval="0"
+  else
+    restart_interval="${CYCL_INC} -1"
+  fi
+else
+  restart_interval="${RESTART_INTERVAL}"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Setup air quality model cold/warm start
+#
+#-----------------------------------------------------------------------
+#
+init_concentrations="false"
+
+if [[ "${RESTART_WORKFLOW}"=="FALSE" && "${CDATE}"=="${DATE_FIRST_CYCL}${CYCL_HRS[0]}" ]]; then
+  init_concentrations="true"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Set parameters in the model configuration files.
+#
+#-----------------------------------------------------------------------
+#
+if [ ! -z "${AQM_RC_FP}" ]; then
+  print_info_msg "$VERBOSE" "
+Setting parameters in file:
+  AQM_RC_FP = \"${AQM_RC_FP}\""
+
+  set_file_param "${AQM_RC_FP}" "init_concentrations" "${init_concentrations}"
+  set_file_param "${AQM_RC_FP}" "aqm_config_dir" "${AQM_CONFIG_DIR%/}"
+  set_file_param "${AQM_RC_FP}" "aqm_emis_dir" "${AQM_EMIS_DIR%/}"
+  set_file_param "${AQM_RC_FP}" "aqm_fire_dir" "${AQM_FIRE_DIR%/}"
+  set_file_param "${AQM_RC_FP}" "YYYYMMDD" "${YYYYMMDD}"
+  set_file_param "${AQM_RC_FP}" "aqm_fire_file" "${AQM_FIRE_FILE}"
+fi
+#
 ##### RRFS-CMAQ ########## end   #####
+#
 
 if [ "${DO_ENSEMBLE}" = TRUE ]; then
   ln_vrfy -sf ${relative_or_null} "${FV3_NML_ENSMEM_FPS[$(( 10#${ensmem_indx}-1 ))]}" ${run_dir}/${FV3_NML_FN}

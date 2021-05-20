@@ -245,7 +245,7 @@ fire_type: gbbepx
 #  Note: the regional workflow will replace the <YYYYMMDD>, <MMDD>, <DD>
 #  keywords with the current cycle's date, month/day, and day, respectively.
 #
-fire_file: /scratch2/NCEPDEV/naqfc/Jianping.Huang/Data/emissions/GSCE/GBBEPx.in.C401/Reprocessed/2019<MMDD>/GBBEPx_C401GRID.emissions_v003_2019<MMDD>.nc
+fire_file: <aqm_fire_dir>/<YYYYMMDD>/<aqm_fire_file>
 
 fire_frequency: static
 

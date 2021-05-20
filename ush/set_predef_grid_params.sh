@@ -1167,6 +1167,50 @@ case ${PREDEF_GRID_NAME} in
   fi
   ;;
 
+#
+##### RRFS-CMAQ ########## start #####
+#
+"GSD_HRRR_25km")
+
+  GRID_GEN_METHOD="ESGgrid"
+
+  ESGgrid_LON_CTR="-97.5"
+  ESGgrid_LAT_CTR="38.5"
+
+  ESGgrid_DELX="25000.0"
+  ESGgrid_DELY="25000.0"
+
+  ESGgrid_NX="200"
+  ESGgrid_NY="110"
+
+  ESGgrid_WIDE_HALO_WIDTH="6"
+
+  DT_ATMOS="${DT_ATMOS:-300}"
+
+  LAYOUT_X="${LAYOUT_X:-10}"
+  LAYOUT_Y="${LAYOUT_Y:-11}"
+  BLOCKSIZE="${BLOCKSIZE:-2}"
+
+  if [ "$QUILTING" = "TRUE" ]; then
+    WRTCMP_write_groups="1"
+    WRTCMP_write_tasks_per_group="10"
+    WRTCMP_output_grid="lambert_conformal"
+    WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
+    WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
+    WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
+    WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
+    WRTCMP_nx="191"
+    WRTCMP_ny="97"
+    WRTCMP_lon_lwr_left="-120.72962370"
+    WRTCMP_lat_lwr_left="25.11648583"
+    WRTCMP_dx="${ESGgrid_DELX}"
+    WRTCMP_dy="${ESGgrid_DELY}"
+  fi
+  ;;
+#
+##### RRFS-CMAQ ########## end   #####
+#
+
 esac
 #
 #-----------------------------------------------------------------------

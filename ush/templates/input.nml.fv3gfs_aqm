@@ -1,0 +1,306 @@
+&amip_interp_nml
+    data_set = 'reynolds_oi'
+    date_out_of_range = 'climo'
+    interp_oi_sst = .true.
+    no_anom_sst = .false.
+    use_ncep_ice = .false.
+    use_ncep_sst = .true.
+/
+
+&atmos_model_nml
+    avg_max_length = 3600.0
+    chksum_debug = .false.
+    dycore_only = .false.
+    fdiag = 1
+/
+
+&cires_ugwp_nml
+    knob_ugwp_azdir = 2,4,4,4
+    knob_ugwp_doaxyz = 1
+    knob_ugwp_doheat = 1
+    knob_ugwp_dokdis = 1
+    knob_ugwp_effac = 1,1,1,1
+    knob_ugwp_ndx4lh = 1
+    knob_ugwp_solver = 2
+    knob_ugwp_source = 1,1,0,0
+    knob_ugwp_stoch = 0,0,0,0
+    knob_ugwp_version = 0
+    knob_ugwp_wvspec = 1,25,25,25
+    launch_level = 25
+/
+
+&diag_manager_nml
+    prepend_date = .false.
+    max_output_fields = 422
+/
+
+&external_ic_nml
+    checker_tr = .false.
+    filtered_terrain = .true.
+    gfs_dwinds = .true.
+    levp = 65
+    nt_checker = 0
+/
+
+&fms_io_nml
+    checksum_required = .false.
+    max_files_r = 100
+    max_files_w = 100
+/
+
+&fms_nml
+    clock_grain = 'ROUTINE'
+    domains_stack_size = 12000000
+    print_memory_usage = .false.
+/
+
+&fv_core_nml
+    a_imp = 1.0
+    adjust_dry_mass = .false.
+    beta = 0.0
+    consv_am = .false.
+    consv_te = 0.0
+    d2_bg = 0.0
+    d2_bg_k1 = 0.16
+    d2_bg_k2 = 0.02
+    d4_bg = 0.08
+    d_con = 1.0
+    d_ext = 0.0
+    dddmp = 0.1
+    delt_max = 0.008
+    dnats = 4
+    do_sat_adj = .true.
+    do_schmidt = .true.
+    do_vort_damp = .true.
+    dwind_2d = .false.
+    external_eta = .true.
+    external_ic = .true.
+    fill = .true.
+    full_zs_filter = .false.
+    fv_debug = .false.
+    fv_sg_adj = 450
+    gfs_phil = .false.
+    hord_dp = -5
+    hord_mt = 6
+    hord_tm = -5
+    hord_tr = -8
+    hord_vt = -5
+    hydrostatic = .false.
+    io_layout = 1,1
+    k_split = 4
+    ke_bg = 0.0
+    kord_mt = 10
+    kord_tm = -10
+    kord_tr = 10
+    kord_wz = 10
+    make_nh = .true.
+    mountain = .false.
+    n_split = 6
+    n_sponge = 20
+    n_zs_filter = 0
+    na_init = 1
+    ncep_ic = .false.
+    nggps_ic = .true.
+    no_dycore = .false.
+    nord = 2
+    npz = 64
+    nrows_blend = 0
+    ntiles = 1
+    nudge_qv = .false.
+    nwat = 6
+    p_fac = 0.1
+    phys_hydrostatic = .false.
+    print_freq = 6
+    range_warn = .false.
+    read_increment = .false.
+    regional = .true.
+    regional_bcs_from_gsi = .false.
+    res_latlon_dynamics = 'fv3_increment.nc'
+    reset_eta = .false.
+    rf_cutoff = 20.e2
+    tau = 5.0
+    use_hydro_pressure = .false.
+    vtdm4 = 0.075
+    warm_start = .false.
+    z_tracer = .true.
+/
+
+&fv_grid_nml
+    grid_file = 'INPUT/grid_spec.nc'
+/
+
+&gfdl_cloud_microphysics_nml
+    sedi_transport = .false.
+    do_sedi_heat = .false.
+    rad_snow = .true.
+    rad_graupel = .true.
+    rad_rain = .true.
+    const_vi = .false.
+    const_vs = .false.
+    const_vg = .false.
+    const_vr = .false.
+    vi_max = 1.0
+    vs_max = 2.0
+    vg_max = 12.0
+    vr_max = 12.0
+    qi_lim = 1.0
+    prog_ccn = .false.
+    do_qa = .true.
+    fast_sat_adj = .true.
+    tau_l2v = 180.0
+    tau_v2l = 90.0
+    tau_g2v = 900.0
+    rthresh = 1e-05
+    dw_land = 0.16
+    dw_ocean = 0.1
+    ql_gen = 0.001
+    ql_mlt = 0.001
+    qi0_crt = 8e-05
+    qs0_crt = 0.001
+    tau_i2s = 1000.0
+    c_psaci = 0.05
+    c_pgacs = 0.01
+    rh_inc = 0.3
+    rh_inr = 0.3
+    rh_ins = 0.3
+    ccn_l = 300.0
+    ccn_o = 100.0
+    c_paut = 0.5
+    c_cracw = 0.8
+    use_ppm = .false.
+    use_ccn = .true.
+    mono_prof = .true.
+    z_slope_liq = .true.
+    z_slope_ice = .true.
+    de_ice = .false.
+    fix_negative = .true.
+    icloud_f = 1
+    mp_time = 90.0
+/
+
+&gfs_physics_nml
+    cal_pre = .true.
+    cdmbgwd = 2.0,0.25
+    cnvcld = .true.
+    cnvgwd = .true.
+    cplaqm = .true.
+    debug = .false.
+    do_deep = .true.
+    dspheat = .true.
+    fhcyc = 24.0
+    fhlwr = 3600.0
+    fhswr = 3600.0
+    fhzero = 6.0
+    h2o_phys = .true.
+    hybedmf = .true.
+    iaer = 111
+    ialb = 1
+    iau_delthrs = 6
+    iau_inc_files = ''
+    iaufhrs = 30
+    ico2 = 2
+    iems = 1
+    imfdeepcnv = 2
+    imfshalcnv = 2
+    imp_physics = 11
+    iopt_alb = 2
+    iopt_btr = 1
+    iopt_crs = 1
+    iopt_dveg = 2
+    iopt_frz = 1
+    iopt_inf = 1
+    iopt_rad = 1
+    iopt_run = 1
+    iopt_sfc = 1
+    iopt_snf = 4
+    iopt_stc = 1
+    iopt_tbot = 2
+    isol = 2
+    isot = 1
+    isubc_lw = 2
+    isubc_sw = 2
+    ivegsrc = 1
+    ldiag3d = .false.
+    lheatstrg = .false.
+    lradar = .true.
+    lsm = 1
+    lsoil = 4
+    lwhtr = .true.
+    ncld = 5
+    nst_anl = .true.
+    nstf_name = 1,1,1,0,5
+    pdfcld = .false.
+    pre_rad = .false.
+    prslrd0 = 0.0
+    random_clds = .false.
+    redrag = .true.
+    satmedmf = .false.
+    shal_cnv = .true.
+    swhtr = .true.
+    trans_trac = .true.
+    use_ufo = .true.
+    fscav_aero = 'aacd:0.0', 'acet:0.0', 'acrolein:0.0', 'acro_primary:0.0',
+                 'ald2:0.0', 'ald2_primary:0.0', 'aldx:0.0', 'benzene:0.0',
+                 'butadiene13:0.0', 'cat1:0.0', 'cl2:0.0', 'clno2:0.0',
+                 'co:0.0', 'cres:0.0', 'cron:0.0', 'ech4:0.0', 'epox:0.0',
+                 'eth:0.0', 'etha:0.0', 'ethy:0.0', 'etoh:0.0', 'facd:0.0',
+                 'fmcl:0.0', 'form:0.0', 'form_primary:0.0', 'gly:0.0',
+                 'glyd:0.0', 'h2o2:0.0', 'hcl:0.0', 'hg:0.0', 'hgiigas:0.0',
+                 'hno3:0.0', 'hocl:0.0', 'hono:0.0', 'hpld:0.0', 'intr:0.0',
+                 'iole:0.0', 'isop:0.0', 'ispd:0.0', 'ispx:0.0', 'ket:0.0',
+                 'meoh:0.0', 'mepx:0.0', 'mgly:0.0', 'n2o5:0.0', 'naph:0.0',
+                 'no:0.0', 'no2:0.0', 'no3:0.0', 'ntr1:0.0', 'ntr2:0.0',
+                 'o3:0.0', 'ole:0.0', 'opan:0.0', 'open:0.0', 'opo3:0.0',
+                 'pacd:0.0', 'pan:0.0', 'panx:0.0', 'par:0.0', 'pcvoc:0.0',
+                 'pna:0.0', 'prpa:0.0', 'rooh:0.0', 'sesq:0.0', 'so2:0.0',
+                 'soaalk:0.0', 'sulf:0.0', 'terp:0.0', 'tol:0.0', 'tolu:0.0',
+                 'vivpo1:0.0', 'vlvoo1:0.0', 'vlvoo2:0.0', 'vlvpo1:0.0',
+                 'vsvoo1:0.0', 'vsvoo2:0.0', 'vsvoo3:0.0', 'vsvpo1:0.0',
+                 'vsvpo2:0.0', 'vsvpo3:0.0', 'xopn:0.0', 'xylmn:0.0', '*:0.2'
+/
+
+&interpolator_nml
+    interp_method = 'conserve_great_circle'
+/
+
+&nam_sfcperts
+/
+
+&nam_stochy
+/
+
+&namsfc
+    fabsl = 99999
+    faisl = 99999
+    faiss = 99999
+    fnacna = ''
+    fnsnoa = ''
+    fntsfa = ''
+    fnzorc = 'igbp'
+    fsicl = 99999
+    fsics = 99999
+    fslpl = 99999
+    fsmcl(2) = 99999
+    fsmcl(3) = 99999
+    fsmcl(4) = 99999
+    fsnol = 99999
+    fsnos = 99999
+    fsotl = 99999
+    ftsfl = 99999
+    ftsfs = 90
+    fvetl = 99999
+    fvmnl = 99999
+    fvmxl = 99999
+    ldebug = .true.
+/
+
+&surf_map_nml
+    cd2 = -1
+    cd4 = 0.12
+    max_slope = 0.4
+    n_del2_strong = 0
+    n_del2_weak = 2
+    n_del4 = 1
+    peak_fac = 1.0
+    zero_ocean = .false.
+/
