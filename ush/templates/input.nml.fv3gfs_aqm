@@ -76,7 +76,6 @@
     external_eta = .true.
     external_ic = .true.
     fill = .true.
-    full_zs_filter = .false.
     fv_debug = .false.
     fv_sg_adj = 450
     gfs_phil = .false.
@@ -87,7 +86,7 @@
     hord_vt = -5
     hydrostatic = .false.
     io_layout = 1,1
-    k_split = 4
+    k_split = 2
     ke_bg = 0.0
     kord_mt = 10
     kord_tm = -10
@@ -117,10 +116,10 @@
     regional_bcs_from_gsi = .false.
     res_latlon_dynamics = 'fv3_increment.nc'
     reset_eta = .false.
-    rf_cutoff = 20.e2
+    rf_cutoff = 1000.0
     tau = 5.0
     use_hydro_pressure = .false.
-    vtdm4 = 0.075
+    vtdm4 = 0.0
     warm_start = .false.
     z_tracer = .true.
 /
@@ -221,6 +220,7 @@
     isubc_sw = 2
     ivegsrc = 1
     ldiag3d = .false.
+    lgfdlmprad = .true.
     lheatstrg = .false.
     lradar = .true.
     lsm = 1
