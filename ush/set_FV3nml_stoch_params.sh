@@ -93,7 +93,7 @@ ensmem_name="mem${ENSMEM_INDX}"
 
 fv3_nml_ensmem_fp="${CYCLE_BASEDIR}/${cdate}/${ensmem_name}/${FV3_NML_FN}"
 
-ensmem_num=${ENSMEM_INDX}
+ensmem_num=$((10#${ENSMEM_INDX}))
 
 iseed_shum=$(( cdate*1000 + ensmem_num*10 + 2 ))
 iseed_skeb=$(( cdate*1000 + ensmem_num*10 + 3 ))
