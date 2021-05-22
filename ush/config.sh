@@ -12,7 +12,7 @@ PREEXISTING_DIR_METHOD="rename"
 #CRON_RELAUNCH_INTVL_MNTS="5"
 
 FV3_EXEC_FN="NEMS.x"
-FV3_NML_BASE_SUITE_FN="input.nml.fv3gfs_aqm"
+FV3_NML_BASE_SUITE_FN="input.nml.fv3gfs_aqm.FV3_GFS_2017_gfdlmp"
 FV3_NML_YAML_CONFIG_FN="fv3gfs_aqm.input.yml"
 #ENABLE_AQ="FALSE"
 
