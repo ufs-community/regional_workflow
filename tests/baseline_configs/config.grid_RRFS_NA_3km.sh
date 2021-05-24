@@ -25,7 +25,7 @@ USE_USER_STAGED_EXTRN_FILES="TRUE"
 # The model should be built in 32-bit mode (64-bit will result in much
 # longer run times.
 
-# Use k_split=5 and n_split=2, the previous namelist values (k_split=4
+# Use k_split=2 and n_split=5, the previous namelist values (k_split=4
 # and n_split=5) will result in significantly longer run times.
 
 NNODES_MAKE_ICS="12"
