@@ -47,7 +47,6 @@ ushdir="${scrfunc_dir}"
 #
 . $ushdir/source_util_funcs.sh
 . $ushdir/set_FV3nml_sfc_climo_filenames.sh
-. $ushdir/set_FV3nml_stoch_params.sh
 . $ushdir/create_diag_table_files.sh
 #
 #-----------------------------------------------------------------------
@@ -277,7 +276,8 @@ settings="\
   'maxtries_vx_gridstat_24h': ${MAXTRIES_VX_GRIDSTAT_24h}
   'maxtries_vx_pointstat': ${MAXTRIES_VX_POINTSTAT}
 #
-# Flags that specify whether to run the preprocessing tasks.
+# Flags that specify whether to run the preprocessing or
+# verification-related tasks.
 #
   'run_task_make_grid': ${RUN_TASK_MAKE_GRID}
   'run_task_make_orog': ${RUN_TASK_MAKE_OROG}
@@ -841,12 +841,6 @@ if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
   set_FV3nml_sfc_climo_filenames || print_err_msg_exit "\
 Call to function to set surface climatology file names in the FV3 namelist
 file failed."
-
-  if [ "${DO_ENSEMBLE}" = TRUE ]; then
-    set_FV3nml_stoch_params || print_err_msg_exit "\
-Call to function to set stochastic parameters in the FV3 namelist files
-for the various ensemble members failed."
-  fi
 
   create_diag_table_files || print_err_msg_exit "\
 Call to function to create a diagnostics table file under each cycle 
