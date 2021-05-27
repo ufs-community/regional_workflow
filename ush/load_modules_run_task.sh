@@ -153,6 +153,11 @@ jjob_fp="$2"
 #-----------------------------------------------------------------------
 #
 machine=${MACHINE,,}
+#
+##### RRFS-CMAQ ########## start #####
+if [ "${task_name}" != "${RUN_FCST_TN}" ]; then
+##### RRFS-CMAQ ########## end   #####
+#
 env_fn="build_${machine}_${COMPILER}.env"
 env_fp="${SR_WX_APP_TOP_DIR}/env/${env_fn}"
 source "${env_fp}" || print_err_msg_exit "\
@@ -160,6 +165,10 @@ Sourcing platform- and compiler-specific environment file (env_fp) for the
 workflow task specified by task_name failed:
   task_name = \"${task_name}\"
   env_fp = \"${env_fp}\""
+#
+##### RRFS-CMAQ ########## start #####
+fi
+##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -298,7 +307,20 @@ Call to \"module use\" command failed."
     #
     # Load the .local module file if available for the given task
     #
+#
+##### RRFS-CMAQ ########## start #####
+if [ "${task_name}" = "${RUN_FCST_TN}" ]; then
+    modulefile_local="${RUN_FCST_TN}.local.${FCST_MODEL}"
+else
+##### RRFS-CMAQ ########## end   #####
+#
     modulefile_local="${task_name}.local"
+#
+##### RRFS-CMAQ ########## start #####
+fi
+##### RRFS-CMAQ ########## end   #####
+#
+
     if [ -f ${modules_dir}/${modulefile_local} ]; then
       module load "${modulefile_local}" || print_err_msg_exit "\
 Loading .local module file (in directory specified by mod-
