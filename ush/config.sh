@@ -8,13 +8,8 @@ PRINT_ESMF="TRUE"
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 
-#USE_CRON_TO_RELAUNCH="TRUE"
-#CRON_RELAUNCH_INTVL_MNTS="5"
-
-FV3_EXEC_FN="NEMS.x"
-FV3_NML_BASE_SUITE_FN="input.nml.fv3gfs_aqm_FV3_GFS_2017_gfdlmp"
-FV3_NML_YAML_CONFIG_FN="fv3gfs_aqm.input.yml"
-#ENABLE_AQ="FALSE"
+USE_CRON_TO_RELAUNCH="TRUE"
+CRON_RELAUNCH_INTVL_MNTS="5"
 
 PREDEF_GRID_NAME="GSD_HRRR_25km"
 GRID_GEN_METHOD="ESGgrid"
@@ -40,9 +35,15 @@ WTIME_RUN_FCST="00:20:00"
 RUN_TASK_ADD_AQM_LBCS="TRUE"
 RUN_TASK_RUN_NEXUS="TRUE"
 
-#USE_USER_STAGED_EXTRN_FILES="TRUE"
-#EXTRN_MDL_SOURCE_BASEDIR_ICS="/scratch2/BMC/det/UFS_SRW_app/v1p0/model_data/FV3GFS"
-#EXTRN_MDL_FILES_ICS=( "gfs.pgrb2.0p25.f000" )
-#EXTRN_MDL_SOURCE_BASEDIR_LBCS="/scratch2/BMC/det/UFS_SRW_app/v1p0/model_data/FV3GFS"
-#EXTRN_MDL_FILES_LBCS=( "gfs.pgrb2.0p25.f006" "gfs.pgrb2.0p25.f012" "gfs.pgrb2.0p25.f018" "gfs.pgrb2.0p25.f024" \
-#                       "gfs.pgrb2.0p25.f030" "gfs.pgrb2.0p25.f036" "gfs.pgrb2.0p25.f042" "gfs.pgrb2.0p25.f048" )
+FV3_EXEC_FN="NEMS.x"
+FV3_NML_BASE_SUITE_FN="input.nml.fv3gfs_aqm_FV3_GFS_2017_gfdlmp"
+FV3_NML_YAML_CONFIG_FN="fv3gfs_aqm.input.yml"
+#ENABLE_AQ="FALSE"
+
+AQM_CONFIG_DIR="/scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/aqm/epa/data"
+AQM_EMIS_DIR="/scratch1/NCEPDEV/nems/Raffaele.Montuoro/dev/fv3sar/data/bio"
+AQM_FIRE_DIR="/scratch2/NCEPDEV/naqfc/Jianping.Huang/Data/emissions/GSCE/GBBEPx.in.C401/Reprocessed"
+AQM_FIRE_FILE="GBBEPx_C401GRID.emissions_v003_20190804.nc"
+AQM_LBCS_DIR="/scratch1/NCEPDEV/rstprod/nexus_emissions/LBCS"
+AQM_LBCS_FILES="gfs_bndy_chem_<MM>.tile7.000.nc"
+NEXUS_INPUT_DIR="/scratch1/NCEPDEV/rstprod/nexus_emissions"
