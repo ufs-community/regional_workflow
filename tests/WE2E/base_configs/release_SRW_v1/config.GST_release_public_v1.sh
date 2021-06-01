@@ -1,3 +1,10 @@
+# 
+# PURPOSE:
+# -------
+# This test checks that the Graduate Student Test (GST) included in 
+# Release 1 of the UFS SRW App runs to completion.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 
