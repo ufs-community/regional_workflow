@@ -1,3 +1,13 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test is to ensure that the workflow running in community mode 
+# completes successfully on the GSD_HRRR_AK_50km grid (which is an 
+# ESGgrid type of grid) with ICs and LBCs derived from the RAP and using 
+# the GSD_SAR suite.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 
