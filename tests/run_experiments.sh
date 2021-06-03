@@ -500,7 +500,11 @@ VERBOSE=\"${VERBOSE}\""
 # ${pregen_basedir}/${PREDEF_GRID_NAME}, and pregen_dir can then be used
 # to set GRID_DIR, OROG_DIR, and/or SFC_CLIMO_DIR below.
 
-    if [ "$MACHINE" = "HERA" ]; then
+    if [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      pregen_basedir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/FV3LAM_pregen"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      pregen_basedir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/FV3LAM_pregen"
+    elif [ "$MACHINE" = "HERA" ]; then
       pregen_basedir="/scratch2/BMC/det/FV3LAM_pregen"
     elif [ "$MACHINE" = "JET" ]; then
       pregen_basedir="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
@@ -549,41 +553,6 @@ OROG_DIR=\"${OROG_DIR}\""
 # Directory containing the pregenerated surface climatology files.
 #
 SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
-
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# If using the FV3_HRRR physics suite, set the base directory in which 
-# the pregenerated orography statistics files needed by the gravity wave 
-# drag parameterization in this suite are located.
-#
-#-----------------------------------------------------------------------
-#
-  if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
-
-    if [ "$MACHINE" = "HERA" ]; then
-      GWD_HRRRsuite_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"
-    elif [ "$MACHINE" = "JET" ]; then
-      GWD_HRRRsuite_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
-    elif [ "$MACHINE" = "CHEYENNE" ]; then
-      GWD_HRRRsuite_BASEDIR="/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen"
-    else
-      print_err_msg_exit "\
-The base directory (GWD_HRRRsuite_BASEDIR) containing the pregenerated 
-orography statistics files needed by the gravity wave drag parameterization
-in the FV3_HRRR physics suite has not been specified for this machine 
-(MACHINE):
-  MACHINE= \"${MACHINE}\""
-    fi
-
-    str=${str}"
-#
-# Base directory containing the pregenerated orography statistics files 
-# needed by the gravity wave drag parameterization in the FV3_HRRR physics 
-# suite.
-#
-GWD_HRRRsuite_BASEDIR=\"${GWD_HRRRsuite_BASEDIR}\""
 
   fi
 #
@@ -642,7 +611,11 @@ envir=\"\${EXPT_SUBDIR}\""
 #
 # Set FIXLAM_NCO_BASEDIR.
 #
-    if [ "$MACHINE" = "HERA" ]; then
+    if [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      FIXLAM_NCO_BASEDIR="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/FV3LAM_pregen"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      FIXLAM_NCO_BASEDIR="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/FV3LAM_pregen"
+    elif [ "$MACHINE" = "HERA" ]; then
       FIXLAM_NCO_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"
     elif [ "$MACHINE" = "JET" ]; then
       FIXLAM_NCO_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
@@ -675,8 +648,12 @@ FIXLAM_NCO_BASEDIR=\"${FIXLAM_NCO_BASEDIR}\""
        [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
        [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then
 
-      if [ "$MACHINE" = "HERA" ]; then
-        COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"
+      if [ "$MACHINE" = "WCOSS_CRAY" ]; then
+        COMINgfs="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/COMGFS"
+      elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+        COMINgfs="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/COMGFS"
+      elif [ "$MACHINE" = "HERA" ]; then
+        COMINgfs="/scratch2/NCEPDEV/fv3-cam/noscrub/UFS_SRW_App/COMGFS"
       elif [ "$MACHINE" = "JET" ]; then
         COMINgfs="/lfs1/HFIP/hwrf-data/hafs-input/COMGFS"
       elif [ "$MACHINE" = "CHEYENNE" ]; then
@@ -724,12 +701,16 @@ PTMP=\"${PTMP}\""
 #
   if [ ${USE_USER_STAGED_EXTRN_FILES} = "TRUE" ]; then
 
-    if [ "$MACHINE" = "HERA" ]; then
+    if [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      extrn_mdl_source_basedir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/extrn_mdl_files"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      extrn_mdl_source_basedir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/extrn_mdl_files"
+    elif [ "$MACHINE" = "HERA" ]; then
       extrn_mdl_source_basedir="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "JET" ]; then
       extrn_mdl_source_basedir="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
-      extrn_mdl_source_basedir="/glade/p/ral/jntp/UFS_CAM/staged_extrn_mdl_files"
+      extrn_mdl_source_basedir="/glade/p/ral/jntp/UFS_SRW_app/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "ORION" ]; then
       extrn_mdl_source_basedir="/work/noaa/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files"
     else

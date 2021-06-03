@@ -39,8 +39,6 @@ FV3_RRFS_v1alpha:
     imfshalcnv: -1
     lsm: 2
     lsoil_lsm: 4
-  atmos_model_nml:
-    fdiag: 3
 
 FV3_RRFS_v1beta:
   gfs_physics_nml:
@@ -51,8 +49,6 @@ FV3_RRFS_v1beta:
     imfshalcnv: -1
     lsm: 2
     lsoil_lsm: 4
-  atmos_model_nml:
-    fdiag: 3
 
 FV3_HRRR:
   fv_core_nml:
@@ -212,8 +208,6 @@ FV3_GFS_2017_gfdlmp_regional:
     <<: *gfs_gfdl_cloud_mp
 
 FV3_GFS_v15p2:
-  atmos_model_nml:
-    fdiag: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 18, 21, 24]
   fms_nml:
     domains_stack_size: 1800200
   fv_core_nml: &gfs_v15_fv_core
@@ -258,7 +252,6 @@ FV3_GFS_v15p2:
     fhcyc: 0.0
     fhlwr: 3600.0
     fhswr: 3600.0
-    fhzero: 6.0
     hybedmf: True
     iau_delthrs: !!python/none
     iaufhrs: !!python/none
@@ -296,9 +289,8 @@ FV3_GFS_v15p2:
     ldebug: False
   surf_map_nml:
 
-FV3_GFS_v16beta:
+FV3_GFS_v16:
   atmos_model_nml:
-    fdiag: 3
     fhmax: 240
     fhmaxhf: 0
     fhout: 3
@@ -368,8 +360,6 @@ FV3_GFS_v16beta:
   surf_map_nml: !!python/none
 
 FV3_CPT_v0:
-  atmos_model_nml:
-    fdiag: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 18, 21, 24]
   fms_nml:
     domains_stack_size: 1800200
   fv_core_nml:
@@ -407,7 +397,6 @@ FV3_CPT_v0:
     fhcyc: 0.0
     fhlwr: 3600.0
     fhswr: 3600.0
-    fhzero: 6.0
     fprcp: 2
     hybedmf: True
     iccn: False
