@@ -183,6 +183,7 @@ FV3_GFS_2017_gfdlmp_regional:
   gfs_physics_nml:
     <<: *gfs_2017_gfdlmp_phys
     cplflx: False
+    effr_in: False
     iopt_alb: 2
     iopt_btr: 1
     iopt_crs: 1
