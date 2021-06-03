@@ -26,7 +26,7 @@ FV3GFS_FILE_FMT_LBCS="grib2"
 
 WTIME_RUN_FCST="08:00:00"
 
-MODEL="FV3_RRFS_3km_winter"
+MODEL="FV3_RRFS_v1alpha_3km_winter"
 METPLUS_PATH="/contrib/METplus/METplus-4.0.0"
 MET_INSTALL_DIR="/contrib/met/9.0.2"
 CCPA_OBS_DIR="/scratch2/BMC/fv3lam/RRFS_baseline/obs_data/ccpa/proc"
