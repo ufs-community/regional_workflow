@@ -173,7 +173,7 @@ EXPT_SUBDIR=""
 # (consisting of the 2-digit hour-of-day), the directory in which the 
 # workflow will look for the external model files is:
 #
-#   $COMINgfs/gfs.$yyyymmdd/$hh
+#   $COMINgfs/gfs.$yyyymmdd/$hh/atmos
 #
 # FIXLAM_NCO_BASEDIR:
 # The base directory containing pregenerated grid, orography, and surface 
@@ -375,23 +375,13 @@ WFLOW_LAUNCH_LOG_FN="log.launch_FV3LAM_wflow"
 # FCST_LEN_HRS:
 # The length of each forecast, in integer hours.
 #
-# SUB_HOURLY_POST:
-# Logical flag to indicate whether sub-hourly FV3 output should be
-# post-processed. If TRUE, then DT_SUBHOURLY_POST_MNTS should also be specified.
-#
-# DT_SUB_HOURLY_POST_MNTS:
-# Temporal spacing in minutes for post-processed output files. This needs
-# to be a two-digit integer between 00 and 59. Setting to 00 will override
-# the value of SUB_HOURLY_POST to FALSE.
-#
 #-----------------------------------------------------------------------
 #
 DATE_FIRST_CYCL="YYYYMMDD"
 DATE_LAST_CYCL="YYYYMMDD"
 CYCL_HRS=( "HH1" "HH2" )
 FCST_LEN_HRS="24"
-SUB_HOURLY_POST="FALSE"
-DT_SUBHOURLY_POST_MNTS="00"
+#
 #-----------------------------------------------------------------------
 #
 # Set METplus parameters.  Definitions:
@@ -485,6 +475,7 @@ DT_SUBHOURLY_POST_MNTS="00"
 #
 MODEL=""
 MET_INSTALL_DIR="/path/to/MET"
+MET_BIN_EXEC="bin"
 METPLUS_PATH="/path/to/METPlus"
 CCPA_OBS_DIR="/path/to/observation-directory/ccpa/proc"
 MRMS_OBS_DIR="/path/to/observation-directory/mrms/proc"
@@ -1275,6 +1266,9 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "fix_co2_proj/global_co2historicaldata_2016.txt" \
 "fix_co2_proj/global_co2historicaldata_2017.txt" \
 "fix_co2_proj/global_co2historicaldata_2018.txt" \
+"fix_co2_proj/global_co2historicaldata_2019.txt" \
+"fix_co2_proj/global_co2historicaldata_2020.txt" \
+"fix_co2_proj/global_co2historicaldata_2021.txt" \
 "global_co2historicaldata_glob.txt" \
 "co2monthlycyc.txt" \
 "global_h2o_pltc.f77" \
@@ -1282,6 +1276,8 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "global_zorclim.1x1.grb" \
 "global_sfc_emissivity_idx.txt" \
 "global_solarconstant_noaa_an.txt" \
+"geo_em.d01.lat-lon.2.5m.HGT_M.nc" \
+"HGT.Beljaars_filtered.lat-lon.30s_res.nc" \
 "replace_with_FIXgsm_ozone_prodloss_filename" \
 )
 
@@ -1324,6 +1320,9 @@ CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING=( \
 "co2historicaldata_2016.txt | fix_co2_proj/global_co2historicaldata_2016.txt" \
 "co2historicaldata_2017.txt | fix_co2_proj/global_co2historicaldata_2017.txt" \
 "co2historicaldata_2018.txt | fix_co2_proj/global_co2historicaldata_2018.txt" \
+"co2historicaldata_2019.txt | fix_co2_proj/global_co2historicaldata_2019.txt" \
+"co2historicaldata_2020.txt | fix_co2_proj/global_co2historicaldata_2020.txt" \
+"co2historicaldata_2021.txt | fix_co2_proj/global_co2historicaldata_2021.txt" \
 "co2historicaldata_glob.txt | global_co2historicaldata_glob.txt" \
 "co2monthlycyc.txt          | co2monthlycyc.txt" \
 "global_h2oprdlos.f77       | global_h2o_pltc.f77" \
@@ -1362,6 +1361,7 @@ GET_OBS_NDAS_TN="get_obs_ndas"
 VX_TN="run_vx"
 VX_GRIDSTAT_TN="run_gridstatvx"
 VX_GRIDSTAT_REFC_TN="run_gridstatvx_refc"
+VX_GRIDSTAT_RETOP_TN="run_gridstatvx_retop"
 VX_GRIDSTAT_03h_TN="run_gridstatvx_03h"
 VX_GRIDSTAT_06h_TN="run_gridstatvx_06h"
 VX_GRIDSTAT_24h_TN="run_gridstatvx_24h"
@@ -1428,16 +1428,43 @@ MAXTRIES_GET_EXTRN_LBCS="1"
 MAXTRIES_MAKE_ICS="1"
 MAXTRIES_MAKE_LBCS="1"
 MAXTRIES_RUN_FCST="1"
-MAXTRIES_RUN_POST="1"
+MAXTRIES_RUN_POST="2"
 MAXTRIES_GET_OBS_CCPA="1"
 MAXTRIES_GET_OBS_MRMS="1"
 MAXTRIES_GET_OBS_NDAS="1"
 MAXTRIES_VX_GRIDSTAT="1"
 MAXTRIES_VX_GRIDSTAT_REFC="1"
+MAXTRIES_VX_GRIDSTAT_RETOP="1"
 MAXTRIES_VX_GRIDSTAT_03h="1"
 MAXTRIES_VX_GRIDSTAT_06h="1"
 MAXTRIES_VX_GRIDSTAT_24h="1"
 MAXTRIES_VX_POINTSTAT="1"
+#
+#-----------------------------------------------------------------------
+#
+# Set parameters associated with subhourly forecast model output and 
+# post-processing.
+#
+# SUB_HOURLY_POST:
+# Flag that indicates whether the forecast model will generate output 
+# files on a sub-hourly time interval (e.g. 10 minutes, 15 minutes, etc).
+# This will also cause the post-processor to process these sub-hourly
+# files.  If ths is set to "TRUE", then DT_SUBHOURLY_POST_MNTS should be 
+# set to a value between "00" and "59".
+#
+# DT_SUB_HOURLY_POST_MNTS:
+# Time interval in minutes between the forecast model output files.  If 
+# SUB_HOURLY_POST is set to "TRUE", this needs to be set to a two-digit 
+# integer between "01" and "59".  This is not used if SUB_HOURLY_POST is
+# not set to "TRUE".  Note that if SUB_HOURLY_POST is set to "TRUE" but
+# DT_SUB_HOURLY_POST_MNTS is set to "00", SUB_HOURLY_POST will get reset
+# to "FALSE" in the experiment generation scripts (there will be an 
+# informational message in the log file to emphasize this).
+#
+#-----------------------------------------------------------------------
+#
+SUB_HOURLY_POST="FALSE"
+DT_SUBHOURLY_POST_MNTS="00"
 #
 #-----------------------------------------------------------------------
 #
@@ -1505,7 +1532,7 @@ SHUM_MAG="0.006" #Variable "shum" in input.nml
 SHUM_LSCALE="150000"
 SHUM_TSCALE="21600" #Variable "shum_tau" in input.nml
 SHUM_INT="3600" #Variable "shumint" in input.nml
-SPPT_MAG="1.0" #Variable "sppt" in input.nml
+SPPT_MAG="0.7" #Variable "sppt" in input.nml
 SPPT_LSCALE="150000"
 SPPT_TSCALE="21600" #Variable "sppt_tau" in input.nml
 SPPT_INT="3600" #Variable "spptint" in input.nml
@@ -1586,26 +1613,6 @@ COMPILER="intel"
 #
 #-----------------------------------------------------------------------
 #
-# GWD_HRRRsuite_BASEDIR:
-# Temporary workflow variable specifies the base directory in which to 
-# look for certain fixed orography statistics files needed only by the 
-# gravity wave drag parameterization in the FV3_HRRR physics suite.  This 
-# variable is added in order to avoid including hard-coded paths in the 
-# workflow scripts.  Currently, the workflow simply copies the necessary 
-# files from a subdirectory under this directory (named according to the 
-# specified predefined grid) to the orography directory (OROG_DIR) under 
-# the experiment directory.  
-#
-# Note that this variable is only used when using the FV3_HRRR physics 
-# suite.  It should be removed from the workflow once there is a script 
-# or code available that generates these files for any grid.
-#
-#-----------------------------------------------------------------------
-#
-GWD_HRRRsuite_BASEDIR=""
-#
-#-----------------------------------------------------------------------
-#
 # KMP_AFFINITY_*:
 # From Intel: "The Intel® runtime library has the ability to bind OpenMP
 # threads to physical processing units. The interface is controlled using
@@ -1639,7 +1646,7 @@ GWD_HRRRsuite_BASEDIR=""
 #
 #-----------------------------------------------------------------------
 #
-KMP_AFFINITY_MAKE_OROG="scatter"
+KMP_AFFINITY_MAKE_OROG="disabled"
 OMP_NUM_THREADS_MAKE_OROG="6"
 OMP_STACKSIZE_MAKE_OROG="2048m"
 
@@ -1659,7 +1666,7 @@ KMP_AFFINITY_RUN_FCST="scatter"
 OMP_NUM_THREADS_RUN_FCST="4"
 OMP_STACKSIZE_RUN_FCST="1024m"
 
-CPUS_PER_TASK_RUN_FCST="4"
+CPUS_PER_TASK_RUN_FCST="2"
 
 KMP_AFFINITY_RUN_POST="scatter"
 OMP_NUM_THREADS_RUN_POST="1"

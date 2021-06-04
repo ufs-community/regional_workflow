@@ -76,9 +76,9 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-KMP_AFFINITY=${KMP_AFFINITY_MAKE_LBCS}
-OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_LBCS}
-OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_LBCS}
+export KMP_AFFINITY=${KMP_AFFINITY_MAKE_LBCS}
+export OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_LBCS}
+export OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_LBCS}
 #
 #-----------------------------------------------------------------------
 #
@@ -162,7 +162,7 @@ case "${CCPP_PHYS_SUITE}" in
 #
   "FV3_GFS_2017_gfdlmp" | \
   "FV3_GFS_2017_gfdlmp_regional" | \
-  "FV3_GFS_v16beta" | \
+  "FV3_GFS_v16" | \
   "FV3_GFS_v15p2" | "FV3_CPT_v0" )
     varmap_file="GFSphys_var_map.txt"
     ;;

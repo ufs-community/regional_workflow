@@ -20,6 +20,7 @@ valid_vals_PREDEF_GRID_NAME=( \
 "GSL_HAFSV0.A_3km" \
 "GSD_HRRR_AK_50km" \
 "RRFS_NA_13km" \
+"RRFS_NA_3km" \
 )
 valid_vals_CCPP_PHYS_SUITE=( \
 "FV3_CPT_v0" \
@@ -28,7 +29,7 @@ valid_vals_CCPP_PHYS_SUITE=( \
 "FV3_GSD_SAR" \
 "FV3_GSD_v0" \
 "FV3_GFS_v15p2" \
-"FV3_GFS_v16beta" \
+"FV3_GFS_v16" \
 "FV3_RRFS_v1beta" \
 "FV3_RRFS_v1alpha" \
 "FV3_HRRR" \
@@ -64,3 +65,4 @@ valid_vals_USE_ZMTNBLCK=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_USE_FVCOM=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_COMPILER=("intel" "gnu")
 valid_vals_SUB_HOURLY_POST=("TRUE" "true" "FALSE" "false" "YES" "yes" "NO" "no")
+valid_vals_DT_SUBHOURLY_POST_MNTS=("1" "01" "2" "02" "3" "03" "4" "04" "5" "05" "6" "06" "10" "12" "15" "20" "30")

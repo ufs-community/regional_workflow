@@ -405,7 +405,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that SUB_HOURLY_POST is set to a valid value.
+# Make sure that SUB_HOURLY_POST and DT_SUBHOURLY_POST_MNTS are set to 
+# valid values.
 #
 #-----------------------------------------------------------------------
 #
@@ -415,19 +416,12 @@ check_var_valid_value "SUB_HOURLY_POST" "valid_vals_SUB_HOURLY_POST"
 # other valid values later on.
 #
 SUB_HOURLY_POST=${SUB_HOURLY_POST^^}
-if [ "$SUB_HOURLY_POST" = "TRUE" ] || \
-   [ "$SUB_HOURLY_POST" = "YES" ]; then
+if [ "${SUB_HOURLY_POST}" = "TRUE" ] || \
+   [ "${SUB_HOURLY_POST}" = "YES" ]; then
   SUB_HOURLY_POST="TRUE"
-elif [ "$SUB_HOURLY_POST" = "FALSE" ] || \
-     [ "$SUB_HOURLY_POST" = "NO" ]; then
+elif [ "${SUB_HOURLY_POST}" = "FALSE" ] || \
+     [ "${SUB_HOURLY_POST}" = "NO" ]; then
   SUB_HOURLY_POST="FALSE"
-fi
-
-if [ "${DT_SUBHOURLY_POST_MNTS}" -eq "0" ]; then
-  SUB_HOURLY_POST="FALSE"
-  print_info_msg "NOTE: since you have set DT_SUBHOURLY_POST_MNTS to '00', then 
-  SUB_HOURLY_POST is being overwritten to FALSE. If you do not want this, you 
-  must set DT_SUBHOURLY_POST_MNTS to something other than '00.'"
 fi
 #
 #-----------------------------------------------------------------------
@@ -648,20 +642,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Check that DT_SUBHOURLY_POST_MNTS is a string consisting of exactly 2 digits between "00" and "59"
-#
-#-----------------------------------------------------------------------
-#
-min_or_null=$( printf "%s" "${DT_SUBHOURLY_POST_MNTS}" | \
-                sed -n -r -e "s/^([0-5][0-9])$/\1/p" )
-if [ -z "${min_or_null}" ]; then
-  print_err_msg_exit "\
-DT_SUBHOURLY_POST_MNTS must be a 2-digit integer between 00 and 59 inclusive, as "MM".
-  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\""
-fi
-#
-#-----------------------------------------------------------------------
-#
 # Check that all elements of CYCL_HRS are strings consisting of exactly
 # 2 digits that are between "00" and "23", inclusive.
 #
@@ -772,7 +752,6 @@ SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
 PARMDIR="$HOMErrfs/parm"
 MODULES_DIR="$HOMErrfs/modulefiles"
 EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
-FIXrrfs="$HOMErrfs/fix"
 TEMPLATE_DIR="$USHDIR/templates"
 VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
 METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
@@ -1060,22 +1039,6 @@ The forecast model main time step (DT_ATMOS) is set to a null string:
 Please set this to a valid numerical value in the user-specified experiment
 configuration file (EXPT_CONFIG_FP) and rerun:
   EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
-else
-  if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
-    ((rem = (DT_SUBHOURLY_POST_MNTS*60) % DT_ATMOS))
-    if [ ${rem} -ne 0 ]; then
-      print_err_msg_exit "\
-When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), the time
-interval specified by DT_SUBHOURLY_POST_MNTS (after converting to seconds) must be evenly divisible 
-by the time step DT_ATMOS used in the forecast model, i.e. the remainder (rem) must 
-be zero.  In this case, it is not:
-  SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
-  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\"
-  DT_ATMOS = \"${DT_ATMOS}\"
-  rem = \$(( (DT_SUBHOURLY_POST_MNTS*60) %% DT_ATMOS )) = $rem
-Please reset DT_SUBHOURLY_POST_MNTS and/or DT_ATMOS so that the remainder is zero."
-    fi
-  fi
 fi
 
 if [ -z "${LAYOUT_X}" ]; then
@@ -1110,85 +1073,90 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If using the FV3_HRRR physics suite, make sure that the directory from 
-# which certain fixed orography files will be copied to the experiment 
-# directory actually exists.  Note that this is temporary code.  It should
-# be removed once there is a script or code available that will create 
-# these orography files for any grid.
+# If performing sub-hourly model output and post-processing, check that
+# the output interval DT_SUBHOURLY_POST_MNTS (in minutes) is specified
+# correctly.
 #
 #-----------------------------------------------------------------------
 #
-GWD_HRRRsuite_DIR=""
-if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
+if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
 #
-# If in NCO mode, make sure that GWD_HRRRsuite_BASEDIR is set equal to  
-# FIXLAM_NCO_BASEDIR
+# Check that DT_SUBHOURLY_POST_MNTS is a string consisting of one or two
+# digits.
 #
-  if [ "${RUN_ENVIR}" = "nco" ]; then
-
-    if [ "${GWD_HRRRsuite_BASEDIR}" != "${FIXLAM_NCO_BASEDIR}" ]; then
-
-      gwd_hrrrsuite_basedir_orig="${GWD_HRRRsuite_BASEDIR}"
-      GWD_HRRRsuite_BASEDIR="${FIXLAM_NCO_BASEDIR}"
-
-      if [ ! -z "${gwd_hrrrsuite_basedir_orig}" ]; then
-        print_err_msg_exit "
-When RUN_ENVIR is set to \"nco\", the workflow assumes that the base 
-directory (GWD_HRRRsuite_BASEDIR) under which the grid-specific 
-subdirectories containing the gravity wave drag-related orography 
-statistics files for the FV3_HRRR suite are located is the same as the 
-base directory (FIXLAM_NCO_BASEDIR) under which the other fixed files 
-are located.  Currently, this is not the case:
-  GWD_HRRRsuite_BASEDIR = \"${gwd_hrrrsuite_basedir_orig}\"
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
-Resetting GWD_HRRRsuite_BASEDIR to FIXLAM_NCO_BASEDIR.  Reset value is:
-  GWD_HRRRsuite_BASEDIR = \"${GWD_HRRRsuite_BASEDIR}\""
-      fi
-
-    fi
-
+  mnts_or_null=$( printf "%s" "${DT_SUBHOURLY_POST_MNTS}" | \
+                  sed -n -r -e "s/^([0-9])([0-9])?$/\1\2/p" )
+  if [ -z "${mnts_or_null}" ]; then
+    print_err_msg_exit "\
+When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
+DT_SUBHOURLY_POST_MNTS must be set to a one- or two-digit integer but 
+in this case is not:
+  SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
+  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\""
   fi
 #
-# Check that GWD_HRRRsuite_BASEDIR exists and is a directory.
+# Check that DT_SUBHOURLY_POST_MNTS is between 0 and 59, inclusive.
 #
-  if [ ! -d "${GWD_HRRRsuite_BASEDIR}" ]; then
+  if [ ${DT_SUBHOURLY_POST_MNTS} -lt "0" ] || \
+     [ ${DT_SUBHOURLY_POST_MNTS} -gt "59" ]; then
     print_err_msg_exit "\
-The base directory (GWD_HRRRsuite_BASEDIR) under which the grid-specific
-subdirectories containing the gravity wave drag-related orography files 
-for the FV3_HRRR suite should be located does not exist (or is not a 
-directory):
-  GWD_HRRRsuite_BASEDIR = \"${GWD_HRRRsuite_BASEDIR}\""
+When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
+DT_SUBHOURLY_POST_MNTS must be set to an integer between 0 and 59, 
+inclusive but in this case is not:
+  SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
+  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\""
   fi
-  GWD_HRRRsuite_DIR="${GWD_HRRRsuite_BASEDIR}/${PREDEF_GRID_NAME}"
 #
-# Ensure that PREDEF_GRID_NAME is not set to a null string.  Currently,
-# only predefined grids can be used with the FV3_HRRR suite because 
-# orography statistics files required by this suite are available only
-# for (some of) the predefined grids.
+# Check that DT_SUBHOURLY_POST_MNTS (after converting to seconds) is 
+# evenly divisible by the forecast model's main time step DT_ATMOS.
 #
-  if [ -z "${PREDEF_GRID_NAME}" ]; then
+  rem=$(( DT_SUBHOURLY_POST_MNTS*60 % DT_ATMOS ))
+  if [ ${rem} -ne 0 ]; then
     print_err_msg_exit "\
-A predefined grid name (PREDEF_GRID_NAME) must be specified when using 
-the FV3_HRRR physics suite:
-  CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\"
-  PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\""
-  else        
+When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
+the time interval specified by DT_SUBHOURLY_POST_MNTS (after converting 
+to seconds) must be evenly divisible by the time step DT_ATMOS used in 
+the forecast model, i.e. the remainder (rem) must be zero.  In this case, 
+it is not:
+  SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
+  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\"
+  DT_ATMOS = \"${DT_ATMOS}\"
+  rem = \$(( (DT_SUBHOURLY_POST_MNTS*60) %% DT_ATMOS )) = $rem
+Please reset DT_SUBHOURLY_POST_MNTS and/or DT_ATMOS so that this remainder 
+is zero."
+  fi
 #
-# Ensure that the directory GWD_HRRRsuite_DIR in which the orography
-# statistics files required by the FV3_HRRR suite are located actually
-# exists.
+# If DT_SUBHOURLY_POST_MNTS is set to 0 (with SUB_HOURLY_POST set to 
+# "TRUE"), then we're not really performing subhourly post-processing.
+# In this case, reset SUB_HOURLY_POST to "FALSE" and print out an 
+# informational message that such a change was made.
 #
-    if [ ! -d "${GWD_HRRRsuite_DIR}" ]; then
-      print_err_msg_exit "\
-The directory (GWD_HRRRsuite_DIR) that should contain the gravity wave 
-drag-related orography files for the FV3_HRRR suite does not exist:
-  GWD_HRRRsuite_DIR = \"${GWD_HRRRsuite_DIR}\""
-    elif [ ! "$( ls -A ${GWD_HRRRsuite_DIR} )" ]; then
-      print_err_msg_exit "\
-The directory (GWD_HRRRsuite_DIR) that should contain the gravity wave 
-drag related orography files for the FV3_HRRR suite is empty:
-  GWD_HRRRsuite_DIR = \"${GWD_HRRRsuite_DIR}\""
-    fi      
+  if [ "${DT_SUBHOURLY_POST_MNTS}" -eq "0" ]; then
+    print_info_msg "\
+When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
+DT_SUBHOURLY_POST_MNTS must be set to a value greater than 0; otherwise,
+sub-hourly output is not really being performed:
+  SUB_HOURLY_POST = \"${SUB_HOURLY_POST}\"
+  DT_SUBHOURLY_POST_MNTS = \"${DT_SUBHOURLY_POST_MNTS}\"
+Resetting SUB_HOURLY_POST to \"FALSE\".  If you do not want this, you 
+must set DT_SUBHOURLY_POST_MNTS to something other than zero."
+    SUB_HOURLY_POST="FALSE"
+  fi
+#
+# For now, the sub-hourly capability is restricted to having values of 
+# DT_SUBHOURLY_POST_MNTS that evenly divide into 60 minutes.  This is 
+# because the jinja rocoto XML template (FV3LAM_wflow.xml) assumes that
+# model output is generated at the top of every hour (i.e. at 00 minutes).
+# This restricts DT_SUBHOURLY_POST_MNTS to the following values (inluding
+# both cases with and without a leading 0):
+#
+#   "1" "01" "2" "02" "3" "03" "4" "04" "5" "05" "6" "06" "10" "12" "15" "20" "30"
+#   
+# This restriction will be removed in a future version of the workflow, 
+# For now, check that DT_SUBHOURLY_POST_MNTS is one of the above values.
+#
+  if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
+    check_var_valid_value "DT_SUBHOURLY_POST_MNTS" "valid_vals_DT_SUBHOURLY_POST_MNTS"
   fi
 
 fi
@@ -2577,7 +2545,6 @@ SRC_DIR="$SRC_DIR"
 PARMDIR="$PARMDIR"
 MODULES_DIR="${MODULES_DIR}"
 EXECDIR="$EXECDIR"
-FIXrrfs="$FIXrrfs"
 FIXam="$FIXam"
 FIXLAM="$FIXLAM"
 FIXgsm="$FIXgsm"
@@ -2599,7 +2566,6 @@ CYCLE_BASEDIR="${CYCLE_BASEDIR}"
 GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
-GWD_HRRRsuite_DIR="${GWD_HRRRsuite_DIR}"
 
 NDIGITS_ENSMEM_NAMES="${NDIGITS_ENSMEM_NAMES}"
 ENSMEM_NAMES=( $( printf "\"%s\" " "${ENSMEM_NAMES[@]}" ))
