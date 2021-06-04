@@ -1,5 +1,7 @@
 #%Module
 
+module purge
+
 module load ips/18.0.1.163
 module load impi/18.0.1
 module load lsf/10.1
