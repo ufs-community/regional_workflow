@@ -342,6 +342,10 @@ settings="\
   'run_nexus_tn': ${RUN_NEXUS_TN}
   'restart_workflow': ${RESTART_WORKFLOW}
   'restart_cycle_dir': !!str ${RESTART_CYCLE_DIR}
+  'cycl_first': ${ALL_CDATES[0]}00
+  'cycl_next': ${ALL_CDATES[1]:-${ALL_CDATES[0]}}00
+  'cycl_last': ${ALL_CDATES[@]: -1}00
+  'cycl_freq': !!str ${CYCL_INC/00/24}:00:00
   'cycl_incr': !!str ${CYCL_INC}:00:00
   'nnodes_add_aqm_ics': ${NNODES_ADD_AQM_ICS}
   'nnodes_add_aqm_lbcs': ${NNODES_ADD_AQM_LBCS}

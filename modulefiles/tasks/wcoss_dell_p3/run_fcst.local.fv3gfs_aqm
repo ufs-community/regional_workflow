@@ -1,6 +1,7 @@
 #%Module
 
 module purge
+module unload NetCDF
 
 module load ips/18.0.1.163
 module load impi/18.0.1
