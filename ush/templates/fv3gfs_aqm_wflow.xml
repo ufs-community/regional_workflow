@@ -558,15 +558,13 @@ MODULES_RUN_TASK_FP script.
 {%- endif %}
 {%- if run_task_add_aqm_ics %}
         <or>
-          <taskdep task="&ADD_AQM_ICS_TN;"/>
   {%- if restart_workflow %}
+          <taskdep task="&ADD_AQM_EXTRN_ICS_TN;"/>
+  {%- endif %}
           <and>
             <not><cycleexistdep cycle_offset="-{{- cycl_incr -}}"/></not>
-            <taskdep task="&ADD_AQM_EXTRN_ICS_TN;"/>
+            <taskdep task="&ADD_AQM_ICS_TN;"/>
           </and>
-  {%- else %}
-          <not><cycleexistdep cycle_offset="-{{- cycl_incr -}}"/></not>
-  {%- endif %}
         </or>
 {%- endif %}
 {%- if run_task_add_aqm_lbcs %}
