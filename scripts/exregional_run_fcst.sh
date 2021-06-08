@@ -455,6 +455,7 @@ MM=${CDATE:4:2}
 DD=${CDATE:6:2}
 HH=${CDATE:8:2}
 YYYYMMDD=${CDATE:0:8}
+YYMMDD=${CDATE:2:6}
 #-----------------------------------------------------------------------
 #
 # Set atmosphere's restart interval
@@ -500,6 +501,7 @@ Setting parameters in file:
   set_file_param "${AQM_RC_FP}" "aqm_fire_dir" "${AQM_FIRE_DIR%/}"
   set_file_param "${AQM_RC_FP}" "YYYYMMDD" "${YYYYMMDD}"
   set_file_param "${AQM_RC_FP}" "aqm_fire_file" "${AQM_FIRE_FILE}"
+  set_file_param "${AQM_RC_FP}" "YYMMDD" "${YYMMDD}"
 fi
 #
 ##### RRFS-CMAQ ########## end   #####

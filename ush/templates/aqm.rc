@@ -245,7 +245,7 @@ fire_type: gbbepx
 #  Note: the regional workflow will replace the <YYYYMMDD>, <MMDD>, <DD>
 #  keywords with the current cycle's date, month/day, and day, respectively.
 #
-fire_file: <aqm_fire_dir>/<YYYYMMDD>/<aqm_fire_file>
+fire_file: <aqm_fire_dir>/<YYYYMMDD>/<aqm_fire_file>_20<YYMMDD>.nc
 
 fire_frequency: static
 
