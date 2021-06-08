@@ -784,7 +784,7 @@ the <task> tag to be identical to the ones above for other output times.
 
   <task name="&VX_GRIDSTAT_TN;" maxtries="{{ maxtries_vx_gridstat }}">
 
-    &RSRV_HPSS;
+    &RSRV_DEFAULT;
   {%- if machine in ["WCOSS_CRAY"] %}
     <shared/>
   {%- endif %}
@@ -826,7 +826,7 @@ the <task> tag to be identical to the ones above for other output times.
 -->
   <task name="&VX_GRIDSTAT_REFC_TN;" maxtries="{{ maxtries_vx_gridstat_refc }}">
 
-    &RSRV_HPSS;
+    &RSRV_DEFAULT;
   {%- if machine in ["WCOSS_CRAY"] %}
     <shared/>
   {%- endif %}
@@ -867,7 +867,7 @@ the <task> tag to be identical to the ones above for other output times.
 -->
   <task name="&VX_GRIDSTAT_RETOP_TN;" maxtries="{{ maxtries_vx_gridstat_retop }}">
 
-    &RSRV_HPSS;
+    &RSRV_DEFAULT;
   {%- if machine in ["WCOSS_CRAY"] %}
     <shared/>
   {%- endif %}
@@ -1004,7 +1004,7 @@ the <task> tag to be identical to the ones above for other output times.
 -->
   <task name="&VX_POINTSTAT_TN;" maxtries="{{ maxtries_vx_pointstat }}">
 
-    &RSRV_HPSS;
+    &RSRV_DEFAULT;
   {%- if machine in ["WCOSS_CRAY"] %}
     <shared/>
   {%- endif %}

@@ -100,14 +100,7 @@ obs_bufr_var = ${OBS_BUFR_VAR_LIST};
 // Mapping of input BUFR variable names to output variables names.
 // The default PREPBUFR map, obs_prepbufr_map, is appended to this map.
 //
-obs_bufr_map = [];
-
-//
-// Default mapping for PREPBUFR.  Replace input BUFR variable names with GRIB
-// abbreviations in the output.  This default map is appended to obs_bufr_map.
-// This should not typically be overridden.
-//
-obs_prefbufr_map = [
+obs_bufr_map = [
    { key = "HOVI";    val = "VIS";   },
    { key = "PMO";     val = "PRMSL"; },
    { key = "POB";     val = "PRES";  },
@@ -127,8 +120,16 @@ obs_prefbufr_map = [
    { key = "D_PBL";   val = "PBL";   },
    { key = "D_CAPE";  val = "CAPE";  },
    { key = "CEILING"; val = "HGT";   },
+   { key = "D_PRMSL"; val = "PRMSL"; },
    { key = "TOCC";    val = "TCDC";  }
 ];
+
+//
+// Default mapping for PREPBUFR.  Replace input BUFR variable names with GRIB
+// abbreviations in the output.  This default map is appended to obs_bufr_map.
+// This should not typically be overridden.
+//
+obs_prefbufr_map = [];
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -159,6 +160,6 @@ time_summary = {
 ////////////////////////////////////////////////////////////////////////////////
 
 tmp_dir = "/tmp";
-version = "V9.0.2";
+version = "V10.0.0";
 
 ////////////////////////////////////////////////////////////////////////////////
