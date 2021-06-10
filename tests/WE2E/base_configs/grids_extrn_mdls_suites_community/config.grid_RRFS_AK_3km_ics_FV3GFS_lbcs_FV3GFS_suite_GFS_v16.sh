@@ -1,7 +1,16 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test is to ensure that the workflow running in community mode 
+# completes successfully on the RRFS_AK_3km grid using the GFS_v16
+# physics suite with ICs and LBCs derived from the FV3GFS.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 
-PREDEF_GRID_NAME="RRFS_AK_13km"
+PREDEF_GRID_NAME="RRFS_AK_3km"
 QUILTING="TRUE"
 
 CCPP_PHYS_SUITE="FV3_GFS_v16"

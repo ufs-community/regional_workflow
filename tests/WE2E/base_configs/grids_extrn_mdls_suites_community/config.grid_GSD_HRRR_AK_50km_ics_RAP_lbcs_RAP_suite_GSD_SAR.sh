@@ -3,9 +3,13 @@
 # ------------------------
 #
 # This test is to ensure that the workflow running in community mode 
-# completes successfully on the GSD_HRRR_AK_50km grid (which is an 
-# ESGgrid type of grid) with ICs and LBCs derived from the RAP and using 
-# the GSD_SAR suite.
+# completes successfully on the GSD_HRRR_AK_50km grid using the GSD_SAR 
+# physics suite with ICs and LBCs derived from the RAP.
+#
+# Note that this test specifies computational resource parameters for 
+# the MAKE_ICS_TN, MAKE_LBCS_TN, and RUN_POST_TN rocoto tasks in order 
+# allow the chgres_cube and UPP codes to complete these tasks successfully
+# on this very coarse grid.
 #
 
 RUN_ENVIR="community"
