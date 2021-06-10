@@ -349,7 +349,7 @@ MODEL_CONFIG_FN="model_configure"
 NEMS_CONFIG_FN="nems.configure"
 FV3_EXEC_FN="ufs_model"
 
-FCST_MODEL="ufs_weather_model"
+FCST_MODEL="ufs-weather-model"
 
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
