@@ -119,7 +119,7 @@ obs_bufr_map = [
    { key = "D_MIXR";  val = "MIXR";  },
    { key = "D_PBL";   val = "PBL";   },
    { key = "D_CAPE";  val = "CAPE";  },
-   { key = "CEILING"; val = "HGT";   },
+   { key = "CEILING"; val = "CEILING";   },
    { key = "D_PRMSL"; val = "PRMSL"; },
    { key = "TOCC";    val = "TCDC";  }
 ];
