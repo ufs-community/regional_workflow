@@ -2,10 +2,10 @@
 # TEST PURPOSE/DESCRIPTION:
 # ------------------------
 #
-# This test is to ensure that the workflow running in community mode
+# This test is to ensure that the workflow running in community mode 
 # completes successfully on the CONUS_3km_GFDLgrid grid (which is a 
-# GFDLgrid type of grid) with ICs and LBCs derived from the FV3GFS and 
-# using the GFS_v16 suite.
+# GFDLgrid type of grid) using the GFS_v16 suite with ICs and LBCs 
+# derived from the FV3GFS.
 #
 
 RUN_ENVIR="community"
