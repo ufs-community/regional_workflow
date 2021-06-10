@@ -1,3 +1,12 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test is to ensure that the workflow running in community mode 
+# completes successfully on the RRFS_CONUS_25km grid using the RRFS_v1beta
+# physics suite with ICs and LBCs derived from the NAM.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 

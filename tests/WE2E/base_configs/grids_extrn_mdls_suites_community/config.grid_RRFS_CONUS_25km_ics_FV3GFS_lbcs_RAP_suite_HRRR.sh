@@ -1,3 +1,17 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test is to ensure that the workflow running in community mode 
+# completes successfully on the RRFS_CONUS_25km grid using the HRRR
+# physics suite with ICs derived from the FV3GFS and LBCs derived from 
+# the RAP.
+#
+# Note that this test specifies the file format of the FV3GFS external
+# model data (from which to generate ICs) to be "grib2" as opposed to 
+# the default value of "nemsio".
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 
@@ -15,5 +29,4 @@ CYCL_HRS=( "00" )
 EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="RAP"
 FV3GFS_FILE_FMT_ICS="grib2"
-FV3GFS_FILE_FMT_LBCS="grib2"
 USE_USER_STAGED_EXTRN_FILES="TRUE"
