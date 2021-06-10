@@ -1,8 +1,9 @@
-# 
-# PURPOSE:
-# -------
-# This test checks that the Graduate Student Test (GST) included in 
-# Release 1 of the UFS SRW App runs to completion.
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test is to ensure that the workflow successfully completes the 
+# Graduate Student Test (GST) included in Release 1 of the UFS SRW App.
 #
 
 RUN_ENVIR="community"
