@@ -1,3 +1,13 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test is to ensure that the workflow running in nco mode completes 
+# successfully on the CONUS_25km_GFDLgrid grid (which is a GFDLgrid type
+# of grid) using the GFS_v16 physics suite with ICs and LBCs derived from 
+# the FV3GFS.
+#
+
 RUN_ENVIR="nco"
 PREEXISTING_DIR_METHOD="rename"
 

@@ -1,3 +1,12 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test is to ensure that the workflow running in nco mode completes 
+# successfully on the RRFS_CONUS_25km grid using the HRRR physics suite 
+# with ICs derived from the HRRR and LBCs derived from the RAP.
+#
+
 RUN_ENVIR="nco"
 PREEXISTING_DIR_METHOD="rename"
 

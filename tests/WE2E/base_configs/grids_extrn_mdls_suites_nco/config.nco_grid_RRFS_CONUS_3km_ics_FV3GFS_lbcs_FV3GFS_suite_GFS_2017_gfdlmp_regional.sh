@@ -1,3 +1,12 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test is to ensure that the workflow running in nco mode completes 
+# successfully on the RRFS_CONUS_3km grid using the GFS_2017_gfdlmp_regional 
+# physics suite with ICs and LBCs derived from the FV3GFS.
+#
+
 RUN_ENVIR="nco"
 PREEXISTING_DIR_METHOD="rename"
 
