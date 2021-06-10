@@ -1,3 +1,16 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test is to ensure that the workflow running in community mode 
+# completes successfully on the RRFS_NA_3km grid using the RRFS_v1alpha
+# physics suite with ICs and LBCs derived from the FV3GFS.
+#
+# Note that this test also sets various resource parameters for several
+# of the rocoto tasks in order to more efficiently run the code on this
+# (very large) grid.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 
