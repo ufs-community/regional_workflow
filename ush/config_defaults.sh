@@ -1687,8 +1687,6 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # Should be blank for the default value specified in setup.sh
 #
 
-FCST_MODEL="fv3gfs_aqm"
-
 AQM_RC_FN="aqm.rc"
 AQM_CONFIG_DIR=""
 AQM_EMIS_DIR=""
