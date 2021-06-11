@@ -1,3 +1,11 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test checks the capability of the workflow to run the forecast 
+# model using the GFS_v15p2 physics suite.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 
