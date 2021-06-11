@@ -1,3 +1,12 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test checks the capability of the workflow to have the user 
+# specify a new grid (as opposed to one of the predefined ones in the
+# workflow) of ESGgrid type.
+
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 

@@ -1,3 +1,11 @@
+# 
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test checks the capability of the workflow to have the model write
+# output files and perform post-processing on a sub-hourly time interval.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 

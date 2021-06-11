@@ -1,3 +1,12 @@
+# 
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test checks the capability of the workflow to have the forecast 
+# model's time step (DT_ATMOS), its MPI layout (LAYOUT_X and LAYOUT_Y), 
+# and its cache block size be set to user-specified values.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 

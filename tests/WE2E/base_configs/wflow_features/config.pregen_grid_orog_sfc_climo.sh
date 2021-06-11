@@ -1,3 +1,11 @@
+# 
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test checks the capability of the workflow to use pregenerated 
+# grid, orography, and surface climatology files.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 

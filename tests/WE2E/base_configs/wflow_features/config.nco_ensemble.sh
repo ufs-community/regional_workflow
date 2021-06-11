@@ -1,3 +1,19 @@
+# 
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test checks the capability of the workflow to run ensemble forecasts
+# (i.e. DO_ENSEMBLE set to "TRUE") in nco mode (i.e. RUN_ENVIR set to 
+# "nco") with the number of ensemble members (NUM_ENS_MEMBERS) set to 
+# "2".  The lack of leading zeros in this "2" should cause the ensemble 
+# members to be named "mem1" and "mem2" (instead of, for instance, "mem01" 
+# and "mem02").  
+#
+# Note also that this test uses two cycle hours ("12" and "18") to test
+# the capability of the workflow to run ensemble forecasts for more than
+# one cycle hour in nco mode.
+#
+
 RUN_ENVIR="nco"
 PREEXISTING_DIR_METHOD="rename"
 

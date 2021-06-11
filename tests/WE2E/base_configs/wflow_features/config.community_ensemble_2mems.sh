@@ -7,7 +7,11 @@
 # to "community") with the number of ensemble members (NUM_ENS_MEMBERS) 
 # set to "2".  The lack of leading zeros in this "2" should cause the 
 # ensemble members to be named "mem1" and "mem2" (instead of, for instance, 
-# "mem01" and "mem02")
+# "mem01" and "mem02").
+#
+# Note also that this test uses two cycle hours ("00" and "12") to test
+# the capability of the workflow to run ensemble forecasts for more than
+# one cycle hour in community mode.
 #
 
 RUN_ENVIR="community"
