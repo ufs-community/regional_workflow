@@ -34,9 +34,9 @@ function get_WE2Etest_names_subdirs_descs() {
     "output_varname_WE2E_test_subdirs" \
     "output_varname_WE2E_test_descs" \
     )
-#  process_args "valid_args" "$@"
-  local set_args_cmd=$( process_args "valid_args" "$@" )
-  eval ${set_args_cmd}
+  process_args "valid_args" "$@"
+#  local set_args_cmd=$( process_args "valid_args" "$@" )
+#  eval ${set_args_cmd}
 #
 #-----------------------------------------------------------------------
 #
@@ -47,38 +47,6 @@ function get_WE2Etest_names_subdirs_descs() {
 #-----------------------------------------------------------------------
 #
   print_input_args "valid_args"
-##
-##-----------------------------------------------------------------------
-##
-## Get the full path to the file in which this script/function is located
-## (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
-## which the file is located (scrfunc_dir).
-##
-##-----------------------------------------------------------------------
-##
-#scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
-#scrfunc_fn=$( basename "${scrfunc_fp}" )
-#scrfunc_dir=$( dirname "${scrfunc_fp}" )
-##
-##-----------------------------------------------------------------------
-##
-## The current script should be located in the "tests" subdirectory of the
-## workflow's top-level directory, which we denote by homerrfs.  Thus,
-## homerrfs is the directory one level above the directory in which the
-## current script is located.  Set homerrfs accordingly.
-##
-##-----------------------------------------------------------------------
-##
-#homerrfs=${scrfunc_dir%/*}
-##
-##-----------------------------------------------------------------------
-##
-## Set directories.
-##
-##-----------------------------------------------------------------------
-##
-#ushdir="$homerrfs/ush"
-#WE2E_basedir="$homerrfs/tests/baseline_configs"
 #
 #-----------------------------------------------------------------------
 #
@@ -87,21 +55,6 @@ function get_WE2Etest_names_subdirs_descs() {
 #-----------------------------------------------------------------------
 #
 . $ushdir/source_util_funcs.sh
-
-
-##
-##-----------------------------------------------------------------------
-##
-##
-##
-##-----------------------------------------------------------------------
-##
-#WE2E_category_subdirs=( \
-#  "." \
-#  "grids_extrn_mdls_suites_community" \
-#  "grids_extrn_mdls_suites_nco" \
-#  "wflow_features" \
-#  )
 #
 #-----------------------------------------------------------------------
 #
@@ -114,6 +67,7 @@ function get_WE2Etest_names_subdirs_descs() {
         crnt_item \
         cwd \
         i \
+        init_dir \
         line \
         num_files \
         num_occurrences \
@@ -137,19 +91,30 @@ function get_WE2Etest_names_subdirs_descs() {
         WE2E_symlinked_test_subdirs \
         WE2E_symlinked_test_target_test_names \
         WE2E_test_descs \
+        WE2E_test_descs_str \
         WE2E_test_names \
         WE2E_test_names_orig \
-        WE2E_test_subdirs
+        WE2E_test_names_str \
+        WE2E_test_subdirs \
+        WE2E_test_subdirs_str
+#
+#-----------------------------------------------------------------------
+#
+# Save current directory.
+#
+#-----------------------------------------------------------------------
+#
+  init_dir=$( pwd )
 #
 #-----------------------------------------------------------------------
 #
 # Loop through all subdirectories under the WE2E tests base directory
 # (including the base directory itself since the first element of
-# WE2E_category_subdirs is ".").  From each such subdirectory, collect the
-# names of all WE2E tests and append them in the array WE2E_test_names.
+# WE2E_category_subdirs is ".").  From each such subdirectory, collect 
+# the names of all WE2E tests and append them in the array WE2E_test_names.  
 # Also, for each test added to WE2E_test_names, create a corresponding
-# element in the array WE2E_test_subdirs that specifies the subdirectory under
-# WE2E_basedir in which the test was found.
+# element in the array WE2E_test_subdirs that specifies the subdirectory
+# under WE2E_basedir in which the test was found.
 #
 #-----------------------------------------------------------------------
 #
@@ -355,14 +320,6 @@ correct and rerun."
   done
 
 done
-
-echo
-echo "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
-printf "%s\n" "${WE2E_symlinked_test_names[@]}"
-echo
-echo "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
-printf "%s\n" "${WE2E_symlinked_test_subdirs[@]}"
-#exit
 #
 #-----------------------------------------------------------------------
 #
@@ -422,17 +379,55 @@ for (( i=0; i<=$((num_WE2E_tests-1)); i++ )); do
 
   config_fn="config.${test_name}.sh"
   test_desc=""
-  while { read -r line; } && [ "${line:0:1}" = "#" ]; do
-    test_desc="\
-${test_desc}$line
+  while read -r line; do
+
+    regex_search="^[ ]*(#)([ ]{0,1})(.*)"
+    hash_or_null=$( printf "%s" "${line}" | \
+                    sed -n -r -e "s/${regex_search}/\1/p" )
+
+    if [ "${hash_or_null}" = "#" ]; then
+
+      stripped_line=$( printf "%s" "${line}" | \
+                       sed -n -r -e "s/${regex_search}/\3/p" )
+      if [ -z "${stripped_line}" ]; then
+        test_desc="\
+${test_desc}
+
 "
+      else
+        test_desc="\
+${test_desc}${stripped_line} "
+      fi
+
+    else
+      break
+    fi
+
   done < "${config_fn}"
 #
-# Remove trailing newline from test_desc.
+# First remove leading whitespace and then remove trailing whitespace.
 #
-  if [ ! -z "${test_desc}" ]; then
-    test_desc="${test_desc:0:-1}"
-  fi
+# Note that the right-hand sides of the following two lines are NOT 
+# regular expressions.  They are expressions that use bash's pattern 
+# matching syntax (gnu.org/software/bash/manual/html_node/Pattern-Matching.html, 
+# wiki.bash-hackers.org/syntax/pattern) used in substring removal 
+# (tldp.org/LDP/abs/html/string-manipulation.html).  For example,
+#
+#   ${var%%[![:space:]]*} 
+#
+# says "remove from var its longest substring that starts with a non-
+# space character".
+#
+# First remove leading whitespace.
+  test_desc="${test_desc#"${test_desc%%[![:space:]]*}"}"
+# Now remove trailing whitespace.
+  test_desc="${test_desc%"${test_desc##*[![:space:]]}"}"
+#
+# Replace any double-quotes with two double-quotes since this is the way
+# a double-quote is escaped in a CSV file, at least a CSV file that is
+# read in by Google Sheets.
+#
+  test_desc=$( printf "%s" "${test_desc}" | sed -r -e "s/\"/\"\"/g" )
 #
 # Save the test description in the array WE2E_test_descs.
 #
@@ -445,21 +440,18 @@ done
 # Loop over all the symlinked WE2E tests found above.  For each such
 # test, find the name of the test that the target of the symlinked test
 # represents.  Then append to the element in the array WE2E_test_names
-# (which contains the names of the non-symlinked tests) corresponding
-# to the target test the name of the symlink test.  Similarly, append to
+# (which contains the names of the non-symlinked tests) corresponding to 
+# the target test the name of the symlink test.  Similarly, append to
 # the element in WE2E_test_subdirs (which contains the names of the
-# subdirectories under WE2E_basedir in which the non-symlinked tests
-# are located) corresponding to the target test the name of the subdirectory
+# subdirectories under WE2E_basedir in which the non-symlinked tests are 
+# located) corresponding to the target test the name of the subdirectory
 # in which the symlinked test is located.
 #
 #-----------------------------------------------------------------------
 #
-#WE2E_test_names[0]="abc  def  ghi"
-#set -x
-#WE2E_test_names_str="( "$( printf "\"%s\" " "${WE2E_test_names[@]}" )" )"
-#eval WE2E_test_names_orig=${WE2E_test_names_str}
 #
-# Should all array assignments in the workflow be done in this way?
+# Question: 
+# Should all array assignments in the workflow be done in the following way?
 #
 WE2E_test_names_orig=( "${WE2E_test_names[@]}" )
 
@@ -489,80 +481,79 @@ Please correct and rerun."
   fi
 
 done
+#
+#-----------------------------------------------------------------------
+#
+# Use the eval function to set the output variables.  Note that each of
+# these is set only if the corresponding input variable specifying the
+# name to use for the output variable is not empty.
+#
+#-----------------------------------------------------------------------
+#
+  if [ ! -z "${output_varname_WE2E_test_names}" ]; then
+    WE2E_test_names_str="( "$( printf "\"%s\" " "${WE2E_test_names[@]}" )")" 
+    eval ${output_varname_WE2E_test_names}="${WE2E_test_names_str}"
+  fi
 
+  if [ ! -z "${output_varname_WE2E_test_subdirs}" ]; then
+    WE2E_test_subdirs_str="( "$( printf "\"%s\" " "${WE2E_test_subdirs[@]}" )")" 
+    eval ${output_varname_WE2E_test_subdirs}="${WE2E_test_subdirs_str}"
+  fi
+#
+#-----------------------------------------------------------------------
+#
+# Before exiting function, change location to initial.
+#
+#-----------------------------------------------------------------------
+#
+  cd_vrfy "${init_dir}"
+#
+#-----------------------------------------------------------------------
+#
+# Generate a CSV file.
+#
+#-----------------------------------------------------------------------
+#
+  csv_fn="WE2E_test_info.csv"
+  rm_vrfy -f "${csv_fn}"
 
+  csv_delimiter="@"
+  column_titles="\"Test Name\" ${csv_delimiter} \"Alternate Test Names\" ${csv_delimiter} \"Test Purpose/Description\""
+  printf "%s\n" "${column_titles}" >> "${csv_fn}"
 
-echo
-echo "GGGGGGGGGGGGGGGGGGGGGGGGGG"
-printf "%s\n" "${WE2E_test_names[@]}"
-echo
-echo "HHHHHHHHHHHHHHHHHHHHHHHHHH"
-printf "%s\n" "${WE2E_test_subdirs[@]}"
-##
-##-----------------------------------------------------------------------
-##
-##
-##
-##-----------------------------------------------------------------------
-##
-#tests_to_run=( "dummy01" "dummy02" "regional_001" )
-##tests_to_run=( "dummy01" "dummy02" "regional_001" "regional_001" "DOT_OR_USCORE" )
+  for (( i=0; i<=$((num_WE2E_tests-1)); i++ )); do
+
+    test_names="${WE2E_test_names[$i]}"
+
+    regex_search="^[ ]*([^ \|]*).*"
+    test_name_primary=$( printf "%s" "${test_names}" | sed -n -r -e "s/${regex_search}/\1/p" )
+
+    regex_search="^[ ]*([^ \|]*)[ ]*\|[ ]*(.*)"
+    test_name_alts=$( printf "%s" "${test_names}" | sed -n -r -e "s/${regex_search}/\2/p" )
 #
-#inds_tests_to_run=()
-#num_tests_to_run="${#tests_to_run[@]}"
-#for (( i=0; i<=$((num_tests_to_run-1)); i++ )); do
+# Replace the pipe symbol "|" used as a separator in the list of alternate 
+# test names by newline in test_name_alts.  This is because we want the 
+# alternate test names to each be on a separate line (of the same cell
+# in the spreadsheet).
 #
-#  test_to_run="${tests_to_run[$i]}"
+    regex_search="([ ]*\|[ ]*)"
+    regex_replace="\n"
+    test_name_alts=$( printf "%s" "${test_name_alts}" | sed -r -e "s/${regex_search}/${regex_replace}/g" )
+
+    test_desc="${WE2E_test_descs[$i]}"
+  
+    row_content="\"${test_name_primary}\" ${csv_delimiter} \"${test_name_alts}\" ${csv_delimiter} \"${test_desc}\""
+    printf "%s\n" "${row_content}" >> "${csv_fn}"
+
+  done
 #
-#  regex_search="[ ]*\|[ ]*"
-#  regex_replace=" "
-#  for (( j=0; j<=$((num_WE2E_tests-1)); j++ )); do
+#-----------------------------------------------------------------------
 #
-#    primary_test_name_and_alts=$( \
-#      printf "%s\n" "${WE2E_test_names[$j]}" | \
-#      sed -r -e "s/${regex_search}/${regex_replace}/g" )
-#    eval primary_test_name_and_alts=( ${primary_test_name_and_alts} )
+# Restore the shell options saved at the beginning of this script/function.
 #
-#    is_element_of "primary_test_name_and_alts" "${test_to_run}" && {
+#-----------------------------------------------------------------------
 #
-#      is_element_of "inds_tests_to_run" "$j" && {
-#        primary_test_name_and_alts_str=$(printf "\"%s\" " "${primary_test_name_and_alts[@]}")
-#        print_err_msg_exit "\
-#The specified test to run (test_to_run) already exists in the list of
-#tests to run, either under the same name or an alternate name:
-#  test_to_run = \"${test_to_run}\"
-#This test has the following primary and possibly one or more alternate
-#names:
-#  ${primary_test_name_and_alts_str}
-#The first item in this list is the primary test name, and the second,
-#third, etc are the alternate names.  In order to not repeat the same
-#WE2E test (and thus waste computational resources), only one of these
-#test names can be specified in the list of tests to run.  Please modify
-#the list accordingly and retry."
-#      }
-#
-#      inds_tests_to_run+=("$j")
-#      break
-#
-#    }
-#
-#  done
-#
-#done
-#
-#echo
-#echo "KKKKKKKKKKKKKKKKK"
-#echo "inds_tests_to_run = ${inds_tests_to_run[@]}"
-#echo
-#echo "LLLLLLLLLLLLLLLLL"
-##exit
+  { restore_shell_opts; } > /dev/null 2>&1
 
 }
-
-
-#get_WE2Etest_names_subdirs_descs "$@"
-
-
-
-
 
