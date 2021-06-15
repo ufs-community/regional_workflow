@@ -49,7 +49,6 @@ LAYOUT_Y="6"
 BLOCKSIZE="26"
 
 QUILTING="TRUE"
-
 if [ "$QUILTING" = "TRUE" ]; then
   WRTCMP_write_groups="1"
   WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))

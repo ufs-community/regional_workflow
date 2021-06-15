@@ -30,19 +30,21 @@ LAYOUT_Y="12"
 BLOCKSIZE="13"
 
 QUILTING="TRUE"
-WRTCMP_write_groups="1"
-WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))                     
-WRTCMP_output_grid="lambert_conformal"
-WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
-WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
-WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
-WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-WRTCMP_nx="200"
-WRTCMP_ny="150"
-WRTCMP_lon_lwr_left="-122.21414225"
-WRTCMP_lat_lwr_left="22.41403305"
-WRTCMP_dx="${ESGgrid_DELX}"
-WRTCMP_dy="${ESGgrid_DELY}"
+if [ "$QUILTING" = "TRUE" ]; then
+  WRTCMP_write_groups="1"
+  WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))                     
+  WRTCMP_output_grid="lambert_conformal"
+  WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
+  WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
+  WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
+  WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
+  WRTCMP_nx="200"
+  WRTCMP_ny="150"
+  WRTCMP_lon_lwr_left="-122.21414225"
+  WRTCMP_lat_lwr_left="22.41403305"
+  WRTCMP_dx="${ESGgrid_DELX}"
+  WRTCMP_dy="${ESGgrid_DELY}"
+fi
 
 CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp_regional"
 
