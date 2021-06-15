@@ -2,8 +2,10 @@
 # TEST PURPOSE/DESCRIPTION:
 # ------------------------
 #
-# This test checks the capability of the workflow to run the forecast 
-# model using the RRFS_v1beta physics suite.
+# This test is to ensure that the workflow running in community mode 
+# completes successfully on the RRFS_CONUS_25km grid using the GSD_v0
+# physics suite with ICs derived from the HRRR and LBCs derived from the 
+# RAP.
 #
 
 RUN_ENVIR="community"
@@ -12,7 +14,7 @@ PREEXISTING_DIR_METHOD="rename"
 PREDEF_GRID_NAME="RRFS_CONUS_25km"
 QUILTING="TRUE"
 
-CCPP_PHYS_SUITE="FV3_RRFS_v1beta"
+CCPP_PHYS_SUITE="FV3_GSD_v0"
 
 FCST_LEN_HRS="06"
 LBC_SPEC_INTVL_HRS="6"

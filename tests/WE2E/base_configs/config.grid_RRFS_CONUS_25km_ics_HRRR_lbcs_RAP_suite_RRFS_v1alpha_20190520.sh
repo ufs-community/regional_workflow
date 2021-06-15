@@ -2,8 +2,10 @@
 # TEST PURPOSE/DESCRIPTION:
 # ------------------------
 #
-# This test checks the capability of the workflow to run the forecast 
-# model using the RRFS_v1alpha physics suite.
+# This test is to ensure that the workflow running in community mode 
+# completes successfully on the RRFS_CONUS_25km grid using the RRFS_v1alpha
+# physics suite with ICs derived from the HRRR and LBCs derived from the
+# RAP.
 #
 
 RUN_ENVIR="community"

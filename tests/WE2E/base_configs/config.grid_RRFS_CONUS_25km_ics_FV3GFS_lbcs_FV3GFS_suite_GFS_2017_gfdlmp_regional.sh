@@ -1,3 +1,12 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test is to ensure that the workflow running in community mode 
+# completes successfully on the RRFS_CONUS_25km grid using the GFS_2017_gfdlmp_regional
+# physics suite with ICs and LBCs derived from the FV3GFS.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 
@@ -5,6 +14,7 @@ PREDEF_GRID_NAME="RRFS_CONUS_25km"
 QUILTING="TRUE"
 
 CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp_regional"
+
 FCST_LEN_HRS="6"
 LBC_SPEC_INTVL_HRS="6"
 
