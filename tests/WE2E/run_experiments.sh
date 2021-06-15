@@ -1,5 +1,6 @@
 #!/bin/bash 
 
+set -u
 #
 #-----------------------------------------------------------------------
 #
@@ -22,7 +23,7 @@ scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
 #-----------------------------------------------------------------------
 #
-homerrfs=${scrfunc_dir%/*}
+homerrfs=${scrfunc_dir%/*/*}
 #
 #-----------------------------------------------------------------------
 #
@@ -31,7 +32,8 @@ homerrfs=${scrfunc_dir%/*}
 #-----------------------------------------------------------------------
 #
 ushdir="$homerrfs/ush"
-baseline_configs_dir="$homerrfs/tests/baseline_configs"
+testsdir="$homerrfs/tests"
+base_configs_dir="$testsdir/WE2E/base_configs"
 #
 #-----------------------------------------------------------------------
 #
@@ -40,6 +42,56 @@ baseline_configs_dir="$homerrfs/tests/baseline_configs"
 #-----------------------------------------------------------------------
 #
 . $ushdir/source_util_funcs.sh
+
+
+
+
+
+
+
+. ./get_WE2Etest_names_subdirs_descs.sh
+
+#
+#-----------------------------------------------------------------------
+#
+# Get the names of all available WE2E tests (i.e. not just the ones to
+# run specified by the user but all that are part of the WE2E testing
+# system), the subdirectory each is in, and the purpose/description of 
+# each.
+#
+# The array WE2E_category_subdirs set below specifies the subdirectories
+# under the main WE2E base directory (WE2E_basedir) in which to search
+# for WE2E tests.  Each subdirectory is meant to represent a category of
+# tests (e.g. those that test workflow capabilities, those whose purpose
+# is to try running various combinations of grids, physics suites, and
+# external models for ICs/LBCs, etc).  Note that we can include tests 
+# with base configuration files placed immediately under WE2E_basedir by
+# including "." as an element of WE2E_category_basedirs. 
+#
+#-----------------------------------------------------------------------
+#
+WE2E_category_subdirs=( \
+  "." \
+  "grids_extrn_mdls_suites_community" \
+  "grids_extrn_mdls_suites_nco" \
+  "wflow_features" \
+  )
+
+WE2E_category_subdirs_str="( "$( printf "\"%s\" " "${WE2E_category_subdirs[@]}" )")"
+get_WE2Etest_names_subdirs_descs \
+  ushdir="$ushdir" \
+  WE2E_basedir="${base_configs_dir}" \
+  WE2E_category_subdirs="${WE2E_category_subdirs_str}" \
+  output_varname_WE2E_test_names="all_WE2E_test_names" \
+  output_varname_WE2E_test_subdirs="all_WE2E_test_subdirs" \
+  output_varname_WE2E_test_descs="all_WE2E_test_descs"
+
+
+
+
+
+
+
 #
 #-----------------------------------------------------------------------
 #
@@ -60,17 +112,17 @@ baseline_configs_dir="$homerrfs/tests/baseline_configs"
 #-----------------------------------------------------------------------
 #
 valid_args=( \
-"expts_file" \
-"machine" \
-"account" \
-"expt_basedir" \
-"testset_name" \
-"use_cron_to_relaunch" \
-"cron_relaunch_intvl_mnts" \
-"verbose" \
-"stmp" \
-"ptmp" \
-)
+  "expts_file" \
+  "machine" \
+  "account" \
+  "expt_basedir" \
+  "testset_name" \
+  "use_cron_to_relaunch" \
+  "cron_relaunch_intvl_mnts" \
+  "verbose" \
+  "stmp" \
+  "ptmp" \
+  )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -81,7 +133,7 @@ process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
 #
-print_input_args valid_args
+print_input_args "valid_args"
 #
 #-----------------------------------------------------------------------
 #
@@ -174,8 +226,8 @@ fi
 # variables to modify from the baseline.  Note that:
 #
 # 1) There must exist a experiment/workflow configuration file named
-#    config.BASELINE_NAME.sh in a subdirectory named baseline_configs
-#    in the directory of this script.
+#    config.BASELINE_NAME.sh in a subdirectory named base_configs in the
+#    directory of this script.
 #
 # 2) The variable name-value pairs on each line of the expts_list.txt
 #    file are delimited from the baseline and from each other by pipe
@@ -186,8 +238,8 @@ fi
 print_info_msg "
 Reading in list of forecast experiments from file
   expts_list_fp = \"${expts_list_fp}\"
-and storing result in the array \"all_lines\" (one array element per expe-
-riment)..."
+and storing result in the array \"all_lines\" (one array element per 
+experiment)..."
 
 readarray -t all_lines < "${expts_list_fp}"
 
@@ -237,8 +289,8 @@ for (( i=0; i<=$((num_lines-1)); i++ )); do
   all_lines[$i]=$( printf "%s" "${all_lines[$i]}" | \
                    sed -r -e "s/${field_separator}$//g" )
 #
-# If after the processing above the current element of all_lines is not
-# empty, save it as the next element of expts_list.
+# If after the processing performed above the current element of all_lines 
+# is not empty, save it as the next element of expts_list.
 #
   if [ ! -z "${all_lines[$i]}" ]; then
     expts_list[$j]="${all_lines[$i]}"
@@ -259,19 +311,23 @@ expts_list_str=$( printf "  \'%s\'\n" "${expts_list[@]}" )
 print_info_msg "
 After processing, the number of experiments to run (num_expts) is:
   num_expts = ${num_expts}
-The list of forecast experiments to run (one experiment per line) is gi-
-ven by:
+The list of forecast experiments to run (one experiment per line) is 
+given by:
 ${expts_list_str}
 "
 #
 #-----------------------------------------------------------------------
 #
 # Loop through the elements of the array expts_list.  For each element
-# (i.e. for each experiment), generate an experiment directory and cor-
-# responding workflow and then launch the workflow.
+# (i.e. for each experiment), generate an experiment directory and 
+# corresponding workflow and then launch the workflow.
 #
 #-----------------------------------------------------------------------
 #
+num_all_WE2E_tests="${#all_WE2E_test_names[@]}"
+inds_tests_to_run=()
+subdirs_tests_to_run=()
+
 for (( i=0; i<=$((num_expts-1)); i++ )); do
 
   print_info_msg "
@@ -308,9 +364,9 @@ Processing experiment \"${expts_list[$i]}\" ..."
     remainder=$( printf "%s" "$remainder" | \
                  sed -r -e "s/${regex_search}/\3/" )
 #
-# Save the name of the variable in the variable-value pair obtained
-# above in the array modvar_name.  Then save the value in the variable-
-# value pair in the array modvar_value.
+# Save the name of the variable in the variable-value pair obtained above
+# in the array modvar_name.  Then save the value in the variable-value 
+# pair in the array modvar_value.
 #
     modvar_name[${num_mod_vars}]=$( printf "%s" "${next_field}" | \
                                     sed -r -e "s/^([^=]*)=(.*)/\1/" )
@@ -325,21 +381,152 @@ Processing experiment \"${expts_list[$i]}\" ..."
 
   done
 #
+# For the current experiment to run (baseline_name), loop through the 
+# list of all WE2E tests and make sure that:
+#
+# 1) The name of the test exists as either a primary test name or an
+#    alternate test name in the full list of WE2E tests.
+# 2) The test to run is not a repeat of a previously listed test to run,
+#    either under the same name or a different name.
+# 
+
+# No need for two names for same quantity!!! 
+  test_to_run="${baseline_name}"
+
+  regex_search="[ ]*\|[ ]*"
+  regex_replace=" "
+  match_found="FALSE"
+  for (( j=0; j<=$((num_all_WE2E_tests-1)); j++ )); do
+
+    primary_test_name_and_alts=$( \
+      printf "%s\n" "${all_WE2E_test_names[$j]}" | \
+      sed -r -e "s/${regex_search}/${regex_replace}/g" )
+    eval primary_test_name_and_alts=( ${primary_test_name_and_alts} )
+#
+# Check whether the name of the test to run (test_to_run) matches the
+# primary or any of the alternate names of the j-th test in the full 
+# list of WE2E tests.  If so:
+#
+# 1) Set match_found to "TRUE".
+# 2) Make sure that the test to run hasn't already been specified in the
+#    list of tests to run, either under the same name or under an 
+#    alternate name for the same test.  We do this by keeping track of
+#    the indices into the array containing the full list of tests of the
+#    tests to run and making sure that none of these indices are repeated.
+# 
+
+# To-do: 
+# Modify is_element_of to return the match index (if a match is found).  
+# Use process_args to pass variables into is_element_of and get the 
+# match index out.
+    is_element_of "primary_test_name_and_alts" "${test_to_run}" && {
+
+      match_found="TRUE"
+
+      is_element_of "inds_tests_to_run" "$j" && {
+        primary_test_name_and_alts_str=$(printf "\"%s\" " "${primary_test_name_and_alts[@]}")
+        print_err_msg_exit "\
+The specified test to run (test_to_run) already exists in the list of
+tests to run, either under the same name or an alternate name:
+  test_to_run = \"${test_to_run}\"
+This test has the following primary and possibly one or more alternate
+names:
+  ${primary_test_name_and_alts_str}
+The first item in this list is the primary test name, and the second,
+third, etc are the alternate names.  In order to not repeat the same
+WE2E test (and thus waste computational resources), only one of these
+test names can be specified in the list of tests to run.  Please modify
+the list accordingly and retry."
+      }
+#
+# At this point, we know that the current test_to_run is not a repeat of
+# one already specified (either under the same name or one of its 
+# alternate names).  Next, get the index of the element in the array 
+# primary_test_name_and_alts that matches test_to_run.  This is needed
+# in getting the category subdirectory in which the test is found.
+#
+# Note that the following for-loop should not be necessary once the above 
+# change to the is_element_of function to return the index of the match 
+# is made.
+#
+      num_elems=${#primary_test_name_and_alts[@]}
+      for (( n=0; n<${num_elems}; n++ )); do
+        if [ "${primary_test_name_and_alts[$n]}" = "${test_to_run}" ]; then
+          break
+        fi
+      done
+#
+# Add the index into the full list of tests of the current test to run
+# to the array inds_tests_to_run.  Then get the category subdirectory in 
+# which the test is located.
+#
+      inds_tests_to_run+=("$j")
+      primary_and_alt_subdirs=$( \
+        printf "%s\n" "${all_WE2E_test_subdirs[$j]}" | \
+        sed -r -e "s/${regex_search}/${regex_replace}/g" )
+      eval primary_and_alt_subdirs=( ${primary_and_alt_subdirs} )
+      subdirs_tests_to_run+=("${primary_and_alt_subdirs[$n]}")
+      break
+
+    }
+
+  done
+#
+# If match_found is still "FALSE" after exiting the loop above, then a
+# match for the current test_to_run was not found in the list of all WE2E
+# tests -- neither as a primary test name nor as an alternate name.  In
+# this case, print out an error message and exit.
+#
+  if [ "${match_found}" = "FALSE" ]; then
+    regex_search="[ ]*\|[ ]*"
+    regex_replace="\" \| \""
+    all_WE2E_test_names_str=$( \
+      printf "  \"%s\"\n" "${all_WE2E_test_names[@]}" | \
+      sed -r -e "s/${regex_search}/${regex_replace}/g" )
+    print_err_msg_exit "\
+The specified test to run (test_to_run) does not match any of the existing
+WE2E tests:
+  test_to_run = \"${test_to_run}\"
+Valid values for test_to_run are:
+${all_WE2E_test_names_str}
+Each line of this list corresponds to a WE2E test.  The first string on 
+each line is the primary test name, and the second, third, etc strings
+following the first, second, etc pipe symbols (\"|\") (if any) are the 
+alternate names for the test.  Each member in the set of tests to run 
+must:
+  1) Consist of either the primary name or one of the alternate names of
+     one of the tests in the list above.
+  2) Not be the primary or alternate name of a test whose primary name 
+     or one of whose alternate names already exists in the set of test 
+     to run, i.e. tests must not be repeated.
+Please modify the set of tests to run such that it adheres to the rules
+above and retry."
+  fi
+
+
+  test_subdir="${subdirs_tests_to_run[-1]}"
+echo "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
+echo "test_subdir = |${test_subdir}|"
+#exit
+
+
+
+#
 # Generate the path to the configuration file for the current baseline.
 # This will be modified to obtain the configuration file for the current
 # experiment.
 #
-  baseline_config_fp="${baseline_configs_dir}/config.${baseline_name}.sh"
+  base_config_fp="${base_configs_dir}/${test_subdir}/config.${baseline_name}.sh"
 #
 # Print out an error message and exit if a configuration file for the
 # current baseline does not exist.
 #
-  if [ ! -f "${baseline_config_fp}" ]; then
+  if [ ! -f "${base_config_fp}" ]; then
     print_err_msg_exit "\
-The experiment/workflow configuration file (baseline_config_fp) for the
+The experiment/workflow configuration file (base_config_fp) for the
 specified baseline (baseline_name) does not exist:
   baseline_name = \"${baseline_name}\"
-  baseline_config_fp = \"${baseline_config_fp}\"
+  base_config_fp = \"${base_config_fp}\"
 Please correct and rerun."
   fi
 #
@@ -386,16 +573,16 @@ Please correct and rerun."
 #
 #-----------------------------------------------------------------------
 #
-  . ${baseline_config_fp}
+  . ${base_config_fp}
 #
 #-----------------------------------------------------------------------
 #
 # Set various workflow variables that depend on inputs to this script (as
 # opposed to information in the test-specific configuration file specified 
-# by baseline_config_fp).  Note that any values of these parameters 
-# specified in the default workflow configuration file (config_defaults.sh) 
-# or in the test-specific configuraiton file (baseline_config_fp) that 
-# are sourced above will be overwritten by the settings below.
+# by base_config_fp).  Note that any values of these parameters specified 
+# in the default workflow configuration file (config_defaults.sh) or in 
+# the test-specific configuraiton file (base_config_fp) that are sourced 
+# above will be overwritten by the settings below.
 #
 # Note that EXPT_BASEDIR is set below as follows:
 # * If neither of the command line arguments expt_basedir and testset_name 
@@ -474,7 +661,7 @@ VERBOSE=\"${VERBOSE}\""
 # test.
 #
 "
-  str=${str}$( cat "${baseline_config_fp}" )
+  str=${str}$( cat "${base_config_fp}" )
   str=${str}"
 #
 # End of section from the base configuration file of this WE2E test.
