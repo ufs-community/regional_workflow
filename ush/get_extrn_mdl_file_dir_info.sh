@@ -919,7 +919,12 @@ workflow to look for the external model files in a user-staged directory."
     fi
 
     arcv_fmt="tar"
+    
+    if [ "${cdate_FV3LAM}" -lt "2021032100" ]; then
     arcvrel_dir="./gfs.${yyyymmdd}/${hh}"
+    else
+    arcvrel_dir="./gfs.${yyyymmdd}/${hh}/atmos"
+    fi
 
     is_array arcv_fns
     if [ "$?" = "0" ]; then
