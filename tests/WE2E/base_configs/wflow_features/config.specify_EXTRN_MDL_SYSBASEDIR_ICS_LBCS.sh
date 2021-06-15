@@ -1,3 +1,12 @@
+# 
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test checks the capability of the workflow to have the base 
+# directories on the system disk in which the external model files are 
+# located be set to user-specified values.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 
@@ -13,7 +22,7 @@ DATE_FIRST_CYCL="20210603"
 DATE_LAST_CYCL="20210603"
 CYCL_HRS=( "06" )
 
-FCST_LEN_HRS="06"
+FCST_LEN_HRS="6"
 LBC_SPEC_INTVL_HRS="3"
 
 FV3GFS_FILE_FMT_ICS="grib2"
