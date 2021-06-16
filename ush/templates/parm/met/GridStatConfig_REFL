@@ -139,7 +139,7 @@ nbrhd = {
    field      = BOTH;
    shape      = ${NEIGHBORHOOD_SHAPE};
    width      = [ ${NEIGHBORHOOD_WIDTH} ];
-   cov_thresh = [ >0. ];
+   cov_thresh = [ >=0.5 ];
    vld_thresh = 1.0;
 }
 
@@ -171,12 +171,12 @@ gradient = {
 // Statistical output types
 //
 output_flag = {
-   fho    = NONE;
+   fho    = STAT;
    ctc    = STAT;
    cts    = STAT;
    mctc   = NONE;
    mcts   = NONE;
-   cnt    = NONE;
+   cnt    = STAT;
    sl1l2  = NONE;
    sal1l2 = NONE;
    vl1l2  = NONE;
