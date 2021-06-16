@@ -771,7 +771,7 @@ elif [ "${RESTART_WORKFLOW}" = "FALSE" ] || \
   RESTART_WORKFLOW="FALSE"
 fi
 #
-##### RRFS-cmAQ ########## end   #####
+##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #

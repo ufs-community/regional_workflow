@@ -456,21 +456,6 @@ DD=${CDATE:6:2}
 HH=${CDATE:8:2}
 YYYYMMDD=${CDATE:0:8}
 YYMMDD=${CDATE:2:6}
-#-----------------------------------------------------------------------
-#
-# Set atmosphere's restart interval
-#
-#-----------------------------------------------------------------------
-#
-if [ -z "${RESTART_INTERVAL}" ]; then
-  if [ "${CYCL_INC}" = "00" ]; then
-    restart_interval="0"
-  else
-    restart_interval="${CYCL_INC} -1"
-  fi
-else
-  restart_interval="${RESTART_INTERVAL}"
-fi
 #
 #-----------------------------------------------------------------------
 #
