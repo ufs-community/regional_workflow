@@ -381,7 +381,11 @@ WFLOW_LAUNCH_LOG_FN="log.launch_FV3LAM_wflow"
 # The length of each forecast, in integer hours.
 #
 # RESTART_INTERVAL:
-# Parameter in model_configure; frequency of the output restart files
+# Parameter in model_configure; 
+# frequency of the output restart files (unit:hour). 
+# Defalut=0: restart files are produced at the end of a forecast run
+# For example, RESTART_INTERVAL="1": restart files are produced every hour
+# with the prefix "YYYYMMDD.HHmmSS." in the RESTART directory
 #
 #-----------------------------------------------------------------------
 #

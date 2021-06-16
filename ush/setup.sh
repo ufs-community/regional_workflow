@@ -640,7 +640,7 @@ check_var_valid_value \
 #
 #-----------------------------------------------------------------------
 #
-if ! [[ "${RESTART_INTERVAL:-0}" =~ ^[0-9]+$ ]]; then
+if ! [[ "${RESTART_INTERVAL}" =~ ^[0-9]+$ ]]; then
   print_err_msg_exit "\
 RESTART_INTERVAL must be set to an integer number of hours.
   RESTART_INTERVAL = \"${RESTART_INTERVAL}\""
