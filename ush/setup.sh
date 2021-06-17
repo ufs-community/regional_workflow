@@ -744,18 +744,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure RESTART_INTERVAL is set to an integer value if present
-#
-#-----------------------------------------------------------------------
-#
-if ! [[ "${RESTART_INTERVAL:-0}" =~ ^[0-9]+$ ]]; then
-  print_err_msg_exit "\
-RESTART_INTERVAL must be set to an integer number of hours.
-  RESTART_INTERVAL = \"${RESTART_INTERVAL}\""
-fi
-#
-#-----------------------------------------------------------------------
-#
 # Make sure that RESTART_WORKFLOW is set to a valid value.
 #
 #-----------------------------------------------------------------------
