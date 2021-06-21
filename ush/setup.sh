@@ -171,6 +171,26 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that CPL is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "CPL" "valid_vals_CPL"
+#
+# Set CPL to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+CPL=${CPL^^}
+if [ "${CPL}" = "TRUE" ] || \
+   [ "${CPL}" = "YES" ]; then
+  CPL="TRUE"
+elif [ "${CPL}" = "FALSE" ] || \
+     [ "${CPL}" = "NO" ]; then
+  CPL="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that RUN_TASK_MAKE_GRID is set to a valid value.
 #
 #-----------------------------------------------------------------------
