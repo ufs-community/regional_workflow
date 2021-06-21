@@ -58,5 +58,7 @@ AQM_FIRE_FILE="GBBEPx_C401GRID.emissions_v003"
 AQM_LBCS_DIR="/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/LBCS/boundary_conditions_v4"
 AQM_LBCS_FILES="gfs_bndy_chem_<MM>.tile7.000.nc"
 NEXUS_INPUT_DIR="/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions"
+NEXUS_FIX_DIR="/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/nexus/fix"
+NEXUS_GRID_FN="grid_spec_C401.nc"
 RESTART_CYCLE_DIR="/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/restart/GSD_HRRR_25km/2019073112"
 

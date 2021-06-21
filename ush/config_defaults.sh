@@ -1727,6 +1727,11 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # Same as GRID_DIR but for the the air quality emission generation task.
 # Should be blank for the default value specified in setup.sh
 #
+# NEXUS_FIX_DIR:
+# Directory containing grid_spec files as the input file of nexus
+#
+# NEXUS_GRID_FN:
+# File name of the input grid_spec file of nexus
 
 AQM_RC_FN="aqm.rc"
 AQM_CONFIG_DIR=""
@@ -1734,7 +1739,7 @@ AQM_EMIS_DIR=""
 AQM_FIRE_DIR=""
 AQM_FIRE_FILE=""
 AQM_LBCS_DIR=""
-AQM_LBCS_FILES="gfs_bndy_chem_<MM>.tile7.000.nc"
+AQM_LBCS_FILES=""
 AQM_ARCHIVE="/NCEPDEV/emc-naqfc/5year/Barry.Baker/emissions/BOUNDARY_CONDITIONS/NAQFC_RRFS_CMAQ_C401.tar"
 
 ENABLE_AQ="TRUE"
@@ -1747,6 +1752,8 @@ RUN_TASK_ADD_AQM_ICS="FALSE"
 RUN_TASK_ADD_AQM_LBCS="FALSE"
 RUN_TASK_RUN_NEXUS="FALSE"
 NEXUS_INPUT_DIR=""
+NEXUS_FIX_DIR=""
+NEXUS_GRID_FN=""
 
 NNODES_ADD_AQM_ICS="1"
 NNODES_ADD_AQM_LBCS="1"

@@ -915,6 +915,8 @@ case $MACHINE in
   AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/LBCS/boundary_conditions_v4"}
   AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
   NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions"}
+  NEXUS_FIX_DIR=${NEXUS_FIX_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/nexus/fix"}
+  NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_C401.nc"}
   ;;
 
 "HERA")
@@ -925,6 +927,8 @@ case $MACHINE in
   AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/LBCS/boundary_conditions_v4"}
   AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
   NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/scratch1/NCEPDEV/rstprod/nexus_emissions"}
+  NEXUS_FIX_DIR=${NEXUS_FIX_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/nexus/fix"}
+  NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_C401.nc"}
   ;;
 
   *)
@@ -937,7 +941,9 @@ One or more AQM directories have not been specified for this machine:
   AQM_FIRE_FILE = \"${AQM_FIRE_FILE:-\"\"}
   AQM_LBCS_DIR = \"${AQM_LBCS_DIR:-\"\"}
   AQM_LBCS_FILES = \"${AQM_LBCS_FILES:-\"\"}
-  NEXUS_INPUT_DIR = \"${NUXUS_INPUT_DIR:-\"\"}
+  NEXUS_INPUT_DIR = \"${NEXUS_INPUT_DIR:-\"\"}
+  NEXUS_FIX_DIR = \"${NEXUS_FIX_DIR:-\"\"}
+  NEXUS_GRID_FN = \"${NEXUS_GRID_FN:-\"\"}
 You can specify the missing location(s) in config.sh"
     ;;
 

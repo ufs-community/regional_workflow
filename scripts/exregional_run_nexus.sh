@@ -100,8 +100,8 @@ cd_vrfy $workdir
 #
 cp_vrfy ${EXECDIR}/nexus ${workdir}
 cp_vrfy ${EXECDIR}/../src/arl_nexus/config/cmaq/*.rc ${workdir}
-cp_vrfy ${EXECDIR}/../src/arl_nexus/fix/grid_spec_C401.nc ${workdir}/grid_spec.nc
-
+#cp_vrfy ${EXECDIR}/../src/arl_nexus/fix/grid_spec_C401.nc ${workdir}/grid_spec.nc
+cp_vrfy ${NEXUS_FIX_DIR}/${NEXUS_GRID_FN} ${workdir}/grid_spec.nc
 #
 #-----------------------------------------------------------------------
 #
