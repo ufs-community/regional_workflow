@@ -916,7 +916,7 @@ case $MACHINE in
   AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
   NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions"}
   NEXUS_FIX_DIR=${NEXUS_FIX_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/nexus/fix"}
-  NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_C401.nc"}
+  NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_GSD_HRRR_25km.nc"}
   ;;
 
 "HERA")
@@ -928,7 +928,7 @@ case $MACHINE in
   AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
   NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/scratch1/NCEPDEV/rstprod/nexus_emissions"}
   NEXUS_FIX_DIR=${NEXUS_FIX_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/nexus/fix"}
-  NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_C401.nc"}
+  NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_GSD_HRRR_25km.nc"}
   ;;
 
   *)
