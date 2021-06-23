@@ -1087,7 +1087,7 @@ PREEXISTING_DIR_METHOD="delete"
 #-----------------------------------------------------------------------
 #
 # Set VERBOSE.  This is a flag that determines whether or not the experiment
-# generation and workflow task scripts tend to be print out more informational
+# generation and workflow task scripts tend to print out more informational
 # messages.
 #
 #-----------------------------------------------------------------------
