@@ -516,6 +516,8 @@ $settings"
 # of chgres_cube is nonzero.
 # A similar thing happens in the forecast task.
 #
+  unload_python
+
   ${APRUN} ${exec_fp} || \
     print_err_msg_exit "\
 Call to executable (exec_fp) to generate lateral boundary conditions (LBCs)

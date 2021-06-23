@@ -503,6 +503,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+unload_python
+
 $APRUN ${FV3_EXEC_FP} || print_err_msg_exit "\
 Call to executable to run FV3-LAM forecast returned with nonzero exit
 code."

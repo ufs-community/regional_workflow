@@ -172,6 +172,14 @@ function source_util_funcs() {
 #-----------------------------------------------------------------------
 #
   . ${bashutils_dir}/get_charvar_from_netcdf.sh
+#
+#-----------------------------------------------------------------------
+#
+#  Unload python or miniconda3 if loaded
+#
+#-----------------------------------------------------------------------
+#
+  . ${bashutils_dir}/unload_python.sh
 
 }
 source_util_funcs
