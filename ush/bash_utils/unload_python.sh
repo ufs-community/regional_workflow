@@ -69,14 +69,14 @@ Usage:
   module_to_unload=( python miniconda3 )
   loaded_modules=$(module list 2>&1)
 
-  for module in ${module_to_unload[@]}; do
-    if [[ "${loaded_modules}" =~ "${module}" ]]; then
+  for a_module in ${module_to_unload[@]}; do
+    if [[ "${loaded_modules}" =~ "${a_module}" ]]; then
   print_info_msg "\
-Module ${module} IS loaded, unloading... "
-      module unload ${module}
+Module ${a_module} IS loaded, unloading... "
+      module unload ${a_module}
     else
   print_info_msg "\
-Module ${module} IS NOT loaded "
+Module ${a_module} IS NOT loaded "
     fi
   done
 
