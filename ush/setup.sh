@@ -741,21 +741,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Disable air quality tasks if the forecast model does not require them.
-# Air quality workflow tasks are enabled by default.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${ENABLE_AQ}" = "FALSE" ]; then
-  RUN_TASK_ADD_AQM_ICS="FALSE"
-  RUN_TASK_ADD_AQM_LBCS="FALSE"
-  RUN_TASK_RUN_NEXUS="FALSE"
-  print_info_msg "
-Disabling air quality tasks since forecast model does not require them."
-fi
-#
-#-----------------------------------------------------------------------
-#
 # Make sure that RESTART_WORKFLOW is set to a valid value.
 #
 #-----------------------------------------------------------------------

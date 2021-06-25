@@ -1742,8 +1742,6 @@ AQM_LBCS_DIR=""
 AQM_LBCS_FILES=""
 AQM_ARCHIVE="/NCEPDEV/emc-naqfc/5year/Barry.Baker/emissions/BOUNDARY_CONDITIONS/NAQFC_RRFS_CMAQ_C401.tar"
 
-ENABLE_AQ="TRUE"
-
 ADD_AQM_ICS_TN="add_aqm_ics"
 ADD_AQM_LBCS_TN="add_aqm_lbcs"
 RUN_NEXUS_TN="run_nexus"
