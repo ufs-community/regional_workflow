@@ -146,7 +146,7 @@ bio_type: biogenic
 
 bio_format: netcdf
 
-bio_file: <aqm_emis_dir>/BEIS_SARC401.ncf
+bio_file: <aqm_emis_dir>/<aqm_bio_file>
 
 bio_frequency: static
 
