@@ -171,26 +171,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that CPL is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "CPL" "valid_vals_CPL"
-#
-# Set CPL to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-CPL=${CPL^^}
-if [ "${CPL}" = "TRUE" ] || \
-   [ "${CPL}" = "YES" ]; then
-  CPL="TRUE"
-elif [ "${CPL}" = "FALSE" ] || \
-     [ "${CPL}" = "NO" ]; then
-  CPL="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
 # Make sure that RUN_TASK_MAKE_GRID is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -653,6 +633,20 @@ The CCPP physics suite specified in CCPP_PHYS_SUITE is not supported:
   CCPP_PHYS_SUITE = \"${CCPP_PHYS_SUITE}\""
 check_var_valid_value \
   "CCPP_PHYS_SUITE" "valid_vals_CCPP_PHYS_SUITE" "${err_msg}"
+#
+#-----------------------------------------------------------------------
+#
+# Set CPL to TRUE/FALSE based on FCST_MODEL.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${FCST_MODEL}" = "ufs-weather-model" ]; then
+  CPL="FALSE"
+elif [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+  CPL="TRUE"
+else
+  CPL="FALSE"
+fi
 #
 #-----------------------------------------------------------------------
 #

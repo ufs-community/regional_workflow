@@ -397,8 +397,9 @@ FCST_LEN_HRS="24"
 # which the top level routine in the dynamics is called as well as the 
 # frequency with which the physics is called."
 #
-# CPL:
-# Flag that determines whether or not to couple multiple models
+# CPL: parameter for coupling
+# (set automatically based on FCST_MODEL in ush/setup.sh)
+# (ufs-weather-model:FALSE, fv3gfs_aqm:TRUE)
 #
 # RESTART_INTERVAL:
 # frequency of the output restart files (unit:hour). 
@@ -409,7 +410,7 @@ FCST_LEN_HRS="24"
 #-----------------------------------------------------------------------
 #
 DT_ATMOS=""
-CPL="FALSE"
+CPL=""
 RESTART_INTERVAL="0"
 #
 #-----------------------------------------------------------------------
