@@ -1,12 +1,23 @@
 #!/bin/bash 
 
-set -u
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located
-# (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
-# which the file is located (scrfunc_dir).
+# This script runs the specified WE2E tests.  Type
+#
+#   run_experiment.sh --help
+#
+# for a full description of how to use this script.
+#
+#-----------------------------------------------------------------------
+#
+
+#
+#-----------------------------------------------------------------------
+#
+# Get the full path to the file in which this script or function is 
+# located (scrfunc_fp), the name of that file (scrfunc_fn), and the 
+# directory in which the file is located (scrfunc_dir).
 #
 #-----------------------------------------------------------------------
 #
@@ -16,10 +27,11 @@ scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
 #-----------------------------------------------------------------------
 #
-# The current script should be located in the "tests" subdirectory of the
-# workflow's top-level directory, which we denote by homerrfs.  Thus,
-# homerrfs is the directory one level above the directory in which the
-# current script is located.  Set homerrfs accordingly.
+# Set the full path to the top-level directory of the regional_workflow 
+# repository.  We denote this path by homerrfs.  The current script 
+# should be located in the "tests/WE2E" subdirectory under this directory.
+# Thus, homerrfs is the directory two levels above the directory in which 
+# the current script is located.
 #
 #-----------------------------------------------------------------------
 #
@@ -27,13 +39,13 @@ homerrfs=${scrfunc_dir%/*/*}
 #
 #-----------------------------------------------------------------------
 #
-# Set directories.
+# Set other directories that depend on homerrfs.
 #
 #-----------------------------------------------------------------------
 #
 ushdir="$homerrfs/ush"
 testsdir="$homerrfs/tests"
-base_configs_dir="$testsdir/WE2E/base_configs"
+WE2Edir="$testsdir/WE2E"
 #
 #-----------------------------------------------------------------------
 #
@@ -42,61 +54,19 @@ base_configs_dir="$testsdir/WE2E/base_configs"
 #-----------------------------------------------------------------------
 #
 . $ushdir/source_util_funcs.sh
-
-
-
-
-
-
-
-. ./get_WE2Etest_names_subdirs_descs.sh
-
 #
 #-----------------------------------------------------------------------
 #
-# Get the names of all available WE2E tests (i.e. not just the ones to
-# run specified by the user but all that are part of the WE2E testing
-# system), the subdirectory each is in, and the purpose/description of 
-# each.
-#
-# The array WE2E_category_subdirs set below specifies the subdirectories
-# under the main WE2E base directory (WE2E_basedir) in which to search
-# for WE2E tests.  Each subdirectory is meant to represent a category of
-# tests (e.g. those that test workflow capabilities, those whose purpose
-# is to try running various combinations of grids, physics suites, and
-# external models for ICs/LBCs, etc).  Note that we can include tests 
-# with base configuration files placed immediately under WE2E_basedir by
-# including "." as an element of WE2E_category_basedirs. 
+# Source other needed files.
 #
 #-----------------------------------------------------------------------
 #
-WE2E_category_subdirs=( \
-  "." \
-  "grids_extrn_mdls_suites_community" \
-  "grids_extrn_mdls_suites_nco" \
-  "wflow_features" \
-  )
-
-WE2E_category_subdirs_str="( "$( printf "\"%s\" " "${WE2E_category_subdirs[@]}" )")"
-get_WE2Etest_names_subdirs_descs \
-  ushdir="$ushdir" \
-  WE2E_basedir="${base_configs_dir}" \
-  WE2E_category_subdirs="${WE2E_category_subdirs_str}" \
-  output_varname_WE2E_test_names="all_WE2E_test_names" \
-  output_varname_WE2E_test_subdirs="all_WE2E_test_subdirs" \
-  output_varname_WE2E_test_descs="all_WE2E_test_descs"
-
-
-
-
-
-
-
+. ${WE2Edir}/get_WE2Etest_names_subdirs_descs.sh
 #
 #-----------------------------------------------------------------------
 #
 # Save current shell options (in a global array).  Then set new options
-# for this script/function.
+# for this script or function.
 #
 #-----------------------------------------------------------------------
 #
@@ -104,19 +74,154 @@ get_WE2Etest_names_subdirs_descs \
 #
 #-----------------------------------------------------------------------
 #
-# Specify the set of valid argument names for this script/function.
-# Then process the arguments provided to this script/function (which
-# should consist of a set of name-value pairs of the form arg1="value1",
-# etc).
+# Set the usage message.
+#
+#-----------------------------------------------------------------------
+#
+usage_str="\
+Usage:
+
+  ${scrfunc_fn} \\
+    tests_file=\"...\" \\
+    machine=\"...\" \\
+    account=\"...\" \\
+    [expt_basedir=\"...\"] \\
+    [use_cron_to_relaunch=\"...\"] \\
+    [cron_relaunch_intvl_mnts=\"...\"] \\
+    [verbose=\"...\"] \\
+    [stmp=\"...\"] \\
+    [ptmp=\"...\"]
+
+The arguments in brackets are optional.  The arguments are defined as 
+follows:
+
+tests_file:
+Name of file or relative or absolute path to file containing the list of
+WE2E tests to run.  This file must contain one test name per line, with 
+no repeated names.  This is a required argument.
+
+machine:
+Argument used to explicitly set the experiment variable MACHINE in the
+experiment configuration files of all the WE2E tests the user wants to 
+run.  (A description of MACHINE can be found in the default experiment 
+configuration file.)  This is a required argument.
+
+account:
+Argument used to explicitly set the experiment variable ACCOUNT in the
+experiment configuration files of all the WE2E tests the user wants to 
+run.  (A description of ACCOUNT can be found in the default experiment 
+configuration file.)  This is a required argument.
+
+expt_basedir:
+Argument used to explicitly set the experiment variable EXPT_BASEDIR in 
+the experiment configuration files of all the WE2E tests the user wants
+to run.  (A description of EXPT_BASEDIR can be found in the default 
+experiment configuration file.)  If expt_basedir is specified in the call 
+to this script, its value is used to set EXPT_BASEDIR in the configuration 
+files.  If it is not specified, EXPT_BASEDIR is not set in the configuration 
+files, in which case the workflow generation script sets it to a default 
+value.  Note that if expt_basedir is set to a relative path (e.g. 
+expt_basedir=\"testset1\" in the call to this script), then the workflow 
+generation script will set EXPT_BASEDIR for the experiment to a default 
+absolute path followed by \${expt_basedir}.  This feature can be used to 
+group the WE2E tests into subdirectories for convenience, e.g. a set of 
+tests under subdirectory testset1, another set of tests under testset2, 
+etc.
+
+use_cron_to_relaunch:
+Argument used to explicitly set the experiment variable USE_CRON_TO_RELAUNCH
+in the experiment configuration files of all the WE2E tests the user wants 
+to run.  (A description of USE_CRON_TO_RELAUNCH can be found in the default 
+experiment configuration file.)  If use_cron_to_relaunch is specified in 
+the call to this script, its value is used to set USE_CRON_TO_RELAUNCH 
+in the configuration files.  If it is not specified, USE_CRON_TO_RELAUNCH 
+is set to \"TRUE\" in the configuration files, in which case cron jobs 
+are used to (re)launch the workflows for all tests (one cron job per test).  
+Thus, use_cron_to_relaunch needs to be specified only if the user wants 
+to turn off use of cron jobs for all tests (by specifying use_cron_to_relaunch=
+\"FALSE\" on the command line).  Note that it is not possible to specify 
+a different value for USE_CRON_TO_RELAUNCH for each test via this argument; 
+either all tests use cron jobs or none do.
+
+cron_relaunch_intvl_mnts:
+Argument used to explicitly set the experiment variable CRON_RELAUNCH_INTVL_MNTS
+in the experiment configuration files of all the WE2E tests the user wants 
+to run.  (A description of CRON_RELAUNCH_INTVL_MNTS can be found in the 
+default experiment configuration file.)  If cron_relaunch_intvl_mnts is 
+specified in the call to this script, its value is used to set 
+CRON_RELAUNCH_INTVL_MNTS in the configuration files.  If it is not 
+specified, CRON_RELAUNCH_INTVL_MNTS is set to \"02\" (i.e. two minutes) 
+in the configuration files.  Note that it is not possible to specify a 
+different value for CRON_RELAUNCH_INTVL_MNTS for each test via this 
+argument; all tests will use the same value for USE_CRON_TO_RELAUNCH 
+(either the value specified in the call to this script or the default 
+value of \"02\").  Note also that the value of this argument matters only 
+if the argument use_cron_to_relaunch is not explicitly set to \"FALSE\" 
+in the call to this script.
+
+verbose:
+Argument used to explicitly set the experiment variable VERBOSE in the
+experiment configuration files of all the WE2E tests the user wants to
+run.  (A description of VERBOSE can be found in the default experiment 
+configuration file.)  If verbose is specified in the call to this script, 
+its value is used to set VERBOSE in the configuration files.  If it is 
+not specified, VERBOSE is set to \"TRUE\" in the configuration files.
+Note that it is not possible to specify a different value for VERBOSE 
+for each test via this argument; either all tests will have VERBOSE set 
+to \"TRUE\" or all will have it set to \"FALSE\".
+
+stmp:
+Argument used to explicitly set the experiment variable STMP in the 
+experiment configuration files of all the WE2E tests the user wants to 
+run that are in NCO mode, i.e. they have test configuration files that
+set the experiment variable RUN_ENVIR to \"nco\".  (A description of 
+STMP can be found in the default experiment configuration file.)  If 
+stmp is specified in the call to this script, its value is used to set 
+STMP in the configuration files of all tests that will run in NCO mode.  
+If it is not specified, STMP is (effectively) set as follows in the 
+configuration files (of all NCO mode tests to be run):
+
+    STMP=\$( readlink -f \"\$homerrfs/../../nco_dirs/stmp\" \)
+
+Here, homerrfs is the base directory in which the regional_workflow
+repository is cloned.  Note that it is not possible to specify a different 
+value for STMP for each test via this argument; all tests will use the
+same value for STMP (either the value specified in the call to this 
+script or the default value above).  Note also that the value of this 
+argument is not used for any tests that are not in NCO mode.
+
+ptmp:
+Same as the argument \"stmp\" described above but for setting the 
+experiment variable PTMP for all tests that will run in NCO mode.
+"
+#
+#-----------------------------------------------------------------------
+#
+# Check to see if usage help for this script is being requested.  If so,
+# print it out and exit with a 0 exit code (success).
+#
+#-----------------------------------------------------------------------
+#
+help_flag="--help"
+if [ "$#" -eq 1 ] && [ "$1" = "${help_flag}" ]; then
+  print_info_msg "${usage_str}"
+  exit 0
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Specify the set of valid argument names for this script or function.
+# Then process the arguments provided to it on the command line (which
+# should consist of a set of name-value pairs of the form arg1="value1", 
+# arg2="value2", etc).
 #
 #-----------------------------------------------------------------------
 #
 valid_args=( \
-  "expts_file" \
+  "tests_file" \
   "machine" \
   "account" \
   "expt_basedir" \
-  "testset_name" \
   "use_cron_to_relaunch" \
   "cron_relaunch_intvl_mnts" \
   "verbose" \
@@ -129,7 +234,7 @@ process_args valid_args "$@"
 #
 # For debugging purposes, print out values of arguments passed to this
 # script.  Note that these will be printed out only if VERBOSE is set to
-# TRUE.
+# "TRUE".
 #
 #-----------------------------------------------------------------------
 #
@@ -137,488 +242,429 @@ print_input_args "valid_args"
 #
 #-----------------------------------------------------------------------
 #
-# Check arguments.
+# Verify that the required arguments to this script have been specified.
+# If not, print out an error message and exit.
 #
 #-----------------------------------------------------------------------
 #
-if [ 1 = 0 ]; then
-  if [ "$#" -ne 1 ]; then
+help_msg="\
+Use
+  ${scrfunc_fn} ${help_flag}
+to get help on how to use this script."
 
-    print_err_msg_exit "
-Incorrect number of arguments specified:
+if [ -z "${tests_file}" ]; then
+  print_err_msg_exit "\
+The argument \"tests_file\" specifying the file containing a list of the 
+WE2E tests to run was not specified in the call to this script.  \
+${help_msg}"
+fi
 
-  Number of arguments specified:  $#
+if [ -z "${machine}" ]; then
+  print_err_msg_exit "\
+The argument \"machine\" specifying the machine or platform on which to
+run the WE2E tests was not specified in the call to this script.  \
+${help_msg}"
+fi
 
-Usage:
+if [ -z "${account}" ]; then
+  print_err_msg_exit "\
+The argument \"account\" specifying the account under which to submit 
+jobs to the queue when running the WE2E tests was not specified in the 
+call to this script.  \
+${help_msg}"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Get the full path to the file containing the list of user-specified 
+# WE2E tests to run.  Then verify that the file exists.
+#
+#-----------------------------------------------------------------------
+#
+user_spec_tests_fp=$( readlink -f "${tests_file}" )
 
-  ${scrfunc_fn}  expts_file
-
-where expts_file is the name of the file containing the list of experi-
-ments to run.  If expts_file is the absolute path to a file, it is used
-as is.  If it is a relative path (including just a file name), it is as-
-sumed to be given relative to the path from which this script is called.
-"
-
+if [ ! -f "${user_spec_tests_fp}" ]; then
+  print_err_msg_exit "\
+The file containing the user-specified list of WE2E tests to run 
+(tests_file) that is passed in as an argument to this script does not
+exit:
+  tests_file = \"${tests_file}\"
+The full path to this script is:
+  user_spec_tests_fp = \"${user_spec_tests_fp}\"
+Please ensure that this file exists and rerun."
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Read in each line of the file specified by user_spec_tests_fp and add 
+# each non-empty line to the array user_spec_tests.  Note that the read 
+# command will remove any leading and trailing whitespace from each line 
+# in user_spec_tests_fp [because it treats whatever character(s) the bash 
+# variable IFS (Internal Field Separator) is set to as word separators 
+# on each line, and IFS is by default set to a space, a tab, and a 
+# newline].
+#
+#-----------------------------------------------------------------------
+#
+user_spec_tests=()
+while read -r line; do
+  if [ ! -z "$line" ]; then
+    user_spec_tests+=("$line")
   fi
-fi
+done < "${user_spec_tests_fp}"
 #
 #-----------------------------------------------------------------------
 #
-# Verify that an experiments list file has been specified.  If not,
-# print out an error message and exit.
+# Call a function to obtain the names of all available WE2E tests (i.e. 
+# not just the ones the user wants to run but all that are part of the 
+# WE2E testing system), the test IDs, and the category subdirectory in 
+# which each corresponding test configuration file is located.  
 #
+# The array of test names (avail_WE2E_test_names) that the function 
+# called below returns contains both primary and alternate test names.  
+# A primary test name is a test name obtained from the name of a WE2E 
+# test configuration file that is an ordinary file, i.e. not a symlink, 
+# whereas an alternate name is one that is derived from the name of a 
+# symlink whose target is an ordinary test configuration file (but not
+# another symlink).  To be able to determine the set of test names that 
+# correspond to the same primary test, the function called also returns 
+# an array of test IDs (avail_WE2E_test_IDs) such that the IDs for a 
+# primary test name and all the alternate names that map to it (if any) 
+# are the same.  These IDs will be used later below to ensure that the 
+# user does not list in the set of test names to run a given test more 
+# than once, e.g. by accidentally including in the list its primary name 
+# as well as one of its alternate names.
+#
+# The category subdirectories in the array avail_WE2E_test_subdirs 
+# returned by the function called below are relative to the base 
+# directory under which the WE2E test configuration files are located.
+# This base directory is set by the function call below and is returned
+# in the output variable avail_WE2E_test_configs_basedir.  The i-th 
+# element of avail_WE2E_test_subdirs specifies the subdirectory under 
+# this base directory that contains the ordinary test configuration file 
+# (for a primary test name) or the symlink (for an alternate test name) 
+# corresponding to the i-th element (which may be a primary or alternate 
+# test name) in avail_WE2E_test_names.  We refer to these subdirectories 
+# as "category" subdirectories because they are used for clarity to group 
+# the WE2E tests into types or categories.
+#
+# Finally, note that the returned arrays 
+#
+#   avail_WE2E_test_names
+#   avail_WE2E_test_ids
+#   avail_WE2E_test_subdirs
+#
+# are sorted in order of increasing test ID and such that for a given 
+# set of test names that share the same ID, the primary test name is 
+# listed first followed by zero or more alternate names.  As an example,
+# assume that there are three category subdirectories under the base
+# directory specified by avail_WE2E_test_configs_basedir: dir1, dir2, 
+# and dir3.  Also, assume that dir1 contains a test configuration file 
+# named config.primary_name.sh that is an ordinary file, and dir2 and dir3 
+# contain the following symlinks that point config.primary_name.sh:
+#
+#   ${avail_WE2E_test_configs_basedir}/dir2/config.alt_name_1.sh 
+#     --> ${avail_WE2E_test_configs_basedir}/dir1/config.primary_name.sh
+#
+#   ${avail_WE2E_test_configs_basedir}/dir3/config.alt_name_2.sh
+#     --> ${avail_WE2E_test_configs_basedir}/dir1/config.primary_name.sh
+#
+# Finally, assume that the ID of the test primary_name is 21 and that
+# this ID is at indices 7, 8, and 9 in avail_WE2E_test_ids.  Then indices
+# 7, 8, and 9 of the three arrays returned by the function call below
+# may be as follows:
+#
+#   avail_WE2E_test_names[7]="primary_name"
+#   avail_WE2E_test_names[8]="alt_name_1"
+#   avail_WE2E_test_names[9]="alt_name_2"
+#
+#   avail_WE2E_test_ids[7]="21"
+#   avail_WE2E_test_ids[8]="21"
+#   avail_WE2E_test_ids[9]="21"
+#
+#   avail_WE2E_test_subdirs[7]="dir1"
+#   avail_WE2E_test_subdirs[8]="dir2"
+#   avail_WE2E_test_subdirs[9]="dir3"
+#   
 #-----------------------------------------------------------------------
 #
-# Note:
-# The function process_args() should be modified to look for required
-# arguments, which can be denoted by appending to the name of a required
-# argument the string "; REQUIRED".  It can then check that all required
-# arguments are in fact specified in the arguments list.  That way, the
-# following if-statement will not be needed since process_args() will
-# catch the case of missing required arguments.
-#
-if [ -z "${expts_file}" ] || \
-   [ -z "${machine}" ] || \
-   [ -z "${account}" ]; then
-  print_err_msg_exit "\
-An experiments list file (expts_file), a machine name (machine), and an
-account name (account) must be specified as input arguments to this
-script.  One or more of these is currently set to an empty string:
-  expts_file = \"${expts_file}\"
-  machine = \"${machine}\"
-  account = \"${account}\"
-Use the following format to specify these in the argument list passed to
-this script:
-  ${scrfunc_fn}  \\
-    expts_file=\"name_of_file_or_full_path_to_file\" \\
-    machine=\"name_of_machine_to_run_on\" \\
-    account=\"name_of_hpc_account_to_use\" \\
-    ..."
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Get the full path to the experiments list file and verify that it exists.
-#
-#-----------------------------------------------------------------------
-#
-expts_list_fp=$( readlink -f "${expts_file}" )
+print_info_msg "
+Getting information about all available WE2E tests..."
 
-if [ ! -f "${expts_list_fp}" ]; then
-  print_err_msg_exit "\
-The experiments list file (expts_file) specified as an argument to this
-script (and with full path given by expts_list_fp) does not exist:
-  expts_file = \"${expts_file}\"
-  expts_list_fp = \"${expts_list_fp}\""
-fi
+get_WE2Etest_names_subdirs_descs \
+  WE2Edir="${WE2Edir}" \
+  output_varname_test_configs_basedir="avail_WE2E_test_configs_basedir" \
+  output_varname_test_names="avail_WE2E_test_names" \
+  output_varname_test_subdirs="avail_WE2E_test_subdirs" \
+  output_varname_test_ids="avail_WE2E_test_ids"
+#
+# Get the total number of available WE2E test names (including alternate
+# names).
+#
+num_avail_WE2E_tests="${#avail_WE2E_test_names[@]}"
 #
 #-----------------------------------------------------------------------
 #
-# Read in the list of experiments (which might be baselines) to run.
-# This entails reading in each line of the file expts_list.txt in the
-# directory of this script and saving the result in the array variable
-# expts_list.  Note that each line of expts_list.txt has the form
+# Loop through the elements of the array user_spec_tests and perform
+# sanity checks.  For each such element (i.e. for each WE2E test to run 
+# specified by the user), make sure that:
 #
-#   BASELINE_NAME  |  VAR_NAME_1="VAR_VALUE_1"  |  ... |  VAR_NAME_N="VAR_VALUE_N"
+# 1) The name of the test exists in the complete list of available WE2E
+#    tests in avail_WE2E_test_names.
+# 2) The test does not have an ID that is identical to a previously 
+#    considered test in the user-specified list of tests to run (because
+#    if so, it would be identical to that previously considered test,
+#    and it would be a waste of computational resources to run). 
 #
-# where BASELINE_NAME is the name of the baseline and the zero or more
-# variable name-value pairs following the baseline name are a list of
-# variables to modify from the baseline.  Note that:
-#
-# 1) There must exist a experiment/workflow configuration file named
-#    config.BASELINE_NAME.sh in a subdirectory named base_configs in the
-#    directory of this script.
-#
-# 2) The variable name-value pairs on each line of the expts_list.txt
-#    file are delimited from the baseline and from each other by pipe
-#    characters (i.e. "|").
+# If these requirements are met, add the test name to the list of tests 
+# to run in the array names_tests_to_run, and add the test's category 
+# subdirectory to subdirs_tests_to_run.
 #
 #-----------------------------------------------------------------------
 #
 print_info_msg "
-Reading in list of forecast experiments from file
-  expts_list_fp = \"${expts_list_fp}\"
-and storing result in the array \"all_lines\" (one array element per 
-experiment)..."
+Performing sanity checks on user-specified list of WE2E tests to run..."
 
-readarray -t all_lines < "${expts_list_fp}"
+names_tests_to_run=()
+ids_tests_to_run=()
+subdirs_tests_to_run=()
+#
+# Initialize the array that will contain the remaining available WE2E
+# test names (including alternate names, if any) after finding a match
+# for the i-th user-specified test name to run in user_spec_tests.
+#
+remaining_avail_WE2E_test_names=( "${avail_WE2E_test_names[@]}" )
 
-all_lines_str=$( printf "\'%s\'\n" "${all_lines[@]}" )
-print_info_msg "
-All lines from experiments list file (expts_list_fp) read in, where:
-  expts_list_fp = \"${expts_list_fp}\"
-Contents of file are (line by line, each line within single quotes, and
-before any processing):
+num_user_spec_tests="${#user_spec_tests[@]}"
+for (( i=0; i<=$((num_user_spec_tests-1)); i++ )); do
 
-${all_lines_str}
-"
-#
-#-----------------------------------------------------------------------
-#
-# Loop through the elements of all_lines and modify each line to remove
-# leading and trailing whitespace and any whitespace before and after the
-# field separator character (which is the pipe character, "|").  Also,
-# drop any elements that are empty after this processing, and save the
-# resulting set of non-empty elements in the array expts_list.
-#
-#-----------------------------------------------------------------------
-#
-expts_list=()
-field_separator="\|"  # Need backslash as an escape sequence in the sed commands below.
+  user_spec_test="${user_spec_tests[$i]}"
 
-j=0
-num_lines="${#all_lines[@]}"
-for (( i=0; i<=$((num_lines-1)); i++ )); do
+  print_info_msg "\
+  Checking user-specified WE2E test:  \"${user_spec_test}\""
 #
-# Remove all leading and trailing whitespace from the current element of
-# all_lines.
+# For the current user-specified WE2E test (user_spec_test), loop through 
+# the list of all remaining available WE2E test names (i.e. the ones that 
+# haven't yet been matched to any of the user-specified test names to 
+# run) and make sure that:
 #
-  all_lines[$i]=$( printf "%s" "${all_lines[$i]}" | \
-                   sed -r -e "s/^[ ]*//" -e "s/[ ]*$//" )
+# 1) The name of the test exists (either as a primary test name or an
+#    alternate test name) in the list of all available WE2E test names.
+# 2) The test is not repeated in the user-specified list of tests to run, 
+#    either under the same name or an alternate name (i.e. make sure that
+#    it does not have the same test ID as a previously considered test).
+# 
+# Note that in the loop below, the index j gets set to only those elements
+# of remaining_avail_WE2E_test_names that are defined [the syntax 
+# "${!some_array[@]}" expands to the indices of some_array that have 
+# defined elements].  We do this for efficiency; we unset elements of 
+# remaining_avail_WE2E_test_names that have already been matched with 
+# one of the user-specified test names to run because we know that any
+# remaining user-specified test names will not match those elements.
 #
-# Remove spaces before and after all field separators in the current
-# element of all_lines.  Note that we use the pipe symbol, "|", as the
-# field separator.
+  match_found="FALSE"
+  for j in "${!remaining_avail_WE2E_test_names[@]}"; do
+
+    test_name="${avail_WE2E_test_names[$j]}"
+    test_id="${avail_WE2E_test_ids[$j]}"
 #
-  all_lines[$i]=$( printf "%s" "${all_lines[$i]}" | \
-                   sed -r -e "s/[ ]*${field_separator}[ ]*/${field_separator}/g" )
+# Check whether the name of the current user-specified test (user_spec_test) 
+# matches any of the names in the full list of WE2E tests.  If so:
 #
-# If the last character of the current line is a field separator, remove
-# it.
+# 1) Set match_found to "TRUE".
+# 2) Make sure that the test to run doesn't have a test ID that is 
+#    identical to a previously considered test in the user-specified 
+#    list of tests to run (which would mean the two tests are identical).
+#    If so, print out an error message and exit.
+# 
+    if [ "${test_name}" = "${user_spec_test}" ]; then
+
+      match_found="TRUE"
+
+      is_element_of "ids_tests_to_run" "${test_id}" && {
+
+        user_spec_tests_str=$(printf "    \"%s\"\n" "${user_spec_tests[@]}")
+        user_spec_tests_str=$(printf "(\n%s\n    )" "${user_spec_tests_str}")
+
+        all_names_for_test=()
+        for (( k=0; k<=$((num_avail_WE2E_tests-1)); k++ )); do
+          if [ "${avail_WE2E_test_ids[$k]}" = "${test_id}" ]; then
+            all_names_for_test+=("${avail_WE2E_test_names[$k]}")
+          fi
+        done
+        all_names_for_test_str=$(printf "  \"%s\"\n" "${all_names_for_test[@]}")
+
+        print_err_msg_exit "\
+The current user-specified test to run (user_spec_test) is already included 
+in the list of tests to run (user_spec_tests), either under the same name 
+or an alternate name:
+  user_spec_test = \"${user_spec_test}\"
+  user_spec_tests = ${user_spec_tests_str}
+This test has the following primary and possible alternate names:
+${all_names_for_test_str}
+In order to avoid repeating the same WE2E test (and thus waste computational 
+resources), only one of these test names can be specified in the list of 
+tests to run.  Please modify this list in the file
+  user_spec_tests_fp = \"${user_spec_tests_fp}\"
+accordingly and rerun."
+
+      }
 #
-  all_lines[$i]=$( printf "%s" "${all_lines[$i]}" | \
-                   sed -r -e "s/${field_separator}$//g" )
+# Append the name of the current user-specified test, its ID, and its
+# category subdirectory to the arrays that contain the sanity-checked 
+# versions of of these quantities.  
 #
-# If after the processing performed above the current element of all_lines 
-# is not empty, save it as the next element of expts_list.
+      names_tests_to_run+=("${user_spec_test}")
+      ids_tests_to_run+=("${test_id}")
+      subdirs_tests_to_run+=("${avail_WE2E_test_subdirs[$j]}")
+# 
+# Remove the j-th element of remaining_avail_WE2E_test_names so that for
+# the next user-specified test to run, we do not need to check whether
+# the j-th test is a match.  Then break out of the loop over all remaining
+# available WE2E tests.
 #
-  if [ ! -z "${all_lines[$i]}" ]; then
-    expts_list[$j]="${all_lines[$i]}"
-    j=$((j+1))
+      unset remaining_avail_WE2E_test_names[$j]
+      break
+
+    fi
+
+  done
+#
+# If match_found is still "FALSE" after exiting the loop above, then a
+# match for the current user-specifed test to run was not found in the 
+# list of all WE2E tests -- neither as a primary test name nor as an 
+# alternate name.  In this case, print out an error message and exit.
+#
+  if [ "${match_found}" = "FALSE" ]; then
+    avail_WE2E_test_names_str=$( printf "  \"%s\"\n" "${avail_WE2E_test_names[@]}" )
+    print_err_msg_exit "\
+The name current user-specified test to run (user_spec_test) does not 
+match any of the names (either primary or alternate) of the available
+WE2E tests:
+  user_spec_test = \"${user_spec_test}\"
+Valid values for user_spec_test consist of the names (primary or alternate)
+of the available WE2E tests, which are:
+${avail_WE2E_test_names_str}
+Each name in the user-specified list of tests to run:
+  1) Must match one of the (primary or alternate) test names of the 
+     availabe WE2E tests.
+  2) Must not be the primary or alternate name of a test that has its
+     primary or one of its alternate names already included in the user-
+     specified list of test to run, i.e. tests must not be repeated (in
+     order not to waste computational resources).
+Please modify the user-specified list of tests to run such that it adheres 
+to the rules above and rerun.  This list is in the file specified by the
+input variable tests_file:
+  tests_file = \"${tests_file}\"
+The full path to this file is:
+  user_spec_tests_fp = \"${user_spec_tests_fp}\""
   fi
 
 done
 #
 #-----------------------------------------------------------------------
 #
-# Get the number of experiments to run and print out an informational
+# Get the number of WE2E tests to run and print out an informational
 # message.
 #
 #-----------------------------------------------------------------------
 #
-num_expts="${#expts_list[@]}"
-expts_list_str=$( printf "  \'%s\'\n" "${expts_list[@]}" )
+num_tests_to_run="${#names_tests_to_run[@]}"
+tests_to_run_str=$( printf "  \'%s\'\n" "${names_tests_to_run[@]}" )
 print_info_msg "
-After processing, the number of experiments to run (num_expts) is:
-  num_expts = ${num_expts}
-The list of forecast experiments to run (one experiment per line) is 
-given by:
-${expts_list_str}
-"
+After processing the user-specified list of WE2E tests to run, the number 
+of tests to run (num_tests_to_run) is
+  num_tests_to_run = ${num_tests_to_run}
+and the list of WE2E tests to run (one test per line) is
+${tests_to_run_str}"
 #
 #-----------------------------------------------------------------------
 #
-# Loop through the elements of the array expts_list.  For each element
-# (i.e. for each experiment), generate an experiment directory and 
-# corresponding workflow and then launch the workflow.
+# Loop through the WE2E tests to run.  For each test, use the corresponding
+# test configuration file to generate a temporary experiment file and
+# launch the experiment generation script using that file.
 #
 #-----------------------------------------------------------------------
 #
-num_all_WE2E_tests="${#all_WE2E_test_names[@]}"
-inds_tests_to_run=()
-subdirs_tests_to_run=()
+for (( i=0; i<=$((num_tests_to_run-1)); i++ )); do
 
-for (( i=0; i<=$((num_expts-1)); i++ )); do
+  test_name="${names_tests_to_run[$i]}"
+  test_subdir="${subdirs_tests_to_run[$i]}"
+#
+# Generate the full path to the current WE2E test's configuration file.
+# Then ensure that this file exists.
+#
+  test_config_fp="${avail_WE2E_test_configs_basedir}/${test_subdir}/config.${test_name}.sh"
 
-  print_info_msg "
-Processing experiment \"${expts_list[$i]}\" ..."
-#
-# Get the name of the baseline on which the current experiment is based.
-# Then save the remainder of the current element of expts_list in the
-# variable "remainder".  Note that if this variable is empty, then the
-# current experiment is identical to the current baseline.  If not, then
-# "remainder" contains the modifications that need to be made to the
-# current baseline to obtain the current experiment.
-#
-  regex_search="^([^${field_separator}]*)(${field_separator}(.*)|)"
-  baseline_name=$( printf "%s" "${expts_list[$i]}" | \
-                   sed -r -n -e "s/${regex_search}/\1/p" )
-  remainder=$( printf "%s" "${expts_list[$i]}" | \
-               sed -r -n -e "s/${regex_search}/\3/p" )
-#
-# Get the names and corresponding values of the variables that need to
-# be modified in the current baseline to obtain the current experiment.
-# The following while-loop steps through all the variables listed in
-# "remainder".
-#
-  modvar_name=()
-  modvar_value=()
-  num_mod_vars=0
-  while [ ! -z "${remainder}" ]; do
-#
-# Get the next variable-value pair in remainder, and save what is left
-# of remainder back into itself.
-#
-    next_field=$( printf "%s" "$remainder" | \
-                  sed -r -e "s/${regex_search}/\1/" )
-    remainder=$( printf "%s" "$remainder" | \
-                 sed -r -e "s/${regex_search}/\3/" )
-#
-# Save the name of the variable in the variable-value pair obtained above
-# in the array modvar_name.  Then save the value in the variable-value 
-# pair in the array modvar_value.
-#
-    modvar_name[${num_mod_vars}]=$( printf "%s" "${next_field}" | \
-                                    sed -r -e "s/^([^=]*)=(.*)/\1/" )
-    modvar_value[${num_mod_vars}]=$( printf "%s" "${next_field}" | \
-                                     sed -r -e "s/^([^=]*)=(\")?([^\"]+*)(\")?/\3/" )
-#
-# Increment the index that keeps track of the number of variables that
-# need to be modified in the current baseline to obtain the current ex-
-# periment.
-#
-    num_mod_vars=$((num_mod_vars+1))
-
-  done
-#
-# For the current experiment to run (baseline_name), loop through the 
-# list of all WE2E tests and make sure that:
-#
-# 1) The name of the test exists as either a primary test name or an
-#    alternate test name in the full list of WE2E tests.
-# 2) The test to run is not a repeat of a previously listed test to run,
-#    either under the same name or a different name.
-# 
-
-# No need for two names for same quantity!!! 
-  test_to_run="${baseline_name}"
-
-  regex_search="[ ]*\|[ ]*"
-  regex_replace=" "
-  match_found="FALSE"
-  for (( j=0; j<=$((num_all_WE2E_tests-1)); j++ )); do
-
-    primary_test_name_and_alts=$( \
-      printf "%s\n" "${all_WE2E_test_names[$j]}" | \
-      sed -r -e "s/${regex_search}/${regex_replace}/g" )
-    eval primary_test_name_and_alts=( ${primary_test_name_and_alts} )
-#
-# Check whether the name of the test to run (test_to_run) matches the
-# primary or any of the alternate names of the j-th test in the full 
-# list of WE2E tests.  If so:
-#
-# 1) Set match_found to "TRUE".
-# 2) Make sure that the test to run hasn't already been specified in the
-#    list of tests to run, either under the same name or under an 
-#    alternate name for the same test.  We do this by keeping track of
-#    the indices into the array containing the full list of tests of the
-#    tests to run and making sure that none of these indices are repeated.
-# 
-
-# To-do: 
-# Modify is_element_of to return the match index (if a match is found).  
-# Use process_args to pass variables into is_element_of and get the 
-# match index out.
-    is_element_of "primary_test_name_and_alts" "${test_to_run}" && {
-
-      match_found="TRUE"
-
-      is_element_of "inds_tests_to_run" "$j" && {
-        primary_test_name_and_alts_str=$(printf "\"%s\" " "${primary_test_name_and_alts[@]}")
-        print_err_msg_exit "\
-The specified test to run (test_to_run) already exists in the list of
-tests to run, either under the same name or an alternate name:
-  test_to_run = \"${test_to_run}\"
-This test has the following primary and possibly one or more alternate
-names:
-  ${primary_test_name_and_alts_str}
-The first item in this list is the primary test name, and the second,
-third, etc are the alternate names.  In order to not repeat the same
-WE2E test (and thus waste computational resources), only one of these
-test names can be specified in the list of tests to run.  Please modify
-the list accordingly and retry."
-      }
-#
-# At this point, we know that the current test_to_run is not a repeat of
-# one already specified (either under the same name or one of its 
-# alternate names).  Next, get the index of the element in the array 
-# primary_test_name_and_alts that matches test_to_run.  This is needed
-# in getting the category subdirectory in which the test is found.
-#
-# Note that the following for-loop should not be necessary once the above 
-# change to the is_element_of function to return the index of the match 
-# is made.
-#
-      num_elems=${#primary_test_name_and_alts[@]}
-      for (( n=0; n<${num_elems}; n++ )); do
-        if [ "${primary_test_name_and_alts[$n]}" = "${test_to_run}" ]; then
-          break
-        fi
-      done
-#
-# Add the index into the full list of tests of the current test to run
-# to the array inds_tests_to_run.  Then get the category subdirectory in 
-# which the test is located.
-#
-      inds_tests_to_run+=("$j")
-      primary_and_alt_subdirs=$( \
-        printf "%s\n" "${all_WE2E_test_subdirs[$j]}" | \
-        sed -r -e "s/${regex_search}/${regex_replace}/g" )
-      eval primary_and_alt_subdirs=( ${primary_and_alt_subdirs} )
-      subdirs_tests_to_run+=("${primary_and_alt_subdirs[$n]}")
-      break
-
-    }
-
-  done
-#
-# If match_found is still "FALSE" after exiting the loop above, then a
-# match for the current test_to_run was not found in the list of all WE2E
-# tests -- neither as a primary test name nor as an alternate name.  In
-# this case, print out an error message and exit.
-#
-  if [ "${match_found}" = "FALSE" ]; then
-    regex_search="[ ]*\|[ ]*"
-    regex_replace="\" \| \""
-    all_WE2E_test_names_str=$( \
-      printf "  \"%s\"\n" "${all_WE2E_test_names[@]}" | \
-      sed -r -e "s/${regex_search}/${regex_replace}/g" )
+  if [ ! -f "${test_config_fp}" ]; then
     print_err_msg_exit "\
-The specified test to run (test_to_run) does not match any of the existing
-WE2E tests:
-  test_to_run = \"${test_to_run}\"
-Valid values for test_to_run are:
-${all_WE2E_test_names_str}
-Each line of this list corresponds to a WE2E test.  The first string on 
-each line is the primary test name, and the second, third, etc strings
-following the first, second, etc pipe symbols (\"|\") (if any) are the 
-alternate names for the test.  Each member in the set of tests to run 
-must:
-  1) Consist of either the primary name or one of the alternate names of
-     one of the tests in the list above.
-  2) Not be the primary or alternate name of a test whose primary name 
-     or one of whose alternate names already exists in the set of test 
-     to run, i.e. tests must not be repeated.
-Please modify the set of tests to run such that it adheres to the rules
-above and retry."
-  fi
-
-
-  test_subdir="${subdirs_tests_to_run[-1]}"
-echo "RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR"
-echo "test_subdir = |${test_subdir}|"
-#exit
-
-
-
-#
-# Generate the path to the configuration file for the current baseline.
-# This will be modified to obtain the configuration file for the current
-# experiment.
-#
-  base_config_fp="${base_configs_dir}/${test_subdir}/config.${baseline_name}.sh"
-#
-# Print out an error message and exit if a configuration file for the
-# current baseline does not exist.
-#
-  if [ ! -f "${base_config_fp}" ]; then
-    print_err_msg_exit "\
-The experiment/workflow configuration file (base_config_fp) for the
-specified baseline (baseline_name) does not exist:
-  baseline_name = \"${baseline_name}\"
-  base_config_fp = \"${base_config_fp}\"
+The experiment configuration file (test_config_fp) for the current WE2E
+test (test_name) does not exist:
+  test_name = \"${test_name}\"
+  test_config_fp = \"${test_config_fp}\"
 Please correct and rerun."
   fi
 #
-# Generate a name for the current experiment.  We start with the name of
-# the current baseline and modify it to indicate which variables must be
-# reset to obtain the current experiment.
-#
-  expt_name="${baseline_name}"
-  for (( j=0; j<${num_mod_vars}; j++ )); do
-    if [ $j -lt ${#modvar_name[@]} ]; then
-      expt_name="${expt_name}__${modvar_name[$j]}.eq.${modvar_value[$j]}"
-    else
-      break
-    fi
-  done
-#
-# Set the full path to the workflow configuration file for the current 
-# experiment that the workflow generation script will read in.  For now, 
-# include the name of the test in the file name.  Once this file is 
-# constructed below, it will get renamed to the file name that the 
-# generation script expects (which is "config.sh").  Also, if a preexisting
-# file of this name exists, delete it.
-#
-  expt_config_fp="$ushdir/config.${expt_name}.sh"
-  rm_vrfy -rf "${expt_config_fp}"
-#
 #-----------------------------------------------------------------------
 #
-# Source the default workflow configuration file.  Note that we need to
-# re-source this file for each WE2E test because the previous test may 
-# change these default values when the test-specific configuration file
-# is sourced below.  We need to reset the workflow variables because some 
-# of the tests rely on the default values.
+# Source the default experiment configuration file to set values of 
+# various experiment variables to their defaults.  Then source the 
+# current WE2E test's configuration file to overwrite certain variables' 
+# default values with test-specific ones.
 #
 #-----------------------------------------------------------------------
 #
   . ${ushdir}/config_defaults.sh
+  . ${test_config_fp}
 #
 #-----------------------------------------------------------------------
 #
-# Source the WE2E test configuration file.  This will overwrite some of
-# the workflow variable values in the default workflow configuration file
-# sourced above.
+# We will now construct a multiline variable consisting of the contents 
+# that we want the experiment configuration file for this WE2E test to
+# have.  Once this variable is constructed, we will write its contents
+# to the generic configuration file that the experiment generation script
+# reads in (specified by the variable EXPT_CONFIG_FN in the default 
+# configuration file config_defaults.sh sourced above) and then run that
+# script to generate an experiment for the current WE2E test.
+#
+# We name the multiline variable that will contain the contents of the
+# experiment configuration file "expt_config_str" (short for "experiment
+# configuration string").  Here, we initialize this to a null string,
+# and we append to it later below.
+#
+#-----------------------------------------------------------------------
+# 
+  expt_config_str=""
 #
 #-----------------------------------------------------------------------
 #
-  . ${base_config_fp}
-#
-#-----------------------------------------------------------------------
-#
-# Set various workflow variables that depend on inputs to this script (as
-# opposed to information in the test-specific configuration file specified 
-# by base_config_fp).  Note that any values of these parameters specified 
-# in the default workflow configuration file (config_defaults.sh) or in 
-# the test-specific configuraiton file (base_config_fp) that are sourced 
+# Set (and then write to expt_config_str) various experiment variables 
+# that depend on the input arguments to this script (as opposed to 
+# variable settings in the test configuration file specified by 
+# test_config_fp).  Note that any values of these parameters specified 
+# in the default experiment configuration file (config_defaults.sh) 
+# or in the test configuraiton file (test_config_fp) that were sourced 
 # above will be overwritten by the settings below.
 #
-# Note that EXPT_BASEDIR is set below as follows:
-# * If neither of the command line arguments expt_basedir and testset_name 
-#   to this script are specified, EXPT_BASEDIR gets set to a null string.
-# * If expt_basedir is specified but testset_name is not, EXPT_BASEDIR
-#   gets set to expt_basedir.
-# * If expt_basedir is not specified but testset_name is, EXPT_BASEDIR
-#   gets set to testset_name.
-# * If expt_basedir and testset_name are both specified, EXPT_BASEDIR 
-#   gets set to expt_basedir with testset_name appended to it (with a
-#   "/" in between).
-#
 # Note also that if EXPT_BASEDIR ends up getting set to a null string, 
-# the workflow generation script that gets called further below will set 
-# it to a default path; if it gets set to a relative path, then the workflow 
-# generation script will set it to a path consisting of a default path 
-# with the relative path appended to it; and if it gets set to an absolute 
-# path, then the workflow will leave it set to that path.
+# the experiment generation script that gets called further below will 
+# set it to a default path; if it gets set to a relative path, then the 
+# experiment generation script will set it to a path consisting of a 
+# default path with the relative path appended to it; and if it gets set 
+# to an absolute path, then the workflow will leave it set to that path.
 #
 #-----------------------------------------------------------------------
 #
   MACHINE="${machine^^}"
   ACCOUNT="${account}"
 
-# Note that if expt_basedir is a null (or unset) string, ${expt_basedir:+/} 
-# gets set to a null string; otherwise, it gets set to "/".
-  EXPT_BASEDIR="${expt_basedir}${expt_basedir:+/}${testset_name}"
-# Remove any trailing "/" from EXPT_BASEDIR.
-  EXPT_BASEDIR="${EXPT_BASEDIR%%/}"
-
-  EXPT_SUBDIR="${expt_name}"
+  EXPT_BASEDIR="${expt_basedir}"
+  EXPT_SUBDIR="${test_name}"
   USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch:-"TRUE"}
   CRON_RELAUNCH_INTVL_MNTS=${cron_relaunch_intvl_mnts:-"02"}
   VERBOSE=${verbose:-"TRUE"}
 
-  str="\
+  expt_config_str=${expt_config_str}"\
 #
 # The machine on which to run, the account to which to charge computational
 # resources, the base directory in which to create the experiment directory
@@ -629,11 +675,11 @@ MACHINE=\"${MACHINE}\"
 ACCOUNT=\"${ACCOUNT}\""
 
   if [ ! -z "${EXPT_BASEDIR}" ]; then
-    str=${str}"
+    expt_config_str=${expt_config_str}"
 EXPT_BASEDIR=\"${EXPT_BASEDIR}\""
   fi
 
-  str=${str}"
+  expt_config_str=${expt_config_str}"
 EXPT_SUBDIR=\"${EXPT_SUBDIR}\"
 #
 # Flag specifying whether or not to automatically resubmit the worfklow
@@ -649,43 +695,39 @@ VERBOSE=\"${VERBOSE}\""
 #
 #-----------------------------------------------------------------------
 #
-# Append test-specific values to the workflow configuration file.
+# Append the contents of the current WE2E test's configuration file to
+# the experiment configuration string.
 #
 #-----------------------------------------------------------------------
 #
-  str=${str}"
+  expt_config_str=${expt_config_str}"
 #
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
-# The following section is a copy of the base configuration of this WE2E 
-# test.
+# The following section is a copy of this WE2E test's configuration file.
 #
 "
-  str=${str}$( cat "${base_config_fp}" )
-  str=${str}"
+  expt_config_str=${expt_config_str}$( cat "${test_config_fp}" )
+  expt_config_str=${expt_config_str}"
 #
-# End of section from the base configuration file of this WE2E test.
+# End of section from this test's configuration file.
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------"
 #
 #-----------------------------------------------------------------------
 #
-# If not running one or more of the grid, orography, and surface climatology
-# file generation tasks, specify directories in which pregenerated files
-# can be found.
+# Modifications to the experiment configuration file if the WE2E test 
+# uses pre-generated grid, orography, or surface climatology files.
+#
+# If not running one or more of the grid, orography, and surface 
+# climatology file generation tasks, specify directories in which 
+# pregenerated versions of these files can be found.
 #
 #-----------------------------------------------------------------------
 #
-  if [ ${RUN_TASK_MAKE_GRID} = "FALSE" ] || \
-     [ ${RUN_TASK_MAKE_OROG} = "FALSE" ] || \
-     [ ${RUN_TASK_MAKE_SFC_CLIMO} = "FALSE" ]; then
-
-# Note:
-# Now that the "grid", "orog", and "sfc_climo" sub-subdirectories under
-# pregen_basedir have been removed, we don't need the variable pregen_basedir
-# and can instead have the variable "pregen_dir" that gets set to 
-# ${pregen_basedir}/${PREDEF_GRID_NAME}, and pregen_dir can then be used
-# to set GRID_DIR, OROG_DIR, and/or SFC_CLIMO_DIR below.
+  if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ] || \
+     [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ] || \
+     [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ]; then
 
     if [ "$MACHINE" = "WCOSS_CRAY" ]; then
       pregen_basedir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/FV3LAM_pregen"
@@ -705,47 +747,47 @@ specified for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
 
+    pregen_dir="${pregen_basedir}/${PREDEF_GRID_NAME}"
+
   fi
 #
 # Directory for pregenerated grid files.
 #
-  if [ ${RUN_TASK_MAKE_GRID} = "FALSE" ]; then
-    GRID_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}"
-    str=${str}"
+  if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
+    GRID_DIR="${pregen_dir}"
+    expt_config_str=${expt_config_str}"
 #
 # Directory containing the pregenerated grid files.
 #
 GRID_DIR=\"${GRID_DIR}\""
-
   fi
 #
 # Directory for pregenerated orography files.
 #
-  if [ ${RUN_TASK_MAKE_OROG} = "FALSE" ]; then
-    OROG_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}"
-    str=${str}"
+  if [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ]; then
+    OROG_DIR="${pregen_dir}"
+    expt_config_str=${expt_config_str}"
 #
 # Directory containing the pregenerated orography files.
 #
 OROG_DIR=\"${OROG_DIR}\""
-
   fi
 #
 # Directory for pregenerated surface climatology files.
 #
-  if [ ${RUN_TASK_MAKE_SFC_CLIMO} = "FALSE" ]; then
-    SFC_CLIMO_DIR="${pregen_basedir}/${PREDEF_GRID_NAME}"
-    str=${str}"
+  if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ]; then
+    SFC_CLIMO_DIR="${pregen_dir}"
+    expt_config_str=${expt_config_str}"
 #
 # Directory containing the pregenerated surface climatology files.
 #
 SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
-
   fi
 #
 #-----------------------------------------------------------------------
 #
-#
+# Modifications to the experiment configuration file if running the WE2E 
+# test in NCO mode.
 #
 #-----------------------------------------------------------------------
 #
@@ -753,7 +795,7 @@ SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
 #
 # Set RUN and envir.
 #
-    str=${str}"
+    expt_config_str=${expt_config_str}"
 #
 # In order to prevent simultaneous WE2E (Workflow End-to-End) tests that
 # are running in NCO mode and which run the same cycles from interfering
@@ -816,7 +858,7 @@ located has not been specified for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
 
-    str=${str}"
+    expt_config_str=${expt_config_str}"
 #
 # The base directory in which the pregenerated grid, orography, and surface 
 # climatology \"fixed\" files used in NCO mode are located.  In NCO mode,
@@ -854,7 +896,7 @@ for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
       fi
 
-      str=${str}"
+      expt_config_str=${expt_config_str}"
 #
 # Directory that needs to be specified when running the workflow in NCO
 # mode (RUN_ENVIR set to \"nco\") AND using the FV3GFS or the GSMGFS as
@@ -870,7 +912,7 @@ COMINgfs=\"${COMINgfs}\""
     STMP=${stmp:-"${nco_basedir}/stmp"}
     PTMP=${ptmp:-"${nco_basedir}/ptmp"}
 
-    str=${str}"
+    expt_config_str=${expt_config_str}"
 #
 # Directories STMP and PTMP that need to be specified when running the
 # workflow in NCO-mode (i.e. RUN_ENVIR set to "nco").
@@ -882,11 +924,12 @@ PTMP=\"${PTMP}\""
 #
 #-----------------------------------------------------------------------
 #
-#
+# Modifications to the experiment configuration file if the WE2E test 
+# uses user-staged external model files.
 #
 #-----------------------------------------------------------------------
 #
-  if [ ${USE_USER_STAGED_EXTRN_FILES} = "TRUE" ]; then
+  if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
 
     if [ "$MACHINE" = "WCOSS_CRAY" ]; then
       extrn_mdl_source_basedir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/extrn_mdl_files"
@@ -955,7 +998,7 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
       EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
     fi
 
-    str=${str}"
+    expt_config_str=${expt_config_str}"
 #
 # Locations and names of user-staged external model files for generating
 # ICs and LBCs.
@@ -969,10 +1012,10 @@ EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
 #
 #-----------------------------------------------------------------------
 #
-# On some machines (e.g. cheyenne), some tasks take many attempts to 
-# succeed.  To make it more convenient to run the WE2E tests on these
-# machines without manual intervention, change the number of attempts
-# for such tasks on those machines to be more than one.
+# On some machines (e.g. cheyenne), some tasks often require multiple
+# tries before they succeed.  To make it more convenient to run the WE2E 
+# tests on these machines without manual intervention, change the number 
+# of attempts for such tasks on those machines to be more than one.
 #
 #-----------------------------------------------------------------------
 #
@@ -993,7 +1036,7 @@ EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
 
   if [ "${add_maxtries}" = "TRUE" ]; then
 
-    str=${str}"
+    expt_config_str=${expt_config_str}"
 #
 # Maximum number of attempts at running each task.
 #
@@ -1011,13 +1054,22 @@ MAXTRIES_RUN_POST=\"${MAXTRIES_RUN_POST}\""
 #
 #-----------------------------------------------------------------------
 #
+# Set the full path to the configuration file that the experiment 
+# generation script reads in.  Then write the contents of expt_config_str 
+# to that file.
 #
+#-----------------------------------------------------------------------
+#
+  expt_config_fp="$ushdir/${EXPT_CONFIG_FN}"
+  printf "%s" "${expt_config_str}" > "${expt_config_fp}"
 #
 #-----------------------------------------------------------------------
 #
-  printf "%s" "$str" > "${expt_config_fp}"
-#
-#-----------------------------------------------------------------------
+# The following are changes that need to be made directly to the 
+# experiment configuration file created above (as opposed to the 
+# experiment configuration string expt_config_str) because they involve
+# resetting of values that have already been set in the experiment 
+# configuration file.
 #
 # If EXTRN_MDL_SYSBASEDIR_ICS has been specified in the current WE2E
 # test's base configuration file, it must be set to one of the following:
@@ -1062,7 +1114,8 @@ exist or is not a directory:
 
     fi
 
-    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SYSBASEDIR_ICS" "${EXTRN_MDL_SYSBASEDIR_ICS}"
+    set_bash_param "${expt_config_fp}" \
+                   "EXTRN_MDL_SYSBASEDIR_ICS" "${EXTRN_MDL_SYSBASEDIR_ICS}"
 
   fi
 #
@@ -1103,50 +1156,32 @@ exist or is not a directory:
 
     fi
 
-    set_bash_param "${expt_config_fp}" "EXTRN_MDL_SYSBASEDIR_LBCS" "${EXTRN_MDL_SYSBASEDIR_LBCS}"
+    set_bash_param "${expt_config_fp}" \
+                   "EXTRN_MDL_SYSBASEDIR_LBCS" "${EXTRN_MDL_SYSBASEDIR_LBCS}"
 
   fi
 #
 #-----------------------------------------------------------------------
 #
-# Set the values of those parameters in the experiment configuration file
-# that need to be adjusted from their baseline values (as specified in
-# the current line of the experiments list file) to obtain the configuration
-# file for the current experiment.
+# Call the experiment generation script to generate an experiment 
+# directory and a rocoto workflow XML for the current WE2E test to run. 
 #
 #-----------------------------------------------------------------------
 #
-  printf ""
-  for (( j=0; j<${num_mod_vars}; j++ )); do
-    set_bash_param "${expt_config_fp}" "${modvar_name[$j]}" "${modvar_value[$j]}"
-  done
-#
-# Move the current experiment's configuration file into the directory in
-# which the experiment generation script expects to find it, and in the
-# process rename the file to the name that the experiment generation script
-# expects it to have.
-#
-  mv_vrfy -f "${expt_config_fp}" "$ushdir/${EXPT_CONFIG_FN}"
-#
-#-----------------------------------------------------------------------
-#
-# Call the experiment/workflow generation script to generate an experi-
-# ment directory and rocoto workflow XML for the current experiment.
-#
-#-----------------------------------------------------------------------
-#
+if [ 0 = 1 ]; then
   $ushdir/generate_FV3LAM_wflow.sh || \
     print_err_msg_exit "\
-Could not generate an experiment/workflow for the test specified by
-expt_name:
-  expt_name = \"${expt_name}\""
-
+Could not generate an experiment for the test specified by test_name:
+  test_name = \"${test_name}\""
+else
+  echo "AAAAAAAAAAAAAAAAAAAAAAAA"
+fi
 done
 #
 #-----------------------------------------------------------------------
 #
-# Restore the shell options saved at the beginning of this script/func-
-# tion.
+# Restore the shell options saved at the beginning of this script or 
+# function.
 #
 #-----------------------------------------------------------------------
 #
