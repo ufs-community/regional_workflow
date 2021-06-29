@@ -1,6 +1,6 @@
 MACHINE="hera"
 ACCOUNT="fv3lam"
-EXPT_SUBDIR="RRFS_baseline_summer"
+EXPT_SUBDIR="RRFS_baseline_winter"
 
 VERBOSE="TRUE"
 
@@ -25,6 +25,9 @@ FV3GFS_FILE_FMT_ICS="nemsio"
 FV3GFS_FILE_FMT_LBCS="grib2"
 
 WTIME_RUN_FCST="08:00:00"
+
+WTIME_GET_EXTRN_ICS="00:10:00"
+WTIME_GET_EXTRN_LBCS="00:10:00"
 
 MODEL="FV3_RRFS_v1alpha_3km_winter"
 METPLUS_PATH="/contrib/METplus/METplus-4.0.0"
