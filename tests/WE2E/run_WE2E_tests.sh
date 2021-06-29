@@ -5,7 +5,7 @@
 #
 # This script runs the specified WE2E tests.  Type
 #
-#   run_experiment.sh --help
+#   run_WE2E_tests.sh --help
 #
 # for a full description of how to use this script.
 #
