@@ -861,7 +861,7 @@ the <task> tag to be identical to the ones above for other output times.
 
 {%- if run_task_vx_gridstat %}
 <!--
-     ************************************************************************
+************************************************************************
 ************************************************************************
 -->
   <task name="&VX_GRIDSTAT_RETOP_TN;" maxtries="{{ maxtries_vx_gridstat_retop }}">
