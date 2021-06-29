@@ -170,7 +170,14 @@
 #
 # These local arrays are sorted in order of increasing test ID.  Within
 # each group of tests that have the same ID, the primary test name is
-# listed first followed by zero or more alternate test names.
+# listed first followed by zero or more alternate test names.  Note also
+# that to reduce confusion, we do not allow two or more configuration
+# files of the same name anywere under test_configs_basedir (either 
+# representing the same actual test or different ones).  In other words, 
+# the list of all test names that this function generates cannot contain 
+# any duplicate names (either primary or alternate).  After assembling 
+# the full list of test names, this function checks for such duplicates 
+# and exits with an error message if any are found.
 #
 # The following input arguments to this function specify the names of 
 # the arrays in which each of the quantities listed above should be 
