@@ -31,7 +31,7 @@ WTIME_GET_EXTRN_LBCS="00:10:00"
 
 MODEL="FV3_RRFS_v1alpha_3km_summer"
 METPLUS_PATH="/contrib/METplus/METplus-4.0.0"
-MET_INSTALL_DIR="/contrib/met/9.0.2"
+MET_INSTALL_DIR="/contrib/met/10.0.0"
 CCPA_OBS_DIR="/scratch2/BMC/fv3lam/RRFS_baseline/obs_data/ccpa/proc"
 MRMS_OBS_DIR="/scratch2/BMC/fv3lam/RRFS_baseline/obs_data/mrms/proc"
 NDAS_OBS_DIR="/scratch2/BMC/fv3lam/RRFS_baseline/obs_data/ndas/proc"
