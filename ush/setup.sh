@@ -730,6 +730,13 @@ set_cycle_dates \
   output_varname_all_cdates="ALL_CDATES"
 
 NUM_CYCLES="${#ALL_CDATES[@]}"
+
+if [ $NUM_CYCLES -gt 30 ] ; then
+unset ALL_CDATES
+print_info_msg "$VERBOSE" "
+Too many cycles in ALL_CDATES, defining in abbreviated form."
+ALL_CDATES="${DATE_FIRST_CYCL}${CYCL_HRS[0]}...${DATE_LAST_CYCL}${CYCL_HRS[-1]}"
+fi
 #
 #-----------------------------------------------------------------------
 #
