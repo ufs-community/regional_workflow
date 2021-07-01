@@ -78,7 +78,7 @@ function create_diag_table_file() {
 #
   print_info_msg "$VERBOSE" "                                            
 Creating a diagnostics table file (\"${DIAG_TABLE_FN}\") in the specified
-run directory..."
+run directory...
 
   run_dir = \"${run_dir}\""
 
@@ -94,7 +94,7 @@ to create:
     diag_table_fp = \"${diag_table_fp}\""
 
     settings="
-    starttime: !datetime ${ALL_CDATES[$i]}
+    starttime: !datetime ${CDATE}
     cres: ${CRES}"
 
     $USHDIR/fill_jinja_template.py -q -u "${settings}" -t "${DIAG_TABLE_TMPL_FP}" -o "${diag_table_fp}" || \

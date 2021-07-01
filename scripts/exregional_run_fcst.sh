@@ -476,8 +476,8 @@ cycle's (cdate) run directory (run_dir) failed:
 #
 #-----------------------------------------------------------------------
 #
-# Call the function that creates the model configuration file within each
-# cycle directory.
+# Call the function that creates the diag_table file within each cycle 
+# directory.
 #
 #-----------------------------------------------------------------------
 #
