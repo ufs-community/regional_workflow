@@ -82,8 +82,6 @@ run directory..."
 
   run_dir = \"${run_dir}\""
 
-# Copy template diag_table file from the templates directory to the 
-# run directory.
     diag_table_fp="${run_dir}/${DIAG_TABLE_FN}"
     print_info_msg "$VERBOSE" "
 

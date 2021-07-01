@@ -483,8 +483,8 @@ cycle's (cdate) run directory (run_dir) failed:
 #
 create_diag_table_file \
   run_dir="${run_dir}" || print_err_msg_exit "\
-Call to function to create a diag table file for the current
-cycle's (cdate) run directory (run_dir) failed:
+Call to function to create a diag table file for the current cycle's 
+(cdate) run directory (run_dir) failed:
   run_dir = \"${run_dir}\""
 #
 #-----------------------------------------------------------------------
