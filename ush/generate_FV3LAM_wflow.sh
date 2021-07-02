@@ -404,7 +404,9 @@ Creating symlink in the experiment directory (EXPTDIR) that points to the
 workflow launch script (WFLOW_LAUNCH_SCRIPT_FP):
   EXPTDIR = \"${EXPTDIR}\"
   WFLOW_LAUNCH_SCRIPT_FP = \"${WFLOW_LAUNCH_SCRIPT_FP}\""
-ln_vrfy -fs "${WFLOW_LAUNCH_SCRIPT_FP}" "$EXPTDIR"
+create_symlink_to_file target="${WFLOW_LAUNCH_SCRIPT_FP}" \
+                       symlink="${EXPTDIR}/${WFLOW_LAUNCH_SCRIPT_FN}" \
+                       relative="FALSE"
 #
 #-----------------------------------------------------------------------
 #
