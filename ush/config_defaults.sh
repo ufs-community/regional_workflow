@@ -407,10 +407,14 @@ FCST_LEN_HRS="24"
 # For example, RESTART_INTERVAL="1": restart files are produced every hour
 # with the prefix "YYYYMMDD.HHmmSS." in the RESTART directory
 #
+# WRITE_DOPOST:
+# Flag that determines whether or not to use the INLINE POST option
+#
 #-----------------------------------------------------------------------
 #
 DT_ATMOS=""
 RESTART_INTERVAL="0"
+WRITE_DOPOST="FALSE"
 #
 #-----------------------------------------------------------------------
 #

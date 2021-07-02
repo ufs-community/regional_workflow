@@ -124,6 +124,7 @@ run directory (run_dir):
   'atmos_nthreads': ${nthreads:-1}
   'ncores_per_node': ${NCORES_PER_NODE}
   'restart_interval': ${RESTART_INTERVAL}
+  'write_dopost': ${WRITE_DOPOST}
   'quilting': ${dot_quilting_dot}
   'print_esmf': ${dot_print_esmf_dot}
   'output_grid': ${WRTCMP_output_grid}"
