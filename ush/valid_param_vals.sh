@@ -54,6 +54,7 @@ valid_vals_WRTCMP_output_grid=("rotated_latlon" "lambert_conformal" "regional_la
 valid_vals_RUN_TASK_MAKE_GRID=( ${BOOLEAN_VALID_VALS[@]} )
 valid_vals_RUN_TASK_MAKE_OROG=( ${BOOLEAN_VALID_VALS[@]} )
 valid_vals_RUN_TASK_MAKE_SFC_CLIMO=( ${BOOLEAN_VALID_VALS[@]} )
+valid_vals_RUN_TASK_RUN_POST=( ${BOOLEAN_VALID_VALS[@]} )
 valid_vals_RUN_TASK_VX_GRIDSTAT=( ${BOOLEAN_VALID_VALS[@]} )
 valid_vals_RUN_TASK_VX_POINTSTAT=( ${BOOLEAN_VALID_VALS[@]} )
 valid_vals_QUILTING=( ${BOOLEAN_VALID_VALS[@]} )
