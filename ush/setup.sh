@@ -653,11 +653,9 @@ if [ "${FCST_MODEL}" = "ufs-weather-model" ]; then
 elif [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   CPL="TRUE"
 else
-  err_msg="\
-The forecast model specified in FCST_MODEL is not supported:
+  print_err_msg_exit "\ 
+The coupling flag CPL has not been specified for this value of FCST_MODEL:
   FCST_MODEL = \"${FCST_MODEL}\""
-check_var_valid_value \
-  "FCST_MODEL" "valid_vals_FCST_MODEL" "${err_msg}"
 fi
 #
 #-----------------------------------------------------------------------
