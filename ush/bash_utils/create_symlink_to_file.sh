@@ -108,7 +108,7 @@ will create wasnot specified in the call to this function:
 #
   relative=${relative:-"TRUE"}
 
-  valid_vals_relative=( "${BOOLEAN_VALID_VALS[@]}" )
+  valid_vals_relative=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
   check_var_valid_value "relative" "valid_vals_relative"
 #
 #-----------------------------------------------------------------------
