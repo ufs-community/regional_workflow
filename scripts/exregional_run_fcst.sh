@@ -9,6 +9,7 @@
 #
 . ${GLOBAL_VAR_DEFNS_FP}
 . $USHDIR/source_util_funcs.sh
+. $USHDIR/set_FV3nml_stoch_params.sh
 #
 #-----------------------------------------------------------------------
 #

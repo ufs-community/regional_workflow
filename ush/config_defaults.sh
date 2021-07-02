@@ -295,6 +295,9 @@ DOT_OR_USCORE="_"
 # the directory in which it is created in the build step to the executables
 # directory (EXECDIR; this is set during experiment generation).
 #
+# FCST_MODEL:
+# Name of forecast model (default=ufs-weather-model)
+#
 # WFLOW_XML_FN:
 # Name of the rocoto workflow XML file that the experiment generation
 # script creates and that defines the workflow for the experiment.
@@ -346,6 +349,8 @@ MODEL_CONFIG_FN="model_configure"
 NEMS_CONFIG_FN="nems.configure"
 FV3_EXEC_FN="ufs_model"
 
+FCST_MODEL="ufs-weather-model"
+
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
 EXTRN_MDL_ICS_VAR_DEFNS_FN="extrn_mdl_ics_var_defns.sh"
@@ -375,12 +380,20 @@ WFLOW_LAUNCH_LOG_FN="log.launch_FV3LAM_wflow"
 # FCST_LEN_HRS:
 # The length of each forecast, in integer hours.
 #
+# RESTART_INTERVAL:
+# Parameter in model_configure; 
+# frequency of the output restart files (unit:hour). 
+# Default=0: restart files are produced at the end of a forecast run
+# For example, RESTART_INTERVAL="1": restart files are produced every hour
+# with the prefix "YYYYMMDD.HHmmSS." in the RESTART directory
+#
 #-----------------------------------------------------------------------
 #
 DATE_FIRST_CYCL="YYYYMMDD"
 DATE_LAST_CYCL="YYYYMMDD"
 CYCL_HRS=( "HH1" "HH2" )
 FCST_LEN_HRS="24"
+RESTART_INTERVAL="0"
 #
 #-----------------------------------------------------------------------
 #
@@ -525,18 +538,26 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #
 #-----------------------------------------------------------------------
 #
-# Set NOMADS online data associated parameters. Definitions:
+# Base directories in which to search for external model files.
 #
-# NOMADS:
-# Flag controlling whether or not using NOMADS online data.
+# EXTRN_MDL_SYSBASEDIR_ICS:
+# Base directory on the local machine containing external model files for
+# generating ICs on the native grid.  The way the full path containing 
+# these files is constructed depends on the user-specified external model
+# for ICs, i.e. EXTRN_MDL_NAME_ICS.
 #
-# NOMADS_file_type:
-# Flag controlling the format of data.
+# EXTRN_MDL_SYSBASEDIR_LBCS:
+# Same as EXTRN_MDL_SYSBASEDIR_ICS but for LBCs.
+#
+# Note that these must be defined as null strings here so that if they 
+# are specified by the user in the experiment configuration file, they 
+# remain set to those values, and if not, they get set to machine-dependent 
+# values.
 #
 #-----------------------------------------------------------------------
 #
-NOMADS="FALSE"
-NOMADS_file_type="nemsio"
+EXTRN_MDL_SYSBASEDIR_ICS=""
+EXTRN_MDL_SYSBASEDIR_LBCS=""
 #
 #-----------------------------------------------------------------------
 #
@@ -580,6 +601,21 @@ EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
 #
 #-----------------------------------------------------------------------
 #
+# Set NOMADS online data associated parameters. Definitions:
+#
+# NOMADS:
+# Flag controlling whether or not using NOMADS online data.
+#
+# NOMADS_file_type:
+# Flag controlling the format of data.
+#
+#-----------------------------------------------------------------------
+#
+NOMADS="FALSE"
+NOMADS_file_type="nemsio"
+#
+#-----------------------------------------------------------------------
+#
 # Set CCPP-associated parameters.  Definitions:
 #
 # CCPP_PHYS_SUITE:
@@ -590,6 +626,7 @@ EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
 # directory or the cycle directories under it.
 #
 #-----------------------------------------------------------------------
+#
 CCPP_PHYS_SUITE="FV3_GFS_v15p2"
 #
 #-----------------------------------------------------------------------
@@ -1096,6 +1133,9 @@ VERBOSE="TRUE"
 #
 # SFC_CLIMO_DIR:
 # Same as GRID_DIR but for the surface climatology generation task.
+#
+# RUN_TASK_RUN_POST:
+# Flag that determines whether the run_post task is to be run
 # 
 # RUN_TASK_VX_GRIDSTAT:
 # Flag that determines whether the grid-stat verification task is to be
@@ -1115,6 +1155,8 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
+
+RUN_TASK_RUN_POST="TRUE"
 
 RUN_TASK_GET_OBS_CCPA="FALSE"
 
@@ -1252,6 +1294,8 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "global_zorclim.1x1.grb" \
 "global_sfc_emissivity_idx.txt" \
 "global_solarconstant_noaa_an.txt" \
+"geo_em.d01.lat-lon.2.5m.HGT_M.nc" \
+"HGT.Beljaars_filtered.lat-lon.30s_res.nc" \
 "replace_with_FIXgsm_ozone_prodloss_filename" \
 )
 
@@ -1335,6 +1379,7 @@ GET_OBS_NDAS_TN="get_obs_ndas"
 VX_TN="run_vx"
 VX_GRIDSTAT_TN="run_gridstatvx"
 VX_GRIDSTAT_REFC_TN="run_gridstatvx_refc"
+VX_GRIDSTAT_RETOP_TN="run_gridstatvx_retop"
 VX_GRIDSTAT_03h_TN="run_gridstatvx_03h"
 VX_GRIDSTAT_06h_TN="run_gridstatvx_06h"
 VX_GRIDSTAT_24h_TN="run_gridstatvx_24h"
@@ -1401,12 +1446,13 @@ MAXTRIES_GET_EXTRN_LBCS="1"
 MAXTRIES_MAKE_ICS="1"
 MAXTRIES_MAKE_LBCS="1"
 MAXTRIES_RUN_FCST="1"
-MAXTRIES_RUN_POST="1"
+MAXTRIES_RUN_POST="2"
 MAXTRIES_GET_OBS_CCPA="1"
 MAXTRIES_GET_OBS_MRMS="1"
 MAXTRIES_GET_OBS_NDAS="1"
 MAXTRIES_VX_GRIDSTAT="1"
 MAXTRIES_VX_GRIDSTAT_REFC="1"
+MAXTRIES_VX_GRIDSTAT_RETOP="1"
 MAXTRIES_VX_GRIDSTAT_03h="1"
 MAXTRIES_VX_GRIDSTAT_06h="1"
 MAXTRIES_VX_GRIDSTAT_24h="1"
@@ -1504,7 +1550,7 @@ SHUM_MAG="0.006" #Variable "shum" in input.nml
 SHUM_LSCALE="150000"
 SHUM_TSCALE="21600" #Variable "shum_tau" in input.nml
 SHUM_INT="3600" #Variable "shumint" in input.nml
-SPPT_MAG="1.0" #Variable "sppt" in input.nml
+SPPT_MAG="0.7" #Variable "sppt" in input.nml
 SPPT_LSCALE="150000"
 SPPT_TSCALE="21600" #Variable "sppt_tau" in input.nml
 SPPT_INT="3600" #Variable "spptint" in input.nml
@@ -1585,26 +1631,6 @@ COMPILER="intel"
 #
 #-----------------------------------------------------------------------
 #
-# GWD_HRRRsuite_BASEDIR:
-# Temporary workflow variable specifies the base directory in which to 
-# look for certain fixed orography statistics files needed only by the 
-# gravity wave drag parameterization in the FV3_HRRR physics suite.  This 
-# variable is added in order to avoid including hard-coded paths in the 
-# workflow scripts.  Currently, the workflow simply copies the necessary 
-# files from a subdirectory under this directory (named according to the 
-# specified predefined grid) to the orography directory (OROG_DIR) under 
-# the experiment directory.  
-#
-# Note that this variable is only used when using the FV3_HRRR physics 
-# suite.  It should be removed from the workflow once there is a script 
-# or code available that generates these files for any grid.
-#
-#-----------------------------------------------------------------------
-#
-GWD_HRRRsuite_BASEDIR=""
-#
-#-----------------------------------------------------------------------
-#
 # KMP_AFFINITY_*:
 # From Intel: "The Intel® runtime library has the ability to bind OpenMP
 # threads to physical processing units. The interface is controlled using
@@ -1658,7 +1684,7 @@ KMP_AFFINITY_RUN_FCST="scatter"
 OMP_NUM_THREADS_RUN_FCST="4"
 OMP_STACKSIZE_RUN_FCST="1024m"
 
-CPUS_PER_TASK_RUN_FCST="4"
+CPUS_PER_TASK_RUN_FCST="2"
 
 KMP_AFFINITY_RUN_POST="scatter"
 OMP_NUM_THREADS_RUN_POST="1"
