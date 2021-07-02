@@ -433,23 +433,25 @@ else
   relative_link_flag="FALSE"
 fi
 
-create_symlink_to_file target="${DATA_TABLE_FP}" 
+create_symlink_to_file target="${DATA_TABLE_FP}" \
                        symlink="${run_dir}/${DATA_TABLE_FN}" \
                        relative="${relative_link_flag}"
-create_symlink_to_file target="${FIELD_TABLE_FP}" 
+
+create_symlink_to_file target="${FIELD_TABLE_FP}" \
                        symlink="${run_dir}/${FIELD_TABLE_FN}" \
                        relative="${relative_link_flag}"
-create_symlink_to_file target="${NEMS_CONFIG_FP}" 
+
+create_symlink_to_file target="${NEMS_CONFIG_FP}" \
                        symlink="${run_dir}/${NEMS_CONFIG_FN}" \
                        relative="${relative_link_flag}"
 
 if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
-  create_symlink_to_file target="${FV3_NML_ENSMEM_FPS[$(( 10#${ensmem_indx}-1 ))]}" 
+  create_symlink_to_file target="${FV3_NML_ENSMEM_FPS[$(( 10#${ensmem_indx}-1 ))]}" \
                          symlink="${run_dir}/${FV3_NML_FN}" \
                          relative="${relative_link_flag}"
 else
-  create_symlink_to_file target="${FV3_NML_FP}" 
-                         symlink="${run_dir}/$FV3_NML_FN}" \
+  create_symlink_to_file target="${FV3_NML_FP}" \
+                         symlink="${run_dir}/${FV3_NML_FN}" \
                          relative="${relative_link_flag}"
 fi
 #

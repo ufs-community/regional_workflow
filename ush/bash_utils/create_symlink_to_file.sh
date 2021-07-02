@@ -85,8 +85,8 @@ this function will create was not specified in the call to this function:
   if [ -z "${symlink}" ]; then
     print_err_msg_exit "\
 The argument \"symlink\" specifying the symbolic link that this function
-will create wasnot specified in the call to this function:
-  machine = \"$machine\""
+will create was not specified in the call to this function:
+  symlink = \"$symlink\""
   fi
 #
 #-----------------------------------------------------------------------
