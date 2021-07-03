@@ -339,7 +339,7 @@ for fid in "${fids[@]}"; do
   mv_vrfy ${tmp_dir}/${post_orig_fn} ${post_renamed_fn}
   create_symlink_to_file target="${post_renamed_fn}" \
                          symlink="${FID}${symlink_suffix}" \
-                         relative="${relative_link_flag}"                  
+                         relative="TRUE"
 done
 
 rm_vrfy -rf ${tmp_dir}
