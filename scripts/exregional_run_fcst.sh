@@ -444,6 +444,27 @@ ln_vrfy -sf ${relative_or_null} ${DATA_TABLE_FP} ${run_dir}
 ln_vrfy -sf ${relative_or_null} ${FIELD_TABLE_FP} ${run_dir}
 ln_vrfy -sf ${relative_or_null} ${NEMS_CONFIG_FP} ${run_dir}
 
+
+if [ ${WRITE_DOPOST} = "TRUE" ]; then
+  cp_vrfy ${EMC_POST_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
+  if [ ${USE_CUSTOM_POST_CONFIG_FILE} = "TRUE" ]; then
+    post_config_fp="${CUSTOM_POST_CONFIG_FP}"
+    print_info_msg "
+====================================================================
+  CUSTOM_POST_CONFIG_FP = \"${CUSTOM_POST_CONFIG_FP}\"
+===================================================================="
+  else
+    post_config_fp="${EMC_POST_DIR}/parm/postxconfig-NT-fv3lam.txt"
+    print_info_msg "
+====================================================================
+  post_config_fp = \"${post_config_fp}\"
+===================================================================="
+  fi
+  cp_vrfy ${post_config_fp} ./postxconfig-NT_FH00.txt
+  cp_vrfy ${post_config_fp} ./postxconfig-NT.txt
+  cp_vrfy ${EMC_POST_DIR}/parm/params_grib2_tbl_new .
+fi
+
 if [ "${DO_ENSEMBLE}" = TRUE ]; then
   set_FV3nml_stoch_params cdate="$cdate" || print_err_msg_exit "\
 Call to function to create the ensemble-based namelist for the current
