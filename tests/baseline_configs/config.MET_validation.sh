@@ -1,3 +1,11 @@
+#
+# TEST PURPOSE/DESCRIPTION:
+# ------------------------
+#
+# This test is to ensure that the workflow running in community mode 
+# completes successfully with including MET verification.
+#
+
 RUN_ENVIR="community"
 PREEXISTING_DIR_METHOD="rename"
 
