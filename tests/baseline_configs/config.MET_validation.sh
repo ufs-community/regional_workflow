@@ -3,7 +3,7 @@
 # ------------------------
 #
 # This test is to ensure that the workflow running in community mode 
-# completes successfully with including MET verification.
+# completes successfully with MET verification.
 #
 
 RUN_ENVIR="community"
