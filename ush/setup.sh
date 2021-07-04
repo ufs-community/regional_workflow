@@ -2134,6 +2134,10 @@ WRITE_DOPOST=${WRITE_DOPOST^^}
 if [ "$WRITE_DOPOST" = "TRUE" ] || \
    [ "$WRITE_DOPOST" = "YES" ]; then
   WRITE_DOPOST="TRUE"
+
+# Turn off run_post
+  RUN_TASK_RUN_POST="FALSE"
+
 elif [ "$WRITE_DOPOST" = "FALSE" ] || \
      [ "$WRITE_DOPOST" = "NO" ]; then
   WRITE_DOPOST="FALSE"
