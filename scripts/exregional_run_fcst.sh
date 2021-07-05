@@ -549,10 +549,10 @@ if [ ${WRITE_DOPOST} = "TRUE" ]; then
     post_mn=${post_time:10:2}
     post_mn_or_null=""
     post_fn_suffix="GrbF${fhr}"
-    post_renamed_fn_suffix="f${fhr}${post_mn_or_null}.${tmmark}.grib2"
+    post_renamed_fn_suffix="f0${fhr}${post_mn_or_null}.${tmmark}.grib2"
 
     basetime=$( date --date "$yyyymmdd $hh" +%y%j%H%M )
-    symlink_suffix="_${basetime}f${fhr}${post_mn}"
+    symlink_suffix="_${basetime}f0${fhr}${post_mn}"
     fids=( "bgdawp" "bgrd3d" )
     for fid in "${fids[@]}"; do
       FID="${fid^^}"
