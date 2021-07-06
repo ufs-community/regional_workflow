@@ -1526,6 +1526,7 @@ elif [ "$DO_ENSEMBLE" = "FALSE" ] || \
      [ "$DO_ENSEMBLE" = "NO" ]; then
   DO_ENSEMBLE="FALSE"
 fi
+
 NDIGITS_ENSMEM_NAMES="0"
 ENSMEM_NAMES=("")
 FV3_NML_ENSMEM_FPS=("")
