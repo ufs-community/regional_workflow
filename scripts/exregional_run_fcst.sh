@@ -446,9 +446,11 @@ create_symlink_to_file target="${NEMS_CONFIG_FP}" \
                        relative="${relative_link_flag}"
 
 if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
-  create_symlink_to_file target="${FV3_NML_ENSMEM_FPS[$(( 10#${ensmem_indx}-1 ))]}" \
-                         symlink="${run_dir}/${FV3_NML_FN}" \
-                         relative="${relative_link_flag}"
+  set_FV3nml_stoch_params cdate="$cdate" || print_err_msg_exit "\        
+Call to function to create the ensemble-based namelist for the current   
+cycle's (cdate) run directory (run_dir) failed:                          
+  cdate = \"${cdate}\"                                                   
+  run_dir = \"${run_dir}\""                                              
 else
   create_symlink_to_file target="${FV3_NML_FP}" \
                          symlink="${run_dir}/${FV3_NML_FN}" \
