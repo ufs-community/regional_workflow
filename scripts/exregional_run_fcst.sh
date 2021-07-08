@@ -544,7 +544,6 @@ if [ ${WRITE_DOPOST} = "TRUE" ]; then
   fmn="00"
 
   for fhr in $(seq -f "%02g" 0 ${FCST_LEN_HRS}); do
-    echo $fhr
     post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours + ${fmn} minutes" "+%Y%m%d%H%M" )
     post_mn=${post_time:10:2}
     post_mn_or_null=""
