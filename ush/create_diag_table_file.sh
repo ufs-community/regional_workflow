@@ -94,8 +94,8 @@ to create:
     diag_table_fp = \"${diag_table_fp}\""
 
     settings="
-    starttime: !datetime ${CDATE}
-    cres: ${CRES}"
+starttime: !datetime ${CDATE}
+cres: ${CRES}"
 
     $USHDIR/fill_jinja_template.py -q -u "${settings}" -t "${DIAG_TABLE_TMPL_FP}" -o "${diag_table_fp}" || \
     print_err_msg_exit "
