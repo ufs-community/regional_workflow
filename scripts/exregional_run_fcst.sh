@@ -539,8 +539,13 @@ $APRUN ${FV3_EXEC_FP} || print_err_msg_exit "\
 Call to executable to run FV3-LAM forecast returned with nonzero exit
 code."
 #
-# Only for inline post, create the directory where post-processing output
-# are stored (postprd_dir)
+#-----------------------------------------------------------------------
+#
+# If doing inline post, create the directory in which the post-processing 
+# output will be stored (postprd_dir).
+#
+#-----------------------------------------------------------------------
+#
 if [ ${WRITE_DOPOST} = "TRUE" ]; then
 
   yyyymmdd=${cdate:0:8}
@@ -577,6 +582,7 @@ if [ ${WRITE_DOPOST} = "TRUE" ]; then
       ln_vrfy -fs ${post_renamed_fn} ${FID}${symlink_suffix}
     done
   done
+
 fi
 #
 #-----------------------------------------------------------------------
