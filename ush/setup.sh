@@ -777,6 +777,13 @@ set_cycle_dates \
   output_varname_all_cdates="ALL_CDATES"
 
 NUM_CYCLES="${#ALL_CDATES[@]}"
+
+if [ $NUM_CYCLES -gt 30 ] ; then
+  unset ALL_CDATES
+  print_info_msg "$VERBOSE" "
+Too many cycles in ALL_CDATES to list, redefining in abbreviated form."
+ALL_CDATES="${DATE_FIRST_CYCL}${CYCL_HRS[0]}...${DATE_LAST_CYCL}${CYCL_HRS[-1]}"
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -2162,6 +2169,12 @@ if [ "$WRITE_DOPOST" = "TRUE" ] || \
 # Turn off run_post
   RUN_TASK_RUN_POST="FALSE"
 
+# Check if SUB_HOURLY_POST is on
+  if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
+    print_err_msg_exit "\
+SUB_HOURLY_POST is NOT available with Inline Post yet."
+  fi
+
 elif [ "$WRITE_DOPOST" = "FALSE" ] || \
      [ "$WRITE_DOPOST" = "NO" ]; then
   WRITE_DOPOST="FALSE"
@@ -2263,7 +2276,6 @@ fi
 #-----------------------------------------------------------------------
 #
 NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
-
 
 #
 #-----------------------------------------------------------------------
