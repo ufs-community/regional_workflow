@@ -57,7 +57,7 @@ the UPP output files by initialization time for all forecast hours.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "cycle_dir" "postprd_dir" "vx_dir" "pointstat_dir" )
+valid_args=( "cycle_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -69,16 +69,6 @@ process_args valid_args "$@"
 #-----------------------------------------------------------------------
 #
 print_input_args valid_args
-#-----------------------------------------------------------------------
-#
-# Remove any files from previous runs and stage necessary files in pointstat_dir.
-#
-#-----------------------------------------------------------------------
-#
-print_info_msg "$VERBOSE" "Starting point-stat verification"
-
-cd ${pointstat_dir}
-
 #
 #-----------------------------------------------------------------------
 #

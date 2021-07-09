@@ -150,8 +150,8 @@ output_flag = {
    pstd   = NONE;
    pjc    = NONE;
    prc    = NONE;
-   nbrctc = NONE;
-   nbrcts = NONE;
+   nbrctc = STAT;
+   nbrcts = STAT;
    nbrcnt = STAT;
 }
 

@@ -58,7 +58,7 @@ gridded data.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "cycle_dir" "vx_dir" "ensemblestat_dir" )
+valid_args=( "cycle_dir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -73,13 +73,11 @@ print_input_args valid_args
 
 #-----------------------------------------------------------------------
 #
-# Remove any files from previous runs and stage necessary files in ensemblestat_dir.
+# Begin grid-to-grid ensemble vx.
 #
 #-----------------------------------------------------------------------
 #
 print_info_msg "$VERBOSE" "Starting ensemble-stat verification"
-
-cd ${ensemblestat_dir}
 
 #
 #-----------------------------------------------------------------------

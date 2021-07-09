@@ -68,19 +68,19 @@ on gridded fields by initialization time for all forecast hours.
 #-----------------------------------------------------------------------
 #
 
-if [ "${RUN_ENVIR}" = "nco" ]; then
-  COMOUT="$COMROOT/$NET/$envir/$RUN.$PDY/$cyc"
-  vx_dir="$COMOUT"
-else
-  vx_dir="${CYCLE_DIR}/metprd"
-fi
-mkdir_vrfy -p "${vx_dir}"
+#if [ "${RUN_ENVIR}" = "nco" ]; then
+#  COMOUT="$COMROOT/$NET/$envir/$RUN.$PDY/$cyc"
+#  vx_dir="$COMOUT"
+#else
+#  vx_dir="${CYCLE_DIR}/metprd"
+#fi
+#mkdir_vrfy -p "${vx_dir}"
 
-ensemblestat_dir="${vx_dir}/ensemble_stat"
-#check_for_preexist_dir "${ensemblestat_dir}" "delete"
-mkdir_vrfy -p "${ensemblestat_dir}"
+#ensemblestat_dir="${vx_dir}/ensemble_stat"
+##check_for_preexist_dir "${ensemblestat_dir}" "delete"
+#mkdir_vrfy -p "${ensemblestat_dir}"
 
-cd_vrfy "${ensemblestat_dir}"
+#cd_vrfy "${ensemblestat_dir}"
 #
 #-----------------------------------------------------------------------
 #
@@ -90,9 +90,7 @@ cd_vrfy "${ensemblestat_dir}"
 #-----------------------------------------------------------------------
 #
 $SCRIPTSDIR/exregional_run_ensgridvx.sh \
-  cycle_dir="${CYCLE_DIR}" \
-  vx_dir="${vx_dir}" \
-  ensemblestat_dir="${ensemblestat_dir}" || \
+  cycle_dir="${CYCLE_DIR}" || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #

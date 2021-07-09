@@ -68,20 +68,20 @@ on gridded fields by initialization time for all forecast hours.
 #-----------------------------------------------------------------------
 #
 
-if [ "${RUN_ENVIR}" = "nco" ]; then
-  COMOUT="$COMROOT/$NET/$envir/$RUN.$PDY/$cyc"
-  vx_dir="$COMOUT"
-else
-  vx_dir="${CYCLE_DIR}/metprd"
-fi
-mkdir_vrfy -p "${vx_dir}"
+#if [ "${RUN_ENVIR}" = "nco" ]; then
+#  COMOUT="$COMROOT/$NET/$envir/$RUN.$PDY/$cyc"
+#  vx_dir="$COMOUT"
+#else
+#  vx_dir="${CYCLE_DIR}/metprd"
+#fi
+#mkdir_vrfy -p "${vx_dir}"
 
-ensemblestat_dir="${vx_dir}/ensemble_stat"
-gridstat_mean_dir="${ensemblestat_dir}/ensemble_mean"
-#check_for_preexist_dir "${ensemblestat_dir}" "delete"
-mkdir_vrfy -p "${gridstat_mean_dir}"
+#ensemblestat_dir="${vx_dir}/ensemble_stat"
+#gridstat_mean_dir="${ensemblestat_dir}/ensemble_mean"
+##check_for_preexist_dir "${ensemblestat_dir}" "delete"
+#mkdir_vrfy -p "${gridstat_mean_dir}"
 
-cd_vrfy "${gridstat_mean_dir}"
+#cd_vrfy "${gridstat_mean_dir}"
 #
 #-----------------------------------------------------------------------
 #
@@ -91,9 +91,7 @@ cd_vrfy "${gridstat_mean_dir}"
 #-----------------------------------------------------------------------
 #
 $SCRIPTSDIR/exregional_run_ensgridvx_mean.sh \
-  cycle_dir="${CYCLE_DIR}" \
-  vx_dir="${vx_dir}" \
-  gridstat_mean_dir="${gridstat_mean_dir}" || \
+  cycle_dir="${CYCLE_DIR}" || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #

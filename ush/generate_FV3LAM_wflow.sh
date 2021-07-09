@@ -208,7 +208,6 @@ settings="\
   'vx_ensgrid_prob_06h_tn': ${VX_ENSGRID_PROB_06h_TN}
   'vx_ensgrid_mean_24h_tn': ${VX_ENSGRID_MEAN_24h_TN}
   'vx_ensgrid_prob_24h_tn': ${VX_ENSGRID_PROB_24h_TN}
-  'vx_ensgrid_mean_refc_tn': ${VX_ENSGRID_MEAN_REFC_TN}
   'vx_ensgrid_prob_refc_tn': ${VX_ENSGRID_PROB_REFC_TN}
   'vx_enspoint_tn': ${VX_ENSPOINT_TN}
   'vx_enspoint_mean_tn': ${VX_ENSPOINT_MEAN_TN}
