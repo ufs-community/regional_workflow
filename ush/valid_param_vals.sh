@@ -1,8 +1,4 @@
 #
-# Source necessary scripts.
-#
-. ./constants.sh
-#
 # Define valid values for various global experiment/workflow variables.
 #
 valid_vals_RUN_ENVIR=("nco" "community")
