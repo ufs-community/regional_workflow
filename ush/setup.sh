@@ -918,7 +918,7 @@ case $MACHINE in
 
 "WCOSS_DELL_P3")
   AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/aqm/epa/data"}
-  AQM_EMIS_DIR=${AQM_EMIS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/aqm/bio"}
+  AQM_BIO_DIR=${AQM_BIO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/aqm/bio"}
   AQM_BIO_FILE=${AQM_BIO_FILE:-"BEIS_SARC401.ncf"}
   AQM_FIRE_DIR=${AQM_FIRE_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/emissions/GSCE/GBBEPx.in.C401/Reprocessed"}
   AQM_FIRE_FILE=${AQM_FIRE_FILE:-"GBBEPx_C401GRID.emissions_v003"}
@@ -931,7 +931,7 @@ case $MACHINE in
 
 "HERA")
   AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/aqm/epa/data"}
-  AQM_EMIS_DIR=${AQM_EMIS_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/aqm/bio"}
+  AQM_BIO_DIR=${AQM_BIO_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/aqm/bio"}
   AQM_BIO_FILE=${AQM_BIO_FILE:-"BEIS_SARC401.ncf"}
   AQM_FIRE_DIR=${AQM_FIRE_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/emissions/GSCE/GBBEPx.in.C401/Reprocessed"}
   AQM_FIRE_FILE=${AQM_FIRE_FILE:-"GBBEPx_C401GRID.emissions_v003"}
@@ -947,7 +947,7 @@ case $MACHINE in
 One or more AQM directories have not been specified for this machine:
   MACHINE = \"$MACHINE\"
   AQM_CONFIG_DIR = \"${AQM_CONFIG_DIR:-\"\"}
-  AQM_EMIS_DIR = \"${AQM_EMIS_DIR:-\"\"}
+  AQM_BIO_DIR = \"${AQM_BIO_DIR:-\"\"}
   AQM_BIO_FILE = \"${AQM_BIO_FILE:-\"\"}
   AQM_FIRE_DIR = \"${AQM_FIRE_DIR:-\"\"}
   AQM_FIRE_FILE = \"${AQM_FIRE_FILE:-\"\"}

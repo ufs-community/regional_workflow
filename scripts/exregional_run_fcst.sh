@@ -482,7 +482,7 @@ Setting parameters in file:
 
   set_file_param "${AQM_RC_FP}" "init_concentrations" "${init_concentrations}"
   set_file_param "${AQM_RC_FP}" "aqm_config_dir" "${AQM_CONFIG_DIR%/}"
-  set_file_param "${AQM_RC_FP}" "aqm_emis_dir" "${AQM_EMIS_DIR%/}"
+  set_file_param "${AQM_RC_FP}" "aqm_bio_dir" "${AQM_BIO_DIR%/}"
   set_file_param "${AQM_RC_FP}" "aqm_bio_file" "${AQM_BIO_FILE}"
   set_file_param "${AQM_RC_FP}" "aqm_fire_dir" "${AQM_FIRE_DIR%/}"
   set_file_param "${AQM_RC_FP}" "YYYYMMDD" "${YYYYMMDD}"

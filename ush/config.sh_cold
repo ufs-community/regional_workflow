@@ -39,7 +39,7 @@ FV3_NML_YAML_CONFIG_FN="fv3gfs_aqm.input.yml"
 WFLOW_XML_FN="fv3gfs_aqm_wflow.xml"
 
 AQM_CONFIG_DIR="/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/aqm/epa/data"
-AQM_EMIS_DIR="/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/aqm/bio"
+AQM_BIO_DIR="/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/aqm/bio"
 AQM_BIO_FILE="BEIS_SARC401.ncf"
 AQM_FIRE_DIR="/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/emissions/GSCE/GBBEPx.in.C401/Reprocessed"
 AQM_FIRE_FILE="GBBEPx_C401GRID.emissions_v003"

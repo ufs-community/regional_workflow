@@ -1711,14 +1711,14 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # AQM_CONFIG_DIR:
 # Configuration directory for AQM
 #
-# AQM_EMIS_DiR:
-# Emission input directory for AQM
+# AQM_BIO_DiR:
+# Path to the directory containing AQM bio files
 # 
 # AQM_BIO_FILE:
 # File name of AQM BIO file
 #
 # AQM_FIRE_DIR:
-# Path to the directory containing AQM fire file
+# Path to the directory containing AQM fire files
 #
 # AQM_FILE_FILE:
 # File name of AQM FIRE file
@@ -1754,7 +1754,7 @@ OMP_STACKSIZE_RUN_POST="1024m"
 
 AQM_RC_FN="aqm.rc"
 AQM_CONFIG_DIR=""
-AQM_EMIS_DIR=""
+AQM_BIO_DIR=""
 AQM_BIO_FILE=""
 AQM_FIRE_DIR=""
 AQM_FIRE_FILE=""

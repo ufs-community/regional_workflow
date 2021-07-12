@@ -146,13 +146,13 @@ bio_type: biogenic
 
 bio_format: netcdf
 
-bio_file: <aqm_emis_dir>/<aqm_bio_file>
+bio_file: <aqm_bio_dir>/<aqm_bio_file>
 
 bio_frequency: static
 
 bio_period: summer
 
-bio_speciation_file: <aqm_emis_dir>/gspro_biogenics_1mar2017.txt
+bio_speciation_file: <aqm_bio_dir>/gspro_biogenics_1mar2017.txt
 
 bio_speciation_profile: B10C6
 
