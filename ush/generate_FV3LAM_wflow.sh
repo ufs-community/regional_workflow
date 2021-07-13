@@ -47,7 +47,6 @@ ushdir="${scrfunc_dir}"
 #
 . $ushdir/source_util_funcs.sh
 . $ushdir/set_FV3nml_sfc_climo_filenames.sh
-. $ushdir/create_diag_table_files.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -321,6 +320,10 @@ settings="\
 #
   'fcst_len_hrs': ${FCST_LEN_HRS}
 #
+# Inline post
+#
+  'write_dopost': ${WRITE_DOPOST}
+#
 # METPlus-specific information
 #
   'model': ${MODEL}
@@ -381,21 +384,6 @@ $settings"
 #
 #-----------------------------------------------------------------------
 #
-# Create the cycle directories.
-#
-#-----------------------------------------------------------------------
-#
-print_info_msg "$VERBOSE" "
-Creating the cycle directories..."
-
-for (( i=0; i<${NUM_CYCLES}; i++ )); do
-  cdate="${ALL_CDATES[$i]}"
-  cycle_dir="${CYCLE_BASEDIR}/$cdate"
-  mkdir_vrfy -p "${cycle_dir}"
-done
-#
-#-----------------------------------------------------------------------
-#
 # Create a symlink in the experiment directory that points to the workflow
 # (re)launch script.
 #
@@ -406,7 +394,9 @@ Creating symlink in the experiment directory (EXPTDIR) that points to the
 workflow launch script (WFLOW_LAUNCH_SCRIPT_FP):
   EXPTDIR = \"${EXPTDIR}\"
   WFLOW_LAUNCH_SCRIPT_FP = \"${WFLOW_LAUNCH_SCRIPT_FP}\""
-ln_vrfy -fs "${WFLOW_LAUNCH_SCRIPT_FP}" "$EXPTDIR"
+create_symlink_to_file target="${WFLOW_LAUNCH_SCRIPT_FP}" \
+                       symlink="${EXPTDIR}/${WFLOW_LAUNCH_SCRIPT_FN}" \
+                       relative="FALSE"
 #
 #-----------------------------------------------------------------------
 #
@@ -792,10 +782,6 @@ if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
 Call to function to set surface climatology file names in the FV3 namelist
 file failed."
 
-  create_diag_table_files || print_err_msg_exit "\
-Call to function to create a diagnostics table file under each cycle 
-directory failed."
-
 fi
 #
 #-----------------------------------------------------------------------
@@ -835,7 +821,7 @@ The experiment directory is:
   > EXPTDIR=\"$EXPTDIR\"
 
 "
-case $MACHINE in
+case "$MACHINE" in
 
 "CHEYENNE")
   print_info_msg "\

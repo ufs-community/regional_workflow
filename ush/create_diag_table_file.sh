@@ -6,7 +6,7 @@
 #
 #-----------------------------------------------------------------------
 #
-function create_diag_table_files() {
+function create_diag_table_file() {
 #
 #-----------------------------------------------------------------------
 #
@@ -45,7 +45,9 @@ function create_diag_table_files() {
 #
 #-----------------------------------------------------------------------
 #
-  local valid_args=()
+  local valid_args=( \
+    "run_dir" \
+    )
   process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -64,29 +66,24 @@ function create_diag_table_files() {
 #
 #-----------------------------------------------------------------------
 #
-  local i \
-        cdate \
-        cycle_dir \
-        diag_table_fp \
+  local diag_table_fp \
         settings
 #
 #-----------------------------------------------------------------------
 #
-# Create a diagnostics table file within each cycle directory.
+# Create a diagnostics table file within the specified run directory.
 #
 #-----------------------------------------------------------------------
 #
   print_info_msg "$VERBOSE" "                                            
-Creating a diagnostics table file (\"${DIAG_TABLE_FN}\") within each cycle
-directory..."                                                      
+Creating a diagnostics table file (\"${DIAG_TABLE_FN}\") in the specified
+run directory...
 
-  for (( i=0; i<${NUM_CYCLES}; i++ )); do
+  run_dir = \"${run_dir}\""
 
-    cdate="${ALL_CDATES[$i]}"
-    cycle_dir="${CYCLE_BASEDIR}/$cdate"
+  diag_table_fp="${run_dir}/${DIAG_TABLE_FN}"
+  print_info_msg "$VERBOSE" "
 
-    diag_table_fp="${cycle_dir}/${DIAG_TABLE_FN}"
-    print_info_msg "$VERBOSE" "
 Using the template diagnostics table file:
 
     diag_table_tmpl_fp = ${DIAG_TABLE_TMPL_FP}
@@ -95,12 +92,11 @@ to create:
 
     diag_table_fp = \"${diag_table_fp}\""
 
-    settings="
-  starttime: !datetime ${ALL_CDATES[$i]}
-  cres: ${CRES}
-"
+  settings="
+starttime: !datetime ${CDATE}
+cres: ${CRES}"
 
-    $USHDIR/fill_jinja_template.py -q -u "${settings}" -t "${DIAG_TABLE_TMPL_FP}" -o "${diag_table_fp}" || \
+  $USHDIR/fill_jinja_template.py -q -u "${settings}" -t "${DIAG_TABLE_TMPL_FP}" -o "${diag_table_fp}" || \
     print_err_msg_exit "
 !!!!!!!!!!!!!!!!!
 
@@ -108,8 +104,6 @@ fill_jinja_template.py failed!
 
 !!!!!!!!!!!!!!!!!
 "
-
-  done
 #
 #-----------------------------------------------------------------------
 #
