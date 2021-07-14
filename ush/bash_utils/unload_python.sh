@@ -66,17 +66,14 @@ Usage:
 #-----------------------------------------------------------------------
 #
 
-  module_to_unload=( python miniconda3 )
+  modules_to_unload=( python miniconda3 )
   loaded_modules=$(module list 2>&1)
 
-  for a_module in ${module_to_unload[@]}; do
-    if [[ "${loaded_modules}" =~ "${a_module}" ]]; then
+  for module_to_unload in ${modules_to_unload[@]}; do
+    if [[ "${loaded_modules}" =~ "${module_to_unload}" ]]; then
   print_info_msg "\
-Module ${a_module} IS loaded, unloading... "
-      module unload ${a_module}
-    else
-  print_info_msg "\
-Module ${a_module} IS NOT loaded "
+Unloading module ${module_to_unload} libraries needed for workflow generation but not for running the workflow... "
+      module unload ${module_to_unload}
     fi
   done
 
