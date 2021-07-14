@@ -456,6 +456,10 @@ MODULES_RUN_TASK_FP script.
 
   </metatask>
 
+{% if do_ensemble %}
+  </metatask>
+{% endif %}
+
 <!--
 ************************************************************************
 ************************************************************************
@@ -482,7 +486,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>ACCUM</name><value>01</value></envar>
 
     <dependency>
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      <metataskdep metatask="run_ensemble"/>
     </dependency>
 
   </task>
@@ -515,7 +519,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>VAR</name><value>REFC</value></envar>
  
     <dependency>
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      <metataskdep metatask="run_ensemble"/>
     </dependency>
 
   </task>
@@ -547,7 +551,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>VAR</name><value>REFC</value></envar>
 
     <dependency>
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      <metataskdep metatask="run_ensemble"/>
     </dependency>
 
   </task>
@@ -557,6 +561,16 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
+{%- if do_ensemble %}
+  <metatask name="run_ensemble_vx">
+
+    <var name="{{ ensmem_indx_name }}">
+{%- for m in range(1, num_ens_members+1) -%}
+  {%- set fmtstr=" %0"~ndigits_ensmem_names~"d" -%}
+  {{- fmtstr%m -}}
+{%- endfor %} </var>
+{%- endif %}
+
 {% if run_task_vx_gridstat %}
 
   <task name="&VX_GRIDSTAT_TN;{{ uscore_ensmem_name }}" maxtries="2">
@@ -586,7 +600,7 @@ MODULES_RUN_TASK_FP script.
       {% if run_task_get_obs_ccpa %}
       <taskdep task="&GET_OBS_CCPA_TN;"/>
       {% else %}
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      <metataskdep metatask="run_ensemble"/>
       {% endif %}
     </dependency>
 
@@ -624,7 +638,7 @@ MODULES_RUN_TASK_FP script.
       {% if run_task_get_obs_mrms %}
       <taskdep task="&GET_OBS_MRMS_TN;"/>
       {% else %}
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      <metataskdep metatask="run_ensemble"/>
       {% endif %}
     </dependency>
 
@@ -771,7 +785,6 @@ MODULES_RUN_TASK_FP script.
     </dependency>
 
   </task>
-
 {% endif %}
 
 {% if do_ensemble %}
@@ -808,7 +821,7 @@ MODULES_RUN_TASK_FP script.
       {% if run_task_get_obs_ccpa %}
       <taskdep task="&GET_OBS_CCPA_TN;"/>
       {% else %}
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      <metataskdep metatask="run_ensemble"/>
       {% endif %}
     </dependency>
 
@@ -816,7 +829,7 @@ MODULES_RUN_TASK_FP script.
 {% endif %}
 
 <!--
-     ************************************************************************
+************************************************************************
 ************************************************************************
 -->
 
@@ -939,7 +952,7 @@ MODULES_RUN_TASK_FP script.
       {% if run_task_get_obs_mrms %}
       <taskdep task="&GET_OBS_MRMS_TN;"/>
       {% else %}
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      <metataskdep metatask="run_ensemble"/>
       {% endif %}
     </dependency>
 
@@ -1262,7 +1275,7 @@ MODULES_RUN_TASK_FP script.
       {% if run_task_get_obs_ndas %}
       <taskdep task="&GET_OBS_NDAS_TN;"/>
       {% else %}
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+      <metataskdep metatask="run_ensemble"/>
       {% endif %}
     </dependency>
 
