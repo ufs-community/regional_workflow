@@ -102,7 +102,7 @@ if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
   INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
   if [ ${VAR} == "APCP" ]; then
     LOG_SUFFIX=gridstat_${CDATE}_${VAR}_${ACCUM}h
-  elif [ ${VAR} == "REFC" ]; then
+  elif [ ${VAR} == "REFC" || ${VAR} == "RETOP" ]; then
     LOG_SUFFIX=gridstat_${CDATE}_${VAR}
   else
     echo "No variable defined"
@@ -114,7 +114,7 @@ elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
   MODEL=${MODEL}_${ENSMEM}
   if [ ${VAR} == "APCP" ]; then
     LOG_SUFFIX=gridstat_${CDATE}_${ENSMEM}_${VAR}_${ACCUM}h
-  elif [ ${VAR} == "REFC" ]; then
+  elif [ ${VAR} == "REFC" || ${VAR} == "RETOP" ]; then
     LOG_SUFFIX=gridstat_${CDATE}_${ENSMEM}_${VAR}
   else
     echo "No variable defined"
@@ -147,6 +147,7 @@ export INPUT_BASE
 export OUTPUT_BASE
 export LOG_SUFFIX
 export MET_INSTALL_DIR
+export MET_BIN_EXEC
 export METPLUS_PATH
 export METPLUS_CONF
 export MET_CONFIG
@@ -168,6 +169,10 @@ if [ ${VAR} == "APCP" ]; then
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/${VAR}_${acc}.conf
 elif [ ${VAR} == "REFC" ]; then
+  ${METPLUS_PATH}/ush/master_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/${VAR}.conf
+elif [ ${VAR} == "RETOP" ]; then
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/${VAR}.conf

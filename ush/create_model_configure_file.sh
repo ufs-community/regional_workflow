@@ -49,6 +49,9 @@ function create_model_configure_file() {
 cdate \
 run_dir \
 nthreads \
+sub_hourly_post \
+dt_subhourly_post_mnts \
+dt_atmos \
   )
   process_args valid_args "$@"
 #
@@ -99,6 +102,8 @@ run directory (run_dir):
 #
   dot_quilting_dot="."${QUILTING,,}"."
   dot_print_esmf_dot="."${PRINT_ESMF,,}"."
+  dot_cpl_dot="."${CPL,,}"."
+  dot_write_dopost="."${WRITE_DOPOST,,}"."
 #
 #-----------------------------------------------------------------------
 #
@@ -116,8 +121,11 @@ run directory (run_dir):
   'start_hour': $hh
   'nhours_fcst': ${FCST_LEN_HRS}
   'dt_atmos': ${DT_ATMOS}
+  'cpl': ${dot_cpl_dot}
   'atmos_nthreads': ${nthreads:-1}
   'ncores_per_node': ${NCORES_PER_NODE}
+  'restart_interval': ${RESTART_INTERVAL}
+  'write_dopost': ${dot_write_dopost}
   'quilting': ${dot_quilting_dot}
   'print_esmf': ${dot_print_esmf_dot}
   'output_grid': ${WRTCMP_output_grid}"
@@ -169,6 +177,47 @@ run directory (run_dir):
     fi
 
   fi
+#
+# If sub_hourly_post is set to "TRUE", then the forecast model must be 
+# directed to generate output files on a sub-hourly interval.  Do this 
+# by specifying the output interval in the model configuration file 
+# (MODEL_CONFIG_FN) in units of number of forecat model time steps (nsout).  
+# nsout is calculated using the user-specified output time interval 
+# dt_subhourly_post_mnts (in units of minutes) and the forecast model's 
+# main time step dt_atmos (in units of seconds).  Note that nsout is 
+# guaranteed to be an integer because the experiment generation scripts 
+# require that dt_subhourly_post_mnts (after conversion to seconds) be 
+# evenly divisible by dt_atmos.  Also, in this case, the variable nfhout 
+# [which specifies the (low-frequency) output interval in hours after 
+# forecast hour nfhmax_hf; see the jinja model_config template file] is 
+# set to 0, although this doesn't matter because any positive of nsout 
+# will override nfhout.
+#
+# If sub_hourly_post is set to "FALSE", then the workflow is hard-coded 
+# (in the jinja model_config template file) to direct the forecast model 
+# to output files every hour.  This is done by setting (1) nfhout_hf to 
+# 1 in that jinja template file, (2) nfhout to 1 here, and (3) nsout to
+# -1 here which turns off output by time step interval.
+#
+# Note that the approach used here of separating how hourly and subhourly
+# output is handled should be changed/generalized/simplified such that 
+# the user should only need to specify the output time interval (there
+# should be no need to specify a flag like sub_hourly_post); the workflow 
+# should then be able to direct the model to output files with that time 
+# interval and to direct the post-processor to process those files 
+# regardless of whether that output time interval is larger than, equal 
+# to, or smaller than one hour.
+#
+  if [ "${sub_hourly_post}" = "TRUE" ]; then
+    nsout=$(( dt_subhourly_post_mnts*60 / dt_atmos ))
+    nfhout=0
+  else
+    nfhout=1
+    nsout=-1
+  fi
+  settings="${settings}
+  'nfhout': ${nfhout}
+  'nsout': ${nsout}"
 
   print_info_msg $VERBOSE "
 The variable \"settings\" specifying values to be used in the \"${MODEL_CONFIG_FN}\"

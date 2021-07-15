@@ -36,12 +36,12 @@ NDAS_OBS_DIR="/path/to/processed/NDAS/data"
 RUN_TASK_MAKE_GRID="TRUE"
 RUN_TASK_MAKE_OROG="TRUE"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
-RUN_TASK_GET_OBS_CCPA="TRUE"
-RUN_TASK_GET_OBS_MRMS="TRUE"
-RUN_TASK_GET_OBS_NDAS="TRUE"
-RUN_TASK_VX_GRIDSTAT="TRUE"
-RUN_TASK_VX_POINTSTAT="TRUE"
-RUN_TASK_VX_ENSGRID="TRUE"
+RUN_TASK_GET_OBS_CCPA="FALSE"
+RUN_TASK_GET_OBS_MRMS="FALSE"
+RUN_TASK_GET_OBS_NDAS="FALSE"
+RUN_TASK_VX_GRIDSTAT="FALSE"
+RUN_TASK_VX_POINTSTAT="FALSE"
+RUN_TASK_VX_ENSGRID="FALSE"
 RUN_TASK_VX_ENSPOINT="FALSE"
 
 #
@@ -53,9 +53,10 @@ RUN_TASK_VX_ENSPOINT="FALSE"
 #
 # The following is specifically for Hera.  It will have to be modified
 # if on another platform, using other dates, other external models, etc.
+# Uncomment the following EXTRN_MDL_*_ICS/LBCS only when USE_USER_STAGED_EXTRN_FILES=TRUE
 #
-EXTRN_MDL_SOURCE_BASEDIR_ICS="/scratch2/BMC/det/UFS_SRW_app/v1p0/model_data/FV3GFS"
-EXTRN_MDL_FILES_ICS=( "gfs.pgrb2.0p25.f000" )
-EXTRN_MDL_SOURCE_BASEDIR_LBCS="/path/to/model_data/FV3GFS"
-EXTRN_MDL_FILES_LBCS=( "gfs.pgrb2.0p25.f006" "gfs.pgrb2.0p25.f012" "gfs.pgrb2.0p25.f018" "gfs.pgrb2.0p25.f024" \
-                       "gfs.pgrb2.0p25.f030" "gfs.pgrb2.0p25.f036" "gfs.pgrb2.0p25.f042" "gfs.pgrb2.0p25.f048" )
+#EXTRN_MDL_SOURCE_BASEDIR_ICS="/scratch2/BMC/det/UFS_SRW_app/v1p0/model_data/FV3GFS"
+#EXTRN_MDL_FILES_ICS=( "gfs.pgrb2.0p25.f000" )
+#EXTRN_MDL_SOURCE_BASEDIR_LBCS="/path/to/model_data/FV3GFS"
+#EXTRN_MDL_FILES_LBCS=( "gfs.pgrb2.0p25.f006" "gfs.pgrb2.0p25.f012" "gfs.pgrb2.0p25.f018" "gfs.pgrb2.0p25.f024" \
+#                       "gfs.pgrb2.0p25.f030" "gfs.pgrb2.0p25.f036" "gfs.pgrb2.0p25.f042" "gfs.pgrb2.0p25.f048" )

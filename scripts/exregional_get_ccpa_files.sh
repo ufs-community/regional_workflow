@@ -151,7 +151,7 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
       fi
 
       # One hour CCPA files have incorrect metadeta in the files under the "00" directory prior to 20210504.
-      #  After data is pulled, reorganize into correct valid yyyymmdd structure.
+      # After data is pulled, reorganize into correct valid yyyymmdd structure.
       if [[ ${vhh_noZero} -ge 1 && ${vhh_noZero} -le 6 ]]; then
         cp $ccpa_raw/${vyyyymmdd}/06/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
       elif [[ ${vhh_noZero} -ge 7 && ${vhh_noZero} -le 12 ]]; then

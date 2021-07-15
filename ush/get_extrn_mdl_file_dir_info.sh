@@ -675,13 +675,13 @@ has not been specified for this external model and machine combination:
   "FV3GFS")
     case "$MACHINE" in
     "WCOSS_CRAY")
-      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}"
+      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
       ;;
     "WCOSS_DELL_P3")
-      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}"
+      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
       ;;
     "HERA")
-      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}"
+      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
       ;;
     "ORION")
       sysdir="$sysbasedir"
@@ -919,8 +919,13 @@ workflow to look for the external model files in a user-staged directory."
     fi
 
     arcv_fmt="tar"
-    arcvrel_dir="./gfs.${yyyymmdd}/${hh}"
-
+    
+    slash_atmos_or_null=""
+    if [ "${cdate_FV3LAM}" -ge "2021032100" ]; then
+      slash_atmos_or_null="/atmos"
+    fi
+    arcvrel_dir="./gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
+     
     is_array arcv_fns
     if [ "$?" = "0" ]; then
       suffix=".${arcv_fmt}"

@@ -47,8 +47,6 @@ ushdir="${scrfunc_dir}"
 #
 . $ushdir/source_util_funcs.sh
 . $ushdir/set_FV3nml_sfc_climo_filenames.sh
-. $ushdir/set_FV3nml_stoch_params.sh
-. $ushdir/create_diag_table_files.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -184,19 +182,20 @@ settings="\
   'make_lbcs_tn': ${MAKE_LBCS_TN}
   'run_fcst_tn': ${RUN_FCST_TN}
   'run_post_tn': ${RUN_POST_TN}
-  'get_obs_tn': ${GET_OBS_TN}
   'get_obs_ccpa_tn': ${GET_OBS_CCPA_TN}
   'get_obs_ndas_tn': ${GET_OBS_NDAS_TN}
   'get_obs_mrms_tn': ${GET_OBS_MRMS_TN}
   'vx_tn': ${VX_TN}
   'vx_gridstat_tn': ${VX_GRIDSTAT_TN}
   'vx_gridstat_refc_tn': ${VX_GRIDSTAT_REFC_TN}
+  'vx_gridstat_retop_tn': ${VX_GRIDSTAT_RETOP_TN}
   'vx_gridstat_03h_tn': ${VX_GRIDSTAT_03h_TN}
   'vx_gridstat_06h_tn': ${VX_GRIDSTAT_06h_TN}
   'vx_gridstat_24h_tn': ${VX_GRIDSTAT_24h_TN}
   'vx_pointstat_tn': ${VX_POINTSTAT_TN}
   'vx_ensgrid_tn': ${VX_ENSGRID_TN}
   'vx_ensgrid_refc_tn': ${VX_ENSGRID_REFC_TN}
+  'vx_ensgrid_retop_tn': ${VX_ENSGRID_RETOP_TN}
   'vx_ensgrid_03h_tn': ${VX_ENSGRID_03h_TN}
   'vx_ensgrid_06h_tn': ${VX_ENSGRID_06h_TN}
   'vx_ensgrid_24h_tn': ${VX_ENSGRID_24h_TN}
@@ -209,9 +208,14 @@ settings="\
   'vx_ensgrid_mean_24h_tn': ${VX_ENSGRID_MEAN_24h_TN}
   'vx_ensgrid_prob_24h_tn': ${VX_ENSGRID_PROB_24h_TN}
   'vx_ensgrid_prob_refc_tn': ${VX_ENSGRID_PROB_REFC_TN}
+  'vx_ensgrid_prob_retop_tn': ${VX_ENSGRID_PROB_RETOP_TN}
   'vx_enspoint_tn': ${VX_ENSPOINT_TN}
   'vx_enspoint_mean_tn': ${VX_ENSPOINT_MEAN_TN}
   'vx_enspoint_prob_tn': ${VX_ENSPOINT_PROB_TN}
+#
+# Entity used to load the module file for each GET_OBS_* task.
+#
+  'get_obs': ${GET_OBS}
 #
 # Number of nodes to use for each task.
 #
@@ -239,7 +243,7 @@ settings="\
 # Number of cores used for a task
 #
   'ncores_run_fcst': ${PE_MEMBER01}
-  'native_run_fcst': --cpus-per-task 4 --exclusive
+  'native_run_fcst': --cpus-per-task ${CPUS_PER_TASK_RUN_FCST} --exclusive
 #
 # Number of logical processes per node for each task.  If running without
 # threading, this is equal to the number of MPI processes per node.
@@ -299,12 +303,43 @@ settings="\
   'maxtries_make_lbcs': ${MAXTRIES_MAKE_LBCS}
   'maxtries_run_fcst': ${MAXTRIES_RUN_FCST}
   'maxtries_run_post': ${MAXTRIES_RUN_POST}
+  'maxtries_get_obs_ccpa': ${MAXTRIES_GET_OBS_CCPA}
+  'maxtries_get_obs_mrms': ${MAXTRIES_GET_OBS_MRMS}
+  'maxtries_get_obs_ndas': ${MAXTRIES_GET_OBS_NDAS}
+  'maxtries_vx_gridstat': ${MAXTRIES_VX_GRIDSTAT}
+  'maxtries_vx_gridstat_refc': ${MAXTRIES_VX_GRIDSTAT_REFC}
+  'maxtries_vx_gridstat_retop': ${MAXTRIES_VX_GRIDSTAT_RETOP}
+  'maxtries_vx_gridstat_03h': ${MAXTRIES_VX_GRIDSTAT_03h}
+  'maxtries_vx_gridstat_06h': ${MAXTRIES_VX_GRIDSTAT_06h}
+  'maxtries_vx_gridstat_24h': ${MAXTRIES_VX_GRIDSTAT_24h}
+  'maxtries_vx_pointstat': ${MAXTRIES_VX_POINTSTAT}
+  'maxtries_vx_ensgrid': ${MAXTRIES_VX_ENSGRID}
+  'maxtries_vx_ensgrid_refc': ${MAXTRIES_VX_ENSGRID_REFC}
+  'maxtries_vx_ensgrid_retop': ${MAXTRIES_VX_ENSGRID_RETOP}
+  'maxtries_vx_ensgrid_03h': ${MAXTRIES_VX_ENSGRID_03h}
+  'maxtries_vx_ensgrid_06h': ${MAXTRIES_VX_ENSGRID_06h}
+  'maxtries_vx_ensgrid_24h': ${MAXTRIES_VX_ENSGRID_24h}
+  'maxtries_vx_ensgrid_mean': ${MAXTRIES_VX_ENSGRID_MEAN}
+  'maxtries_vx_ensgrid_prob': ${MAXTRIES_VX_ENSGRID_PROB}
+  'maxtries_vx_ensgrid_mean_03h': ${MAXTRIES_VX_ENSGRID_MEAN_03h}
+  'maxtries_vx_ensgrid_prob_03h': ${MAXTRIES_VX_ENSGRID_PROB_03h}
+  'maxtries_vx_ensgrid_mean_06h': ${MAXTRIES_VX_ENSGRID_MEAN_06h}
+  'maxtries_vx_ensgrid_prob_06h': ${MAXTRIES_VX_ENSGRID_PROB_06h}
+  'maxtries_vx_ensgrid_mean_24h': ${MAXTRIES_VX_ENSGRID_MEAN_24h}
+  'maxtries_vx_ensgrid_prob_24h': ${MAXTRIES_VX_ENSGRID_PROB_24h}
+  'maxtries_vx_ensgrid_prob_refc': ${MAXTRIES_VX_ENSGRID_PROB_REFC}
+  'maxtries_vx_ensgrid_prob_retop': ${MAXTRIES_VX_ENSGRID_PROB_RETOP}
+  'maxtries_vx_enspoint': ${MAXTRIES_VX_ENSPOINT}
+  'maxtries_vx_enspoint_mean': ${MAXTRIES_VX_ENSPOINT_MEAN}
+  'maxtries_vx_enspoint_prob': ${MAXTRIES_VX_ENSPOINT_PROB}
 #
-# Flags that specify whether to run the preprocessing tasks.
+# Flags that specify whether to run the preprocessing or
+# verification-related tasks.
 #
   'run_task_make_grid': ${RUN_TASK_MAKE_GRID}
   'run_task_make_orog': ${RUN_TASK_MAKE_OROG}
   'run_task_make_sfc_climo': ${RUN_TASK_MAKE_SFC_CLIMO}
+  'run_task_run_post': ${RUN_TASK_RUN_POST}
   'run_task_get_obs_ccpa': ${RUN_TASK_GET_OBS_CCPA}
   'run_task_get_obs_mrms': ${RUN_TASK_GET_OBS_MRMS}
   'run_task_get_obs_ndas': ${RUN_TASK_GET_OBS_NDAS}
@@ -343,10 +378,15 @@ settings="\
 #
   'fcst_len_hrs': ${FCST_LEN_HRS}
 #
+# Inline post
+#
+  'write_dopost': ${WRITE_DOPOST}
+#
 # METPlus-specific information
 #
   'model': ${MODEL}
   'met_install_dir': ${MET_INSTALL_DIR}
+  'met_bin_exec': ${MET_BIN_EXEC}
   'metplus_path': ${METPLUS_PATH}
   'vx_config_dir': ${VX_CONFIG_DIR}
   'metplus_conf': ${METPLUS_CONF}
@@ -363,6 +403,12 @@ settings="\
   'ensmem_indx_name': ${ensmem_indx_name}
   'uscore_ensmem_name': ${uscore_ensmem_name}
   'slash_ensmem_subdir': ${slash_ensmem_subdir}
+#
+# Parameters associated with subhourly post-processed output
+#
+  'sub_hourly_post': ${SUB_HOURLY_POST}
+  'delta_min': ${DT_SUBHOURLY_POST_MNTS}
+  'first_fv3_file_tstr': "000:"`date -d "${DATE_FIRST_CYCL} +${DT_ATMOS} seconds" +%M:%S`
 " # End of "settings" variable.
 
 print_info_msg $VERBOSE "
@@ -396,21 +442,6 @@ $settings"
 #
 #-----------------------------------------------------------------------
 #
-# Create the cycle directories.
-#
-#-----------------------------------------------------------------------
-#
-print_info_msg "$VERBOSE" "
-Creating the cycle directories..."
-
-for (( i=0; i<${NUM_CYCLES}; i++ )); do
-  cdate="${ALL_CDATES[$i]}"
-  cycle_dir="${CYCLE_BASEDIR}/$cdate"
-  mkdir_vrfy -p "${cycle_dir}"
-done
-#
-#-----------------------------------------------------------------------
-#
 # Create a symlink in the experiment directory that points to the workflow
 # (re)launch script.
 #
@@ -421,7 +452,9 @@ Creating symlink in the experiment directory (EXPTDIR) that points to the
 workflow launch script (WFLOW_LAUNCH_SCRIPT_FP):
   EXPTDIR = \"${EXPTDIR}\"
   WFLOW_LAUNCH_SCRIPT_FP = \"${WFLOW_LAUNCH_SCRIPT_FP}\""
-ln_vrfy -fs "${WFLOW_LAUNCH_SCRIPT_FP}" "$EXPTDIR"
+create_symlink_to_file target="${WFLOW_LAUNCH_SCRIPT_FP}" \
+                       symlink="${EXPTDIR}/${WFLOW_LAUNCH_SCRIPT_FN}" \
+                       relative="FALSE"
 #
 #-----------------------------------------------------------------------
 #
@@ -440,7 +473,11 @@ if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ]; then
   print_info_msg "
 Copying contents of user cron table to backup file:
   crontab_backup_fp = \"${crontab_backup_fp}\""
-  crontab -l > ${crontab_backup_fp}
+  if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+    cp_vrfy "/u/$USER/cron/mycrontab" "${crontab_backup_fp}"
+  else
+    crontab -l > ${crontab_backup_fp}
+  fi
 #
 # Below, we use "grep" to determine whether the crontab line that the
 # variable CRONTAB_LINE contains is already present in the cron table.
@@ -463,7 +500,11 @@ Copying contents of user cron table to backup file:
 # string in crontab_line_esc_astr (in which case it does something more
 # than the command portion of the string in crontab_line_esc_astr does).
 #
-  grep_output=$( crontab -l | grep "^${crontab_line_esc_astr}$" )
+  if [ "$MACHINE" = "WCOSS_DELL_P3" ];then
+    grep_output=$( grep "^${crontab_line_esc_astr}$" "/u/$USER/cron/mycrontab" )
+  else
+    grep_output=$( crontab -l | grep "^${crontab_line_esc_astr}$" )
+  fi
   exit_status=$?
 
   if [ "${exit_status}" -eq 0 ]; then
@@ -480,7 +521,11 @@ Adding the following line to the cron table in order to automatically
 resubmit FV3-LAM workflow:
   CRONTAB_LINE = \"${CRONTAB_LINE}\""
 
-    ( crontab -l; echo "${CRONTAB_LINE}" ) | crontab -
+    if [ "$MACHINE" = "WCOSS_DELL_P3" ];then
+      echo "${CRONTAB_LINE}" >> "/u/$USER/cron/mycrontab"      
+    else
+      ( crontab -l; echo "${CRONTAB_LINE}" ) | crontab -
+    fi
 
   fi
 
@@ -795,16 +840,6 @@ if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
 Call to function to set surface climatology file names in the FV3 namelist
 file failed."
 
-  if [ "${DO_ENSEMBLE}" = TRUE ]; then
-    set_FV3nml_stoch_params || print_err_msg_exit "\
-Call to function to set stochastic parameters in the FV3 namelist files
-for the various ensemble members failed."
-  fi
-
-  create_diag_table_files || print_err_msg_exit "\
-Call to function to create a diagnostics table file under each cycle 
-directory failed."
-
 fi
 #
 #-----------------------------------------------------------------------
@@ -844,7 +879,7 @@ The experiment directory is:
   > EXPTDIR=\"$EXPTDIR\"
 
 "
-case $MACHINE in
+case "$MACHINE" in
 
 "CHEYENNE")
   print_info_msg "\

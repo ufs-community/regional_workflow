@@ -95,17 +95,18 @@ if [ "$MACHINE" = "CHEYENNE" ]; then
   module use -a /glade/p/ral/jntp/UFS_SRW_app/modules/
   module load rocoto
 elif [ "$MACHINE" = "ORION" ]; then
+  module purge
   module load contrib rocoto
 elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
   module purge
   module load lsf/10.1
   module use /gpfs/dell3/usrx/local/dev/emc_rocoto/modulefiles/
-  module load ruby/2.5.1 rocoto/1.2.4
+  module load ruby/2.5.1 rocoto/1.3.0rc2
 elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
   module purge
   module load xt-lsfhpc/9.1.3
   module use -a /usrx/local/emc_rocoto/modulefiles
-  module load rocoto/1.2.4
+  module load rocoto/1.3.0rc2
 else
   module purge
   module load rocoto
@@ -315,7 +316,7 @@ done <<< "${rocotostat_output}"
 num_cycles_total=${#cycle_str[@]}
 num_cycles_completed=0
 for (( i=0; i<=$((num_cycles_total-1)); i++ )); do
-  if [ "${cycle_status}" = "Done" ]; then
+  if [ "${cycle_status[i]}" = "Done" ]; then
     num_cycles_completed=$((num_cycles_completed+1))
   fi
 done
@@ -401,8 +402,11 @@ launch script for this experiment:
 # ly find lines in the crontab that contain exactly the string in cron-
 # tab_line_esc_astr without any leading or trailing characters.
 #
-    ( crontab -l | grep -v "^${crontab_line_esc_astr}$" ) | crontab -
-
+    if [ "$MACHINE" = "WCOSS_DELL_P3" ];then
+      grep -v "^${crontab_line_esc_astr}$" "/u/$USER/cron/mycrontab" > tmpfile && mv tmpfile "/u/$USER/cron/mycrontab"
+    else
+      ( crontab -l | grep -v "^${crontab_line_esc_astr}$" ) | crontab -
+    fi
   fi
 #
 # Print the workflow completion message to the launch log file.

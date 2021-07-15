@@ -192,6 +192,6 @@ ensemble_flag = {
 
 grid_weight_flag = NONE;
 output_prefix    = "${MODEL}_${DOMAIN}_F${FCST_TIME}_ADPSFC";
-version          = "V7.0";
+version          = "V10.0.0";
 
 ////////////////////////////////////////////////////////////////////////////////

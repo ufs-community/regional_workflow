@@ -78,6 +78,16 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
+# Set OpenMP variables.
+#
+#-----------------------------------------------------------------------
+#
+export KMP_AFFINITY=${KMP_AFFINITY_MAKE_SFC_CLIMO}
+export OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_SFC_CLIMO}
+export OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_SFC_CLIMO}
+#
+#-----------------------------------------------------------------------
+#
 # Are these machine dependent??
 #
 #-----------------------------------------------------------------------
@@ -126,7 +136,7 @@ EOF
 #
 #-----------------------------------------------------------------------
 #
-case $MACHINE in
+case "$MACHINE" in
 
   "WCOSS_CRAY")
     APRUN=${APRUN:-"aprun -j 1 -n 6 -N 6"}

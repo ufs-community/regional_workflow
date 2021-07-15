@@ -173,7 +173,7 @@ EXPT_SUBDIR=""
 # (consisting of the 2-digit hour-of-day), the directory in which the 
 # workflow will look for the external model files is:
 #
-#   $COMINgfs/gfs.$yyyymmdd/$hh
+#   $COMINgfs/gfs.$yyyymmdd/$hh/atmos
 #
 # FIXLAM_NCO_BASEDIR:
 # The base directory containing pregenerated grid, orography, and surface 
@@ -295,6 +295,9 @@ DOT_OR_USCORE="_"
 # the directory in which it is created in the build step to the executables
 # directory (EXECDIR; this is set during experiment generation).
 #
+# FCST_MODEL:
+# Name of forecast model (default=ufs-weather-model)
+#
 # WFLOW_XML_FN:
 # Name of the rocoto workflow XML file that the experiment generation
 # script creates and that defines the workflow for the experiment.
@@ -346,6 +349,8 @@ MODEL_CONFIG_FN="model_configure"
 NEMS_CONFIG_FN="nems.configure"
 FV3_EXEC_FN="ufs_model"
 
+FCST_MODEL="ufs-weather-model"
+
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
 EXTRN_MDL_ICS_VAR_DEFNS_FN="extrn_mdl_ics_var_defns.sh"
@@ -384,6 +389,36 @@ FCST_LEN_HRS="24"
 #
 #-----------------------------------------------------------------------
 #
+# Set model_configure parameters.  Definitions:
+#
+# DT_ATMOS:
+# The main forecast model integraton time step.  As described in the 
+# forecast model documentation, "It corresponds to the frequency with 
+# which the top level routine in the dynamics is called as well as the 
+# frequency with which the physics is called."
+#
+# CPL: parameter for coupling
+# (set automatically based on FCST_MODEL in ush/setup.sh)
+# (ufs-weather-model:FALSE, fv3gfs_aqm:TRUE)
+#
+# RESTART_INTERVAL:
+# frequency of the output restart files (unit:hour). 
+# Default=0: restart files are produced at the end of a forecast run
+# For example, RESTART_INTERVAL="1": restart files are produced every hour
+# with the prefix "YYYYMMDD.HHmmSS." in the RESTART directory
+#
+# WRITE_DOPOST:
+# Flag that determines whether or not to use the INLINE POST option
+# When TRUE, force to turn off run_post (RUN_TASK_RUN_POST=FALSE) in setup.sh
+#
+#-----------------------------------------------------------------------
+#
+DT_ATMOS=""
+RESTART_INTERVAL="0"
+WRITE_DOPOST="FALSE"
+#
+#-----------------------------------------------------------------------
+#
 # Set METplus parameters.  Definitions:
 #
 # MODEL: 
@@ -401,7 +436,10 @@ FCST_LEN_HRS="24"
 # to be set for both user-provided observations and for observations 
 # that are retrieved from the NOAA HPSS (if the user has access) via
 # the get_obs_ccpa_tn task (activated in workflow by setting 
-# RUN_TASK_GET_OBS_CCPA="TRUE"). METplus is configured to verify 01-, 
+# RUN_TASK_GET_OBS_CCPA="TRUE"). In the case of pulling observations 
+# directly from NOAA HPSS, the data retrieved will be placed in this 
+# directory. Please note, this path must be defind as 
+# /full-path-to-obs/ccpa/proc. METplus is configured to verify 01-, 
 # 03-, 06-, and 24-h accumulated precipitation using hourly CCPA files. 
 # METplus configuration files require the use of predetermined directory 
 # structure and file names. Therefore, if the CCPA files are user 
@@ -424,7 +462,10 @@ FCST_LEN_HRS="24"
 # to be set for both user-provided observations and for observations
 # that are retrieved from the NOAA HPSS (if the user has access) via the
 # get_obs_mrms_tn task (activated in workflow by setting 
-# RUN_TASK_GET_OBS_MRMS="TRUE"). METplus configuration files require the
+# RUN_TASK_GET_OBS_MRMS="TRUE"). In the case of pulling observations 
+# directly from NOAA HPSS, the data retrieved will be placed in this 
+# directory. Please note, this path must be defind as 
+# /full-path-to-obs/mrms/proc. METplus configuration files require the
 # use of predetermined directory structure and file names. Therefore, if
 # the MRMS files are user provided, they need to follow the anticipated 
 # naming structure:
@@ -450,7 +491,10 @@ FCST_LEN_HRS="24"
 # both user-provided observations and for observations that are 
 # retrieved from the NOAA HPSS (if the user has access) via the 
 # get_obs_ndas_tn task (activated in workflow by setting 
-# RUN_TASK_GET_OBS_NDAS="TRUE"). METplus is configured to verify 
+# RUN_TASK_GET_OBS_NDAS="TRUE"). In the case of pulling observations 
+# directly from NOAA HPSS, the data retrieved will be placed in this 
+# directory. Please note, this path must be defind as 
+# /full-path-to-obs/ndas/proc. METplus is configured to verify 
 # near-surface variables hourly and upper-air variables at times valid 
 # at 00 and 12 UTC with NDAS prepbufr files. METplus configuration files
 # require the use of predetermined file names. Therefore, if the NDAS 
@@ -466,10 +510,11 @@ FCST_LEN_HRS="24"
 #
 MODEL=""
 MET_INSTALL_DIR="/path/to/MET"
+MET_BIN_EXEC="bin"
 METPLUS_PATH="/path/to/METPlus"
-CCPA_OBS_DIR="/path/to/processed/CCPA/data"
-MRMS_OBS_DIR="/path/to/processed/MRMS/data"
-NDAS_OBS_DIR="/path/to/processed/NDAS/data"
+CCPA_OBS_DIR="/path/to/observation-directory/ccpa/proc"
+MRMS_OBS_DIR="/path/to/observation-directory/mrms/proc"
+NDAS_OBS_DIR="/path/to/observation-directory/ndas/proc"
 #
 #-----------------------------------------------------------------------
 #
@@ -515,18 +560,26 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #
 #-----------------------------------------------------------------------
 #
-# Set NOMADS online data associated parameters. Definitions:
+# Base directories in which to search for external model files.
 #
-# NOMADS:
-# Flag controlling whether or not using NOMADS online data.
+# EXTRN_MDL_SYSBASEDIR_ICS:
+# Base directory on the local machine containing external model files for
+# generating ICs on the native grid.  The way the full path containing 
+# these files is constructed depends on the user-specified external model
+# for ICs, i.e. EXTRN_MDL_NAME_ICS.
 #
-# NOMADS_file_type:
-# Flag controlling the format of data.
+# EXTRN_MDL_SYSBASEDIR_LBCS:
+# Same as EXTRN_MDL_SYSBASEDIR_ICS but for LBCs.
+#
+# Note that these must be defined as null strings here so that if they 
+# are specified by the user in the experiment configuration file, they 
+# remain set to those values, and if not, they get set to machine-dependent 
+# values.
 #
 #-----------------------------------------------------------------------
 #
-NOMADS="FALSE"
-NOMADS_file_type="nemsio"
+EXTRN_MDL_SYSBASEDIR_ICS=""
+EXTRN_MDL_SYSBASEDIR_LBCS=""
 #
 #-----------------------------------------------------------------------
 #
@@ -567,6 +620,21 @@ EXTRN_MDL_SOURCE_BASEDIR_ICS="/base/dir/containing/user/staged/extrn/mdl/files/f
 EXTRN_MDL_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
 EXTRN_MDL_SOURCE_BASEDIR_LBCS="/base/dir/containing/user/staged/extrn/mdl/files/for/LBCs"
 EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
+#
+#-----------------------------------------------------------------------
+#
+# Set NOMADS online data associated parameters. Definitions:
+#
+# NOMADS:
+# Flag controlling whether or not using NOMADS online data.
+#
+# NOMADS_file_type:
+# Flag controlling the format of data.
+#
+#-----------------------------------------------------------------------
+#
+NOMADS="FALSE"
+NOMADS_file_type="nemsio"
 #
 #-----------------------------------------------------------------------
 #
@@ -888,12 +956,6 @@ ESGgrid_WIDE_HALO_WIDTH=""
 #
 # Set computational parameters for the forecast.  Definitions:
 #
-# DT_ATMOS:
-# The main forecast model integraton time step.  As described in the 
-# forecast model documentation, "It corresponds to the frequency with 
-# which the top level routine in the dynamics is called as well as the 
-# frequency with which the physics is called."
-#
 # LAYOUT_X, LAYOUT_Y:
 # The number of MPI tasks (processes) to use in the two horizontal 
 # directions (x and y) of the regional grid when running the forecast 
@@ -922,7 +984,6 @@ ESGgrid_WIDE_HALO_WIDTH=""
 #
 #-----------------------------------------------------------------------
 #
-DT_ATMOS=""
 LAYOUT_X=""
 LAYOUT_Y=""
 BLOCKSIZE=""
@@ -1086,6 +1147,9 @@ VERBOSE="TRUE"
 #
 # SFC_CLIMO_DIR:
 # Same as GRID_DIR but for the surface climatology generation task.
+#
+# RUN_TASK_RUN_POST:
+# Flag that determines whether the run_post task is to be run
 # 
 # RUN_TASK_VX_GRIDSTAT:
 # Flag that determines whether the grid-stat verification task is to be
@@ -1114,6 +1178,8 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
+
+RUN_TASK_RUN_POST="TRUE"
 
 RUN_TASK_GET_OBS_CCPA="FALSE"
 
@@ -1245,6 +1311,9 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "fix_co2_proj/global_co2historicaldata_2016.txt" \
 "fix_co2_proj/global_co2historicaldata_2017.txt" \
 "fix_co2_proj/global_co2historicaldata_2018.txt" \
+"fix_co2_proj/global_co2historicaldata_2019.txt" \
+"fix_co2_proj/global_co2historicaldata_2020.txt" \
+"fix_co2_proj/global_co2historicaldata_2021.txt" \
 "global_co2historicaldata_glob.txt" \
 "co2monthlycyc.txt" \
 "global_h2o_pltc.f77" \
@@ -1252,6 +1321,8 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "global_zorclim.1x1.grb" \
 "global_sfc_emissivity_idx.txt" \
 "global_solarconstant_noaa_an.txt" \
+"geo_em.d01.lat-lon.2.5m.HGT_M.nc" \
+"HGT.Beljaars_filtered.lat-lon.30s_res.nc" \
 "replace_with_FIXgsm_ozone_prodloss_filename" \
 )
 
@@ -1294,6 +1365,9 @@ CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING=( \
 "co2historicaldata_2016.txt | fix_co2_proj/global_co2historicaldata_2016.txt" \
 "co2historicaldata_2017.txt | fix_co2_proj/global_co2historicaldata_2017.txt" \
 "co2historicaldata_2018.txt | fix_co2_proj/global_co2historicaldata_2018.txt" \
+"co2historicaldata_2019.txt | fix_co2_proj/global_co2historicaldata_2019.txt" \
+"co2historicaldata_2020.txt | fix_co2_proj/global_co2historicaldata_2020.txt" \
+"co2historicaldata_2021.txt | fix_co2_proj/global_co2historicaldata_2021.txt" \
 "co2historicaldata_glob.txt | global_co2historicaldata_glob.txt" \
 "co2monthlycyc.txt          | co2monthlycyc.txt" \
 "global_h2oprdlos.f77       | global_h2o_pltc.f77" \
@@ -1325,13 +1399,14 @@ MAKE_ICS_TN="make_ics"
 MAKE_LBCS_TN="make_lbcs"
 RUN_FCST_TN="run_fcst"
 RUN_POST_TN="run_post"
-GET_OBS_TN="get_obs"
+GET_OBS="get_obs"
 GET_OBS_CCPA_TN="get_obs_ccpa"
 GET_OBS_MRMS_TN="get_obs_mrms"
 GET_OBS_NDAS_TN="get_obs_ndas"
 VX_TN="run_vx"
 VX_GRIDSTAT_TN="run_gridstatvx"
 VX_GRIDSTAT_REFC_TN="run_gridstatvx_refc"
+VX_GRIDSTAT_RETOP_TN="run_gridstatvx_retop"
 VX_GRIDSTAT_03h_TN="run_gridstatvx_03h"
 VX_GRIDSTAT_06h_TN="run_gridstatvx_06h"
 VX_GRIDSTAT_24h_TN="run_gridstatvx_24h"
@@ -1341,6 +1416,7 @@ VX_ENSGRID_03h_TN="run_ensgridvx_03h"
 VX_ENSGRID_06h_TN="run_ensgridvx_06h"
 VX_ENSGRID_24h_TN="run_ensgridvx_24h"
 VX_ENSGRID_REFC_TN="run_ensgridvx_refc"
+VX_ENSGRID_RETOP_TN="run_ensgridvx_retop"
 VX_ENSGRID_MEAN_TN="run_ensgridvx_mean"
 VX_ENSGRID_PROB_TN="run_ensgridvx_prob"
 VX_ENSGRID_MEAN_03h_TN="run_ensgridvx_mean_03h"
@@ -1350,6 +1426,7 @@ VX_ENSGRID_PROB_06h_TN="run_ensgridvx_prob_06h"
 VX_ENSGRID_MEAN_24h_TN="run_ensgridvx_mean_24h"
 VX_ENSGRID_PROB_24h_TN="run_ensgridvx_prob_24h"
 VX_ENSGRID_PROB_REFC_TN="run_ensgridvx_prob_refc"
+VX_ENSGRID_PROB_RETOP_TN="run_ensgridvx_prob_retop"
 VX_ENSPOINT_TN="run_enspointvx"
 VX_ENSPOINT_MEAN_TN="run_enspointvx_mean"
 VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
@@ -1414,7 +1491,7 @@ WTIME_RUN_POST="00:15:00"
 WTIME_GET_OBS_CCPA="00:45:00"
 WTIME_GET_OBS_MRMS="00:45:00"
 WTIME_GET_OBS_NDAS="02:00:00"
-WTIME_VX_GRIDSTAT="01:00:00"
+WTIME_VX_GRIDSTAT="02:00:00"
 WTIME_VX_POINTSTAT="01:00:00"
 WTIME_VX_ENSGRID="01:00:00"
 WTIME_VX_ENSGRID_MEAN="01:00:00"
@@ -1433,7 +1510,62 @@ MAXTRIES_GET_EXTRN_LBCS="1"
 MAXTRIES_MAKE_ICS="1"
 MAXTRIES_MAKE_LBCS="1"
 MAXTRIES_RUN_FCST="1"
-MAXTRIES_RUN_POST="1"
+MAXTRIES_RUN_POST="2"
+MAXTRIES_GET_OBS_CCPA="1"
+MAXTRIES_GET_OBS_MRMS="1"
+MAXTRIES_GET_OBS_NDAS="1"
+MAXTRIES_VX_GRIDSTAT="1"
+MAXTRIES_VX_GRIDSTAT_REFC="1"
+MAXTRIES_VX_GRIDSTAT_RETOP="1"
+MAXTRIES_VX_GRIDSTAT_03h="1"
+MAXTRIES_VX_GRIDSTAT_06h="1"
+MAXTRIES_VX_GRIDSTAT_24h="1"
+MAXTRIES_VX_POINTSTAT="1"
+MAXTRIES_VX_ENSGRID="1"
+MAXTRIES_VX_ENSGRID_REFC="1"
+MAXTRIES_VX_ENSGRID_RETOP="1"
+MAXTRIES_VX_ENSGRID_03h="1"
+MAXTRIES_VX_ENSGRID_06h="1"
+MAXTRIES_VX_ENSGRID_24h="1"
+MAXTRIES_VX_ENSGRID_MEAN="1"
+MAXTRIES_VX_ENSGRID_PROB="1"
+MAXTRIES_VX_ENSGRID_MEAN_03h="1"
+MAXTRIES_VX_ENSGRID_PROB_03h="1"
+MAXTRIES_VX_ENSGRID_MEAN_06h="1"
+MAXTRIES_VX_ENSGRID_PROB_06h="1"
+MAXTRIES_VX_ENSGRID_MEAN_24h="1"
+MAXTRIES_VX_ENSGRID_PROB_24h="1"
+MAXTRIES_VX_ENSGRID_PROB_REFC="1"
+MAXTRIES_VX_ENSGRID_PROB_RETOP="1"
+MAXTRIES_VX_ENSPOINT="1"
+MAXTRIES_VX_ENSPOINT_MEAN="1"
+MAXTRIES_VX_ENSPOINT_PROB="1"
+#
+#-----------------------------------------------------------------------
+#
+# Set parameters associated with subhourly forecast model output and 
+# post-processing.
+#
+# SUB_HOURLY_POST:
+# Flag that indicates whether the forecast model will generate output 
+# files on a sub-hourly time interval (e.g. 10 minutes, 15 minutes, etc).
+# This will also cause the post-processor to process these sub-hourly
+# files.  If ths is set to "TRUE", then DT_SUBHOURLY_POST_MNTS should be 
+# set to a value between "00" and "59".
+#
+# DT_SUB_HOURLY_POST_MNTS:
+# Time interval in minutes between the forecast model output files.  If 
+# SUB_HOURLY_POST is set to "TRUE", this needs to be set to a two-digit 
+# integer between "01" and "59".  This is not used if SUB_HOURLY_POST is
+# not set to "TRUE".  Note that if SUB_HOURLY_POST is set to "TRUE" but
+# DT_SUB_HOURLY_POST_MNTS is set to "00", SUB_HOURLY_POST will get reset
+# to "FALSE" in the experiment generation scripts (there will be an 
+# informational message in the log file to emphasize this).
+#
+#-----------------------------------------------------------------------
+#
+SUB_HOURLY_POST="FALSE"
+DT_SUBHOURLY_POST_MNTS="00"
 #
 #-----------------------------------------------------------------------
 #
@@ -1501,7 +1633,7 @@ SHUM_MAG="0.006" #Variable "shum" in input.nml
 SHUM_LSCALE="150000"
 SHUM_TSCALE="21600" #Variable "shum_tau" in input.nml
 SHUM_INT="3600" #Variable "shumint" in input.nml
-SPPT_MAG="1.0" #Variable "sppt" in input.nml
+SPPT_MAG="0.7" #Variable "sppt" in input.nml
 SPPT_LSCALE="150000"
 SPPT_TSCALE="21600" #Variable "sppt_tau" in input.nml
 SPPT_INT="3600" #Variable "spptint" in input.nml
@@ -1544,7 +1676,7 @@ SPP_STDDEV_CUTOFF=( "1.5" )
 #
 #-----------------------------------------------------------------------
 #
-HALO_BLEND=10
+HALO_BLEND="10"
 #
 #-----------------------------------------------------------------------
 #
@@ -1582,21 +1714,64 @@ COMPILER="intel"
 #
 #-----------------------------------------------------------------------
 #
-# GWD_HRRRsuite_BASEDIR:
-# Temporary workflow variable specifies the base directory in which to 
-# look for certain fixed orography statistics files needed only by the 
-# gravity wave drag parameterization in the FV3_HRRR physics suite.  This 
-# variable is added in order to avoid including hard-coded paths in the 
-# workflow scripts.  Currently, the workflow simply copies the necessary 
-# files from a subdirectory under this directory (named according to the 
-# specified predefined grid) to the orography directory (OROG_DIR) under 
-# the experiment directory.  
+# KMP_AFFINITY_*:
+# From Intel: "The Intel® runtime library has the ability to bind OpenMP
+# threads to physical processing units. The interface is controlled using
+# the KMP_AFFINITY environment variable. Depending on the system (machine)
+# topology, application, and operating system, thread affinity can have a
+# dramatic effect on the application speed. 
 #
-# Note that this variable is only used when using the FV3_HRRR physics 
-# suite.  It should be removed from the workflow once there is a script 
-# or code available that generates these files for any grid.
+# Thread affinity restricts execution of certain threads (virtual execution
+# units) to a subset of the physical processing units in a multiprocessor 
+# computer. Depending upon the topology of the machine, thread affinity can
+# have a dramatic effect on the execution speed of a program."
+#
+# For more information, see the following link:
+# https://software.intel.com/content/www/us/en/develop/documentation/cpp-
+# compiler-developer-guide-and-reference/top/optimization-and-programming-
+# guide/openmp-support/openmp-library-support/thread-affinity-interface-
+# linux-and-windows.html
+# 
+# OMP_NUM_THREADS_*:
+# The number of OpenMP threads to use for parallel regions.
+# 
+# OMP_STACKSIZE_*:
+# Controls the size of the stack for threads created by the OpenMP 
+# implementation.
+#
+# CPUS_PER_TASK_RUN_FCST:
+# Sets the number of MPI tasks per CPU for the RUN_FCST task. 
+#
+# Note that settings for the make_grid and make_orog tasks are not 
+# included below as they do not use parallelized code.
 #
 #-----------------------------------------------------------------------
 #
-GWD_HRRRsuite_BASEDIR=""
+KMP_AFFINITY_MAKE_OROG="disabled"
+OMP_NUM_THREADS_MAKE_OROG="6"
+OMP_STACKSIZE_MAKE_OROG="2048m"
 
+KMP_AFFINITY_MAKE_SFC_CLIMO="scatter"
+OMP_NUM_THREADS_MAKE_SFC_CLIMO="1"
+OMP_STACKSIZE_MAKE_SFC_CLIMO="1024m"
+
+KMP_AFFINITY_MAKE_ICS="scatter"
+OMP_NUM_THREADS_MAKE_ICS="1"
+OMP_STACKSIZE_MAKE_ICS="1024m"
+
+KMP_AFFINITY_MAKE_LBCS="scatter"
+OMP_NUM_THREADS_MAKE_LBCS="1"
+OMP_STACKSIZE_MAKE_LBCS="1024m"
+
+KMP_AFFINITY_RUN_FCST="scatter"
+OMP_NUM_THREADS_RUN_FCST="4"
+OMP_STACKSIZE_RUN_FCST="1024m"
+
+CPUS_PER_TASK_RUN_FCST="2"
+
+KMP_AFFINITY_RUN_POST="scatter"
+OMP_NUM_THREADS_RUN_POST="1"
+OMP_STACKSIZE_RUN_POST="1024m"
+#
+#-----------------------------------------------------------------------
+#

@@ -48,9 +48,9 @@ nc_var_str    = "";
 
 ////////////////////////////////////////////////////////////////////////////////
 
-tmp_z2_thresh   = [ >=298, >=303 ];
-dpt_z2_thresh   = [ >=293, >=298 ];
-wind_z10_thresh = [ >=5, >=10 ];
+//tmp_z2_thresh   = [ >=298, >=303 ];
+//dpt_z2_thresh   = [ >=293, >=298 ];
+//wind_z10_thresh = [ >=5, >=10 ];
 
 //
 // Ensemble product fields to be processed
@@ -290,6 +290,6 @@ rng = {
 
 grid_weight_flag = NONE;
 output_prefix    = "${OUTPUT_PREFIX}";
-version          = "V9.0.2";
+version          = "V10.0.0";
 
 ////////////////////////////////////////////////////////////////////////////////

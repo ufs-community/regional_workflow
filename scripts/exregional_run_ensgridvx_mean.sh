@@ -111,7 +111,7 @@ INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
 
 if [ ${VAR} == "APCP" ]; then
   LOG_SUFFIX=ensgrid_mean_${CDATE}_${VAR}_${ACCUM}h
-elif [ ${VAR} == "REFC" ]; then
+elif [ ${VAR} == "REFC" || ${VAR} == "RETOP" ]; then
   LOG_SUFFIX=ensgrid_mean_${CDATE}_${VAR}
 else
   echo "No variable defined"
@@ -139,6 +139,7 @@ fi
 export SCRIPTSDIR
 export EXPTDIR
 export MET_INSTALL_DIR
+export MET_BIN_EXEC
 export METPLUS_PATH
 export METPLUS_CONF
 export MET_CONFIG
