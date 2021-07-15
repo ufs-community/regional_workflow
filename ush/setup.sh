@@ -469,9 +469,16 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 # several queues.  These queues are defined in the default and local 
 # workflow/experiment configuration script.
 #
+# Also, set the machine-dependent flag RELAITVE_OR_NULL that specifies
+# the flag to pass to the link creation command (ln_vrfy) when attempting 
+# to create relative symlinks.  On machines that don't support relative
+# symlinks, it should be set to a null string.
+#
 #-----------------------------------------------------------------------
 #
-case $MACHINE in
+RELATIVE_LINK_FLAG=""
+
+case "$MACHINE" in
 
   "WCOSS_CRAY")
     NCORES_PER_NODE="24"
@@ -479,6 +486,8 @@ case $MACHINE in
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
     QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
     QUEUE_FCST=${QUEUE_FCST:-"dev"}
+#
+    RELATIVE_LINK_FLAG=""
     ;;
 
   "WCOSS_DELL_P3")
@@ -487,58 +496,70 @@ case $MACHINE in
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
     QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
     QUEUE_FCST=${QUEUE_FCST:-"dev"}
+#
+    RELATIVE_LINK_FLAG="--relative"
     ;;
 
   "HERA")
     NCORES_PER_NODE=40
-    SCHED="${SCHED:-slurm}"
+    SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"hera"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
     PARTITION_HPSS=${PARTITION_HPSS:-"service"}
     QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
     PARTITION_FCST=${PARTITION_FCST:-"hera"}
     QUEUE_FCST=${QUEUE_FCST:-"batch"}
+#
+    RELATIVE_LINK_FLAG="--relative"
     ;;
 
   "ORION")
     NCORES_PER_NODE=40
-    SCHED="${SCHED:-slurm}"
+    SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"orion"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
     PARTITION_HPSS=${PARTITION_HPSS:-"service"}
     QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
     PARTITION_FCST=${PARTITION_FCST:-"orion"}
     QUEUE_FCST=${QUEUE_FCST:-"batch"}
+#
+    RELATIVE_LINK_FLAG="--relative"
     ;;
 
   "JET")
     NCORES_PER_NODE=24
-    SCHED="${SCHED:-slurm}"
+    SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"sjet,vjet,kjet,xjet"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
     PARTITION_HPSS=${PARTITION_HPSS:-"service"}
     QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
     PARTITION_FCST=${PARTITION_FCST:-"sjet,vjet,kjet,xjet"}
     QUEUE_FCST=${QUEUE_FCST:-"batch"}
+#
+    RELATIVE_LINK_FLAG="--relative"
     ;;
 
   "ODIN")
     NCORES_PER_NODE=24
-    SCHED="${SCHED:-slurm}"
+    SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"workq"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"workq"}
     PARTITION_HPSS=${PARTITION_HPSS:-"workq"}
     QUEUE_HPSS=${QUEUE_HPSS:-"workq"}
     PARTITION_FCST=${PARTITION_FCST:-"workq"}
     QUEUE_FCST=${QUEUE_FCST:-"workq"}
+#
+    RELATIVE_LINK_FLAG="--relative"
     ;;
 
   "CHEYENNE")
     NCORES_PER_NODE=36
-    SCHED="${SCHED:-pbspro}"
+    SCHED=${SCHED:-"pbspro"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
     QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
     QUEUE_FCST=${QUEUE_FCST:-"regular"}
+#
+    RELATIVE_LINK_FLAG="--relative"
     ;;
 
   "STAMPEDE")
@@ -550,6 +571,8 @@ case $MACHINE in
     QUEUE_HPSS=${QUEUE_HPSS:-"normal"}
     PARTITION_FCST=${PARTITION_FCST:-"normal"}
     QUEUE_FCST=${QUEUE_FCST:-"normal"}
+#
+    RELATIVE_LINK_FLAG="--relative"
     ;;
 
 esac
@@ -754,6 +777,13 @@ set_cycle_dates \
   output_varname_all_cdates="ALL_CDATES"
 
 NUM_CYCLES="${#ALL_CDATES[@]}"
+
+if [ $NUM_CYCLES -gt 30 ] ; then
+  unset ALL_CDATES
+  print_info_msg "$VERBOSE" "
+Too many cycles in ALL_CDATES to list, redefining in abbreviated form."
+ALL_CDATES="${DATE_FIRST_CYCL}${CYCL_HRS[0]}...${DATE_LAST_CYCL}${CYCL_HRS[-1]}"
+fi
 #
 ##### RRFS-CMAQ ########## start #####
 #
@@ -841,7 +871,7 @@ VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
 METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
 MET_CONFIG="$TEMPLATE_DIR/parm/met"
 
-case $MACHINE in
+case "$MACHINE" in
 
   "WCOSS_CRAY")
     FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
@@ -1617,6 +1647,7 @@ elif [ "$DO_ENSEMBLE" = "FALSE" ] || \
      [ "$DO_ENSEMBLE" = "NO" ]; then
   DO_ENSEMBLE="FALSE"
 fi
+
 NDIGITS_ENSMEM_NAMES="0"
 ENSMEM_NAMES=("")
 FV3_NML_ENSMEM_FPS=("")
@@ -2211,6 +2242,36 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that WRITE_DOPOST is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "WRITE_DOPOST" "valid_vals_WRITE_DOPOST"
+#
+# Set WRITE_DOPOST to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+WRITE_DOPOST=${WRITE_DOPOST^^}
+if [ "$WRITE_DOPOST" = "TRUE" ] || \
+   [ "$WRITE_DOPOST" = "YES" ]; then
+  WRITE_DOPOST="TRUE"
+
+# Turn off run_post
+  RUN_TASK_RUN_POST="FALSE"
+
+# Check if SUB_HOURLY_POST is on
+  if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
+    print_err_msg_exit "\
+SUB_HOURLY_POST is NOT available with Inline Post yet."
+  fi
+
+elif [ "$WRITE_DOPOST" = "FALSE" ] || \
+     [ "$WRITE_DOPOST" = "NO" ]; then
+  WRITE_DOPOST="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that QUILTING is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -2305,7 +2366,6 @@ fi
 #-----------------------------------------------------------------------
 #
 NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
-
 
 #
 #-----------------------------------------------------------------------
@@ -2738,6 +2798,14 @@ THOMPSON_MP_CLIMO_FP="${THOMPSON_MP_CLIMO_FP}"
 AQM_RC_TMPL_FN="${AQM_RC_TMPL_FN}"
 AQM_RC_TMPL_FP="${AQM_RC_TMPL_FP}"
 ##### RRFS-CMAQ ########## end   #####
+#
+#-----------------------------------------------------------------------
+#
+# Flag for creating relative symlinks (as opposed to absolute ones).
+#
+#-----------------------------------------------------------------------
+#
+RELATIVE_LINK_FLAG="${RELATIVE_LINK_FLAG}"
 #
 #-----------------------------------------------------------------------
 #
