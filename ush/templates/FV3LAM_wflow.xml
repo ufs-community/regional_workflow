@@ -813,7 +813,14 @@ the <task> tag to be identical to the ones above for other output times.
 
     <dependency>
       {%- if run_task_get_obs_ccpa %}
-      <taskdep task="&GET_OBS_CCPA_TN;"/>
+      <and>
+        <taskdep task="&GET_OBS_CCPA_TN;"/>
+        {%- if write_dopost %}
+        <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
+        {%- else %}
+        <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+        {%- endif %}
+      </and>
       {%- else %}
         {%- if write_dopost %}
       <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
@@ -855,7 +862,14 @@ the <task> tag to be identical to the ones above for other output times.
 
     <dependency>
       {%- if run_task_get_obs_mrms %}
-      <taskdep task="&GET_OBS_MRMS_TN;"/>
+      <and>
+        <taskdep task="&GET_OBS_MRMS_TN;"/>
+        {%- if write_dopost %}
+        <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
+        {%- else %}
+        <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+        {%- endif %}
+      </and>
       {%- else %}
         {%- if write_dopost %}
       <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
@@ -897,7 +911,14 @@ the <task> tag to be identical to the ones above for other output times.
 
     <dependency>
       {%- if run_task_get_obs_mrms %}
-      <taskdep task="&GET_OBS_MRMS_TN;"/>
+      <and>
+        <taskdep task="&GET_OBS_MRMS_TN;"/>
+        {%- if write_dopost %}
+        <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
+        {%- else %}
+        <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+        {%- endif %}
+      </and>
       {%- else %}
         {%- if write_dopost %}
       <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
@@ -1042,11 +1063,22 @@ the <task> tag to be identical to the ones above for other output times.
     {% endif %}
 
     <dependency>
-      {% if run_task_get_obs_ndas %}
-      <taskdep task="&GET_OBS_NDAS_TN;"/>
-      {% else %}
+      {%- if run_task_get_obs_ndas %}
+      <and>
+        <taskdep task="&GET_OBS_NDAS_TN;"/>
+        {%- if write_dopost %}
+        <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
+        {%- else %}
+        <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
+        {%- endif %}
+      </and>
+      {%- else %}
+        {%- if write_dopost %}
+      <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
+        {%- else %}
       <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
-      {% endif %}
+        {%- endif %}
+      {%- endif %}
     </dependency>
 
   </task>
@@ -1062,7 +1094,7 @@ the <task> tag to be identical to the ones above for other output times.
 -->
 
 {% if run_task_vx_ensgrid %}
-  <task name="&VX_ENSGRID_TN;" maxtries="maxtries_vx_ensgrid">
+  <task name="&VX_ENSGRID_TN;" maxtries="{{ maxtries_vx_ensgrid }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
@@ -1093,7 +1125,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_03h_TN;" maxtries="maxtries_vx_ensgrid_03h">
+  <task name="&VX_ENSGRID_03h_TN;" maxtries="{{ maxtries_vx_ensgrid_03h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
@@ -1124,7 +1156,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_06h_TN;" maxtries="maxtries_vx_ensgrid_06h">
+  <task name="&VX_ENSGRID_06h_TN;" maxtries="{{ maxtries_vx_ensgrid_06h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
@@ -1155,7 +1187,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_24h_TN;" maxtries="maxtries_vx_ensgrid_24h">
+  <task name="&VX_ENSGRID_24h_TN;" maxtries="{{ maxtries_vx_ensgrid_24h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
@@ -1186,7 +1218,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-<task name="&VX_ENSGRID_REFC_TN;" maxtries="maxtries_vx_ensgrid_refc">
+<task name="&VX_ENSGRID_REFC_TN;" maxtries="{{ maxtries_vx_ensgrid_refc }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
@@ -1212,11 +1244,11 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 
 <!--
-     ************************************************************************
+************************************************************************
 ************************************************************************
 -->
 
-<task name="&VX_ENSGRID_RETOP_TN;" maxtries="maxtries_vx_ensgrid_retop">
+<task name="&VX_ENSGRID_RETOP_TN;" maxtries="{{ maxtries_vx_ensgrid_retop }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
@@ -1245,7 +1277,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_ENSGRID_MEAN_TN;" maxtries="maxtries_vx_ensgrid_mean">
+  <task name="&VX_ENSGRID_MEAN_TN;" maxtries="{{ maxtries_vx_ensgrid_mean }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_MEAN"</command>
@@ -1276,7 +1308,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_PROB_TN;" maxtries="maxtries_vx_ensgrid_prob">
+  <task name="&VX_ENSGRID_PROB_TN;" maxtries="{{ maxtries_vx_ensgrid_prob }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_PROB"</command>
@@ -1307,7 +1339,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_MEAN_03h_TN;" maxtries="maxtries_vx_ensgrid_mean_03h">
+  <task name="&VX_ENSGRID_MEAN_03h_TN;" maxtries="{{ maxtries_vx_ensgrid_mean_03h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_MEAN"</command>
@@ -1338,7 +1370,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_PROB_03h_TN;" maxtries="maxtries_vx_ensgrid_prob_03h">
+  <task name="&VX_ENSGRID_PROB_03h_TN;" maxtries="{{ maxtries_vx_ensgrid_prob_03h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_PROB"</command>
@@ -1369,7 +1401,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_MEAN_06h_TN;" maxtries="maxtries_vx_ensgrid_mean_06h">
+  <task name="&VX_ENSGRID_MEAN_06h_TN;" maxtries="{{ maxtries_vx_ensgrid_mean_06h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_MEAN"</command>
@@ -1400,7 +1432,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_PROB_06h_TN;" maxtries="maxtries_vx_ensgrid_prob_06h">
+  <task name="&VX_ENSGRID_PROB_06h_TN;" maxtries="{{ maxtries_vx_ensgrid_prob_06h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_PROB"</command>
@@ -1431,7 +1463,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_MEAN_24h_TN;" maxtries="maxtries_vx_ensgrid_mean_24h">
+  <task name="&VX_ENSGRID_MEAN_24h_TN;" maxtries="{{ maxtries_vx_ensgrid_mean_24h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_MEAN"</command>
@@ -1462,7 +1494,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_PROB_24h_TN;" maxtries="maxtries_vx_ensgrid_prob_24h">
+  <task name="&VX_ENSGRID_PROB_24h_TN;" maxtries="{{ maxtries_vx_ensgrid_prob_24h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_PROB"</command>
@@ -1493,7 +1525,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_PROB_REFC_TN;" maxtries="maxtries_vx_ensgrid_prob_refc">
+  <task name="&VX_ENSGRID_PROB_REFC_TN;" maxtries="{{ maxtries_vx_ensgrid_prob_refc }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_PROB"</command>
@@ -1523,7 +1555,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_ENSGRID_PROB_RETOP_TN;" maxtries="maxtries_vx_ensgrid_prob_retop">
+  <task name="&VX_ENSGRID_PROB_RETOP_TN;" maxtries="{{ maxtries_vx_ensgrid_prob_retop }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID_PROB"</command>
@@ -1554,7 +1586,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 {% if run_task_vx_enspoint %}
-  <task name="&VX_ENSPOINT_TN;" maxtries="maxtries_vx_enspoint">
+  <task name="&VX_ENSPOINT_TN;" maxtries="{{ maxtries_vx_enspoint }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSPOINT"</command>
@@ -1582,7 +1614,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_ENSPOINT_MEAN_TN;" maxtries="maxtries_vx_enspoint_mean">
+  <task name="&VX_ENSPOINT_MEAN_TN;" maxtries="{{ maxtries_vx_enspoint_mean }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSPOINT_MEAN"</command>
@@ -1610,7 +1642,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_ENSPOINT_PROB_TN;" maxtries="maxtries_vx_enspoint_prob">
+  <task name="&VX_ENSPOINT_PROB_TN;" maxtries="{{ maxtries_vx_enspoint_prob }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSPOINT_PROB"</command>

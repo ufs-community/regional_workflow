@@ -882,7 +882,6 @@ SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
 PARMDIR="$HOMErrfs/parm"
 MODULES_DIR="$HOMErrfs/modulefiles"
 EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
-FIXrrfs="$HOMErrfs/fix"
 TEMPLATE_DIR="$USHDIR/templates"
 VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
 METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
@@ -1489,6 +1488,29 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Set:
+#
+# 1) the variable FIELD_DICT_FN to the name of the field dictionary
+#    file.
+# 2) the variable FIELD_DICT_IN_UWM_FP to the full path of this
+#    file in the forecast model's directory structure.
+# 3) the variable FIELD_DICT_FP to the full path of this file in
+#    the experiment directory.
+#
+#-----------------------------------------------------------------------
+#
+FIELD_DICT_FN="fd_nems.yaml"
+FIELD_DICT_IN_UWM_FP="${UFS_WTHR_MDL_DIR}/tests/parm/${FIELD_DICT_FN}"
+FIELD_DICT_FP="${EXPTDIR}/${FIELD_DICT_FN}"
+if [ ! -f "${FIELD_DICT_IN_UWM_FP}" ]; then
+  print_err_msg_exit "\
+The field dictionary file (FIELD_DICT_IN_UWM_FP) does not exist
+in the local clone of the ufs-weather-model:
+  FIELD_DICT_IN_UWM_FP = \"${FIELD_DICT_IN_UWM_FP}\""
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Call the function that sets the ozone parameterization being used and
 # modifies associated parameters accordingly. 
 #
@@ -1698,20 +1720,15 @@ When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 grid files already exist in the directory 
 
   \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
-
 where
-
   FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
-
 Thus, the MAKE_GRID_TN task must not be run (i.e. RUN_TASK_MAKE_GRID must 
 be set to \"FALSE\"), and the directory in which to look for the grid 
 files (i.e. GRID_DIR) must be set to the one above.  Current values for 
 these quantities are:
-
   RUN_TASK_MAKE_GRID = \"${RUN_TASK_MAKE_GRID}\"
   GRID_DIR = \"${GRID_DIR}\"
-
 Resetting RUN_TASK_MAKE_GRID to \"FALSE\" and GRID_DIR to the one above.
 Reset values are:
 "
@@ -1735,14 +1752,10 @@ Reset values are:
     msg="
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 orography files already exist in the directory 
-
   \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
-
 where
-
   FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
-
 Thus, the MAKE_OROG_TN task must not be run (i.e. RUN_TASK_MAKE_OROG must 
 be set to \"FALSE\"), and the directory in which to look for the orography 
 files (i.e. OROG_DIR) must be set to the one above.  Current values for 
@@ -1774,22 +1787,16 @@ Reset values are:
     msg="
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 surface climatology files already exist in the directory 
-
   \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
-
 where
-
   FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
-
 Thus, the MAKE_SFC_CLIMO_TN task must not be run (i.e. RUN_TASK_MAKE_SFC_CLIMO 
 must be set to \"FALSE\"), and the directory in which to look for the 
 surface climatology files (i.e. SFC_CLIMO_DIR) must be set to the one 
 above.  Current values for these quantities are:
-
   RUN_TASK_MAKE_SFC_CLIMO = \"${RUN_TASK_MAKE_SFC_CLIMO}\"
   SFC_CLIMO_DIR = \"${SFC_CLIMO_DIR}\"
-
 Resetting RUN_TASK_MAKE_SFC_CLIMO to \"FALSE\" and SFC_CLIMO_DIR to the 
 one above.  Reset values are:
 "
@@ -1866,14 +1873,14 @@ Reset value is:"
 
   fi
 
-
-else
 #
 #-----------------------------------------------------------------------
 #
 # Now consider community mode.
 #
 #-----------------------------------------------------------------------
+#
+else
 #
 # If RUN_TASK_MAKE_GRID is set to "FALSE", the workflow will look for 
 # the pregenerated grid files in GRID_DIR.  In this case, make sure that 
@@ -2475,7 +2482,6 @@ line_list=$( sed -r \
 
 print_info_msg "$VERBOSE" "
 The variable \"line_list\" contains:
-
 ${line_list}
 "
 #
@@ -2699,7 +2705,6 @@ SRC_DIR="$SRC_DIR"
 PARMDIR="$PARMDIR"
 MODULES_DIR="${MODULES_DIR}"
 EXECDIR="$EXECDIR"
-FIXrrfs="$FIXrrfs"
 FIXam="$FIXam"
 FIXLAM="$FIXLAM"
 FIXgsm="$FIXgsm"
@@ -2714,14 +2719,12 @@ UFS_UTILS_DIR="${UFS_UTILS_DIR}"
 SFC_CLIMO_INPUT_DIR="${SFC_CLIMO_INPUT_DIR}"
 TOPO_DIR="${TOPO_DIR}"
 EMC_POST_DIR="${EMC_POST_DIR}"
-
 EXPTDIR="$EXPTDIR"
 LOGDIR="$LOGDIR"
 CYCLE_BASEDIR="${CYCLE_BASEDIR}"
 GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
-
 NDIGITS_ENSMEM_NAMES="${NDIGITS_ENSMEM_NAMES}"
 ENSMEM_NAMES=( $( printf "\"%s\" " "${ENSMEM_NAMES[@]}" ))
 FV3_NML_ENSMEM_FPS=( $( printf "\"%s\" " "${FV3_NML_ENSMEM_FPS[@]}" ))
@@ -2736,13 +2739,11 @@ GLOBAL_VAR_DEFNS_FP="${GLOBAL_VAR_DEFNS_FP}"
 # Try this at some point instead of hard-coding it as above; it's a more
 # flexible approach (if it works).
 #GLOBAL_VAR_DEFNS_FP=$( readlink -f "${BASH_SOURCE[0]}" )
-
 DATA_TABLE_TMPL_FN="${DATA_TABLE_TMPL_FN}"
 DIAG_TABLE_TMPL_FN="${DIAG_TABLE_TMPL_FN}"
 FIELD_TABLE_TMPL_FN="${FIELD_TABLE_TMPL_FN}"
 MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_TMPL_FN}"
 NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_TMPL_FN}"
-
 DATA_TABLE_TMPL_FP="${DATA_TABLE_TMPL_FP}"
 DIAG_TABLE_TMPL_FP="${DIAG_TABLE_TMPL_FP}"
 FIELD_TABLE_TMPL_FP="${FIELD_TABLE_TMPL_FP}"
@@ -2751,21 +2752,19 @@ FV3_NML_YAML_CONFIG_FP="${FV3_NML_YAML_CONFIG_FP}"
 FV3_NML_BASE_ENS_FP="${FV3_NML_BASE_ENS_FP}"
 MODEL_CONFIG_TMPL_FP="${MODEL_CONFIG_TMPL_FP}"
 NEMS_CONFIG_TMPL_FP="${NEMS_CONFIG_TMPL_FP}"
-
 CCPP_PHYS_SUITE_FN="${CCPP_PHYS_SUITE_FN}"
 CCPP_PHYS_SUITE_IN_CCPP_FP="${CCPP_PHYS_SUITE_IN_CCPP_FP}"
 CCPP_PHYS_SUITE_FP="${CCPP_PHYS_SUITE_FP}"
-
+FIELD_DICT_FN="${FIELD_DICT_FN}"
+FIELD_DICT_IN_UWM_FP="${FIELD_DICT_IN_UWM_FP}"
+FIELD_DICT_FP="${FIELD_DICT_FP}"
 DATA_TABLE_FP="${DATA_TABLE_FP}"
 FIELD_TABLE_FP="${FIELD_TABLE_FP}"
 FV3_NML_FN="${FV3_NML_FN}"   # This may not be necessary...
 FV3_NML_FP="${FV3_NML_FP}"
 NEMS_CONFIG_FP="${NEMS_CONFIG_FP}"
-
 FV3_EXEC_FP="${FV3_EXEC_FP}"
-
 LOAD_MODULES_RUN_TASK_FP="${LOAD_MODULES_RUN_TASK_FP}"
-
 THOMPSON_MP_CLIMO_FN="${THOMPSON_MP_CLIMO_FN}"
 THOMPSON_MP_CLIMO_FP="${THOMPSON_MP_CLIMO_FP}"
 #
