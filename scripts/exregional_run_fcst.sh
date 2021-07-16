@@ -166,7 +166,6 @@ case "$MACHINE" in
     print_err_msg_exit "\
 Run command has not been specified for this machine:
   MACHINE = \"$MACHINE\"
-  APRUN = \"$APRUN\""
     ;;
 
 esac
