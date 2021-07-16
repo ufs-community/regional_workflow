@@ -789,8 +789,8 @@ EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
 #
   if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ]; then 
       if [ "$MACHINE" = "HERA" ]; then
-          MET_INSTALL_DIR="/contrib/met/10.0.0"
-          METPLUS_PATH="/contrib/METplus/METplus-4.0.0"
+          met_install_dir="/contrib/met/10.0.0"
+          metplus_path="/contrib/METplus/METplus-4.0.0"
       else
           print_err_msg_exit "\
 The MET and MET+ paths (MET_INSTALL_DIR and MET_INSTALL_DIR) have not been specified for 
