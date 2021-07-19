@@ -2,7 +2,9 @@
 #-----------------------------------------------------------------------
 #
 # This file defines a function that detects if a python or miniconds3
-# module is loaded, and if so, unloads that module.
+# module is loaded, and if so, unloads that module.  This may be
+# necessary on machines where the loaded python environment isn't
+# compatible with environment set for the compiler.
 #
 #-----------------------------------------------------------------------
 #
