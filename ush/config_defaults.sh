@@ -1729,10 +1729,16 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # File name of AQM FIRE file
 #
 # AQM_LBCS_DIR:
-# LBC directory for AQM
+# Path to the directory containing chemical LBC files
 #
 # AQM_LBCS_FILES:
-# LBC file name for AQM
+# File name of chemical LBCs
+#
+# AQM_GEFS_DIR:
+# Path to the directory containing GEFS aerosol LBC files
+#
+# AQM_GEFS_CYC:
+# Cycle of the GEFS aerosol LBC files
 #
 # RUN_TASK_ADD_AQM_LBCS:
 # Flag that determines whether the air quality LBCs generation
@@ -1743,6 +1749,9 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # RUN_TASK_RUN_NEXUS:
 # Same as RUN_TASK_MAKE_GRID but for the air quality emission generation
 # task.
+#
+# RUN_ADD_AQM_GEFS_LBCS:
+# Add GEFS aerosol LBCs to chemical LBCs
 #
 # NEXUS_INPUT_DIR:
 # Same as GRID_DIR but for the the air quality emission generation task.
