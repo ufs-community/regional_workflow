@@ -1,8 +1,8 @@
 #%Module#####################################################
-## Module file for get_extrn_aqm task.
+## Module file for add_aqm_lbcs task.
 #############################################################
 
 module purge
 
-module load hpss
 module load intel netcdf nco
+

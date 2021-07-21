@@ -107,7 +107,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-workdir="${CYCLE_DIR}/INPUT/tmp_AQICs"
+workdir="${CYCLE_DIR}/AQM/tmp_AQICS"
 mkdir_vrfy -p "${workdir}"
 cd_vrfy ${workdir}
 #

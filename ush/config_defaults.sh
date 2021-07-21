@@ -1734,9 +1734,6 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # AQM_LBCS_FILES:
 # LBC file name for AQM
 #
-# AQM_ARCHIVE:
-# The HPSS tar file used to generate ICs and LBCs for air quality.
-#
 # RUN_TASK_ADD_AQM_LBCS:
 # Flag that determines whether the air quality LBCs generation
 # task is to be run. If this is set to "TRUE", air quality lateral
@@ -1765,7 +1762,8 @@ AQM_FIRE_DIR=""
 AQM_FIRE_FILE=""
 AQM_LBCS_DIR=""
 AQM_LBCS_FILES=""
-AQM_ARCHIVE="/NCEPDEV/emc-naqfc/5year/Barry.Baker/emissions/BOUNDARY_CONDITIONS/NAQFC_RRFS_CMAQ_C401.tar"
+AQM_GEFS_DIR=""
+AQM_GEFS_CYC="00"
 
 ADD_AQM_ICS_TN="add_aqm_ics"
 ADD_AQM_LBCS_TN="add_aqm_lbcs"
@@ -1774,6 +1772,9 @@ RUN_NEXUS_TN="run_nexus"
 RUN_TASK_ADD_AQM_ICS="FALSE"
 RUN_TASK_ADD_AQM_LBCS="FALSE"
 RUN_TASK_RUN_NEXUS="FALSE"
+
+RUN_ADD_AQM_GEFS_LBCS="FALSE"
+
 NEXUS_INPUT_DIR=""
 NEXUS_FIX_DIR=""
 NEXUS_GRID_FN=""
@@ -1782,7 +1783,7 @@ NNODES_ADD_AQM_ICS="1"
 NNODES_ADD_AQM_LBCS="1"
 NNODES_RUN_NEXUS="1"
 PPN_ADD_AQM_ICS="1"
-PPN_ADD_AQM_LBCS="1"
+PPN_ADD_AQM_LBCS="24"
 PPN_RUN_NEXUS="24"
 WTIME_ADD_AQM_ICS="00:30:00"
 WTIME_ADD_AQM_LBCS="00:30:00"

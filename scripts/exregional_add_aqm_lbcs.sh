@@ -42,9 +42,8 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the ex-script for the task that copies/fetches to a local direc-
-tory (either from disk or HPSS) the external model files from which ini-
-tial or boundary condition files for the FV3 will be generated.
+This is the ex-script for the task that generates chemical and GEFS
+lateral boundary conditions.
 ========================================================================"
 #
 #-----------------------------------------------------------------------
@@ -67,7 +66,7 @@ process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
 #
-#print_input_args valid_args
+print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
@@ -84,16 +83,80 @@ process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
 #
+#
+# Set OpenMP variables.
+#
+#-----------------------------------------------------------------------
+#
+  export KMP_AFFINITY=${KMP_AFFINITY_MAKE_LBCS}
+  export OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_LBCS}
+  export OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_LBCS}
+#
+#-----------------------------------------------------------------------
+#
+# Set machine-dependent parameters.
+#
+#-----------------------------------------------------------------------
+#
+  case "$MACHINE" in
+
+    "WCOSS_CRAY")
+      ulimit -s unlimited
+      ulimit -a
+      APRUN="aprun -b -j1 -n48 -N12 -d1 -cc depth"
+      ;;
+
+    "WCOSS_DELL_P3")
+      ulimit -s unlimited
+      ulimit -a
+      APRUN="mpirun"
+      ;;
+
+    "HERA")
+      ulimit -s unlimited
+      ulimit -a
+      APRUN="srun"
+      ;;
+
+    "ORION")
+      ulimit -s unlimited
+      ulimit -a
+      APRUN="srun"
+      ;;
+
+    "JET")
+      ulimit -s unlimited
+      ulimit -a
+      APRUN="srun"
+      ;;
+
+    "ODIN")
+      APRUN="srun"
+      ;;
+
+    "CHEYENNE")
+      nprocs=$(( NNODES_MAKE_LBCS*PPN_MAKE_LBCS ))
+      APRUN="mpirun -np $nprocs"
+      ;;
+
+    "STAMPEDE")
+      APRUN="ibrun"
+      ;;
+  esac
+#
+#
+#-----------------------------------------------------------------------
+#
+# Add chemical LBCS
+#
+#-----------------------------------------------------------------------
+#
+
 yyyymmdd="${PDY:0:8}"
-yyyy="${PDY:0:4}"
 mm="${PDY:4:2}"
-dd="${PDY:6:2}"
 
 ext_lbcs_file=${AQM_LBCS_FILES}
-ext_lbcs_file=${ext_lbcs_file//<YYYYMMDD>/${yyyymmdd}}
-ext_lbcs_file=${ext_lbcs_file//<YYYY>/${yyyy}}
 ext_lbcs_file=${ext_lbcs_file//<MM>/${mm}}
-ext_lbcs_file=${ext_lbcs_file//<DD>/${dd}}
 
 CHEM_BOUNDARY_CONDITION_FILE=${ext_lbcs_file}
 
@@ -102,13 +165,9 @@ if [ -f ${FULL_CHEMICAL_BOUNDARY_FILE} ]; then
     #Copy the boundary condition file to the current location
     cp ${FULL_CHEMICAL_BOUNDARY_FILE} .
 else
-    CHEM_BOUNDARY_CONDITION_FILE=LBCS/${CHEM_BOUNDARY_CONDITION_FILE}
-    print_info_msg "
-Fetching chemical lateral boundary condition files from HPSS:
-  AQM_ARCHIVE = ${AQM_ARCHIVE}
-  CHEM_BOUNDARY_CONDITION_FILE = ${CHEM_BOUNDARY_CONDITION_FILE}
-  "
-    htar -xvf ${AQM_ARCHIVE} ${CHEM_BOUNDARY_CONDITION_FILE}
+    print_err_msg_exit "\
+The chemical LBC files do not exist:
+  CHEM_BOUNDARY_CONDITION_FILE = \"${CHEM_BOUNDARY_CONDITION_FILE}\""
 fi
 
 for hr in 0 ${LBC_SPEC_FCST_HRS[@]}; do
@@ -120,15 +179,83 @@ done
 #
 #-----------------------------------------------------------------------
 #
+# Add GEFS-LBCS
+#
+#-----------------------------------------------------------------------
+#
+if [ ${RUN_ADD_AQM_GEFS_LBCS} = "TRUE" ]; then
+
+  workdir="${CYCLE_DIR}/AQM/tmp_AQLBCS"
+  mkdir_vrfy -p "$workdir"
+  cp_vrfy ${CYCLE_DIR}/INPUT/gfs_bndy.tile7.???.nc $workdir
+
+  GEFS_CYC_DIFF=$( printf "%02d" "$(( ${CYCL_HRS} - ${AQM_GEFS_CYC} ))" )
+
+  NUMTS="$(( ${FCST_LEN_HRS} / ${LBC_SPEC_INTVL_HRS} + 1 ))"
+
+cat > gefs2lbc-nemsio.ini <<EOF
+&control
+ tstepdiff=${GEFS_CYC_DIFF}
+ dtstep=${LBC_SPEC_INTVL_HRS}
+ bndname='aothrj','aecj','aorgcj','asoil','numacc','numcor'
+ mofile='${AQM_GEFS_DIR}/$yyyymmdd/${AQM_GEFS_CYC}/gfs.t00z.atmf','.nemsio'
+ lbcfile='${CYCLE_DIR}/INPUT/gfs_bndy.tile7.','.nc'
+ topofile='${OROG_DIR}/${CRES}_oro_data.tile7.halo4.nc'
+&end
+
+Species converting Factor
+# Gocart ug/m3 to regional ug/m3
+'dust1'    2  ## 0.2-2um diameter: assuming mean diameter is 0.3 um (volume= 0.01414x10^-18 m3) and density is 2.6x10^3 kg/m3 or 2.6x10^12 ug/m3.so 1 particle = 0.036x10^-6 ug
+'aothrj'  1.0   'numacc' 27205909.
+'dust2'    4  ## 2-4um
+'aothrj'  0.45    'numacc'  330882.  'asoil'  0.55   'numcor'  50607.
+'dust3'    2  ## 4-6um
+'asoil'   1.0   'numcor' 11501.
+'dust4'    2   ## 6-12um
+'asoil'  0.7586   'numcor' 1437.
+'bc1'      2     # kg/kg
+'aecj'     1.0   'numacc' 6775815.
+'bc2'  2     # kg/kg
+'aecj'     1.0   'numacc' 6775815.
+'oc1'  2     # kg/kg OC -> organic matter
+'aorgcj'    1.0   'numacc' 6775815.
+'oc2'  2
+'aorgcj'  1.0   'numacc' 6775815.
+EOF
+
+  exec_fn="gefs2lbc_para"
+  exec_fp="$EXECDIR/${exec_fn}"
+  if [ ! -f "${exec_fp}" ]; then
+    print_err_msg_exit "\
+The executable (exec_fp) for GEFS LBCs does not exist:
+  exec_fp = \"${exec_fp}\"
+Please ensure that you've built this executable."
+  fi
+#
+#----------------------------------------------------------------------
+#
+# Run the executable
+#
+#----------------------------------------------------------------------
+#
+  ${APRUN} -n ${NUMTS} ${exec_fp} || \
+    print_err_msg_exit "\
+Call to executable (exec_fp) to generate chemical and GEFS LBCs
+file for RRFS-CMAQ failed:
+  exec_fp = \"${exec_fp}\""
+
+
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Print message indicating successful completion of script.
 #
 #-----------------------------------------------------------------------
 #
     print_info_msg "
 ========================================================================
-Successfully copied or linked to external model files on system disk 
-needed for generating initial conditions and surface fields for the FV3
-forecast!!!
+Successfully added chemical and GEFS LBCs !!!
 
 Exiting script:  \"${scrfunc_fn}\"
 In directory:    \"${scrfunc_dir}\"

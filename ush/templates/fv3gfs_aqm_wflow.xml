@@ -492,14 +492,8 @@ MODULES_RUN_TASK_FP script.
 -->
   <task name="&ADD_AQM_LBCS_TN;" maxtries="{{ maxtries_add_aqm_lbcs }}">
 
-    &RSRV_HPSS;
-  {%- if machine in ["WCOSS_CRAY"] %}
-    <shared/>
-  {%- endif %}
+    &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&ADD_AQM_LBCS_TN;" "&JOBSDIR;/JREGIONAL_ADD_AQM_LBCS"</command>
-  {%- if machine in ["WCOSS_DELL_P3"] %}
-    <memory>2048M</memory><native>-R affinity[core]</native>
-  {%- endif %}
     <nodes>{{ nnodes_add_aqm_lbcs }}:ppn={{ ppn_add_aqm_lbcs }}</nodes>
     <walltime>{{ wtime_add_aqm_lbcs }}</walltime>
     <nodesize>&NCORES_PER_NODE;</nodesize>

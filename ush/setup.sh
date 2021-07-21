@@ -787,6 +787,22 @@ fi
 #
 ##### RRFS-CMAQ ########## start #####
 #
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_ADD_AQM_ICS is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_ADD_AQM_ICS" "valid_vals_RUN_TASK_ADD_AQM_ICS"
+RUN_TASK_ADD_AQM_ICS=${RUN_TASK_ADD_AQM_ICS^^}
+if [ "${RUN_TASK_ADD_AQM_ICS}" = "TRUE" ] || \
+   [ "${RUN_TASK_ADD_AQM_ICS}" = "YES" ]; then
+  RUN_TASK_ADD_AQM_ICS="TRUE"
+elif [ "${RUN_TASK_ADD_AQM_ICS}" = "FALSE" ] || \
+     [ "${RUN_TASK_ADD_AQM_ICS}" = "NO" ]; then
+  RUN_TASK_ADD_AQM_ICS="FALSE"
+fi
+#
 if [ ${#ALL_CDATES[@]} -gt 1 ]; then
   RUN_TASK_ADD_AQM_ICS="${RUN_TASK_ADD_AQM_ICS:-TRUE}"
 else
@@ -795,12 +811,64 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that RUN_TASK_ADD_AQM_LBCS is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_ADD_AQM_LBCS" "valid_vals_RUN_TASK_ADD_AQM_LBCS"
+RUN_TASK_ADD_AQM_LBCS=${RUN_TASK_ADD_AQM_LBCS^^}
+if [ "${RUN_TASK_ADD_AQM_LBCS}" = "TRUE" ] || \
+   [ "${RUN_TASK_ADD_AQM_LBCS}" = "YES" ]; then
+  RUN_TASK_ADD_AQM_LBCS="TRUE"
+elif [ "${RUN_TASK_ADD_AQM_LBCS}" = "FALSE" ] || \
+     [ "${RUN_TASK_ADD_AQM_LBCS}" = "NO" ]; then
+  RUN_TASK_ADD_AQM_LBCS="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_RUN_NEXUS is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_RUN_NEXUS" "valid_vals_RUN_TASK_RUN_NEXUS"
+RUN_TASK_RUN_NEXUS=${RUN_TASK_RUN_NEXUS^^}
+if [ "${RUN_TASK_RUN_NEXUS}" = "TRUE" ] || \
+   [ "${RUN_TASK_RUN_NEXUS}" = "YES" ]; then
+  RUN_TASK_RUN_NEXUS="TRUE"
+elif [ "${RUN_TASK_RUN_NEXUS}" = "FALSE" ] || \
+     [ "${RUN_TASK_RUN_NEXUS}" = "NO" ]; then
+  RUN_TASK_RUN_NEXUS="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_ADD_AQM_GEFS_LBCS is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_ADD_AQM_GEFS_LBCS" "valid_vals_RUN_ADD_AQM_GEFS_LBCS"
+RUN_ADD_AQM_GEFS_LBCS=${RUN_ADD_AQM_GEFS_LBCS^^}
+if [ "${RUN_ADD_AQM_GEFS_LBCS}" = "TRUE" ] || \
+   [ "${RUN_ADD_AQM_GEFS_LBCS}" = "YES" ]; then
+  RUN_ADD_AQM_GEFS_LBCS="TRUE"
+
+  if [ "${RUN_TASK_ADD_AQM_LBCS}" = "FALSE" ]; then
+    RUN_ADD_AQM_GEFS_LBCS="FALSE"
+  fi
+
+elif [ "${RUN_ADD_AQM_GEFS_LBCS}" = "FALSE" ] || \
+     [ "${RUN_ADD_AQM_GEFS_LBCS}" = "NO" ]; then
+  RUN_ADD_AQM_GEFS_LBCS="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that RESTART_WORKFLOW is set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value \
-  "RESTART_WORKFLOW" "valid_vals_RESTART_WORKFLOW"
+check_var_valid_value "RESTART_WORKFLOW" "valid_vals_RESTART_WORKFLOW"
 RESTART_WORKFLOW=${RESTART_WORKFLOW^^}
 if [ "${RESTART_WORKFLOW}" = "TRUE" ] || \
    [ "${RESTART_WORKFLOW}" = "YES" ]; then
@@ -954,6 +1022,7 @@ case $MACHINE in
   AQM_FIRE_FILE=${AQM_FIRE_FILE:-"GBBEPx_C401GRID.emissions_v003"}
   AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/LBCS/boundary_conditions_v4"}
   AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
+  AQM_GEFS_DIR=${AQM_GEFS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/GEFS_aerosol"}
   NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions"}
   NEXUS_FIX_DIR=${NEXUS_FIX_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/nexus/fix"}
   NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_GSD_HRRR_25km.nc"}
@@ -967,6 +1036,7 @@ case $MACHINE in
   AQM_FIRE_FILE=${AQM_FIRE_FILE:-"GBBEPx_C401GRID.emissions_v003"}
   AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/LBCS/boundary_conditions_v4"}
   AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
+  AQM_GEFS_DIR=${AQM_GEFS_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GEFS_aerosol"}
   NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/scratch1/NCEPDEV/rstprod/nexus_emissions"}
   NEXUS_FIX_DIR=${NEXUS_FIX_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/nexus/fix"}
   NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_GSD_HRRR_25km.nc"}
