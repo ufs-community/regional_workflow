@@ -1,6 +1,6 @@
 MACHINE="hera"
 ACCOUNT="naqfc"
-EXPT_SUBDIR="test_gefs_lbc"
+EXPT_SUBDIR="test_cmaq"
 
 PRINT_ESMF="TRUE"
 
