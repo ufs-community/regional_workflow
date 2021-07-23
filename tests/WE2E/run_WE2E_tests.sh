@@ -1029,7 +1029,7 @@ been specified for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
 
-    str=${str}"
+    expt_config_str=${expt_config_str}"
 #
 # MET and MET+ paths.
 #
