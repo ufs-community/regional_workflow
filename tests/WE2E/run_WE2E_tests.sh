@@ -1012,6 +1012,34 @@ EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
 #
 #-----------------------------------------------------------------------
 #
+# Set MET and MET+ paths, if necessary.
+#
+#-----------------------------------------------------------------------
+#
+  if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
+     [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ]; then
+
+    if [ "$MACHINE" = "HERA" ]; then
+      met_install_dir="/contrib/met/10.0.0"
+      metplus_path="/contrib/METplus/METplus-4.0.0"
+    else
+      print_err_msg_exit "\
+The MET and MET+ paths (MET_INSTALL_DIR and MET_INSTALL_DIR) have not
+been specified for this machine (MACHINE):
+  MACHINE= \"${MACHINE}\""
+    fi
+
+    str=${str}"
+#
+# MET and MET+ paths.
+#
+METPLUS_PATH=\"${metplus_path}\"
+MET_INSTALL_DIR=\"${met_install_dir}\""
+
+  fi
+#
+#-----------------------------------------------------------------------
+#
 # On some machines (e.g. cheyenne), some tasks often require multiple
 # tries before they succeed.  To make it more convenient to run the WE2E 
 # tests on these machines without manual intervention, change the number 

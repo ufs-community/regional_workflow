@@ -324,13 +324,18 @@ case "${EXTRN_MDL_NAME_LBCS}" in
 "FV3GFS")
   if [ "${FV3GFS_FILE_FMT_LBCS}" = "nemsio" ]; then
     external_model="FV3GFS"
-    input_type="gaussian_nemsio"     # For FV3-GFS Gaussian grid in nemsio format.
+    input_type="gaussian_nemsio"     # For FV3GFS data on a Gaussian grid in nemsio format.
     tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
     tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
   elif [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
     external_model="GFS"
     fn_grib2="${EXTRN_MDL_FNS[0]}"
     input_type="grib2"
+  elif [ "${FV3GFS_FILE_FMT_LBCS}" = "netcdf" ]; then
+    external_model="FV3GFS"
+    input_type="gaussian_netcdf"     # For FV3GFS data on a Gaussian grid in netcdf format.
+    tracers_input="[\"spfh\",\"clwmr\",\"o3mr\",\"icmr\",\"rwmr\",\"snmr\",\"grle\"]"
+    tracers="[\"sphum\",\"liq_wat\",\"o3mr\",\"ice_wat\",\"rainwat\",\"snowwat\",\"graupel\"]"
   fi
   ;;
 
@@ -403,6 +408,8 @@ for (( i=0; i<${num_fhrs}; i++ )); do
       fn_atm="${EXTRN_MDL_FNS[$i]}"
     elif [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
       fn_grib2="${EXTRN_MDL_FNS[$i]}"
+    elif [ "${FV3GFS_FILE_FMT_LBCS}" = "netcdf" ]; then
+      fn_atm="${EXTRN_MDL_FNS[$i]}"
     fi
     ;;
   "RAP")
@@ -516,6 +523,13 @@ $settings"
 # of chgres_cube is nonzero.
 # A similar thing happens in the forecast task.
 #
+#-----------------------------------------------------------------------
+# Deactivate the conda environment to avoid conflicts between the 
+# environment used by the regional workflow (prepended to your $PATH)
+# and that used in the run environment.
+#-----------------------------------------------------------------------
+  unload_python
+
   ${APRUN} ${exec_fp} || \
     print_err_msg_exit "\
 Call to executable (exec_fp) to generate lateral boundary conditions (LBCs)
