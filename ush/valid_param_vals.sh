@@ -76,5 +76,6 @@ valid_vals_DT_SUBHOURLY_POST_MNTS=("1" "01" "2" "02" "3" "03" "4" "04" "5" "05" 
 valid_vals_RUN_TASK_ADD_AQM_ICS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_ADD_AQM_LBCS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_RUN_NEXUS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
+valid_vals_RUN_ADD_AQM_CHEM_LBCS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_ADD_AQM_GEFS_LBCS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RESTART_WORKFLOW=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")

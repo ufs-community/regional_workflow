@@ -811,6 +811,40 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that RUN_ADD_AQM_CHEM_LBCS is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_ADD_AQM_CHEM_LBCS" "valid_vals_RUN_ADD_AQM_CHEM_LBCS"
+RUN_ADD_AQM_CHEM_LBCS=${RUN_ADD_AQM_CHEM_LBCS^^}
+if [ "${RUN_ADD_AQM_CHEM_LBCS}" = "TRUE" ] || \
+   [ "${RUN_ADD_AQM_CHEM_LBCS}" = "YES" ]; then
+  RUN_ADD_AQM_CHEM_LBCS="TRUE"
+
+elif [ "${RUN_ADD_AQM_CHEM_LBCS}" = "FALSE" ] || \
+     [ "${RUN_ADD_AQM_CHEM_LBCS}" = "NO" ]; then
+  RUN_ADD_AQM_CHEM_LBCS="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_ADD_AQM_GEFS_LBCS is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_ADD_AQM_GEFS_LBCS" "valid_vals_RUN_ADD_AQM_GEFS_LBCS"
+RUN_ADD_AQM_GEFS_LBCS=${RUN_ADD_AQM_GEFS_LBCS^^}
+if [ "${RUN_ADD_AQM_GEFS_LBCS}" = "TRUE" ] || \
+   [ "${RUN_ADD_AQM_GEFS_LBCS}" = "YES" ]; then
+  RUN_ADD_AQM_GEFS_LBCS="TRUE"
+
+elif [ "${RUN_ADD_AQM_GEFS_LBCS}" = "FALSE" ] || \
+     [ "${RUN_ADD_AQM_GEFS_LBCS}" = "NO" ]; then
+  RUN_ADD_AQM_GEFS_LBCS="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that RUN_TASK_ADD_AQM_LBCS is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -822,6 +856,11 @@ if [ "${RUN_TASK_ADD_AQM_LBCS}" = "TRUE" ] || \
   RUN_TASK_ADD_AQM_LBCS="TRUE"
 elif [ "${RUN_TASK_ADD_AQM_LBCS}" = "FALSE" ] || \
      [ "${RUN_TASK_ADD_AQM_LBCS}" = "NO" ]; then
+  RUN_TASK_ADD_AQM_LBCS="FALSE"
+fi
+
+if [ "${RUN_ADD_AQM_CHEM_LBCS}" = "FALSE" ] && \
+   [ "${RUN_ADD_AQM_GEFS_LBCS}" = "FALSE" ]; then
   RUN_TASK_ADD_AQM_LBCS="FALSE"
 fi
 #
@@ -839,27 +878,6 @@ if [ "${RUN_TASK_RUN_NEXUS}" = "TRUE" ] || \
 elif [ "${RUN_TASK_RUN_NEXUS}" = "FALSE" ] || \
      [ "${RUN_TASK_RUN_NEXUS}" = "NO" ]; then
   RUN_TASK_RUN_NEXUS="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_ADD_AQM_GEFS_LBCS is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "RUN_ADD_AQM_GEFS_LBCS" "valid_vals_RUN_ADD_AQM_GEFS_LBCS"
-RUN_ADD_AQM_GEFS_LBCS=${RUN_ADD_AQM_GEFS_LBCS^^}
-if [ "${RUN_ADD_AQM_GEFS_LBCS}" = "TRUE" ] || \
-   [ "${RUN_ADD_AQM_GEFS_LBCS}" = "YES" ]; then
-  RUN_ADD_AQM_GEFS_LBCS="TRUE"
-
-  if [ "${RUN_TASK_ADD_AQM_LBCS}" = "FALSE" ]; then
-    RUN_ADD_AQM_GEFS_LBCS="FALSE"
-  fi
-
-elif [ "${RUN_ADD_AQM_GEFS_LBCS}" = "FALSE" ] || \
-     [ "${RUN_ADD_AQM_GEFS_LBCS}" = "NO" ]; then
-  RUN_ADD_AQM_GEFS_LBCS="FALSE"
 fi
 #
 #-----------------------------------------------------------------------

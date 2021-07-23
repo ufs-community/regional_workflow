@@ -155,27 +155,35 @@ print_input_args valid_args
 yyyymmdd="${PDY:0:8}"
 mm="${PDY:4:2}"
 
-ext_lbcs_file=${AQM_LBCS_FILES}
-ext_lbcs_file=${ext_lbcs_file//<MM>/${mm}}
+if [ ${RUN_ADD_AQM_CHEM_LBCS} = "TRUE" ]; then
 
-CHEM_BOUNDARY_CONDITION_FILE=${ext_lbcs_file}
+  ext_lbcs_file=${AQM_LBCS_FILES}
+  ext_lbcs_file=${ext_lbcs_file//<MM>/${mm}}
 
-FULL_CHEMICAL_BOUNDARY_FILE=${AQM_LBCS_DIR}/${CHEM_BOUNDARY_CONDITION_FILE}
-if [ -f ${FULL_CHEMICAL_BOUNDARY_FILE} ]; then
+  CHEM_BOUNDARY_CONDITION_FILE=${ext_lbcs_file}
+
+  FULL_CHEMICAL_BOUNDARY_FILE=${AQM_LBCS_DIR}/${CHEM_BOUNDARY_CONDITION_FILE}
+  if [ -f ${FULL_CHEMICAL_BOUNDARY_FILE} ]; then
     #Copy the boundary condition file to the current location
     cp ${FULL_CHEMICAL_BOUNDARY_FILE} .
-else
+  else
     print_err_msg_exit "\
 The chemical LBC files do not exist:
   CHEM_BOUNDARY_CONDITION_FILE = \"${CHEM_BOUNDARY_CONDITION_FILE}\""
-fi
+  fi
 
-for hr in 0 ${LBC_SPEC_FCST_HRS[@]}; do
+  for hr in 0 ${LBC_SPEC_FCST_HRS[@]}; do
     fhr=$( printf "%03d" "${hr}" )
     if [ -r ${CYCLE_DIR}/INPUT/gfs_bndy.tile7.${fhr}.nc ]; then
         ncks -A ${CHEM_BOUNDARY_CONDITION_FILE} ${CYCLE_DIR}/INPUT/gfs_bndy.tile7.${fhr}.nc
     fi
-done
+  done
+
+  print_info_msg "
+========================================================================
+Successfully added chemical LBCs !!!
+========================================================================"
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -244,23 +252,18 @@ Call to executable (exec_fp) to generate chemical and GEFS LBCs
 file for RRFS-CMAQ failed:
   exec_fp = \"${exec_fp}\""
 
-
+  print_info_msg "
+========================================================================
+Successfully added GEFS aerosol LBCs !!!
+========================================================================"
+#
 fi
 #
-#-----------------------------------------------------------------------
-#
-# Print message indicating successful completion of script.
-#
-#-----------------------------------------------------------------------
-#
-    print_info_msg "
+print_info_msg "
 ========================================================================
-Successfully added chemical and GEFS LBCs !!!
-
 Exiting script:  \"${scrfunc_fn}\"
 In directory:    \"${scrfunc_dir}\"
 ========================================================================"
-
 #
 #-----------------------------------------------------------------------
 #
