@@ -445,9 +445,17 @@ create_symlink_to_file target="${NEMS_CONFIG_FP}" \
                        symlink="${run_dir}/${NEMS_CONFIG_FN}" \
                        relative="${relative_link_flag}"
 
+##### RRFS-CMAQ ########## start #####
+if [ ${FCST_MODEL} = "ufs-weather-model" ]; then
+##### RRFS-CMAQ ########## end   #####
+
 create_symlink_to_file target="${FIELD_DICT_FP}" \
                        symlink="${run_dir}/${FIELD_DICT_FN}" \
                        relative="${relative_link_flag}"
+
+##### RRFS-CMAQ ########## start #####
+fi
+##### RRFS-CMAQ ########## end   #####
 
 if [ ${WRITE_DOPOST} = "TRUE" ]; then
   cp_vrfy ${EMC_POST_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
