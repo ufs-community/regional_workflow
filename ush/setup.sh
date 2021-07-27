@@ -1573,6 +1573,7 @@ MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_FN}"
 NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}"
 
 ##### RRFS-CMAQ ########## start #####
+#
 AQM_RC_TMPL_FN="${AQM_RC_FN}"
 AQM_RC_TMPL_FP="${TEMPLATE_DIR}/${AQM_RC_TMPL_FN}"
 #--- replace template file names/paths
@@ -1582,6 +1583,7 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_FN}.${FCST_MODEL}"
   NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}.${FCST_MODEL}"
 fi
+#
 ##### RRFS-CMAQ ########## end   #####
 
 DATA_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DATA_TABLE_TMPL_FN}"
@@ -1637,12 +1639,22 @@ fi
 FIELD_DICT_FN="fd_nems.yaml"
 FIELD_DICT_IN_UWM_FP="${UFS_WTHR_MDL_DIR}/tests/parm/${FIELD_DICT_FN}"
 FIELD_DICT_FP="${EXPTDIR}/${FIELD_DICT_FN}"
+#
+#
+##### RRFS-CMAQ ########## start #####
+if [ ${FCST_MODEL} = "ufs-weather-model" ]; then
+##### RRFS-CMAQ ########## end   #####
+
 if [ ! -f "${FIELD_DICT_IN_UWM_FP}" ]; then
   print_err_msg_exit "\
 The field dictionary file (FIELD_DICT_IN_UWM_FP) does not exist
 in the local clone of the ufs-weather-model:
   FIELD_DICT_IN_UWM_FP = \"${FIELD_DICT_IN_UWM_FP}\""
 fi
+
+##### RRFS-CMAQ ########## start #####
+fi
+##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
