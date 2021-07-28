@@ -848,7 +848,7 @@ has not been specified for this external model:
       arcvrel_dir="/gpfs/hps/nco/ops/com/gfs/prod/gfs.${yyyymmdd}"
     fi
     arcv_fns="${arcv_fns}.${arcv_fmt}"
-    arcv_fps="$arcv_dir/$arcv_fns"
+    arcv_fps="${arcv_dir}/${arcv_fns}"
     ;;
 
   "FV3GFS")
@@ -930,11 +930,11 @@ workflow to look for the external model files in a user-staged directory."
     if [ "$?" = "0" ]; then
       suffix=".${arcv_fmt}"
       arcv_fns=( "${arcv_fns[@]/%/$suffix}" )
-      prefix="$arcv_dir/"
+      prefix="${arcv_dir}/"
       arcv_fps=( "${arcv_fns[@]/#/$prefix}" )
     else
       arcv_fns="${arcv_fns}.${arcv_fmt}"
-      arcv_fps="$arcv_dir/$arcv_fns"
+      arcv_fps="${arcv_dir}/${arcv_fns}"
     fi
     ;;
 
@@ -969,7 +969,7 @@ workflow to look for the external model files in a user-staged directory."
     arcv_dir="/BMC/fdr/Permanent/${yyyy}/${mm}/${dd}/data/fsl/rap/full/wrfnat"
     arcv_fmt="zip"
     arcv_fns="${yyyy}${mm}${dd}${hh}00.${arcv_fmt}"
-    arcv_fps="$arcv_dir/$arcv_fns"
+    arcv_fps="${arcv_dir}/${arcv_fns}"
     arcvrel_dir=""
 #
 # Reset hh to its original value in case it is used again later below.
@@ -985,7 +985,7 @@ workflow to look for the external model files in a user-staged directory."
     arcv_dir="/BMC/fdr/Permanent/${yyyy}/${mm}/${dd}/data/fsl/hrrr/conus/wrfnat"
     arcv_fmt="zip"
     arcv_fns="${yyyy}${mm}${dd}${hh}00.${arcv_fmt}"
-    arcv_fps="$arcv_dir/$arcv_fns"
+    arcv_fps="${arcv_dir}/${arcv_fns}"
     arcvrel_dir=""
     ;;
 
@@ -993,7 +993,7 @@ workflow to look for the external model files in a user-staged directory."
     arcv_dir="/NCEPPROD/hpssprod/runhistory/rh${yyyy}/${yyyy}${mm}/${yyyymmdd}"
     arcv_fmt="tar"
     arcv_fns="com_nam_prod_nam.${yyyy}${mm}${dd}${hh}.bgrid.${arcv_fmt}"
-    arcv_fps="$arcv_dir/$arcv_fns"
+    arcv_fps="${arcv_dir}/${arcv_fns}"
     arcvrel_dir=""
     ;;
 
