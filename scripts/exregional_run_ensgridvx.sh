@@ -83,8 +83,9 @@ print_info_msg "$VERBOSE" "Starting ensemble-stat verification"
 #-----------------------------------------------------------------------
 #
 # Get the cycle date and hour (in formats of yyyymmdd and hh, respect-
-# ively) from CDATE. Also read in FHR and create a comma-separated list
-# for METplus to run over.
+# ively) from CDATE. Read in FHR and create a comma-separated list
+# for METplus to run over. Determine the number padding needed based
+# on number of ensemble members.
 #
 #-----------------------------------------------------------------------
 #
@@ -100,17 +101,24 @@ export fhr_last
 fhr_list=`echo ${FHR} | sed "s/ /,/g"`
 export fhr_list
 
+if [[ ${NUM_ENS_MEMBERS} -lt 10 ]]; then
+  NUM_PAD=1
+elif [[ ${NUM_ENS_MEMBERS} -ge 10 && ${NUM_ENS_MEMBERS} -lt 99 ]]; then
+  NUM_PAD=2
+elif [[ ${NUM_ENS_MEMBERS} -ge 100 && ${NUM_ENS_MEMBERS} -lt 999 ]]; then
+  NUM_PAD=3
+else
+  echo "This verification workflow only supports ensembles less than 999 members!"
+fi
+
 
 #
 #-----------------------------------------------------------------------
 #
-# Create INPUT_BASE and LOG_SUFFIX to read into METplus conf files.
+# Create LOG_SUFFIX to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
 #
-
-
-INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
 
 if [ ${VAR} == "APCP" ]; then
   LOG_SUFFIX=ensgrid_${CDATE}_${VAR}_${ACCUM}h
@@ -129,7 +137,6 @@ fi
 #
 export SCRIPTSDIR
 export EXPTDIR
-export INPUT_BASE
 export MET_INSTALL_DIR
 export MET_BIN_EXEC
 export METPLUS_PATH
@@ -140,6 +147,7 @@ export VAR
 export MODEL
 export NET
 export NUM_ENS_MEMBERS 
+export NUM_PAD
 export LOG_SUFFIX
 
 #
@@ -154,7 +162,7 @@ if [ ${VAR} == "APCP" ]; then
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/EnsembleStat_${VAR}${acc}.conf
-elif [ ${VAR} == "REFC"  || ${VAR} == "RETOP" ]; then
+elif [[ ${VAR} == "REFC"  || ${VAR} == "RETOP" ]]; then
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/EnsembleStat_${VAR}.conf

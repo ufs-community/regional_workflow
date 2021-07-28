@@ -114,7 +114,7 @@ elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
   MODEL=${MODEL}_${ENSMEM}
   if [ ${VAR} == "APCP" ]; then
     LOG_SUFFIX=gridstat_${CDATE}_${ENSMEM}_${VAR}_${ACCUM}h
-  elif [ ${VAR} == "REFC" || ${VAR} == "RETOP" ]; then
+  elif [[ ${VAR} == "REFC" || ${VAR} == "RETOP" ]]; then
     LOG_SUFFIX=gridstat_${CDATE}_${ENSMEM}_${VAR}
   else
     echo "No variable defined"
@@ -168,11 +168,7 @@ if [ ${VAR} == "APCP" ]; then
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/${VAR}_${acc}.conf
-elif [ ${VAR} == "REFC" ]; then
-  ${METPLUS_PATH}/ush/master_metplus.py \
-    -c ${METPLUS_CONF}/common.conf \
-    -c ${METPLUS_CONF}/${VAR}.conf
-elif [ ${VAR} == "RETOP" ]; then
+elif [[ ${VAR} == "REFC" || ${VAR} == "RETOP" ]]; then
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/${VAR}.conf
