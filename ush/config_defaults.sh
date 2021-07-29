@@ -560,6 +560,68 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #
 #-----------------------------------------------------------------------
 #
+# Array specifying the sources from which to try to obtain external model
+# files for generating ICs or LBCs (which happens in the GET_EXTRN_ICS_TN 
+# and GET_EXTRN_LBCS_TN tasks).  These sources are queried starting with 
+# the first (and ending after the first one from which the files are 
+# successfully obtained).
+#
+# Valid values for the elements of EXTRN_MDL_DATA_SOURCES and the 
+# behavior they elicit are:
+#
+# user_dir:
+# Look for external model files in a user-specified directory.  The 
+# GET_EXTRN_ICS_TN task looks for external model files with names 
+# specified by EXTRN_MDL_FILES_ICS in the directory specified by 
+# EXTRN_MDL_SOURCE_BASEDIR_ICS, while the GET_EXTRN_LBCS_TN task looks 
+# for external model files with names specified by EXTRN_MDL_FILES_LBCS 
+# in the directory specified by EXTRN_MDL_SOURCE_BASEDIR_LBCS.  See the
+# defintions of these parameters below for more details.
+#
+# sys_dir:
+# Look for external model files in a system directory.  The GET_EXTRN_ICS_TN 
+# task looks for the external model files in the directory specified by 
+# EXTRN_MDL_SYSBASEDIR_ICS, while the GET_EXTRN_LBCS_TN task looks for 
+# the files in the directory specified by EXTRN_MDL_SYSBASEDIR_LBCS.  If
+# not specified by the user in the experiment configuration file, 
+# EXTRN_MDL_SYSBASEDIR_ICS and EXTRN_MDL_SYSBASEDIR_LBCS are set according
+# to the platform the workflow is running on (MACHINE) and the external
+# model providing the files (as specified by EXTRN_MDL_NAME_ICS or 
+# EXTRN_MDL_NAME_LBCS).  Also, the names of the files to search for are 
+# set in an internal script according to the external model being 
+# considered (as specified by EXTRN_MDL_NAME_ICS or EXTRN_MDL_NAME_LBCS).
+#
+# noaa_hpss:
+# Fetch external model files from NOAA's HPSS.  All information needed
+# to obtain the files [e.g. the path on NOAA HPSS of the archive files
+# (e.g. tar or zip) that contain the external model files, the paths 
+# within the archive files where the latter are located, etc) are set in
+# an internal script according to the external model being considered 
+# (as specified by EXTRN_MDL_NAME_ICS or EXTRN_MDL_NAME_LBCS).
+#
+# nomads:
+# Fetch external model files from NOMADS (NOAA Operational Model Archive 
+# and Distribution System).
+#
+# The default behavior is to first try the system directory (if one exists 
+# on the current platform for the external model being considered), then
+# NOAA HPSS, and finally NOMADS.  The default does not include trying a
+# user-specified directory because those are not known a-priori (they
+# require the user to explicitly specify EXTRN_MDL_SOURCE_BASEDIR_ICS 
+# and EXTRN_MDL_FILES_ICS and/or EXTRN_MDL_SOURCE_BASEDIR_LBCS and 
+# EXTRN_MDL_FILES_LBCS).  
+#
+# Note that if USE_USER_STAGED_EXTRN_FILES is set to "TRUE", then the 
+# experiment generation scripts will prepend "user_dir" to the array
+# EXTRN_MDL_DATA_SOURCES if the latter does not already contain "user_dir"
+# as an element.
+#
+#-----------------------------------------------------------------------
+#
+EXTRN_MDL_DATA_SOURCES=( "sys_dir" "noaa_hpss" "nomads" )
+#
+#-----------------------------------------------------------------------
+#
 # Base directories in which to search for external model files.
 #
 # EXTRN_MDL_SYSBASEDIR_ICS:

@@ -1511,9 +1511,14 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If USE_USER_STAGED_EXTRN_FILES is set to TRUE, make sure that the user-
-# specified directories under which the external model files should be 
-# located actually exist.
+# If USE_USER_STAGED_EXTRN_FILES is set to TRUE, then:
+#
+# 1) Make sure that the user-specified directories under which the external 
+#    model files should be located actually exist.
+#
+# 2) If the array EXTRN_MDL_DATA_SOURCES does not contain the element
+#    "user_dir", prepend it to the array.  This ensures that the specified 
+#    user directories are searched for external model files.
 #
 #-----------------------------------------------------------------------
 #
@@ -1533,7 +1538,20 @@ external model files for generating LBCs should be located does not exist:
   EXTRN_MDL_SOURCE_BASEDIR_LBCS = \"${EXTRN_MDL_SOURCE_BASEDIR_LBCS}\""
   fi
 
+  is_element_of "user_dir" "EXTRN_MDL_DATA_SOURCES" || \
+    EXTRN_MDL_DATA_SOURCES=( "user_dir" "${EXTRN_MDL_DATA_SOURCES[@]}" )
+
 fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that all the elements of EXTRN_MDL_DATA_SOURCES are valid.
+#
+#-----------------------------------------------------------------------
+#
+for (( i=0; i<${#EXTRN_MDL_DATA_SOURCES[@]}; i++ )); do
+  check_var_valid_value "EXTRN_MDL_DATA_SOURCES[$i]" "valid_vals_EXTRN_MDL_DATA_SOURCES"
+done
 #
 #-----------------------------------------------------------------------
 #
