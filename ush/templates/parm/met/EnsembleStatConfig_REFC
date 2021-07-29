@@ -50,6 +50,10 @@ nc_var_str    = "";
 //
 // Ensemble product fields to be processed
 //
+
+M_to_KFT(x)  = x * 3.28084 * 0.001;
+KM_to_KFT(x)  = x * 3280.84 * 0.001;
+
 ens = {
    ens_thresh = ${ENS_THRESH};
    vld_thresh = 1.0;
@@ -62,6 +66,10 @@ ens = {
 //
 // Forecast and observation fields to be verified
 //
+
+M_to_KFT(x)  = x * 3.28084 * 0.001;
+KM_to_KFT(x)  = x * 3280.84 * 0.001;
+
 fcst = {
    field = [ ${FCST_FIELD}  ];
 }

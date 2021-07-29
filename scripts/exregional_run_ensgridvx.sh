@@ -122,7 +122,7 @@ fi
 
 if [ ${VAR} == "APCP" ]; then
   LOG_SUFFIX=ensgrid_${CDATE}_${VAR}_${ACCUM}h
-elif [ ${VAR} == "REFC" ]; then
+elif [[ ${VAR} == "REFC"  || ${VAR} == "RETOP" ]]; then
   LOG_SUFFIX=ensgrid_${CDATE}_${VAR}
 else
   echo "No variable defined"
