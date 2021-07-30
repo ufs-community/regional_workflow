@@ -1538,7 +1538,7 @@ external model files for generating LBCs should be located does not exist:
   EXTRN_MDL_SOURCE_BASEDIR_LBCS = \"${EXTRN_MDL_SOURCE_BASEDIR_LBCS}\""
   fi
 
-  is_element_of "user_dir" "EXTRN_MDL_DATA_SOURCES" || \
+  is_element_of "EXTRN_MDL_DATA_SOURCES" "user_dir" || \
     EXTRN_MDL_DATA_SOURCES=( "user_dir" "${EXTRN_MDL_DATA_SOURCES[@]}" )
 
 fi
