@@ -125,20 +125,20 @@ source directory (extrn_mdl_source_dir) to the staging directory
 
     if [ ! -f "$fp" ]; then
       print_info_msg "
-The external model file fp is not a regular file:
+The external model file fp is not a regular file (probably because it
+does not exist):
   fp = \"$fp\"
-This is likely because it does not exist, but it could also be for other
-reasons.  Returning with a nonzero return code.
+Returning with a nonzero return code.
 "
       return 1
     fi
 #
-# Check that the file found is at least min_age minutes old.  If not, 
+# Check that the file found is at least min_age minutes old.  If not,
 # return with a nonzero return code.
 #
     if [ ! $( find "$fp" -mmin +${min_age} ) ]; then
       print_info_msg "
-The external modle file fp is younger than the minumum required age of 
+The external modle file fp is younger than the minumum required age of
 min_age minutes:
   fp = \"$fp\"
   min_age = ${min_age} minutes
@@ -166,4 +166,3 @@ Returning with a nonzero return code.
   { restore_shell_opts; } > /dev/null 2>&1
 
 }
-

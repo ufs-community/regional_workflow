@@ -45,9 +45,10 @@ function get_extrn_mdl_files_from_user_dir() {
 #-----------------------------------------------------------------------
 #
   local valid_args=( \
-    "extrn_mdl_fns_on_disk" \
-    "extrn_mdl_source_dir" \
-    "extrn_mdl_staging_dir" \
+    "ics_or_lbcs" \
+    "cdate" \
+    "staging_dir" \
+    "varname_fns_on_disk" \
     )
   process_args valid_args "$@"
 #
@@ -67,60 +68,99 @@ function get_extrn_mdl_files_from_user_dir() {
 #
 #-----------------------------------------------------------------------
 #
-  local extrn_mdl_fns_on_disk_str \
-        extrn_mdl_fps_on_disk \
+  local fn \
+        aaafns_on_disk \
+        aaafns_on_disk_str \
         fp \
-        prefix
+        fps_on_disk \
+        i \
+        num_files \
+        prefix \
+        source_dir
 #
 #-----------------------------------------------------------------------
 #
-# Set the elements of extrn_mdl_fps_on_disk to the full paths of the 
+# Set the elements of fps_on_disk to the full paths of the 
 # external model files on disk.
 #
 #-----------------------------------------------------------------------
 #
-  prefix="${extrn_mdl_source_dir}/"
-  extrn_mdl_fps_on_disk=( "${extrn_mdl_fns_on_disk[@]/#/$prefix}" )
+  if [ "${ics_or_lbcs}" = "ICS" ]; then
+    source_dir="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/$cdate"
+    aaafns_on_disk=( $( printf "%s " "${EXTRN_MDL_FILES_ICS[@]}" ))
+  elif [ "${ics_or_lbcs}" = "LBCS" ]; then
+    source_dir="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/$cdate"
+    aaafns_on_disk=( $( printf "%s " "${EXTRN_MDL_FILES_LBCS[@]}" ))
+  fi
+
+  if [ ! -d "${source_dir}" ]; then
+    print_err_msg_exit "\
+The user-specified directory containing the user-staged external model 
+files (source_dir) does not exist:
+  source_dir = \"${source_dir}\"
+Please ensure that the directory specified by source_dir exists and that 
+all the files specified in the array aaafns_on_disk exist within it:
+  source_dir = \"${source_dir}\"
+  aaafns_on_disk = ( $( printf "\"%s\" " "${aaafns_on_disk[@]}" ))"
+  fi
+
+  prefix="${source_dir}/"
+  fps_on_disk=( "${aaafns_on_disk[@]/#/$prefix}" )
 #
 #-----------------------------------------------------------------------
 #
 # Loop through the list of external model files and create a symlink to
-# each in the experiment's staging directory.  If any external file does 
+# each in the experiment's staging directory.  If any external file does
 # not exist, return from this function with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-  extrn_mdl_fns_on_disk_str="( "$( printf "\"%s\" " "${extrn_mdl_fns_on_disk[@]}" )")"
+  aaafns_on_disk_str="( "$( printf "\"%s\" " "${aaafns_on_disk[@]}" )")"
   print_info_msg "
-Creating symlinks in the staging directory (extrn_mdl_staging_dir) to
-the external model files on disk (extrn_mdl_fns_on_disk) in the source
-directory (extrn_mdl_source_dir):
-  extrn_mdl_source_dir = \"${extrn_mdl_source_dir}\"
-  extrn_mdl_fns_on_disk = ${extrn_mdl_fns_on_disk_str}
-  extrn_mdl_staging_dir = \"${extrn_mdl_staging_dir}\"
+Creating symlinks in the staging directory (staging_dir) to the external 
+model files on disk (aaafns_on_disk) in the source directory (source_dir):
+  source_dir = \"${source_dir}\"
+  aaafns_on_disk = ${aaafns_on_disk_str}
+  staging_dir = \"${staging_dir}\"
 "
 
-  num_extrn_mdl_files="${#extrn_mdl_fps_on_disk[@]}"
-  for (( i=0; i<${num_extrn_mdl_files}; i++ )); do
+  num_files="${#fps_on_disk[@]}"
+  for (( i=0; i<${num_files}; i++ )); do
 
-    fn="${extrn_mdl_fns_on_disk[$i]}"
-    fp="${extrn_mdl_source_dir}/$fn"
+    fn="${aaafns_on_disk[$i]}"
+    fp="${fps_on_disk[$i]}"
 
     if [ ! -f "$fp" ]; then
       print_info_msg "
-The external model file fp is not a regular file:
+The external model file fp is not a regular file (probably because it
+does not exist):
   fp = \"$fp\"
-This is likely because it does not exist, but it could also be for other
-reasons.  Returning with a nonzero return code.
+Returning with a nonzero return code.
 "
       return 1
     fi
 #
 # Create a symlink in the staging directory to the current file.
 #
-    ln_vrfy -sf "$fn" "${extrn_mdl_staging_dir}/$fn"  # This should be replaced with the function "create_symlink_to_file" after the PR for that goes in.
-  
+    create_symlink_to_file target="$fp" \
+                           symlink="${staging_dir}/$fn" \
+                           relative="FALSE"
+
   done
+#
+#-----------------------------------------------------------------------
+#
+# Use the eval function to set the output variables.  Note that each of
+# these is set only if the corresponding input variable specifying the
+# name to use for the output variable is not empty.
+#
+#-----------------------------------------------------------------------
+#
+  if [ ! -z "${varname_fns_on_disk}" ]; then
+set -x
+    eval ${varname_fns_on_disk}=${aaafns_on_disk_str}
+set +x
+  fi
 #
 #-----------------------------------------------------------------------
 #

@@ -240,29 +240,29 @@ extrn_mdl_source_dir="${extrn_mdl_sysdir}"
 #
 #-----------------------------------------------------------------------
 #
-if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
-
-  if [ "${ICS_OR_LBCS}" = "ICS" ]; then
-    extrn_mdl_source_dir="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/$CDATE"
-    extrn_mdl_fns_on_disk=( $( printf "%s " "${EXTRN_MDL_FILES_ICS[@]}" ))
-  elif [ "${ICS_OR_LBCS}" = "LBCS" ]; then
-    extrn_mdl_source_dir="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/$CDATE"
-    extrn_mdl_fns_on_disk=( $( printf "%s " "${EXTRN_MDL_FILES_LBCS[@]}" ))
-  fi
-
-  if [ ! -d "${extrn_mdl_source_dir}" ]; then
-    print_err_msg_exit "\
-The directory extrn_mdl_source_dir containing the user-staged external
-model files does not exist:
-  extrn_mdl_source_dir = \"${extrn_mdl_source_dir}\"
-Please ensure that the directory specified by extrn_mdl_source_dir exists
-and that all the files specified in the array extrn_mdl_fns_on_disk exist
-within it:
-  extrn_mdl_source_dir = \"${extrn_mdl_source_dir}\"
-  extrn_mdl_fns_on_disk = ( $( printf "\"%s\" " "${extrn_mdl_fns_on_disk[@]}" ))"
-  fi
-
-fi
+#if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
+#
+#  if [ "${ICS_OR_LBCS}" = "ICS" ]; then
+#    extrn_mdl_source_dir="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/$CDATE"
+#    extrn_mdl_fns_on_disk=( $( printf "%s " "${EXTRN_MDL_FILES_ICS[@]}" ))
+#  elif [ "${ICS_OR_LBCS}" = "LBCS" ]; then
+#    extrn_mdl_source_dir="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/$CDATE"
+#    extrn_mdl_fns_on_disk=( $( printf "%s " "${EXTRN_MDL_FILES_LBCS[@]}" ))
+#  fi
+#
+#  if [ ! -d "${extrn_mdl_source_dir}" ]; then
+#    print_err_msg_exit "\
+#The directory extrn_mdl_source_dir containing the user-staged external
+#model files does not exist:
+#  extrn_mdl_source_dir = \"${extrn_mdl_source_dir}\"
+#Please ensure that the directory specified by extrn_mdl_source_dir exists
+#and that all the files specified in the array extrn_mdl_fns_on_disk exist
+#within it:
+#  extrn_mdl_source_dir = \"${extrn_mdl_source_dir}\"
+#  extrn_mdl_fns_on_disk = ( $( printf "\"%s\" " "${extrn_mdl_fns_on_disk[@]}" ))"
+#  fi
+#
+#fi
 #
 #-----------------------------------------------------------------------
 #
@@ -270,28 +270,33 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-extrn_mdl_lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${extrn_mdl_lbc_spec_fhrs[@]}" )")"
+#extrn_mdl_lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${extrn_mdl_lbc_spec_fhrs[@]}" )")"
 extrn_mdl_data_sources_str="( "$( printf "\"%s\" " "${EXTRN_MDL_DATA_SOURCES[@]}" )")"
-extrn_mdl_fns_on_disk_str="( "$( printf "\"%s\" " "${extrn_mdl_fns_on_disk[@]}" )")"
-extrn_mdl_fns_in_arcv_str="( "$( printf "\"%s\" " "${extrn_mdl_fns_in_arcv[@]}" )")"
-extrn_mdl_arcv_fns_str="( "$( printf "\"%s\" " "${extrn_mdl_arcv_fns[@]}" )")"
-extrn_mdl_arcv_fps_str="( "$( printf "\"%s\" " "${extrn_mdl_arcv_fps[@]}" )")"
+#extrn_mdl_fns_on_disk_str="( "$( printf "\"%s\" " "${extrn_mdl_fns_on_disk[@]}" )")"
+#extrn_mdl_fns_in_arcv_str="( "$( printf "\"%s\" " "${extrn_mdl_fns_in_arcv[@]}" )")"
+#extrn_mdl_arcv_fns_str="( "$( printf "\"%s\" " "${extrn_mdl_arcv_fns[@]}" )")"
+#extrn_mdl_arcv_fps_str="( "$( printf "\"%s\" " "${extrn_mdl_arcv_fps[@]}" )")"
 
 $SCRIPTSDIR/exregional_get_extrn_mdl_files.sh \
   ics_or_lbcs="${ICS_OR_LBCS}" \
-  extrn_mdl_cdate="${extrn_mdl_cdate}" \
-  extrn_mdl_lbc_spec_fhrs="${extrn_mdl_lbc_spec_fhrs_str}" \
-  extrn_mdl_data_sources="${extrn_mdl_data_sources_str}" \
-  extrn_mdl_fns_on_disk="${extrn_mdl_fns_on_disk_str}" \
-  extrn_mdl_fns_in_arcv="${extrn_mdl_fns_in_arcv_str}" \
-  extrn_mdl_source_dir="${extrn_mdl_source_dir}" \
-  extrn_mdl_staging_dir="${extrn_mdl_staging_dir}" \
-  extrn_mdl_arcv_fmt="${extrn_mdl_arcv_fmt}" \
-  extrn_mdl_arcv_fns="${extrn_mdl_arcv_fns_str}" \
-  extrn_mdl_arcv_fps="${extrn_mdl_arcv_fps_str}" \
-  extrn_mdl_arcvrel_dir="${extrn_mdl_arcvrel_dir}" || \
+  data_sources="${extrn_mdl_data_sources_str}" \
+  staging_dir="${extrn_mdl_staging_dir}" || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
+
+
+#  ics_or_lbcs="${ICS_OR_LBCS}" \
+#  extrn_mdl_cdate="${extrn_mdl_cdate}" \
+#  extrn_mdl_lbc_spec_fhrs="${extrn_mdl_lbc_spec_fhrs_str}" \
+#  extrn_mdl_data_sources="${extrn_mdl_data_sources_str}" \
+#  extrn_mdl_fns_on_disk="${extrn_mdl_fns_on_disk_str}" \
+#  extrn_mdl_fns_in_arcv="${extrn_mdl_fns_in_arcv_str}" \
+#  extrn_mdl_source_dir="${extrn_mdl_source_dir}" \
+#  extrn_mdl_staging_dir="${extrn_mdl_staging_dir}" \
+#  extrn_mdl_arcv_fmt="${extrn_mdl_arcv_fmt}" \
+#  extrn_mdl_arcv_fns="${extrn_mdl_arcv_fns_str}" \
+#  extrn_mdl_arcv_fps="${extrn_mdl_arcv_fps_str}" \
+#  extrn_mdl_arcvrel_dir="${extrn_mdl_arcvrel_dir}" || \
 #
 #-----------------------------------------------------------------------
 #
