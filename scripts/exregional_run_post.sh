@@ -245,11 +245,13 @@ phy_file="${run_dir}/phyf${fhr}${mnts_secs_str}.nc"
 # output.
 #
 post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours + ${fmn} minutes" "+%Y%m%d%H%M" )
-post_yyyy=${post_time:0:4}
-post_mm=${post_time:4:2}
-post_dd=${post_time:6:2}
-post_hh=${post_time:8:2}
-post_mn=${post_time:10:2}
+parse_cdate \
+  cdate="${post_time}" \
+  outvarname_yyyy="post_yyyy" \
+  outvarname_mm="post_mm" \
+  outvarname_dd="post_dd" \
+  outvarname_hh="post_hh" \
+  outvarname_mn="post_mn"
 #
 # Create the input text file to the post-processor executable.
 #
