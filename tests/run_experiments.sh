@@ -699,7 +699,8 @@ PTMP=\"${PTMP}\""
 #
 #-----------------------------------------------------------------------
 #
-  if [ ${USE_USER_STAGED_EXTRN_FILES} = "TRUE" ]; then
+  if [ ${USE_USER_STAGED_EXTRN_FILES} = "TRUE" ] || \
+     is_element_of "EXTRN_MDL_DATA_SOURCES" "user_dir"; then
 
     if [ "$MACHINE" = "WCOSS_CRAY" ]; then
       extrn_mdl_source_basedir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/extrn_mdl_files"
