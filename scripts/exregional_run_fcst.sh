@@ -445,6 +445,10 @@ create_symlink_to_file target="${NEMS_CONFIG_FP}" \
                        symlink="${run_dir}/${NEMS_CONFIG_FN}" \
                        relative="${relative_link_flag}"
 
+create_symlink_to_file target="${FIELD_DICT_FP}" \
+                       symlink="${run_dir}/${FIELD_DICT_FN}" \
+                       relative="${relative_link_flag}"
+
 if [ ${WRITE_DOPOST} = "TRUE" ]; then
   cp_vrfy ${EMC_POST_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
   if [ ${USE_CUSTOM_POST_CONFIG_FILE} = "TRUE" ]; then
@@ -511,22 +515,6 @@ Call to function to create a diag table file for the current cycle's
 #
 #-----------------------------------------------------------------------
 #
-# If running ensemble forecasts, create a link to the cycle-specific
-# diagnostic tables file in the cycle directory.  Note that this link
-# should not be made if not running ensemble forecasts because in that
-# case, the cycle directory is the run directory (and we would be creating
-# a symlink with the name of a file that already exists).
-#
-#-----------------------------------------------------------------------
-#
-if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
-  create_symlink_to_file target="${cycle_dir}/${DIAG_TABLE_FN}" \
-                         symlink="${run_dir}/${DIAG_TABLE_FN}" \
-                         relative="${relative_link_flag}"
-fi
-#
-#-----------------------------------------------------------------------
-#
 # Run the FV3-LAM model.  Note that we have to launch the forecast from
 # the current cycle's directory because the FV3 executable will look for
 # input files in the current directory.  Since those files have been
@@ -564,15 +552,22 @@ if [ ${WRITE_DOPOST} = "TRUE" ]; then
 
   cd_vrfy ${postprd_dir}
 
-  for fhr in $(seq -f "%02g" 0 ${FCST_LEN_HRS}); do
-    post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours + ${fmn} minutes" "+%Y%m%d%H%M" )
+  for fhr in $(seq -f "%03g" 0 ${FCST_LEN_HRS}); do
+
+    if [ ${fhr:0:1} = "0" ]; then
+      fhr_d=${fhr:1:2}
+    else
+      fhr_d=${fhr}
+    fi
+
+    post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr_d} hours + ${fmn} minutes" "+%Y%m%d%H%M" )
     post_mn=${post_time:10:2}
     post_mn_or_null=""
-    post_fn_suffix="GrbF${fhr}"
-    post_renamed_fn_suffix="f0${fhr}${post_mn_or_null}.${tmmark}.grib2"
+    post_fn_suffix="GrbF${fhr_d}"
+    post_renamed_fn_suffix="f${fhr}${post_mn_or_null}.${tmmark}.grib2"
 
     basetime=$( date --date "$yyyymmdd $hh" +%y%j%H%M )
-    symlink_suffix="_${basetime}f0${fhr}${post_mn}"
+    symlink_suffix="_${basetime}f${fhr}${post_mn}"
     fids=( "bgdawp" "bgrd3d" )
     for fid in "${fids[@]}"; do
       FID="${fid^^}"
