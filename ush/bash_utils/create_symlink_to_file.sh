@@ -52,10 +52,10 @@ function create_symlink_to_file() {
 #-----------------------------------------------------------------------
 #
   local valid_args=( \
-"target" \
-"symlink" \
-"relative" \
-  )
+    "target" \
+    "symlink" \
+    "relative" \
+    )
   process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------

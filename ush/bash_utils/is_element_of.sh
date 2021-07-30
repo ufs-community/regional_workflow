@@ -74,15 +74,15 @@ Use this function in a script as follows:
   array_name=("1" "2" "3 4" "5")
 
   str_to_match="2"
-  is_element_of "${str_to_match}" array_name
+  is_element_of array_name "${str_to_match}"
   echo $?  # Should output 0.
 
   str_to_match="3 4"
-  is_element_of "${str_to_match}" array_name
+  is_element_of array_name "${str_to_match}"
   echo $?  # Should output 0.
 
   str_to_match="6"
-  is_element_of "${str_to_match}" array_name
+  is_element_of array_name "${str_to_match}"
   echo $?  # Should output 1.
 "
 
