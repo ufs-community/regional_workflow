@@ -189,6 +189,15 @@ function source_util_funcs() {
 #-----------------------------------------------------------------------
 #
   . ${bashutils_dir}/create_symlink_to_file.sh
+#
+#-----------------------------------------------------------------------
+#
+# Source the file containing the function that parses a given cycle date
+# and returns its parts.
+#
+#-----------------------------------------------------------------------
+#
+  . ${bashutils_dir}/parse_cdate.sh
 
 }
 source_util_funcs
