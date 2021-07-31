@@ -579,6 +579,27 @@ esac
 #
 #-----------------------------------------------------------------------
 #
+# Calculate PPN_RUN_FCST from NCORES_PER_NODE and OMP_NUM_THREADS_RUN_FCST
+# 
+# OMP_NUM_THREADS_RUN_FCST:
+#   For ufs-weather-model (FV3 alone): OMP_NUM_THREAD_ATMOS
+#   For coupled model: OMP_NUM_THREAD_ATMOS + alpha
+#
+#-----------------------------------------------------------------------
+#
+OMP_NUM_THREADS_ALL="$(( ${OMP_NUM_THREADS_ATMOS} ))"
+OMP_NUM_THREADS_RUN_FCST=${OMP_NUM_THREADS_RUN_FCST:-${OMP_NUM_THREADS_ALL}}
+
+if [ "$(( ${NCORES_PER_NODE} % ${OMP_NUM_THREADS_RUN_FCST} ))" != "0" ]; then
+  print_err_msg_exit "\
+NCORES_PER_NODE is NOT divided by OMP_NUM_THREADS_RUN_FCST:
+  NCORES_PER_NODE = \"${NCORES_PER_NODE}\"
+  OMP_NUM_THREADS_RUN_FCST = \"${OMP_NUM_THREADS_RUN_FCST}\""
+fi
+PPN_RUN_FCST="$(( ${NCORES_PER_NODE} / ${OMP_NUM_THREADS_RUN_FCST} ))"
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that the job scheduler set above is valid.
 #
 #-----------------------------------------------------------------------
