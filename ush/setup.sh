@@ -596,7 +596,8 @@ NCORES_PER_NODE is NOT divided by OMP_NUM_THREADS_RUN_FCST:
   NCORES_PER_NODE = \"${NCORES_PER_NODE}\"
   OMP_NUM_THREADS_RUN_FCST = \"${OMP_NUM_THREADS_RUN_FCST}\""
 fi
-PPN_RUN_FCST="$(( ${NCORES_PER_NODE} / ${OMP_NUM_THREADS_RUN_FCST} ))"
+PPN_RUN_FCST_OPT="$(( ${NCORES_PER_NODE} / ${OMP_NUM_THREADS_RUN_FCST} ))"
+PPN_RUN_FCST=${PPN_RUN_FCST:-${PPN_RUN_FCST_OPT}}
 #
 #-----------------------------------------------------------------------
 #
