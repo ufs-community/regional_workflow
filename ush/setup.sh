@@ -582,8 +582,8 @@ esac
 # Calculate PPN_RUN_FCST from NCORES_PER_NODE and OMP_NUM_THREADS_RUN_FCST
 # 
 # OMP_NUM_THREADS_RUN_FCST:
-#   For ufs-weather-model (FV3 alone): OMP_NUM_THREAD_ATMOS
-#   For coupled model: OMP_NUM_THREAD_ATMOS + alpha
+#   For ufs-weather-model (FV3 alone): OMP_NUM_THREADS_ATMOS
+#   For coupled model: OMP_NUM_THREADS_ATMOS + alpha
 #
 #-----------------------------------------------------------------------
 #
