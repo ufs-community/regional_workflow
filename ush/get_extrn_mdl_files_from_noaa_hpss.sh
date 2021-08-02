@@ -170,32 +170,19 @@ function get_extrn_mdl_files_from_noaa_hpss() {
     elif [ "${fv3gfs_file_fmt}" = "netcdf" ]; then
 
       if [ "${anl_or_fcst}" = "ANL" ]; then
-        arcv_fns=""
+        arcv_fns="${arcv_fns}gfs_nca"
       elif [ "${anl_or_fcst}" = "FCST" ]; then
-        last_fhr_in_netcdfa=""
-        first_lbc_fhr=""
-        last_lbc_fhr=""
+        last_fhr_in_netcdfa="39"
+        first_lbc_fhr="${lbc_spec_fhrs[0]}"
+        last_lbc_fhr="${lbc_spec_fhrs[-1]}"
         if [ "${last_lbc_fhr}" -le "${last_fhr_in_netcdfa}" ]; then
-          arcv_fns=""
+          arcv_fns="${arcv_fns}gfs_nca"
         elif [ "${first_lbc_fhr}" -gt "${last_fhr_in_netcdfa}" ]; then
-          arcv_fns=""
+          arcv_fns="${arcv_fns}gfs_ncb"
         else
-          arcv_fns=( "${arcv_fns}" "${arcv_fns}" )
+          arcv_fns=( "${arcv_fns}gfs_nca" "${arcv_fns}gfs_ncb" )
         fi
       fi
-
-        arcv_fns_str="( "$( printf "\"%s\" " "${arcv_fns[@]}")")"
-
-        print_info_msg "
-Fetching of external model files from NOAA HPSS is not yet supported for
-this external model (extrn_mdl_name) and file format (fv3gfs_file_fmt)
-combination:
-  extrn_mdl_name = \"${extrn_mdl_name}\"
-  fv3gfs_file_fmt = \"${fv3gfs_file_fmt}\"
-Setting arcv_fns to an array containing empty elements:
-  arcv_fns = ${arcv_fns_str}
-If USE_USER_STAGED_EXTRN_FILES is set to \"TRUE\", this will allow the
-workflow to look for the external model files in a user-staged directory."
 
     fi
 
@@ -207,7 +194,6 @@ workflow to look for the external model files in a user-staged directory."
     fi
     arcvrel_dir="./gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
 
-    
     if is_array "arcv_fns"; then
       suffix=".${arcv_fmt}"
       arcv_fns=( "${arcv_fns[@]/%/$suffix}" )
