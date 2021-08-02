@@ -1668,7 +1668,7 @@ COMPILER="intel"
 # OMP_NUM_THREADS_*:
 # The number of OpenMP threads to use for parallel regions.
 #
-# OMP_NUM_ATMOS:
+# OMP_NUM_THREADS_ATMOS:
 # The number of OpenMP threads for FV3 (atmos_nthreads in model_configure)
 # 
 # OMP_STACKSIZE_*:
