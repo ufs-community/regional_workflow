@@ -63,7 +63,7 @@ while [[ ${cur_ut} -le ${end_valid_ut} ]]; do
 
   # Set field of interest from the MRMS products, including name and level information. 
   if [ "${field}" = "REFC" ]; then
-    field_base_name="MergedReflectivityQComposite"
+    field_base_name="MergedReflectivityQCComposite"
     level="_00.00_"
   elif [ "${field}" = "RETOP" ]; then
     field_base_name="EchoTop"
