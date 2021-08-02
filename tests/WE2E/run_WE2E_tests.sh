@@ -925,7 +925,8 @@ PTMP=\"${PTMP}\""
 #-----------------------------------------------------------------------
 #
 # Modifications to the experiment configuration file if the WE2E test 
-# uses user-staged external model files.
+# may try to look for external model files staged by the user in user-
+# specified directories.
 #
 #-----------------------------------------------------------------------
 #
@@ -1013,6 +1014,61 @@ EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
 #
 #-----------------------------------------------------------------------
 #
+# Modifications to the experiment configuration file if the WE2E test
+# may try to look for external model files in system directories.
+#
+#-----------------------------------------------------------------------
+#
+  if is_element_of "EXTRN_MDL_DATA_SOURCES" "sys_dir"; then
+#
+# First, consider the external model for ICs.
+#
+    extrn_mdl_sysbasedir_ics=""
+    if [ "$MACHINE" = "HERA" ]; then
+      if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
+        extrn_mdl_sysbasedir_ics="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
+      fi
+    fi
+#
+# If extrn_mdl_sysbasedir_ics was set above to a non-empty string, then
+# write its value to the experiment configuration file.  Otherwise, the 
+# default value specified in the workflow will be used.
+#
+    if [ ! -z "${extrn_mdl_sysbasedir_ics}" ]; then
+      expt_config_str=${expt_config_str}"
+#
+# System base directory in which to look for external model files from
+# which to generate initial conditions (ICs).
+#
+EXTRN_MDL_SYSBASEDIR_ICS=\"${extrn_mdl_sysbasedir_ics}\""
+    fi
+#
+# Now consider the external model for LBCs.
+#
+    extrn_mdl_sysbasedir_lbcs=""
+    if [ "$MACHINE" = "HERA" ]; then
+      if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
+        extrn_mdl_sysbasedir_lbcs="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
+      fi
+    fi
+#
+# If extrn_mdl_sysbasedir_lbcs was set above to a non-empty string, then
+# write its value to the experiment configuration file.  Otherwise, the 
+# default value specified in the workflow will be used.
+#
+    if [ ! -z "${extrn_mdl_sysbasedir_lbcs}" ]; then
+      expt_config_str=${expt_config_str}"
+#
+# System base directory in which to look for external model files from
+# which to generate initial conditions (ICs).
+#
+EXTRN_MDL_SYSBASEDIR_LBCS=\"${extrn_mdl_sysbasedir_lbcs}\""
+    fi
+
+  fi
+#
+#-----------------------------------------------------------------------
+#
 # Set MET and MET+ paths, if necessary.
 #
 #-----------------------------------------------------------------------
@@ -1025,8 +1081,8 @@ EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
       metplus_path="/contrib/METplus/METplus-4.0.0"
     else
       print_err_msg_exit "\
-The MET and MET+ paths (MET_INSTALL_DIR and MET_INSTALL_DIR) have not
-been specified for this machine (MACHINE):
+The MET and MET+ paths (met_install_dir and metplus_path) have not been 
+specified for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
 
@@ -1091,104 +1147,6 @@ MAXTRIES_RUN_POST=\"${MAXTRIES_RUN_POST}\""
 #
   expt_config_fp="$ushdir/${EXPT_CONFIG_FN}"
   printf "%s" "${expt_config_str}" > "${expt_config_fp}"
-#
-#-----------------------------------------------------------------------
-#
-# The following are changes that need to be made directly to the 
-# experiment configuration file created above (as opposed to the 
-# experiment configuration string expt_config_str) because they involve
-# resetting of values that have already been set in the experiment 
-# configuration file.
-#
-# If EXTRN_MDL_SYSBASEDIR_ICS has been specified in the current WE2E
-# test's base configuration file, it must be set to one of the following:
-#
-# 1) The string "set_to_non_default_location_in_testing_script" in order
-#    to allow this script to set it to a valid location depending on the
-#    machine and external model (for ICs).
-#
-# 2) To an existing directory.  If it is set to a directory, then this
-#    script ensures that the directory exists (via the check below).
-#
-#-----------------------------------------------------------------------
-#
-  if [ ! -z "${EXTRN_MDL_SYSBASEDIR_ICS}" ]; then
-
-    if [ "${EXTRN_MDL_SYSBASEDIR_ICS}" = "set_to_non_default_location_in_testing_script" ]; then
-
-      EXTRN_MDL_SYSBASEDIR_ICS=""
-      if [ "$MACHINE" = "HERA" ]; then
-        if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
-          EXTRN_MDL_SYSBASEDIR_ICS="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
-        fi
-      fi
-
-      if [ -z "${EXTRN_MDL_SYSBASEDIR_ICS}" ]; then
-        print_err_msg_exit "\
-A non-default location for EXTRN_MDL_SYSBASEDIR_ICS for testing purposes
-has not been specified for this machine (MACHINE) and external model for 
-initial conditions (EXTRN_MDL_NAME_ICS) combination:
-  MACHINE= \"${MACHINE}\"
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\""
-      fi
-
-    else 
-
-      if [ ! -d "${EXTRN_MDL_SYSBASEDIR_ICS}" ]; then
-        print_err_msg_exit "\
-The non-default location specified by EXTRN_MDL_SYSBASEDIR_ICS does not 
-exist or is not a directory:
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\""
-      fi
-
-    fi
-
-    set_bash_param "${expt_config_fp}" \
-                   "EXTRN_MDL_SYSBASEDIR_ICS" "${EXTRN_MDL_SYSBASEDIR_ICS}"
-
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Same as above but for EXTRN_MDL_SYSBASEDIR_LBCS.
-#
-#-----------------------------------------------------------------------
-#
-  if [ ! -z "${EXTRN_MDL_SYSBASEDIR_LBCS}" ]; then
-
-    if [ "${EXTRN_MDL_SYSBASEDIR_LBCS}" = "set_to_non_default_location_in_testing_script" ]; then
-
-      EXTRN_MDL_SYSBASEDIR_LBCS=""
-      if [ "$MACHINE" = "HERA" ]; then
-        if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
-          EXTRN_MDL_SYSBASEDIR_LBCS="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
-        fi
-      fi
-
-      if [ -z "${EXTRN_MDL_SYSBASEDIR_LBCS}" ]; then
-        print_err_msg_exit "\
-A non-default location for EXTRN_MDL_SYSBASEDIR_LBCS for testing purposes
-has not been specified for this machine (MACHINE) and external model for 
-initial conditions (EXTRN_MDL_NAME_LBCS) combination:
-  MACHINE= \"${MACHINE}\"
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
-      fi
-
-    else 
-
-      if [ ! -d "${EXTRN_MDL_SYSBASEDIR_LBCS}" ]; then
-        print_err_msg_exit "\
-The non-default location specified by EXTRN_MDL_SYSBASEDIR_LBCS does not 
-exist or is not a directory:
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
-      fi
-
-    fi
-
-    set_bash_param "${expt_config_fp}" \
-                   "EXTRN_MDL_SYSBASEDIR_LBCS" "${EXTRN_MDL_SYSBASEDIR_LBCS}"
-
-  fi
 #
 #-----------------------------------------------------------------------
 #

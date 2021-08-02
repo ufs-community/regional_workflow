@@ -16,7 +16,7 @@
 #
 #-----------------------------------------------------------------------
 #
-. $USHDIR/set_extrn_mdl_filenames.sh 
+. $USHDIR/set_extrn_mdl_filenames.sh
 . $USHDIR/get_extrn_mdl_files_from_user_dir.sh
 . $USHDIR/get_extrn_mdl_files_from_sys_dir.sh
 . $USHDIR/get_extrn_mdl_files_from_noaa_hpss.sh
@@ -112,24 +112,6 @@ print_input_args valid_args
     outvarname_hh="hh" \
 
   cdate=$( date --utc --date "${yyyymmdd} ${hh} UTC - ${EXTRN_MDL_LBCS_OFFSET_HRS} hours" "+%Y%m%d%H" )
-##
-##-----------------------------------------------------------------------
-##
-## Extract from cdate the starting year, month, day, hour, and minute of 
-## the external model forecast as well as the date without time (yyyymmdd).
-## [The minute (mn) will get set to "00" since cdate does not contain
-## minutes.]
-##
-##-----------------------------------------------------------------------
-##
-#  parse_cdate \
-#    cdate="$cdate" \
-#    outvarname_yyyymmdd="yyyymmdd" \
-#    outvarname_yyyy="yyyy" \
-#    outvarname_mm="mm" \
-#    outvarname_dd="dd" \
-#    outvarname_hh="hh" \
-#    outvarname_mn="mn"
 #
 #-----------------------------------------------------------------------
 #
@@ -199,7 +181,7 @@ echo "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
     get_extrn_mdl_files_from_user_dir \
       ics_or_lbcs="${ics_or_lbcs}" \
-      cdate="${CDATE}" \
+      cdate="$cdate" \
       staging_dir="${staging_dir}" \
       varname_fns_on_disk="fns_on_disk"
 echo
@@ -209,7 +191,23 @@ echo "  fns_on_disk = \"${fns_on_disk[@]}\""
 echo
 echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
-    get_extrn_mdl_files_from_sys_dir
+    set_extrn_mdl_filenames \
+      ics_or_lbcs="${ics_or_lbcs}" \
+      extrn_mdl_name="${extrn_mdl_name}" \
+      cdate="$cdate" \
+      outvarname_fns_on_disk="fns_on_disk"
+
+echo
+echo "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+echo "  fns_on_disk = ( ${fns_on_disk[@]} )"
+
+    fns_on_disk_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}" )")"
+    get_extrn_mdl_files_from_sys_dir \
+      ics_or_lbcs="${ics_or_lbcs}" \
+      extrn_mdl_name="${extrn_mdl_name}" \
+      cdate="$cdate" \
+      staging_dir="${staging_dir}" \
+      fns_on_disk="${fns_on_disk_str}"
 
   elif [ "${data_src}" = "noaa_hpss" ]; then
 echo
@@ -219,12 +217,10 @@ echo "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
       ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
-      varname_fns_on_disk="fns_on_disk" \
-      varname_fns_in_arcv="fns_in_arcv"
+      outvarname_fns_in_arcv="fns_in_arcv"
 
 echo
 echo "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"
-echo "  fns_on_disk = ( ${fns_on_disk[@]} )"
 echo "  fns_in_arcv = ( ${fns_in_arcv[@]} )"
 
     fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}" )")"
@@ -244,7 +240,7 @@ echo "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 #
 #-----------------------------------------------------------------------
 #
-# If the file retrieval from the current external model data source 
+# If the file retrieval from the current external model data source
 # (data_src) failed, then print out a message and either try the next
 # data source (if more are available) or exit.
 #
@@ -269,10 +265,10 @@ Will try the next data source specified in data_sources, which is:
 #
 #-----------------------------------------------------------------------
 #
-# If the file retrieval from the current external model data source 
-# (data_src) succeeded, there is no need to try to retrieve the files 
-# from the remaining data sources specified in data_sources.  In this 
-# case, print out an appropriate message and break out of the for-loop 
+# If the file retrieval from the current external model data source
+# (data_src) succeeded, there is no need to try to retrieve the files
+# from the remaining data sources specified in data_sources.  In this
+# case, print out an appropriate message and break out of the for-loop
 # over the locations.
 #
 #-----------------------------------------------------------------------
@@ -312,7 +308,7 @@ In directory:    \"${scrfunc_dir}\"
 
         print_info_msg "
 ========================================================================
-External model files needed for generating initial condition and surface 
+External model files needed for generating initial condition and surface
 fields for the FV3-LAM successfully fetched from NOAA HPSS!!!
 
 Exiting script:  \"${scrfunc_fn}\"
@@ -324,7 +320,7 @@ In directory:    \"${scrfunc_dir}\"
         print_info_msg "
 ========================================================================
 External model files needed for generating lateral boundary conditions
-on the halo of the FV3-LAM's regional grid successfully fetched from 
+on the halo of the FV3-LAM's regional grid successfully fetched from
 NOAA HPSS!!!
 
 Exiting script:  \"${scrfunc_fn}\"
@@ -337,7 +333,7 @@ In directory:    \"${scrfunc_dir}\"
 
       print_info_msg "
 ========================================================================
-External model files needed for generating initial and/or lateral boundary 
+External model files needed for generating initial and/or lateral boundary
 conditions successfully fetched from NOMADS!!!
 
 Exiting script:  \"${scrfunc_fn}\"
@@ -355,7 +351,7 @@ done
 #-----------------------------------------------------------------------
 #
 # Create a variable definitions file (a shell script) and save in it the
-# values of several external-model-associated variables generated in this 
+# values of several external-model-associated variables generated in this
 # script that will be needed by downstream workflow tasks.
 #
 #-----------------------------------------------------------------------
@@ -387,8 +383,8 @@ EXTRN_MDL_STAGING_DIR=\"${staging_dir}\"
 EXTRN_MDL_FNS=${fns_str}"
 #
 # If the external model files obtained above were for generating LBCS (as
-# opposed to ICs), then add to the external model variable definitions 
-# file the array variable EXTRN_MDL_LBC_SPEC_FHRS containing the forecast 
+# opposed to ICs), then add to the external model variable definitions
+# file the array variable EXTRN_MDL_LBC_SPEC_FHRS containing the forecast
 # hours at which the lateral boundary conditions are specified.
 #
 echo "33333333333333333333333333333"
@@ -405,7 +401,7 @@ $settings
 EOM
 } || print_err_msg_exit "\
 Heredoc (cat) command to create a variable definitions file associated
-with the external model from which to generate ${ics_or_lbcs} returned with a 
+with the external model from which to generate ${ics_or_lbcs} returned with a
 nonzero status.  The full path to this variable definitions file is:
   var_defns_fp = \"${var_defns_fp}\""
 #

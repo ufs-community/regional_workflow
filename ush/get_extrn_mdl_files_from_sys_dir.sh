@@ -18,26 +18,6 @@ function get_extrn_mdl_files_from_sys_dir() {
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located
-# (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
-# which the file is located (scrfunc_dir).
-#
-#-----------------------------------------------------------------------
-#
-  local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
-  local scrfunc_fn=$( basename "${scrfunc_fp}" )
-  local scrfunc_dir=$( dirname "${scrfunc_fp}" )
-#
-#-----------------------------------------------------------------------
-#
-# Get the name of this function.
-#
-#-----------------------------------------------------------------------
-#
-  local func_name="${FUNCNAME[0]}"
-#
-#-----------------------------------------------------------------------
-#
 # Specify the set of valid argument names for this script/function.  Then
 # process the arguments provided to this script/function (which should
 # consist of a set of name-value pairs of the form arg1="value1", etc).
@@ -45,9 +25,11 @@ function get_extrn_mdl_files_from_sys_dir() {
 #-----------------------------------------------------------------------
 #
   local valid_args=( \
-    "extrn_mdl_fns_on_disk" \
-    "extrn_mdl_source_dir" \
-    "extrn_mdl_staging_dir" \
+    "ics_or_lbcs" \
+    "cdate" \
+    "extrn_mdl_name" \
+    "staging_dir" \
+    "fns_on_disk" \
     )
   process_args valid_args "$@"
 #
@@ -67,20 +49,143 @@ function get_extrn_mdl_files_from_sys_dir() {
 #
 #-----------------------------------------------------------------------
 #
-  local extrn_mdl_fns_on_disk_str \
-        extrn_mdl_fps_on_disk \
+  local fn \
+        fns_on_disk_str \
         fp \
-        prefix
+        fps_on_disk \
+        hh \
+        i \
+        min_age \
+        num_files \
+        prefix \
+        source_dir \
+        source_subdir \
+        sysbasedir \
+        yyyymmdd
 #
 #-----------------------------------------------------------------------
 #
-# Set the elements of extrn_mdl_fps_on_disk to the full paths of the 
+# Set the system directory (i.e. a directory on disk) in which the external
+# model output files for the specified cycle date (cdate) may be located.
+# Note that this will be used by the calling script only if the output
+# files for the specified cdate actually exist at this location.  Otherwise,
+# the files will be searched for on the mass store (HPSS).
+#
+#-----------------------------------------------------------------------
+#
+  if [ "${ics_or_lbcs}" = "ICS" ]; then
+    sysbasedir="${EXTRN_MDL_SYSBASEDIR_ICS}"
+  elif [ "${ics_or_lbcs}" = "LBCS" ]; then
+    sysbasedir="${EXTRN_MDL_SYSBASEDIR_LBCS}"
+  fi
+
+  if [ ! -d "$sysbasedir" ]; then
+    print_info_msg "
+The system base directory in which to look for external model files does
+not exist or is not a directory:
+  sysbasedir = \"$sysbasedir\"
+Returning with a nonzero return code.
+"
+  fi
+#
+#-----------------------------------------------------------------------
+#
+# Extract from cdate the starting date without time (yyyymmdd) and the
+# hour-of-day (hh) of the external model forecast.
+#
+#-----------------------------------------------------------------------
+#
+  parse_cdate \
+    cdate="$cdate" \
+    outvarname_yyyymmdd="yyyymmdd" \
+    outvarname_hh="hh"
+#
+#-----------------------------------------------------------------------
+#
+#
+#
+#-----------------------------------------------------------------------
+#
+  source_subdir=""
+  case "$MACHINE" in
+
+  "WCOSS_CRAY")
+    case "${extrn_mdl_name}" in
+    "FV3GFS")
+      source_subdir="gfs.${yyyymmdd}/${hh}/atmos"
+      ;;
+    esac
+    ;;
+
+  "WCOSS_DELL_P3")
+    case "${extrn_mdl_name}" in
+    "FV3GFS")
+      source_subdir="gfs.${yyyymmdd}/${hh}/atmos"
+      ;;
+    esac
+    ;;
+
+  "HERA")
+    case "${extrn_mdl_name}" in
+    "FV3GFS")
+      source_subdir="gfs.${yyyymmdd}/${hh}/atmos"
+      ;;
+    esac
+    ;;
+
+  "JET")
+    case "${extrn_mdl_name}" in
+    "RAP")
+      source_subdir="${yyyymmdd}${hh}/postprd"
+      ;;
+    "HRRR")
+      source_subdir="${yyyymmdd}${hh}/postprd"
+      ;;
+    esac
+    ;;
+
+  "ODIN")
+    case "${extrn_mdl_name}" in
+    "FV3GFS")
+      source_subdir="${yyyymmdd}"
+      ;;
+    esac
+    ;;
+
+  "CHEYENNE")
+    case "${extrn_mdl_name}" in
+    "FV3GFS")
+      source_subdir="gfs.${yyyymmdd}/${hh}"
+      ;;
+    esac
+    ;;
+
+  esac
+
+  if [ -z "${source_subdir}" ]; then
+    print_info_msg "
+The subdirectroy (source_subdir) under the system base directory (sysbasedir) 
+in which to look for external model files has not been specified for this 
+machine (MACHINE) and external model (extrn_mdl_name) combination:
+  MACHINE = \"$MACHINE\"
+  extrn_mdl_name = \"${extrn_mdl_name}\"
+  sysbasedir = \"${sysbasedir}\"
+  source_subdir = \"${source_subdir}\"
+Returning with a nonzero return code.
+"
+  fi
+
+  source_dir="${sysbasedir}/${source_subdir}"
+#
+#-----------------------------------------------------------------------
+#
+# Set the elements of fps_on_disk to the full paths of the 
 # external model files on disk.
 #
 #-----------------------------------------------------------------------
 #
-  prefix="${extrn_mdl_source_dir}/"
-  extrn_mdl_fps_on_disk=( "${extrn_mdl_fns_on_disk[@]/#/$prefix}" )
+  prefix="${source_dir}/"
+  fps_on_disk=( "${fns_on_disk[@]/#/$prefix}" )
 #
 #-----------------------------------------------------------------------
 #
@@ -90,24 +195,23 @@ function get_extrn_mdl_files_from_sys_dir() {
 #
 #-----------------------------------------------------------------------
 #
-  extrn_mdl_fns_on_disk_str="( "$( printf "\"%s\" " "${extrn_mdl_fns_on_disk[@]}" )")"
+  fns_on_disk_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}" )")"
   if [ "${RUN_ENVIR}" = "nco" ]; then
     print_info_msg "
-Creating symlinks in the staging directory (extrn_mdl_staging_dir) to
-the external model files on disk (extrn_mdl_fns_on_disk) in the source
-directory (extrn_mdl_source_dir):
-  extrn_mdl_source_dir = \"${extrn_mdl_source_dir}\"
-  extrn_mdl_fns_on_disk = ${extrn_mdl_fns_on_disk_str}
-  extrn_mdl_staging_dir = \"${extrn_mdl_staging_dir}\"
+Creating symlinks in the staging directory (staging_dir) to the external 
+model files on disk (fns_on_disk) in the source directory (source_dir):
+  source_dir = \"${source_dir}\"
+  fns_on_disk = ${fns_on_disk_str}
+  staging_dir = \"${staging_dir}\"
 "
   else
     print_info_msg "
-Copying external model files on disk (extrn_mdl_fns_on_disk) from the
-source directory (extrn_mdl_source_dir) to the staging directory 
-(extrn_mdl_staging_dir):
-  extrn_mdl_source_dir = \"${extrn_mdl_source_dir}\"
-  extrn_mdl_fns_on_disk = ${extrn_mdl_fns_on_disk_str}
-  extrn_mdl_staging_dir = \"${extrn_mdl_staging_dir}\"
+Copying external model files on disk (fns_on_disk) from the
+source directory (source_dir) to the staging directory 
+(staging_dir):
+  source_dir = \"${source_dir}\"
+  fns_on_disk = ${fns_on_disk_str}
+  staging_dir = \"${staging_dir}\"
 "
   fi
 #
@@ -115,13 +219,13 @@ source directory (extrn_mdl_source_dir) to the staging directory
 # being written to), we require that they be at least min_age minutes
 # old.  Set this value.
 #
-  min_age="5"  # Minimum file age, in minutes.
+  min_age="5"
 
-  num_extrn_mdl_files="${#extrn_mdl_fps_on_disk[@]}"
-  for (( i=0; i<${num_extrn_mdl_files}; i++ )); do
+  num_files="${#fps_on_disk[@]}"
+  for (( i=0; i<${num_files}; i++ )); do
 
-    fn="${extrn_mdl_fns_on_disk[$i]}"
-    fp="${extrn_mdl_source_dir}/$fn"
+    fn="${fns_on_disk[$i]}"
+    fp="${source_dir}/$fn"
 
     if [ ! -f "$fp" ]; then
       print_info_msg "
@@ -150,9 +254,11 @@ Returning with a nonzero return code.
 # Link to or copy the file.
 #
     if [ "${RUN_ENVIR}" = "nco" ]; then
-      ln_vrfy -sf "$fp" "${extrn_mdl_staging_dir}/$fn"  # This should be replaced with the function "create_symlink_to_file" after the PR for that goes in.
+      create_symlink_to_file target="$fp" \
+                             symlink="${staging_dir}/$fn" \
+                             relative="FALSE"
     else
-      cp_vrfy "$fp" "${extrn_mdl_staging_dir}/$fn"  # This should be replaced with the function "create_symlink_to_file" after the PR for that goes in.
+      cp_vrfy "$fp" "${staging_dir}/$fn"
     fi
 
   done
@@ -166,3 +272,5 @@ Returning with a nonzero return code.
   { restore_shell_opts; } > /dev/null 2>&1
 
 }
+
+

@@ -18,26 +18,6 @@ function get_extrn_mdl_files_from_user_dir() {
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located
-# (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
-# which the file is located (scrfunc_dir).
-#
-#-----------------------------------------------------------------------
-#
-  local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
-  local scrfunc_fn=$( basename "${scrfunc_fp}" )
-  local scrfunc_dir=$( dirname "${scrfunc_fp}" )
-#
-#-----------------------------------------------------------------------
-#
-# Get the name of this function.
-#
-#-----------------------------------------------------------------------
-#
-  local func_name="${FUNCNAME[0]}"
-#
-#-----------------------------------------------------------------------
-#
 # Specify the set of valid argument names for this script/function.  Then
 # process the arguments provided to this script/function (which should
 # consist of a set of name-value pairs of the form arg1="value1", etc).
@@ -48,7 +28,7 @@ function get_extrn_mdl_files_from_user_dir() {
     "ics_or_lbcs" \
     "cdate" \
     "staging_dir" \
-    "varname_fns_on_disk" \
+    "outvarname_fns_on_disk" \
     )
   process_args valid_args "$@"
 #
@@ -156,10 +136,8 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -z "${varname_fns_on_disk}" ]; then
-set -x
-    eval ${varname_fns_on_disk}=${aaafns_on_disk_str}
-set +x
+  if [ ! -z "${outvarname_fns_on_disk}" ]; then
+    eval ${outvarname_fns_on_disk}=${aaafns_on_disk_str}
   fi
 #
 #-----------------------------------------------------------------------

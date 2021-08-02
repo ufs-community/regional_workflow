@@ -28,15 +28,9 @@ function set_extrn_mdl_filenames() {
     "ics_or_lbcs" \
     "extrn_mdl_name" \
     "cdate" \
-    "varname_fns_on_disk" \
-    "varname_fns_in_arcv" \
+    "outvarname_fns_on_disk" \
+    "outvarname_fns_in_arcv" \
     )
-#    "yyyymmdd" \
-#    "yyyy" \
-#    "mm" \
-#    "dd" \
-#    "hh" \
-#    "mn" \
   process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -412,14 +406,14 @@ combination of external model (extrn_mdl_name) and ICs or LBCs
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -z "${varname_fns_on_disk}" ]; then
+  if [ ! -z "${outvarname_fns_on_disk}" ]; then
     fns_on_disk_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}" )")"
-    eval ${varname_fns_on_disk}=${fns_on_disk_str}
+    eval ${outvarname_fns_on_disk}=${fns_on_disk_str}
   fi
 
-  if [ ! -z "${varname_fns_in_arcv}" ]; then
+  if [ ! -z "${outvarname_fns_in_arcv}" ]; then
     fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}" )")"
-    eval ${varname_fns_in_arcv}=${fns_in_arcv_str}
+    eval ${outvarname_fns_in_arcv}=${fns_in_arcv_str}
   fi
 #
 #-----------------------------------------------------------------------

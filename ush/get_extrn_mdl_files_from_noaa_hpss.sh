@@ -30,11 +30,6 @@ function get_extrn_mdl_files_from_noaa_hpss() {
     "staging_dir" \
     "fns_in_arcv" \
     )
-#    "yyyymmdd" \
-#    "yyyy" \
-#    "mm" \
-#    "dd" \
-#    "hh" \
   process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -53,10 +48,41 @@ function get_extrn_mdl_files_from_noaa_hpss() {
 #
 #-----------------------------------------------------------------------
 #
-  local ruc_lsm_name \
-        regex_search \
-        ruc_lsm_name_or_null \
-        sdf_uses_ruc_lsm
+  local arcv_dir \
+        arcv_fmt \
+        arcv_fn \
+        arcv_fns \
+        arcv_fns_str \
+        arcv_fp \
+        arcv_fps \
+        arcv_fps_str \
+        arcvrel_dir \
+        files_in_crnt_arcv \
+        first_lbc_fhr \
+        fp \
+        fps_in_arcv \
+        fps_in_arcv_str \
+        hh \
+        hh_orig \
+        hsi_log_fn \
+        htar_log_fn \
+        i \
+        last_fhr_in_nemsioa \
+        last_fhr_in_netcdfa \
+        last_lbc_fhr \
+        narcv \
+        narcv_formatted \
+        nfile \
+        num_arcv_files \
+        num_files_in_crnt_arcv \
+        num_files_to_extract \
+        num_occurs \
+        prefix \
+        rel_dir \
+        slash_atmos_or_null \
+        subdir_to_remove \
+        suffix \
+        unzip_log_fn
 #
 #-----------------------------------------------------------------------
 #
@@ -181,8 +207,8 @@ workflow to look for the external model files in a user-staged directory."
     fi
     arcvrel_dir="./gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
 
-    is_array arcv_fns
-    if [ "$?" = "0" ]; then
+    
+    if is_array arcv_fns; then
       suffix=".${arcv_fmt}"
       arcv_fns=( "${arcv_fns[@]/%/$suffix}" )
       prefix="${arcv_dir}/"
@@ -635,19 +661,6 @@ file unzip_log_fn in the staging directory (staging_dir) for details:
 #
 
   fi
-#
-#-----------------------------------------------------------------------
-#
-# Use the eval function to set the output variables.  Note that each of
-# these is set only if the corresponding input variable specifying the
-# name to use for the output variable is not empty.
-#
-#-----------------------------------------------------------------------
-#
-#  if [ ! -z "${varname_lbc_spec_fhrs}" ]; then
-#    lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${lbc_spec_fhrs[@]}" )")"
-#    eval ${varname_lbc_spec_fhrs}=${lbc_spec_fhrs_str}
-#  fi
 #
 #-----------------------------------------------------------------------
 #
