@@ -25,6 +25,7 @@ function get_extrn_mdl_files_from_noaa_hpss() {
 #-----------------------------------------------------------------------
 #
   local valid_args=( \
+    "ics_or_lbcs" \
     "extrn_mdl_name" \
     "cdate" \
     "staging_dir" \
@@ -48,7 +49,8 @@ function get_extrn_mdl_files_from_noaa_hpss() {
 #
 #-----------------------------------------------------------------------
 #
-  local arcv_dir \
+  local anl_or_fcst \
+        arcv_dir \
         arcv_fmt \
         arcv_fn \
         arcv_fns \
@@ -83,6 +85,18 @@ function get_extrn_mdl_files_from_noaa_hpss() {
         subdir_to_remove \
         suffix \
         unzip_log_fn
+#
+#-----------------------------------------------------------------------
+#
+#
+#
+#-----------------------------------------------------------------------
+#
+  if [ "${ics_or_lbcs}" = "ICS" ]; then
+    anl_or_fcst="ANL"
+  elif [ "${ics_or_lbcs}" = "LBCS" ]; then
+    anl_or_fcst="FCST"
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -360,8 +374,8 @@ htar_log_fn in the staging directory (staging_di) for details:
       files_in_crnt_arcv=()
       for (( nfile=0; nfile<${num_files_to_extract}; nfile++ )); do
         fp="${fps_in_arcv[$nfile]}"
-#        grep -n $fp ${htar_log_fn} 2>&1 && { \
-        grep -n $fp ${htar_log_fn} > /dev/null 2>&1 && { \
+#        grep -n "$fp" "${htar_log_fn}" 2>&1 && { \
+        grep -n "$fp" "${htar_log_fn}" > /dev/null 2>&1 && { \
           files_in_crnt_arcv[$i]="$fp"; \
           i=$((i+1)); \
         }
@@ -450,7 +464,7 @@ for details:
       for (( narcv=0; narcv<${num_arcv_files}; narcv++ )); do
         narcv_formatted=$( printf "%02d" $narcv )
         htar_log_fn="log.htar_xvf.${narcv_formatted}"
-        grep -n $fp ${htar_log_fn} > /dev/null 2>&1 && { \
+        grep -n "$fp" "${htar_log_fn}" > /dev/null 2>&1 && { \
           num_occurs=$((num_occurs+1)); \
         }
       done

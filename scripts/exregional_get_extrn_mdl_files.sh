@@ -183,7 +183,7 @@ echo "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       ics_or_lbcs="${ics_or_lbcs}" \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
-      varname_fns_on_disk="fns_on_disk"
+      outvarname_fns_on_disk="fns_on_disk"
 echo
 echo "  fns_on_disk = \"${fns_on_disk[@]}\""
 
@@ -225,6 +225,7 @@ echo "  fns_in_arcv = ( ${fns_in_arcv[@]} )"
 
     fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}" )")"
     get_extrn_mdl_files_from_noaa_hpss \
+      ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
