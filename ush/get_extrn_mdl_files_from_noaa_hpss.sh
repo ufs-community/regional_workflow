@@ -208,7 +208,7 @@ workflow to look for the external model files in a user-staged directory."
     arcvrel_dir="./gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
 
     
-    if is_array arcv_fns; then
+    if is_array "arcv_fns"; then
       suffix=".${arcv_fmt}"
       arcv_fns=( "${arcv_fns[@]/%/$suffix}" )
       prefix="${arcv_dir}/"
@@ -290,8 +290,8 @@ Archive file information has not been specified for this external model:
 # arrays, recast them as arrays because that is what is expected in the
 # code below.
 #
-  is_array arcv_fns || arcv_fns=( "${arcv_fns}" )
-  is_array arcv_fps || arcv_fps=( "${arcv_fps}" )
+  is_array "arcv_fns" || arcv_fns=( "${arcv_fns}" )
+  is_array "arcv_fps" || arcv_fps=( "${arcv_fps}" )
 #
 #-----------------------------------------------------------------------
 #

@@ -158,14 +158,20 @@ where the arguments are defined as follows:
 #
 #-----------------------------------------------------------------------
 #
-  local array_name_valid_arg_names \
-        valid_arg_names_at \
-        valid_arg_names \
-        num_valid_args \
+  local arg_already_specified \
+        arg_name \
+        arg_val_pair \
+        arg_value \
+        array_name_valid_arg_names \
+        cmd_line \
+        err_msg \
+        i \
+        is_array \
         num_arg_val_pairs \
-        i valid_arg_name arg_already_specified \
-        arg_val_pair arg_name arg_value is_array \
-        err_msg cmd_line
+        num_valid_args \
+        valid_arg_name \
+        valid_arg_names \
+        valid_arg_names_at
 #
 #-----------------------------------------------------------------------
 #

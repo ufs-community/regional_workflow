@@ -4,7 +4,7 @@
 # This file defines a function that is used to check whether a specified
 # variable is a bash array.  It is called as follows:
 #
-#   is_array var_name
+#   is_array "var_name"
 #
 # Here, var_name is the name of the variable to check to determine whe-
 # ther or not it is an array.  If the variable is an array, this func-
