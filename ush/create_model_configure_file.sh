@@ -121,7 +121,7 @@ run directory (run_dir):
   'nhours_fcst': ${FCST_LEN_HRS}
   'dt_atmos': ${DT_ATMOS}
   'cpl': ${dot_cpl_dot}
-  'atmos_nthreads': ${OMP_NUM_THREADS_ATMOS}
+  'atmos_nthreads': ${OMP_NUM_THREADS_RUN_FCST}
   'restart_interval': ${RESTART_INTERVAL}
   'write_dopost': ${dot_write_dopost}
   'quilting': ${dot_quilting_dot}

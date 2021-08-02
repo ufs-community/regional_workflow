@@ -1667,9 +1667,6 @@ COMPILER="intel"
 # 
 # OMP_NUM_THREADS_*:
 # The number of OpenMP threads to use for parallel regions.
-#
-# OMP_NUM_THREADS_ATMOS:
-# The number of OpenMP threads for FV3 (atmos_nthreads in model_configure)
 # 
 # OMP_STACKSIZE_*:
 # Controls the size of the stack for threads created by the OpenMP 
@@ -1697,8 +1694,7 @@ OMP_NUM_THREADS_MAKE_LBCS="1"
 OMP_STACKSIZE_MAKE_LBCS="1024m"
 
 KMP_AFFINITY_RUN_FCST="scatter"
-OMP_NUM_THREADS_ATMOS="2"    # atmos_nthreads in model_configure
-OMP_NUM_THREADS_RUN_FCST=""  # will be calculated in setup.sh
+OMP_NUM_THREADS_RUN_FCST="2"    # atmos_nthreads in model_configure
 OMP_STACKSIZE_RUN_FCST="1024m"
 
 KMP_AFFINITY_RUN_POST="scatter"
