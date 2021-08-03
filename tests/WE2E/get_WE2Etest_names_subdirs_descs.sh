@@ -430,6 +430,7 @@ function get_WE2Etest_names_subdirs_descs() {
 #
   category_subdirs=( \
     "." \
+    "get_extrn_mdl_files" \
     "grids_extrn_mdls_suites_community" \
     "grids_extrn_mdls_suites_nco" \
     "release_SRW_v1" \

@@ -25,10 +25,13 @@ function get_extrn_mdl_files_from_noaa_hpss() {
 #-----------------------------------------------------------------------
 #
   local valid_args=( \
-    "ics_or_lbcs" \
     "extrn_mdl_name" \
     "cdate" \
     "staging_dir" \
+    "arcv_fmt" \
+    "arcv_fns" \
+    "arcv_fps" \
+    "arcvrel_dir" \
     "fns_in_arcv" \
     )
   process_args valid_args "$@"
@@ -36,8 +39,8 @@ function get_extrn_mdl_files_from_noaa_hpss() {
 #-----------------------------------------------------------------------
 #
 # For debugging purposes, print out values of arguments passed to this
-# script.  Note that these will be printed out only if VERBOSE is set to
-# TRUE.
+# script/function.  Note that these will be printed out only if VERBOSE 
+# is set to TRUE.
 #
 #-----------------------------------------------------------------------
 #
@@ -49,16 +52,10 @@ function get_extrn_mdl_files_from_noaa_hpss() {
 #
 #-----------------------------------------------------------------------
 #
-  local anl_or_fcst \
-        arcv_dir \
-        arcv_fmt \
+  local arcv_dir \
         arcv_fn \
-        arcv_fns \
-        arcv_fns_str \
         arcv_fp \
-        arcv_fps \
         arcv_fps_str \
-        arcvrel_dir \
         files_in_crnt_arcv \
         first_lbc_fhr \
         fp \
@@ -85,213 +82,6 @@ function get_extrn_mdl_files_from_noaa_hpss() {
         subdir_to_remove \
         suffix \
         unzip_log_fn
-#
-#-----------------------------------------------------------------------
-#
-#
-#
-#-----------------------------------------------------------------------
-#
-  if [ "${ics_or_lbcs}" = "ICS" ]; then
-    anl_or_fcst="ANL"
-  elif [ "${ics_or_lbcs}" = "LBCS" ]; then
-    anl_or_fcst="FCST"
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Extract from cdate the starting year, month, day, and hour of the 
-# external model forecast as well as the date without time (yyyymmdd).
-#
-#-----------------------------------------------------------------------
-#
-  parse_cdate \
-    cdate="$cdate" \
-    outvarname_yyyymmdd="yyyymmdd" \
-    outvarname_yyyy="yyyy" \
-    outvarname_mm="mm" \
-    outvarname_dd="dd" \
-    outvarname_hh="hh"
-#
-#-----------------------------------------------------------------------
-#
-# Set parameters associated with the mass store (HPSS) for the specified
-# cycle date (cdate).  These consist of:
-#
-# 1) The type of the archive file (e.g. tar, zip, etc).
-# 2) The name of the archive file.
-# 3) The full path in HPSS to the archive file.
-# 4) The relative directory in the archive file in which the module output
-#    files are located.
-#
-# Note that these will be used by the calling script only if the archive
-# file for the specified cdate actually exists on HPSS.
-#
-#-----------------------------------------------------------------------
-#
-  case "${extrn_mdl_name}" in
-
-  "GSMGFS")
-    arcv_dir="/NCEPPROD/hpssprod/runhistory/rh${yyyy}/${yyyy}${mm}/${yyyymmdd}"
-    arcv_fmt="tar"
-    arcv_fns="gpfs_hps_nco_ops_com_gfs_prod_gfs.${cdate}."
-    if [ "${anl_or_fcst}" = "ANL" ]; then
-      arcv_fns="${arcv_fns}anl"
-      arcvrel_dir="."
-    elif [ "${anl_or_fcst}" = "FCST" ]; then
-      arcv_fns="${arcv_fns}sigma"
-      arcvrel_dir="/gpfs/hps/nco/ops/com/gfs/prod/gfs.${yyyymmdd}"
-    fi
-    arcv_fns="${arcv_fns}.${arcv_fmt}"
-    arcv_fps="${arcv_dir}/${arcv_fns}"
-    ;;
-
-  "FV3GFS")
-
-    if [ "${cdate}" -lt "2019061200" ]; then
-      arcv_dir="/NCEPDEV/emc-global/5year/emc.glopara/WCOSS_C/Q2FY19/prfv3rt3/${cdate}"
-      arcv_fns=""
-    elif [ "${cdate}" -ge "2019061200" ] && \
-         [ "${cdate}" -lt "2020022600" ]; then
-      arcv_dir="/NCEPPROD/hpssprod/runhistory/rh${yyyy}/${yyyy}${mm}/${yyyymmdd}"
-      arcv_fns="gpfs_dell1_nco_ops_com_gfs_prod_gfs.${yyyymmdd}_${hh}."
-    elif [ "${cdate}" -ge "2020022600" ]; then
-      arcv_dir="/NCEPPROD/hpssprod/runhistory/rh${yyyy}/${yyyy}${mm}/${yyyymmdd}"
-      arcv_fns="com_gfs_prod_gfs.${yyyymmdd}_${hh}."
-    fi
-
-    if [ "${fv3gfs_file_fmt}" = "nemsio" ]; then
-
-      if [ "${anl_or_fcst}" = "ANL" ]; then
-        arcv_fns="${arcv_fns}gfs_nemsioa"
-      elif [ "${anl_or_fcst}" = "FCST" ]; then
-        last_fhr_in_nemsioa="39"
-        first_lbc_fhr="${lbc_spec_fhrs[0]}"
-        last_lbc_fhr="${lbc_spec_fhrs[-1]}"
-        if [ "${last_lbc_fhr}" -le "${last_fhr_in_nemsioa}" ]; then
-          arcv_fns="${arcv_fns}gfs_nemsioa"
-        elif [ "${first_lbc_fhr}" -gt "${last_fhr_in_nemsioa}" ]; then
-          arcv_fns="${arcv_fns}gfs_nemsiob"
-        else
-          arcv_fns=( "${arcv_fns}gfs_nemsioa" "${arcv_fns}gfs_nemsiob" )
-        fi
-      fi
-
-    elif [ "${fv3gfs_file_fmt}" = "grib2" ]; then
-
-      arcv_fns="${arcv_fns}gfs_pgrb2"
-
-    elif [ "${fv3gfs_file_fmt}" = "netcdf" ]; then
-
-      if [ "${anl_or_fcst}" = "ANL" ]; then
-        arcv_fns="${arcv_fns}gfs_nca"
-      elif [ "${anl_or_fcst}" = "FCST" ]; then
-        last_fhr_in_netcdfa="39"
-        first_lbc_fhr="${lbc_spec_fhrs[0]}"
-        last_lbc_fhr="${lbc_spec_fhrs[-1]}"
-        if [ "${last_lbc_fhr}" -le "${last_fhr_in_netcdfa}" ]; then
-          arcv_fns="${arcv_fns}gfs_nca"
-        elif [ "${first_lbc_fhr}" -gt "${last_fhr_in_netcdfa}" ]; then
-          arcv_fns="${arcv_fns}gfs_ncb"
-        else
-          arcv_fns=( "${arcv_fns}gfs_nca" "${arcv_fns}gfs_ncb" )
-        fi
-      fi
-
-    fi
-
-    arcv_fmt="tar"
-
-    slash_atmos_or_null=""
-    if [ "${cdate}" -ge "2021032100" ]; then
-      slash_atmos_or_null="/atmos"
-    fi
-    arcvrel_dir="./gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
-
-    if is_array "arcv_fns"; then
-      suffix=".${arcv_fmt}"
-      arcv_fns=( "${arcv_fns[@]/%/$suffix}" )
-      prefix="${arcv_dir}/"
-      arcv_fps=( "${arcv_fns[@]/#/$prefix}" )
-    else
-      arcv_fns="${arcv_fns}.${arcv_fmt}"
-      arcv_fps="${arcv_dir}/${arcv_fns}"
-    fi
-    ;;
-
-
-  "RAP")
-#
-# Note that this is GSL RAPX data, not operational NCEP RAP data.  An option for the latter
-# may be added in the future.
-#
-# The zip archive files for RAPX are named such that the forecast files
-# for odd-numbered starting hours (e.g. 01, 03, ..., 23) are stored
-# together with the forecast files for the corresponding preceding even-
-# numbered starting hours (e.g. 00, 02, ..., 22, respectively), in an
-# archive file whose name contains only the even-numbered hour.  Thus,
-# in forming the name of the archive file, if the starting hour (hh) is
-# odd, we reduce it by one to get the corresponding even-numbered hour
-# and use that to form the archive file name.
-#
-    hh_orig=$hh
-# if it starts with a 0 (e.g. 00, 01, ..., 09), bash will treat it as an
-# octal number, and 08 and 09 are illegal ocatal numbers for which the
-# arithmetic operations below will fail.
-    hh=$((10#$hh))
-    if [ $(($hh%2)) = 1 ]; then
-      hh=$((hh-1))
-    fi
-# Now that the arithmetic is done, recast hh as a two-digit string because
-# that is needed in constructing the names below.
-    hh=$( printf "%02d\n" $hh )
-
-    arcv_dir="/BMC/fdr/Permanent/${yyyy}/${mm}/${dd}/data/fsl/rap/full/wrfnat"
-    arcv_fmt="zip"
-    arcv_fns="${yyyy}${mm}${dd}${hh}00.${arcv_fmt}"
-    arcv_fps="${arcv_dir}/${arcv_fns}"
-    arcvrel_dir=""
-#
-# Reset hh to its original value in case it is used again later below.
-#
-    hh=${hh_orig}
-    ;;
-
-  "HRRR")
-#
-# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An option for the latter
-# may be added in the future.
-#
-    arcv_dir="/BMC/fdr/Permanent/${yyyy}/${mm}/${dd}/data/fsl/hrrr/conus/wrfnat"
-    arcv_fmt="zip"
-    arcv_fns="${yyyy}${mm}${dd}${hh}00.${arcv_fmt}"
-    arcv_fps="${arcv_dir}/${arcv_fns}"
-    arcvrel_dir=""
-    ;;
-
-  "NAM")
-    arcv_dir="/NCEPPROD/hpssprod/runhistory/rh${yyyy}/${yyyy}${mm}/${yyyymmdd}"
-    arcv_fmt="tar"
-    arcv_fns="com_nam_prod_nam.${yyyy}${mm}${dd}${hh}.bgrid.${arcv_fmt}"
-    arcv_fps="${arcv_dir}/${arcv_fns}"
-    arcvrel_dir=""
-    ;;
-
-  *)
-    print_err_msg_exit "\
-Archive file information has not been specified for this external model:
-  extrn_mdl_name = \"${extrn_mdl_name}\""
-    ;;
-
-  esac
-#
-# Depending on the experiment configuration, the above code may set
-# arcv_fns and arcv_fps to either scalars or arrays.  If they are not
-# arrays, recast them as arrays because that is what is expected in the
-# code below.
-#
-  is_array "arcv_fns" || arcv_fns=( "${arcv_fns}" )
-  is_array "arcv_fps" || arcv_fps=( "${arcv_fps}" )
 #
 #-----------------------------------------------------------------------
 #
@@ -565,13 +355,13 @@ This script must be modified to account for this case."
 #
     if [ "${num_arcv_files}" -gt 1 ]; then
       print_err_msg_exit "\
-Currently, this script is coded to handle only one archive file if the
+Currently, this function is coded to handle only one archive file if the
 archive file format is specified to be \"zip\", but the number of archive
-files (num_arcv_files) passed to this script is greater than 1:
+files (num_arcv_files) passed to this function is greater than 1:
   arcv_fmt = \"${arcv_fmt}\"
   num_arcv_files = ${num_arcv_files}
-Please modify the script to handle more than one \"zip\" archive file.
-Note that code already exists in this script that can handle multiple
+Please modify the function to handle more than one \"zip\" archive file.
+Note that code already exists in this function that can handle multiple
 archive files if the archive file format is specified to be \"tar\", so
 that can be used as a guide for the \"zip\" case."
     else
@@ -615,7 +405,7 @@ unzip_log_fn in that directory for details:
 # Check that the log file from the unzip command above contains the name
 # of each external model file.  If any are missing, then the corresponding
 # files are not in the zip file and thus cannot be extracted.  In that
-# case, print out a message and exit the script because initial condition
+# case, print out a message and exit the function because initial condition
 # and surface field files for the FV3-LAM cannot be generated without all
 # the external model files.
 #

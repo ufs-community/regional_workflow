@@ -18,26 +18,6 @@ function get_extrn_mdl_files_from_nomads() {
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located
-# (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
-# which the file is located (scrfunc_dir).
-#
-#-----------------------------------------------------------------------
-#
-  local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
-  local scrfunc_fn=$( basename "${scrfunc_fp}" )
-  local scrfunc_dir=$( dirname "${scrfunc_fp}" )
-#
-#-----------------------------------------------------------------------
-#
-# Get the name of this function.
-#
-#-----------------------------------------------------------------------
-#
-  local func_name="${FUNCNAME[0]}"
-#
-#-----------------------------------------------------------------------
-#
 # Specify the set of valid argument names for this script/function.  Then
 # process the arguments provided to this script/function (which should
 # consist of a set of name-value pairs of the form arg1="value1", etc).
