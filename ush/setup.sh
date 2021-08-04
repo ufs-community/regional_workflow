@@ -2050,6 +2050,7 @@ elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
     output_varname_lat_ctr="LAT_CTR" \
     output_varname_nx="NX" \
     output_varname_ny="NY" \
+    output_varname_pazi="PAZI" \
     output_varname_halo_width="NHW" \
     output_varname_stretch_factor="STRETCH_FAC" \
     output_varname_del_angle_x_sg="DEL_ANGLE_X_SG" \
@@ -2778,6 +2779,7 @@ NX="${NX}"
 NY="${NY}"
 NHW="${NHW}"
 STRETCH_FAC="${STRETCH_FAC}"
+PAZI="${PAZI}"
 
 RES_IN_FIXLAM_FILENAMES="${RES_IN_FIXLAM_FILENAMES}"
 #

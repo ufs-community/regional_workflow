@@ -955,7 +955,7 @@ ESGgrid_DELY=""
 ESGgrid_NX=""
 ESGgrid_NY=""
 ESGgrid_WIDE_HALO_WIDTH=""
-ESGgrid_PAZI=""
+ESGgrid_PAZI="0.0"
 #
 #-----------------------------------------------------------------------
 #
