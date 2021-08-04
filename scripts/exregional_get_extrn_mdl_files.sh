@@ -227,7 +227,6 @@ echo "  fns_in_arcv = ( ${fns_in_arcv[@]} )"
 
     fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}" )")"
     get_extrn_mdl_files_from_noaa_hpss \
-      extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
       arcv_fmt="${arcv_fmt}" \
