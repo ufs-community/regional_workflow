@@ -45,8 +45,7 @@ fi
 
 #getting online forecast data
 ifcst=$nfcst_int
-while [ $ifcst -le $nfcst ] 
-do
+while [ $ifcst -le $nfcst ]; do
 echo $ifcst
   if [ $ifcst -le 99 ]; then 
      if [ $ifcst -le 9 ]; then
@@ -59,12 +58,14 @@ echo $ifcst
  fi
  echo $ifcst_str
 #
-if [ $file_fmt == "grib2" ] || [ $file_fmt == "GRIB2" ]; then
-  wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.pgrb2.0p25.f${ifcst_str}
-else
-  wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.atmf${ifcst_str}.nemsio
-  wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.sfcf${ifcst_str}.nemsio
-fi
+  if [ $file_fmt == "grib2" ] || [ $file_fmt == "GRIB2" ]; then
+    wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.pgrb2.0p25.f${ifcst_str}
+  else
+    wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.atmf${ifcst_str}.nemsio
+    wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.sfcf${ifcst_str}.nemsio
+  fi
 #
-ifcst=$[$ifcst+$nfcst_int]
+  ifcst=$[$ifcst+$nfcst_int]
+#
 done
+

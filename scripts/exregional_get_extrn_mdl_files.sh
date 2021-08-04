@@ -238,9 +238,36 @@ echo "  fns_in_arcv = ( ${fns_in_arcv[@]} )"
 
   elif [ "${data_src}" = "nomads" ]; then
 echo
-echo "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+echo "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
 
-    get_extrn_mdl_files_from_nomads
+    set_extrn_mdl_filenames \
+      ics_or_lbcs="${ics_or_lbcs}" \
+      extrn_mdl_name="${extrn_mdl_name}" \
+      cdate="$cdate" \
+      outvarname_fns_in_arcv="fns_in_arcv"
+
+echo
+echo "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+
+    fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}" )")"
+    set_extrn_mdl_arcv_file_dir_names \
+      ics_or_lbcs="${ics_or_lbcs}" \
+      extrn_mdl_name="${extrn_mdl_name}" \
+      cdate="$cdate" \
+      outvarname_arcvrel_dir="arcvrel_dir"
+#      outvarname_arcv_fmt="arcv_fmt" \
+#      outvarname_arcv_fns="arcv_fns" \
+#      outvarname_arcv_fps="arcv_fps" \
+
+    get_extrn_mdl_files_from_nomads \
+      extrn_mdl_name="${extrn_mdl_name}" \
+      cdate="$cdate" \
+      staging_dir="${staging_dir}" \
+      arcvrel_dir="${arcvrel_dir}" \
+      fns_in_arcv="${fns_in_arcv_str}"
+#      arcv_fmt="${arcv_fmt}" \
+#      arcv_fns="${arcv_fns}" \
+#      arcv_fps="${arcv_fps}" \
 
   fi
 #
