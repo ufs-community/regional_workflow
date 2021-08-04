@@ -2042,6 +2042,7 @@ elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
     lat_ctr="${ESGgrid_LAT_CTR}" \
     nx="${ESGgrid_NX}" \
     ny="${ESGgrid_NY}" \
+    pazi="${ESGgrid_PAZI}" \
     halo_width="${ESGgrid_WIDE_HALO_WIDTH}" \
     delx="${ESGgrid_DELX}" \
     dely="${ESGgrid_DELY}" \
