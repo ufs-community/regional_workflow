@@ -86,6 +86,7 @@ not exist or is not a directory:
   sysbasedir = \"$sysbasedir\"
 Returning with a nonzero return code.
 "
+    return 1
   fi
 #
 #-----------------------------------------------------------------------
@@ -173,6 +174,7 @@ machine (MACHINE) and external model (extrn_mdl_name) combination:
   source_subdir = \"${source_subdir}\"
 Returning with a nonzero return code.
 "
+    return 1
   fi
 
   source_dir="${sysbasedir}/${source_subdir}"

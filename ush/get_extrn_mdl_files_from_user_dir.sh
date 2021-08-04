@@ -74,14 +74,17 @@ function get_extrn_mdl_files_from_user_dir() {
   fi
 
   if [ ! -d "${source_dir}" ]; then
-    print_err_msg_exit "\
+    print_info_msg "
 The user-specified directory containing the user-staged external model 
 files (source_dir) does not exist:
   source_dir = \"${source_dir}\"
 Please ensure that the directory specified by source_dir exists and that 
 all the files specified in the array aaafns_on_disk exist within it:
   source_dir = \"${source_dir}\"
-  aaafns_on_disk = ( $( printf "\"%s\" " "${aaafns_on_disk[@]}" ))"
+  aaafns_on_disk = ( $( printf "\"%s\" " "${aaafns_on_disk[@]}" ))
+Returning with a nonzero return code.
+"
+    return 1
   fi
 
   prefix="${source_dir}/"

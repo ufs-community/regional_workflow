@@ -152,12 +152,17 @@ they will be copied (staging_dir) are:
 # file.
 #
       htar_log_fn="log.htar_tvf.${narcv_formatted}"
-      htar -tvf ${arcv_fp} ${fps_in_arcv[@]} >& ${htar_log_fn} || \
-      print_err_msg_exit "\
+      htar -tvf ${arcv_fp} ${fps_in_arcv[@]} >& ${htar_log_fn} || { \
+        print_info_msg "
 htar file list operation (\"htar -tvf ...\") failed.  Check the log file
 htar_log_fn in the staging directory (staging_di) for details:
   staging_dir = \"${staging_dir}\"
-  htar_log_fn = \"${htar_log_fn}\""
+  htar_log_fn = \"${htar_log_fn}\"
+Returning with a nonzero return code.
+";
+        return 1;
+      }
+
 
       i=0
       files_in_crnt_arcv=()
@@ -176,13 +181,15 @@ htar_log_fn in the staging directory (staging_di) for details:
       num_files_in_crnt_arcv=${#files_in_crnt_arcv[@]}
       if [ ${num_files_in_crnt_arcv} -eq 0 ]; then
         fps_in_arcv_str="( "$( printf "\"%s\" " "${fps_in_arcv[@]}" )")"
-        print_err_msg_exit "\
+        print_info_msg "
 The current archive file (arcv_fp) does not contain any of the external
 model files listed in fps_in_arcv:
   arcv_fp = \"${arcv_fp}\"
   fps_in_arcv = ${fps_in_arcv_str}
 The archive file should contain at least one external model file; otherwise,
-it would not be needed."
+it would not be needed.  Returning with a nonzero return code.
+"
+        return 1
       fi
 #
 # Extract from the current tar archive file on HPSS all the external model
@@ -190,12 +197,16 @@ it would not be needed."
 # "htar -xvf" command in a log file for debugging (if necessary).
 #
       htar_log_fn="log.htar_xvf.${narcv_formatted}"
-      htar -xvf ${arcv_fp} ${files_in_crnt_arcv[@]} >& ${htar_log_fn} || \
-      print_err_msg_exit "\
+      htar -xvf ${arcv_fp} ${files_in_crnt_arcv[@]} >& ${htar_log_fn} || { \
+        print_info_msg "
 htar file extract operation (\"htar -xvf ...\") failed.  Check the log
 file htar_log_fn in the staging directory (staging_dir) for details:
   staging_dir = \"${staging_dir}\"
-  htar_log_fn = \"${htar_log_fn}\""
+  htar_log_fn = \"${htar_log_fn}\"
+Returning with a nonzero return code.
+";
+        return 1;
+      }
 #
 # Note that the htar file extract operation above may return with a 0
 # exit code (success) even if one or more (or all) external model files
@@ -215,15 +226,19 @@ file htar_log_fn in the staging directory (staging_dir) for details:
 #
         fp=${fp#/}
 
-        grep -n "$fp" "${htar_log_fn}" > /dev/null 2>&1 || \
-        print_err_msg_exit "\
+        grep -n "$fp" "${htar_log_fn}" > /dev/null 2>&1 || { \
+          print_info_msg "
 External model file fp not extracted from tar archive file arcv_fp:
   arcv_fp = \"${arcv_fp}\"
   fp = \"$fp\"
 Check the log file htar_log_fn in the staging directory (staging_dir)
 for details:
   staging_dir = \"${staging_dir}\"
-  htar_log_fn = \"${htar_log_fn}\""
+  htar_log_fn = \"${htar_log_fn}\"
+Returning with a nonzero return code.
+";
+          return 1;
+        }
 
       done
 
@@ -259,14 +274,19 @@ for details:
       done
 
       if [ ${num_occurs} -eq 0 ]; then
-        print_err_msg_exit "\
+
+        print_info_msg "
 The current external model file (fp) does not appear in any of the archive
 extraction log files:
   fp = \"$fp\"
 Thus, it was not extracted, likely because it doesn't exist in any of the
-archive files."
+archive files.  Returning with a nonzero return code.
+"
+        return 1
+
       elif [ ${num_occurs} -gt 1 ]; then
-        print_err_msg_exit "\
+
+        print_info_msg "
 The current external model file (fp) appears more than once in the archive
 extraction log files:
   fp = \"$fp\"
@@ -274,7 +294,10 @@ The number of times it occurs in the log files is:
   num_occurs = ${num_occurs}
 Thus, it was extracted from more than one archive file, with the last one
 that was extracted overwriting all previous ones.  This should normally
-not happen."
+not happen.  Returning with a nonzero return code.
+"
+        return 1
+
       fi
 
     done
@@ -320,13 +343,16 @@ not happen."
 #
       else
 
-        print_err_msg_exit "\
+        print_info_msg "
 The archive-relative directory specified by arcvrel_dir [i.e. the directory
 \"within\" the tar file(s) listed in arcv_fps] is not the current directory
 (i.e. it is not \".\"), and it does not start with a \"/\" or a \"./\":
   arcvrel_dir = \"${arcvrel_dir}\"
   arcv_fps = ${arcv_fps_str}
-This script must be modified to account for this case."
+This script must be modified to account for this case.  Returning with a 
+nonzero return code.
+"
+        return 1
 
       fi
 
@@ -353,7 +379,7 @@ This script must be modified to account for this case."
 #-----------------------------------------------------------------------
 #
     if [ "${num_arcv_files}" -gt 1 ]; then
-      print_err_msg_exit "\
+      print_info_msg "
 Currently, this function is coded to handle only one archive file if the
 archive file format is specified to be \"zip\", but the number of archive
 files (num_arcv_files) passed to this function is greater than 1:
@@ -362,7 +388,10 @@ files (num_arcv_files) passed to this function is greater than 1:
 Please modify the function to handle more than one \"zip\" archive file.
 Note that code already exists in this function that can handle multiple
 archive files if the archive file format is specified to be \"tar\", so
-that can be used as a guide for the \"zip\" case."
+that can be used as a guide for the \"zip\" case.  Returning with a 
+nonzero return code.
+"
+      return 1
     else
       arcv_fn="${arcv_fns[0]}"
       arcv_fp="${arcv_fps[0]}"
@@ -375,12 +404,16 @@ that can be used as a guide for the \"zip\" case."
 #-----------------------------------------------------------------------
 #
     hsi_log_fn="log.hsi_get"
-    hsi get "${arcv_fp}" >& ${hsi_log_fn} || \
-    print_err_msg_exit "\
+    hsi get "${arcv_fp}" >& ${hsi_log_fn} || { \
+      print_info_msg "
 hsi file get operation (\"hsi get ...\") failed.  Check the log file
 hsi_log_fn in the staging directory (staging_dir) for details:
   staging_dir = \"${staging_dir}\"
-  hsi_log_fn = \"${hsi_log_fn}\""
+  hsi_log_fn = \"${hsi_log_fn}\"
+Returning with a nonzero return code.
+";
+      return 1;
+    }
 #
 #-----------------------------------------------------------------------
 #
@@ -390,14 +423,18 @@ hsi_log_fn in the staging directory (staging_dir) for details:
 #-----------------------------------------------------------------------
 #
     unzip_log_fn="log.unzip_lv"
-    unzip -l -v ${arcv_fn} >& ${unzip_log_fn} || \
-    print_err_msg_exit "\
+    unzip -l -v ${arcv_fn} >& ${unzip_log_fn} || { \
+      print_info_msg "
 unzip operation to list the contents of the zip archive file arcv_fn in
 the staging directory (staging_dir) failed.  Check the log file
 unzip_log_fn in that directory for details:
   arcv_fn = \"${arcv_fn}\"
   staging_dir = \"${staging_dir}\"
-  unzip_log_fn = \"${unzip_log_fn}\""
+  unzip_log_fn = \"${unzip_log_fn}\"
+Returning with a nonzero return code.
+";
+      return 1;
+    }
 #
 #-----------------------------------------------------------------------
 #
@@ -411,15 +448,19 @@ unzip_log_fn in that directory for details:
 #-----------------------------------------------------------------------
 #
     for fp in "${fps_in_arcv[@]}"; do
-      grep -n "$fp" "${unzip_log_fn}" > /dev/null 2>&1 || \
-      print_err_msg_exit "\
+      grep -n "$fp" "${unzip_log_fn}" > /dev/null 2>&1 || { \
+        print_info_msg "
 External model file fp does not exist in the zip archive file arcv_fn in
 the staging directory (staging_dir).  Check the log file unzip_log_fn in
 that directory for the contents of the zip archive:
   staging_dir = \"${staging_dir}\"
   arcv_fn = \"${arcv_fn}\"
   fp = \"$fp\"
-  unzip_log_fn = \"${unzip_log_fn}\""
+  unzip_log_fn = \"${unzip_log_fn}\"
+Returning with a nonzero return code.
+";
+        return 1;
+      }
     done
 #
 #-----------------------------------------------------------------------
@@ -432,12 +473,16 @@ that directory for the contents of the zip archive:
 #-----------------------------------------------------------------------
 #
     unzip_log_fn="log.unzip"
-    unzip -o "${arcv_fn}" ${fps_in_arcv[@]} >& ${unzip_log_fn} || \
-    print_err_msg_exit "\
+    unzip -o "${arcv_fn}" ${fps_in_arcv[@]} >& ${unzip_log_fn} || { \
+      print_info_msg "
 unzip file extract operation (\"unzip -o ...\") failed.  Check the log
 file unzip_log_fn in the staging directory (staging_dir) for details:
   staging_dir = \"${staging_dir}\"
-  unzip_log_fn = \"${unzip_log_fn}\""
+  unzip_log_fn = \"${unzip_log_fn}\"
+Returning with a nonzero return code.
+";
+      return 1;
+    }
 #
 # NOTE:
 # If arcvrel_dir is not empty, the unzip command above will create a
