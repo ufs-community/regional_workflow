@@ -20,6 +20,14 @@
 . $USHDIR/create_model_configure_file.sh
 . $USHDIR/create_diag_table_file.sh
 #
+##### RRFS-CMAQ ########## start #####
+#
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+  . $USHDIR/create_nems_configure_file.sh
+fi
+#
+##### RRFS-CMAQ ########## end   #####
+#
 #-----------------------------------------------------------------------
 #
 # Save current shell options (in a global array).  Then set new options
@@ -441,13 +449,16 @@ create_symlink_to_file target="${FIELD_TABLE_FP}" \
                        symlink="${run_dir}/${FIELD_TABLE_FN}" \
                        relative="${relative_link_flag}"
 
+#
+##### RRFS-CMAQ ########## start #####
+#
+if [ "${FCST_MODEL}" = "ufs-weather-model" ]; then
+#
+##### RRFS-CMAQ ########## end   #####
+#
 create_symlink_to_file target="${NEMS_CONFIG_FP}" \
                        symlink="${run_dir}/${NEMS_CONFIG_FN}" \
                        relative="${relative_link_flag}"
-
-##### RRFS-CMAQ ########## start #####
-if [ ${FCST_MODEL} = "ufs-weather-model" ]; then
-##### RRFS-CMAQ ########## end   #####
 
 create_symlink_to_file target="${FIELD_DICT_FP}" \
                        symlink="${run_dir}/${FIELD_DICT_FN}" \
@@ -569,6 +580,27 @@ create_diag_table_file \
 Call to function to create a diag table file for the current cycle's 
 (cdate) run directory (run_dir) failed:
   run_dir = \"${run_dir}\""
+#
+##### RRFS-CMAQ ########## start #####
+#
+#-----------------------------------------------------------------------
+#
+# Call the function that creates the NEMS configuration file within each
+# cycle directory for RRFS-CMAQ.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+create_nems_configure_file \
+  run_dir="${run_dir}" \
+  dt_atmos="${DT_ATMOS}" || print_err_msg_exit "\
+Call to function to create a NEMS configuration file for the current
+cycle's (cdate) run directory (run_dir) failed:
+  cdate = \"${cdate}\"
+  run_dir = \"${run_dir}\""
+fi
+#
+##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #

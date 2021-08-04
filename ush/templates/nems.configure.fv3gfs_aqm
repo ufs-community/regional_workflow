@@ -25,7 +25,7 @@ AQM_attributes::
 
 # Run Sequence #
 runSeq::
-  @300
+  @{{ dt_atmos }}
     ATM phase1
     ATM -> AQM
     AQM

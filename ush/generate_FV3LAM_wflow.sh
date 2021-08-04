@@ -576,10 +576,23 @@ print_info_msg "$VERBOSE" "
   Copying the template field table file to the experiment directory..."
 cp_vrfy "${FIELD_TABLE_TMPL_FP}" "${FIELD_TABLE_FP}"
 
+#
+##### RRFS-CMAQ ########## start #####
+#
+if [ "${FCST_MODEL}" = "ufs-weather-model" ]; then
+#
+##### RRFS-CMAQ ########## end   #####
+#
 print_info_msg "$VERBOSE" "
   Copying the template NEMS configuration file to the experiment direct-
   ory..."
 cp_vrfy "${NEMS_CONFIG_TMPL_FP}" "${NEMS_CONFIG_FP}"
+#
+##### RRFS-CMAQ ########## start #####
+#
+fi
+#
+##### RRFS-CMAQ ########## end   #####
 #
 # Copy the CCPP physics suite definition file from its location in the
 # clone of the FV3 code repository to the experiment directory (EXPT-
