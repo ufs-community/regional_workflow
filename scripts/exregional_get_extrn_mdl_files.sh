@@ -83,7 +83,7 @@ process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
 #
-print_input_args valid_args
+print_input_args "valid_args"
 #
 #-----------------------------------------------------------------------
 #
@@ -136,7 +136,7 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-#
+# Set the name of the external model.
 #
 #-----------------------------------------------------------------------
 #
@@ -148,48 +148,40 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-#
+# Loop through the specified external model data sources until we are 
+# able to get the external model files from one.
 #
 #-----------------------------------------------------------------------
 #
 num_data_sources="${#data_sources[@]}"
 for (( i=0; i<${num_data_sources}; i++ )); do
-echo
-echo "===>>>  i = $i"
 
   data_src="${data_sources[i]}"
-echo "data_src = \"${data_src}\""
 
   print_info_msg "
 Attempting to obtain external model data from current data source (data_src):
   data_src = \"${data_src}\"
 ..."
-
+#
+# Data source is a user-specified directory.
+#
   if [ "${data_src}" = "user_dir" ]; then
-echo
-echo "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
     get_extrn_mdl_files_from_user_dir \
       ics_or_lbcs="${ics_or_lbcs}" \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
       outvarname_fns_on_disk="fns_on_disk"
-echo
-echo "  fns_on_disk = \"${fns_on_disk[@]}\""
-
+#
+# Data source is a system directory.
+#
   elif [ "${data_src}" = "sys_dir" ]; then
-echo
-echo "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 
     set_extrn_mdl_filenames \
       ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
       outvarname_fns_on_disk="fns_on_disk"
-
-echo
-echo "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
-echo "  fns_on_disk = ( ${fns_on_disk[@]} )"
 
     fns_on_disk_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}" )")"
     get_extrn_mdl_files_from_sys_dir \
@@ -198,19 +190,16 @@ echo "  fns_on_disk = ( ${fns_on_disk[@]} )"
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
       fns_on_disk="${fns_on_disk_str}"
-
+#
+# Data source is NOAA HPSS.
+#
   elif [ "${data_src}" = "noaa_hpss" ]; then
-echo
-echo "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
 
     set_extrn_mdl_filenames \
       ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
       outvarname_fns_in_arcv="fns_in_arcv"
-
-echo
-echo "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 
     set_extrn_mdl_arcv_file_dir_names \
       ics_or_lbcs="${ics_or_lbcs}" \
@@ -221,10 +210,6 @@ echo "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
       outvarname_arcv_fps="arcv_fps" \
       outvarname_arcvrel_dir="arcvrel_dir"
 
-echo
-echo "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"
-echo "  fns_in_arcv = ( ${fns_in_arcv[@]} )"
-
     fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}" )")"
     get_extrn_mdl_files_from_noaa_hpss \
       cdate="$cdate" \
@@ -234,10 +219,10 @@ echo "  fns_in_arcv = ( ${fns_in_arcv[@]} )"
       arcv_fps="${arcv_fps}" \
       arcvrel_dir="${arcvrel_dir}" \
       fns_in_arcv="${fns_in_arcv_str}"
-
+#
+# Data source is NOMADS.
+#
   elif [ "${data_src}" = "nomads" ]; then
-echo
-echo "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
 
     set_extrn_mdl_filenames \
       ics_or_lbcs="${ics_or_lbcs}" \
@@ -245,28 +230,20 @@ echo "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
       cdate="$cdate" \
       outvarname_fns_in_arcv="fns_in_arcv"
 
-echo
-echo "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
-
-    fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}" )")"
     set_extrn_mdl_arcv_file_dir_names \
       ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
       outvarname_arcvrel_dir="arcvrel_dir"
-#      outvarname_arcv_fmt="arcv_fmt" \
-#      outvarname_arcv_fns="arcv_fns" \
-#      outvarname_arcv_fps="arcv_fps" \
 
+    fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}" )")"
     get_extrn_mdl_files_from_nomads \
       extrn_mdl_name="${extrn_mdl_name}" \
+      ics_or_lbcs="${ics_or_lbcs}" \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
       arcvrel_dir="${arcvrel_dir}" \
       fns_in_arcv="${fns_in_arcv_str}"
-#      arcv_fmt="${arcv_fmt}" \
-#      arcv_fns="${arcv_fns}" \
-#      arcv_fps="${arcv_fps}" \
 
   fi
 #
@@ -388,7 +365,6 @@ done
 #
 #-----------------------------------------------------------------------
 #
-echo "0000000000000000000000000"
 if [ "${ics_or_lbcs}" = "ICS" ]; then
   var_defns_fn="${EXTRN_MDL_ICS_VAR_DEFNS_FN}"
 elif [ "${ics_or_lbcs}" = "LBCS" ]; then
@@ -397,7 +373,6 @@ fi
 var_defns_fp="${staging_dir}/${var_defns_fn}"
 check_for_preexist_dir_file "${var_defns_fp}" "delete"
 
-echo "111111111111111111111111111"
 if [ "${data_src}" = "user_dir" ] || \
    [ "${data_src}" = "sys_dir" ]; then
   fns_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}" )")"
@@ -407,7 +382,6 @@ elif [ "${data_src}" = "nomads" ]; then
   fns_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}" )")"
 fi
 
-echo "222222222222222222222222222"
 settings="\
 DATA_SRC=\"${data_src}\"
 EXTRN_MDL_CDATE=\"${cdate}\"
@@ -419,15 +393,12 @@ EXTRN_MDL_FNS=${fns_str}"
 # file the array variable EXTRN_MDL_LBC_SPEC_FHRS containing the forecast
 # hours at which the lateral boundary conditions are specified.
 #
-echo "33333333333333333333333333333"
 if [ "${ics_or_lbcs}" = "LBCS" ]; then
   extrn_mdl_lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${lbc_spec_fhrs[@]}" )")"
   settings="$settings
 EXTRN_MDL_LBC_SPEC_FHRS=${extrn_mdl_lbc_spec_fhrs_str}"
 fi
 
-echo "444444444444444444444444444444"
-echo "var_defns_fp = \"${var_defns_fp}\""
 { cat << EOM >> ${var_defns_fp}
 $settings
 EOM
