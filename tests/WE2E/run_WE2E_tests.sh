@@ -848,8 +848,6 @@ envir=\"\${EXPT_SUBDIR}\""
       FIXLAM_NCO_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"
     elif [ "$MACHINE" = "JET" ]; then
       FIXLAM_NCO_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
-    elif [ "$MACHINE" = "CHEYENNE" ]; then
-      FIXLAM_NCO_BASEDIR="/needs/to/be/specified"
     else
       print_err_msg_exit "\
 The base directory (FIXLAM_NCO_BASEDIR) in which the pregenerated grid, 
@@ -1028,6 +1026,10 @@ EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
       if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
         extrn_mdl_sysbasedir_ics="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
       fi
+    elif [ "$MACHINE" = "CHEYENNE" ]; then
+      if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
+        extrn_mdl_sysbasedir_ics="/glade/p/ral/jntp/UFS_SRW_app/dummy_FV3GFS_sys_dir"
+      fi
     fi
 #
 # If extrn_mdl_sysbasedir_ics was set above to a non-empty string, then
@@ -1049,6 +1051,10 @@ EXTRN_MDL_SYSBASEDIR_ICS=\"${extrn_mdl_sysbasedir_ics}\""
     if [ "$MACHINE" = "HERA" ]; then
       if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
         extrn_mdl_sysbasedir_lbcs="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
+      fi
+    elif [ "$MACHINE" = "CHEYENNE" ]; then
+      if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
+        extrn_mdl_sysbasedir_lbcs="/glade/p/ral/jntp/UFS_SRW_app/dummy_FV3GFS_sys_dir"
       fi
     fi
 #
