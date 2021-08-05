@@ -6,21 +6,20 @@
 # refer to these pairs as argument-value pairs (or "arg-val" pairs for
 # short) because the variable names in these pairs represent the names
 # of arguments to the script or function that calls this function (which
-# we refer to here as the "caller").  The first argument to this func-
-# tion being the name of an array that contains a list of valid argument
-# names that the caller is allowed to accept.  Each arg-val pair must 
-# have the form
+# we refer to here as the "caller").  The first argument to this function 
+# being the name of an array that contains a list of valid argument names 
+# that the caller is allowed to accept.  Each arg-val pair must have the 
+# form
 #
 #   ARG_NAME=VAR_VALUE
 #
 # where ARG_NAME is the name of an argument and VAR_VALUE is the value 
 # to set that argument to.  For each arg-val pair, this function creates
-# a global variable named ARG_NAME and assigns to it the value VAR_VAL-
-# UE.
+# a global variable named ARG_NAME and assigns to it the value VAR_VALUE.
 #
-# The purpose of this function is to provide a mechanism by which a pa-
-# rent script, say parent.sh, can pass variable values to a child script
-# or function, say child.sh, that makes it very clear which arguments of
+# The purpose of this function is to provide a mechanism by which a parent 
+# script, say parent.sh, can pass variable values to a child script or 
+# function, say child.sh, that makes it very clear which arguments of
 # child.sh are being set and to what values.  For example, parent.sh can
 # call child.sh as follows:
 #
@@ -28,8 +27,8 @@
 #   child.sh arg3="Hello" arg2="bye" arg4=("this" "is" "an" "array")
 #   ...
 #
-# Then child.sh can use this function (process_args) as follows to pro-
-# cess the arg-val pairs passed to it:
+# Then child.sh can use this function (process_args) as follows to process 
+# the arg-val pairs passed to it:
 #
 #   ...
 #   valid_args=( "arg1" "arg2" "arg3" "arg4" )
@@ -41,8 +40,8 @@
 # allowed to accept as arguments.  Its name is passed to process_args as
 # the first argument.  The "$@" appearing in the call to process_args 
 # passes to process_args the list of arg-val pairs that parent.sh passes
-# to child.sh as the second through N-th arguments.  In the example 
-# above, "$@" represents:
+# to child.sh as the second through N-th arguments.  In the example above, 
+# "$@" represents:
 #
 #   arg3="Hello" arg2="bye" arg4=("this" "is" "an" "array")
 #
@@ -56,11 +55,11 @@
 #
 # Note that:
 #
-# 1) The set of arg-val pairs may list only a subset of the list of arg-
-#    uments declared in valid_args; the unlisted arguments will be set
-#    to the null string.  In the example above, arg1 is set to the null
-#    string because it is not specified in any of the arg-val pairs in
-#    the call to child.sh in parent.sh. 
+# 1) The set of arg-val pairs may list only a subset of the list of
+#    arguments declared in valid_args; the unlisted arguments will be 
+#    set to the null string.  In the example above, arg1 is set to the 
+#    null string because it is not specified in any of the arg-val pairs
+#    in the call to child.sh in parent.sh. 
 #
 # 2) The arg-val pairs in the call to child.sh do not have to be in the
 #    same order as the list of "declared" arguments in child.sh.  For 
@@ -110,6 +109,16 @@ function process_args() {
 #-----------------------------------------------------------------------
 #
   local func_name="${FUNCNAME[0]}"
+#
+#-----------------------------------------------------------------------
+#
+# Get information about the script or function that calls this function.
+#
+#-----------------------------------------------------------------------
+#
+  local caller_fp=$( readlink -f "${BASH_SOURCE[1]}" )
+  local caller_fn=$( basename "${caller_fp}" )
+  local caller_dir=$( dirname "${caller_fp}" )
 #
 #-----------------------------------------------------------------------
 #
@@ -234,9 +243,12 @@ where the arguments are defined as follows:
 #
   if [ "${num_arg_val_pairs}" -gt "${num_valid_args}" ]; then
     print_err_msg_exit "\
-The number of argument-value pairs specified on the command line 
-(num_arg_val_pairs) must be less than or equal to the number of valid 
-arguments (num_valid_args) specified in the array valid_arg_names:
+In the call to the script or function specified by caller_fn (full path 
+given by caller_fp), the number of argument-value pairs (num_arg_val_pairs) 
+must be less than or equal to the number of valid arguments (num_valid_args) 
+specified in the array valid_arg_names:
+  caller_fn = \"${caller_fn}\"
+  caller_fp = \"${caller_fp}\"
   num_arg_val_pairs = ${num_arg_val_pairs}
   num_valid_args = ${num_valid_args}
   valid_arg_names = ( ${valid_arg_names_str})"
@@ -273,17 +285,23 @@ arguments (num_valid_args) specified in the array valid_arg_names:
 
     if [ "${valid_arg_name_no_spaces}" != "${valid_arg_name}" ]; then
       print_err_msg_exit "\
-The name of an argument in the list of valid arguments (valid_arg_names)
-cannot contain any spaces, but the element with index i=${i} contains at
-least one space:
+In the call to the script or function specified by caller_fn (full path 
+given by caller_fp), the name of an argument in the list of valid arguments 
+(valid_arg_names) cannot contain any spaces, but the element with index 
+i=${i} contains at least one space:
+  caller_fn = \"${caller_fn}\"
+  caller_fp = \"${caller_fp}\"
   valid_arg_names = ( ${valid_arg_names_str})
   valid_arg_names[$i] = \"${valid_arg_names[$i]}\""
     fi
 
     if [ -z ${valid_arg_name} ]; then
       print_err_msg_exit "\
-The list of valid arguments (valid_arg_names) cannot contain empty elements, 
-but the element with index i=${i} is empty:
+In the call to the script or function specified by caller_fn (full path 
+given by caller_fp), the list of valid arguments (valid_arg_names) cannot 
+contain empty elements, but the element with index i=${i} is empty:
+  caller_fn = \"${caller_fn}\"
+  caller_fp = \"${caller_fp}\"
   valid_arg_names = ( ${valid_arg_names_str})
   valid_arg_names[$i] = \"${valid_arg_names[$i]}\""
     fi
@@ -336,10 +354,14 @@ but the element with index i=${i} is empty:
 #-----------------------------------------------------------------------
 #
     err_msg="\
-The specified argument name (arg_name) in the current argument-value pair
-(arg_val_pair) is not valid:
+In the call to the script or function specified by caller_fn (full path 
+given by caller_fp), the argument name (arg_name) in the current argument-
+value pair (arg_val_pair) is not valid:
+  caller_fn = \"${caller_fn}\"
+  caller_fp = \"${caller_fp}\"
   arg_val_pair = \"${arg_val_pair}\"
   arg_name = \"${arg_name}\""
+
     check_var_valid_value "arg_name" "valid_arg_names" "${err_msg}"
 #
 #-----------------------------------------------------------------------
