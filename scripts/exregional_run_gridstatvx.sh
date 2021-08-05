@@ -100,6 +100,7 @@ export fhr_list
 #
 if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
   INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
+  OUTPUT_BASE=${EXPTDIR}/${CDATE}
   if [ ${VAR} == "APCP" ]; then
     LOG_SUFFIX=gridstat_${CDATE}_${VAR}_${ACCUM}h
   elif [ ${VAR} == "REFC" || ${VAR} == "RETOP" ]; then
