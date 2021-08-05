@@ -37,26 +37,27 @@ cd gfs.$yyyymmdd/$hh
 
 #getting online analysis data
 if [ $file_fmt == "grib2" ] || [ $file_fmt == "GRIB2" ]; then
-   wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.pgrb2.0p25.f000
+  wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.pgrb2.0p25.f000
 else
-   wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.atmanl.nemsio
-   wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.sfcanl.nemsio
+  wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.atmanl.nemsio
+  wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.sfcanl.nemsio
 fi
 
 #getting online forecast data
 ifcst=$nfcst_int
 while [ $ifcst -le $nfcst ]; do
 echo $ifcst
+
   if [ $ifcst -le 99 ]; then 
-     if [ $ifcst -le 9 ]; then
-        ifcst_str="00"$ifcst
-     else
-        ifcst_str="0"$ifcst
-     fi
+    if [ $ifcst -le 9 ]; then
+      ifcst_str="00"$ifcst
+    else
+      ifcst_str="0"$ifcst
+    fi
   else
-        ifcst_str="$ifcst"
- fi
- echo $ifcst_str
+    ifcst_str="$ifcst"
+  fi
+  echo $ifcst_str
 #
   if [ $file_fmt == "grib2" ] || [ $file_fmt == "GRIB2" ]; then
     wget -c https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.$yyyymmdd/$hh/gfs.t${hh}z.pgrb2.0p25.f${ifcst_str}
