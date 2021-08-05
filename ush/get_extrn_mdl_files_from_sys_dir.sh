@@ -107,13 +107,20 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
+  if [ "${extrn_mdl_name}" = "FV3GFS" ]; then
+    slash_atmos_or_null=""
+    if [ "${cdate}" -ge "2021032100" ]; then
+      slash_atmos_or_null="/atmos"
+    fi
+  fi
+
   source_subdir=""
   case "$MACHINE" in
 
   "WCOSS_CRAY")
     case "${extrn_mdl_name}" in
     "FV3GFS")
-      source_subdir="gfs.${yyyymmdd}/${hh}/atmos"
+      source_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
       ;;
     esac
     ;;
@@ -121,7 +128,7 @@ Returning with a nonzero return code.
   "WCOSS_DELL_P3")
     case "${extrn_mdl_name}" in
     "FV3GFS")
-      source_subdir="gfs.${yyyymmdd}/${hh}/atmos"
+      source_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
       ;;
     esac
     ;;
@@ -129,7 +136,7 @@ Returning with a nonzero return code.
   "HERA")
     case "${extrn_mdl_name}" in
     "FV3GFS")
-      source_subdir="gfs.${yyyymmdd}/${hh}/atmos"
+      source_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
       ;;
     esac
     ;;
@@ -156,7 +163,7 @@ Returning with a nonzero return code.
   "CHEYENNE")
     case "${extrn_mdl_name}" in
     "FV3GFS")
-      source_subdir="gfs.${yyyymmdd}/${hh}"
+      source_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
       ;;
     esac
     ;;
