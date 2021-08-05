@@ -110,7 +110,11 @@ Returning with a nonzero return code.
 
     file_url="${file_urls[$i]}"
 
-    wget -c "${file_url}" --directory-prefix "${staging_dir}" || \
+    wget_log_fn="log.wget"                                             
+    wget --continue \
+         --directory-prefix="${staging_dir}" \
+         --output-file="${staging_dir}/${wget_log_fn}" \
+         "${file_url}" \ || \
       print_info_msg "
 Fetching of file (file_url) from NOMADS failed:
   file_url = \"${file_url}\"
