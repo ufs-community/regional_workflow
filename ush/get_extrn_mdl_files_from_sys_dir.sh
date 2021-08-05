@@ -1,7 +1,11 @@
 #
 #-----------------------------------------------------------------------
 #
-# This file defines a function that
+# This file defines a function that either (1) creates symlinks in the 
+# current cycle's external model file staging directory (staging_dir) to 
+# the specified set of external model files (fns) in a system directory 
+# (sys_dir) (if running in NCO mode) or (2) copies the external model 
+# files to the staging directory (if running in community mode).
 #
 #-----------------------------------------------------------------------
 #
@@ -29,7 +33,7 @@ function get_extrn_mdl_files_from_sys_dir() {
     "cdate" \
     "extrn_mdl_name" \
     "staging_dir" \
-    "fns_on_disk" \
+    "fns" \
     )
   process_args valid_args "$@"
 #
@@ -41,7 +45,7 @@ function get_extrn_mdl_files_from_sys_dir() {
 #
 #-----------------------------------------------------------------------
 #
-  print_input_args valid_args
+  print_input_args "valid_args"
 #
 #-----------------------------------------------------------------------
 #
@@ -50,40 +54,38 @@ function get_extrn_mdl_files_from_sys_dir() {
 #-----------------------------------------------------------------------
 #
   local fn \
-        fns_on_disk_str \
+        fns_str \
         fp \
-        fps_on_disk \
+        fps \
         hh \
         i \
         min_age \
         num_files \
         prefix \
-        source_dir \
-        source_subdir \
-        sysbasedir \
+        sys_dir \
+        sys_subdir \
+        sys_basedir \
         yyyymmdd
 #
 #-----------------------------------------------------------------------
 #
-# Set the system directory (i.e. a directory on disk) in which the external
-# model output files for the specified cycle date (cdate) may be located.
-# Note that this will be used by the calling script only if the output
-# files for the specified cdate actually exist at this location.  Otherwise,
-# the files will be searched for on the mass store (HPSS).
+# Set the base system directory (sys_basedir) that contains the date-
+# dependent full system directory in which the external model files are 
+# located.
 #
 #-----------------------------------------------------------------------
 #
   if [ "${ics_or_lbcs}" = "ICS" ]; then
-    sysbasedir="${EXTRN_MDL_SYSBASEDIR_ICS}"
+    sys_basedir="${EXTRN_MDL_SYSBASEDIR_ICS}"
   elif [ "${ics_or_lbcs}" = "LBCS" ]; then
-    sysbasedir="${EXTRN_MDL_SYSBASEDIR_LBCS}"
+    sys_basedir="${EXTRN_MDL_SYSBASEDIR_LBCS}"
   fi
 
-  if [ ! -d "$sysbasedir" ]; then
+  if [ ! -d "${sys_basedir}" ]; then
     print_info_msg "
-The system base directory in which to look for external model files does
-not exist or is not a directory:
-  sysbasedir = \"$sysbasedir\"
+The system base directory (sys_basedir) in which to look for external 
+model files does not exist or is not a directory:
+  sys_basedir = \"${sys_basedir}\"
 Returning with a nonzero return code.
 "
     return 1
@@ -103,7 +105,9 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-#
+# Set the subdirectory (sys_subdir) under the system base directory 
+# (sys_basedir) in which the external model files are located.  Then set
+# the full system directory (sys_dir).
 #
 #-----------------------------------------------------------------------
 #
@@ -114,13 +118,13 @@ Returning with a nonzero return code.
     fi
   fi
 
-  source_subdir=""
+  sys_subdir=""
   case "$MACHINE" in
 
   "WCOSS_CRAY")
     case "${extrn_mdl_name}" in
     "FV3GFS")
-      source_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
+      sys_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
       ;;
     esac
     ;;
@@ -128,7 +132,7 @@ Returning with a nonzero return code.
   "WCOSS_DELL_P3")
     case "${extrn_mdl_name}" in
     "FV3GFS")
-      source_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
+      sys_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
       ;;
     esac
     ;;
@@ -136,7 +140,7 @@ Returning with a nonzero return code.
   "HERA")
     case "${extrn_mdl_name}" in
     "FV3GFS")
-      source_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
+      sys_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
       ;;
     esac
     ;;
@@ -144,10 +148,10 @@ Returning with a nonzero return code.
   "JET")
     case "${extrn_mdl_name}" in
     "RAP")
-      source_subdir="${yyyymmdd}${hh}/postprd"
+      sys_subdir="${yyyymmdd}${hh}/postprd"
       ;;
     "HRRR")
-      source_subdir="${yyyymmdd}${hh}/postprd"
+      sys_subdir="${yyyymmdd}${hh}/postprd"
       ;;
     esac
     ;;
@@ -155,7 +159,7 @@ Returning with a nonzero return code.
   "ODIN")
     case "${extrn_mdl_name}" in
     "FV3GFS")
-      source_subdir="${yyyymmdd}"
+      sys_subdir="${yyyymmdd}"
       ;;
     esac
     ;;
@@ -163,63 +167,63 @@ Returning with a nonzero return code.
   "CHEYENNE")
     case "${extrn_mdl_name}" in
     "FV3GFS")
-      source_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
+      sys_subdir="gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
       ;;
     esac
     ;;
 
   esac
 
-  if [ -z "${source_subdir}" ]; then
+  if [ -z "${sys_subdir}" ]; then
     print_info_msg "
-The subdirectroy (source_subdir) under the system base directory (sysbasedir) 
+The subdirectroy (sys_subdir) under the system base directory (sys_basedir) 
 in which to look for external model files has not been specified for this 
 machine (MACHINE) and external model (extrn_mdl_name) combination:
   MACHINE = \"$MACHINE\"
   extrn_mdl_name = \"${extrn_mdl_name}\"
-  sysbasedir = \"${sysbasedir}\"
-  source_subdir = \"${source_subdir}\"
+  sys_basedir = \"${sys_basedir}\"
+  sys_subdir = \"${sys_subdir}\"
 Returning with a nonzero return code.
 "
     return 1
   fi
 
-  source_dir="${sysbasedir}/${source_subdir}"
+  sys_dir="${sys_basedir}/${sys_subdir}"
 #
 #-----------------------------------------------------------------------
 #
-# Set the elements of fps_on_disk to the full paths of the 
-# external model files on disk.
+# Set the array fps to the full paths of the external model files in the 
+# system directory.
 #
 #-----------------------------------------------------------------------
 #
-  prefix="${source_dir}/"
-  fps_on_disk=( "${fns_on_disk[@]/#/$prefix}" )
+  prefix="${sys_dir}/"
+  fps=( "${fns[@]/#/$prefix}" )
 #
 #-----------------------------------------------------------------------
 #
 # Loop through the list of external model files and either create a 
-# symlink in the staging director to each (if running in NCO mode) or
-# copy each to the experiment's staging directory (in community mode).
+# symlink in the staging directory to each (if running in NCO mode) or
+# copy each to the current cycle's staging directory (if running in 
+# community mode).
 #
 #-----------------------------------------------------------------------
 #
-  fns_on_disk_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}" )")"
+  fns_str="( "$( printf "\"%s\" " "${fns[@]}" )")"
   if [ "${RUN_ENVIR}" = "nco" ]; then
     print_info_msg "
-Creating symlinks in the staging directory (staging_dir) to the external 
-model files on disk (fns_on_disk) in the source directory (source_dir):
-  source_dir = \"${source_dir}\"
-  fns_on_disk = ${fns_on_disk_str}
+Creating symlinks in the current cycle's staging directory (staging_dir) 
+to the external model files (fns) in the system directory (sys_dir):
+  sys_dir = \"${sys_dir}\"
+  fns = ${fns_str}
   staging_dir = \"${staging_dir}\"
 "
   else
     print_info_msg "
-Copying external model files on disk (fns_on_disk) from the
-source directory (source_dir) to the staging directory 
-(staging_dir):
-  source_dir = \"${source_dir}\"
-  fns_on_disk = ${fns_on_disk_str}
+Copying external model files on disk (fns) from the system directory 
+(sys_dir) to the current cycle's staging directory (staging_dir):
+  sys_dir = \"${sys_dir}\"
+  fns = ${fns_str}
   staging_dir = \"${staging_dir}\"
 "
   fi
@@ -230,11 +234,11 @@ source directory (source_dir) to the staging directory
 #
   min_age="5"
 
-  num_files="${#fps_on_disk[@]}"
+  num_files="${#fps[@]}"
   for (( i=0; i<${num_files}; i++ )); do
 
-    fn="${fns_on_disk[$i]}"
-    fp="${source_dir}/$fn"
+    fn="${fns[$i]}"
+    fp="${fps[$i]}"
 
     if [ ! -f "$fp" ]; then
       print_info_msg "
@@ -260,7 +264,7 @@ Returning with a nonzero return code.
       return 1
     fi
 #
-# Link to or copy the file.
+# Link to or copy the current file.
 #
     if [ "${RUN_ENVIR}" = "nco" ]; then
       create_symlink_to_file target="$fp" \
@@ -281,5 +285,3 @@ Returning with a nonzero return code.
   { restore_shell_opts; } > /dev/null 2>&1
 
 }
-
-

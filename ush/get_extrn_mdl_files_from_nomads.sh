@@ -2,7 +2,9 @@
 #-----------------------------------------------------------------------
 #
 # This file defines a function that fetches external model files from
-# NOMADS (NOAA Operational Model Archive and Distribution System).
+# NOMADS (NOAA Operational Model Archive and Distribution System) and
+# places them in the current cycle's external model file staging directory 
+# (staging_dir).
 #
 #-----------------------------------------------------------------------
 #
@@ -26,8 +28,8 @@ function get_extrn_mdl_files_from_nomads() {
 #-----------------------------------------------------------------------
 #
   local valid_args=( \
-    "extrn_mdl_name" \
     "ics_or_lbcs" \
+    "extrn_mdl_name" \
     "cdate" \
     "staging_dir" \
     "arcvrel_dir" \
@@ -164,4 +166,3 @@ Returning with a nonzero return code.
   { restore_shell_opts; } > /dev/null 2>&1
 
 }
-

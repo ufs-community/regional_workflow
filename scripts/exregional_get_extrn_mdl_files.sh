@@ -171,7 +171,7 @@ Attempting to obtain external model data from current data source (data_src):
       ics_or_lbcs="${ics_or_lbcs}" \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
-      outvarname_fns_on_disk="fns_on_disk"
+      outvarname_fns="fns"
 #
 # Data source is a system directory.
 #
@@ -181,15 +181,15 @@ Attempting to obtain external model data from current data source (data_src):
       ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
-      outvarname_fns_on_disk="fns_on_disk"
+      outvarname_fns_on_disk="fns"
 
-    fns_on_disk_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}" )")"
+    fns_str="( "$( printf "\"%s\" " "${fns[@]}" )")"
     get_extrn_mdl_files_from_sys_dir \
       ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
-      fns_on_disk="${fns_on_disk_str}"
+      fns="${fns_str}"
 #
 # Data source is NOAA HPSS.
 #
@@ -199,7 +199,7 @@ Attempting to obtain external model data from current data source (data_src):
       ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
-      outvarname_fns_in_arcv="fns_in_arcv"
+      outvarname_fns_in_arcv="fns"
 
     set_extrn_mdl_arcv_file_dir_names \
       ics_or_lbcs="${ics_or_lbcs}" \
@@ -210,7 +210,7 @@ Attempting to obtain external model data from current data source (data_src):
       outvarname_arcv_fps="arcv_fps" \
       outvarname_arcvrel_dir="arcvrel_dir"
 
-    fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}" )")"
+    fns_str="( "$( printf "\"%s\" " "${fns[@]}" )")"
     get_extrn_mdl_files_from_noaa_hpss \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
@@ -218,7 +218,7 @@ Attempting to obtain external model data from current data source (data_src):
       arcv_fns="${arcv_fns}" \
       arcv_fps="${arcv_fps}" \
       arcvrel_dir="${arcvrel_dir}" \
-      fns_in_arcv="${fns_in_arcv_str}"
+      fns="${fns_str}"
 #
 # Data source is NOMADS.
 #
@@ -228,7 +228,7 @@ Attempting to obtain external model data from current data source (data_src):
       ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
-      outvarname_fns_in_arcv="fns_in_arcv"
+      outvarname_fns_in_arcv="fns"
 
     set_extrn_mdl_arcv_file_dir_names \
       ics_or_lbcs="${ics_or_lbcs}" \
@@ -236,14 +236,14 @@ Attempting to obtain external model data from current data source (data_src):
       cdate="$cdate" \
       outvarname_arcvrel_dir="arcvrel_dir"
 
-    fns_in_arcv_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}" )")"
+    fns_str="( "$( printf "\"%s\" " "${fns[@]}" )")"
     get_extrn_mdl_files_from_nomads \
-      extrn_mdl_name="${extrn_mdl_name}" \
       ics_or_lbcs="${ics_or_lbcs}" \
+      extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
       arcvrel_dir="${arcvrel_dir}" \
-      fns_in_arcv="${fns_in_arcv_str}"
+      fns_in_arcv="${fns_str}"
 
   fi
 #
@@ -359,7 +359,7 @@ done
 #
 #-----------------------------------------------------------------------
 #
-# Create a variable definitions file (a shell script) and save in it the
+# Create a variable definitions file (in bash syntax) and save in it the
 # values of several external-model-associated variables generated in this
 # script that will be needed by downstream workflow tasks.
 #
@@ -373,14 +373,7 @@ fi
 var_defns_fp="${staging_dir}/${var_defns_fn}"
 check_for_preexist_dir_file "${var_defns_fp}" "delete"
 
-if [ "${data_src}" = "user_dir" ] || \
-   [ "${data_src}" = "sys_dir" ]; then
-  fns_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}" )")"
-elif [ "${data_src}" = "noaa_hpss" ]; then
-  fns_str="( "$( printf "\"%s\" " "${fns_in_arcv[@]}" )")"
-elif [ "${data_src}" = "nomads" ]; then
-  fns_str="( "$( printf "\"%s\" " "${fns_on_disk[@]}" )")"
-fi
+fns_str="( "$( printf "\"%s\" " "${fns[@]}" )")"
 
 settings="\
 DATA_SRC=\"${data_src}\"
@@ -394,12 +387,12 @@ EXTRN_MDL_FNS=${fns_str}"
 # hours at which the lateral boundary conditions are specified.
 #
 if [ "${ics_or_lbcs}" = "LBCS" ]; then
-  extrn_mdl_lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${lbc_spec_fhrs[@]}" )")"
+  lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${lbc_spec_fhrs[@]}" )")"
   settings="$settings
-EXTRN_MDL_LBC_SPEC_FHRS=${extrn_mdl_lbc_spec_fhrs_str}"
+EXTRN_MDL_LBC_SPEC_FHRS=${lbc_spec_fhrs_str}"
 fi
 
-{ cat << EOM >> ${var_defns_fp}
+{ cat << EOM >> "${var_defns_fp}"
 $settings
 EOM
 } || print_err_msg_exit "\
@@ -415,5 +408,3 @@ nonzero status.  The full path to this variable definitions file is:
 #-----------------------------------------------------------------------
 #
 { restore_shell_opts; } > /dev/null 2>&1
-
-

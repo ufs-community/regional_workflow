@@ -1,7 +1,10 @@
 #
 #-----------------------------------------------------------------------
 #
-# This file defines a function that
+# This file defines a function that creates symlinks in the current 
+# cycle's external model file staging directory (staging_dir) to a set 
+# of user-specified external model files (fns) in a user-specified 
+# directory (user_dir).
 #
 #-----------------------------------------------------------------------
 #
@@ -28,7 +31,7 @@ function get_extrn_mdl_files_from_user_dir() {
     "ics_or_lbcs" \
     "cdate" \
     "staging_dir" \
-    "outvarname_fns_on_disk" \
+    "outvarname_fns" \
     )
   process_args valid_args "$@"
 #
@@ -40,7 +43,7 @@ function get_extrn_mdl_files_from_user_dir() {
 #
 #-----------------------------------------------------------------------
 #
-  print_input_args valid_args
+  print_input_args "valid_args"
 #
 #-----------------------------------------------------------------------
 #
@@ -49,46 +52,45 @@ function get_extrn_mdl_files_from_user_dir() {
 #-----------------------------------------------------------------------
 #
   local fn \
-        aaafns_on_disk \
-        aaafns_on_disk_str \
+        __fns \
+        fns_str \
         fp \
-        fps_on_disk \
+        fps \
         i \
         num_files \
         prefix \
-        source_dir
+        user_dir
 #
 #-----------------------------------------------------------------------
 #
-# Set the elements of fps_on_disk to the full paths of the 
-# external model files on disk.
+# Set the user directory in which the external model files are located 
+# (user_dir), the names of the files (__fns), and the full paths to the 
+# files.
 #
 #-----------------------------------------------------------------------
 #
   if [ "${ics_or_lbcs}" = "ICS" ]; then
-    source_dir="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/$cdate"
-    aaafns_on_disk=( $( printf "%s " "${EXTRN_MDL_FILES_ICS[@]}" ))
+    user_dir="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/$cdate"
+    __fns=( $( printf "%s " "${EXTRN_MDL_FILES_ICS[@]}" ))
   elif [ "${ics_or_lbcs}" = "LBCS" ]; then
-    source_dir="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/$cdate"
-    aaafns_on_disk=( $( printf "%s " "${EXTRN_MDL_FILES_LBCS[@]}" ))
+    user_dir="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/$cdate"
+    __fns=( $( printf "%s " "${EXTRN_MDL_FILES_LBCS[@]}" ))
   fi
+  fns_str="( "$( printf "\"%s\" " "${__fns[@]}" )")"
 
-  if [ ! -d "${source_dir}" ]; then
+  if [ ! -d "${user_dir}" ]; then
     print_info_msg "
-The user-specified directory containing the user-staged external model 
-files (source_dir) does not exist:
-  source_dir = \"${source_dir}\"
-Please ensure that the directory specified by source_dir exists and that 
-all the files specified in the array aaafns_on_disk exist within it:
-  source_dir = \"${source_dir}\"
-  aaafns_on_disk = ( $( printf "\"%s\" " "${aaafns_on_disk[@]}" ))
+The user-specified directory (user_dir) containing the user-specified
+external model files (__fns) does not exist:
+  user_dir = \"${user_dir}\"
+  __fns = ${fns_str}
 Returning with a nonzero return code.
 "
     return 1
   fi
 
-  prefix="${source_dir}/"
-  fps_on_disk=( "${aaafns_on_disk[@]/#/$prefix}" )
+  prefix="${user_dir}/"
+  fps=( "${__fns[@]/#/$prefix}" )
 #
 #-----------------------------------------------------------------------
 #
@@ -98,20 +100,19 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-  aaafns_on_disk_str="( "$( printf "\"%s\" " "${aaafns_on_disk[@]}" )")"
   print_info_msg "
 Creating symlinks in the staging directory (staging_dir) to the external 
-model files on disk (aaafns_on_disk) in the source directory (source_dir):
-  source_dir = \"${source_dir}\"
-  aaafns_on_disk = ${aaafns_on_disk_str}
+model files on disk (__fns) in the source directory (user_dir):
+  user_dir = \"${user_dir}\"
+  __fns = ${fns_str}
   staging_dir = \"${staging_dir}\"
 "
 
-  num_files="${#fps_on_disk[@]}"
+  num_files="${#fps[@]}"
   for (( i=0; i<${num_files}; i++ )); do
 
-    fn="${aaafns_on_disk[$i]}"
-    fp="${fps_on_disk[$i]}"
+    fn="${__fns[$i]}"
+    fp="${fps[$i]}"
 
     if [ ! -f "$fp" ]; then
       print_info_msg "
@@ -139,8 +140,8 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -z "${outvarname_fns_on_disk}" ]; then
-    eval ${outvarname_fns_on_disk}=${aaafns_on_disk_str}
+  if [ ! -z "${outvarname_fns}" ]; then
+    eval ${outvarname_fns}=${fns_str}
   fi
 #
 #-----------------------------------------------------------------------
@@ -152,4 +153,3 @@ Returning with a nonzero return code.
   { restore_shell_opts; } > /dev/null 2>&1
 
 }
-

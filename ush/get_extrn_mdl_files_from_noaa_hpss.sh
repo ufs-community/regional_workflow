@@ -1,7 +1,9 @@
 #
 #-----------------------------------------------------------------------
 #
-# This file defines a function that
+# This file defines a function that fetches external model files from
+# NOAA's HPSS (High Performance Storage System) and places them in the
+# current cycle's external model file staging directory (staging_dir).
 #
 #-----------------------------------------------------------------------
 #
@@ -31,7 +33,7 @@ function get_extrn_mdl_files_from_noaa_hpss() {
     "arcv_fns" \
     "arcv_fps" \
     "arcvrel_dir" \
-    "fns_in_arcv" \
+    "fns" \
     )
   process_args valid_args "$@"
 #
@@ -43,7 +45,7 @@ function get_extrn_mdl_files_from_noaa_hpss() {
 #
 #-----------------------------------------------------------------------
 #
-  print_input_args valid_args
+  print_input_args "valid_args"
 #
 #-----------------------------------------------------------------------
 #
@@ -58,8 +60,8 @@ function get_extrn_mdl_files_from_noaa_hpss() {
         files_in_crnt_arcv \
         first_lbc_fhr \
         fp \
-        fps_in_arcv \
-        fps_in_arcv_str \
+        fps \
+        fps_str \
         hh \
         hh_orig \
         hsi_log_fn \
@@ -84,23 +86,23 @@ function get_extrn_mdl_files_from_noaa_hpss() {
 #
 #-----------------------------------------------------------------------
 #
-# Set fps_in_arcv to the full paths within the archive files of the
+# Set the array fps to the full paths within the archive files of the
 # external model files.
 #
 #-----------------------------------------------------------------------
 #
   prefix=${arcvrel_dir:+${arcvrel_dir}/}
-  fps_in_arcv=( "${fns_in_arcv[@]/#/$prefix}" )
+  fps=( "${fns[@]/#/$prefix}" )
 
-  fps_in_arcv_str="( "$( printf "\"%s\" " "${fps_in_arcv[@]}" )")"
+  fps_str="( "$( printf "\"%s\" " "${fps[@]}" )")"
   arcv_fps_str="( "$( printf "\"%s\" " "${arcv_fps[@]}" )")"
 
   print_info_msg "
 Fetching external model files from HPSS.  The full paths to these files
-in the archive file(s) (fps_in_arcv), the archive files on HPSS in which 
+in the archive file(s) (fps), the archive files on HPSS in which 
 these files are stored (arcv_fps), and the staging directory to which 
 they will be copied (staging_dir) are:
-  fps_in_arcv = ${fps_in_arcv_str}
+  fps = ${fps_str}
   arcv_fps = ${arcv_fps_str}
   staging_dir = \"${staging_dir}\""
 #
@@ -123,12 +125,12 @@ they will be copied (staging_dir) are:
 #
 #-----------------------------------------------------------------------
 #
-# Loop through the set of archive files specified in arcv_fps
-# and extract a subset of the specified external model files from each.
+# Loop through the set of archive files specified in arcv_fps and extract 
+# a subset of the specified external model files from each.
 #
 #-----------------------------------------------------------------------
 #
-    num_files_to_extract="${#fps_in_arcv[@]}"
+    num_files_to_extract="${#fps[@]}"
 
     for (( narcv=0; narcv<${num_arcv_files}; narcv++ )); do
 
@@ -152,7 +154,7 @@ they will be copied (staging_dir) are:
 # file.
 #
       htar_log_fn="log.htar_tvf.${narcv_formatted}"
-      htar -tvf ${arcv_fp} ${fps_in_arcv[@]} >& ${htar_log_fn} || { \
+      htar -tvf "${arcv_fp}" ${fps[@]} >& "${htar_log_fn}" || { \
         print_info_msg "
 htar file list operation (\"htar -tvf ...\") failed.  Check the log file
 htar_log_fn in the staging directory (staging_di) for details:
@@ -167,8 +169,7 @@ Returning with a nonzero return code.
       i=0
       files_in_crnt_arcv=()
       for (( nfile=0; nfile<${num_files_to_extract}; nfile++ )); do
-        fp="${fps_in_arcv[$nfile]}"
-#        grep -n "$fp" "${htar_log_fn}" 2>&1 && { \
+        fp="${fps[$nfile]}"
         grep -n "$fp" "${htar_log_fn}" > /dev/null 2>&1 && { \
           files_in_crnt_arcv[$i]="$fp"; \
           i=$((i+1)); \
@@ -180,12 +181,12 @@ Returning with a nonzero return code.
 #
       num_files_in_crnt_arcv=${#files_in_crnt_arcv[@]}
       if [ ${num_files_in_crnt_arcv} -eq 0 ]; then
-        fps_in_arcv_str="( "$( printf "\"%s\" " "${fps_in_arcv[@]}" )")"
+        fps_str="( "$( printf "\"%s\" " "${fps[@]}" )")"
         print_info_msg "
 The current archive file (arcv_fp) does not contain any of the external
-model files listed in fps_in_arcv:
+model files listed in fps:
   arcv_fp = \"${arcv_fp}\"
-  fps_in_arcv = ${fps_in_arcv_str}
+  fps = ${fps_str}
 The archive file should contain at least one external model file; otherwise,
 it would not be needed.  Returning with a nonzero return code.
 "
@@ -197,7 +198,7 @@ it would not be needed.  Returning with a nonzero return code.
 # "htar -xvf" command in a log file for debugging (if necessary).
 #
       htar_log_fn="log.htar_xvf.${narcv_formatted}"
-      htar -xvf ${arcv_fp} ${files_in_crnt_arcv[@]} >& ${htar_log_fn} || { \
+      htar -xvf "${arcv_fp}" ${files_in_crnt_arcv[@]} >& "${htar_log_fn}" || { \
         print_info_msg "
 htar file extract operation (\"htar -xvf ...\") failed.  Check the log
 file htar_log_fn in the staging directory (staging_dir) for details:
@@ -256,7 +257,8 @@ Returning with a nonzero return code.
 #-----------------------------------------------------------------------
 #
     for (( nfile=0; nfile<${num_files_to_extract}; nfile++ )); do
-      fp="${fps_in_arcv[$nfile]}"
+
+      fp="${fps[$nfile]}"
 #
 # If the file path is absolute (i.e. starts with a "/"), then drop the
 # leading "/" because htar strips it before writing the file path to the
@@ -315,7 +317,7 @@ not happen.  Returning with a nonzero return code.
     if [ "${arcvrel_dir}" != "." ]; then
 #
 # The code below works if arcvrel_dir starts with a "/" or a "./", which
-# are the only case encountered thus far.  The code may have to be
+# are the only cases encountered thus far.  The code will have to be 
 # modified to accomodate other cases.
 #
       if [ "${arcvrel_dir:0:1}" = "/" ] || \
@@ -331,8 +333,8 @@ not happen.  Returning with a nonzero return code.
 #
 # Get the first subdirectory in rel_dir, i.e. the subdirectory before the
 # first forward slash.  This is the subdirectory that we want to remove
-# since it no longer contains any files (only subdirectories).  Then remove
-# it.
+# since it no longer contains any files (only subdirectories).  Then 
+# remove it.
 #
         subdir_to_remove=$( printf "%s" "${rel_dir}" | \
                             sed -r 's%^([^/]*)(.*)%\1%' )
@@ -404,7 +406,7 @@ nonzero return code.
 #-----------------------------------------------------------------------
 #
     hsi_log_fn="log.hsi_get"
-    hsi get "${arcv_fp}" >& ${hsi_log_fn} || { \
+    hsi get "${arcv_fp}" >& "${hsi_log_fn}" || { \
       print_info_msg "
 hsi file get operation (\"hsi get ...\") failed.  Check the log file
 hsi_log_fn in the staging directory (staging_dir) for details:
@@ -423,7 +425,7 @@ Returning with a nonzero return code.
 #-----------------------------------------------------------------------
 #
     unzip_log_fn="log.unzip_lv"
-    unzip -l -v ${arcv_fn} >& ${unzip_log_fn} || { \
+    unzip -l -v ${arcv_fn} >& "${unzip_log_fn}" || { \
       print_info_msg "
 unzip operation to list the contents of the zip archive file arcv_fn in
 the staging directory (staging_dir) failed.  Check the log file
@@ -447,7 +449,7 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-    for fp in "${fps_in_arcv[@]}"; do
+    for fp in "${fps[@]}"; do
       grep -n "$fp" "${unzip_log_fn}" > /dev/null 2>&1 || { \
         print_info_msg "
 External model file fp does not exist in the zip archive file arcv_fn in
@@ -473,7 +475,7 @@ Returning with a nonzero return code.
 #-----------------------------------------------------------------------
 #
     unzip_log_fn="log.unzip"
-    unzip -o "${arcv_fn}" ${fps_in_arcv[@]} >& ${unzip_log_fn} || { \
+    unzip -o "${arcv_fn}" ${fps[@]} >& "${unzip_log_fn}" || { \
       print_info_msg "
 unzip file extract operation (\"unzip -o ...\") failed.  Check the log
 file unzip_log_fn in the staging directory (staging_dir) for details:
@@ -505,4 +507,3 @@ Returning with a nonzero return code.
   { restore_shell_opts; } > /dev/null 2>&1
 
 }
-
