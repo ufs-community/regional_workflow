@@ -158,15 +158,15 @@ check_var_valid_value "ICS_OR_LBCS" "valid_vals_ICS_OR_LBCS"
 #
 #-----------------------------------------------------------------------
 #
-# Set the name of and then create the directory in which to stage the 
-# external model files for the current cycle (if it doesn't already exist).  
-# Then change location to that directory.
+# Set the name of the directory in which to stage the external model 
+# files (or symlinks to such files) for the current cycle.  Then create 
+# the directory (if it doesn't already exist) and change location to it.
 #
 #-----------------------------------------------------------------------
 #
-extrn_mdl_staging_dir="${CYCLE_DIR}/${EXTRN_MDL_NAME}/for_${ICS_OR_LBCS}"
-mkdir_vrfy -p "${extrn_mdl_staging_dir}"
-cd_vrfy "${extrn_mdl_staging_dir}"
+staging_dir="${CYCLE_DIR}/${EXTRN_MDL_NAME}/for_${ICS_OR_LBCS}"
+mkdir_vrfy -p "${staging_dir}"
+cd_vrfy "${staging_dir}"
 #
 #-----------------------------------------------------------------------
 #
@@ -179,7 +179,7 @@ extrn_mdl_data_sources_str="( "$( printf "\"%s\" " "${EXTRN_MDL_DATA_SOURCES[@]}
 $SCRIPTSDIR/exregional_get_extrn_mdl_files.sh \
   ics_or_lbcs="${ICS_OR_LBCS}" \
   data_sources="${extrn_mdl_data_sources_str}" \
-  staging_dir="${extrn_mdl_staging_dir}" || \
+  staging_dir="${staging_dir}" || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #
