@@ -22,3 +22,5 @@ CYCL_HRS=( "00" )
 
 FCST_LEN_HRS="6"
 LBC_SPEC_INTVL_HRS="6"
+
+EXTRN_MDL_DATA_SOURCES=( "noaa_hpss" )
