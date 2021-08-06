@@ -64,6 +64,7 @@ cd_vrfy ${scrfunc_dir}
 . ./set_ozone_param.sh
 . ./set_thompson_mp_fix_files.sh
 . ./check_ruc_lsm.sh
+. ./extrn_mdl/set_extrn_mdl_default_sys_basedir.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -1547,18 +1548,18 @@ fi
 #
 if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
 
-  if [ ! -d "${EXTRN_MDL_SOURCE_BASEDIR_ICS}" ]; then
+  if [ ! -d "${EXTRN_MDL_USER_BASEDIR_ICS}" ]; then
     print_err_msg_exit "\
-The directory (EXTRN_MDL_SOURCE_BASEDIR_ICS) in which the user-staged 
+The directory (EXTRN_MDL_USER_BASEDIR_ICS) in which the user-staged 
 external model files for generating ICs should be located does not exist:
-  EXTRN_MDL_SOURCE_BASEDIR_ICS = \"${EXTRN_MDL_SOURCE_BASEDIR_ICS}\""
+  EXTRN_MDL_USER_BASEDIR_ICS = \"${EXTRN_MDL_USER_BASEDIR_ICS}\""
   fi
 
-  if [ ! -d "${EXTRN_MDL_SOURCE_BASEDIR_LBCS}" ]; then
+  if [ ! -d "${EXTRN_MDL_USER_BASEDIR_LBCS}" ]; then
     print_err_msg_exit "\
-The directory (EXTRN_MDL_SOURCE_BASEDIR_LBCS) in which the user-staged 
+The directory (EXTRN_MDL_USER_BASEDIR_LBCS) in which the user-staged 
 external model files for generating LBCs should be located does not exist:
-  EXTRN_MDL_SOURCE_BASEDIR_LBCS = \"${EXTRN_MDL_SOURCE_BASEDIR_LBCS}\""
+  EXTRN_MDL_USER_BASEDIR_LBCS = \"${EXTRN_MDL_USER_BASEDIR_LBCS}\""
   fi
 
   is_element_of "EXTRN_MDL_DATA_SOURCES" "user_dir" || \
@@ -1960,13 +1961,30 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Set cycle-independent parameters associated with the external models
-# from which we will obtain the ICs and LBCs.
+# Get the default value of the external model system base directory.
+# Then, if the user has not already set EXTRN_MDL_SYS_BASEDIR_ICS and 
+# EXTRN_MDL_SYS_BASEDIR_LBCS to non-emtpy strings, set them to the 
+# default value.
+#
+# Note that the default value may be a null string because it is not 
+# defined for all combinations of experiment mode (NCO or community),
+# machine, and external model.  In this case, if the user has not defined
+# Then, if the user has not already set EXTRN_MDL_SYS_BASEDIR_ICS and/or 
+# EXTRN_MDL_SYS_BASEDIR_LBCS, they will remain set to null string.  This
+# will matter only if the workflow tries to obtain (copy or link to) 
+# external model files from the system directory (see description of the 
+# experiment parameter EXTRN_MDL_DATA_SOURCES), in which case that attempt
+# will fail (although the files may then be obtainable from one of the 
+# other data sources listed in  EXTRN_MDL_DATA_SOURCES).
 #
 #-----------------------------------------------------------------------
 #
-. ./set_extrn_mdl_params.sh
+set_extrn_mdl_default_sys_basedir \
+  extrn_mdl_name="${EXTRN_MDL_NAME_ICS}" \
+  outvarname_extrn_mdl_default_sys_basedir="extrn_mdl_default_sys_basedir"
 
+EXTRN_MDL_SYS_BASEDIR_ICS=${EXTRN_MDL_SYS_BASEDIR_ICS:-${extrn_mdl_default_sys_basedir}}
+EXTRN_MDL_SYS_BASEDIR_LBCS=${EXTRN_MDL_SYS_BASEDIR_LBCS:-${extrn_mdl_default_sys_basedir}}
 #
 #-----------------------------------------------------------------------
 #
@@ -2891,7 +2909,7 @@ OZONE_PARAM="${OZONE_PARAM}"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYSBASEDIR_ICS="${EXTRN_MDL_SYSBASEDIR_ICS}"
+EXTRN_MDL_SYS_BASEDIR_ICS="${EXTRN_MDL_SYS_BASEDIR_ICS}"
 #
 #-----------------------------------------------------------------------
 #
@@ -2903,16 +2921,7 @@ EXTRN_MDL_SYSBASEDIR_ICS="${EXTRN_MDL_SYSBASEDIR_ICS}"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYSBASEDIR_LBCS="${EXTRN_MDL_SYSBASEDIR_LBCS}"
-#
-#-----------------------------------------------------------------------
-#
-# Shift back in time (in units of hours) of the starting time of the ex-
-# ternal model specified in EXTRN_MDL_NAME_LBCS.
-#
-#-----------------------------------------------------------------------
-#
-EXTRN_MDL_LBCS_OFFSET_HRS="${EXTRN_MDL_LBCS_OFFSET_HRS}"
+EXTRN_MDL_SYS_BASEDIR_LBCS="${EXTRN_MDL_SYS_BASEDIR_LBCS}"
 #
 #-----------------------------------------------------------------------
 #

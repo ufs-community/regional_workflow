@@ -572,19 +572,19 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 # user_dir:
 # Look for external model files in a user-specified directory.  The 
 # GET_EXTRN_ICS_TN task looks for external model files with names 
-# specified by EXTRN_MDL_FILES_ICS in the directory specified by 
-# EXTRN_MDL_SOURCE_BASEDIR_ICS, while the GET_EXTRN_LBCS_TN task looks 
-# for external model files with names specified by EXTRN_MDL_FILES_LBCS 
-# in the directory specified by EXTRN_MDL_SOURCE_BASEDIR_LBCS.  See the
+# specified by EXTRN_MDL_USER_FILES_ICS in the directory specified by 
+# EXTRN_MDL_USER_BASEDIR_ICS, while the GET_EXTRN_LBCS_TN task looks for
+# external model files with names specified by EXTRN_MDL_USER_FILES_LBCS
+# in the directory specified by EXTRN_MDL_USER_BASEDIR_LBCS.  See the
 # defintions of these parameters below for more details.
 #
 # sys_dir:
 # Look for external model files in a system directory.  The GET_EXTRN_ICS_TN 
 # task looks for the external model files in the directory specified by 
-# EXTRN_MDL_SYSBASEDIR_ICS, while the GET_EXTRN_LBCS_TN task looks for 
-# the files in the directory specified by EXTRN_MDL_SYSBASEDIR_LBCS.  If
-# not specified by the user in the experiment configuration file, 
-# EXTRN_MDL_SYSBASEDIR_ICS and EXTRN_MDL_SYSBASEDIR_LBCS are set according
+# EXTRN_MDL_SYS_BASEDIR_ICS, while the GET_EXTRN_LBCS_TN task looks for 
+# the files in the directory specified by EXTRN_MDL_SYS_BASEDIR_LBCS.  
+# If not specified by the user in the experiment configuration file, 
+# EXTRN_MDL_SYS_BASEDIR_ICS and EXTRN_MDL_SYS_BASEDIR_LBCS are set according
 # to the platform the workflow is running on (MACHINE) and the external
 # model providing the files (as specified by EXTRN_MDL_NAME_ICS or 
 # EXTRN_MDL_NAME_LBCS).  Also, the names of the files to search for are 
@@ -603,13 +603,13 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 # Fetch external model files from NOMADS (NOAA Operational Model Archive 
 # and Distribution System).
 #
-# The default behavior is to first try the system directory (if one exists 
-# on the current platform for the external model being considered), then
-# NOAA HPSS, and finally NOMADS.  The default does not include trying a
-# user-specified directory because those are not known a-priori (they
-# require the user to explicitly specify EXTRN_MDL_SOURCE_BASEDIR_ICS 
-# and EXTRN_MDL_FILES_ICS and/or EXTRN_MDL_SOURCE_BASEDIR_LBCS and 
-# EXTRN_MDL_FILES_LBCS).  
+# The default behavior is to first try the system directory (if one 
+# exists on the current platform for the external model being considered), 
+# then NOAA HPSS, and finally NOMADS.  The default does not include 
+# trying a user-specified directory because those are not known a-priori 
+# (they require the user to explicitly specify EXTRN_MDL_USER_BASEDIR_ICS 
+# and EXTRN_MDL_USER_FILES_ICS and/or EXTRN_MDL_USER_BASEDIR_LBCS and 
+# EXTRN_MDL_USER_FILES_LBCS).  
 #
 # Note that if USE_USER_STAGED_EXTRN_FILES is set to "TRUE", then the 
 # experiment generation scripts will prepend "user_dir" to the array
@@ -624,14 +624,14 @@ EXTRN_MDL_DATA_SOURCES=( "sys_dir" "noaa_hpss" "nomads" )
 #
 # Base directories in which to search for external model files.
 #
-# EXTRN_MDL_SYSBASEDIR_ICS:
+# EXTRN_MDL_SYS_BASEDIR_ICS:
 # Base directory on the local machine containing external model files for
 # generating ICs on the native grid.  The way the full path containing 
 # these files is constructed depends on the user-specified external model
 # for ICs, i.e. EXTRN_MDL_NAME_ICS.
 #
-# EXTRN_MDL_SYSBASEDIR_LBCS:
-# Same as EXTRN_MDL_SYSBASEDIR_ICS but for LBCs.
+# EXTRN_MDL_SYS_BASEDIR_LBCS:
+# Same as EXTRN_MDL_SYS_BASEDIR_ICS but for LBCs.
 #
 # Note that these must be defined as null strings here so that if they 
 # are specified by the user in the experiment configuration file, they 
@@ -640,8 +640,8 @@ EXTRN_MDL_DATA_SOURCES=( "sys_dir" "noaa_hpss" "nomads" )
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYSBASEDIR_ICS=""
-EXTRN_MDL_SYSBASEDIR_LBCS=""
+EXTRN_MDL_SYS_BASEDIR_ICS=""
+EXTRN_MDL_SYS_BASEDIR_LBCS=""
 #
 #-----------------------------------------------------------------------
 #
@@ -649,39 +649,40 @@ EXTRN_MDL_SYSBASEDIR_LBCS=""
 #
 # USE_USER_STAGED_EXTRN_FILES:
 # Flag that determines whether or not the workflow will look for the 
-# external model files needed for generating ICs and LBCs in user-specified
-# directories.
+# external model files (needed for generating ICs and LBCs) in user-
+# specified directories.
 #
-# EXTRN_MDL_SOURCE_BASEDIR_ICS:
-# Directory in which to look for external model files for generating ICs.
-# If USE_USER_STAGED_EXTRN_FILES is set to "TRUE", the workflow looks in 
-# this directory (specifically, in a subdirectory under this directory 
+# EXTRN_MDL_USER_BASEDIR_ICS:
+# Directory in which to look for external model files if the data source
+# is a user-specified directory with user-specified file names (case of
+# "user_dir" in EXTRN_MDL_DATA_SOURCES).  In this case, the scripts look 
+# in this directory (specifically, in a subdirectory under this directory 
 # named "YYYYMMDDHH" consisting of the starting date and cycle hour of 
 # the forecast, where YYYY is the 4-digit year, MM the 2-digit month, DD 
 # the 2-digit day of the month, and HH the 2-digit hour of the day) for 
-# the external model files specified by the array EXTRN_MDL_FILES_ICS 
+# the external model files specified by the array EXTRN_MDL_USER_FILES_ICS 
 # (these files will be used to generate the ICs on the native FV3-LAM 
 # grid).  This variable is not used if USE_USER_STAGED_EXTRN_FILES is 
 # set to "FALSE".
 # 
-# EXTRN_MDL_FILES_ICS:
+# EXTRN_MDL_USER_FILES_ICS:
 # Array containing the names of the files to search for in the directory
-# specified by EXTRN_MDL_SOURCE_BASEDIR_ICS.  This variable is not used
+# specified by EXTRN_MDL_USER_BASEDIR_ICS.  This variable is not used
 # if USE_USER_STAGED_EXTRN_FILES is set to "FALSE".
 #
-# EXTRN_MDL_SOURCE_BASEDIR_LBCS:
-# Analogous to EXTRN_MDL_SOURCE_BASEDIR_ICS but for LBCs instead of ICs.
+# EXTRN_MDL_USER_BASEDIR_LBCS:
+# Analogous to EXTRN_MDL_USER_BASEDIR_ICS but for LBCs instead of ICs.
 #
-# EXTRN_MDL_FILES_LBCS:
-# Analogous to EXTRN_MDL_FILES_ICS but for LBCs instead of ICs.
+# EXTRN_MDL_USER_FILES_LBCS:
+# Analogous to EXTRN_MDL_USER_FILES_ICS but for LBCs instead of ICs.
 #
 #-----------------------------------------------------------------------
 #
 USE_USER_STAGED_EXTRN_FILES="FALSE"
-EXTRN_MDL_SOURCE_BASEDIR_ICS="/base/dir/containing/user/staged/extrn/mdl/files/for/ICs"
-EXTRN_MDL_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
-EXTRN_MDL_SOURCE_BASEDIR_LBCS="/base/dir/containing/user/staged/extrn/mdl/files/for/LBCs"
-EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
+EXTRN_MDL_USER_BASEDIR_ICS="/base/dir/containing/user/staged/extrn/mdl/files/for/ICs"
+EXTRN_MDL_USER_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
+EXTRN_MDL_USER_BASEDIR_LBCS="/base/dir/containing/user/staged/extrn/mdl/files/for/LBCs"
+EXTRN_MDL_USER_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
 #
 #-----------------------------------------------------------------------
 #

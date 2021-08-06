@@ -70,11 +70,11 @@ function get_extrn_mdl_files_from_user_dir() {
 #-----------------------------------------------------------------------
 #
   if [ "${ics_or_lbcs}" = "ICS" ]; then
-    user_dir="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/$cdate"
-    __fns=( $( printf "%s " "${EXTRN_MDL_FILES_ICS[@]}" ))
+    user_dir="${EXTRN_MDL_USER_BASEDIR_ICS}/$cdate"
+    __fns=( $( printf "%s " "${EXTRN_MDL_USER_FILES_ICS[@]}" ))
   elif [ "${ics_or_lbcs}" = "LBCS" ]; then
-    user_dir="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/$cdate"
-    __fns=( $( printf "%s " "${EXTRN_MDL_FILES_LBCS[@]}" ))
+    user_dir="${EXTRN_MDL_USER_BASEDIR_LBCS}/$cdate"
+    __fns=( $( printf "%s " "${EXTRN_MDL_USER_FILES_LBCS[@]}" ))
   fi
   fns_str="( "$( printf "\"%s\" " "${__fns[@]}" )")"
 

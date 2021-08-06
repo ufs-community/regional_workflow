@@ -16,12 +16,12 @@
 #
 #-----------------------------------------------------------------------
 #
-. $USHDIR/set_extrn_mdl_filenames.sh
-. $USHDIR/set_extrn_mdl_arcv_file_dir_names.sh
-. $USHDIR/get_extrn_mdl_files_from_user_dir.sh
-. $USHDIR/get_extrn_mdl_files_from_sys_dir.sh
-. $USHDIR/get_extrn_mdl_files_from_noaa_hpss.sh
-. $USHDIR/get_extrn_mdl_files_from_nomads.sh
+. $USHDIR/extrn_mdl/set_extrn_mdl_filenames.sh
+. $USHDIR/extrn_mdl/set_extrn_mdl_arcv_file_dir_names.sh
+. $USHDIR/extrn_mdl/get_extrn_mdl_files_from_user_dir.sh
+. $USHDIR/extrn_mdl/get_extrn_mdl_files_from_sys_dir.sh
+. $USHDIR/extrn_mdl/get_extrn_mdl_files_from_noaa_hpss.sh
+. $USHDIR/extrn_mdl/get_extrn_mdl_files_from_nomads.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -87,21 +87,63 @@ print_input_args "valid_args"
 #
 #-----------------------------------------------------------------------
 #
-# Extract from CDATE the starting year, month, day, and hour of
-# the FV3-LAM cycle.  Then subtract the temporal offset specified by
-# EXTRN_MDL_LBCS_OFFSET_HRS (in units of hours) from CDATE
-# to obtain the starting date and time of the external model, express the
+# Set the name of the external model.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${ics_or_lbcs}" = "ICS" ]; then
+  extrn_mdl_name="${EXTRN_MDL_NAME_ICS}"
+elif [ "${ics_or_lbcs}" = "LBCS" ]; then
+  extrn_mdl_name="${EXTRN_MDL_NAME_LBCS}"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Set the number of hours to shift back the starting time of the external 
+# model for LBCs (relative to the starting time of the FV3LAM).
+#
+#-----------------------------------------------------------------------
+#
+extrn_mdl_temporal_offset_hrs="0"
+if [ "${ics_or_lbcs}" = "LBCS" ]; then
+
+  case "${EXTRN_MDL_NAME_LBCS}" in
+  "GSMGFS")
+    extrn_mdl_temporal_offset_hrs="0"
+    ;;
+  "FV3GFS")
+    extrn_mdl_temporal_offset_hrs="0"
+    ;;
+  "RAP")
+    extrn_mdl_temporal_offset_hrs="3"
+    ;;
+  "HRRR")
+    extrn_mdl_temporal_offset_hrs="0"
+    ;;
+  "NAM")
+    extrn_mdl_temporal_offset_hrs="0"
+    ;;
+  esac
+
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Extract from CDATE the starting date (without the hour) and hour-of-day
+# of the current FV3LAM cycle.  Then subtract the temporal offset given
+# by extrn_mdl_temporal_offset_hrs (in units of hours) from CDATE to 
+# obtain the starting date and time of the external model, express the
 # result in YYYYMMDDHH format, and save it in cdate.  This is the starting
 # time of the external model forecast.
 #
 #-----------------------------------------------------------------------
 #
-  parse_cdate \
-    cdate="$CDATE" \
-    outvarname_yyyymmdd="yyyymmdd" \
-    outvarname_hh="hh" \
+parse_cdate \
+  cdate="$CDATE" \
+  outvarname_yyyymmdd="yyyymmdd" \
+  outvarname_hh="hh" \
 
-  cdate=$( date --utc --date "${yyyymmdd} ${hh} UTC - ${EXTRN_MDL_LBCS_OFFSET_HRS} hours" "+%Y%m%d%H" )
+cdate=$( date --utc --date "${yyyymmdd} ${hh} UTC - ${extrn_mdl_temporal_offset_hrs} hours" "+%Y%m%d%H" )
 #
 #-----------------------------------------------------------------------
 #
@@ -115,36 +157,25 @@ print_input_args "valid_args"
 #
 #-----------------------------------------------------------------------
 #
-  lbc_spec_fhrs=( "" )
+lbc_spec_fhrs=( "" )
 
-  if [ "${ics_or_lbcs}" = "LBCS" ]; then
+if [ "${ics_or_lbcs}" = "LBCS" ]; then
 
-    lbc_spec_fhrs=( "${LBC_SPEC_FCST_HRS[@]}" )
+  lbc_spec_fhrs=( "${LBC_SPEC_FCST_HRS[@]}" )
 #
-# Add the temporal offset specified in EXTRN_MDL_LBCS_OFFSET_HRS (which 
-# is in units of hours) to the the array of LBC update forecast hours to 
-# make up for shifting the starting hour back in time.  After this addition, 
-# lbc_spec_fhrs will contain the LBC update forecast hours relative to
-# the start time of the external model run.
+# Add the temporal offset specified by extrn_mdl_temporal_offset_hrs 
+# (which is in units of hours) to the array of LBC update forecast hours 
+# to make up for the fact that the starting time of the external model 
+# is shifted back from that of the FV3LAM by this offset.  After this 
+# addition, lbc_spec_fhrs will contain the LBC update forecast hours 
+# relative to the start time of the external model.
 #
-    num_fhrs=${#lbc_spec_fhrs[@]}
-    for (( i=0; i<=$((num_fhrs-1)); i++ )); do
-      lbc_spec_fhrs[$i]=$(( ${lbc_spec_fhrs[$i]} + ${EXTRN_MDL_LBCS_OFFSET_HRS} ))
-    done
+  num_fhrs=${#lbc_spec_fhrs[@]}
+  for (( i=0; i<=$((num_fhrs-1)); i++ )); do
+    lbc_spec_fhrs[$i]=$(( ${lbc_spec_fhrs[$i]} + ${extrn_mdl_temporal_offset_hrs} ))
+  done
 
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Set the name of the external model.
-#
-#-----------------------------------------------------------------------
-#
-  if [ "${ics_or_lbcs}" = "ICS" ]; then
-    extrn_mdl_name="${EXTRN_MDL_NAME_ICS}"
-  elif [ "${ics_or_lbcs}" = "LBCS" ]; then
-    extrn_mdl_name="${EXTRN_MDL_NAME_LBCS}"
-  fi
+fi
 #
 #-----------------------------------------------------------------------
 #

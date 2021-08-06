@@ -11,8 +11,8 @@
 # set them to default values.  Since the default system directories 
 # usually contain only the most recent few days' files (e.g. the last 
 # two days), the files needed to run this test are in fact stored in a
-# non-system directory, and that directory is specified in the WE2E test
-# launch script.  However, the file naming convention used in this non-
+# non-system directory, and that directory is specified in the WE2E 
+# testing script.  However, the file naming convention used in this non-
 # system directory is the same as the one used in the system directory.
 #
 
@@ -35,3 +35,5 @@ FCST_LEN_HRS="6"
 LBC_SPEC_INTVL_HRS="3"
 
 EXTRN_MDL_DATA_SOURCES=( "sys_dir" )
+EXTRN_MDL_SYS_BASEDIR_ICS="set_to_non_default_location_in_testing_script"
+EXTRN_MDL_SYS_BASEDIR_LBCS="set_to_non_default_location_in_testing_script"

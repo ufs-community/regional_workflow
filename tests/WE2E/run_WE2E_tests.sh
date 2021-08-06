@@ -932,46 +932,48 @@ PTMP=\"${PTMP}\""
      is_element_of "EXTRN_MDL_DATA_SOURCES" "user_dir"; then
 
     if [ "$MACHINE" = "WCOSS_CRAY" ]; then
-      extrn_mdl_source_basedir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/extrn_mdl_files"
+      extrn_mdl_user_basedir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/extrn_mdl_files"
     elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
-      extrn_mdl_source_basedir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/extrn_mdl_files"
+      extrn_mdl_user_basedir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/extrn_mdl_files"
     elif [ "$MACHINE" = "HERA" ]; then
-      extrn_mdl_source_basedir="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
+      extrn_mdl_user_basedir="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "JET" ]; then
-      extrn_mdl_source_basedir="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
+      extrn_mdl_user_basedir="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "CHEYENNE" ]; then
-      extrn_mdl_source_basedir="/glade/p/ral/jntp/UFS_SRW_app/staged_extrn_mdl_files"
+      extrn_mdl_user_basedir="/glade/p/ral/jntp/UFS_SRW_app/staged_extrn_mdl_files"
     elif [ "$MACHINE" = "ORION" ]; then
-      extrn_mdl_source_basedir="/work/noaa/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files"
+      extrn_mdl_user_basedir="/work/noaa/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files"
     else
       print_err_msg_exit "\
-The base directory (extrn_mdl_source_basedir) in which the user-staged
+The base directory (extrn_mdl_user_basedir) in which the user-staged
 external model files should be located has not been specified for this
 machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
-
-    EXTRN_MDL_SOURCE_BASEDIR_ICS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_ICS}"
+#
+# Consider ICs.
+#
+    extrn_mdl_user_basedir_ics="${extrn_mdl_user_basedir}/${EXTRN_MDL_NAME_ICS}"
     if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
        [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ]; then
       if [ "${FV3GFS_FILE_FMT_ICS}" = "nemsio" ]; then
-        EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
+        extrn_mdl_user_files_ics=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
       elif [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
-        EXTRN_MDL_FILES_ICS=( "gfs.pgrb2.0p25.f000" )
+        extrn_mdl_user_files_ics=( "gfs.pgrb2.0p25.f000" )
       fi
     elif [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ]; then
-      EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
+      extrn_mdl_user_files_ics=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
     elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ]; then
-      EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
+      extrn_mdl_user_files_ics=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
     fi
-
-    EXTRN_MDL_SOURCE_BASEDIR_LBCS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_LBCS}"
 #
+# Consider LBCs.
+#
+    extrn_mdl_user_basedir_lbcs="${extrn_mdl_user_basedir}/${EXTRN_MDL_NAME_LBCS}"
 # Make sure that the forecast length is evenly divisible by the interval
 # between the times at which the lateral boundary conditions will be
 # specified.
-#
     rem=$(( 10#${FCST_LEN_HRS} % 10#${LBC_SPEC_INTVL_HRS} ))
     if [ "$rem" -ne "0" ]; then
       print_err_msg_exit "\
@@ -982,20 +984,20 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
   rem = FCST_LEN_HRS%%LBC_SPEC_INTVL_HRS = $rem"
     fi
     lbc_spec_times_hrs=( $( seq "${LBC_SPEC_INTVL_HRS}" "${LBC_SPEC_INTVL_HRS}" "${FCST_LEN_HRS}" ) )
-    EXTRN_MDL_FILES_LBCS=( $( printf "%03d " "${lbc_spec_times_hrs[@]}" ) ) 
+    extrn_mdl_user_files_lbcs=( $( printf "%03d " "${lbc_spec_times_hrs[@]}" ) ) 
     if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
        [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then
       if [ "${FV3GFS_FILE_FMT_LBCS}" = "nemsio" ]; then
-        EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/gfs.atmf}" )
-        EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/%/.nemsio}" )
+        extrn_mdl_user_files_lbcs=( "${extrn_mdl_user_files_lbcs[@]/#/gfs.atmf}" )
+        extrn_mdl_user_files_lbcs=( "${extrn_mdl_user_files_lbcs[@]/%/.nemsio}" )
       elif [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
-        EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/gfs.pgrb2.0p25.f}" )
+        extrn_mdl_user_files_lbcs=( "${extrn_mdl_user_files_lbcs[@]/#/gfs.pgrb2.0p25.f}" )
       fi
     elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ] || \
          [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ]; then
-      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
+      extrn_mdl_user_files_lbcs=( "${extrn_mdl_user_files_lbcs[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
     elif [ "${EXTRN_MDL_NAME_LBCS}" = "NAM" ]; then
-      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
+      extrn_mdl_user_files_lbcs=( "${extrn_mdl_user_files_lbcs[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
     fi
 
     expt_config_str=${expt_config_str}"
@@ -1003,73 +1005,10 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
 # Locations and names of user-staged external model files for generating
 # ICs and LBCs.
 #
-EXTRN_MDL_SOURCE_BASEDIR_ICS=\"${EXTRN_MDL_SOURCE_BASEDIR_ICS}\"
-EXTRN_MDL_FILES_ICS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_ICS[@]}" ))
-EXTRN_MDL_SOURCE_BASEDIR_LBCS=\"${EXTRN_MDL_SOURCE_BASEDIR_LBCS}\"
-EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
-
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Modifications to the experiment configuration file if the WE2E test
-# may try to look for external model files in system directories.
-#
-#-----------------------------------------------------------------------
-#
-  if is_element_of "EXTRN_MDL_DATA_SOURCES" "sys_dir"; then
-#
-# First, consider the external model for ICs.
-#
-    extrn_mdl_sysbasedir_ics=""
-    if [ "$MACHINE" = "HERA" ]; then
-      if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
-        extrn_mdl_sysbasedir_ics="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
-      fi
-    elif [ "$MACHINE" = "CHEYENNE" ]; then
-      if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
-        extrn_mdl_sysbasedir_ics="/glade/p/ral/jntp/UFS_SRW_app/dummy_FV3GFS_sys_dir"
-      fi
-    fi
-#
-# If extrn_mdl_sysbasedir_ics was set above to a non-empty string, then
-# write its value to the experiment configuration file.  Otherwise, the 
-# default value specified in the workflow will be used.
-#
-    if [ ! -z "${extrn_mdl_sysbasedir_ics}" ]; then
-      expt_config_str=${expt_config_str}"
-#
-# System base directory in which to look for external model files from
-# which to generate initial conditions (ICs).
-#
-EXTRN_MDL_SYSBASEDIR_ICS=\"${extrn_mdl_sysbasedir_ics}\""
-    fi
-#
-# Now consider the external model for LBCs.
-#
-    extrn_mdl_sysbasedir_lbcs=""
-    if [ "$MACHINE" = "HERA" ]; then
-      if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
-        extrn_mdl_sysbasedir_lbcs="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
-      fi
-    elif [ "$MACHINE" = "CHEYENNE" ]; then
-      if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
-        extrn_mdl_sysbasedir_lbcs="/glade/p/ral/jntp/UFS_SRW_app/dummy_FV3GFS_sys_dir"
-      fi
-    fi
-#
-# If extrn_mdl_sysbasedir_lbcs was set above to a non-empty string, then
-# write its value to the experiment configuration file.  Otherwise, the 
-# default value specified in the workflow will be used.
-#
-    if [ ! -z "${extrn_mdl_sysbasedir_lbcs}" ]; then
-      expt_config_str=${expt_config_str}"
-#
-# System base directory in which to look for external model files from
-# which to generate initial conditions (ICs).
-#
-EXTRN_MDL_SYSBASEDIR_LBCS=\"${extrn_mdl_sysbasedir_lbcs}\""
-    fi
+EXTRN_MDL_USER_BASEDIR_ICS=\"${extrn_mdl_user_basedir_ics}\"
+EXTRN_MDL_USER_FILES_ICS=( $( printf "\"%s\" " "${extrn_mdl_user_files_ics[@]}" ))
+EXTRN_MDL_USER_BASEDIR_LBCS=\"${extrn_mdl_user_basedir_lbcs}\"
+EXTRN_MDL_USER_FILES_LBCS=( $( printf "\"%s\" " "${extrn_mdl_user_files_lbcs[@]}" ))"
 
   fi
 #
@@ -1153,6 +1092,127 @@ MAXTRIES_RUN_POST=\"${MAXTRIES_RUN_POST}\""
 #
   expt_config_fp="$ushdir/${EXPT_CONFIG_FN}"
   printf "%s" "${expt_config_str}" > "${expt_config_fp}"
+#
+#-----------------------------------------------------------------------
+#
+# Modifications to the experiment configuration file if the WE2E test
+# may try to look for external model files in system directories.
+#
+# The following are changes that need to be made directly to the 
+# experiment configuration file created above (as opposed to the 
+# experiment configuration string expt_config_str) because they involve
+# resetting of values that have already been set in that file.
+#
+# EXTRN_MDL_SYS_BASEDIR_ICS in the current WE2E test's configuration file
+# may be set to one of the following:
+#
+# 1) The string "set_to_non_default_location_in_testing_script".  This
+#    will cause this script to reset EXTRN_MDL_SYS_BASEDIR_ICS to a valid 
+#    non-default location depending on the machine and external model 
+#    for ICs.
+#
+# 2) To an existing directory.  If it is set to a directory, then this
+#    script ensures that the directory exists (via the check below).  If
+#    not, the script will exit.
+#
+# Note that if a test would like to use the default system directory 
+# specified in the workflow as the source for external model files (i.e.
+# instead of the values set below), then EXTRN_MDL_SYS_BASEDIR_ICS simply
+# needs to be left unset in the test's configuration file.
+#
+#-----------------------------------------------------------------------
+#
+  if [ ! -z "${EXTRN_MDL_SYS_BASEDIR_ICS}" ] && \
+     is_element_of "EXTRN_MDL_DATA_SOURCES" "sys_dir"; then
+
+    if [ "${EXTRN_MDL_SYS_BASEDIR_ICS}" = "set_to_non_default_location_in_testing_script" ]; then
+
+      extrn_mdl_sys_basedir_ics=""
+      if [ "$MACHINE" = "HERA" ]; then
+        if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
+          extrn_mdl_sys_basedir_ics="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
+        fi
+      elif [ "$MACHINE" = "CHEYENNE" ]; then
+        if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
+          extrn_mdl_sys_basedir_ics="/glade/p/ral/jntp/UFS_SRW_app/dummy_FV3GFS_sys_dir"
+        fi
+      fi
+
+      if [ -z "${extrn_mdl_sys_basedir_ics}" ]; then
+        print_err_msg_exit "\
+A non-default location for the external model system base directory for
+ICs (extrn_mdl_sys_basedir_ics) for testing purposes has not been specified 
+for this machine (MACHINE) and external model for initial conditions 
+(EXTRN_MDL_NAME_ICS) combination:
+  MACHINE= \"${MACHINE}\"
+  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
+  extrn_mdl_sys_basedir_ics = \"${extrn_mdl_sys_basedir_ics}\""
+      fi
+
+    else 
+
+      if [ ! -d "${extrn_mdl_sys_basedir_ics}" ]; then
+        print_err_msg_exit "\
+The non-default location specified by extrn_mdl_sys_basedir_ics does not 
+exist or is not a directory:
+  extrn_mdl_name_ics = \"${extrn_mdl_name_ics}\""
+      fi
+
+    fi
+
+    set_bash_param "${expt_config_fp}" \
+                   "EXTRN_MDL_SYS_BASEDIR_ICS" "${extrn_mdl_sys_basedir_ics}"
+
+  fi
+#
+#-----------------------------------------------------------------------
+#
+# Same as above but for EXTRN_MDL_SYS_BASEDIR_LBCS.
+#
+#-----------------------------------------------------------------------
+#
+  if [ ! -z "${EXTRN_MDL_SYS_BASEDIR_LBCS}" ] && \
+     is_element_of "EXTRN_MDL_DATA_SOURCES" "sys_dir"; then
+
+    if [ "${EXTRN_MDL_SYS_BASEDIR_LBCS}" = "set_to_non_default_location_in_testing_script" ]; then
+
+      extrn_mdl_sys_basedir_lbcs=""
+      if [ "$MACHINE" = "HERA" ]; then
+        if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
+          extrn_mdl_sys_basedir_lbcs="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
+        fi
+      elif [ "$MACHINE" = "CHEYENNE" ]; then
+        if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
+          extrn_mdl_sys_basedir_lbcs="/glade/p/ral/jntp/UFS_SRW_app/dummy_FV3GFS_sys_dir"
+        fi
+      fi
+
+      if [ -z "${extrn_mdl_sys_basedir_lbcs}" ]; then
+        print_err_msg_exit "\
+A non-default location for the external model system base directory for
+LBCs (extrn_mdl_sys_basedir_lbcs) for testing purposes has not been specified 
+for this machine (MACHINE) and external model for initial conditions 
+(EXTRN_MDL_NAME_LBCS) combination:
+  MACHINE= \"${MACHINE}\"
+  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
+  extrn_mdl_sys_basedir_lbcs = \"${extrn_mdl_sys_basedir_lbcs}\""
+      fi
+
+    else 
+
+      if [ ! -d "${extrn_mdl_sys_basedir_lbcs}" ]; then
+        print_err_msg_exit "\
+The non-default location specified by extrn_mdl_sys_basedir_lbcs does not 
+exist or is not a directory:
+  extrn_mdl_name_lbcs = \"${extrn_mdl_name_lbcs}\""
+      fi
+
+    fi
+
+    set_bash_param "${expt_config_fp}" \
+                   "EXTRN_MDL_SYS_BASEDIR_LBCS" "${extrn_mdl_sys_basedir_ics}"
+
+  fi
 #
 #-----------------------------------------------------------------------
 #

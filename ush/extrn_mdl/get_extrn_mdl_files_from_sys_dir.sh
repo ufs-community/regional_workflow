@@ -76,9 +76,9 @@ function get_extrn_mdl_files_from_sys_dir() {
 #-----------------------------------------------------------------------
 #
   if [ "${ics_or_lbcs}" = "ICS" ]; then
-    sys_basedir="${EXTRN_MDL_SYSBASEDIR_ICS}"
+    sys_basedir="${EXTRN_MDL_SYS_BASEDIR_ICS}"
   elif [ "${ics_or_lbcs}" = "LBCS" ]; then
-    sys_basedir="${EXTRN_MDL_SYSBASEDIR_LBCS}"
+    sys_basedir="${EXTRN_MDL_SYS_BASEDIR_LBCS}"
   fi
 
   if [ ! -d "${sys_basedir}" ]; then
