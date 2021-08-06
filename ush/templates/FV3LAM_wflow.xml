@@ -680,12 +680,12 @@ the <task> tag to be identical to the ones above for other output times.
   {%- endif %}
 {%- endif %}
 
+
+{% if run_task_get_obs_ccpa %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-
-{% if run_task_get_obs_ccpa %}
   <task name="&GET_OBS_CCPA_TN;" maxtries="{{ maxtries_get_obs_ccpa }}">
 
     &RSRV_HPSS;
@@ -714,12 +714,11 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {% endif %}
 
+{% if run_task_get_obs_mrms %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-
-{% if run_task_get_obs_mrms %}
   <task name="&GET_OBS_MRMS_TN;" maxtries="{{ maxtries_get_obs_mrms }}">
 
     &RSRV_HPSS;
@@ -749,12 +748,11 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {% endif %}
 
+{% if run_task_get_obs_ndas %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-
-{% if run_task_get_obs_ndas %}
   <task name="&GET_OBS_NDAS_TN;" maxtries="{{ maxtries_get_obs_ndas }}">
 
     &RSRV_HPSS;
@@ -782,12 +780,11 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
-
   <task name="&VX_GRIDSTAT_TN;{{ uscore_ensmem_name }}" maxtries="{{ maxtries_vx_gridstat }}">
 
     &RSRV_DEFAULT;
@@ -833,11 +830,11 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_REFC_TN;{{ uscore_ensmem_name }}" maxtries="{{ maxtries_vx_gridstat_refc }}">
 
     &RSRV_DEFAULT;
@@ -882,11 +879,11 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {% endif %}
 
+{%- if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{%- if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_RETOP_TN;{{ uscore_ensmem_name }}" maxtries="{{ maxtries_vx_gridstat_retop }}">
 
     &RSRV_DEFAULT;
@@ -931,11 +928,11 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {%- endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_03h_TN;{{ uscore_ensmem_name }}" maxtries="{{ maxtries_vx_gridstat_03h }}">
 
     &RSRV_DEFAULT;
@@ -966,11 +963,11 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_06h_TN;{{ uscore_ensmem_name }}" maxtries="{{ maxtries_vx_gridstat_06h }}">
 
     &RSRV_DEFAULT;
@@ -1001,11 +998,11 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {% endif %}
 
+{% if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_gridstat %}
   <task name="&VX_GRIDSTAT_24h_TN;{{ uscore_ensmem_name }}" maxtries="{{ maxtries_vx_gridstat_24h }}">
 
     &RSRV_DEFAULT;
@@ -1036,11 +1033,11 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {% endif %}
 
+{% if run_task_vx_pointstat %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_pointstat %}
   <task name="&VX_POINTSTAT_TN;{{ uscore_ensmem_name }}" maxtries="{{ maxtries_vx_pointstat }}">
     &RSRV_DEFAULT;
 
@@ -1088,12 +1085,12 @@ the <task> tag to be identical to the ones above for other output times.
   </metatask>
 {% endif %}
 
+
+{% if run_task_vx_ensgrid %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-
-{% if run_task_vx_ensgrid %}
   <task name="&VX_ENSGRID_TN;" maxtries="{{ maxtries_vx_ensgrid }}">
 
     &RSRV_DEFAULT;
@@ -1581,11 +1578,12 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {% endif %}
 
+
+{% if run_task_vx_enspoint %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{% if run_task_vx_enspoint %}
   <task name="&VX_ENSPOINT_TN;" maxtries="{{ maxtries_vx_enspoint }}">
 
     &RSRV_DEFAULT;

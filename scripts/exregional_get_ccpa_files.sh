@@ -150,7 +150,7 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
         htar -xvf ${TarFile} `htar -tf ${TarFile} | egrep "ccpa.t${vhh}z.${accum}h.hrap.conus.gb2" | awk '{print $7}'`
       fi
 
-      # One hour CCPA files have incorrect metadeta in the files under the "00" directory prior to 20210504.
+      # One hour CCPA files have incorrect metadeta in the files under the "00" directory from 20180718 to 20210504.
       # After data is pulled, reorganize into correct valid yyyymmdd structure.
       if [[ ${vhh_noZero} -ge 1 && ${vhh_noZero} -le 6 ]]; then
         cp $ccpa_raw/${vyyyymmdd}/06/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
@@ -159,13 +159,13 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
       elif [[ ${vhh_noZero} -ge 13 && ${vhh_noZero} -le 18 ]]; then
         cp $ccpa_raw/${vyyyymmdd}/18/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
       elif [[ ${vhh_noZero} -ge 19 && ${vhh_noZero} -le 23 ]]; then
-        if [[ ${vyyyymmdd} -le 20210504 ]]; then
+        if [[ ${vyyyymmdd} -ge 20180718 && ${vyyyymmdd} -le 20210504 ]]; then
           wgrib2 $ccpa_raw/${vyyyymmdd_p1}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -set_date -24hr -grib $ccpa_proc/${vyyyymmdd}/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -s
         else
           cp $ccpa_raw/${vyyyymmdd_p1}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
         fi
       elif [[ ${vhh_noZero} -eq 0 ]]; then
-        if [[ ${vyyyymmdd} -le 20210504 ]]; then
+        if [[ ${vyyyymmdd} -ge 20180718 && ${vyyyymmdd} -le 20210504 ]]; then
           wgrib2 $ccpa_raw/${vyyyymmdd}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -set_date -24hr -grib $ccpa_proc/${vyyyymmdd}/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -s
         else
           cp $ccpa_raw/${vyyyymmdd}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}

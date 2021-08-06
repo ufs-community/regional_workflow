@@ -100,6 +100,7 @@ export fhr_list
 #
 if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
   INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
+  OUTPUT_BASE=${EXPTDIR}/${CDATE}
   LOG_SUFFIX=pointstat_${CDATE}
 elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
   INPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}/postprd
