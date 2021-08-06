@@ -469,7 +469,7 @@ WRITE_DOPOST="FALSE"
 # use of predetermined directory structure and file names. Therefore, if
 # the MRMS files are user provided, they need to follow the anticipated 
 # naming structure:
-# {YYYYMMDD}/MergedReflectivityQCComposite_00.00_{YYYYMMDD}-{HH}{mm}{SS}.grib2,
+# {YYYYMMDD}/MergedReflectivityQCComposite_00.50_{YYYYMMDD}-{HH}{mm}{SS}.grib2,
 # where YYYY is the 4-digit valid year, MM the 2-digit valid month, DD 
 # the 2-digit valid day of the month, HH the 2-digit valid hour of the 
 # day, mm the 2-digit valid minutes of the hour, and SS is the two-digit
@@ -897,6 +897,9 @@ GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES=""
 # the regional grid before shaving the halo down to the width(s) expected
 # by the forecast model.  
 #
+# ESGgrid_PAZI:
+# The rotational parameter for the ESG grid (in degrees).
+#
 # In order to generate grid files containing halos that are 3-cell and
 # 4-cell wide and orography files with halos that are 0-cell and 3-cell
 # wide (all of which are required as inputs to the forecast model), the
@@ -951,6 +954,7 @@ ESGgrid_DELY=""
 ESGgrid_NX=""
 ESGgrid_NY=""
 ESGgrid_WIDE_HALO_WIDTH=""
+ESGgrid_PAZI=""
 #
 #-----------------------------------------------------------------------
 #
@@ -1109,7 +1113,7 @@ PREEXISTING_DIR_METHOD="delete"
 #-----------------------------------------------------------------------
 #
 # Set VERBOSE.  This is a flag that determines whether or not the experiment
-# generation and workflow task scripts tend to be print out more informational
+# generation and workflow task scripts tend to print out more informational
 # messages.
 #
 #-----------------------------------------------------------------------
@@ -1118,38 +1122,84 @@ VERBOSE="TRUE"
 #
 #-----------------------------------------------------------------------
 #
-# Set flags (and related directories) that determine whether the grid, 
-# orography, and/or surface climatology file generation tasks should be
-# run.  Note that these are all cycle-independent tasks, i.e. if they are
-# to be run, they do so only once at the beginning of the workflow before
-# any cycles are run.  Definitions:
+# Set the names of the various rocoto workflow tasks.
+#
+#-----------------------------------------------------------------------
+#
+MAKE_GRID_TN="make_grid"
+MAKE_OROG_TN="make_orog"
+MAKE_SFC_CLIMO_TN="make_sfc_climo"
+GET_EXTRN_ICS_TN="get_extrn_ics"
+GET_EXTRN_LBCS_TN="get_extrn_lbcs"
+MAKE_ICS_TN="make_ics"
+MAKE_LBCS_TN="make_lbcs"
+RUN_FCST_TN="run_fcst"
+RUN_POST_TN="run_post"
+GET_OBS="get_obs"
+GET_OBS_CCPA_TN="get_obs_ccpa"
+GET_OBS_MRMS_TN="get_obs_mrms"
+GET_OBS_NDAS_TN="get_obs_ndas"
+VX_TN="run_vx"
+VX_GRIDSTAT_TN="run_gridstatvx"
+VX_GRIDSTAT_REFC_TN="run_gridstatvx_refc"
+VX_GRIDSTAT_RETOP_TN="run_gridstatvx_retop"
+VX_GRIDSTAT_03h_TN="run_gridstatvx_03h"
+VX_GRIDSTAT_06h_TN="run_gridstatvx_06h"
+VX_GRIDSTAT_24h_TN="run_gridstatvx_24h"
+VX_POINTSTAT_TN="run_pointstatvx"
+VX_ENSGRID_TN="run_ensgridvx"
+VX_ENSGRID_03h_TN="run_ensgridvx_03h"
+VX_ENSGRID_06h_TN="run_ensgridvx_06h"
+VX_ENSGRID_24h_TN="run_ensgridvx_24h"
+VX_ENSGRID_REFC_TN="run_ensgridvx_refc"
+VX_ENSGRID_RETOP_TN="run_ensgridvx_retop"
+VX_ENSGRID_MEAN_TN="run_ensgridvx_mean"
+VX_ENSGRID_PROB_TN="run_ensgridvx_prob"
+VX_ENSGRID_MEAN_03h_TN="run_ensgridvx_mean_03h"
+VX_ENSGRID_PROB_03h_TN="run_ensgridvx_prob_03h"
+VX_ENSGRID_MEAN_06h_TN="run_ensgridvx_mean_06h"
+VX_ENSGRID_PROB_06h_TN="run_ensgridvx_prob_06h"
+VX_ENSGRID_MEAN_24h_TN="run_ensgridvx_mean_24h"
+VX_ENSGRID_PROB_24h_TN="run_ensgridvx_prob_24h"
+VX_ENSGRID_PROB_REFC_TN="run_ensgridvx_prob_refc"
+VX_ENSGRID_PROB_RETOP_TN="run_ensgridvx_prob_retop"
+VX_ENSPOINT_TN="run_enspointvx"
+VX_ENSPOINT_MEAN_TN="run_enspointvx_mean"
+VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
+#
+#-----------------------------------------------------------------------
+#
+# Set flags (and related directories) that determine whether various
+# workflow tasks should be run.  Note that the MAKE_GRID_TN, MAKE_OROG_TN, 
+# and MAKE_SFC_CLIMO_TN are all cycle-independent tasks, i.e. if they 
+# are to be run, they do so only once at the beginning of the workflow 
+# before any cycles are run.  Definitions:
 #
 # RUN_TASK_MAKE_GRID:
-# Flag that determines whether the grid file generation task is to be run.
-# If this is set to "TRUE", the grid generation task is run and new grid
-# files are generated.  If it is set to "FALSE", then the scripts look 
-# for pregenerated grid files in the directory specified by GRID_DIR (see
-# below).
+# Flag that determines whether the MAKE_GRID_TN task is to be run.  If 
+# this is set to "TRUE", the grid generation task is run and new grid
+# files are generated.  If it is set to "FALSE", then the scripts look
+# for pregenerated grid files in the directory specified by GRID_DIR 
+# (see below).
 #
 # GRID_DIR:
 # The directory in which to look for pregenerated grid files if 
 # RUN_TASK_MAKE_GRID is set to "FALSE".
 # 
 # RUN_TASK_MAKE_OROG:
-# Same as RUN_TASK_MAKE_GRID but for the orography generation task.
+# Same as RUN_TASK_MAKE_GRID but for the MAKE_OROG_TN task.
 #
 # OROG_DIR:
-# Same as GRID_DIR but for the orogrpahy generation task.
+# Same as GRID_DIR but for the MAKE_OROG_TN task.
 # 
 # RUN_TASK_MAKE_SFC_CLIMO:
-# Same as RUN_TASK_MAKE_GRID but for the surface climatology generation
-# task.
+# Same as RUN_TASK_MAKE_GRID but for the MAKE_SFC_CLIMO_TN task.
 #
 # SFC_CLIMO_DIR:
-# Same as GRID_DIR but for the surface climatology generation task.
+# Same as GRID_DIR but for the MAKE_SFC_CLIMO_TN task.
 #
 # RUN_TASK_RUN_POST:
-# Flag that determines whether the run_post task is to be run
+# Flag that determines whether the RUN_POST_TN task is to be run.
 # 
 # RUN_TASK_VX_GRIDSTAT:
 # Flag that determines whether the grid-stat verification task is to be
@@ -1194,7 +1244,6 @@ RUN_TASK_VX_POINTSTAT="FALSE"
 RUN_TASK_VX_ENSGRID="FALSE"
 
 RUN_TASK_VX_ENSPOINT="FALSE"
-
 #
 #-----------------------------------------------------------------------
 #
@@ -1379,57 +1428,13 @@ CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING=( \
 #
 #-----------------------------------------------------------------------
 #
-# Set the names of the various workflow tasks.  Then, for each task, set
-# the parameters to pass to the job scheduler (e.g. slurm) that will submit
-# a job for each task to be run.  These parameters include the number of
-# nodes to use to run the job, the MPI processes per node, the maximum
-# walltime to allow for the job to complete, and the maximum number of
-# times to attempt to run each task.
+# For each workflow task, set the parameters to pass to the job scheduler 
+# (e.g. slurm) that will submit a job for each task to be run.  These 
+# parameters include the number of nodes to use to run the job, the MPI 
+# processes per node, the maximum walltime to allow for the job to complete, 
+# and the maximum number of times to attempt to run each task.
 #
 #-----------------------------------------------------------------------
-#
-# Task names.
-#
-MAKE_GRID_TN="make_grid"
-MAKE_OROG_TN="make_orog"
-MAKE_SFC_CLIMO_TN="make_sfc_climo"
-GET_EXTRN_ICS_TN="get_extrn_ics"
-GET_EXTRN_LBCS_TN="get_extrn_lbcs"
-MAKE_ICS_TN="make_ics"
-MAKE_LBCS_TN="make_lbcs"
-RUN_FCST_TN="run_fcst"
-RUN_POST_TN="run_post"
-GET_OBS="get_obs"
-GET_OBS_CCPA_TN="get_obs_ccpa"
-GET_OBS_MRMS_TN="get_obs_mrms"
-GET_OBS_NDAS_TN="get_obs_ndas"
-VX_TN="run_vx"
-VX_GRIDSTAT_TN="run_gridstatvx"
-VX_GRIDSTAT_REFC_TN="run_gridstatvx_refc"
-VX_GRIDSTAT_RETOP_TN="run_gridstatvx_retop"
-VX_GRIDSTAT_03h_TN="run_gridstatvx_03h"
-VX_GRIDSTAT_06h_TN="run_gridstatvx_06h"
-VX_GRIDSTAT_24h_TN="run_gridstatvx_24h"
-VX_POINTSTAT_TN="run_pointstatvx"
-VX_ENSGRID_TN="run_ensgridvx"
-VX_ENSGRID_03h_TN="run_ensgridvx_03h"
-VX_ENSGRID_06h_TN="run_ensgridvx_06h"
-VX_ENSGRID_24h_TN="run_ensgridvx_24h"
-VX_ENSGRID_REFC_TN="run_ensgridvx_refc"
-VX_ENSGRID_RETOP_TN="run_ensgridvx_retop"
-VX_ENSGRID_MEAN_TN="run_ensgridvx_mean"
-VX_ENSGRID_PROB_TN="run_ensgridvx_prob"
-VX_ENSGRID_MEAN_03h_TN="run_ensgridvx_mean_03h"
-VX_ENSGRID_PROB_03h_TN="run_ensgridvx_prob_03h"
-VX_ENSGRID_MEAN_06h_TN="run_ensgridvx_mean_06h"
-VX_ENSGRID_PROB_06h_TN="run_ensgridvx_prob_06h"
-VX_ENSGRID_MEAN_24h_TN="run_ensgridvx_mean_24h"
-VX_ENSGRID_PROB_24h_TN="run_ensgridvx_prob_24h"
-VX_ENSGRID_PROB_REFC_TN="run_ensgridvx_prob_refc"
-VX_ENSGRID_PROB_RETOP_TN="run_ensgridvx_prob_retop"
-VX_ENSPOINT_TN="run_enspointvx"
-VX_ENSPOINT_MEAN_TN="run_enspointvx_mean"
-VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
 #
 # Number of nodes.
 #
@@ -1463,7 +1468,7 @@ PPN_GET_EXTRN_ICS="1"
 PPN_GET_EXTRN_LBCS="1"
 PPN_MAKE_ICS="12"
 PPN_MAKE_LBCS="12"
-PPN_RUN_FCST="24"  # This may have to be changed depending on the number of threads used.
+PPN_RUN_FCST=""    # will be calculated from NCORES_PER_NODE and OMP_NUM_THREADS in setup.sh
 PPN_RUN_POST="24"
 PPN_GET_OBS_CCPA="1"
 PPN_GET_OBS_MRMS="1"
@@ -1739,9 +1744,6 @@ COMPILER="intel"
 # Controls the size of the stack for threads created by the OpenMP 
 # implementation.
 #
-# CPUS_PER_TASK_RUN_FCST:
-# Sets the number of MPI tasks per CPU for the RUN_FCST task. 
-#
 # Note that settings for the make_grid and make_orog tasks are not 
 # included below as they do not use parallelized code.
 #
@@ -1764,10 +1766,8 @@ OMP_NUM_THREADS_MAKE_LBCS="1"
 OMP_STACKSIZE_MAKE_LBCS="1024m"
 
 KMP_AFFINITY_RUN_FCST="scatter"
-OMP_NUM_THREADS_RUN_FCST="4"
+OMP_NUM_THREADS_RUN_FCST="2"    # atmos_nthreads in model_configure
 OMP_STACKSIZE_RUN_FCST="1024m"
-
-CPUS_PER_TASK_RUN_FCST="2"
 
 KMP_AFFINITY_RUN_POST="scatter"
 OMP_NUM_THREADS_RUN_POST="1"

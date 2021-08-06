@@ -490,7 +490,6 @@ fi
 #
 create_model_configure_file \
   cdate="$cdate" \
-  nthreads=${OMP_NUM_THREADS} \
   run_dir="${run_dir}" \
   sub_hourly_post="${SUB_HOURLY_POST}" \
   dt_subhourly_post_mnts="${DT_SUBHOURLY_POST_MNTS}" \
@@ -523,13 +522,6 @@ Call to function to create a diag table file for the current cycle's
 #
 #-----------------------------------------------------------------------
 #
-#-----------------------------------------------------------------------
-# Deactivate the conda environment to avoid conflicts between the 
-# environment used by the regional workflow (prepended to your $PATH)
-# and that used in the run environment.
-#-----------------------------------------------------------------------
-unload_python
-
 $APRUN ${FV3_EXEC_FP} || print_err_msg_exit "\
 Call to executable to run FV3-LAM forecast returned with nonzero exit
 code."
