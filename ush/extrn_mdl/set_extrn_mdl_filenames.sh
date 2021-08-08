@@ -49,10 +49,24 @@ function set_extrn_mdl_filenames() {
 #
 #-----------------------------------------------------------------------
 #
-  local ruc_lsm_name \
-        regex_search \
-        ruc_lsm_name_or_null \
-        sdf_uses_ruc_lsm
+  local dd \
+        ddd \
+        fcst_hh \
+        fcst_hhh \
+        fcst_mn \
+        fns \
+        fns_in_arcv \
+        fns_in_arcv_str \
+        fns_on_disk \
+        fns_on_disk_str \
+        fv3gfs_file_fmt \
+        hh \
+        mm \
+        mn \
+        prefix \
+        suffix \
+        yy \
+        yyyy \
 #
 #-----------------------------------------------------------------------
 #
@@ -182,8 +196,8 @@ function set_extrn_mdl_filenames() {
 
     "RAP")
 #
-# Note that this is GSL RAPX data, not operational NCEP RAP data.  An option for the latter
-# may be added in the future.
+# Note that this is GSL RAPX data, not operational NCEP RAP data.  An 
+# option for the latter may be added in the future.
 #
       if [ "${MACHINE}" = "JET" ]; then
         fns_on_disk=( "wrfnat_130_${fcst_hh}.grib2" )
@@ -195,8 +209,8 @@ function set_extrn_mdl_filenames() {
 
     "HRRR")
 #
-# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An option for the latter
-# may be added in the future.
+# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An 
+# option for the latter may be added in the future.
 #
       if [ "${MACHINE}" = "JET" ]; then
         fns_on_disk=( "wrfnat_hrconus_${fcst_hh}.grib2" )
@@ -235,12 +249,13 @@ and ICs or LBCs (ics_or_lbcs):
 #
   "LBCS")
 
+    fcst_hh=( $( printf "%02d " "${lbc_spec_fhrs[@]}" ) )
+    fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
     fcst_mn="00"
 
     case "${extrn_mdl_name}" in
 
     "GSMGFS")
-      fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
       prefix="gfs.t${hh}z.atmf"
       fns=( "${fcst_hhh[@]/#/$prefix}" )
       suffix=".nemsio"
@@ -254,7 +269,6 @@ and ICs or LBCs (ics_or_lbcs):
 
       if [ "${fv3gfs_file_fmt}" = "nemsio" ]; then
 
-        fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
         suffix=".nemsio"
         fns=( "${fcst_hhh[@]/%/$suffix}" )
 
@@ -270,7 +284,6 @@ and ICs or LBCs (ics_or_lbcs):
 
       elif [ "${fv3gfs_file_fmt}" = "grib2" ]; then
 
-        fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
         prefix="gfs.t${hh}z.pgrb2.0p25.f"
         fns_on_disk=( "${fcst_hhh[@]/#/$prefix}" )
         fns_in_arcv=( "${fcst_hhh[@]/#/$prefix}" )
@@ -278,7 +291,6 @@ and ICs or LBCs (ics_or_lbcs):
 
       elif [ "${fv3gfs_file_fmt}" = "netcdf" ]; then
 
-        fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
         suffix=".nc"
         fns=( "${fcst_hhh[@]/%/$suffix}" )
 
@@ -297,11 +309,9 @@ and ICs or LBCs (ics_or_lbcs):
 
     "RAP")
 #
-# Note that this is GSL RAPX data, not operational NCEP RAP data.  An option for the latter
-# may be added in the future.
+# Note that this is GSL RAPX data, not operational NCEP RAP data.  An 
+# option for the latter may be added in the future.
 #
-      fcst_hh=( $( printf "%02d " "${lbc_spec_fhrs[@]}" ) )
-
       if [ "${MACHINE}" = "JET" ]; then 
         prefix="wrfnat_130_"
         suffix=".grib2"
@@ -320,11 +330,9 @@ and ICs or LBCs (ics_or_lbcs):
 
     "HRRR")
 #
-# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An option for the latter
-# may be added in the future.
+# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An 
+# option for the latter may be added in the future.
 #
-      fcst_hh=( $( printf "%02d " "${lbc_spec_fhrs[@]}" ) )
-
       if [ "${MACHINE}" = "JET" ]; then
         prefix="wrfnat_hrconus_"
         suffix=".grib2"
@@ -342,7 +350,6 @@ and ICs or LBCs (ics_or_lbcs):
       ;;
 
     "NAM")
-      fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
       prefix="nam.t${hh}z.bgrdsf"
       fns=( "${fcst_hhh[@]/#/$prefix}" )
       suffix=""
