@@ -112,6 +112,8 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NX="202"
   ESGgrid_NY="116"
 
+  ESGgrid_PAZI="0.0"
+
   ESGgrid_WIDE_HALO_WIDTH="6"
 
   DT_ATMOS="${DT_ATMOS:-40}"
@@ -156,6 +158,8 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NX="396"
   ESGgrid_NY="232"
 
+  ESGgrid_PAZI="0.0"
+  
   ESGgrid_WIDE_HALO_WIDTH="6"
 
   DT_ATMOS="${DT_ATMOS:-45}"
@@ -199,6 +203,8 @@ case ${PREDEF_GRID_NAME} in
 
   ESGgrid_NX="1748"
   ESGgrid_NY="1038"
+
+  ESGgrid_PAZI="0.0"
 
   ESGgrid_WIDE_HALO_WIDTH="6"
 
@@ -244,6 +250,8 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NX="840"
   ESGgrid_NY="600"
 
+  ESGgrid_PAZI="0.0"
+  
   ESGgrid_WIDE_HALO_WIDTH="6"
 
   DT_ATMOS="${DT_ATMOS:-40}"
@@ -291,6 +299,8 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NX="320"
   ESGgrid_NY="240"
 
+  ESGgrid_PAZI="0.0"
+  
   ESGgrid_WIDE_HALO_WIDTH="6"
 
 #  DT_ATMOS="${DT_ATMOS:-50}"
@@ -409,6 +419,8 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NX="1380"
   ESGgrid_NY="1020"
 
+  ESGgrid_PAZI="0.0"
+  
   ESGgrid_WIDE_HALO_WIDTH="6"
 
 #  DT_ATMOS="${DT_ATMOS:-50}"
@@ -638,6 +650,9 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NX="1344" # Supergrid value 2704
   ESGgrid_NY="1152" # Supergrid value 2320
 
+# Rotation of the ESG grid in degrees.
+  ESGgrid_PAZI="0.0"
+
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
   ESGgrid_WIDE_HALO_WIDTH="6"
@@ -712,6 +727,9 @@ case ${PREDEF_GRID_NAME} in
 # Divide "supergrid" values from /scratch2/BMC/det/kavulich/fix/fix_sar/hi/C768_grid.tile7.halo4.nc by 2 and subtract 8 to eliminate halo
   ESGgrid_NX="432" # Supergrid value 880
   ESGgrid_NY="360" # Supergrid value 736
+
+# Rotation of the ESG grid in degrees.
+  ESGgrid_PAZI="0.0"
 
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
@@ -788,6 +806,9 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NX="576" # Supergrid value 1168
   ESGgrid_NY="432" # Supergrid value 880
 
+# Rotation of the ESG grid in degrees.
+  ESGgrid_PAZI="0.0"
+
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
   ESGgrid_WIDE_HALO_WIDTH="6"
@@ -863,6 +884,9 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NX="432" # Supergrid value 880
   ESGgrid_NY="360" # Supergrid value 736
 
+# Rotation of the ESG grid in degrees.
+  ESGgrid_PAZI="0.0"
+
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
   ESGgrid_WIDE_HALO_WIDTH="6"
@@ -930,6 +954,8 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NX="345"
   ESGgrid_NY="230"
 
+  ESGgrid_PAZI="0.0"
+
   ESGgrid_WIDE_HALO_WIDTH="6"
 
   DT_ATMOS="${DT_ATMOS:-300}"
@@ -971,6 +997,8 @@ case ${PREDEF_GRID_NAME} in
 
   ESGgrid_NX="665"
   ESGgrid_NY="444"
+
+  ESGgrid_PAZI="0.0"
 
   ESGgrid_WIDE_HALO_WIDTH="6"
 
@@ -1014,6 +1042,8 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NX="2880"
   ESGgrid_NY="1920"
 
+  ESGgrid_PAZI="0.0"
+
   ESGgrid_WIDE_HALO_WIDTH="6"
 
   DT_ATMOS="${DT_ATMOS:-40}"
@@ -1055,6 +1085,8 @@ case ${PREDEF_GRID_NAME} in
 
   ESGgrid_NX="74"
   ESGgrid_NY="51"
+
+  ESGgrid_PAZI="0.0"
 
   ESGgrid_WIDE_HALO_WIDTH="6"
 
@@ -1144,6 +1176,8 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_NX="960"
   ESGgrid_NY="960"
 
+  ESGgrid_PAZI="0.0"
+
   ESGgrid_WIDE_HALO_WIDTH="6"
 
   DT_ATMOS="${DT_ATMOS:-50}"
@@ -1167,6 +1201,50 @@ case ${PREDEF_GRID_NAME} in
   fi
   ;;
 
+#
+#-----------------------------------------------------------------------
+#
+# Future operational RRFS domain with ~3km cell size.
+#
+#-----------------------------------------------------------------------
+#
+"RRFS_NA_3km")
+
+  GRID_GEN_METHOD="ESGgrid"
+
+  ESGgrid_LON_CTR=-107.5
+  ESGgrid_LAT_CTR=51.5
+
+  ESGgrid_DELX="3000.0"
+  ESGgrid_DELY="3000.0"
+
+  ESGgrid_NX=3640
+  ESGgrid_NY=2520
+
+  ESGgrid_PAZI="-13.0"
+
+  ESGgrid_WIDE_HALO_WIDTH=6
+
+  DT_ATMOS="${DT_ATMOS:-36}"
+
+  LAYOUT_X="${LAYOUT_X:-18}"
+  LAYOUT_Y="${LAYOUT_Y:-36}"
+  BLOCKSIZE="${BLOCKSIZE:-28}"
+
+  if [ "$QUILTING" = "TRUE" ]; then
+    WRTCMP_write_groups="1"
+    WRTCMP_write_tasks_per_group="144"
+    WRTCMP_output_grid="rotated_latlon"
+    WRTCMP_cen_lon="-112.0" #${ESGgrid_LON_CTR}"
+    WRTCMP_cen_lat="48.0" #${ESGgrid_LAT_CTR}"
+    WRTCMP_lon_lwr_left="-51.0"
+    WRTCMP_lat_lwr_left="-33.0"
+    WRTCMP_lon_upr_rght="51.0"
+    WRTCMP_lat_upr_rght="33.0"
+    WRTCMP_dlon="0.025" #$( printf "%.9f" $( bc -l <<< "(${ESGgrid_DELX}/${radius_Earth})*${degs_per_radian}" ) )
+    WRTCMP_dlat="0.025" #$( printf "%.9f" $( bc -l <<< "(${ESGgrid_DELY}/${radius_Earth})*${degs_per_radian}" ) )
+  fi
+  ;;
 esac
 #
 #-----------------------------------------------------------------------

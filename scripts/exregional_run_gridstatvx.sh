@@ -124,6 +124,7 @@ fi
 export SCRIPTSDIR
 export EXPTDIR
 export MET_INSTALL_DIR
+export MET_BIN_EXEC
 export METPLUS_PATH
 export METPLUS_CONF
 export MET_CONFIG
@@ -145,6 +146,10 @@ if [ ${VAR} == "APCP" ]; then
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/${VAR}_${acc}.conf
 elif [ ${VAR} == "REFC" ]; then
+  ${METPLUS_PATH}/ush/master_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/${VAR}.conf
+elif [ ${VAR} == "RETOP" ]; then
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/${VAR}.conf

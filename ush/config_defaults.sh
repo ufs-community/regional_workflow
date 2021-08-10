@@ -295,6 +295,9 @@ DOT_OR_USCORE="_"
 # the directory in which it is created in the build step to the executables
 # directory (EXECDIR; this is set during experiment generation).
 #
+# FCST_MODEL:
+# Name of forecast model (default=ufs-weather-model)
+#
 # WFLOW_XML_FN:
 # Name of the rocoto workflow XML file that the experiment generation
 # script creates and that defines the workflow for the experiment.
@@ -346,6 +349,8 @@ MODEL_CONFIG_FN="model_configure"
 NEMS_CONFIG_FN="nems.configure"
 FV3_EXEC_FN="ufs_model"
 
+FCST_MODEL="ufs-weather-model"
+
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
 EXTRN_MDL_ICS_VAR_DEFNS_FN="extrn_mdl_ics_var_defns.sh"
@@ -381,6 +386,36 @@ DATE_FIRST_CYCL="YYYYMMDD"
 DATE_LAST_CYCL="YYYYMMDD"
 CYCL_HRS=( "HH1" "HH2" )
 FCST_LEN_HRS="24"
+#
+#-----------------------------------------------------------------------
+#
+# Set model_configure parameters.  Definitions:
+#
+# DT_ATMOS:
+# The main forecast model integraton time step.  As described in the 
+# forecast model documentation, "It corresponds to the frequency with 
+# which the top level routine in the dynamics is called as well as the 
+# frequency with which the physics is called."
+#
+# CPL: parameter for coupling
+# (set automatically based on FCST_MODEL in ush/setup.sh)
+# (ufs-weather-model:FALSE, fv3gfs_aqm:TRUE)
+#
+# RESTART_INTERVAL:
+# frequency of the output restart files (unit:hour). 
+# Default=0: restart files are produced at the end of a forecast run
+# For example, RESTART_INTERVAL="1": restart files are produced every hour
+# with the prefix "YYYYMMDD.HHmmSS." in the RESTART directory
+#
+# WRITE_DOPOST:
+# Flag that determines whether or not to use the INLINE POST option
+# When TRUE, force to turn off run_post (RUN_TASK_RUN_POST=FALSE) in setup.sh
+#
+#-----------------------------------------------------------------------
+#
+DT_ATMOS=""
+RESTART_INTERVAL="0"
+WRITE_DOPOST="FALSE"
 #
 #-----------------------------------------------------------------------
 #
@@ -434,7 +469,7 @@ FCST_LEN_HRS="24"
 # use of predetermined directory structure and file names. Therefore, if
 # the MRMS files are user provided, they need to follow the anticipated 
 # naming structure:
-# {YYYYMMDD}/MergedReflectivityQComposite_00.00_{YYYYMMDD}-{HH}{mm}{SS}.grib2,
+# {YYYYMMDD}/MergedReflectivityQCComposite_00.50_{YYYYMMDD}-{HH}{mm}{SS}.grib2,
 # where YYYY is the 4-digit valid year, MM the 2-digit valid month, DD 
 # the 2-digit valid day of the month, HH the 2-digit valid hour of the 
 # day, mm the 2-digit valid minutes of the hour, and SS is the two-digit
@@ -475,6 +510,7 @@ FCST_LEN_HRS="24"
 #
 MODEL=""
 MET_INSTALL_DIR="/path/to/MET"
+MET_BIN_EXEC="bin"
 METPLUS_PATH="/path/to/METPlus"
 CCPA_OBS_DIR="/path/to/observation-directory/ccpa/proc"
 MRMS_OBS_DIR="/path/to/observation-directory/mrms/proc"
@@ -524,18 +560,26 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #
 #-----------------------------------------------------------------------
 #
-# Set NOMADS online data associated parameters. Definitions:
+# Base directories in which to search for external model files.
 #
-# NOMADS:
-# Flag controlling whether or not using NOMADS online data.
+# EXTRN_MDL_SYSBASEDIR_ICS:
+# Base directory on the local machine containing external model files for
+# generating ICs on the native grid.  The way the full path containing 
+# these files is constructed depends on the user-specified external model
+# for ICs, i.e. EXTRN_MDL_NAME_ICS.
 #
-# NOMADS_file_type:
-# Flag controlling the format of data.
+# EXTRN_MDL_SYSBASEDIR_LBCS:
+# Same as EXTRN_MDL_SYSBASEDIR_ICS but for LBCs.
+#
+# Note that these must be defined as null strings here so that if they 
+# are specified by the user in the experiment configuration file, they 
+# remain set to those values, and if not, they get set to machine-dependent 
+# values.
 #
 #-----------------------------------------------------------------------
 #
-NOMADS="FALSE"
-NOMADS_file_type="nemsio"
+EXTRN_MDL_SYSBASEDIR_ICS=""
+EXTRN_MDL_SYSBASEDIR_LBCS=""
 #
 #-----------------------------------------------------------------------
 #
@@ -576,6 +620,21 @@ EXTRN_MDL_SOURCE_BASEDIR_ICS="/base/dir/containing/user/staged/extrn/mdl/files/f
 EXTRN_MDL_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
 EXTRN_MDL_SOURCE_BASEDIR_LBCS="/base/dir/containing/user/staged/extrn/mdl/files/for/LBCs"
 EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
+#
+#-----------------------------------------------------------------------
+#
+# Set NOMADS online data associated parameters. Definitions:
+#
+# NOMADS:
+# Flag controlling whether or not using NOMADS online data.
+#
+# NOMADS_file_type:
+# Flag controlling the format of data.
+#
+#-----------------------------------------------------------------------
+#
+NOMADS="FALSE"
+NOMADS_file_type="nemsio"
 #
 #-----------------------------------------------------------------------
 #
@@ -839,6 +898,9 @@ GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES=""
 # the regional grid before shaving the halo down to the width(s) expected
 # by the forecast model.  
 #
+# ESGgrid_PAZI:
+# The rotational parameter for the ESG grid (in degrees).
+#
 # In order to generate grid files containing halos that are 3-cell and
 # 4-cell wide and orography files with halos that are 0-cell and 3-cell
 # wide (all of which are required as inputs to the forecast model), the
@@ -893,16 +955,11 @@ ESGgrid_DELY=""
 ESGgrid_NX=""
 ESGgrid_NY=""
 ESGgrid_WIDE_HALO_WIDTH=""
+ESGgrid_PAZI=""
 #
 #-----------------------------------------------------------------------
 #
 # Set computational parameters for the forecast.  Definitions:
-#
-# DT_ATMOS:
-# The main forecast model integraton time step.  As described in the 
-# forecast model documentation, "It corresponds to the frequency with 
-# which the top level routine in the dynamics is called as well as the 
-# frequency with which the physics is called."
 #
 # LAYOUT_X, LAYOUT_Y:
 # The number of MPI tasks (processes) to use in the two horizontal 
@@ -932,7 +989,6 @@ ESGgrid_WIDE_HALO_WIDTH=""
 #
 #-----------------------------------------------------------------------
 #
-DT_ATMOS=""
 LAYOUT_X=""
 LAYOUT_Y=""
 BLOCKSIZE=""
@@ -1058,7 +1114,7 @@ PREEXISTING_DIR_METHOD="delete"
 #-----------------------------------------------------------------------
 #
 # Set VERBOSE.  This is a flag that determines whether or not the experiment
-# generation and workflow task scripts tend to be print out more informational
+# generation and workflow task scripts tend to print out more informational
 # messages.
 #
 #-----------------------------------------------------------------------
@@ -1067,35 +1123,65 @@ VERBOSE="TRUE"
 #
 #-----------------------------------------------------------------------
 #
-# Set flags (and related directories) that determine whether the grid, 
-# orography, and/or surface climatology file generation tasks should be
-# run.  Note that these are all cycle-independent tasks, i.e. if they are
-# to be run, they do so only once at the beginning of the workflow before
-# any cycles are run.  Definitions:
+# Set the names of the various rocoto workflow tasks.
+#
+#-----------------------------------------------------------------------
+#
+MAKE_GRID_TN="make_grid"
+MAKE_OROG_TN="make_orog"
+MAKE_SFC_CLIMO_TN="make_sfc_climo"
+GET_EXTRN_ICS_TN="get_extrn_ics"
+GET_EXTRN_LBCS_TN="get_extrn_lbcs"
+MAKE_ICS_TN="make_ics"
+MAKE_LBCS_TN="make_lbcs"
+RUN_FCST_TN="run_fcst"
+RUN_POST_TN="run_post"
+GET_OBS="get_obs"
+GET_OBS_CCPA_TN="get_obs_ccpa"
+GET_OBS_MRMS_TN="get_obs_mrms"
+GET_OBS_NDAS_TN="get_obs_ndas"
+VX_TN="run_vx"
+VX_GRIDSTAT_TN="run_gridstatvx"
+VX_GRIDSTAT_REFC_TN="run_gridstatvx_refc"
+VX_GRIDSTAT_RETOP_TN="run_gridstatvx_retop"
+VX_GRIDSTAT_03h_TN="run_gridstatvx_03h"
+VX_GRIDSTAT_06h_TN="run_gridstatvx_06h"
+VX_GRIDSTAT_24h_TN="run_gridstatvx_24h"
+VX_POINTSTAT_TN="run_pointstatvx"
+#
+#-----------------------------------------------------------------------
+#
+# Set flags (and related directories) that determine whether various
+# workflow tasks should be run.  Note that the MAKE_GRID_TN, MAKE_OROG_TN, 
+# and MAKE_SFC_CLIMO_TN are all cycle-independent tasks, i.e. if they 
+# are to be run, they do so only once at the beginning of the workflow 
+# before any cycles are run.  Definitions:
 #
 # RUN_TASK_MAKE_GRID:
-# Flag that determines whether the grid file generation task is to be run.
-# If this is set to "TRUE", the grid generation task is run and new grid
-# files are generated.  If it is set to "FALSE", then the scripts look 
-# for pregenerated grid files in the directory specified by GRID_DIR (see
-# below).
+# Flag that determines whether the MAKE_GRID_TN task is to be run.  If 
+# this is set to "TRUE", the grid generation task is run and new grid
+# files are generated.  If it is set to "FALSE", then the scripts look
+# for pregenerated grid files in the directory specified by GRID_DIR 
+# (see below).
 #
 # GRID_DIR:
 # The directory in which to look for pregenerated grid files if 
 # RUN_TASK_MAKE_GRID is set to "FALSE".
 # 
 # RUN_TASK_MAKE_OROG:
-# Same as RUN_TASK_MAKE_GRID but for the orography generation task.
+# Same as RUN_TASK_MAKE_GRID but for the MAKE_OROG_TN task.
 #
 # OROG_DIR:
-# Same as GRID_DIR but for the orogrpahy generation task.
+# Same as GRID_DIR but for the MAKE_OROG_TN task.
 # 
 # RUN_TASK_MAKE_SFC_CLIMO:
-# Same as RUN_TASK_MAKE_GRID but for the surface climatology generation
-# task.
+# Same as RUN_TASK_MAKE_GRID but for the MAKE_SFC_CLIMO_TN task.
 #
 # SFC_CLIMO_DIR:
-# Same as GRID_DIR but for the surface climatology generation task.
+# Same as GRID_DIR but for the MAKE_SFC_CLIMO_TN task.
+#
+# RUN_TASK_RUN_POST:
+# Flag that determines whether the RUN_POST_TN task is to be run.
 # 
 # RUN_TASK_VX_GRIDSTAT:
 # Flag that determines whether the grid-stat verification task is to be
@@ -1116,6 +1202,8 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
 
+RUN_TASK_RUN_POST="TRUE"
+
 RUN_TASK_GET_OBS_CCPA="FALSE"
 
 RUN_TASK_GET_OBS_MRMS="FALSE"
@@ -1125,7 +1213,6 @@ RUN_TASK_GET_OBS_NDAS="FALSE"
 RUN_TASK_VX_GRIDSTAT="FALSE"
 
 RUN_TASK_VX_POINTSTAT="FALSE"
-
 #
 #-----------------------------------------------------------------------
 #
@@ -1252,6 +1339,8 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "global_zorclim.1x1.grb" \
 "global_sfc_emissivity_idx.txt" \
 "global_solarconstant_noaa_an.txt" \
+"geo_em.d01.lat-lon.2.5m.HGT_M.nc" \
+"HGT.Beljaars_filtered.lat-lon.30s_res.nc" \
 "replace_with_FIXgsm_ozone_prodloss_filename" \
 )
 
@@ -1308,37 +1397,13 @@ CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING=( \
 #
 #-----------------------------------------------------------------------
 #
-# Set the names of the various workflow tasks.  Then, for each task, set
-# the parameters to pass to the job scheduler (e.g. slurm) that will submit
-# a job for each task to be run.  These parameters include the number of
-# nodes to use to run the job, the MPI processes per node, the maximum
-# walltime to allow for the job to complete, and the maximum number of
-# times to attempt to run each task.
+# For each workflow task, set the parameters to pass to the job scheduler 
+# (e.g. slurm) that will submit a job for each task to be run.  These 
+# parameters include the number of nodes to use to run the job, the MPI 
+# processes per node, the maximum walltime to allow for the job to complete, 
+# and the maximum number of times to attempt to run each task.
 #
 #-----------------------------------------------------------------------
-#
-# Task names.
-#
-MAKE_GRID_TN="make_grid"
-MAKE_OROG_TN="make_orog"
-MAKE_SFC_CLIMO_TN="make_sfc_climo"
-GET_EXTRN_ICS_TN="get_extrn_ics"
-GET_EXTRN_LBCS_TN="get_extrn_lbcs"
-MAKE_ICS_TN="make_ics"
-MAKE_LBCS_TN="make_lbcs"
-RUN_FCST_TN="run_fcst"
-RUN_POST_TN="run_post"
-GET_OBS="get_obs"
-GET_OBS_CCPA_TN="get_obs_ccpa"
-GET_OBS_MRMS_TN="get_obs_mrms"
-GET_OBS_NDAS_TN="get_obs_ndas"
-VX_TN="run_vx"
-VX_GRIDSTAT_TN="run_gridstatvx"
-VX_GRIDSTAT_REFC_TN="run_gridstatvx_refc"
-VX_GRIDSTAT_03h_TN="run_gridstatvx_03h"
-VX_GRIDSTAT_06h_TN="run_gridstatvx_06h"
-VX_GRIDSTAT_24h_TN="run_gridstatvx_24h"
-VX_POINTSTAT_TN="run_pointstatvx"
 #
 # Number of nodes.
 #
@@ -1366,7 +1431,7 @@ PPN_GET_EXTRN_ICS="1"
 PPN_GET_EXTRN_LBCS="1"
 PPN_MAKE_ICS="12"
 PPN_MAKE_LBCS="12"
-PPN_RUN_FCST="24"  # This may have to be changed depending on the number of threads used.
+PPN_RUN_FCST=""    # will be calculated from NCORES_PER_NODE and OMP_NUM_THREADS in setup.sh
 PPN_RUN_POST="24"
 PPN_GET_OBS_CCPA="1"
 PPN_GET_OBS_MRMS="1"
@@ -1401,12 +1466,13 @@ MAXTRIES_GET_EXTRN_LBCS="1"
 MAXTRIES_MAKE_ICS="1"
 MAXTRIES_MAKE_LBCS="1"
 MAXTRIES_RUN_FCST="1"
-MAXTRIES_RUN_POST="1"
+MAXTRIES_RUN_POST="2"
 MAXTRIES_GET_OBS_CCPA="1"
 MAXTRIES_GET_OBS_MRMS="1"
 MAXTRIES_GET_OBS_NDAS="1"
 MAXTRIES_VX_GRIDSTAT="1"
 MAXTRIES_VX_GRIDSTAT_REFC="1"
+MAXTRIES_VX_GRIDSTAT_RETOP="1"
 MAXTRIES_VX_GRIDSTAT_03h="1"
 MAXTRIES_VX_GRIDSTAT_06h="1"
 MAXTRIES_VX_GRIDSTAT_24h="1"
@@ -1504,7 +1570,7 @@ SHUM_MAG="0.006" #Variable "shum" in input.nml
 SHUM_LSCALE="150000"
 SHUM_TSCALE="21600" #Variable "shum_tau" in input.nml
 SHUM_INT="3600" #Variable "shumint" in input.nml
-SPPT_MAG="1.0" #Variable "sppt" in input.nml
+SPPT_MAG="0.7" #Variable "sppt" in input.nml
 SPPT_LSCALE="150000"
 SPPT_TSCALE="21600" #Variable "sppt_tau" in input.nml
 SPPT_INT="3600" #Variable "spptint" in input.nml
@@ -1586,26 +1652,6 @@ COMPILER="intel"
 #
 #-----------------------------------------------------------------------
 #
-# GWD_HRRRsuite_BASEDIR:
-# Temporary workflow variable specifies the base directory in which to 
-# look for certain fixed orography statistics files needed only by the 
-# gravity wave drag parameterization in the FV3_HRRR physics suite.  This 
-# variable is added in order to avoid including hard-coded paths in the 
-# workflow scripts.  Currently, the workflow simply copies the necessary 
-# files from a subdirectory under this directory (named according to the 
-# specified predefined grid) to the orography directory (OROG_DIR) under 
-# the experiment directory.  
-#
-# Note that this variable is only used when using the FV3_HRRR physics 
-# suite.  It should be removed from the workflow once there is a script 
-# or code available that generates these files for any grid.
-#
-#-----------------------------------------------------------------------
-#
-GWD_HRRRsuite_BASEDIR=""
-#
-#-----------------------------------------------------------------------
-#
 # KMP_AFFINITY_*:
 # From Intel: "The Intel® runtime library has the ability to bind OpenMP
 # threads to physical processing units. The interface is controlled using
@@ -1631,9 +1677,6 @@ GWD_HRRRsuite_BASEDIR=""
 # Controls the size of the stack for threads created by the OpenMP 
 # implementation.
 #
-# CPUS_PER_TASK_RUN_FCST:
-# Sets the number of MPI tasks per CPU for the RUN_FCST task. 
-#
 # Note that settings for the make_grid and make_orog tasks are not 
 # included below as they do not use parallelized code.
 #
@@ -1656,10 +1699,8 @@ OMP_NUM_THREADS_MAKE_LBCS="1"
 OMP_STACKSIZE_MAKE_LBCS="1024m"
 
 KMP_AFFINITY_RUN_FCST="scatter"
-OMP_NUM_THREADS_RUN_FCST="4"
+OMP_NUM_THREADS_RUN_FCST="2"    # atmos_nthreads in model_configure
 OMP_STACKSIZE_RUN_FCST="1024m"
-
-CPUS_PER_TASK_RUN_FCST="4"
 
 KMP_AFFINITY_RUN_POST="scatter"
 OMP_NUM_THREADS_RUN_POST="1"

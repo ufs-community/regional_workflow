@@ -47,8 +47,6 @@ ushdir="${scrfunc_dir}"
 #
 . $ushdir/source_util_funcs.sh
 . $ushdir/set_FV3nml_sfc_climo_filenames.sh
-. $ushdir/set_FV3nml_stoch_params.sh
-. $ushdir/create_diag_table_files.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -190,6 +188,7 @@ settings="\
   'vx_tn': ${VX_TN}
   'vx_gridstat_tn': ${VX_GRIDSTAT_TN}
   'vx_gridstat_refc_tn': ${VX_GRIDSTAT_REFC_TN}
+  'vx_gridstat_retop_tn': ${VX_GRIDSTAT_RETOP_TN}
   'vx_gridstat_03h_tn': ${VX_GRIDSTAT_03h_TN}
   'vx_gridstat_06h_tn': ${VX_GRIDSTAT_06h_TN}
   'vx_gridstat_24h_tn': ${VX_GRIDSTAT_24h_TN}
@@ -219,7 +218,7 @@ settings="\
 # Number of cores used for a task
 #
   'ncores_run_fcst': ${PE_MEMBER01}
-  'native_run_fcst': --cpus-per-task ${CPUS_PER_TASK_RUN_FCST} --exclusive
+  'native_run_fcst': --cpus-per-task ${OMP_NUM_THREADS_RUN_FCST} --exclusive
 #
 # Number of logical processes per node for each task.  If running without
 # threading, this is equal to the number of MPI processes per node.
@@ -238,7 +237,6 @@ settings="\
   'ppn_get_obs_ndas': ${PPN_GET_OBS_NDAS}
   'ppn_vx_gridstat': ${PPN_VX_GRIDSTAT}
   'ppn_vx_pointstat': ${PPN_VX_POINTSTAT}
-
 #
 # Maximum wallclock time for each task.
 #
@@ -273,16 +271,19 @@ settings="\
   'maxtries_get_obs_ndas': ${MAXTRIES_GET_OBS_NDAS}
   'maxtries_vx_gridstat': ${MAXTRIES_VX_GRIDSTAT}
   'maxtries_vx_gridstat_refc': ${MAXTRIES_VX_GRIDSTAT_REFC}
+  'maxtries_vx_gridstat_retop': ${MAXTRIES_VX_GRIDSTAT_RETOP}
   'maxtries_vx_gridstat_03h': ${MAXTRIES_VX_GRIDSTAT_03h}
   'maxtries_vx_gridstat_06h': ${MAXTRIES_VX_GRIDSTAT_06h}
   'maxtries_vx_gridstat_24h': ${MAXTRIES_VX_GRIDSTAT_24h}
   'maxtries_vx_pointstat': ${MAXTRIES_VX_POINTSTAT}
 #
-# Flags that specify whether to run the preprocessing tasks.
+# Flags that specify whether to run the preprocessing or
+# verification-related tasks.
 #
   'run_task_make_grid': ${RUN_TASK_MAKE_GRID}
   'run_task_make_orog': ${RUN_TASK_MAKE_OROG}
   'run_task_make_sfc_climo': ${RUN_TASK_MAKE_SFC_CLIMO}
+  'run_task_run_post': ${RUN_TASK_RUN_POST}
   'run_task_get_obs_ccpa': ${RUN_TASK_GET_OBS_CCPA}
   'run_task_get_obs_mrms': ${RUN_TASK_GET_OBS_MRMS}
   'run_task_get_obs_ndas': ${RUN_TASK_GET_OBS_NDAS}
@@ -319,10 +320,15 @@ settings="\
 #
   'fcst_len_hrs': ${FCST_LEN_HRS}
 #
+# Inline post
+#
+  'write_dopost': ${WRITE_DOPOST}
+#
 # METPlus-specific information
 #
   'model': ${MODEL}
   'met_install_dir': ${MET_INSTALL_DIR}
+  'met_bin_exec': ${MET_BIN_EXEC}
   'metplus_path': ${METPLUS_PATH}
   'vx_config_dir': ${VX_CONFIG_DIR}
   'metplus_conf': ${METPLUS_CONF}
@@ -378,21 +384,6 @@ $settings"
 #
 #-----------------------------------------------------------------------
 #
-# Create the cycle directories.
-#
-#-----------------------------------------------------------------------
-#
-print_info_msg "$VERBOSE" "
-Creating the cycle directories..."
-
-for (( i=0; i<${NUM_CYCLES}; i++ )); do
-  cdate="${ALL_CDATES[$i]}"
-  cycle_dir="${CYCLE_BASEDIR}/$cdate"
-  mkdir_vrfy -p "${cycle_dir}"
-done
-#
-#-----------------------------------------------------------------------
-#
 # Create a symlink in the experiment directory that points to the workflow
 # (re)launch script.
 #
@@ -403,7 +394,9 @@ Creating symlink in the experiment directory (EXPTDIR) that points to the
 workflow launch script (WFLOW_LAUNCH_SCRIPT_FP):
   EXPTDIR = \"${EXPTDIR}\"
   WFLOW_LAUNCH_SCRIPT_FP = \"${WFLOW_LAUNCH_SCRIPT_FP}\""
-ln_vrfy -fs "${WFLOW_LAUNCH_SCRIPT_FP}" "$EXPTDIR"
+create_symlink_to_file target="${WFLOW_LAUNCH_SCRIPT_FP}" \
+                       symlink="${EXPTDIR}/${WFLOW_LAUNCH_SCRIPT_FN}" \
+                       relative="FALSE"
 #
 #-----------------------------------------------------------------------
 #
@@ -564,6 +557,15 @@ print_info_msg "$VERBOSE" "
 Copying the CCPP physics suite definition XML file from its location in
 the forecast model directory sturcture to the experiment directory..."
 cp_vrfy "${CCPP_PHYS_SUITE_IN_CCPP_FP}" "${CCPP_PHYS_SUITE_FP}"
+#
+# Copy the field dictionary file from its location in the
+# clone of the FV3 code repository to the experiment directory (EXPT-
+# DIR).
+#
+print_info_msg "$VERBOSE" "
+Copying the field dictionary file from its location in the forecast
+model directory sturcture to the experiment directory..."
+cp_vrfy "${FIELD_DICT_IN_UWM_FP}" "${FIELD_DICT_FP}"
 #
 #-----------------------------------------------------------------------
 #
@@ -810,16 +812,6 @@ if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
 Call to function to set surface climatology file names in the FV3 namelist
 file failed."
 
-  if [ "${DO_ENSEMBLE}" = TRUE ]; then
-    set_FV3nml_stoch_params || print_err_msg_exit "\
-Call to function to set stochastic parameters in the FV3 namelist files
-for the various ensemble members failed."
-  fi
-
-  create_diag_table_files || print_err_msg_exit "\
-Call to function to create a diagnostics table file under each cycle 
-directory failed."
-
 fi
 #
 #-----------------------------------------------------------------------
@@ -859,7 +851,7 @@ The experiment directory is:
   > EXPTDIR=\"$EXPTDIR\"
 
 "
-case $MACHINE in
+case "$MACHINE" in
 
 "CHEYENNE")
   print_info_msg "\

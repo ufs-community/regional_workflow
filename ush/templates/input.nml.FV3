@@ -85,7 +85,7 @@
     hord_vt = 6
     hydrostatic = .false.
     io_layout = 1,1
-    k_split = 4
+    k_split = 2
     ke_bg = 0.0
     kord_mt = 9
     kord_tm = -9
@@ -143,6 +143,7 @@
     do_spp = .false.
     do_sppt = .false.
     dspheat = .true.
+    effr_in = .true.
     fhcyc = 0.0
     fhlwr = 1200.0
     fhswr = 1200.0
@@ -227,7 +228,7 @@
     sppt = 1.0
     sppt_logit = .true.
     sppt_lscale = 150.E3
-    sppt_sfclimit = .false.
+    sppt_sfclimit = .true.
     sppt_tau = 2.16E4
     spptint = 3600
     use_zmtnblck = .false.
