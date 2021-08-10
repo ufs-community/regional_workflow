@@ -492,7 +492,7 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 # several queues.  These queues are defined in the default and local 
 # workflow/experiment configuration script.
 #
-# Also, set the machine-dependent flag RELAITVE_OR_NULL that specifies
+# Also, set the machine-dependent flag RELATIVE_OR_NULL that specifies
 # the flag to pass to the link creation command (ln_vrfy) when attempting 
 # to create relative symlinks.  On machines that don't support relative
 # symlinks, it should be set to a null string.

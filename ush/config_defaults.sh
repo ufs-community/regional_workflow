@@ -1587,8 +1587,8 @@ USE_ZMTNBLCK="false"
 # Each SPP option is an array, applicable (in order) to the scheme/parameter
 # listed in SPP_VAR_LIST. Enter each value of the array in config.sh as 
 # shown below without commas or single quotes (e.g., SPP_VAR_LIST=
-# ( "pbl" "lsm" "mp" ). Both commas and single quotes will be added by
-# Jinja when creating the namelist.
+# ( "pbl" "sfc" "mp" "rad" "gwd" ). Both commas and single quotes will be 
+# added by Jinja when creating the namelist.
 #
 # Note that SPP is currently only available for specific physics schemes 
 # used in the RAP/HRRR physics suite.  Users need to be aware of which SDF
@@ -1597,14 +1597,14 @@ USE_ZMTNBLCK="false"
 #-----------------------------------------------------------------------
 #
 DO_SPP="false"
-SPP_VAR_LIST=( "pbl" "sfc" )
-SPP_MAG_LIST=( "0.2" "0.2" ) #Variable "spp_prt_list" in input.nml
-SPP_LSCALE=( "150000.0" "150000.0" )
-SPP_TSCALE=( "21600.0" "21600.0" ) #Variable "spp_tau" in input.nml
-SPP_SIGTOP1=( "0.1" "0.1" )
-SPP_SIGTOP2=( "0.025" "0.025" )
-SPP_STDDEV_CUTOFF=( "1.5" "1.5" )
-ISEED_SPP=( "4" "4" )
+SPP_VAR_LIST=( "pbl" "sfc" "mp" "rad" "gwd" )
+SPP_MAG_LIST=( "0.2" "0.2" "0.2" "0.2" "0.2" ) #Variable "spp_prt_list" in input.nml
+SPP_LSCALE=( "150000.0" "150000.0" "150000.0" "150000.0" "150000.0" )
+SPP_TSCALE=( "21600.0" "21600.0" "21600.0" "21600.0" "21600.0" ) #Variable "spp_tau" in input.nml
+SPP_SIGTOP1=( "0.1" "0.1" "0.1" "0.1" "0.1")
+SPP_SIGTOP2=( "0.025" "0.025" "0.025" "0.025" "0.025" )
+SPP_STDDEV_CUTOFF=( "1.5" "1.5" "1.5" "1.5" "1.5" )
+ISEED_SPP=( "4" "4" "4" "4" "4" )
 #
 #-----------------------------------------------------------------------
 # 
