@@ -438,11 +438,11 @@ fi
 #
 N_VAR_LNDP=0
 LNDP_TYPE=0
-FHCYC_LSM_SPP=0
+FHCYC_LSM_SPP_OR_NOT=0
 if [ "${DO_LSM_SPP}" = "TRUE" ]; then
   N_VAR_LNDP=${#SPP_LSM_VAR_LIST[@]}
   LNDP_TYPE=2
-  FHCYC_LSM_SPP=999
+  FHCYC_LSM_SPP_OR_NOT=999
 fi
 #
 #-----------------------------------------------------------------------
