@@ -428,7 +428,7 @@ fi
 # If running with LSM SPP, count the number of entries in SPP_LSM_VAR_LIST
 # to correctly set N_VAR_LNDP, otherwise set it to zero.  Also set 
 # LNDP_TYPE to 2 for LSM SPP, otherwise set it to zero.  Finally, initialize
-# a "FHCYC_LSM_SPP" variable to 0 and set it to 999 if LSM SPP is turned
+# an "FHCYC_LSM_SPP" variable to 0 and set it to 999 if LSM SPP is turned
 # on.  This requirement is necessary since LSM SPP cannot run with 
 # FHCYC=0 at the moment, but FHCYC cannot be set to anything less than the
 # length of the forecast either.  A bug fix will be issued ufs-weather-model 
