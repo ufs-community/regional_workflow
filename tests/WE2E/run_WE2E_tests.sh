@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 #
 #-----------------------------------------------------------------------
@@ -15,8 +15,8 @@
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script or function is 
-# located (scrfunc_fp), the name of that file (scrfunc_fn), and the 
+# Get the full path to the file in which this script or function is
+# located (scrfunc_fp), the name of that file (scrfunc_fn), and the
 # directory in which the file is located (scrfunc_dir).
 #
 #-----------------------------------------------------------------------
@@ -27,10 +27,10 @@ scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
 #-----------------------------------------------------------------------
 #
-# Set the full path to the top-level directory of the regional_workflow 
-# repository.  We denote this path by homerrfs.  The current script 
+# Set the full path to the top-level directory of the regional_workflow
+# repository.  We denote this path by homerrfs.  The current script
 # should be located in the "tests/WE2E" subdirectory under this directory.
-# Thus, homerrfs is the directory two levels above the directory in which 
+# Thus, homerrfs is the directory two levels above the directory in which
 # the current script is located.
 #
 #-----------------------------------------------------------------------
@@ -62,6 +62,7 @@ WE2Edir="$testsdir/WE2E"
 #-----------------------------------------------------------------------
 #
 . ${WE2Edir}/get_WE2Etest_names_subdirs_descs.sh
+. ${WE2Edir}/set_user_specified_extrn_mdl_file_info.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -92,106 +93,106 @@ Usage:
     [stmp=\"...\"] \\
     [ptmp=\"...\"]
 
-The arguments in brackets are optional.  The arguments are defined as 
+The arguments in brackets are optional.  The arguments are defined as
 follows:
 
 tests_file:
 Name of file or relative or absolute path to file containing the list of
-WE2E tests to run.  This file must contain one test name per line, with 
+WE2E tests to run.  This file must contain one test name per line, with
 no repeated names.  This is a required argument.
 
 machine:
 Argument used to explicitly set the experiment variable MACHINE in the
-experiment configuration files of all the WE2E tests the user wants to 
-run.  (A description of MACHINE can be found in the default experiment 
+experiment configuration files of all the WE2E tests the user wants to
+run.  (A description of MACHINE can be found in the default experiment
 configuration file.)  This is a required argument.
 
 account:
 Argument used to explicitly set the experiment variable ACCOUNT in the
-experiment configuration files of all the WE2E tests the user wants to 
-run.  (A description of ACCOUNT can be found in the default experiment 
+experiment configuration files of all the WE2E tests the user wants to
+run.  (A description of ACCOUNT can be found in the default experiment
 configuration file.)  This is a required argument.
 
 expt_basedir:
-Argument used to explicitly set the experiment variable EXPT_BASEDIR in 
+Argument used to explicitly set the experiment variable EXPT_BASEDIR in
 the experiment configuration files of all the WE2E tests the user wants
-to run.  (A description of EXPT_BASEDIR can be found in the default 
-experiment configuration file.)  If expt_basedir is specified in the call 
-to this script, its value is used to set EXPT_BASEDIR in the configuration 
-files.  If it is not specified, EXPT_BASEDIR is not set in the configuration 
-files, in which case the workflow generation script sets it to a default 
-value.  Note that if expt_basedir is set to a relative path (e.g. 
-expt_basedir=\"testset1\" in the call to this script), then the workflow 
-generation script will set EXPT_BASEDIR for the experiment to a default 
-absolute path followed by \${expt_basedir}.  This feature can be used to 
-group the WE2E tests into subdirectories for convenience, e.g. a set of 
-tests under subdirectory testset1, another set of tests under testset2, 
+to run.  (A description of EXPT_BASEDIR can be found in the default
+experiment configuration file.)  If expt_basedir is specified in the call
+to this script, its value is used to set EXPT_BASEDIR in the configuration
+files.  If it is not specified, EXPT_BASEDIR is not set in the configuration
+files, in which case the workflow generation script sets it to a default
+value.  Note that if expt_basedir is set to a relative path (e.g.
+expt_basedir=\"testset1\" in the call to this script), then the workflow
+generation script will set EXPT_BASEDIR for the experiment to a default
+absolute path followed by \${expt_basedir}.  This feature can be used to
+group the WE2E tests into subdirectories for convenience, e.g. a set of
+tests under subdirectory testset1, another set of tests under testset2,
 etc.
 
 use_cron_to_relaunch:
 Argument used to explicitly set the experiment variable USE_CRON_TO_RELAUNCH
-in the experiment configuration files of all the WE2E tests the user wants 
-to run.  (A description of USE_CRON_TO_RELAUNCH can be found in the default 
-experiment configuration file.)  If use_cron_to_relaunch is specified in 
-the call to this script, its value is used to set USE_CRON_TO_RELAUNCH 
-in the configuration files.  If it is not specified, USE_CRON_TO_RELAUNCH 
-is set to \"TRUE\" in the configuration files, in which case cron jobs 
-are used to (re)launch the workflows for all tests (one cron job per test).  
-Thus, use_cron_to_relaunch needs to be specified only if the user wants 
+in the experiment configuration files of all the WE2E tests the user wants
+to run.  (A description of USE_CRON_TO_RELAUNCH can be found in the default
+experiment configuration file.)  If use_cron_to_relaunch is specified in
+the call to this script, its value is used to set USE_CRON_TO_RELAUNCH
+in the configuration files.  If it is not specified, USE_CRON_TO_RELAUNCH
+is set to \"TRUE\" in the configuration files, in which case cron jobs
+are used to (re)launch the workflows for all tests (one cron job per test).
+Thus, use_cron_to_relaunch needs to be specified only if the user wants
 to turn off use of cron jobs for all tests (by specifying use_cron_to_relaunch=
-\"FALSE\" on the command line).  Note that it is not possible to specify 
-a different value for USE_CRON_TO_RELAUNCH for each test via this argument; 
+\"FALSE\" on the command line).  Note that it is not possible to specify
+a different value for USE_CRON_TO_RELAUNCH for each test via this argument;
 either all tests use cron jobs or none do.
 
 cron_relaunch_intvl_mnts:
 Argument used to explicitly set the experiment variable CRON_RELAUNCH_INTVL_MNTS
-in the experiment configuration files of all the WE2E tests the user wants 
-to run.  (A description of CRON_RELAUNCH_INTVL_MNTS can be found in the 
-default experiment configuration file.)  If cron_relaunch_intvl_mnts is 
-specified in the call to this script, its value is used to set 
-CRON_RELAUNCH_INTVL_MNTS in the configuration files.  If it is not 
-specified, CRON_RELAUNCH_INTVL_MNTS is set to \"02\" (i.e. two minutes) 
-in the configuration files.  Note that it is not possible to specify a 
-different value for CRON_RELAUNCH_INTVL_MNTS for each test via this 
-argument; all tests will use the same value for USE_CRON_TO_RELAUNCH 
-(either the value specified in the call to this script or the default 
-value of \"02\").  Note also that the value of this argument matters only 
-if the argument use_cron_to_relaunch is not explicitly set to \"FALSE\" 
+in the experiment configuration files of all the WE2E tests the user wants
+to run.  (A description of CRON_RELAUNCH_INTVL_MNTS can be found in the
+default experiment configuration file.)  If cron_relaunch_intvl_mnts is
+specified in the call to this script, its value is used to set
+CRON_RELAUNCH_INTVL_MNTS in the configuration files.  If it is not
+specified, CRON_RELAUNCH_INTVL_MNTS is set to \"02\" (i.e. two minutes)
+in the configuration files.  Note that it is not possible to specify a
+different value for CRON_RELAUNCH_INTVL_MNTS for each test via this
+argument; all tests will use the same value for USE_CRON_TO_RELAUNCH
+(either the value specified in the call to this script or the default
+value of \"02\").  Note also that the value of this argument matters only
+if the argument use_cron_to_relaunch is not explicitly set to \"FALSE\"
 in the call to this script.
 
 verbose:
 Argument used to explicitly set the experiment variable VERBOSE in the
 experiment configuration files of all the WE2E tests the user wants to
-run.  (A description of VERBOSE can be found in the default experiment 
-configuration file.)  If verbose is specified in the call to this script, 
-its value is used to set VERBOSE in the configuration files.  If it is 
+run.  (A description of VERBOSE can be found in the default experiment
+configuration file.)  If verbose is specified in the call to this script,
+its value is used to set VERBOSE in the configuration files.  If it is
 not specified, VERBOSE is set to \"TRUE\" in the configuration files.
-Note that it is not possible to specify a different value for VERBOSE 
-for each test via this argument; either all tests will have VERBOSE set 
+Note that it is not possible to specify a different value for VERBOSE
+for each test via this argument; either all tests will have VERBOSE set
 to \"TRUE\" or all will have it set to \"FALSE\".
 
 stmp:
-Argument used to explicitly set the experiment variable STMP in the 
-experiment configuration files of all the WE2E tests the user wants to 
+Argument used to explicitly set the experiment variable STMP in the
+experiment configuration files of all the WE2E tests the user wants to
 run that are in NCO mode, i.e. they have test configuration files that
-set the experiment variable RUN_ENVIR to \"nco\".  (A description of 
-STMP can be found in the default experiment configuration file.)  If 
-stmp is specified in the call to this script, its value is used to set 
-STMP in the configuration files of all tests that will run in NCO mode.  
-If it is not specified, STMP is (effectively) set as follows in the 
+set the experiment variable RUN_ENVIR to \"nco\".  (A description of
+STMP can be found in the default experiment configuration file.)  If
+stmp is specified in the call to this script, its value is used to set
+STMP in the configuration files of all tests that will run in NCO mode.
+If it is not specified, STMP is (effectively) set as follows in the
 configuration files (of all NCO mode tests to be run):
 
     STMP=\$( readlink -f \"\$homerrfs/../../nco_dirs/stmp\" \)
 
 Here, homerrfs is the base directory in which the regional_workflow
-repository is cloned.  Note that it is not possible to specify a different 
+repository is cloned.  Note that it is not possible to specify a different
 value for STMP for each test via this argument; all tests will use the
-same value for STMP (either the value specified in the call to this 
-script or the default value above).  Note also that the value of this 
+same value for STMP (either the value specified in the call to this
+script or the default value above).  Note also that the value of this
 argument is not used for any tests that are not in NCO mode.
 
 ptmp:
-Same as the argument \"stmp\" described above but for setting the 
+Same as the argument \"stmp\" described above but for setting the
 experiment variable PTMP for all tests that will run in NCO mode.
 "
 #
@@ -212,7 +213,7 @@ fi
 #
 # Specify the set of valid argument names for this script or function.
 # Then process the arguments provided to it on the command line (which
-# should consist of a set of name-value pairs of the form arg1="value1", 
+# should consist of a set of name-value pairs of the form arg1="value1",
 # arg2="value2", etc).
 #
 #-----------------------------------------------------------------------
@@ -254,7 +255,7 @@ to get help on how to use this script."
 
 if [ -z "${tests_file}" ]; then
   print_err_msg_exit "\
-The argument \"tests_file\" specifying the file containing a list of the 
+The argument \"tests_file\" specifying the file containing a list of the
 WE2E tests to run was not specified in the call to this script.  \
 ${help_msg}"
 fi
@@ -268,15 +269,15 @@ fi
 
 if [ -z "${account}" ]; then
   print_err_msg_exit "\
-The argument \"account\" specifying the account under which to submit 
-jobs to the queue when running the WE2E tests was not specified in the 
+The argument \"account\" specifying the account under which to submit
+jobs to the queue when running the WE2E tests was not specified in the
 call to this script.  \
 ${help_msg}"
 fi
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file containing the list of user-specified 
+# Get the full path to the file containing the list of user-specified
 # WE2E tests to run.  Then verify that the file exists.
 #
 #-----------------------------------------------------------------------
@@ -285,7 +286,7 @@ user_spec_tests_fp=$( readlink -f "${tests_file}" )
 
 if [ ! -f "${user_spec_tests_fp}" ]; then
   print_err_msg_exit "\
-The file containing the user-specified list of WE2E tests to run 
+The file containing the user-specified list of WE2E tests to run
 (tests_file) that is passed in as an argument to this script does not
 exit:
   tests_file = \"${tests_file}\"
@@ -296,12 +297,12 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Read in each line of the file specified by user_spec_tests_fp and add 
-# each non-empty line to the array user_spec_tests.  Note that the read 
-# command will remove any leading and trailing whitespace from each line 
-# in user_spec_tests_fp [because it treats whatever character(s) the bash 
-# variable IFS (Internal Field Separator) is set to as word separators 
-# on each line, and IFS is by default set to a space, a tab, and a 
+# Read in each line of the file specified by user_spec_tests_fp and add
+# each non-empty line to the array user_spec_tests.  Note that the read
+# command will remove any leading and trailing whitespace from each line
+# in user_spec_tests_fp [because it treats whatever character(s) the bash
+# variable IFS (Internal Field Separator) is set to as word separators
+# on each line, and IFS is by default set to a space, a tab, and a
 # newline].
 #
 #-----------------------------------------------------------------------
@@ -315,55 +316,55 @@ done < "${user_spec_tests_fp}"
 #
 #-----------------------------------------------------------------------
 #
-# Call a function to obtain the names of all available WE2E tests (i.e. 
-# not just the ones the user wants to run but all that are part of the 
-# WE2E testing system), the test IDs, and the category subdirectory in 
-# which each corresponding test configuration file is located.  
+# Call a function to obtain the names of all available WE2E tests (i.e.
+# not just the ones the user wants to run but all that are part of the
+# WE2E testing system), the test IDs, and the category subdirectory in
+# which each corresponding test configuration file is located.
 #
-# The array of test names (avail_WE2E_test_names) that the function 
-# called below returns contains both primary and alternate test names.  
-# A primary test name is a test name obtained from the name of a WE2E 
-# test configuration file that is an ordinary file, i.e. not a symlink, 
-# whereas an alternate name is one that is derived from the name of a 
+# The array of test names (avail_WE2E_test_names) that the function
+# called below returns contains both primary and alternate test names.
+# A primary test name is a test name obtained from the name of a WE2E
+# test configuration file that is an ordinary file, i.e. not a symlink,
+# whereas an alternate name is one that is derived from the name of a
 # symlink whose target is an ordinary test configuration file (but not
-# another symlink).  To be able to determine the set of test names that 
-# correspond to the same primary test, the function called also returns 
-# an array of test IDs (avail_WE2E_test_IDs) such that the IDs for a 
-# primary test name and all the alternate names that map to it (if any) 
-# are the same.  These IDs will be used later below to ensure that the 
-# user does not list in the set of test names to run a given test more 
-# than once, e.g. by accidentally including in the list its primary name 
+# another symlink).  To be able to determine the set of test names that
+# correspond to the same primary test, the function called also returns
+# an array of test IDs (avail_WE2E_test_IDs) such that the IDs for a
+# primary test name and all the alternate names that map to it (if any)
+# are the same.  These IDs will be used later below to ensure that the
+# user does not list in the set of test names to run a given test more
+# than once, e.g. by accidentally including in the list its primary name
 # as well as one of its alternate names.
 #
-# The category subdirectories in the array avail_WE2E_test_subdirs 
-# returned by the function called below are relative to the base 
+# The category subdirectories in the array avail_WE2E_test_subdirs
+# returned by the function called below are relative to the base
 # directory under which the WE2E test configuration files are located.
 # This base directory is set by the function call below and is returned
-# in the output variable avail_WE2E_test_configs_basedir.  The i-th 
-# element of avail_WE2E_test_subdirs specifies the subdirectory under 
-# this base directory that contains the ordinary test configuration file 
-# (for a primary test name) or the symlink (for an alternate test name) 
-# corresponding to the i-th element (which may be a primary or alternate 
-# test name) in avail_WE2E_test_names.  We refer to these subdirectories 
-# as "category" subdirectories because they are used for clarity to group 
+# in the output variable avail_WE2E_test_configs_basedir.  The i-th
+# element of avail_WE2E_test_subdirs specifies the subdirectory under
+# this base directory that contains the ordinary test configuration file
+# (for a primary test name) or the symlink (for an alternate test name)
+# corresponding to the i-th element (which may be a primary or alternate
+# test name) in avail_WE2E_test_names.  We refer to these subdirectories
+# as "category" subdirectories because they are used for clarity to group
 # the WE2E tests into types or categories.
 #
-# Finally, note that the returned arrays 
+# Finally, note that the returned arrays
 #
 #   avail_WE2E_test_names
 #   avail_WE2E_test_ids
 #   avail_WE2E_test_subdirs
 #
-# are sorted in order of increasing test ID and such that for a given 
-# set of test names that share the same ID, the primary test name is 
+# are sorted in order of increasing test ID and such that for a given
+# set of test names that share the same ID, the primary test name is
 # listed first followed by zero or more alternate names.  As an example,
 # assume that there are three category subdirectories under the base
-# directory specified by avail_WE2E_test_configs_basedir: dir1, dir2, 
-# and dir3.  Also, assume that dir1 contains a test configuration file 
-# named config.primary_name.sh that is an ordinary file, and dir2 and dir3 
+# directory specified by avail_WE2E_test_configs_basedir: dir1, dir2,
+# and dir3.  Also, assume that dir1 contains a test configuration file
+# named config.primary_name.sh that is an ordinary file, and dir2 and dir3
 # contain the following symlinks that point config.primary_name.sh:
 #
-#   ${avail_WE2E_test_configs_basedir}/dir2/config.alt_name_1.sh 
+#   ${avail_WE2E_test_configs_basedir}/dir2/config.alt_name_1.sh
 #     --> ${avail_WE2E_test_configs_basedir}/dir1/config.primary_name.sh
 #
 #   ${avail_WE2E_test_configs_basedir}/dir3/config.alt_name_2.sh
@@ -385,7 +386,7 @@ done < "${user_spec_tests_fp}"
 #   avail_WE2E_test_subdirs[7]="dir1"
 #   avail_WE2E_test_subdirs[8]="dir2"
 #   avail_WE2E_test_subdirs[9]="dir3"
-#   
+#
 #-----------------------------------------------------------------------
 #
 print_info_msg "
@@ -406,18 +407,18 @@ num_avail_WE2E_tests="${#avail_WE2E_test_names[@]}"
 #-----------------------------------------------------------------------
 #
 # Loop through the elements of the array user_spec_tests and perform
-# sanity checks.  For each such element (i.e. for each WE2E test to run 
+# sanity checks.  For each such element (i.e. for each WE2E test to run
 # specified by the user), make sure that:
 #
 # 1) The name of the test exists in the complete list of available WE2E
 #    tests in avail_WE2E_test_names.
-# 2) The test does not have an ID that is identical to a previously 
+# 2) The test does not have an ID that is identical to a previously
 #    considered test in the user-specified list of tests to run (because
 #    if so, it would be identical to that previously considered test,
-#    and it would be a waste of computational resources to run). 
+#    and it would be a waste of computational resources to run).
 #
-# If these requirements are met, add the test name to the list of tests 
-# to run in the array names_tests_to_run, and add the test's category 
+# If these requirements are met, add the test name to the list of tests
+# to run in the array names_tests_to_run, and add the test's category
 # subdirectory to subdirs_tests_to_run.
 #
 #-----------------------------------------------------------------------
@@ -443,22 +444,22 @@ for (( i=0; i<=$((num_user_spec_tests-1)); i++ )); do
   print_info_msg "\
   Checking user-specified WE2E test:  \"${user_spec_test}\""
 #
-# For the current user-specified WE2E test (user_spec_test), loop through 
-# the list of all remaining available WE2E test names (i.e. the ones that 
-# haven't yet been matched to any of the user-specified test names to 
+# For the current user-specified WE2E test (user_spec_test), loop through
+# the list of all remaining available WE2E test names (i.e. the ones that
+# haven't yet been matched to any of the user-specified test names to
 # run) and make sure that:
 #
 # 1) The name of the test exists (either as a primary test name or an
 #    alternate test name) in the list of all available WE2E test names.
-# 2) The test is not repeated in the user-specified list of tests to run, 
+# 2) The test is not repeated in the user-specified list of tests to run,
 #    either under the same name or an alternate name (i.e. make sure that
 #    it does not have the same test ID as a previously considered test).
-# 
+#
 # Note that in the loop below, the index j gets set to only those elements
-# of remaining_avail_WE2E_test_names that are defined [the syntax 
-# "${!some_array[@]}" expands to the indices of some_array that have 
-# defined elements].  We do this for efficiency; we unset elements of 
-# remaining_avail_WE2E_test_names that have already been matched with 
+# of remaining_avail_WE2E_test_names that are defined [the syntax
+# "${!some_array[@]}" expands to the indices of some_array that have
+# defined elements].  We do this for efficiency; we unset elements of
+# remaining_avail_WE2E_test_names that have already been matched with
 # one of the user-specified test names to run because we know that any
 # remaining user-specified test names will not match those elements.
 #
@@ -468,15 +469,15 @@ for (( i=0; i<=$((num_user_spec_tests-1)); i++ )); do
     test_name="${avail_WE2E_test_names[$j]}"
     test_id="${avail_WE2E_test_ids[$j]}"
 #
-# Check whether the name of the current user-specified test (user_spec_test) 
+# Check whether the name of the current user-specified test (user_spec_test)
 # matches any of the names in the full list of WE2E tests.  If so:
 #
 # 1) Set match_found to "TRUE".
-# 2) Make sure that the test to run doesn't have a test ID that is 
-#    identical to a previously considered test in the user-specified 
+# 2) Make sure that the test to run doesn't have a test ID that is
+#    identical to a previously considered test in the user-specified
 #    list of tests to run (which would mean the two tests are identical).
 #    If so, print out an error message and exit.
-# 
+#
     if [ "${test_name}" = "${user_spec_test}" ]; then
 
       match_found="TRUE"
@@ -495,15 +496,15 @@ for (( i=0; i<=$((num_user_spec_tests-1)); i++ )); do
         all_names_for_test_str=$(printf "  \"%s\"\n" "${all_names_for_test[@]}")
 
         print_err_msg_exit "\
-The current user-specified test to run (user_spec_test) is already included 
-in the list of tests to run (user_spec_tests), either under the same name 
+The current user-specified test to run (user_spec_test) is already included
+in the list of tests to run (user_spec_tests), either under the same name
 or an alternate name:
   user_spec_test = \"${user_spec_test}\"
   user_spec_tests = ${user_spec_tests_str}
 This test has the following primary and possible alternate names:
 ${all_names_for_test_str}
-In order to avoid repeating the same WE2E test (and thus waste computational 
-resources), only one of these test names can be specified in the list of 
+In order to avoid repeating the same WE2E test (and thus waste computational
+resources), only one of these test names can be specified in the list of
 tests to run.  Please modify this list in the file
   user_spec_tests_fp = \"${user_spec_tests_fp}\"
 accordingly and rerun."
@@ -511,13 +512,13 @@ accordingly and rerun."
       }
 #
 # Append the name of the current user-specified test, its ID, and its
-# category subdirectory to the arrays that contain the sanity-checked 
-# versions of of these quantities.  
+# category subdirectory to the arrays that contain the sanity-checked
+# versions of of these quantities.
 #
       names_tests_to_run+=("${user_spec_test}")
       ids_tests_to_run+=("${test_id}")
       subdirs_tests_to_run+=("${avail_WE2E_test_subdirs[$j]}")
-# 
+#
 # Remove the j-th element of remaining_avail_WE2E_test_names so that for
 # the next user-specified test to run, we do not need to check whether
 # the j-th test is a match.  Then break out of the loop over all remaining
@@ -531,14 +532,14 @@ accordingly and rerun."
   done
 #
 # If match_found is still "FALSE" after exiting the loop above, then a
-# match for the current user-specifed test to run was not found in the 
-# list of all WE2E tests -- neither as a primary test name nor as an 
+# match for the current user-specifed test to run was not found in the
+# list of all WE2E tests -- neither as a primary test name nor as an
 # alternate name.  In this case, print out an error message and exit.
 #
   if [ "${match_found}" = "FALSE" ]; then
     avail_WE2E_test_names_str=$( printf "  \"%s\"\n" "${avail_WE2E_test_names[@]}" )
     print_err_msg_exit "\
-The name current user-specified test to run (user_spec_test) does not 
+The name current user-specified test to run (user_spec_test) does not
 match any of the names (either primary or alternate) of the available
 WE2E tests:
   user_spec_test = \"${user_spec_test}\"
@@ -546,13 +547,13 @@ Valid values for user_spec_test consist of the names (primary or alternate)
 of the available WE2E tests, which are:
 ${avail_WE2E_test_names_str}
 Each name in the user-specified list of tests to run:
-  1) Must match one of the (primary or alternate) test names of the 
+  1) Must match one of the (primary or alternate) test names of the
      availabe WE2E tests.
   2) Must not be the primary or alternate name of a test that has its
      primary or one of its alternate names already included in the user-
      specified list of test to run, i.e. tests must not be repeated (in
      order not to waste computational resources).
-Please modify the user-specified list of tests to run such that it adheres 
+Please modify the user-specified list of tests to run such that it adheres
 to the rules above and rerun.  This list is in the file specified by the
 input variable tests_file:
   tests_file = \"${tests_file}\"
@@ -572,7 +573,7 @@ done
 num_tests_to_run="${#names_tests_to_run[@]}"
 tests_to_run_str=$( printf "  \'%s\'\n" "${names_tests_to_run[@]}" )
 print_info_msg "
-After processing the user-specified list of WE2E tests to run, the number 
+After processing the user-specified list of WE2E tests to run, the number
 of tests to run (num_tests_to_run) is
   num_tests_to_run = ${num_tests_to_run}
 and the list of WE2E tests to run (one test per line) is
@@ -607,9 +608,9 @@ Please correct and rerun."
 #
 #-----------------------------------------------------------------------
 #
-# Source the default experiment configuration file to set values of 
-# various experiment variables to their defaults.  Then source the 
-# current WE2E test's configuration file to overwrite certain variables' 
+# Source the default experiment configuration file to set values of
+# various experiment variables to their defaults.  Then source the
+# current WE2E test's configuration file to overwrite certain variables'
 # default values with test-specific ones.
 #
 #-----------------------------------------------------------------------
@@ -619,11 +620,11 @@ Please correct and rerun."
 #
 #-----------------------------------------------------------------------
 #
-# We will now construct a multiline variable consisting of the contents 
+# We will now construct a multiline variable consisting of the contents
 # that we want the experiment configuration file for this WE2E test to
 # have.  Once this variable is constructed, we will write its contents
 # to the generic configuration file that the experiment generation script
-# reads in (specified by the variable EXPT_CONFIG_FN in the default 
+# reads in (specified by the variable EXPT_CONFIG_FN in the default
 # configuration file config_defaults.sh sourced above) and then run that
 # script to generate an experiment for the current WE2E test.
 #
@@ -633,24 +634,24 @@ Please correct and rerun."
 # and we append to it later below.
 #
 #-----------------------------------------------------------------------
-# 
+#
   expt_config_str=""
 #
 #-----------------------------------------------------------------------
 #
-# Set (and then write to expt_config_str) various experiment variables 
-# that depend on the input arguments to this script (as opposed to 
-# variable settings in the test configuration file specified by 
-# test_config_fp).  Note that any values of these parameters specified 
-# in the default experiment configuration file (config_defaults.sh) 
-# or in the test configuraiton file (test_config_fp) that were sourced 
+# Set (and then write to expt_config_str) various experiment variables
+# that depend on the input arguments to this script (as opposed to
+# variable settings in the test configuration file specified by
+# test_config_fp).  Note that any values of these parameters specified
+# in the default experiment configuration file (config_defaults.sh)
+# or in the test configuraiton file (test_config_fp) that were sourced
 # above will be overwritten by the settings below.
 #
-# Note also that if EXPT_BASEDIR ends up getting set to a null string, 
-# the experiment generation script that gets called further below will 
-# set it to a default path; if it gets set to a relative path, then the 
-# experiment generation script will set it to a path consisting of a 
-# default path with the relative path appended to it; and if it gets set 
+# Note also that if EXPT_BASEDIR ends up getting set to a null string,
+# the experiment generation script that gets called further below will
+# set it to a default path; if it gets set to a relative path, then the
+# experiment generation script will set it to a path consisting of a
+# default path with the relative path appended to it; and if it gets set
 # to an absolute path, then the workflow will leave it set to that path.
 #
 #-----------------------------------------------------------------------
@@ -716,11 +717,11 @@ VERBOSE=\"${VERBOSE}\""
 #
 #-----------------------------------------------------------------------
 #
-# Modifications to the experiment configuration file if the WE2E test 
+# Modifications to the experiment configuration file if the WE2E test
 # uses pre-generated grid, orography, or surface climatology files.
 #
-# If not running one or more of the grid, orography, and surface 
-# climatology file generation tasks, specify directories in which 
+# If not running one or more of the grid, orography, and surface
+# climatology file generation tasks, specify directories in which
 # pregenerated versions of these files can be found.
 #
 #-----------------------------------------------------------------------
@@ -786,7 +787,7 @@ SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
 #
 #-----------------------------------------------------------------------
 #
-# Modifications to the experiment configuration file if running the WE2E 
+# Modifications to the experiment configuration file if running the WE2E
 # test in NCO mode.
 #
 #-----------------------------------------------------------------------
@@ -850,24 +851,24 @@ envir=\"\${EXPT_SUBDIR}\""
       FIXLAM_NCO_BASEDIR="/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"
     else
       print_err_msg_exit "\
-The base directory (FIXLAM_NCO_BASEDIR) in which the pregenerated grid, 
-orography, and surface climatology \"fixed\" files used in NCO mode are 
+The base directory (FIXLAM_NCO_BASEDIR) in which the pregenerated grid,
+orography, and surface climatology \"fixed\" files used in NCO mode are
 located has not been specified for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
 
     expt_config_str=${expt_config_str}"
 #
-# The base directory in which the pregenerated grid, orography, and surface 
+# The base directory in which the pregenerated grid, orography, and surface
 # climatology \"fixed\" files used in NCO mode are located.  In NCO mode,
-# the workflow scripts will create symlinks (in the directory specified 
+# the workflow scripts will create symlinks (in the directory specified
 # by FIXLAM) to files in a subdirectory under FIXLAM_NCO_BASDEDIR, where
-# the name of the subdirectory is the name of the predefined grid specified 
+# the name of the subdirectory is the name of the predefined grid specified
 # by PREDEF_GRID_NAME.
 #
 FIXLAM_NCO_BASEDIR=\"${FIXLAM_NCO_BASEDIR}\""
 #
-# Set COMINgfs if using the FV3GFS or the GSMGFS as the external model 
+# Set COMINgfs if using the FV3GFS or the GSMGFS as the external model
 # for ICs or LBCs.
 #
     if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
@@ -922,93 +923,130 @@ PTMP=\"${PTMP}\""
 #
 #-----------------------------------------------------------------------
 #
-# Modifications to the experiment configuration file if the WE2E test 
-# may try to look for external model files staged by the user in user-
-# specified directories.
+# Modifications to the experiment configuration file if the WE2E test
+# may try to look for external model files on disk that are named using
+# a user-specified naming convention (and are located in user-specified
+# directories).
 #
 #-----------------------------------------------------------------------
 #
-  if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ] || \
-     is_element_of "EXTRN_MDL_DATA_SOURCES" "user_dir"; then
+  if is_element_of "EXTRN_MDL_DATA_SOURCES" "disk"; then
+#
+# Set the flags that determine whether or not the base directories in
+# which the external model files for ICs and LBCs are located need to be
+# set explicitly in the experiment configuration file.
+#
+    set_basedir_ics="FALSE"
+    set_basedir_lbcs="FALSE"
 
-    if [ "$MACHINE" = "WCOSS_CRAY" ]; then
-      extrn_mdl_user_basedir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/extrn_mdl_files"
-    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
-      extrn_mdl_user_basedir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/extrn_mdl_files"
-    elif [ "$MACHINE" = "HERA" ]; then
-      extrn_mdl_user_basedir="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
-    elif [ "$MACHINE" = "JET" ]; then
-      extrn_mdl_user_basedir="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
-    elif [ "$MACHINE" = "CHEYENNE" ]; then
-      extrn_mdl_user_basedir="/glade/p/ral/jntp/UFS_SRW_app/staged_extrn_mdl_files"
-    elif [ "$MACHINE" = "ORION" ]; then
-      extrn_mdl_user_basedir="/work/noaa/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files"
-    else
-      print_err_msg_exit "\
-The base directory (extrn_mdl_user_basedir) in which the user-staged
-external model files should be located has not been specified for this
-machine (MACHINE):
+    trigger_str="set_to_non_default_directory_in_testing_script"
+    if [ "${EXTRN_MDL_FILE_NAMING_CONVENTION}" = "extrn_mdl" ]; then
+      if [ "${EXTRN_MDL_BASEDIR_ICS}" = "${trigger_str}" ]; then
+        set_basedir_ics="TRUE"
+      fi
+      if [ "${EXTRN_MDL_BASEDIR_LBCS}" = "${trigger_str}" ]; then
+        set_basedir_lbcs="TRUE"
+      fi
+    fi
+
+    if [ "${EXTRN_MDL_FILE_NAMING_CONVENTION}" = "user_spec" ]; then
+#
+# Set the base directories for the external model files, both for ICs
+# and LBCs.  Note that when a user-specified file naming convention is
+# being used (i.e. EXTRN_MDL_FILE_NAMING_CONVENTION set to "user_spec"),
+# for simplicity, we require that these base directories not already be
+# specified in the test configuraiton file.
+#
+      if [ ! -z "${EXTRN_MDL_BASEDIR_ICS}" ] || \
+         [ ! -z "${EXTRN_MDL_BASEDIR_LBCS}" ]; then
+        print_err_msg_exit "\
+For WE2E tests that use a user-specified naming convention for external
+model files (i.e. EXTRN_MDL_FILE_NAMING_CONVENTION set to \"user_spec\"),
+the base directories containing the files from which to generate the ICs
+(EXTRN_MDL_BASEDIR_ICS) and/or LBCs (EXTRN_MDL_BASEDIR_LBCS) should not
+be specified in the WE2E test configuration file (test_config_fp), but
+at least one of these is set to a non-empty string:
+  test_config_fp = \"${test_config_fp}\"
+  EXTRN_MDL_BASEDIR_ICS = \"${EXTRN_MDL_BASEDIR_ICS}\"
+  EXTRN_MDL_BASEDIR_LBCS = \"${EXTRN_MDL_BASEDIR_LBCS}\"
+Please remove these variables from the test configuration file and rerun."
+      else
+        set_basedir_ics="TRUE"
+        set_basedir_lbcs="TRUE"
+      fi
+    fi
+
+
+
+    if [ "${set_basedir_ics}" = "TRUE" ] || \
+       [ "${set_basedir_lbcs}" = "TRUE" ]; then
+
+      extrn_mdl_basedir=""
+      if [ "$MACHINE" = "WCOSS_CRAY" ]; then
+        extrn_mdl_basedir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/extrn_mdl_files"
+      elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+        extrn_mdl_basedir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/extrn_mdl_files"
+      elif [ "$MACHINE" = "HERA" ]; then
+        extrn_mdl_basedir="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
+      elif [ "$MACHINE" = "JET" ]; then
+        extrn_mdl_basedir="/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files"
+      elif [ "$MACHINE" = "CHEYENNE" ]; then
+        extrn_mdl_basedir="/glade/p/ral/jntp/UFS_SRW_app/staged_extrn_mdl_files"
+      elif [ "$MACHINE" = "ORION" ]; then
+        extrn_mdl_basedir="/work/noaa/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files"
+      else
+        print_err_msg_exit "\
+The base directory (extrn_mdl_basedir) in which the external model files
+should be located has not been specified for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
-    fi
-#
-# Consider ICs.
-#
-    extrn_mdl_user_basedir_ics="${extrn_mdl_user_basedir}/${EXTRN_MDL_NAME_ICS}"
-    if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
-       [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ]; then
-      if [ "${FV3GFS_FILE_FMT_ICS}" = "nemsio" ]; then
-        extrn_mdl_user_files_ics=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
-      elif [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
-        extrn_mdl_user_files_ics=( "gfs.pgrb2.0p25.f000" )
       fi
-    elif [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ] || \
-         [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ]; then
-      extrn_mdl_user_files_ics=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
-    elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ]; then
-      extrn_mdl_user_files_ics=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
-    fi
-#
-# Consider LBCs.
-#
-    extrn_mdl_user_basedir_lbcs="${extrn_mdl_user_basedir}/${EXTRN_MDL_NAME_LBCS}"
-# Make sure that the forecast length is evenly divisible by the interval
-# between the times at which the lateral boundary conditions will be
-# specified.
-    rem=$(( 10#${FCST_LEN_HRS} % 10#${LBC_SPEC_INTVL_HRS} ))
-    if [ "$rem" -ne "0" ]; then
-      print_err_msg_exit "\
-The forecast length (FCST_LEN_HRS) must be evenly divisible by the lateral
-boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
-  FCST_LEN_HRS = ${FCST_LEN_HRS}
-  LBC_SPEC_INTVL_HRS = ${LBC_SPEC_INTVL_HRS}
-  rem = FCST_LEN_HRS%%LBC_SPEC_INTVL_HRS = $rem"
-    fi
-    lbc_spec_times_hrs=( $( seq "${LBC_SPEC_INTVL_HRS}" "${LBC_SPEC_INTVL_HRS}" "${FCST_LEN_HRS}" ) )
-    extrn_mdl_user_files_lbcs=( $( printf "%03d " "${lbc_spec_times_hrs[@]}" ) ) 
-    if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
-       [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then
-      if [ "${FV3GFS_FILE_FMT_LBCS}" = "nemsio" ]; then
-        extrn_mdl_user_files_lbcs=( "${extrn_mdl_user_files_lbcs[@]/#/gfs.atmf}" )
-        extrn_mdl_user_files_lbcs=( "${extrn_mdl_user_files_lbcs[@]/%/.nemsio}" )
-      elif [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
-        extrn_mdl_user_files_lbcs=( "${extrn_mdl_user_files_lbcs[@]/#/gfs.pgrb2.0p25.f}" )
+
+      extrn_mdl_basedir="${extrn_mdl_basedir}/fnconv_${EXTRN_MDL_FILE_NAMING_CONVENTION}"
+
+      if [ "${set_basedir_ics}" = "TRUE" ]; then
+        extrn_mdl_basedir_ics="${extrn_mdl_basedir}/${EXTRN_MDL_NAME_ICS}"
+        if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
+          extrn_mdl_basedir_ics="${extrn_mdl_basedir_ics}/${FV3GFS_FILE_FMT_ICS}"
+        fi
       fi
-    elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ] || \
-         [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ]; then
-      extrn_mdl_user_files_lbcs=( "${extrn_mdl_user_files_lbcs[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
-    elif [ "${EXTRN_MDL_NAME_LBCS}" = "NAM" ]; then
-      extrn_mdl_user_files_lbcs=( "${extrn_mdl_user_files_lbcs[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
+
+      if [ "${set_basedir_lbcs}" = "TRUE" ]; then
+        extrn_mdl_basedir_lbcs="${extrn_mdl_basedir}/${EXTRN_MDL_NAME_LBCS}"
+        if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
+          extrn_mdl_basedir_lbcs="${extrn_mdl_basedir_lbcs}/${FV3GFS_FILE_FMT_LBCS}"
+        fi
+      fi
+
     fi
 
-    expt_config_str=${expt_config_str}"
+
+    if [ "${EXTRN_MDL_FILE_NAMING_CONVENTION}" = "user_spec" ]; then
 #
-# Locations and names of user-staged external model files for generating
-# ICs and LBCs.
+# Now set the parameters needed for constructing the user-specified
+# external model file names.
 #
-EXTRN_MDL_USER_BASEDIR_ICS=\"${extrn_mdl_user_basedir_ics}\"
-EXTRN_MDL_USER_FILES_ICS=( $( printf "\"%s\" " "${extrn_mdl_user_files_ics[@]}" ))
-EXTRN_MDL_USER_BASEDIR_LBCS=\"${extrn_mdl_user_basedir_lbcs}\"
-EXTRN_MDL_USER_FILES_LBCS=( $( printf "\"%s\" " "${extrn_mdl_user_files_lbcs[@]}" ))"
+      set_user_specified_extrn_mdl_file_info \
+        extrn_mdl_name_ics="${EXTRN_MDL_NAME_ICS}" \
+        extrn_mdl_name_lbcs="${EXTRN_MDL_NAME_LBCS}" \
+        fv3gfs_file_fmt_ics="${FV3GFS_FILE_FMT_ICS}" \
+        fv3gfs_file_fmt_lbcs="${FV3GFS_FILE_FMT_LBCS}" \
+        outvarname_extrn_mdl_fns_ics="__extrn_mdl_fns_ics" \
+        outvarname_extrn_mdl_fns_lbcs_prefix="__extrn_mdl_fns_lbcs_prefix" \
+        outvarname_extrn_mdl_fns_lbcs_suffix="__extrn_mdl_fns_lbcs_suffix"
+
+      expt_config_str=${expt_config_str}"
+#
+# Base directories in which the external mode files for generating ICs
+# and LBCs are located and the parameters needed to consturct the names
+# of those files using the user-specified file naming convention.
+#
+EXTRN_MDL_BASEDIR_ICS="${extrn_mdl_basedir_ics}"
+EXTRN_MDL_BASEDIR_LBCS="${extrn_mdl_basedir_lbcs}"
+EXTRN_MDL_FNS_ICS=( $( printf "\"%s\" " "${__extrn_mdl_fns_ics[@]}" ))
+EXTRN_MDL_FNS_LBCS_PREFIX="${__extrn_mdl_fns_lbcs_prefix}"
+EXTRN_MDL_FNS_LBCS_SUFFIX="${__extrn_mdl_fns_lbcs_suffix}""
+
+    fi
 
   fi
 #
@@ -1026,7 +1064,7 @@ EXTRN_MDL_USER_FILES_LBCS=( $( printf "\"%s\" " "${extrn_mdl_user_files_lbcs[@]}
       metplus_path="/contrib/METplus/METplus-4.0.0"
     else
       print_err_msg_exit "\
-The MET and MET+ paths (met_install_dir and metplus_path) have not been 
+The MET and MET+ paths (met_install_dir and metplus_path) have not been
 specified for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
@@ -1043,8 +1081,8 @@ MET_INSTALL_DIR=\"${met_install_dir}\""
 #-----------------------------------------------------------------------
 #
 # On some machines (e.g. cheyenne), some tasks often require multiple
-# tries before they succeed.  To make it more convenient to run the WE2E 
-# tests on these machines without manual intervention, change the number 
+# tries before they succeed.  To make it more convenient to run the WE2E
+# tests on these machines without manual intervention, change the number
 # of attempts for such tasks on those machines to be more than one.
 #
 #-----------------------------------------------------------------------
@@ -1084,8 +1122,8 @@ MAXTRIES_RUN_POST=\"${MAXTRIES_RUN_POST}\""
 #
 #-----------------------------------------------------------------------
 #
-# Set the full path to the configuration file that the experiment 
-# generation script reads in.  Then write the contents of expt_config_str 
+# Set the full path to the configuration file that the experiment
+# generation script reads in.  Then write the contents of expt_config_str
 # to that file.
 #
 #-----------------------------------------------------------------------
@@ -1098,126 +1136,52 @@ MAXTRIES_RUN_POST=\"${MAXTRIES_RUN_POST}\""
 # Modifications to the experiment configuration file if the WE2E test
 # may try to look for external model files in system directories.
 #
-# The following are changes that need to be made directly to the 
-# experiment configuration file created above (as opposed to the 
+# The following are changes that need to be made directly to the
+# experiment configuration file created above (as opposed to the
 # experiment configuration string expt_config_str) because they involve
 # resetting of values that have already been set in that file.
 #
-# EXTRN_MDL_SYS_BASEDIR_ICS in the current WE2E test's configuration file
+# EXTRN_MDL_BASEDIR_ICS in the current WE2E test's configuration file
 # may be set to one of the following:
 #
 # 1) The string "set_to_non_default_location_in_testing_script".  This
-#    will cause this script to reset EXTRN_MDL_SYS_BASEDIR_ICS to a valid 
-#    non-default location depending on the machine and external model 
+#    will cause this script to reset EXTRN_MDL_BASEDIR_ICS to a valid
+#    non-default location depending on the machine and external model
 #    for ICs.
 #
 # 2) To an existing directory.  If it is set to a directory, then this
 #    script ensures that the directory exists (via the check below).  If
 #    not, the script will exit.
 #
-# Note that if a test would like to use the default system directory 
+# Note that if a test would like to use the default system directory
 # specified in the workflow as the source for external model files (i.e.
-# instead of the values set below), then EXTRN_MDL_SYS_BASEDIR_ICS simply
+# instead of the values set below), then EXTRN_MDL_BASEDIR_ICS simply
 # needs to be left unset in the test's configuration file.
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -z "${EXTRN_MDL_SYS_BASEDIR_ICS}" ] && \
-     is_element_of "EXTRN_MDL_DATA_SOURCES" "sys_dir"; then
+  if is_element_of "EXTRN_MDL_DATA_SOURCES" "disk"; then
 
-    if [ "${EXTRN_MDL_SYS_BASEDIR_ICS}" = "set_to_non_default_location_in_testing_script" ]; then
+    if [ "${EXTRN_MDL_FILE_NAMING_CONVENTION}" = "extrn_mdl" ]; then
 
-      extrn_mdl_sys_basedir_ics=""
-      if [ "$MACHINE" = "HERA" ]; then
-        if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
-          extrn_mdl_sys_basedir_ics="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
-        fi
-      elif [ "$MACHINE" = "CHEYENNE" ]; then
-        if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
-          extrn_mdl_sys_basedir_ics="/glade/p/ral/jntp/UFS_SRW_app/dummy_FV3GFS_sys_dir"
-        fi
+      if [ "${set_basedir_ics}" = "TRUE" ]; then
+        set_bash_param "${expt_config_fp}" \
+                       "EXTRN_MDL_BASEDIR_ICS" "${extrn_mdl_basedir_ics}"
       fi
 
-      if [ -z "${extrn_mdl_sys_basedir_ics}" ]; then
-        print_err_msg_exit "\
-A non-default location for the external model system base directory for
-ICs (extrn_mdl_sys_basedir_ics) for testing purposes has not been specified 
-for this machine (MACHINE) and external model for initial conditions 
-(EXTRN_MDL_NAME_ICS) combination:
-  MACHINE= \"${MACHINE}\"
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
-  extrn_mdl_sys_basedir_ics = \"${extrn_mdl_sys_basedir_ics}\""
-      fi
-
-    else 
-
-      if [ ! -d "${extrn_mdl_sys_basedir_ics}" ]; then
-        print_err_msg_exit "\
-The non-default location specified by extrn_mdl_sys_basedir_ics does not 
-exist or is not a directory:
-  extrn_mdl_name_ics = \"${extrn_mdl_name_ics}\""
+      if [ "${set_basedir_lbcs}" = "TRUE" ]; then
+        set_bash_param "${expt_config_fp}" \
+                       "EXTRN_MDL_BASEDIR_LBCS" "${extrn_mdl_basedir_lbcs}"
       fi
 
     fi
-
-    set_bash_param "${expt_config_fp}" \
-                   "EXTRN_MDL_SYS_BASEDIR_ICS" "${extrn_mdl_sys_basedir_ics}"
 
   fi
 #
 #-----------------------------------------------------------------------
 #
-# Same as above but for EXTRN_MDL_SYS_BASEDIR_LBCS.
-#
-#-----------------------------------------------------------------------
-#
-  if [ ! -z "${EXTRN_MDL_SYS_BASEDIR_LBCS}" ] && \
-     is_element_of "EXTRN_MDL_DATA_SOURCES" "sys_dir"; then
-
-    if [ "${EXTRN_MDL_SYS_BASEDIR_LBCS}" = "set_to_non_default_location_in_testing_script" ]; then
-
-      extrn_mdl_sys_basedir_lbcs=""
-      if [ "$MACHINE" = "HERA" ]; then
-        if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
-          extrn_mdl_sys_basedir_lbcs="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
-        fi
-      elif [ "$MACHINE" = "CHEYENNE" ]; then
-        if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
-          extrn_mdl_sys_basedir_lbcs="/glade/p/ral/jntp/UFS_SRW_app/dummy_FV3GFS_sys_dir"
-        fi
-      fi
-
-      if [ -z "${extrn_mdl_sys_basedir_lbcs}" ]; then
-        print_err_msg_exit "\
-A non-default location for the external model system base directory for
-LBCs (extrn_mdl_sys_basedir_lbcs) for testing purposes has not been specified 
-for this machine (MACHINE) and external model for initial conditions 
-(EXTRN_MDL_NAME_LBCS) combination:
-  MACHINE= \"${MACHINE}\"
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
-  extrn_mdl_sys_basedir_lbcs = \"${extrn_mdl_sys_basedir_lbcs}\""
-      fi
-
-    else 
-
-      if [ ! -d "${extrn_mdl_sys_basedir_lbcs}" ]; then
-        print_err_msg_exit "\
-The non-default location specified by extrn_mdl_sys_basedir_lbcs does not 
-exist or is not a directory:
-  extrn_mdl_name_lbcs = \"${extrn_mdl_name_lbcs}\""
-      fi
-
-    fi
-
-    set_bash_param "${expt_config_fp}" \
-                   "EXTRN_MDL_SYS_BASEDIR_LBCS" "${extrn_mdl_sys_basedir_ics}"
-
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Call the experiment generation script to generate an experiment 
-# directory and a rocoto workflow XML for the current WE2E test to run. 
+# Call the experiment generation script to generate an experiment
+# directory and a rocoto workflow XML for the current WE2E test to run.
 #
 #-----------------------------------------------------------------------
 #
@@ -1230,7 +1194,7 @@ done
 #
 #-----------------------------------------------------------------------
 #
-# Restore the shell options saved at the beginning of this script or 
+# Restore the shell options saved at the beginning of this script or
 # function.
 #
 #-----------------------------------------------------------------------

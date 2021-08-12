@@ -94,9 +94,9 @@ Returning with a nonzero return code.
 
   if [ "${fv3gfs_file_fmt}" != "grib2" ]; then
     print_info_msg "
-Fetching of FV3GFS files of the specified format (FV3GFS_FILE_FMT) is
+Fetching of FV3GFS files of the specified format (fv3gfs_file_fmt) is
 currently not available on NOMADS:
-  FV3GFS_FILE_FMT = \"${FV3GFS_FILE_FMT}\"
+  fv3gfs_file_fmt = \"${fv3gfs_file_fmt}\"
 Returning with a nonzero return code.
 "
     return 1

@@ -64,7 +64,7 @@ cd_vrfy ${scrfunc_dir}
 . ./set_ozone_param.sh
 . ./set_thompson_mp_fix_files.sh
 . ./check_ruc_lsm.sh
-. ./extrn_mdl/set_extrn_mdl_default_sys_basedir.sh
+. ./extrn_mdl/set_extrn_mdl_default_basedir.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -1517,58 +1517,6 @@ NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that USE_USER_STAGED_EXTRN_FILES is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "USE_USER_STAGED_EXTRN_FILES" "valid_vals_USE_USER_STAGED_EXTRN_FILES"
-#
-# Set USE_USER_STAGED_EXTRN_FILES to either "TRUE" or "FALSE" so we don't 
-# have to consider other valid values later on.
-#
-USE_USER_STAGED_EXTRN_FILES=${USE_USER_STAGED_EXTRN_FILES^^}
-if [ "${USE_USER_STAGED_EXTRN_FILES}" = "YES" ]; then
-  USE_USER_STAGED_EXTRN_FILES="TRUE"
-elif [ "${USE_USER_STAGED_EXTRN_FILES}" = "NO" ]; then
-  USE_USER_STAGED_EXTRN_FILES="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# If USE_USER_STAGED_EXTRN_FILES is set to TRUE, then:
-#
-# 1) Make sure that the user-specified directories under which the external 
-#    model files should be located actually exist.
-#
-# 2) If the array EXTRN_MDL_DATA_SOURCES does not contain the element
-#    "user_dir", prepend it to the array.  This ensures that the specified 
-#    user directories are searched for external model files.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
-
-  if [ ! -d "${EXTRN_MDL_USER_BASEDIR_ICS}" ]; then
-    print_err_msg_exit "\
-The directory (EXTRN_MDL_USER_BASEDIR_ICS) in which the user-staged 
-external model files for generating ICs should be located does not exist:
-  EXTRN_MDL_USER_BASEDIR_ICS = \"${EXTRN_MDL_USER_BASEDIR_ICS}\""
-  fi
-
-  if [ ! -d "${EXTRN_MDL_USER_BASEDIR_LBCS}" ]; then
-    print_err_msg_exit "\
-The directory (EXTRN_MDL_USER_BASEDIR_LBCS) in which the user-staged 
-external model files for generating LBCs should be located does not exist:
-  EXTRN_MDL_USER_BASEDIR_LBCS = \"${EXTRN_MDL_USER_BASEDIR_LBCS}\""
-  fi
-
-  is_element_of "EXTRN_MDL_DATA_SOURCES" "user_dir" || \
-    EXTRN_MDL_DATA_SOURCES=( "user_dir" "${EXTRN_MDL_DATA_SOURCES[@]}" )
-
-fi
-#
-#-----------------------------------------------------------------------
-#
 # Make sure that all the elements of EXTRN_MDL_DATA_SOURCES are valid.
 #
 #-----------------------------------------------------------------------
@@ -1576,6 +1524,10 @@ fi
 for (( i=0; i<${#EXTRN_MDL_DATA_SOURCES[@]}; i++ )); do
   check_var_valid_value "EXTRN_MDL_DATA_SOURCES[$i]" "valid_vals_EXTRN_MDL_DATA_SOURCES"
 done
+
+
+check_var_valid_value "EXTRN_MDL_FILE_NAMING_CONVENTION" \
+                      "valid_vals_EXTRN_MDL_FILE_NAMING_CONVENTION"
 #
 #-----------------------------------------------------------------------
 #
@@ -1962,15 +1914,15 @@ fi
 #-----------------------------------------------------------------------
 #
 # Get the default value of the external model system base directory.
-# Then, if the user has not already set EXTRN_MDL_SYS_BASEDIR_ICS and 
-# EXTRN_MDL_SYS_BASEDIR_LBCS to non-emtpy strings, set them to the 
+# Then, if the user has not already set EXTRN_MDL_BASEDIR_ICS and 
+# EXTRN_MDL_BASEDIR_LBCS to non-emtpy strings, set them to the 
 # default value.
 #
 # Note that the default value may be a null string because it is not 
 # defined for all combinations of experiment mode (NCO or community),
 # machine, and external model.  In this case, if the user has not defined
-# Then, if the user has not already set EXTRN_MDL_SYS_BASEDIR_ICS and/or 
-# EXTRN_MDL_SYS_BASEDIR_LBCS, they will remain set to null string.  This
+# Then, if the user has not already set EXTRN_MDL_BASEDIR_ICS and/or 
+# EXTRN_MDL_BASEDIR_LBCS, they will remain set to null string.  This
 # will matter only if the workflow tries to obtain (copy or link to) 
 # external model files from the system directory (see description of the 
 # experiment parameter EXTRN_MDL_DATA_SOURCES), in which case that attempt
@@ -1979,12 +1931,12 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-set_extrn_mdl_default_sys_basedir \
+set_extrn_mdl_default_basedir \
   extrn_mdl_name="${EXTRN_MDL_NAME_ICS}" \
-  outvarname_extrn_mdl_default_sys_basedir="extrn_mdl_default_sys_basedir"
+  outvarname_extrn_mdl_default_basedir="extrn_mdl_default_basedir"
 
-EXTRN_MDL_SYS_BASEDIR_ICS=${EXTRN_MDL_SYS_BASEDIR_ICS:-${extrn_mdl_default_sys_basedir}}
-EXTRN_MDL_SYS_BASEDIR_LBCS=${EXTRN_MDL_SYS_BASEDIR_LBCS:-${extrn_mdl_default_sys_basedir}}
+EXTRN_MDL_BASEDIR_ICS=${EXTRN_MDL_BASEDIR_ICS:-${extrn_mdl_default_basedir}}
+EXTRN_MDL_BASEDIR_LBCS=${EXTRN_MDL_BASEDIR_LBCS:-${extrn_mdl_default_basedir}}
 #
 #-----------------------------------------------------------------------
 #
@@ -2901,27 +2853,31 @@ OZONE_PARAM="${OZONE_PARAM}"
 #
 #-----------------------------------------------------------------------
 #
-# If USE_USER_STAGED_EXTRN_FILES is set to "FALSE", this is the system 
-# directory in which the workflow scripts will look for the files generated 
-# by the external model specified in EXTRN_MDL_NAME_ICS.  These files will 
-# be used to generate the input initial condition and surface files for 
-# the FV3-LAM.
+# The base directory in which to search for the files generated by the 
+# external model specified in EXTRN_MDL_NAME_ICS.  These files will be 
+# used to generate the input initial condition and surface files for the 
+# FV3LAM.  This directory will be searched only if the array 
+# EXTRN_MDL_DATA_SOURCES includes an element named "disk" and if the 
+# external model files were not found in other data sources that may 
+# precede "disk" in EXTRN_MDL_DATA_SOURCES.
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYS_BASEDIR_ICS="${EXTRN_MDL_SYS_BASEDIR_ICS}"
+EXTRN_MDL_BASEDIR_ICS="${EXTRN_MDL_BASEDIR_ICS}"
 #
 #-----------------------------------------------------------------------
 #
-# If USE_USER_STAGED_EXTRN_FILES is set to "FALSE", this is the system 
-# directory in which the workflow scripts will look for the files generated 
-# by the external model specified in EXTRN_MDL_NAME_LBCS.  These files 
-# will be used to generate the input lateral boundary condition files for 
-# the FV3-LAM.
+# The base directory in which to search for the files generated by the 
+# external model specified in EXTRN_MDL_NAME_LBCS.  These files will be
+# be used to generate the input lateral boundary condition for the FV3LAM.  
+# This directory will be searched only if the array EXTRN_MDL_DATA_SOURCES 
+# includes an element named "disk" and if the external model files were 
+# not found in other data sources that may precede "disk" in 
+# EXTRN_MDL_DATA_SOURCES.
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYS_BASEDIR_LBCS="${EXTRN_MDL_SYS_BASEDIR_LBCS}"
+EXTRN_MDL_BASEDIR_LBCS="${EXTRN_MDL_BASEDIR_LBCS}"
 #
 #-----------------------------------------------------------------------
 #

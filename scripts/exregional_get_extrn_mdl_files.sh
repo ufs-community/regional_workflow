@@ -18,8 +18,7 @@
 #
 . $USHDIR/extrn_mdl/set_extrn_mdl_filenames.sh
 . $USHDIR/extrn_mdl/set_extrn_mdl_arcv_file_dir_names.sh
-. $USHDIR/extrn_mdl/get_extrn_mdl_files_from_user_dir.sh
-. $USHDIR/extrn_mdl/get_extrn_mdl_files_from_sys_dir.sh
+. $USHDIR/extrn_mdl/get_extrn_mdl_files_from_disk.sh
 . $USHDIR/extrn_mdl/get_extrn_mdl_files_from_noaa_hpss.sh
 . $USHDIR/extrn_mdl/get_extrn_mdl_files_from_nomads.sh
 #
@@ -143,7 +142,9 @@ parse_cdate \
   outvarname_yyyymmdd="yyyymmdd" \
   outvarname_hh="hh" \
 
-cdate=$( date --utc --date "${yyyymmdd} ${hh} UTC - ${extrn_mdl_temporal_offset_hrs} hours" "+%Y%m%d%H" )
+cdate=$( date --utc --date \
+         "${yyyymmdd} ${hh} UTC - ${extrn_mdl_temporal_offset_hrs} hours" \
+         "+%Y%m%d%H" )
 #
 #-----------------------------------------------------------------------
 #
@@ -194,30 +195,26 @@ Attempting to obtain external model data from current data source (data_src):
   data_src = \"${data_src}\"
 ..."
 #
-# Data source is a user-specified directory.
+# Get file names.
 #
-  if [ "${data_src}" = "user_dir" ]; then
+  set_extrn_mdl_filenames \
+    data_src="${data_src}" \
+    extrn_mdl_name="${extrn_mdl_name}" \
+    file_naming_convention="${EXTRN_MDL_FILE_NAMING_CONVENTION}" \
+    ics_or_lbcs="${ics_or_lbcs}" \
+    cdate="$cdate" \
+    outvarname_fns="__fns"
 
-    get_extrn_mdl_files_from_user_dir \
-      ics_or_lbcs="${ics_or_lbcs}" \
-      cdate="$cdate" \
-      staging_dir="${staging_dir}" \
-      outvarname_fns="fns"
+    fns_str="( "$( printf "\"%s\" " "${__fns[@]}" )")"
 #
-# Data source is a system directory.
+# Data source is local disk.
 #
-  elif [ "${data_src}" = "sys_dir" ]; then
+  if [ "${data_src}" = "disk" ]; then
 
-    set_extrn_mdl_filenames \
-      ics_or_lbcs="${ics_or_lbcs}" \
+    get_extrn_mdl_files_from_disk \
       extrn_mdl_name="${extrn_mdl_name}" \
-      cdate="$cdate" \
-      outvarname_fns_on_disk="fns"
-
-    fns_str="( "$( printf "\"%s\" " "${fns[@]}" )")"
-    get_extrn_mdl_files_from_sys_dir \
+      file_naming_convention="${EXTRN_MDL_FILE_NAMING_CONVENTION}" \
       ics_or_lbcs="${ics_or_lbcs}" \
-      extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
       fns="${fns_str}"
@@ -226,54 +223,42 @@ Attempting to obtain external model data from current data source (data_src):
 #
   elif [ "${data_src}" = "noaa_hpss" ]; then
 
-    set_extrn_mdl_filenames \
-      ics_or_lbcs="${ics_or_lbcs}" \
-      extrn_mdl_name="${extrn_mdl_name}" \
-      cdate="$cdate" \
-      outvarname_fns_in_arcv="fns"
-
     set_extrn_mdl_arcv_file_dir_names \
-      ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
+      ics_or_lbcs="${ics_or_lbcs}" \
       cdate="$cdate" \
-      outvarname_arcv_fmt="arcv_fmt" \
-      outvarname_arcv_fns="arcv_fns" \
-      outvarname_arcv_fps="arcv_fps" \
-      outvarname_arcvrel_dir="arcvrel_dir"
+      outvarname_arcv_fmt="__arcv_fmt" \
+      outvarname_arcv_fns="__arcv_fns" \
+      outvarname_arcv_fps="__arcv_fps" \
+      outvarname_arcvrel_dir="__arcvrel_dir"
 
-    fns_str="( "$( printf "\"%s\" " "${fns[@]}" )")"
+    arcv_fns_str="( "$( printf "\"%s\" " "${__arcv_fns[@]}" )")"
+    arcv_fps_str="( "$( printf "\"%s\" " "${__arcv_fps[@]}" )")"
     get_extrn_mdl_files_from_noaa_hpss \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
-      arcv_fmt="${arcv_fmt}" \
-      arcv_fns="${arcv_fns}" \
-      arcv_fps="${arcv_fps}" \
-      arcvrel_dir="${arcvrel_dir}" \
+      arcv_fmt="${__arcv_fmt}" \
+      arcv_fns="${arcv_fns_str}" \
+      arcv_fps="${arcv_fps_str}" \
+      arcvrel_dir="${__arcvrel_dir}" \
       fns="${fns_str}"
 #
 # Data source is NOMADS.
 #
   elif [ "${data_src}" = "nomads" ]; then
 
-    set_extrn_mdl_filenames \
-      ics_or_lbcs="${ics_or_lbcs}" \
-      extrn_mdl_name="${extrn_mdl_name}" \
-      cdate="$cdate" \
-      outvarname_fns_in_arcv="fns"
-
     set_extrn_mdl_arcv_file_dir_names \
-      ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
+      ics_or_lbcs="${ics_or_lbcs}" \
       cdate="$cdate" \
-      outvarname_arcvrel_dir="arcvrel_dir"
+      outvarname_arcvrel_dir="__arcvrel_dir"
 
-    fns_str="( "$( printf "\"%s\" " "${fns[@]}" )")"
     get_extrn_mdl_files_from_nomads \
       ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
-      arcvrel_dir="${arcvrel_dir}" \
+      arcvrel_dir="${__arcvrel_dir}" \
       fns_in_arcv="${fns_str}"
 
   fi
@@ -315,8 +300,7 @@ Will try the next data source specified in data_sources, which is:
 #
   else
 
-    if [ "${data_src}" = "user_dir" ] || \
-       [ "${data_src}" = "sys_dir" ]; then
+    if [ "${data_src}" = "disk" ]; then
 
       if [ "${ics_or_lbcs}" = "ICS" ]; then
 
@@ -403,8 +387,6 @@ elif [ "${ics_or_lbcs}" = "LBCS" ]; then
 fi
 var_defns_fp="${staging_dir}/${var_defns_fn}"
 check_for_preexist_dir_file "${var_defns_fp}" "delete"
-
-fns_str="( "$( printf "\"%s\" " "${fns[@]}" )")"
 
 settings="\
 DATA_SRC=\"${data_src}\"

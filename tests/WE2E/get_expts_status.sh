@@ -43,14 +43,14 @@ scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
 #-----------------------------------------------------------------------
 #
-# The current script should be located in the "tests" subdirectory of the
-# workflow's top-level directory, which we denote by homerrfs.  Thus,
-# homerrfs is the directory one level above the directory in which the
-# current script is located.  Set homerrfs accordingly.
+# The current script should be located in the "tests/WE2E" subdirectory 
+# of the workflow's top-level directory, which we denote by homerrfs.  
+# Thus, homerrfs is the directory two levels above the directory in which 
+# the current script is located.  Set homerrfs accordingly.
 #
 #-----------------------------------------------------------------------
 #
-homerrfs=${scrfunc_dir%/*}
+homerrfs=${scrfunc_dir%/*/*}
 #
 #-----------------------------------------------------------------------
 #

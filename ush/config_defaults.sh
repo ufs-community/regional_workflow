@@ -522,28 +522,28 @@ NDAS_OBS_DIR="/path/to/observation-directory/ndas/proc"
 # Definitions:
 #
 # EXTRN_MDL_NAME_ICS:
-#`The name of the external model that will provide fields from which 
-# initial condition (including and surface) files will be generated for
+# The name of the external model that will provide fields from which 
+# initial condition (IC, including surface) files will be generated for
 # input into the forecast model.
 #
 # EXTRN_MDL_NAME_LBCS:
-#`The name of the external model that will provide fields from which 
+# The name of the external model that will provide fields from which 
 # lateral boundary condition (LBC) files will be generated for input into
 # the forecast model.
 #
 # LBC_SPEC_INTVL_HRS:
 # The interval (in integer hours) with which LBC files will be generated.
-# We will refer to this as the boundary update interval.  Note that the
-# model specified in EXTRN_MDL_NAME_LBCS must have data available at a
-# frequency greater than or equal to that implied by LBC_SPEC_INTVL_HRS.
+# We will refer to this as the boundary specification interval.  Note 
+# that the model specified in EXTRN_MDL_NAME_LBCS must have data available 
+# at a frequency greater than or equal to that implied by LBC_SPEC_INTVL_HRS.
 # For example, if LBC_SPEC_INTVL_HRS is set to 6, then the model must have
 # data availble at least every 6 hours.  It is up to the user to ensure 
 # that this is the case.
 #
 # FV3GFS_FILE_FMT_ICS:
-# If using the FV3GFS model as the source of the ICs (i.e. if EXTRN_MDL_NAME_ICS
-# is set to "FV3GFS"), this variable specifies the format of the model
-# files to use when generating the ICs.
+# If using the FV3GFS model as the source of the ICs (i.e. if 
+# EXTRN_MDL_NAME_ICS is set to "FV3GFS"), this variable specifies the 
+# format of the model files to use when generating the ICs.
 #
 # FV3GFS_FILE_FMT_LBCS:
 # If using the FV3GFS model as the source of the LBCs (i.e. if 
@@ -560,129 +560,137 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #
 #-----------------------------------------------------------------------
 #
+# Parameters that specify how to obtain the external model files needed
+# for generating ICs and LBCs on the native grid.  Definitions:
+#
+# EXTRN_MDL_DATA_SOURCES:
 # Array specifying the sources from which to try to obtain external model
 # files for generating ICs or LBCs (which happens in the GET_EXTRN_ICS_TN 
 # and GET_EXTRN_LBCS_TN tasks).  These sources are queried starting with 
-# the first (and ending after the first one from which the files are 
-# successfully obtained).
+# the first and ending after the first one from which the files are 
+# successfully obtained.  Valid values that the elements of this array
+# can take on and the respective behaviors they elicit are:
 #
-# Valid values for the elements of EXTRN_MDL_DATA_SOURCES and the 
-# behavior they elicit are:
-#
-# user_dir:
-# Look for external model files in a user-specified directory.  The 
-# GET_EXTRN_ICS_TN task looks for external model files with names 
-# specified by EXTRN_MDL_USER_FILES_ICS in the directory specified by 
-# EXTRN_MDL_USER_BASEDIR_ICS, while the GET_EXTRN_LBCS_TN task looks for
-# external model files with names specified by EXTRN_MDL_USER_FILES_LBCS
-# in the directory specified by EXTRN_MDL_USER_BASEDIR_LBCS.  See the
-# defintions of these parameters below for more details.
-#
-# sys_dir:
-# Look for external model files in a system directory.  The GET_EXTRN_ICS_TN 
-# task looks for the external model files in the directory specified by 
-# EXTRN_MDL_SYS_BASEDIR_ICS, while the GET_EXTRN_LBCS_TN task looks for 
-# the files in the directory specified by EXTRN_MDL_SYS_BASEDIR_LBCS.  
-# If not specified by the user in the experiment configuration file, 
-# EXTRN_MDL_SYS_BASEDIR_ICS and EXTRN_MDL_SYS_BASEDIR_LBCS are set according
-# to the platform the workflow is running on (MACHINE) and the external
-# model providing the files (as specified by EXTRN_MDL_NAME_ICS or 
-# EXTRN_MDL_NAME_LBCS).  Also, the names of the files to search for are 
-# set in an internal script according to the external model being 
-# considered (as specified by EXTRN_MDL_NAME_ICS or EXTRN_MDL_NAME_LBCS).
-#
-# noaa_hpss:
-# Fetch external model files from NOAA's HPSS.  All information needed
-# to obtain the files [e.g. the path on NOAA HPSS of the archive files
-# (e.g. tar or zip) that contain the external model files, the paths 
-# within the archive files where the latter are located, etc) are set in
-# an internal script according to the external model being considered 
-# (as specified by EXTRN_MDL_NAME_ICS or EXTRN_MDL_NAME_LBCS).
-#
-# nomads:
-# Fetch external model files from NOMADS (NOAA Operational Model Archive 
-# and Distribution System).
-#
-# The default behavior is to first try the system directory (if one 
-# exists on the current platform for the external model being considered), 
-# then NOAA HPSS, and finally NOMADS.  The default does not include 
-# trying a user-specified directory because those are not known a-priori 
-# (they require the user to explicitly specify EXTRN_MDL_USER_BASEDIR_ICS 
-# and EXTRN_MDL_USER_FILES_ICS and/or EXTRN_MDL_USER_BASEDIR_LBCS and 
-# EXTRN_MDL_USER_FILES_LBCS).  
-#
-# Note that if USE_USER_STAGED_EXTRN_FILES is set to "TRUE", then the 
-# experiment generation scripts will prepend "user_dir" to the array
-# EXTRN_MDL_DATA_SOURCES if the latter does not already contain "user_dir"
-# as an element.
-#
-#-----------------------------------------------------------------------
-#
-EXTRN_MDL_DATA_SOURCES=( "sys_dir" "noaa_hpss" "nomads" )
-#
-#-----------------------------------------------------------------------
-#
-# Base directories in which to search for external model files.
-#
-# EXTRN_MDL_SYS_BASEDIR_ICS:
-# Base directory on the local machine containing external model files for
-# generating ICs on the native grid.  The way the full path containing 
-# these files is constructed depends on the user-specified external model
-# for ICs, i.e. EXTRN_MDL_NAME_ICS.
-#
-# EXTRN_MDL_SYS_BASEDIR_LBCS:
-# Same as EXTRN_MDL_SYS_BASEDIR_ICS but for LBCs.
-#
-# Note that these must be defined as null strings here so that if they 
-# are specified by the user in the experiment configuration file, they 
-# remain set to those values, and if not, they get set to machine-dependent 
-# values.
-#
-#-----------------------------------------------------------------------
-#
-EXTRN_MDL_SYS_BASEDIR_ICS=""
-EXTRN_MDL_SYS_BASEDIR_LBCS=""
-#
-#-----------------------------------------------------------------------
-#
-# User-staged external model directories and files.  Definitions:
-#
-# USE_USER_STAGED_EXTRN_FILES:
-# Flag that determines whether or not the workflow will look for the 
-# external model files (needed for generating ICs and LBCs) in user-
-# specified directories.
-#
-# EXTRN_MDL_USER_BASEDIR_ICS:
-# Directory in which to look for external model files if the data source
-# is a user-specified directory with user-specified file names (case of
-# "user_dir" in EXTRN_MDL_DATA_SOURCES).  In this case, the scripts look 
-# in this directory (specifically, in a subdirectory under this directory 
-# named "YYYYMMDDHH" consisting of the starting date and cycle hour of 
-# the forecast, where YYYY is the 4-digit year, MM the 2-digit month, DD 
-# the 2-digit day of the month, and HH the 2-digit hour of the day) for 
-# the external model files specified by the array EXTRN_MDL_USER_FILES_ICS 
-# (these files will be used to generate the ICs on the native FV3-LAM 
-# grid).  This variable is not used if USE_USER_STAGED_EXTRN_FILES is 
-# set to "FALSE".
+# * "disk"
+#   Look for external model files in local directories.  The base 
+#   directories in which the files are assumed to be located are given 
+#   by EXTRN_MDL_BASEDIR_ICS and EXTRN_MDL_BASEDIR_LBCS for ICs and LBCs,
+#   respectively.  Here, by "base" directory, we mean the cycle-independent 
+#   portion of the full directory in which the files are located.  The
+#   way the cycle-dependent portion of the full directory as well as the
+#   file names are constructed depends on the parameter 
+#   EXTRN_MDL_FILE_NAMING_CONVENTION described below.
 # 
-# EXTRN_MDL_USER_FILES_ICS:
-# Array containing the names of the files to search for in the directory
-# specified by EXTRN_MDL_USER_BASEDIR_ICS.  This variable is not used
-# if USE_USER_STAGED_EXTRN_FILES is set to "FALSE".
+# * "noaa_hpss"
+#   Fetch external model files from NOAA's HPSS.  All information needed
+#   to obtain the files [e.g. the path on NOAA HPSS of the archive files 
+#   (e.g. tar or zip) that contain the external model files, the paths 
+#   within the archive files where the latter are located, the names of 
+#   the files, etc) are set in internal scripts according to the external 
+#   model being considered (as specified by EXTRN_MDL_NAME_ICS or
+#   EXTRN_MDL_NAME_LBCS).
 #
-# EXTRN_MDL_USER_BASEDIR_LBCS:
-# Analogous to EXTRN_MDL_USER_BASEDIR_ICS but for LBCs instead of ICs.
+# * "nomads"
+#   Fetch external model files from NOMADS (NOAA Operational Model 
+#   Archive and Distribution System).  As with the "nomads" case, all
+#   information needed to fetch the files are set in internal scripts
+#   according to the external model.
 #
-# EXTRN_MDL_USER_FILES_LBCS:
-# Analogous to EXTRN_MDL_USER_FILES_ICS but for LBCs instead of ICs.
+# EXTRN_MDL_BASEDIR_ICS:
+# Base directory containing the external model file(s) for generating 
+# ICs on the native grid.  Note that:
+#
+# * If this is not set by the user in the experiment configuration file 
+#   (to a non-empty string, e.g. to a directory in which the user has 
+#   manually staged external model files), then the experiment generation 
+#   scripts will try to set it to a machine- and external model-dependent 
+#   system directory.  If such a directory is not defined for the specified 
+#   machine and external model combination, then this variable will remain 
+#   set to a null string.  In this case, the attempt to find the external 
+#   model files on disk will fail (and another data source may be tried 
+#   depending on how EXTRN_MDL_DATA_SOURCES is set).
+#
+# * This variable must be defined as null strings here so that if it is
+#   specified by the user in the experiment configuration file, it remains
+#   set to that value (as opposed to being overwritten by the default
+#   machine- and external model-dependent value).
+#
+# * The external model file(s) for generating ICs are not located directly
+#   under this directory but in a sub(sub...)directory defined by some
+#   relative path.  Thus, the full path to the file(s) is obtained by
+#   appending this relative path to the contents of EXTRN_MDL_BASEDIR_ICS.
+#   This relative path depends on the current cycle's date and time (year, 
+#   month, day, hour, and possibly minutes) and possibly other parameters,
+#   and the way in which it depends on the cycle date and time (i.e. how
+#   the date and time are parsed to form the relative path) itself depends 
+#   on the setting of EXTRN_MDL_FILE_NAMING_CONVENTION (see below).
+#
+# EXTRN_MDL_BASEDIR_LBCS:
+# Same as EXTRN_MDL_BASEDIR_ICS but for LBCs.
+#
+# EXTRN_MDL_FILE_NAMING_CONVENTION:
+# Naming convention and directory stucture to assume for external model 
+# files.  Valid values for this variable and the respective behaviors
+# they elicit are:
+#
+# * "extrn_mdl"
+#   This is the default value and causes the workflow scripts to assume 
+#   that the external model files have not been renamed and the directory
+#   structure in which they are stored has not been altered, i.e. that 
+#   the files use their original names and are located in their original 
+#   cycle-dependent relative subdirectories (under the base directories
+#   specified by EXTRN_MDL_BASEDIR_ICS and EXTRN_MDL_BASEDIR_LBCS).  The
+#   relative paths of these subdirectories are always constructed from
+#   the components of the current cycle's date and time, but the exact 
+#   way in which this is done will depend on the external model (because 
+#   each model has its own output directory structure as well as file 
+#   naming convention).
+#
+# * "user_spec"
+#   This value causes the workflow scripts to assume that, regardless of 
+#   the external model, the files are located in a subdirectory (under 
+#   EXTRN_MDL_BASEDIR_ICS or EXTRN_MDL_BASEDIR_LBCS) named "YYYYMMDDHH",
+#   where YYYY is the 4-digit cycle year, MM the 2-digit month, DD the 
+#   2-digit day of the month, and HH the 2-digit hour of the day.  This 
+#   is a way of imposing a standard directory structure to the external 
+#   model files regardless of the external model.
+# 
+# EXTRN_MDL_FNS_ICS:
+# If EXTRN_MDL_FILE_NAMING_CONVENTION is set to "user_spec", this array
+# specifies the names of the files from which to generate ICs and surface
+# fields.  This is an array because some external models (or external 
+# model and file format combinations) store all the information needed 
+# to generate ICs in a single file while others split this information 
+# between multiple files, e.g. one file for atmostpheric variables and 
+# another for surface variables.  This variable is not used if 
+# EXTRN_MDL_FILE_NAMING_CONVENTION is not set to "user_spec". 
+#                                                            
+# EXTRN_MDL_FNS_LBCS_PREFIX, EXTRN_MDL_FNS_LBCS_SUFFIX:
+# If EXTRN_MDL_FILE_NAMING_CONVENTION is set to "user_spec", the prefix 
+# and suffix to add each 3-digit output forecast hour (of the external 
+# model) to obtain the names of the external model files from which to 
+# generate LBCs.  For example, if we need output files at hours 3 and 6 
+# from the external model, then (assuming EXTRN_MDL_FILE_NAMING_CONVENTION 
+# is set to "user_spec") the scripts will look for files named
+#
+#   ${EXTRN_MDL_FNS_LBCS_PREFIX}003${EXTRN_MDL_FNS_LBCS_SUFFIX}            
+#
+# and
+#
+#   ${EXTRN_MDL_FNS_LBCS_PREFIX}006${EXTRN_MDL_FNS_LBCS_SUFFIX}            
+#
+# This variable is not used if EXTRN_MDL_FILE_NAMING_CONVENTION is not 
+# set to "user_spec".
 #
 #-----------------------------------------------------------------------
 #
-USE_USER_STAGED_EXTRN_FILES="FALSE"
-EXTRN_MDL_USER_BASEDIR_ICS="/base/dir/containing/user/staged/extrn/mdl/files/for/ICs"
-EXTRN_MDL_USER_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
-EXTRN_MDL_USER_BASEDIR_LBCS="/base/dir/containing/user/staged/extrn/mdl/files/for/LBCs"
-EXTRN_MDL_USER_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
+EXTRN_MDL_DATA_SOURCES=( "disk" "noaa_hpss" "nomads" )
+EXTRN_MDL_BASEDIR_ICS=""
+EXTRN_MDL_BASEDIR_LBCS=""
+EXTRN_MDL_FILE_NAMING_CONVENTION="extrn_mdl"
+EXTRN_MDL_FNS_ICS=( "" )
+EXTRN_MDL_FNS_LBCS_PREFIX=""
+EXTRN_MDL_FNS_LBCS_SUFFIX=""
 #
 #-----------------------------------------------------------------------
 #

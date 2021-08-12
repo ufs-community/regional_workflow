@@ -25,8 +25,8 @@ function set_extrn_mdl_arcv_file_dir_names() {
 #-----------------------------------------------------------------------
 #
   local valid_args=( \
-    "ics_or_lbcs" \
     "extrn_mdl_name" \
+    "ics_or_lbcs" \
     "cdate" \
     "outvarname_arcv_fmt" \
     "outvarname_arcv_fns" \
@@ -53,13 +53,14 @@ function set_extrn_mdl_arcv_file_dir_names() {
 #
   local anl_or_fcst \
         arcv_dir \
-        bbbbarcv_fmt \
+        arcv_fmt \
         arcv_fn \
-        bbbbarcv_fns \
+        arcv_fns \
         arcv_fp \
-        bbbbarcv_fps \
+        arcv_fps \
         arcv_fps_str \
-        bbbbarcvrel_dir
+        arcvrel_dir \
+        fv3gfs_file_fmt
 #
 #-----------------------------------------------------------------------
 #
@@ -69,8 +70,10 @@ function set_extrn_mdl_arcv_file_dir_names() {
 #
   if [ "${ics_or_lbcs}" = "ICS" ]; then
     anl_or_fcst="ANL"
+    fv3gfs_file_fmt="${FV3GFS_FILE_FMT_ICS}"
   elif [ "${ics_or_lbcs}" = "LBCS" ]; then
     anl_or_fcst="FCST"
+    fv3gfs_file_fmt="${FV3GFS_FILE_FMT_LBCS}"
   fi
 #
 #-----------------------------------------------------------------------
@@ -108,89 +111,89 @@ function set_extrn_mdl_arcv_file_dir_names() {
 
   "GSMGFS")
     arcv_dir="/NCEPPROD/hpssprod/runhistory/rh${yyyy}/${yyyy}${mm}/${yyyymmdd}"
-    bbbbarcv_fmt="tar"
-    bbbbarcv_fns="gpfs_hps_nco_ops_com_gfs_prod_gfs.${cdate}."
+    arcv_fmt="tar"
+    arcv_fns="gpfs_hps_nco_ops_com_gfs_prod_gfs.${cdate}."
     if [ "${anl_or_fcst}" = "ANL" ]; then
-      bbbbarcv_fns="${bbbbarcv_fns}anl"
-      bbbbarcvrel_dir="."
+      arcv_fns="${arcv_fns}anl"
+      arcvrel_dir="."
     elif [ "${anl_or_fcst}" = "FCST" ]; then
-      bbbbarcv_fns="${bbbbarcv_fns}sigma"
-      bbbbarcvrel_dir="/gpfs/hps/nco/ops/com/gfs/prod/gfs.${yyyymmdd}"
+      arcv_fns="${arcv_fns}sigma"
+      arcvrel_dir="/gpfs/hps/nco/ops/com/gfs/prod/gfs.${yyyymmdd}"
     fi
-    bbbbarcv_fns="${bbbbarcv_fns}.${bbbbarcv_fmt}"
-    bbbbarcv_fps="${arcv_dir}/${bbbbarcv_fns}"
+    arcv_fns="${arcv_fns}.${arcv_fmt}"
+    arcv_fps="${arcv_dir}/${arcv_fns}"
     ;;
 
   "FV3GFS")
 
     if [ "${cdate}" -lt "2019061200" ]; then
       arcv_dir="/NCEPDEV/emc-global/5year/emc.glopara/WCOSS_C/Q2FY19/prfv3rt3/${cdate}"
-      bbbbarcv_fns=""
+      arcv_fns=""
     elif [ "${cdate}" -ge "2019061200" ] && \
          [ "${cdate}" -lt "2020022600" ]; then
       arcv_dir="/NCEPPROD/hpssprod/runhistory/rh${yyyy}/${yyyy}${mm}/${yyyymmdd}"
-      bbbbarcv_fns="gpfs_dell1_nco_ops_com_gfs_prod_gfs.${yyyymmdd}_${hh}."
+      arcv_fns="gpfs_dell1_nco_ops_com_gfs_prod_gfs.${yyyymmdd}_${hh}."
     elif [ "${cdate}" -ge "2020022600" ]; then
       arcv_dir="/NCEPPROD/hpssprod/runhistory/rh${yyyy}/${yyyy}${mm}/${yyyymmdd}"
-      bbbbarcv_fns="com_gfs_prod_gfs.${yyyymmdd}_${hh}."
+      arcv_fns="com_gfs_prod_gfs.${yyyymmdd}_${hh}."
     fi
 
     if [ "${fv3gfs_file_fmt}" = "nemsio" ]; then
 
       if [ "${anl_or_fcst}" = "ANL" ]; then
-        bbbbarcv_fns="${bbbbarcv_fns}gfs_nemsioa"
+        arcv_fns="${arcv_fns}gfs_nemsioa"
       elif [ "${anl_or_fcst}" = "FCST" ]; then
         last_fhr_in_nemsioa="39"
         first_lbc_fhr="${lbc_spec_fhrs[0]}"
         last_lbc_fhr="${lbc_spec_fhrs[-1]}"
         if [ "${last_lbc_fhr}" -le "${last_fhr_in_nemsioa}" ]; then
-          bbbbarcv_fns="${bbbbarcv_fns}gfs_nemsioa"
+          arcv_fns="${arcv_fns}gfs_nemsioa"
         elif [ "${first_lbc_fhr}" -gt "${last_fhr_in_nemsioa}" ]; then
-          bbbbarcv_fns="${bbbbarcv_fns}gfs_nemsiob"
+          arcv_fns="${arcv_fns}gfs_nemsiob"
         else
-          bbbbarcv_fns=( "${bbbbarcv_fns}gfs_nemsioa" "${bbbbarcv_fns}gfs_nemsiob" )
+          arcv_fns=( "${arcv_fns}gfs_nemsioa" "${arcv_fns}gfs_nemsiob" )
         fi
       fi
 
     elif [ "${fv3gfs_file_fmt}" = "grib2" ]; then
 
-      bbbbarcv_fns="${bbbbarcv_fns}gfs_pgrb2"
+      arcv_fns="${arcv_fns}gfs_pgrb2"
 
     elif [ "${fv3gfs_file_fmt}" = "netcdf" ]; then
 
       if [ "${anl_or_fcst}" = "ANL" ]; then
-        bbbbarcv_fns="${bbbbarcv_fns}gfs_nca"
+        arcv_fns="${arcv_fns}gfs_nca"
       elif [ "${anl_or_fcst}" = "FCST" ]; then
         last_fhr_in_netcdfa="39"
         first_lbc_fhr="${lbc_spec_fhrs[0]}"
         last_lbc_fhr="${lbc_spec_fhrs[-1]}"
         if [ "${last_lbc_fhr}" -le "${last_fhr_in_netcdfa}" ]; then
-          bbbbarcv_fns="${bbbbarcv_fns}gfs_nca"
+          arcv_fns="${arcv_fns}gfs_nca"
         elif [ "${first_lbc_fhr}" -gt "${last_fhr_in_netcdfa}" ]; then
-          bbbbarcv_fns="${bbbbarcv_fns}gfs_ncb"
+          arcv_fns="${arcv_fns}gfs_ncb"
         else
-          bbbbarcv_fns=( "${bbbbarcv_fns}gfs_nca" "${bbbbarcv_fns}gfs_ncb" )
+          arcv_fns=( "${arcv_fns}gfs_nca" "${arcv_fns}gfs_ncb" )
         fi
       fi
 
     fi
 
-    bbbbarcv_fmt="tar"
+    arcv_fmt="tar"
 
     slash_atmos_or_null=""
     if [ "${cdate}" -ge "2021032100" ]; then
       slash_atmos_or_null="/atmos"
     fi
-    bbbbarcvrel_dir="./gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
+    arcvrel_dir="./gfs.${yyyymmdd}/${hh}${slash_atmos_or_null}"
 
-    if is_array "bbbbarcv_fns"; then
-      suffix=".${bbbbarcv_fmt}"
-      bbbbarcv_fns=( "${bbbbarcv_fns[@]/%/$suffix}" )
+    if is_array "arcv_fns"; then
+      suffix=".${arcv_fmt}"
+      arcv_fns=( "${arcv_fns[@]/%/$suffix}" )
       prefix="${arcv_dir}/"
-      bbbbarcv_fps=( "${bbbbarcv_fns[@]/#/$prefix}" )
+      arcv_fps=( "${arcv_fns[@]/#/$prefix}" )
     else
-      bbbbarcv_fns="${bbbbarcv_fns}.${bbbbarcv_fmt}"
-      bbbbarcv_fps="${arcv_dir}/${bbbbarcv_fns}"
+      arcv_fns="${arcv_fns}.${arcv_fmt}"
+      arcv_fps="${arcv_dir}/${arcv_fns}"
     fi
     ;;
 
@@ -222,10 +225,10 @@ function set_extrn_mdl_arcv_file_dir_names() {
     hh=$( printf "%02d\n" $hh )
 
     arcv_dir="/BMC/fdr/Permanent/${yyyy}/${mm}/${dd}/data/fsl/rap/full/wrfnat"
-    bbbbarcv_fmt="zip"
-    bbbbarcv_fns="${yyyy}${mm}${dd}${hh}00.${bbbbarcv_fmt}"
-    bbbbarcv_fps="${arcv_dir}/${bbbbarcv_fns}"
-    bbbbarcvrel_dir=""
+    arcv_fmt="zip"
+    arcv_fns="${yyyy}${mm}${dd}${hh}00.${arcv_fmt}"
+    arcv_fps="${arcv_dir}/${arcv_fns}"
+    arcvrel_dir=""
 #
 # Reset hh to its original value in case it is used again later below.
 #
@@ -238,18 +241,18 @@ function set_extrn_mdl_arcv_file_dir_names() {
 # may be added in the future.
 #
     arcv_dir="/BMC/fdr/Permanent/${yyyy}/${mm}/${dd}/data/fsl/hrrr/conus/wrfnat"
-    bbbbarcv_fmt="zip"
-    bbbbarcv_fns="${yyyy}${mm}${dd}${hh}00.${bbbbarcv_fmt}"
-    bbbbarcv_fps="${arcv_dir}/${bbbbarcv_fns}"
-    bbbbarcvrel_dir=""
+    arcv_fmt="zip"
+    arcv_fns="${yyyy}${mm}${dd}${hh}00.${arcv_fmt}"
+    arcv_fps="${arcv_dir}/${arcv_fns}"
+    arcvrel_dir=""
     ;;
 
   "NAM")
     arcv_dir="/NCEPPROD/hpssprod/runhistory/rh${yyyy}/${yyyy}${mm}/${yyyymmdd}"
-    bbbbarcv_fmt="tar"
-    bbbbarcv_fns="com_nam_prod_nam.${yyyy}${mm}${dd}${hh}.bgrid.${bbbbarcv_fmt}"
-    bbbbarcv_fps="${arcv_dir}/${bbbbarcv_fns}"
-    bbbbarcvrel_dir=""
+    arcv_fmt="tar"
+    arcv_fns="com_nam_prod_nam.${yyyy}${mm}${dd}${hh}.bgrid.${arcv_fmt}"
+    arcv_fps="${arcv_dir}/${arcv_fns}"
+    arcvrel_dir=""
     ;;
 
   *)
@@ -261,12 +264,12 @@ Archive file information has not been specified for this external model:
   esac
 #
 # Depending on the experiment configuration, the above code may set
-# bbbbarcv_fns and bbbbarcv_fps to either scalars or arrays.  If they are not
+# arcv_fns and arcv_fps to either scalars or arrays.  If they are not
 # arrays, recast them as arrays because that is what is expected in the
 # code below.
 #
-  is_array "bbbbarcv_fns" || bbbbarcv_fns=( "${bbbbarcv_fns}" )
-  is_array "bbbbarcv_fps" || bbbbarcv_fps=( "${bbbbarcv_fps}" )
+  is_array "arcv_fns" || arcv_fns=( "${arcv_fns}" )
+  is_array "arcv_fps" || arcv_fps=( "${arcv_fps}" )
 #
 #-----------------------------------------------------------------------
 #
@@ -277,21 +280,21 @@ Archive file information has not been specified for this external model:
 #-----------------------------------------------------------------------
 #
   if [ ! -z "${outvarname_arcv_fmt}" ]; then
-    eval ${outvarname_arcv_fmt}=${bbbbarcv_fmt}
+    eval ${outvarname_arcv_fmt}=${arcv_fmt}
   fi
 
   if [ ! -z "${outvarname_arcv_fns}" ]; then
-    arcv_fns_str="( "$( printf "\"%s\" " "${bbbbarcv_fns[@]}" )")"
+    arcv_fns_str="( "$( printf "\"%s\" " "${arcv_fns[@]}" )")"
     eval ${outvarname_arcv_fns}=${arcv_fns_str}
   fi
 
   if [ ! -z "${outvarname_arcv_fps}" ]; then
-    arcv_fps_str="( "$( printf "\"%s\" " "${bbbbarcv_fps[@]}" )")"
+    arcv_fps_str="( "$( printf "\"%s\" " "${arcv_fps[@]}" )")"
     eval ${outvarname_arcv_fps}=${arcv_fps_str}
   fi
 
   if [ ! -z "${outvarname_arcvrel_dir}" ]; then
-    eval ${outvarname_arcvrel_dir}=${bbbbarcvrel_dir}
+    eval ${outvarname_arcvrel_dir}=${arcvrel_dir}
   fi
 #
 #-----------------------------------------------------------------------

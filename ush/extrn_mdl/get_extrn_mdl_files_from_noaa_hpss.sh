@@ -98,10 +98,10 @@ function get_extrn_mdl_files_from_noaa_hpss() {
   arcv_fps_str="( "$( printf "\"%s\" " "${arcv_fps[@]}" )")"
 
   print_info_msg "
-Fetching external model files from HPSS.  The full paths to these files
-in the archive file(s) (fps), the archive files on HPSS in which 
-these files are stored (arcv_fps), and the staging directory to which 
-they will be copied (staging_dir) are:
+Fetching external model files from HPSS.  The full paths (fps) to these 
+files in the archive file(s), the archive files on HPSS in which these 
+files are stored (arcv_fps), and the staging directory (staging_dir) to 
+which they will be copied are:
   fps = ${fps_str}
   arcv_fps = ${arcv_fps_str}
   staging_dir = \"${staging_dir}\""
