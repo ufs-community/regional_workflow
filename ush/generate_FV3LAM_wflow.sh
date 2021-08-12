@@ -668,6 +668,14 @@ settings="\
     'n_var_lndp': ${N_VAR_LNDP},
     'lndp_type': ${LNDP_TYPE},
     'lndp_each_step': ${SPP_LSM_EACH_STEP}, 
+if [ "${DO_LSM_SPP}" = "TRUE" ]; then 
+    'n_var_lndp': ${N_VAR_LNDP},
+    'lndp_type': ${LNDP_TYPE},
+    'lndp_each_step': ${SPP_LSM_EACH_STEP},
+    'fhcyc': {$FHCYC_LSM_SPP},
+fi
+  }
+
   }
 'nam_stochy': {
     'shum': ${SHUM_MAG},
