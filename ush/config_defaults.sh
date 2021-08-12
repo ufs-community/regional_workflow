@@ -1594,6 +1594,8 @@ USE_ZMTNBLCK="false"
 # used in the RAP/HRRR physics suite.  Users need to be aware of which SDF
 # is chosen when turning this option on. 
 #
+# Patterns evolve and are applied at each time step.
+#
 #-----------------------------------------------------------------------
 #
 DO_SPP="false"
@@ -1605,6 +1607,34 @@ SPP_SIGTOP1=( "0.1" "0.1" "0.1" "0.1" "0.1")
 SPP_SIGTOP2=( "0.025" "0.025" "0.025" "0.025" "0.025" )
 SPP_STDDEV_CUTOFF=( "1.5" "1.5" "1.5" "1.5" "1.5" )
 ISEED_SPP=( "4" "4" "4" "4" "4" )
+#
+#-----------------------------------------------------------------------
+#
+# Turn on SPP in Noah or RUC LSM (support for Noah MP is in progress).
+# Please be aware of the SDF that you choose if you wish to turn on LSM
+# SPP.
+#
+# SPP in for LSM schemes is handled in the &nam_sfcperts namelist 
+# block instead of in &nam_spperts, where all other SPP is implemented.
+#
+# The default perturbation frequency is determined by the fhcyc namelist 
+# entry.  Since that parameter is set to zero in the SRW App, use 
+# SPP_LSM_EACH_STEP to perturb every time step. 
+#
+# Perturbations to soil moisture content (SMC) are only applied at the 
+# first time step.
+#
+# SMC - soil moisture content (volume fraction), VGF - vegetation
+# fraction, ALB - albedo, SAL - salinity, EMI - emissivity, ZOL - 
+# surface roughness (cm), and STC - soil temperature.
+#
+DO_LSM_SPP="false" #If true, sets lndp_type=2
+SPP_LSM_TSCALE=( "21600" "21600" "21600" "21600" "21600" "21600" "21600" )
+SPP_LSM_LSCALE=( "150000" "150000" "150000" "150000" "150000" "150000" "150000" )
+ISEED_LSM_SPP=( "5" "5" "5" "5" "5" "5" "5" )
+SPP_LSM_VAR_LIST=( "smc" "vgf" "alb" "sal" "emi" "zol" "stc" )
+SPP_LSM_MAG_LIST=( "0.2" "0.001" "0.001" "0.001" "0.001" "0.001" "0.2" )
+SPP_LSM_EACH_STEP="true" #Sets lndp_each_step=.true.
 #
 #-----------------------------------------------------------------------
 # 

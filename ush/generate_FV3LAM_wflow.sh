@@ -665,6 +665,9 @@ settings="\
     'do_skeb': ${DO_SKEB},
     'do_spp': ${DO_SPP},
     'n_var_spp': ${N_VAR_SPP},
+    'n_var_lndp': ${N_VAR_LNDP},
+    'lndp_type': ${LNDP_TYPE},
+    'lndp_each_step': ${SPP_LSM_EACH_STEP}, 
   }
 'nam_stochy': {
     'shum': ${SHUM_MAG},
@@ -755,7 +758,23 @@ settings="$settings
 fi
 settings="$settings
   }"
-
+#
+# Add the relevant LSM SPP namelist variables to "settings" when running with 
+# LSM SPP turned on.
+#
+settings="$settings
+'nam_sfcperts': {"
+if [ "${DO_LSM_SPP}" = "TRUE" ]; then 
+settings="$settings
+    'lndp_type': ${LNDP_TYPE},
+    'lndp_tau': [ $( printf %s, "${SPP_LSM_TSCALE[@]}" ) ],
+    'lndp_lscale': [ $( printf %s, "${SPP_LSM_LSCALE[@]}" ) ],
+    'iseed_lndp': [ $( printf %s, "${ISEED_LSM_SPP[@]}" ) ],
+    'lndp_var_list': [ $( printf %s, "${SPP_LSM_VAR_LIST[@]}" ) ],
+    'lndp_prt_list': [ $( printf %s, "${SPP_LSM_MAG_LIST[@]}" ) ],"
+fi
+settings="$settings
+  }"
 print_info_msg $VERBOSE "
 The variable \"settings\" specifying values of the namelist variables
 has been set as follows:

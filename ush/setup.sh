@@ -373,6 +373,26 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that DO_LSM_SPP is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "DO_LSM_SPP" "valid_vals_DO_LSM_SPP"
+#
+# Set DO_LSM_SPP to either "TRUE" or "FALSE" so we don't
+# have to consider other valid values later on.
+#
+DO_LSM_SPP=${DO_LSM_SPP^^}
+if [ "${DO_LSM_SPP}" = "TRUE" ] || \
+   [ "${DO_LSM_SPP}" = "YES" ]; then
+  DO_LSM_SPP="TRUE"
+elif [ "${DO_LSM_SPP}" = "FALSE" ] || \
+     [ "${DO_LSM_SPP}" = "NO" ]; then
+  DO_LSM_SPP="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Set magnitude of stochastic ad-hoc schemes to -999.0 if they are not
 # being used. This is required at the moment, since "do_shum/sppt/skeb"
 # does not override the use of the scheme unless the magnitude is also
@@ -405,6 +425,20 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# If running with LSM SPP, count the number of entries in SPP_LSM_VAR_LIST
+# to correctly set N_VAR_LNDP, otherwise set it to zero.  Also set 
+# LNDP_TYPE to 2 for LSM SPP. 
+#
+#-----------------------------------------------------------------------
+#
+N_VAR_LNDP=0
+if [ "${DO_LSM_SPP}" = "TRUE" ]; then
+  N_VAR_LNDP=${#SPP_LSM_VAR_LIST[@]}
+  LNDP_TYPE=2
+fi
+#
+#-----------------------------------------------------------------------
+#
 # If running with SPP, confirm that each SPP-related namelist value 
 # contains the same number of entries as N_VAR_SPP (set above to be equal
 # to the number of entries in SPP_VAR_LIST).
@@ -424,6 +458,26 @@ All SPP-related namelist variables set in config.sh must be equal in number
 of entries to what is found in SPP_VAR_LIST:
   Number of entries in SPP_VAR_LIST = \"${#SPP_VAR_LIST[@]}\""
   fi     
+fi
+#
+#-----------------------------------------------------------------------
+#
+# If running with LSM SPP, confirm that each LSM SPP-related namelist
+# value contains the same number of entries as N_VAR_LNDP (set above to
+# be equal to the number of entries in SPP_LSM_VAR_LIST).
+#
+#-----------------------------------------------------------------------
+#
+if [ "${DO_LSM_SPP}" = "TRUE" ]; then
+  if [ "${#SPP_LSM_MAG_LIST[@]}" != "${N_VAR_LNDP}" ] || \
+     [ "${#SPP_LSM_LSCALE[@]}" != "${N_VAR_LNDP}" ] || \
+     [ "${#SPP_LSM_TSCALE[@]}" != "${N_VAR_LNDP}" ] || \
+     [ "${#ISEED_LSM_SPP[@]}" != "${N_VAR_LNDP}" ]; then
+  print_err_msg_exit "\
+All SPP-related namelist variables set in config.sh must be equal in number
+of entries to what is found in SPP_VAR_LIST:
+  Number of entries in SPP_VAR_LIST = \"${#SPP_VAR_LIST[@]}\""
+  fi
 fi
 #
 #-----------------------------------------------------------------------
@@ -2981,6 +3035,16 @@ PE_MEMBER01="${PE_MEMBER01}"
 #-----------------------------------------------------------------------
 #
 N_VAR_SPP="${N_VAR_SPP}"
+#
+#-----------------------------------------------------------------------
+#
+# IF DO_LSM_SPP="TRUE," N_VAR_LNDP is the number of LSM parameters 
+# that are perturbed with SPP, otherwise N_VAR_LNDP=0.
+#
+#-----------------------------------------------------------------------
+#
+N_VAR_LNDP="${N_VAR_LNDP}"
+
 EOM
 } || print_err_msg_exit "\
 Heredoc (cat) command to append new variable definitions to variable 
