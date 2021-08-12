@@ -19,7 +19,7 @@ FV3GFS_FILE_FMT_ICS="grib2"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
 FV3GFS_FILE_FMT_LBCS="grib2"
 
-DATE_FIRST_CYCL=$( date --utc --date="2 days ago" "+%Y%m%d" )
+DATE_FIRST_CYCL=$( date --utc --date="1 days ago" "+%Y%m%d" )
 DATE_LAST_CYCL="${DATE_FIRST_CYCL}"
 CYCL_HRS=( "06" )
 
