@@ -99,6 +99,7 @@ function set_FV3nml_stoch_params() {
   iseed_skeb=$(( cdate*1000 + ensmem_num*10 + 3 ))
   iseed_sppt=$(( cdate*1000 + ensmem_num*10 + 1 ))
   iseed_spp=$(( cdate*1000 + ensmem_num*10 + 4 ))
+  iseed_lsm_spp=$(( cdate*1000 + ensmem_num*10 + 5 ))
 
   settings="\
 'nam_stochy': {
@@ -108,6 +109,9 @@ function set_FV3nml_stoch_params() {
   }
 'nam_spperts': {
   'iseed_spp': ${iseed_spp},
+  }
+'nam_sfcperts': {
+  'iseed_lndp': ${iseed_lsm_spp},
   }"
 
   $USHDIR/set_namelist.py -q \
