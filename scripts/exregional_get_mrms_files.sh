@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. ${GLOBAL_VAR_DEFNS_FP}
+
 # This script pulls MRMS data from the NOAA HPSS
 # Top-level MRMS directory
 set -x
