@@ -1,4 +1,4 @@
-# 
+#
 # TEST PURPOSE/DESCRIPTION:
 # ------------------------
 #
@@ -6,7 +6,7 @@
 # that require the forecast model to write output files and perform post-
 # processing on a sub-hourly time interval.
 #
-# This test is needed in addition to the one named "subhourly_post" 
+# This test is needed in addition to the one named "subhourly_post"
 # because in the jinja template file from which the rocoto workflow XML
 # is generated, the code changes that were made to add the subhourly
 # capability also involved changes to the ensemble capability.
@@ -20,7 +20,9 @@ CCPP_PHYS_SUITE="FV3_RRFS_v1beta"
 
 EXTRN_MDL_NAME_ICS="HRRR"
 EXTRN_MDL_NAME_LBCS="RAP"
-USE_USER_STAGED_EXTRN_FILES="TRUE"
+
+EXTRN_MDL_DATA_SOURCES=( "disk" )
+EXTRN_MDL_DIR_FILE_LAYOUT="user_spec"
 
 DATE_FIRST_CYCL="20200810"
 DATE_LAST_CYCL="20200810"

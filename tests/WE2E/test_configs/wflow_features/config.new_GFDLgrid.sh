@@ -2,15 +2,15 @@
 # TEST PURPOSE/DESCRIPTION:
 # ------------------------
 #
-# This test checks the capability of the workflow to have the user 
-# specify a new grid (as opposed to one of the predefined ones in the 
-# workflow) of GFDLgrid type.  Note that this test sets the workflow 
-# variable 
+# This test checks the capability of the workflow to have the user
+# specify a new grid (as opposed to one of the predefined ones in the
+# workflow) of GFDLgrid type.  Note that this test sets the workflow
+# variable
 #
-#   GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES 
+#   GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES
 #
-# to "TRUE" (which is its default value); see the UFS SRW User's Guide 
-# for a description of this variable. 
+# to "TRUE" (which is its default value); see the UFS SRW User's Guide
+# for a description of this variable.
 #
 # The difference between this test and the one named
 #
@@ -20,7 +20,7 @@
 # variable GFDLgrid_STRETCH_FAC very close to 1.  Setting it exactly to
 # 1 used to cause the workflow to fail because it caused the GFDL grid
 # generator to assume a global grid.  This bug should be rechecked, e.g.
-# by setting GFDLgrid_STRETCH_FAC to exactly 1 below.  If the grid 
+# by setting GFDLgrid_STRETCH_FAC to exactly 1 below.  If the grid
 # generation succeeds, then this test can be removed.
 #
 
@@ -31,7 +31,9 @@ CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp"
 
 EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
-USE_USER_STAGED_EXTRN_FILES="TRUE"
+
+EXTRN_MDL_DATA_SOURCES=( "disk" )
+EXTRN_MDL_DIR_FILE_LAYOUT="user_spec"
 
 DATE_FIRST_CYCL="20190701"
 DATE_LAST_CYCL="20190701"
@@ -49,7 +51,7 @@ GFDLgrid_LAT_T6_CTR="38.5"
 GFDLgrid_STRETCH_FAC="1.0001"  # Cannot be exactly 1.0 because then FV3 thinnks it's a global grid.  This needs to be fixed in the ufs_weather_model repo.
 GFDLgrid_RES="96"
 GFDLgrid_REFINE_RATIO="2"
-  
+
 #num_margin_cells_T6_left="9"
 #GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
 GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G="10"

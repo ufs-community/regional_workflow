@@ -1,10 +1,10 @@
-# 
+#
 # TEST PURPOSE/DESCRIPTION:
 # ------------------------
 #
-# This test checks the capability of the workflow to have the time 
+# This test checks the capability of the workflow to have the time
 # interval (RESTART_INTERVAL) at which restart files are written by the
-# forecast model be set to a user-specified value.  
+# forecast model be set to a user-specified value.
 #
 
 RUN_ENVIR="community"
@@ -15,7 +15,9 @@ CCPP_PHYS_SUITE="FV3_GFS_v15p2"
 
 EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
-USE_USER_STAGED_EXTRN_FILES="TRUE"
+
+EXTRN_MDL_DATA_SOURCES=( "disk" )
+EXTRN_MDL_DIR_FILE_LAYOUT="user_spec"
 
 DATE_FIRST_CYCL="20190701"
 DATE_LAST_CYCL="20190701"

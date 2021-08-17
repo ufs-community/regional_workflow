@@ -2,7 +2,7 @@
 # TEST PURPOSE/DESCRIPTION:
 # ------------------------
 #
-# This test checks the capability of the workflow to have the user 
+# This test checks the capability of the workflow to have the user
 # specify a new grid (as opposed to one of the predefined ones in the
 # workflow) of ESGgrid type.
 
@@ -14,7 +14,9 @@ CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp_regional"
 
 EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
-USE_USER_STAGED_EXTRN_FILES="TRUE"
+
+EXTRN_MDL_DATA_SOURCES=( "disk" )
+EXTRN_MDL_DIR_FILE_LAYOUT="user_spec"
 
 DATE_FIRST_CYCL="20190701"
 DATE_LAST_CYCL="20190701"
@@ -47,7 +49,7 @@ BLOCKSIZE="13"
 QUILTING="TRUE"
 if [ "$QUILTING" = "TRUE" ]; then
   WRTCMP_write_groups="1"
-  WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))                     
+  WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))
   WRTCMP_output_grid="lambert_conformal"
   WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
   WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"

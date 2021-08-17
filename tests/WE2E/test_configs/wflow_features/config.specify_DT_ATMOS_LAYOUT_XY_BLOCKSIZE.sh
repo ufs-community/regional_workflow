@@ -1,9 +1,9 @@
-# 
+#
 # TEST PURPOSE/DESCRIPTION:
 # ------------------------
 #
-# This test checks the capability of the workflow to have the forecast 
-# model's time step (DT_ATMOS), its MPI layout (LAYOUT_X and LAYOUT_Y), 
+# This test checks the capability of the workflow to have the forecast
+# model's time step (DT_ATMOS), its MPI layout (LAYOUT_X and LAYOUT_Y),
 # and its cache block size be set to user-specified values.
 #
 
@@ -15,7 +15,9 @@ CCPP_PHYS_SUITE="FV3_GSD_SAR"
 
 EXTRN_MDL_NAME_ICS="HRRR"
 EXTRN_MDL_NAME_LBCS="RAP"
-USE_USER_STAGED_EXTRN_FILES="TRUE"
+
+EXTRN_MDL_DATA_SOURCES=( "disk" )
+EXTRN_MDL_DIR_FILE_LAYOUT="user_spec"
 
 DATE_FIRST_CYCL="20200801"
 DATE_LAST_CYCL="20200801"

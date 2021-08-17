@@ -2,15 +2,15 @@
 # TEST PURPOSE/DESCRIPTION:
 # ------------------------
 #
-# This test checks the capability of the workflow to have the user 
-# specify a new grid (as opposed to one of the predefined ones in the 
-# workflow) of GFDLgrid type.  Note that this test sets the workflow 
-# variable 
+# This test checks the capability of the workflow to have the user
+# specify a new grid (as opposed to one of the predefined ones in the
+# workflow) of GFDLgrid type.  Note that this test sets the workflow
+# variable
 #
-#   GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES 
+#   GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES
 #
-# to "TRUE" (which is its default value); see the UFS SRW User's Guide 
-# for a description of this variable. 
+# to "TRUE" (which is its default value); see the UFS SRW User's Guide
+# for a description of this variable.
 #
 
 RUN_ENVIR="community"
@@ -20,7 +20,9 @@ CCPP_PHYS_SUITE="FV3_GFS_2017_gfdlmp"
 
 EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
-USE_USER_STAGED_EXTRN_FILES="TRUE"
+
+EXTRN_MDL_DATA_SOURCES=( "disk" )
+EXTRN_MDL_DIR_FILE_LAYOUT="user_spec"
 
 DATE_FIRST_CYCL="20190701"
 DATE_LAST_CYCL="20190701"
@@ -38,7 +40,7 @@ GFDLgrid_LAT_T6_CTR="38.5"
 GFDLgrid_STRETCH_FAC="1.5"
 GFDLgrid_RES="96"
 GFDLgrid_REFINE_RATIO="2"
-  
+
 #num_margin_cells_T6_left="9"
 #GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=$(( num_margin_cells_T6_left + 1 ))
 GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G="10"

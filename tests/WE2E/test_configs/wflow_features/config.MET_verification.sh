@@ -2,7 +2,7 @@
 # TEST PURPOSE/DESCRIPTION:
 # ------------------------
 #
-# This test is to ensure that the workflow running in community mode 
+# This test is to ensure that the workflow running in community mode
 # completes successfully with MET verification.
 #
 
@@ -14,7 +14,9 @@ CCPP_PHYS_SUITE="FV3_GFS_v15p2"
 
 EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
-USE_USER_STAGED_EXTRN_FILES="TRUE"
+
+EXTRN_MDL_DATA_SOURCES=( "disk" )
+EXTRN_MDL_DIR_FILE_LAYOUT="user_spec"
 
 DATE_FIRST_CYCL="20190415"
 DATE_LAST_CYCL="20190415"

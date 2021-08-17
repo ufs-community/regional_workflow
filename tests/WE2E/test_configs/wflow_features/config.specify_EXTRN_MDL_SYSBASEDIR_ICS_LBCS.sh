@@ -1,9 +1,9 @@
-# 
+#
 # TEST PURPOSE/DESCRIPTION:
 # ------------------------
 #
-# This test checks the capability of the workflow to have the base 
-# directories on the system disk in which the external model files are 
+# This test checks the capability of the workflow to have the base
+# directories on the system disk in which the external model files are
 # located be set to user-specified values.
 #
 
