@@ -154,6 +154,14 @@ case "$MACHINE" in
     APRUN="ibrun -np ${PE_MEMBER01}"
     ;;
 
+  "MACOS")
+    APRUN=$RUN_CMD_FCST
+    ;;
+
+  "LINUX")
+    APRUN=$RUN_CMD_FCST
+    ;;
+
   *)
     print_err_msg_exit "\
 Run command has not been specified for this machine:

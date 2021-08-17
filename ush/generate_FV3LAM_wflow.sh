@@ -369,12 +369,13 @@ $settings"
 # script to generate the experiment's actual XML file from this template
 # file.
 #
-template_xml_fp="${TEMPLATE_DIR}/${WFLOW_XML_FN}"
-$USHDIR/fill_jinja_template.py -q \
-                               -u "${settings}" \
-                               -t ${template_xml_fp} \
-                               -o ${WFLOW_XML_FP} || \
-  print_err_msg_exit "\
+if [ "${WORKFLOW_MANAGER}" = "rocoto" ]; then
+  template_xml_fp="${TEMPLATE_DIR}/${WFLOW_XML_FN}"
+  $USHDIR/fill_jinja_template.py -q \
+                                 -u "${settings}" \
+                                 -t ${template_xml_fp} \
+                                 -o ${WFLOW_XML_FP} || \
+    print_err_msg_exit "\
 Call to python script fill_jinja_template.py to create a rocoto workflow
 XML file from a template file failed.  Parameters passed to this script
 are:
@@ -385,6 +386,7 @@ are:
   Namelist settings specified on command line:
     settings =
 $settings"
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -816,9 +818,11 @@ cp_vrfy $USHDIR/${EXPT_CONFIG_FN} $EXPTDIR
 #
 #-----------------------------------------------------------------------
 #
-wflow_db_fn="${WFLOW_XML_FN%.xml}.db"
-rocotorun_cmd="rocotorun -w ${WFLOW_XML_FN} -d ${wflow_db_fn} -v 10"
-rocotostat_cmd="rocotostat -w ${WFLOW_XML_FN} -d ${wflow_db_fn} -v 10"
+if [ "${WORKFLOW_MANAGER}" = "rocoto" ]; then
+  wflow_db_fn="${WFLOW_XML_FN%.xml}.db"
+  rocotorun_cmd="rocotorun -w ${WFLOW_XML_FN} -d ${wflow_db_fn} -v 10"
+  rocotostat_cmd="rocotostat -w ${WFLOW_XML_FN} -d ${wflow_db_fn} -v 10"
+fi
 
 print_info_msg "
 ========================================================================
@@ -834,25 +838,20 @@ The experiment directory is:
   > EXPTDIR=\"$EXPTDIR\"
 
 "
-case "$MACHINE" in
-
-"CHEYENNE")
+#
+#-----------------------------------------------------------------------
+#
+# If rocoto is required, print instructions on how to load and use it
+#
+#-----------------------------------------------------------------------
+#
+if [ "${WORKFLOW_MANAGER}" = "rocoto" ]; then
   print_info_msg "\
 To launch the workflow, first ensure that you have a compatible version
-of rocoto in your \$PATH. On Cheyenne, version 1.3.1 has been pre-built;
-you can load it in your \$PATH with one of the following commands, depending
-on your default shell:
-
-bash:
-  > export PATH=\${PATH}:/glade/p/ral/jntp/tools/rocoto/rocoto-1.3.1/bin/
-
-tcsh:
-  > setenv PATH \${PATH}:/glade/p/ral/jntp/tools/rocoto/rocoto-1.3.1/bin/
-"
-  ;;
-
-*)
-  print_info_msg "\
+of rocoto available. For most pre-configured platforms, rocoto can be
+loaded via a module:
+  > module load rocoto
+For more details on rocoto, see the User's Guide.
 To launch the workflow, first ensure that you have a compatible version
 of rocoto loaded.  For example, to load version 1.3.1 of rocoto, use
 
@@ -863,7 +862,6 @@ have not been tested.)
 "
   ;;
 
-esac
 print_info_msg "
 To launch the workflow, change location to the experiment directory
 (EXPTDIR) and issue the rocotrun command, as follows:
@@ -885,7 +883,9 @@ Note that:
 2) In order for the output of the rocotostat command to be up-to-date,
    the rocotorun command must be issued immediately before the rocoto-
    stat command.
-
+"
+fi
+print_info_msg "
 For automatic resubmission of the workflow (say every 3 minutes), the
 following line can be added to the user's crontab (use \"crontab -e\" to
 edit the cron table):

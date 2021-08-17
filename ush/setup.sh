@@ -481,6 +481,7 @@ RELATIVE_LINK_FLAG=""
 case "$MACHINE" in
 
   "WCOSS_CRAY")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE="24"
     SCHED="lsfcray"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
@@ -491,6 +492,7 @@ case "$MACHINE" in
     ;;
 
   "WCOSS_DELL_P3")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=24
     SCHED="lsf"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
@@ -501,6 +503,7 @@ case "$MACHINE" in
     ;;
 
   "HERA")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=40
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"hera"}
@@ -514,6 +517,7 @@ case "$MACHINE" in
     ;;
 
   "ORION")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=40
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"orion"}
@@ -527,6 +531,7 @@ case "$MACHINE" in
     ;;
 
   "JET")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=24
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"sjet,vjet,kjet,xjet"}
@@ -540,6 +545,7 @@ case "$MACHINE" in
     ;;
 
   "ODIN")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=24
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"workq"}
@@ -553,6 +559,7 @@ case "$MACHINE" in
     ;;
 
   "CHEYENNE")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=36
     SCHED=${SCHED:-"pbspro"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
@@ -563,6 +570,7 @@ case "$MACHINE" in
     ;;
 
   "STAMPEDE")
+    WORKFLOW_MANAGER="rocoto"
     NCORES_PER_NODE=68
     SCHED="slurm"
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"normal"}
@@ -573,6 +581,16 @@ case "$MACHINE" in
     QUEUE_FCST=${QUEUE_FCST:-"normal"}
 #
     RELATIVE_LINK_FLAG="--relative"
+    ;;
+
+  "MACOS")
+    WORKFLOW_MANAGER="none"
+    SCHED="none"
+    ;;
+
+  "LINUX")
+    WORKFLOW_MANAGER="none"
+    SCHED="none"
     ;;
 
 esac
@@ -597,15 +615,22 @@ check_var_valid_value "SCHED" "valid_vals_SCHED"
 #
 #-----------------------------------------------------------------------
 #
-# Verify that the ACCOUNT variable is not empty.  If it is, print out an
-# error message and exit.
+# If we are using a workflow manager, run some checks. First, 
+# verify that the ACCOUNT variable is not empty. Second, ensure that the
+# custom RUN_CMD variables are not set.
 #
 #-----------------------------------------------------------------------
 #
-if [ -z "$ACCOUNT" ]; then
-  print_err_msg_exit "\
-The variable ACCOUNT cannot be empty:
-  ACCOUNT = \"$ACCOUNT\""
+if [ "$WORKFLOW_MANAGER" != "none" ]; then
+  if [ -z "$ACCOUNT" ]; then
+    print_err_msg_exit "\
+The variable ACCOUNT cannot be empty if you are using a workflow manager:
+  ACCOUNT = \"$ACCOUNT\"
+  WORKFLOW_MANAGER = \"$WORKFLOW_MANAGER\""
+  fi
+  RUN_CMD_UTILS=""
+  RUN_CMD_FCST=""
+  RUN_CMD_POST=""
 fi
 #
 #-----------------------------------------------------------------------
@@ -912,7 +937,8 @@ case "$MACHINE" in
     ;;
 
   *)
-    print_err_msg_exit "\
+    if [ -z "$FIXgsm" -o -z "$TOPO_DIR" -o -z "$SFC_CLIMO_INPUT_DIR" ]; then 
+      print_err_msg_exit "\
 One or more fix file directories have not been specified for this machine:
   MACHINE = \"$MACHINE\"
   FIXgsm = \"${FIXgsm:-\"\"}
@@ -920,6 +946,7 @@ One or more fix file directories have not been specified for this machine:
   SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
   FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR:-\"\"}
 You can specify the missing location(s) in config.sh"
+    fi
     ;;
 
 esac
@@ -2063,12 +2090,14 @@ fi
 #-----------------------------------------------------------------------
 #
 # Create a new experiment directory.  Note that at this point we are 
-# guaranteed that there is no preexisting experiment directory.
+# guaranteed that there is no preexisting experiment directory. For
+# platforms with no workflow manager, we need to create LOGDIR as well,
+# since it won't be created later at runtime.
 #
 #-----------------------------------------------------------------------
 #
 mkdir_vrfy -p "$EXPTDIR"
-
+mkdir_vrfy -p "$LOGDIR"
 #
 #-----------------------------------------------------------------------
 #
@@ -2949,6 +2978,7 @@ FVCOM_FILE="${FVCOM_FILE}"
 #
 NCORES_PER_NODE="${NCORES_PER_NODE}"
 PE_MEMBER01="${PE_MEMBER01}"
+RUN_CMD_FCST="${RUN_CMD_FCST}"
 #
 #-----------------------------------------------------------------------
 #

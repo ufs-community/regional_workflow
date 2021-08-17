@@ -126,6 +126,21 @@ case "$MACHINE" in
     APRUN="ibrun"
     ;;
 
+  "MACOS")
+    APRUN=$RUN_CMD_UTILS
+    ;;
+
+  "LINUX")
+    APRUN=$RUN_CMD_UTILS
+    ;;
+
+  *)
+    print_err_msg_exit "\
+Run command has not been specified for this machine:
+  MACHINE = \"$MACHINE\"
+  APRUN = \"$APRUN\""
+    ;;
+
 esac
 #
 #-----------------------------------------------------------------------

@@ -147,6 +147,14 @@ case "$MACHINE" in
     APRUN="ibrun -n $nprocs"
     ;;
 
+  "MACOS")
+    APRUN=$RUN_CMD_POST
+    ;;
+
+  "LINUX")
+    APRUN=$RUN_CMD_POST
+    ;;
+
   *)
     print_err_msg_exit "\
 Run command has not been specified for this machine:
