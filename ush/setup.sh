@@ -140,7 +140,7 @@ check_var_valid_value "VERBOSE" "valid_vals_VERBOSE"
 # Set VERBOSE to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
 #
-VERBOSE=${VERBOSE^^}
+VERBOSE=$(echo_uppercase $VERBOSE)
 if [ "$VERBOSE" = "TRUE" ] || \
    [ "$VERBOSE" = "YES" ]; then
   VERBOSE="TRUE"
@@ -160,7 +160,7 @@ check_var_valid_value "USE_CRON_TO_RELAUNCH" "valid_vals_USE_CRON_TO_RELAUNCH"
 # Set USE_CRON_TO_RELAUNCH to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
 #
-USE_CRON_TO_RELAUNCH=${USE_CRON_TO_RELAUNCH^^}
+USE_CRON_TO_RELAUNCH=$(echo_uppercase $USE_CRON_TO_RELAUNCH)
 if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ] || \
    [ "${USE_CRON_TO_RELAUNCH}" = "YES" ]; then
   USE_CRON_TO_RELAUNCH="TRUE"
@@ -180,7 +180,7 @@ check_var_valid_value "RUN_TASK_MAKE_GRID" "valid_vals_RUN_TASK_MAKE_GRID"
 # Set RUN_TASK_MAKE_GRID to either "TRUE" or "FALSE" so we don't have to
 # consider other valid values later on.
 #
-RUN_TASK_MAKE_GRID=${RUN_TASK_MAKE_GRID^^}
+RUN_TASK_MAKE_GRID=$(echo_uppercase $RUN_TASK_MAKE_GRID)
 if [ "${RUN_TASK_MAKE_GRID}" = "TRUE" ] || \
    [ "${RUN_TASK_MAKE_GRID}" = "YES" ]; then
   RUN_TASK_MAKE_GRID="TRUE"
@@ -200,7 +200,7 @@ check_var_valid_value "RUN_TASK_MAKE_OROG" "valid_vals_RUN_TASK_MAKE_OROG"
 # Set RUN_TASK_MAKE_OROG to either "TRUE" or "FALSE" so we don't have to
 # consider other valid values later on.
 #
-RUN_TASK_MAKE_OROG=${RUN_TASK_MAKE_OROG^^}
+RUN_TASK_MAKE_OROG=$(echo_uppercase $RUN_TASK_MAKE_OROG)
 if [ "${RUN_TASK_MAKE_OROG}" = "TRUE" ] || \
    [ "${RUN_TASK_MAKE_OROG}" = "YES" ]; then
   RUN_TASK_MAKE_OROG="TRUE"
@@ -221,7 +221,7 @@ check_var_valid_value \
 # Set RUN_TASK_MAKE_SFC_CLIMO to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
 #
-RUN_TASK_MAKE_SFC_CLIMO=${RUN_TASK_MAKE_SFC_CLIMO^^}
+RUN_TASK_MAKE_SFC_CLIMO=$(echo_uppercase $RUN_TASK_MAKE_SFC_CLIMO
 if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] || \
    [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "YES" ]; then
   RUN_TASK_MAKE_SFC_CLIMO="TRUE"
@@ -242,7 +242,7 @@ check_var_valid_value \
 # Set RUN_TASK_RUN_POST to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
 #
-RUN_TASK_RUN_POST=${RUN_TASK_RUN_POST^^}
+RUN_TASK_RUN_POST=$(echo_uppercase $RUN_TASK_RUN_POST)
 if [ "${RUN_TASK_RUN_POST}" = "TRUE" ] || \
    [ "${RUN_TASK_RUN_POST}" = "YES" ]; then
   RUN_TASK_RUN_POST="TRUE"
@@ -262,7 +262,7 @@ check_var_valid_value "RUN_TASK_VX_GRIDSTAT" "valid_vals_RUN_TASK_VX_GRIDSTAT"
 # Set RUN_TASK_VX_GRIDSTAT to either "TRUE" or "FALSE" so we don't have to
 # consider other valid values later on.
 #
-RUN_TASK_VX_GRIDSTAT=${RUN_TASK_VX_GRIDSTAT^^}
+RUN_TASK_VX_GRIDSTAT=$(echo_uppercase $RUN_TASK_VX_GRIDSTAT)
 if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
    [ "${RUN_TASK_VX_GRIDSTAT}" = "YES" ]; then
   RUN_TASK_VX_GRIDSTAT="TRUE"
@@ -282,7 +282,7 @@ check_var_valid_value "RUN_TASK_VX_POINTSTAT" "valid_vals_RUN_TASK_VX_POINTSTAT"
 # Set RUN_TASK_VX_POINTSTAT to either "TRUE" or "FALSE" so we don't have to
 # consider other valid values later on.
 #
-RUN_TASK_VX_POINTSTAT=${RUN_TASK_VX_POINTSTAT^^}
+RUN_TASK_VX_POINTSTAT=$(echo_uppercase $RUN_TASK_VX_POINTSTAT)
 if [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ] || \
    [ "${RUN_TASK_VX_POINTSTAT}" = "YES" ]; then
   RUN_TASK_VX_POINTSTAT="TRUE"
@@ -302,7 +302,7 @@ check_var_valid_value "DO_SHUM" "valid_vals_DO_SHUM"
 # Set DO_SHUM to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
 #
-DO_SHUM=${DO_SHUM^^}
+DO_SHUM=$(echo_uppercase $DO_SHUM)
 if [ "${DO_SHUM}" = "TRUE" ] || \
    [ "${DO_SHUM}" = "YES" ]; then
   DO_SHUM="TRUE"
@@ -322,7 +322,7 @@ check_var_valid_value "DO_SPPT" "valid_vals_DO_SPPT"
 # Set DO_SPPT to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
 #
-DO_SPPT=${DO_SPPT^^}
+DO_SPPT=$(echo_uppercase $DO_SPPT)
 if [ "${DO_SPPT}" = "TRUE" ] || \
    [ "${DO_SPPT}" = "YES" ]; then
   DO_SPPT="TRUE"
@@ -342,7 +342,7 @@ check_var_valid_value "DO_SKEB" "valid_vals_DO_SKEB"
 # Set DO_SKEB to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
 #
-DO_SKEB=${DO_SKEB^^}
+DO_SKEB=$(echo_uppercase $DO_SKEB)
 if [ "${DO_SKEB}" = "TRUE" ] || \
    [ "${DO_SKEB}" = "YES" ]; then
   DO_SKEB="TRUE"
@@ -362,7 +362,7 @@ check_var_valid_value "DO_SPP" "valid_vals_DO_SPP"
 # Set DO_SPP to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
 #
-DO_SPP=${DO_SPP^^}
+DO_SPP=$(echo_uppercase $DO_SPP)
 if [ "${DO_SPP}" = "TRUE" ] || \
    [ "${DO_SPP}" = "YES" ]; then
   DO_SPP="TRUE"
@@ -415,7 +415,7 @@ check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
 # Set USE_FVCOM to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
 #
-USE_FVCOM=${USE_FVCOM^^}
+USE_FVCOM=$(echo_uppercase $USE_FVCOM)
 if [ "$USE_FVCOM" = "TRUE" ] || \
    [ "$USE_FVCOM" = "YES" ]; then
   USE_FVCOM="TRUE"
@@ -436,7 +436,7 @@ check_var_valid_value "SUB_HOURLY_POST" "valid_vals_SUB_HOURLY_POST"
 # Set SUB_HOURLY_POST to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
 #
-SUB_HOURLY_POST=${SUB_HOURLY_POST^^}
+SUB_HOURLY_POST=$(echo_uppercase $SUB_HOURLY_POST)
 if [ "${SUB_HOURLY_POST}" = "TRUE" ] || \
    [ "${SUB_HOURLY_POST}" = "YES" ]; then
   SUB_HOURLY_POST="TRUE"
@@ -592,7 +592,7 @@ PPN_RUN_FCST=${PPN_RUN_FCST:-${PPN_RUN_FCST_OPT}}
 #
 #-----------------------------------------------------------------------
 #
-SCHED="${SCHED,,}"
+SCHED=$(echo_lowercase $SCHED)
 check_var_valid_value "SCHED" "valid_vals_SCHED"
 #
 #-----------------------------------------------------------------------
@@ -1008,7 +1008,7 @@ check_var_valid_value \
 # Set USE_CUSTOM_POST_CONFIG_FILE to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
 #
-USE_CUSTOM_POST_CONFIG_FILE=${USE_CUSTOM_POST_CONFIG_FILE^^}
+USE_CUSTOM_POST_CONFIG_FILE=$(echo_uppercase $USE_CUSTOM_POST_CONFIG_FILE)
 if [ "$USE_CUSTOM_POST_CONFIG_FILE" = "TRUE" ] || \
    [ "$USE_CUSTOM_POST_CONFIG_FILE" = "YES" ]; then
   USE_CUSTOM_POST_CONFIG_FILE="TRUE"
@@ -1534,7 +1534,7 @@ check_var_valid_value "USE_USER_STAGED_EXTRN_FILES" "valid_vals_USE_USER_STAGED_
 # Set USE_USER_STAGED_EXTRN_FILES to either "TRUE" or "FALSE" so we don't 
 # have to consider other valid values later on.
 #
-USE_USER_STAGED_EXTRN_FILES=${USE_USER_STAGED_EXTRN_FILES^^}
+USE_USER_STAGED_EXTRN_FILES=$(echo_uppercase $USE_USER_STAGED_EXTRN_FILES)
 if [ "${USE_USER_STAGED_EXTRN_FILES}" = "YES" ]; then
   USE_USER_STAGED_EXTRN_FILES="TRUE"
 elif [ "${USE_USER_STAGED_EXTRN_FILES}" = "NO" ]; then
@@ -1581,7 +1581,7 @@ check_var_valid_value "DO_ENSEMBLE" "valid_vals_DO_ENSEMBLE"
 # Set DO_ENSEMBLE to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
 #
-DO_ENSEMBLE=${DO_ENSEMBLE^^}
+DO_ENSEMBLE=$(echo_uppercase $DO_ENSEMBLE)
 if [ "$DO_ENSEMBLE" = "TRUE" ] || \
    [ "$DO_ENSEMBLE" = "YES" ]; then
   DO_ENSEMBLE="TRUE"
@@ -2225,7 +2225,7 @@ check_var_valid_value "QUILTING" "valid_vals_QUILTING"
 # Set QUILTING to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
 #
-QUILTING=${QUILTING^^}
+QUILTING=$(echo_uppercase $QUILTING)
 if [ "$QUILTING" = "TRUE" ] || \
    [ "$QUILTING" = "YES" ]; then
   QUILTING="TRUE"
@@ -2245,7 +2245,7 @@ check_var_valid_value "PRINT_ESMF" "valid_vals_PRINT_ESMF"
 # Set PRINT_ESMF to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
 #
-PRINT_ESMF=${PRINT_ESMF^^}
+PRINT_ESMF=$(echo_uppercase $PRINT_ESMF)
 if [ "${PRINT_ESMF}" = "TRUE" ] || \
    [ "${PRINT_ESMF}" = "YES" ]; then
   PRINT_ESMF="TRUE"

@@ -333,7 +333,8 @@ basetime=$( $DATE_UTIL --date "$yyyymmdd $hh" +%y%j%H%M )
 symlink_suffix="_${basetime}f${fhr}${post_mn}"
 fids=( "bgdawp" "bgrd3d" )
 for fid in "${fids[@]}"; do
-  FID="${fid^^}"
+  FID=$(echo_uppercase $fid)
+  MACHINE=$(echo_uppercase $machine)
   post_orig_fn="${FID}.${post_fn_suffix}"
   post_renamed_fn="${NET}.t${cyc}z.${fid}${post_renamed_fn_suffix}"
   mv_vrfy ${tmp_dir}/${post_orig_fn} ${post_renamed_fn}

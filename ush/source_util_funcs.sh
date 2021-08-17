@@ -91,6 +91,15 @@ function source_util_funcs() {
 #
 #-----------------------------------------------------------------------
 #
+# Source the file containing the functions that will echo given strings
+# as uppercase or lowercase
+#
+#-----------------------------------------------------------------------
+#
+  . ${bashutils_dir}/change_case.sh
+#
+#-----------------------------------------------------------------------
+#
 # Source the file containing the function that checks for preexisting 
 # directories or files and handles them according to a specified method
 # (which can be one of "delete", "rename", and "quit").

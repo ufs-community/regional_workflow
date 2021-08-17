@@ -152,7 +152,7 @@ jjob_fp="$2"
 #
 #-----------------------------------------------------------------------
 #
-machine=${MACHINE,,}
+machine=$(echo_lowercase $MACHINE)
 env_fn="build_${machine}_${COMPILER}.env"
 env_fp="${SR_WX_APP_TOP_DIR}/env/${env_fn}"
 source "${env_fp}" || print_err_msg_exit "\
