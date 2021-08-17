@@ -19,7 +19,11 @@ function generate_FV3LAM_wflow() {
 #
 #-----------------------------------------------------------------------
 #
-local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+if [[ $(uname -s) == Darwin ]]; then
+    local scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+  else
+    local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+  fi
 local scrfunc_fn=$( basename "${scrfunc_fp}" )
 local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -350,7 +354,7 @@ settings="\
 #
   'sub_hourly_post': ${SUB_HOURLY_POST}
   'delta_min': ${DT_SUBHOURLY_POST_MNTS}
-  'first_fv3_file_tstr': "000:"`date -d "${DATE_FIRST_CYCL} +${DT_ATMOS} seconds" +%M:%S`
+  'first_fv3_file_tstr': "000:"`$DATE_UTIL -d "${DATE_FIRST_CYCL} +${DT_ATMOS} seconds" +%M:%S`
 " # End of "settings" variable.
 
 print_info_msg $VERBOSE "
@@ -410,7 +414,7 @@ if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ]; then
 #
 # Make a backup copy of the user's crontab file and save it in a file.
 #
-  time_stamp=$( date "+%F_%T" )
+  time_stamp=$( $DATE_UTIL "+%F_%T" )
   crontab_backup_fp="$EXPTDIR/crontab.bak.${time_stamp}"
   print_info_msg "
 Copying contents of user cron table to backup file:
@@ -427,7 +431,7 @@ Copying contents of user cron table to backup file:
 # CRONTAB_LINE with backslashes.  Do this next.
 #
   crontab_line_esc_astr=$( printf "%s" "${CRONTAB_LINE}" | \
-                           sed -r -e "s%[*]%\\\\*%g" )
+                           $SED -r -e "s%[*]%\\\\*%g" )
 #
 # In the grep command below, the "^" at the beginning of the string be-
 # ing passed to grep is a start-of-line anchor while the "$" at the end
@@ -491,7 +495,7 @@ if [ "${RUN_ENVIR}" = "nco" ]; then
 # Resolve the target directory that the FIXam symlink points to and check 
 # that it exists.
 #
-  path_resolved=$( readlink -m "$FIXam" )
+  path_resolved=$( $READLINK -m "$FIXam" )
   if [ ! -d "${path_resolved}" ]; then
     print_err_msg_exit "\
 In order to be able to generate a forecast experiment in NCO mode (i.e.
@@ -704,9 +708,9 @@ for (( i=0; i<${num_nml_vars}; i++ )); do
 
   mapping="${FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[$i]}"
   nml_var_name=$( printf "%s\n" "$mapping" | \
-                  sed -n -r -e "s/${regex_search}/\1/p" )
+                  $SED -n -r -e "s/${regex_search}/\1/p" )
   FIXam_fn=$( printf "%s\n" "$mapping" |
-              sed -n -r -e "s/${regex_search}/\2/p" )
+              $SED -n -r -e "s/${regex_search}/\2/p" )
 
   fp="\"\""
   if [ ! -z "${FIXam_fn}" ]; then
@@ -933,7 +937,12 @@ set -u
 #
 #-----------------------------------------------------------------------
 #
-scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+if [[ $(uname -s) == Darwin ]]; then
+  command -v greadlink >/dev/null 2>&1 || { echo >&2 "For Darwin-based operating systems (MacOS), the 'greadlink' utility is required to run the UFS SRW Application. Reference the User's Guide for more information about platform requirements. Aborting."; exit 1; }
+  scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+else
+  scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+fi
 scrfunc_fn=$( basename "${scrfunc_fp}" )
 scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #

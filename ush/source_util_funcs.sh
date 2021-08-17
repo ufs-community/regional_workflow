@@ -8,7 +8,7 @@ function source_util_funcs() {
 #
 #-----------------------------------------------------------------------
 #
-  local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+  local scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
   local scrfunc_fn=$( basename "${scrfunc_fp}" )
   local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -45,6 +45,15 @@ function source_util_funcs() {
 #-----------------------------------------------------------------------
 #
   . ${bashutils_dir}/save_restore_shell_opts.sh
+#
+#-----------------------------------------------------------------------
+#
+# Source the file that defines MacOS-specific UNIX command-line
+# utilities, that mimic the functionality of the GNU equivalents
+#
+#-----------------------------------------------------------------------
+#
+  . ${bashutils_dir}/define_macos_utilities.sh
 #
 #-----------------------------------------------------------------------
 #

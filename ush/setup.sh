@@ -23,7 +23,7 @@ function setup() {
 #
 #-----------------------------------------------------------------------
 #
-local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+local scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
 local scrfunc_fn=$( basename "${scrfunc_fp}" )
 local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -460,7 +460,7 @@ check_var_valid_value "DOT_OR_USCORE" "valid_vals_DOT_OR_USCORE"
 #
 #-----------------------------------------------------------------------
 #
-MACHINE=$( printf "%s" "$MACHINE" | sed -e 's/\(.*\)/\U\1/' )
+MACHINE=$( printf "%s" "$MACHINE" | $SED -e 's/\(.*\)/\U\1/' )
 check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #
 #-----------------------------------------------------------------------
@@ -710,7 +710,7 @@ fi
 #-----------------------------------------------------------------------
 #
 DATE_OR_NULL=$( printf "%s" "${DATE_FIRST_CYCL}" | \
-                sed -n -r -e "s/^([0-9]{8})$/\1/p" )
+                $SED -n -r -e "s/^([0-9]{8})$/\1/p" )
 if [ -z "${DATE_OR_NULL}" ]; then
   print_err_msg_exit "\
 DATE_FIRST_CYCL must be a string consisting of exactly 8 digits of the 
@@ -720,7 +720,7 @@ month, and DD is the 2-digit day-of-month.
 fi
 
 DATE_OR_NULL=$( printf "%s" "${DATE_LAST_CYCL}" | \
-                sed -n -r -e "s/^([0-9]{8})$/\1/p" )
+                $SED -n -r -e "s/^([0-9]{8})$/\1/p" )
 if [ -z "${DATE_OR_NULL}" ]; then
   print_err_msg_exit "\
 DATE_LAST_CYCL must be a string consisting of exactly 8 digits of the 
@@ -742,7 +742,7 @@ CYCL_HRS_str="( $CYCL_HRS_str)"
 i=0
 for CYCL in "${CYCL_HRS[@]}"; do
 
-  CYCL_OR_NULL=$( printf "%s" "$CYCL" | sed -n -r -e "s/^([0-9]{2})$/\1/p" )
+  CYCL_OR_NULL=$( printf "%s" "$CYCL" | $SED -n -r -e "s/^([0-9]{2})$/\1/p" )
 
   if [ -z "${CYCL_OR_NULL}" ]; then
     print_err_msg_exit "\
@@ -936,7 +936,7 @@ esac
 #
 #-----------------------------------------------------------------------
 #
-mng_extrns_cfg_fn=$( readlink -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
+mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
 property_name="local_path"
 #
 # Get the base directory of the FV3 forecast model code.
@@ -1181,7 +1181,7 @@ if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
 # digits.
 #
   mnts_or_null=$( printf "%s" "${DT_SUBHOURLY_POST_MNTS}" | \
-                  sed -n -r -e "s/^([0-9])([0-9])?$/\1\2/p" )
+                  $SED -n -r -e "s/^([0-9])([0-9])?$/\1\2/p" )
   if [ -z "${mnts_or_null}" ]; then
     print_err_msg_exit "\
 When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
@@ -1275,7 +1275,7 @@ fi
 if [ "${EXPT_BASEDIR:0:1}" != "/" ]; then
   EXPT_BASEDIR="${SR_WX_APP_TOP_DIR}/../expt_dirs/${EXPT_BASEDIR}"
 fi
-EXPT_BASEDIR="$( readlink -m ${EXPT_BASEDIR} )"
+EXPT_BASEDIR="$( $READLINK -m ${EXPT_BASEDIR} )"
 mkdir_vrfy -p "${EXPT_BASEDIR}"
 #
 #-----------------------------------------------------------------------
@@ -2396,7 +2396,7 @@ cp_vrfy $USHDIR/${EXPT_DEFAULT_CONFIG_FN} ${GLOBAL_VAR_DEFNS_FP}
 #
 
 # Read all lines of GLOBAL_VAR_DEFNS file into the variable line_list.
-line_list=$( sed -r -e "s/(.*)/\1/g" ${GLOBAL_VAR_DEFNS_FP} )
+line_list=$( $SED -r -e "s/(.*)/\1/g" ${GLOBAL_VAR_DEFNS_FP} )
 #
 # Loop through the lines in line_list and concatenate lines ending with
 # the line bash continuation character "\".
@@ -2437,7 +2437,7 @@ done <<< "${line_list}"
 #-----------------------------------------------------------------------
 #
 # Also should remove trailing whitespace...
-line_list=$( sed -r \
+line_list=$( $SED -r \
              -e "s/^([ ]*)([^ ]+.*)/\2/g" \
              -e "/^#.*/d" \
              -e "/^$/d" \
@@ -2483,7 +2483,7 @@ str_to_insert=${str_to_insert//$'\n'/\\n}
 # the string "#!", e.g. "#!/bin/bash").
 #
 regexp="(^#!.*)"
-sed -i -r -e "s|$regexp|\1\n\n${str_to_insert}\n|g" ${GLOBAL_VAR_DEFNS_FP}
+$SED -i -r -e "s|$regexp|\1\n\n${str_to_insert}\n|g" ${GLOBAL_VAR_DEFNS_FP}
 #
 # Loop through the lines in line_list.
 #
@@ -2497,7 +2497,7 @@ while read crnt_line; do
 # or more characters representing the value that the variable is being
 # set to.
 #
-  var_name=$( printf "%s" "${crnt_line}" | sed -n -r -e "s/^([^ ]*)=.*/\1/p" )
+  var_name=$( printf "%s" "${crnt_line}" | $SED -n -r -e "s/^([^ ]*)=.*/\1/p" )
 #echo
 #echo "============================"
 #printf "%s\n" "var_name = \"${var_name}\""
@@ -2704,7 +2704,7 @@ FV3_NML_ENSMEM_FPS=( $( printf "\"%s\" " "${FV3_NML_ENSMEM_FPS[@]}" ))
 GLOBAL_VAR_DEFNS_FP="${GLOBAL_VAR_DEFNS_FP}"
 # Try this at some point instead of hard-coding it as above; it's a more
 # flexible approach (if it works).
-#GLOBAL_VAR_DEFNS_FP=$( readlink -f "${BASH_SOURCE[0]}" )
+#GLOBAL_VAR_DEFNS_FP=$( $READLINK -f "${BASH_SOURCE[0]}" )
 
 DATA_TABLE_TMPL_FN="${DATA_TABLE_TMPL_FN}"
 DIAG_TABLE_TMPL_FN="${DIAG_TABLE_TMPL_FN}"

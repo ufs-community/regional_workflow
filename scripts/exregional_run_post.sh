@@ -27,7 +27,7 @@
 #
 #-----------------------------------------------------------------------
 #
-scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
 scrfunc_fn=$( basename "${scrfunc_fp}" )
 scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -230,7 +230,7 @@ tmmark="tm00"
 mnts_secs_str=""
 if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
   if [ ${fhr}${fmn} = "00000" ]; then
-    mnts_secs_str=":"$( date --utc --date "${yyyymmdd} ${hh} UTC + ${dt_atmos} seconds" "+%M:%S" )
+    mnts_secs_str=":"$( $DATE_UTIL --utc --date "${yyyymmdd} ${hh} UTC + ${dt_atmos} seconds" "+%M:%S" )
   else
     mnts_secs_str=":${fmn}:00"
   fi
@@ -244,7 +244,7 @@ phy_file="${run_dir}/phyf${fhr}${mnts_secs_str}.nc"
 # Set parameters that specify the actual time (not forecast time) of the
 # output.
 #
-post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours + ${fmn} minutes" "+%Y%m%d%H%M" )
+post_time=$( $DATE_UTIL --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours + ${fmn} minutes" "+%Y%m%d%H%M" )
 post_yyyy=${post_time:0:4}
 post_mm=${post_time:4:2}
 post_dd=${post_time:6:2}
@@ -329,7 +329,7 @@ post_renamed_fn_suffix="f${fhr}${post_mn_or_null}.${tmmark}.grib2"
 # rename, and create symlinks to them.
 #
 cd_vrfy "${postprd_dir}"
-basetime=$( date --date "$yyyymmdd $hh" +%y%j%H%M )
+basetime=$( $DATE_UTIL --date "$yyyymmdd $hh" +%y%j%H%M )
 symlink_suffix="_${basetime}f${fhr}${post_mn}"
 fids=( "bgdawp" "bgrd3d" )
 for fid in "${fids[@]}"; do
