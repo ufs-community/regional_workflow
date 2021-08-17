@@ -339,14 +339,12 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
   grid_fp_gwd="${FIXLAM}/${grid_fn_gwd}"
   ls_fn="geo_em.d01.lat-lon.2.5m.HGT_M.nc"
   ss_fn="HGT.Beljaars_filtered.lat-lon.30s_res.nc"
-  if [ "${MACHINE}" = "WCOSS_CRAY" ]; then
-    relative_or_null=""
-  else
-    relative_or_null="--relative"
-  fi
-  ln_vrfy -fs ${relative_or_null} "${grid_fp_gwd}" "${tmp_dir}/${grid_fn_gwd}"
-  ln_vrfy -fs ${relative_or_null} "${FIXam}/${ls_fn}" "${tmp_dir}/${ls_fn}"
-  ln_vrfy -fs ${relative_or_null} "${FIXam}/${ss_fn}" "${tmp_dir}/${ss_fn}"
+  create_symlink_to_file target="${grid_fp_gwd}" symlink="${tmp_dir}/${grid_fn_gwd}" \
+                         relative="${relative_link_flag}"
+  create_symlink_to_file target="${FIXam}/${ls_fn} symlink="${tmp_dir}/${ls_fn}" \
+                         relative="${relative_link_flag}"
+  create_symlink_to_file target="${FIXam}/${ss_fn}" symlink="${tmp_dir}/${ss_fn}" \
+                         relative="${relative_link_flag}"
 
   input_redirect_fn="grid_info.dat"
   cat > "${input_redirect_fn}" <<EOF
@@ -488,7 +486,6 @@ cp_vrfy "${raw_orog_fp}" "${filtered_orog_fp}"
 #
 create_symlink_to_file target="${grid_fp}" symlink="${filter_dir}/${grid_fn}" \
                        relative="TRUE"
-
 #
 # Create the namelist file (in the filter_dir directory) that the orography
 # filtering executable will read in.
