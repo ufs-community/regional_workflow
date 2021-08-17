@@ -1019,12 +1019,27 @@ EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
   if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
      [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ]; then
 
-    if [ "$MACHINE" = "HERA" ]; then
+    if [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      met_install_dir="/gpfs/hps/nco/ops/nwprod/met.v9.1.3"
+      metplus_path="/gpfs/hps/nco/ops/nwprod/metplus.v3.1.1/METplus-3.1.1"
+      ccpa_obs_dir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/obs_data/ccpa/proc"
+      mrms_obs_dir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/obs_data/mrms/proc"
+      ndas_obs_dir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/obs_data/ndas/proc"
+      met_bin_exec="exec"
+    elif [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      met_install_dir="/gpfs/dell2/emc/verification/noscrub/emc.metplus/met/10.0.0"
+      metplus_path="/gpfs/dell2/emc/verification/noscrub/emc.metplus/METplus/METplus-4.0.0"
+      ccpa_obs_dir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/obs_data/ccpa/proc"
+      mrms_obs_dir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/obs_data/mrms/proc"
+      ndas_obs_dir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/obs_data/ndas/proc"
+      met_bin_exec="exec"
+    elif [ "$MACHINE" = "HERA" ]; then
       met_install_dir="/contrib/met/10.0.0"
       metplus_path="/contrib/METplus/METplus-4.0.0"
       ccpa_obs_dir="/scratch2/BMC/det/UFS_SRW_app/v1p0/obs_data/ccpa/proc"
       mrms_obs_dir="/scratch2/BMC/det/UFS_SRW_app/v1p0/obs_data/mrms/proc"
       ndas_obs_dir="/scratch2/BMC/det/UFS_SRW_app/v1p0/obs_data/ndas/proc"
+      met_bin_exec="bin"
     else
       print_err_msg_exit "\
 The MET and MET+ paths (MET_INSTALL_DIR and MET_INSTALL_DIR) or the observation directories
@@ -1040,7 +1055,8 @@ METPLUS_PATH=\"${metplus_path}\"
 MET_INSTALL_DIR=\"${met_install_dir}\"
 CCPA_OBS_DIR=\"${ccpa_obs_dir}\"
 MRMS_OBS_DIR=\"${mrms_obs_dir}\"
-NDAS_OBS_DIR=\"${ndas_obs_dir}\""
+NDAS_OBS_DIR=\"${ndas_obs_dir}\"
+MET_BIN_EXEC=\"${met_bin_exec}\""
 
   fi
 #
