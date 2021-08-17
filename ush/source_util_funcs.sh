@@ -8,7 +8,11 @@ function source_util_funcs() {
 #
 #-----------------------------------------------------------------------
 #
-  local scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
+  if [[ $(uname -s) == Darwin ]]; then
+    local scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+  else
+    local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+  fi
   local scrfunc_fn=$( basename "${scrfunc_fp}" )
   local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #

@@ -221,7 +221,7 @@ check_var_valid_value \
 # Set RUN_TASK_MAKE_SFC_CLIMO to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
 #
-RUN_TASK_MAKE_SFC_CLIMO=$(echo_uppercase $RUN_TASK_MAKE_SFC_CLIMO
+RUN_TASK_MAKE_SFC_CLIMO=$(echo_uppercase $RUN_TASK_MAKE_SFC_CLIMO)
 if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] || \
    [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "YES" ]; then
   RUN_TASK_MAKE_SFC_CLIMO="TRUE"
@@ -477,8 +477,8 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #-----------------------------------------------------------------------
 #
 RELATIVE_LINK_FLAG=""
-
-case "$MACHINE" in
+NCORES_PER_NODE=""
+case $MACHINE in
 
   "WCOSS_CRAY")
     WORKFLOW_MANAGER="rocoto"
