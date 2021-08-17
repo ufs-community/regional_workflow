@@ -13,11 +13,14 @@
 # redundant, but the WE2E testing script checks whether or not this
 # parameter is set in this file to determine whether or not it needs to
 # set the base directories for ICs and LBCs to user-specified values.
-# If so, it sets the base directories EXTRN_MDL_BASEDIR_ICS and
-# EXTRN_MDL_BASEDIR_LBCS explicitly to user-specified values in the
+# If so, it sets the base directories (EXTRN_MDL_BASEDIR_ICS and
+# EXTRN_MDL_BASEDIR_LBCS) explicitly to user-specified values in the
 # experiment configuration file that it generates for this test.  If
-# not, it leaves the base directories unset (so that they get set to
-# the default locations during the experiment generation step).
+# not, it leaves the base directories unset (so that they get set to the
+# default locations during the experiment generation step).  Thus, since
+# we are specifying EXTRN_MDL_DIR_FILE_LAYOUT here, EXTRN_MDL_BASEDIR_ICS
+# and EXTRN_MDL_BASEDIR_LBCS will also be explicitly set in the experiment
+# configuration file.
 #
 
 RUN_ENVIR="community"
