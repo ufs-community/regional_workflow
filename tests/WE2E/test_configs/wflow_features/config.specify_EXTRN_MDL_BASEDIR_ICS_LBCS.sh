@@ -1,0 +1,1 @@
+../get_extrn_mdl_files/config.from_disk__usedefaultdir_no__fdlayout_extrn_mdl__ics_FV3GFS_grib2__lbcs_FV3GFS_grib2__2021060306.sh
