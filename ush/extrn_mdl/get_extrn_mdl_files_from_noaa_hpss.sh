@@ -27,7 +27,6 @@ function get_extrn_mdl_files_from_noaa_hpss() {
 #-----------------------------------------------------------------------
 #
   local valid_args=( \
-    "cdate" \
     "staging_dir" \
     "arcv_fmt" \
     "arcv_fns" \

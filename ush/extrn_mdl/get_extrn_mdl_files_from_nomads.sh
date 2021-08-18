@@ -28,9 +28,8 @@ function get_extrn_mdl_files_from_nomads() {
 #-----------------------------------------------------------------------
 #
   local valid_args=( \
-    "ics_or_lbcs" \
     "extrn_mdl_name" \
-    "cdate" \
+    "ics_or_lbcs" \
     "staging_dir" \
     "arcvrel_dir" \
     "fns" \
@@ -62,6 +61,7 @@ function get_extrn_mdl_files_from_nomads() {
         nomads_base_url \
         num_files \
         prefix \
+        wait_time_secs \
         wget_log_fn
 #
 #-----------------------------------------------------------------------

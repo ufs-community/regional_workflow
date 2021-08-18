@@ -224,7 +224,6 @@ Attempting to obtain external model data from current data source (data_src):
     set_extrn_mdl_arcv_file_dir_names \
       extrn_mdl_name="${extrn_mdl_name}" \
       ics_or_lbcs="${ics_or_lbcs}" \
-      cdate="$cdate" \
       outvarname_arcv_fmt="__arcv_fmt" \
       outvarname_arcv_fns="__arcv_fns" \
       outvarname_arcv_fps="__arcv_fps" \
@@ -252,9 +251,8 @@ Attempting to obtain external model data from current data source (data_src):
       outvarname_arcvrel_dir="__arcvrel_dir"
 
     get_extrn_mdl_files_from_nomads \
-      ics_or_lbcs="${ics_or_lbcs}" \
       extrn_mdl_name="${extrn_mdl_name}" \
-      cdate="$cdate" \
+      ics_or_lbcs="${ics_or_lbcs}" \
       staging_dir="${staging_dir}" \
       arcvrel_dir="${__arcvrel_dir}" \
       fns="${fns_str}"
