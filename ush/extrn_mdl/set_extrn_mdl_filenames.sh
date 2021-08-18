@@ -72,6 +72,7 @@ function set_extrn_mdl_filenames() {
     "extrn_mdl_name" \
     "ics_or_lbcs" \
     "cdate" \
+    "lbc_spec_fhrs" \
     "outvarname_fns" \
     )
   process_args valid_args "$@"

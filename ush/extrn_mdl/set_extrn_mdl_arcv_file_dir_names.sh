@@ -40,6 +40,7 @@ function set_extrn_mdl_arcv_file_dir_names() {
     "extrn_mdl_name" \
     "ics_or_lbcs" \
     "cdate" \
+    "lbc_spec_fhrs" \
     "outvarname_arcv_fmt" \
     "outvarname_arcv_fns" \
     "outvarname_arcv_fps" \

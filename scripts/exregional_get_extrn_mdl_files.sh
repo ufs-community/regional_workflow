@@ -158,7 +158,7 @@ cdate=$( date --utc --date \
 #
 #-----------------------------------------------------------------------
 #
-lbc_spec_fhrs=( "" )
+lbc_spec_fhrs=()
 
 if [ "${ics_or_lbcs}" = "LBCS" ]; then
 
@@ -197,11 +197,13 @@ Attempting to obtain external model data from current data source (data_src):
 #
 # Get file names.
 #
+  lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${lbc_spec_fhrs[@]}" )")"
   set_extrn_mdl_filenames \
     data_src="${data_src}" \
     extrn_mdl_name="${extrn_mdl_name}" \
     ics_or_lbcs="${ics_or_lbcs}" \
     cdate="$cdate" \
+    lbc_spec_fhrs="${lbc_spec_fhrs_str}" \
     outvarname_fns="__fns"
 
   fns_str="( "$( printf "\"%s\" " "${__fns[@]}" )")"
@@ -224,6 +226,8 @@ Attempting to obtain external model data from current data source (data_src):
     set_extrn_mdl_arcv_file_dir_names \
       extrn_mdl_name="${extrn_mdl_name}" \
       ics_or_lbcs="${ics_or_lbcs}" \
+      cdate="$cdate" \
+      lbc_spec_fhrs="${lbc_spec_fhrs_str}" \
       outvarname_arcv_fmt="__arcv_fmt" \
       outvarname_arcv_fns="__arcv_fns" \
       outvarname_arcv_fps="__arcv_fps" \
@@ -232,7 +236,6 @@ Attempting to obtain external model data from current data source (data_src):
     arcv_fns_str="( "$( printf "\"%s\" " "${__arcv_fns[@]}" )")"
     arcv_fps_str="( "$( printf "\"%s\" " "${__arcv_fps[@]}" )")"
     get_extrn_mdl_files_from_noaa_hpss \
-      cdate="$cdate" \
       staging_dir="${staging_dir}" \
       arcv_fmt="${__arcv_fmt}" \
       arcv_fns="${arcv_fns_str}" \
