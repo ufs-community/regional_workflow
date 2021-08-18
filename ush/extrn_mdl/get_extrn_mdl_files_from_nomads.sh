@@ -33,7 +33,7 @@ function get_extrn_mdl_files_from_nomads() {
     "cdate" \
     "staging_dir" \
     "arcvrel_dir" \
-    "fns_in_arcv" \
+    "fns" \
     )
   process_args valid_args "$@"
 #
@@ -53,9 +53,11 @@ function get_extrn_mdl_files_from_nomads() {
 #
 #-----------------------------------------------------------------------
 #
-  local file_url \
+  local basedir \
+        file_url \
         file_urls \
         fv3gfs_file_fmt \
+        host \
         i \
         nomads_base_url \
         num_files \
@@ -104,13 +106,32 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
+# Check whether the NOMADS host is accessible from the current machine.
+#
+#-----------------------------------------------------------------------
+#
+  host="nomads.ncep.noaa.gov"
+  ping -w ${wait_time_secs} || { \
+    print_err_msg_exit "\
+Unable to ping the host after ${wait_time_secs} seconds:
+  host = \"$host\"
+Assuming the host is unreachable from this machine:
+  MACHINE = \"$MACHINE\"
+Returning with a nonzero return code.
+";
+    return 1;
+  }
+#
+#-----------------------------------------------------------------------
+#
 # Set the URLs to the external model files.
 #
 #-----------------------------------------------------------------------
 #
 # First, set the base URL for NOMADS. 
 #
-  nomads_base_url="https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod"
+  basedir="/pub/data/nccf/com/gfs/prod"
+  nomads_base_url="https://$host$basedir"
 #
 # Now append to the NOMADS base URL the relative path to the files 
 # specified by arcvrel_dir (which depends on the cycle date and time) to 
@@ -126,7 +147,7 @@ Returning with a nonzero return code.
 # Finally, set the array containing the full URLs to each of the external
 # model files.
 #
-  file_urls=( "${fns_in_arcv[@]/#/$prefix}" )
+  file_urls=( "${fns[@]/#/$prefix}" )
 #
 #-----------------------------------------------------------------------
 #

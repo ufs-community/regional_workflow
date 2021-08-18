@@ -1,7 +1,19 @@
 #
 #-----------------------------------------------------------------------
 #
-# This file defines a function that
+# This file defines a function that, for a given external model 
+# (extrn_mdl_name), a type of condition (initial or boundary, specified 
+# by ics_or_lbcs), and a starting date and hour for the external model 
+# (cdate), sets and returns the following NOAA HPSS-associated quantities:
+#
+# 1) The format of the archive file(s) containing the external model 
+#    files, e.g. tar or zip.
+# 2) The name(s) of the archive file(s).
+# 3) The full paths in NOAA HPSS of the archive file(s).
+# 4) The relative path in the archive files in which the external model 
+#    files are located.  This is the relative path with respect to the
+#    directory in which the archive is being extracted in which the 
+#    external model files are located.
 #
 #-----------------------------------------------------------------------
 #
@@ -64,7 +76,8 @@ function set_extrn_mdl_arcv_file_dir_names() {
 #
 #-----------------------------------------------------------------------
 #
-#
+# Set local variables that depend on whether we are considering ICs or
+# LBCs.
 #
 #-----------------------------------------------------------------------
 #
@@ -93,17 +106,15 @@ function set_extrn_mdl_arcv_file_dir_names() {
 #
 #-----------------------------------------------------------------------
 #
-# Set parameters associated with the mass store (HPSS) for the specified
-# cycle date (cdate).  These consist of:
+# Set parameters associated with the mass store (NOAA HPSS) for the 
+# specified cycle date of the external model (cdate).  These parameters
+# consist of:
 #
 # 1) The type of the archive file (e.g. tar, zip, etc).
 # 2) The name of the archive file.
 # 3) The full path in HPSS to the archive file.
-# 4) The relative directory in the archive file in which the module output
-#    files are located.
-#
-# Note that these will be used by the calling script only if the archive
-# file for the specified cdate actually exists on HPSS.
+# 4) The relative directory in the archive file in which the external
+#    model's output files are located.
 #
 #-----------------------------------------------------------------------
 #
@@ -200,8 +211,8 @@ function set_extrn_mdl_arcv_file_dir_names() {
 
   "RAP")
 #
-# Note that this is GSL RAPX data, not operational NCEP RAP data.  An option for the latter
-# may be added in the future.
+# Note that this is GSL RAPX data, not operational NCEP RAP data.  An 
+# option for the latter may be added in the future.
 #
 # The zip archive files for RAPX are named such that the forecast files
 # for odd-numbered starting hours (e.g. 01, 03, ..., 23) are stored
@@ -237,8 +248,8 @@ function set_extrn_mdl_arcv_file_dir_names() {
 
   "HRRR")
 #
-# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An option for the latter
-# may be added in the future.
+# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An 
+# option for the latter may be added in the future.
 #
     arcv_dir="/BMC/fdr/Permanent/${yyyy}/${mm}/${dd}/data/fsl/hrrr/conus/wrfnat"
     arcv_fmt="zip"

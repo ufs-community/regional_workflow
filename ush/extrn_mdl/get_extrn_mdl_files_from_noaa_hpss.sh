@@ -98,10 +98,10 @@ function get_extrn_mdl_files_from_noaa_hpss() {
   arcv_fps_str="( "$( printf "\"%s\" " "${arcv_fps[@]}" )")"
 
   print_info_msg "
-Fetching external model files from HPSS.  The full paths (fps) to these 
-files in the archive file(s), the archive files on HPSS in which these 
-files are stored (arcv_fps), and the staging directory (staging_dir) to 
-which they will be copied are:
+Fetching external model files from NOAA HPSS.  The full paths (fps) to 
+these files within the archive file(s), the archive files on NOAA HPSS 
+in which these files are stored (arcv_fps), and the staging directory 
+(staging_dir) to which they will be copied are:
   fps = ${fps_str}
   arcv_fps = ${arcv_fps_str}
   staging_dir = \"${staging_dir}\""
@@ -116,8 +116,8 @@ which they will be copied are:
 #
 #-----------------------------------------------------------------------
 #
-# Consider the case of the archive file to be fetched from HPSS being in
-# tar format.
+# Consider the case of the archive file to be fetched from NOAA HPSS 
+# being in tar format.
 #
 #-----------------------------------------------------------------------
 #
@@ -138,20 +138,20 @@ which they will be copied are:
       arcv_fp="${arcv_fps[$narcv]}"
 #
 # Before trying to extract (a subset of) the external model files from
-# the current tar archive file (which is on HPSS), create a list of those
-# external model files that are stored in the current tar archive file.
-# For this purpose, we first use the "htar -tvf" command to list all the
-# external model files that are in the current archive file and store the
-# result in a log file.  (This command also indirectly checks whether the
-# archive file exists on HPSS.)  We then grep this log file for each
-# external model file and create a list containing only those external
-# model files that exist in the current archive.
+# the current tar archive file (which is on NOAA HPSS), create a list of 
+# those external model files that are stored in the current tar archive 
+# file.  For this purpose, we first use the "htar -tvf" command to list 
+# all the external model files that are in the current archive file and 
+# store the result in a log file.  (This command also indirectly checks 
+# whether the archive file exists on NOAA HPSS.)  We then grep this log 
+# file for each external model file and create a list containing only 
+# those external model files that exist in the current archive.
 #
 # Note that the "htar -tvf" command will fail if the tar archive file
-# itself doesn't exist on HPSS, but it won't fail if any of the external
-# model file names passed to it don't exist in the archive file.  In the
-# latter case, the missing files' names simply won't appear in the log
-# file.
+# itself doesn't exist on NOAA HPSS, but it won't fail if any of the 
+# external model file names passed to it don't exist in the archive file.  
+# In the latter case, the missing files' names simply won't appear in 
+# the log file.
 #
       htar_log_fn="log.htar_tvf.${narcv_formatted}"
       htar -tvf "${arcv_fp}" ${fps[@]} >& "${htar_log_fn}" || { \
@@ -193,9 +193,9 @@ it would not be needed.  Returning with a nonzero return code.
         return 1
       fi
 #
-# Extract from the current tar archive file on HPSS all the external model
-# files that exist in that archive file.  Also, save the output of the
-# "htar -xvf" command in a log file for debugging (if necessary).
+# Extract from the current tar archive file on NOAA HPSS all the external 
+# model files that exist in that archive file.  Also, save the output of 
+# the "htar -xvf" command in a log file for debugging (if necessary).
 #
       htar_log_fn="log.htar_xvf.${narcv_formatted}"
       htar -xvf "${arcv_fp}" ${files_in_crnt_arcv[@]} >& "${htar_log_fn}" || { \
@@ -362,8 +362,8 @@ nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-# Consider the case of the archive file to be fetched from HPSS being in
-# zip format.
+# Consider the case of the archive file to be fetched from NOAA HPSS 
+# being in zip format.
 #
 #-----------------------------------------------------------------------
 #
@@ -375,8 +375,8 @@ nonzero return code.
 # containing the list of archive files should contain only one element,
 # i.e. there should be only one archive file to consider.  Check for this.
 # If this ever changes (e.g. due to the way an external model that uses
-# the "zip" format archives its output files on HPSS), the code below must
-# be modified to loop over all archive files.
+# the "zip" format archives its output files on NOAA HPSS), the code 
+# below must be modified to loop over all archive files.
 #
 #-----------------------------------------------------------------------
 #
@@ -401,7 +401,7 @@ nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-# Fetch the zip archive file from HPSS.
+# Fetch the zip archive file from NOAA HPSS.
 #
 #-----------------------------------------------------------------------
 #
@@ -467,10 +467,10 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-# Extract the external model files from the zip file on HPSS.  Note that
-# the -o flag to unzip is needed to overwrite existing files.  Otherwise,
-# unzip will wait for user input as to whether the existing files should
-# be overwritten.
+# Extract the external model files from the zip file on NOAA HPSS.  Note 
+# that the -o flag to unzip is needed to overwrite existing files.  
+# Otherwise, unzip will wait for user input as to whether the existing 
+# files should be overwritten.
 #
 #-----------------------------------------------------------------------
 #

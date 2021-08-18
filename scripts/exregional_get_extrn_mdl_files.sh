@@ -200,12 +200,11 @@ Attempting to obtain external model data from current data source (data_src):
   set_extrn_mdl_filenames \
     data_src="${data_src}" \
     extrn_mdl_name="${extrn_mdl_name}" \
-    file_naming_convention="${EXTRN_MDL_FILE_NAMING_CONVENTION}" \
     ics_or_lbcs="${ics_or_lbcs}" \
     cdate="$cdate" \
     outvarname_fns="__fns"
 
-    fns_str="( "$( printf "\"%s\" " "${__fns[@]}" )")"
+  fns_str="( "$( printf "\"%s\" " "${__fns[@]}" )")"
 #
 # Data source is local disk.
 #
@@ -213,7 +212,6 @@ Attempting to obtain external model data from current data source (data_src):
 
     get_extrn_mdl_files_from_disk \
       extrn_mdl_name="${extrn_mdl_name}" \
-      file_naming_convention="${EXTRN_MDL_FILE_NAMING_CONVENTION}" \
       ics_or_lbcs="${ics_or_lbcs}" \
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
@@ -259,7 +257,7 @@ Attempting to obtain external model data from current data source (data_src):
       cdate="$cdate" \
       staging_dir="${staging_dir}" \
       arcvrel_dir="${__arcvrel_dir}" \
-      fns_in_arcv="${fns_str}"
+      fns="${fns_str}"
 
   fi
 #

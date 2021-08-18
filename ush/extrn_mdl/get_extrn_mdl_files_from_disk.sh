@@ -1,11 +1,19 @@
 #
 #-----------------------------------------------------------------------
 #
-# This file defines a function that either (1) creates symlinks in the
-# current cycle's external model file staging directory (staging_dir) to
-# the specified set of external model files (fns) in a specified directory
-# (extrn_mdl_dir) (if running in NCO mode) or (2) copies the external model
-# files to the staging directory (if running in community mode).
+# This file defines a function that does one of the following:
+#
+# 1) If running in NCO mode (RUN_ENVIR set to "nco") or if using a user-
+#    specified directory and file layout for the external model files
+#    (EXTRN_MDL_DIR_FILE_LAYOUT set to "user_spec"), creates symlinks in 
+#    the current cycle's external model file staging directory (staging_dir) 
+#    to the specified set of external model files (fns) in a specified 
+#    directory (extrn_mdl_dir).
+#
+# 2) If running in community mode (RUN_ENVIR set to "community") and not
+#    using a user-specified and file layout for the external model files
+#    (EXTRN_MDL_DIR_FILE_LAYOUT not set to "user_spec"), copies the 
+#    external model files to the staging directory.
 #
 #-----------------------------------------------------------------------
 #
@@ -30,7 +38,6 @@ function get_extrn_mdl_files_from_disk() {
 #
   local valid_args=( \
     "extrn_mdl_name" \
-    "file_naming_convention" \
     "ics_or_lbcs" \
     "cdate" \
     "staging_dir" \
@@ -55,6 +62,9 @@ function get_extrn_mdl_files_from_disk() {
 #-----------------------------------------------------------------------
 #
   local basedir \
+        basedir_next \
+        basedirs \
+        basedirs_str \
         extrn_mdl_dir \
         fn \
         fns_str \
@@ -62,32 +72,43 @@ function get_extrn_mdl_files_from_disk() {
         fps \
         hh \
         i \
-        min_age \
+        j \
+        jp1 \
+        min_file_age \
+        msg \
+        num_basedirs \
         num_files \
+        num_files_obtained \
         prefix \
+        rc \
         rel_path \
         slash_atmos_or_null \
         yyyymmdd
 #
 #-----------------------------------------------------------------------
 #
-# Set the base directory (basedir) containing the external model files.
-# The base directory is the portion of the directory that is cycle-
-# independent (the full directory containing the files is cycle-dependent).
+# Set the array basedirs containing the set of base directories that may
+# contain the external model files.  Here, by base directory, we mean the
+# beginning cycle-independent portion of the full path to the directory 
+# containing the external model files.  Below, we will try each base
+# directory specified in this array until we find one that contains the
+# files.
 #
 #-----------------------------------------------------------------------
 #
   if [ "${ics_or_lbcs}" = "ICS" ]; then
-    basedir="${EXTRN_MDL_BASEDIR_ICS}"
+    basedirs=( "${EXTRN_MDL_BASEDIRS_ICS[@]:-}" )
   elif [ "${ics_or_lbcs}" = "LBCS" ]; then
-    basedir="${EXTRN_MDL_BASEDIR_LBCS}"
+    basedirs=( "${EXTRN_MDL_BASEDIRS_LBCS[@]:-}" )
   fi
 
-  if [ ! -d "${basedir}" ]; then
+  basedirs_str="( "$( printf "\"%s\" " "${basedirs[@]}" )")"
+  num_basedirs="${#basedirs[@]}"
+  if [ ${num_basedirs} -eq 0 ]; then
     print_info_msg "
-The base directory (basedir) in which to look for external model files
-does not exist or is not a directory:
-  basedir = \"${basedir}\"
+The array containing base directories (basedirs) in which to look for 
+external model files is empty:
+  basedirs = ${basedirs_str}
 Returning with a nonzero return code.
 "
     return 1
@@ -95,39 +116,40 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-# Set the relative path (rel_path) under the base directory (basedir) in
-# which the external model files are located.  This relative path is the
-# cycle-dependent portion of the full directory containing the files.
-# How this is set depends on the assumed file naming convention.
+# Set the relative path (rel_path) in which to search for external model
+# files.  The relative path is the cycle-dependent portion of the full 
+# path to the directory containing the files.  This relative path will 
+# be appended to each base directory in basedirs and the resulting full 
+# directory searched for the files until the files are found (or until
+# we run out of base directories to try).
 #
-# First, consider the case of a user-specified naming convention.  In
-# this case, the files are located in a subdirectory with a name that is
-# identical to cdate.  Thus, the relative path is just cdate.
+# There are two ways in which the relative path may be set.  Which is 
+# used depends on the value of EXTRN_MDL_DIR_FILE_LAYOUT as follows:
+#
+# 1) If EXTRN_MDL_DIR_FILE_LAYOUT is set to "native_to_extrn_mdl", the
+#    assumed directory structure is the one that is native to the external 
+#    model (in which there may be multiple levels of subdirectories under 
+#    the base directory).
+#
+# 2) If EXTRN_MDL_DIR_FILE_LAYOUT is set to "user_spec", the assumed 
+#    directory structure is such that the external model files are located 
+#    directly under a subdirectory named after the cycle date in the 
+#    format "YYYYMMDDHH".
+#
+# In the first case, the way rel_path is set is machine-dependent because
+# we attempt here to use the same directory structure as the one used in
+# the system directory on the current machine in which the files from a 
+# given external model are stored (if such a system directory exists at
+# all on the machine).  Since different machines may use different 
+# directory structures for the same model, the relative path is in 
+# general machine dependent.  In addition, since some machines won't 
+# contain system directories for certain models, rel_path may remain set
+# below to its default value of a null string.
 #
 #-----------------------------------------------------------------------
 #
-  rel_path=""
+  if [ "${EXTRN_MDL_DIR_FILE_LAYOUT}" = "native_to_extrn_mdl" ]; then
 
-  if [ "${file_naming_convention}" = "user_spec" ]; then
-
-    rel_path="$cdate"
-#
-#-----------------------------------------------------------------------
-#
-# Now consider the case of a naming convention that is identical to what
-# the external model uses.  In this case, the relative path depends on
-# the external model as well as the machine on which the experiment is
-# running.  Note that rel_path is not defined for all machine and external 
-# model combinations.  Thus, in certain cases, it may remain set to a null 
-# string.  We will check for this later below.
-#
-#-----------------------------------------------------------------------
-#
-  elif [ "${file_naming_convention}" = "extrn_mdl" ]; then
-#
-# Extract from cdate the starting date without time (yyyymmdd) and the
-# hour-of-day (hh) of the external model forecast.
-#
     parse_cdate \
       cdate="$cdate" \
       outvarname_yyyymmdd="yyyymmdd" \
@@ -140,6 +162,7 @@ Returning with a nonzero return code.
       fi
     fi
 
+    rel_path=""
     case "$MACHINE" in
 
     "WCOSS_CRAY")
@@ -194,125 +217,218 @@ Returning with a nonzero return code.
       ;;
 
     esac
-#
-# If rel_path was not set for the current machine and external model 
-# combination, the external model files cannot be obtained.  In this 
-# case, print out an error message and return with a nonzero return 
-# code.
-#
-    if [ -z "${rel_path}" ]; then
-      print_info_msg "
-The relative path (rel_path) under the base directory (basedir) in which
-to look for external model files has not been specified for this machine
-(MACHINE) and external model (extrn_mdl_name) combination:
-  MACHINE = \"$MACHINE\"
-  extrn_mdl_name = \"${extrn_mdl_name}\"
-  basedir = \"${basedir}\"
-  rel_path = \"${rel_path}\"
-Returning with a nonzero return code.
-"
-      return 1
-    fi
+
+  elif [ "${EXTRN_MDL_DIR_FILE_LAYOUT}" = "user_spec" ]; then
+
+    rel_path="$cdate"
 
   fi
 #
 #-----------------------------------------------------------------------
 #
+# In NCO mode, to ensure that the external model files are complete (i.e.
+# not still being written to), we require that they be at least min_file_age
+# minutes old.  Set this value.
+#
+#-----------------------------------------------------------------------
+#
+  min_file_age="5"
+#
+#-----------------------------------------------------------------------
+#
+# Loop through the base directories in basedirs.  For each one, append
+# the relative path to obtain a full path and try to obtain the external
+# model files from the directory represented by that path.
+#
+#-----------------------------------------------------------------------
+#
+# Initialize the return code from this function to a non-zero value.
+# This will be reset to zero only after all the files have been obtained
+# successfully.
+#
+  rc=1
+
+  for (( j=0; j<${num_basedirs}; j++ )); do
+
+    basedir="${basedirs[$j]}"
+#
+# Define quantities that may be needed below in error messages.
+#
+    basedir_next=""
+    jp1=$((j+1))
+    if [ $jp1 -ne ${num_basedirs} ]; then
+      basedir_next="${basedirs[$jp1]}"
+    fi
+#
+# Check if the current base directory is actually a directory, e.g. 
+# whether it exists at all.
+#
+    if [ ! -d "$basedir" ]; then
+      msg="
+The base directory (basedir) in which to look for external model files
+does not exist or is not a directory:
+  basedir = \"$basedir\""
+      if [ ! -z "${basedir_next}" ]; then
+        msg=$msg"
+Skipping to next base directory (basedir_next) in basedirs:
+  basedirs = ${basedirs_str}
+  basedir_next = \"${basedir_next}\"
+"
+      fi
+      print_info_msg "$msg"
+      continue
+    fi
+#
 # Append the relative path to the base directory to obtain the full path
-# of the directory containing the external model files for the current
-# cycle.  Then set the array fps to the full paths of the external model
-# files.
+# to the directory containing the external model files (for the current
+# cycle).  Then check that the resulting full directory exists.
 #
-#-----------------------------------------------------------------------
+    extrn_mdl_dir="$basedir/${rel_path}"
+    if [ ! -d "${extrn_mdl_dir}" ]; then
+      msg="
+The directory (extrn_mdl_dir) that should contain the external model 
+files for the current cycle does not exist or is not a directory:
+  extrn_mdl_dir = \"${extrn_mdl_dir}\""
+      if [ ! -z "${basedir_next}" ]; then
+        msg=$msg"
+Skipping to next base directory (basedir_next) in basedirs:
+  basedirs = ${basedirs_str}
+  basedir_next = \"${basedir_next}\"
+"
+      fi
+      print_info_msg "$msg"
+      continue
+    fi
 #
-  extrn_mdl_dir="${basedir}/${rel_path}"
-  prefix="${extrn_mdl_dir}/"
-  fps=( "${fns[@]/#/$prefix}" )
+# Set the array fps containing the full paths of all the external model 
+# files to be obtained.
 #
-#-----------------------------------------------------------------------
+    prefix="${extrn_mdl_dir}/"
+    fps=( "${fns[@]/#/$prefix}" )
 #
 # Loop through the list of external model files and either create a
 # symlink in the staging directory to each (if running in NCO mode or if
-# using a user-specified file naming convention) or copy each to the 
-# current cycle's staging directory (if running in community mode.  In
-# the latter case, the files are usually in a system directory and are
-# kept for only a few days.  By copying the files, they will be available
-# later, e.g. for rerunning the experiment.
+# using a user-specified directory and file layout) or copy each to the
+# current cycle's staging directory (if running in community mode and 
+# not using a user-specified directory and file layout).  In the latter 
+# case, the files are usually in a system directory and are available 
+# for only a few days.  By copying the files, we ensure that they will 
+# be available later, e.g. for rerunning the experiment.
 #
-#-----------------------------------------------------------------------
-#
-  fns_str="( "$( printf "\"%s\" " "${fns[@]}" )")"
-  if [ "${RUN_ENVIR}" = "nco" ] || \
-     [ "${file_naming_convention}" = "user_spec" ]; then
-    print_info_msg "
-Creating symlinks in the current cycle's staging directory (staging_dir)
-to the specified files (fns) in the external model directory (extrn_mdl_dir):
-  extrn_mdl_dir = \"${extrn_mdl_dir}\"
-  fns = ${fns_str}
-  staging_dir = \"${staging_dir}\"
-"
-  else
-    print_info_msg "
-Copying the specified files (fns) from the external model directory
-(extrn_mdl_dir) to the current cycle's staging directory (staging_dir):
-  extrn_mdl_dir = \"${extrn_mdl_dir}\"
-  fns = ${fns_str}
-  staging_dir = \"${staging_dir}\"
-"
-  fi
-#
-# In NCO mode, to ensure that the external model files are complete (i.e. 
-# not still being written to), we require that they be at least min_age 
-# minutes old.  Set this value.
-#
-  min_age="5"
-
-  num_files="${#fps[@]}"
-  for (( i=0; i<${num_files}; i++ )); do
-
-    fn="${fns[$i]}"
-    fp="${fps[$i]}"
-
-    if [ ! -f "$fp" ]; then
+    fns_str="( "$( printf "\"%s\" " "${fns[@]}" )")"
+    if [ "${RUN_ENVIR}" = "nco" ] || \
+       [ "${EXTRN_MDL_DIR_FILE_LAYOUT}" = "user_spec" ]; then
       print_info_msg "
-The external model file fp is not a regular file (probably because it
-does not exist):
-  fp = \"$fp\"
-Returning with a nonzero return code.
+Attempting to create symlinks in the current cycle's staging directory 
+(staging_dir) to the specified files (fns) in the external model directory 
+(extrn_mdl_dir):
+  extrn_mdl_dir = \"${extrn_mdl_dir}\"
+  fns = ${fns_str}
+  staging_dir = \"${staging_dir}\"
 "
-      return 1
+    elif [ "${EXTRN_MDL_DIR_FILE_LAYOUT}" = "native_to_extrn_mdl" ]; then
+      print_info_msg "
+Attempting to copy the specified files (fns) from the external model 
+directory (extrn_mdl_dir) to the current cycle's staging directory 
+(staging_dir):
+  extrn_mdl_dir = \"${extrn_mdl_dir}\"
+  fns = ${fns_str}
+  staging_dir = \"${staging_dir}\"
+"
     fi
 #
-# Check that the file found is at least min_age minutes old.  If not,
-# return with a nonzero return code.
+# Loop through the set of files and try to obtain (copy or link to) each
+# one.
 #
-    if [ "${RUN_ENVIR}" = "nco" ] && \
-       [ ! $( find "$fp" -mmin +${min_age} ) ]; then
-      print_info_msg "
+    num_files_obtained=0
+    num_files="${#fps[@]}"
+    for (( i=0; i<${num_files}; i++ )); do
+
+      fn="${fns[$i]}"
+      fp="${fps[$i]}"
+
+      if [ ! -f "$fp" ]; then
+        msg="
+The external model file (fp) is not a regular file, probably because it
+does not exist:
+  fp = \"$fp\""
+        if [ ! -z "${basedir_next}" ]; then
+          msg=$msg"
+Skipping to next base directory (basedir_next) in basedirs:
+  basedirs = ${basedirs_str}
+  basedir_next = \"${basedir_next}\"
+"
+        fi
+        print_info_msg "$msg"
+        break
+      fi
+#
+# If in NCO mode, check that the file found is at least min_file_age 
+# minutes old.
+#
+      if [ "${RUN_ENVIR}" = "nco" ] && \
+         [ ! $( find "$fp" -mmin +${min_file_age} ) ]; then
+        print_info_msg "
 In NCO mode, the external model file (fp) must be older than a minimum
-value [min_age (in minutes), where file age is taken as the time elapsed
-since the last modification time] to ensure that the file is not still 
-being written to:
+value [min_file_age (in minutes), where file age is taken as the time 
+elapsed since the last modification time] to ensure that the file is not 
+still being written to, but the current file (fp) is younger:
   fp = \"$fp\"
-  min_age = ${min_age} minutes
-The current file is younger than min_age minutes.  Returning with a 
-nonzero return code.
+  min_file_age = ${min_file_age} minutes"
+        if [ ! -z "${basedir_next}" ]; then
+          msg=$msg"
+Skipping to next base directory (basedir_next) in basedirs:
+  basedirs = ${basedirs_str}
+  basedir_next = \"${basedir_next}\"
 "
-      return 1
-    fi
+        fi
+        print_info_msg "$msg"
+        break
+      fi
 #
 # Link to or copy the current file.
 #
-    if [ "${RUN_ENVIR}" = "nco" ] || \
-       [ "${file_naming_convention}" = "user_spec" ]; then
-      create_symlink_to_file target="$fp" \
-                             symlink="${staging_dir}/$fn" \
-                             relative="FALSE"
-    else
-      cp_vrfy "$fp" "${staging_dir}/$fn"
+      if [ "${RUN_ENVIR}" = "nco" ] || \
+         [ "${EXTRN_MDL_DIR_FILE_LAYOUT}" = "user_spec" ]; then
+        print_info_msg "
+Linking to file fn:
+  fn = \"$fn\""
+        create_symlink_to_file target="$fp" \
+                               symlink="${staging_dir}/$fn" \
+                               relative="FALSE"
+      else
+        print_info_msg "
+Copying file fn:
+  fn = \"$fn\""
+        cp_vrfy "$fp" "${staging_dir}/$fn"
+      fi
+#
+# Increment the counter that keeps track of the number of external model
+# files that have been obtained (i.e. copied or linked to).
+#
+      num_files_obtained=$(( num_files_obtained+1 ))
+
+    done
+#
+# If, after exiting the loop over the files, the number of files obtained 
+# is equal to the total number of files, then all files were successfully 
+# obtained.  In this case, reset the return code to 0 (in case it is 
+# needed later below) and exit the loop over the base directories.
+#
+    if [ "${num_files_obtained}" -eq "${num_files}" ]; then
+      rc=0
+      break
     fi
 
   done
+#
+# If, after exiting the loops above, the return code is non-zero, it 
+# means the files were not obtained succesfully from any of the base 
+# directories.  In this case, return with the non-zero code.
+#
+  if [ "$rc" -ne "0" ]; then
+    return "$rc"
+  fi
 #
 #-----------------------------------------------------------------------
 #

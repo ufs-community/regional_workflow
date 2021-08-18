@@ -931,55 +931,8 @@ PTMP=\"${PTMP}\""
 #-----------------------------------------------------------------------
 #
   if is_element_of "EXTRN_MDL_DATA_SOURCES" "disk"; then
-#
-# Set the flags that determine whether or not the base directories in
-# which the external model files for ICs and LBCs are located need to be
-# set explicitly in the experiment configuration file.
-#
-    set_basedir_ics="FALSE"
-    set_basedir_lbcs="FALSE"
 
-    trigger_str="set_to_non_default_directory_in_testing_script"
-    if [ "${EXTRN_MDL_FILE_NAMING_CONVENTION}" = "extrn_mdl" ]; then
-      if [ "${EXTRN_MDL_BASEDIR_ICS}" = "${trigger_str}" ]; then
-        set_basedir_ics="TRUE"
-      fi
-      if [ "${EXTRN_MDL_BASEDIR_LBCS}" = "${trigger_str}" ]; then
-        set_basedir_lbcs="TRUE"
-      fi
-    fi
-
-    if [ "${EXTRN_MDL_FILE_NAMING_CONVENTION}" = "user_spec" ]; then
-#
-# Set the base directories for the external model files, both for ICs
-# and LBCs.  Note that when a user-specified file naming convention is
-# being used (i.e. EXTRN_MDL_FILE_NAMING_CONVENTION set to "user_spec"),
-# for simplicity, we require that these base directories not already be
-# specified in the test configuraiton file.
-#
-      if [ ! -z "${EXTRN_MDL_BASEDIR_ICS}" ] || \
-         [ ! -z "${EXTRN_MDL_BASEDIR_LBCS}" ]; then
-        print_err_msg_exit "\
-For WE2E tests that use a user-specified naming convention for external
-model files (i.e. EXTRN_MDL_FILE_NAMING_CONVENTION set to \"user_spec\"),
-the base directories containing the files from which to generate the ICs
-(EXTRN_MDL_BASEDIR_ICS) and/or LBCs (EXTRN_MDL_BASEDIR_LBCS) should not
-be specified in the WE2E test configuration file (test_config_fp), but
-at least one of these is set to a non-empty string:
-  test_config_fp = \"${test_config_fp}\"
-  EXTRN_MDL_BASEDIR_ICS = \"${EXTRN_MDL_BASEDIR_ICS}\"
-  EXTRN_MDL_BASEDIR_LBCS = \"${EXTRN_MDL_BASEDIR_LBCS}\"
-Please remove these variables from the test configuration file and rerun."
-      else
-        set_basedir_ics="TRUE"
-        set_basedir_lbcs="TRUE"
-      fi
-    fi
-
-
-
-    if [ "${set_basedir_ics}" = "TRUE" ] || \
-       [ "${set_basedir_lbcs}" = "TRUE" ]; then
+    if [ ! -z "${EXTRN_MDL_DIR_FILE_LAYOUT}" ]; then
 
       extrn_mdl_basedir=""
       if [ "$MACHINE" = "WCOSS_CRAY" ]; then
@@ -1001,50 +954,50 @@ should be located has not been specified for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
       fi
 
-      extrn_mdl_basedir="${extrn_mdl_basedir}/fnconv_${EXTRN_MDL_FILE_NAMING_CONVENTION}"
-
-      if [ "${set_basedir_ics}" = "TRUE" ]; then
-        extrn_mdl_basedir_ics="${extrn_mdl_basedir}/${EXTRN_MDL_NAME_ICS}"
-        if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
-          extrn_mdl_basedir_ics="${extrn_mdl_basedir_ics}/${FV3GFS_FILE_FMT_ICS}"
-        fi
+      extrn_mdl_basedir_ics="${extrn_mdl_basedir}/${EXTRN_MDL_NAME_ICS}"
+      if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
+        extrn_mdl_basedir_ics="${extrn_mdl_basedir_ics}/${FV3GFS_FILE_FMT_ICS}"
       fi
 
-      if [ "${set_basedir_lbcs}" = "TRUE" ]; then
-        extrn_mdl_basedir_lbcs="${extrn_mdl_basedir}/${EXTRN_MDL_NAME_LBCS}"
-        if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
-          extrn_mdl_basedir_lbcs="${extrn_mdl_basedir_lbcs}/${FV3GFS_FILE_FMT_LBCS}"
-        fi
+      extrn_mdl_basedir_lbcs="${extrn_mdl_basedir}/${EXTRN_MDL_NAME_LBCS}"
+      if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
+        extrn_mdl_basedir_lbcs="${extrn_mdl_basedir_lbcs}/${FV3GFS_FILE_FMT_LBCS}"
       fi
-
-    fi
-
-
-    if [ "${EXTRN_MDL_FILE_NAMING_CONVENTION}" = "user_spec" ]; then
-#
-# Now set the parameters needed for constructing the user-specified
-# external model file names.
-#
-      set_user_specified_extrn_mdl_file_info \
-        extrn_mdl_name_ics="${EXTRN_MDL_NAME_ICS}" \
-        extrn_mdl_name_lbcs="${EXTRN_MDL_NAME_LBCS}" \
-        fv3gfs_file_fmt_ics="${FV3GFS_FILE_FMT_ICS}" \
-        fv3gfs_file_fmt_lbcs="${FV3GFS_FILE_FMT_LBCS}" \
-        outvarname_extrn_mdl_fns_ics="__extrn_mdl_fns_ics" \
-        outvarname_extrn_mdl_fns_lbcs_prefix="__extrn_mdl_fns_lbcs_prefix" \
-        outvarname_extrn_mdl_fns_lbcs_suffix="__extrn_mdl_fns_lbcs_suffix"
 
       expt_config_str=${expt_config_str}"
 #
-# Base directories in which the external mode files for generating ICs
-# and LBCs are located and the parameters needed to consturct the names
-# of those files using the user-specified file naming convention.
+# Base directories in which to search for external mode files for 
+# generating ICs and LBCs.
 #
-EXTRN_MDL_BASEDIR_ICS="${extrn_mdl_basedir_ics}"
-EXTRN_MDL_BASEDIR_LBCS="${extrn_mdl_basedir_lbcs}"
+EXTRN_MDL_BASEDIRS_ICS=( "${extrn_mdl_basedir_ics}" )
+EXTRN_MDL_BASEDIRS_LBCS=( "${extrn_mdl_basedir_lbcs}" )"
+#
+# If using a user-specified direcory structure and file naming convention, 
+# set the parameters needed for constructing the user-specified external 
+# model file names.
+#
+      if [ "${EXTRN_MDL_DIR_FILE_LAYOUT}" = "user_spec" ]; then
+
+        set_user_specified_extrn_mdl_file_info \
+          extrn_mdl_name_ics="${EXTRN_MDL_NAME_ICS}" \
+          extrn_mdl_name_lbcs="${EXTRN_MDL_NAME_LBCS}" \
+          fv3gfs_file_fmt_ics="${FV3GFS_FILE_FMT_ICS}" \
+          fv3gfs_file_fmt_lbcs="${FV3GFS_FILE_FMT_LBCS}" \
+          outvarname_extrn_mdl_fns_ics="__extrn_mdl_fns_ics" \
+          outvarname_extrn_mdl_fns_lbcs_prefix="__extrn_mdl_fns_lbcs_prefix" \
+          outvarname_extrn_mdl_fns_lbcs_suffix="__extrn_mdl_fns_lbcs_suffix"
+
+        expt_config_str=${expt_config_str}"
+#
+# Parameters needed to construct external model file names using a user-
+# specified naming convention.  These must be specified because 
+# EXTRN_MDL_DIR_FILE_LAYOUT has been set above to \"user_spec\".
+#
 EXTRN_MDL_FNS_ICS=( $( printf "\"%s\" " "${__extrn_mdl_fns_ics[@]}" ))
 EXTRN_MDL_FNS_LBCS_PREFIX="${__extrn_mdl_fns_lbcs_prefix}"
 EXTRN_MDL_FNS_LBCS_SUFFIX="${__extrn_mdl_fns_lbcs_suffix}""
+
+      fi
 
     fi
 
@@ -1130,53 +1083,6 @@ MAXTRIES_RUN_POST=\"${MAXTRIES_RUN_POST}\""
 #
   expt_config_fp="$ushdir/${EXPT_CONFIG_FN}"
   printf "%s" "${expt_config_str}" > "${expt_config_fp}"
-#
-#-----------------------------------------------------------------------
-#
-# Modifications to the experiment configuration file if the WE2E test
-# may try to look for external model files in system directories.
-#
-# The following are changes that need to be made directly to the
-# experiment configuration file created above (as opposed to the
-# experiment configuration string expt_config_str) because they involve
-# resetting of values that have already been set in that file.
-#
-# EXTRN_MDL_BASEDIR_ICS in the current WE2E test's configuration file
-# may be set to one of the following:
-#
-# 1) The string "set_to_non_default_location_in_testing_script".  This
-#    will cause this script to reset EXTRN_MDL_BASEDIR_ICS to a valid
-#    non-default location depending on the machine and external model
-#    for ICs.
-#
-# 2) To an existing directory.  If it is set to a directory, then this
-#    script ensures that the directory exists (via the check below).  If
-#    not, the script will exit.
-#
-# Note that if a test would like to use the default system directory
-# specified in the workflow as the source for external model files (i.e.
-# instead of the values set below), then EXTRN_MDL_BASEDIR_ICS simply
-# needs to be left unset in the test's configuration file.
-#
-#-----------------------------------------------------------------------
-#
-  if is_element_of "EXTRN_MDL_DATA_SOURCES" "disk"; then
-
-    if [ "${EXTRN_MDL_FILE_NAMING_CONVENTION}" = "extrn_mdl" ]; then
-
-      if [ "${set_basedir_ics}" = "TRUE" ]; then
-        set_bash_param "${expt_config_fp}" \
-                       "EXTRN_MDL_BASEDIR_ICS" "${extrn_mdl_basedir_ics}"
-      fi
-
-      if [ "${set_basedir_lbcs}" = "TRUE" ]; then
-        set_bash_param "${expt_config_fp}" \
-                       "EXTRN_MDL_BASEDIR_LBCS" "${extrn_mdl_basedir_lbcs}"
-      fi
-
-    fi
-
-  fi
 #
 #-----------------------------------------------------------------------
 #
