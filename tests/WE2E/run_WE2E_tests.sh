@@ -437,7 +437,7 @@ subdirs_tests_to_run=()
 remaining_avail_WE2E_test_names=( "${avail_WE2E_test_names[@]}" )
 
 num_user_spec_tests="${#user_spec_tests[@]}"
-for (( i=0; i<=$((num_user_spec_tests-1)); i++ )); do
+for (( i=0; i<${num_user_spec_tests}; i++ )); do
 
   user_spec_test="${user_spec_tests[$i]}"
 
@@ -488,7 +488,7 @@ for (( i=0; i<=$((num_user_spec_tests-1)); i++ )); do
         user_spec_tests_str=$(printf "(\n%s\n    )" "${user_spec_tests_str}")
 
         all_names_for_test=()
-        for (( k=0; k<=$((num_avail_WE2E_tests-1)); k++ )); do
+        for (( k=0; k<${num_avail_WE2E_tests}; k++ )); do
           if [ "${avail_WE2E_test_ids[$k]}" = "${test_id}" ]; then
             all_names_for_test+=("${avail_WE2E_test_names[$k]}")
           fi
@@ -587,7 +587,7 @@ ${tests_to_run_str}"
 #
 #-----------------------------------------------------------------------
 #
-for (( i=0; i<=$((num_tests_to_run-1)); i++ )); do
+for (( i=0; i<${num_tests_to_run}; i++ )); do
 
   test_name="${names_tests_to_run[$i]}"
   test_subdir="${subdirs_tests_to_run[$i]}"
