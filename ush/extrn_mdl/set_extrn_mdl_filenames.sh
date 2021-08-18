@@ -401,9 +401,9 @@ and ICs or LBCs (ics_or_lbcs):
 
     *)
       print_err_msg_exit "\
-The external model file names have not yet been specified for this 
-combination of external model (extrn_mdl_name) and ICs or LBCs 
-(ics_or_lbcs):
+The external model file names (either on disk or in archive files) have 
+not yet been specified for this combination of external model (extrn_mdl_name) 
+and ICs or LBCs (ics_or_lbcs):
   extrn_mdl_name = \"${extrn_mdl_name}\"
   ics_or_lbcs = \"${ics_or_lbcs}\""
       ;;
