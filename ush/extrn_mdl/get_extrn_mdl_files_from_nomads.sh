@@ -112,7 +112,7 @@ Returning with a nonzero return code.
 #
   wait_time_secs="30"
   host="nomads.ncep.noaa.gov"
-  ping -w ${wait_time_secs} "$host" || { \
+  ping -c 4 -w ${wait_time_secs} "$host" || { \
     print_err_msg_exit "\
 Unable to ping the host after ${wait_time_secs} seconds:
   host = \"$host\"
