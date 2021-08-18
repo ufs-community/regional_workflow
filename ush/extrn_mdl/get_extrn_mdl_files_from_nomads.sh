@@ -113,7 +113,7 @@ Returning with a nonzero return code.
   wait_time_secs="30"
   host="nomads.ncep.noaa.gov"
   ping -c 4 -w ${wait_time_secs} "$host" || { \
-    print_err_msg_exit "\
+    print_info_msg "\
 Unable to ping the host after ${wait_time_secs} seconds:
   host = \"$host\"
 Assuming the host is unreachable from this machine (MACHINE):
