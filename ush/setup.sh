@@ -477,7 +477,7 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #-----------------------------------------------------------------------
 #
 RELATIVE_LINK_FLAG=""
-NCORES_PER_NODE=""
+NCORES_PER_NODE="2" # Need some arbitrary default value to avoid division by zero errors
 case $MACHINE in
 
   "WCOSS_CRAY")
