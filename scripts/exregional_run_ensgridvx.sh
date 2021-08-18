@@ -101,16 +101,7 @@ export fhr_last
 fhr_list=`echo ${FHR} | sed "s/ /,/g"`
 export fhr_list
 
-if [[ ${NUM_ENS_MEMBERS} -lt 10 ]]; then
-  NUM_PAD=1
-elif [[ ${NUM_ENS_MEMBERS} -ge 10 && ${NUM_ENS_MEMBERS} -lt 99 ]]; then
-  NUM_PAD=2
-elif [[ ${NUM_ENS_MEMBERS} -ge 100 && ${NUM_ENS_MEMBERS} -lt 999 ]]; then
-  NUM_PAD=3
-else
-  echo "This verification workflow only supports ensembles less than 999 members!"
-fi
-
+NUM_PAD=${NDIGITS_ENSMEM_NAMES}
 
 #
 #-----------------------------------------------------------------------

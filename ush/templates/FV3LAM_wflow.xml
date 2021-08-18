@@ -928,7 +928,7 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {%- endif %}
 
-{% if run_task_vx_gridstat %}
+{% if run_task_vx_gridstat and fcst_len_hrs >= 3 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -963,7 +963,7 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {% endif %}
 
-{% if run_task_vx_gridstat %}
+{% if run_task_vx_gridstat and fcst_len_hrs >= 6 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -998,7 +998,7 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {% endif %}
 
-{% if run_task_vx_gridstat %}
+{% if run_task_vx_gridstat and fcst_len_hrs >= 24 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1117,6 +1117,7 @@ the <task> tag to be identical to the ones above for other output times.
 
   </task>
 
+{% if fcst_len_hrs >= 3 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1147,7 +1148,8 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-   
+{% endif %}
+{% if fcst_len_hrs >= 6 %}   
 <!--
 ************************************************************************
 ************************************************************************
@@ -1178,7 +1180,8 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
+{% endif %}
+{% if fcst_len_hrs >= 24 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1209,7 +1212,7 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
+{% endif %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1330,7 +1333,7 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
+{% if fcst_len_hrs >= 3 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1392,7 +1395,8 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
+{% endif %}
+{% if fcst_len_hrs >= 6 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1454,7 +1458,8 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
+{% endif %}
+{% if fcst_len_hrs >= 24 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1516,7 +1521,7 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
+{% endif %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1577,7 +1582,6 @@ the <task> tag to be identical to the ones above for other output times.
 
   </task>
 {% endif %}
-
 
 {% if run_task_vx_enspoint %}
 <!--
