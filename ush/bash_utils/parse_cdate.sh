@@ -93,10 +93,10 @@ The input argument \"cdate\" must contain only digits:
   nchars_cdate=${#cdate}
   if [ "${nchars_cdate}" -ne "10" ] && [ "${nchars_cdate}" -ne "12" ]; then
     print_err_msg_exit "\
-The number of characters in the input argument \"cdate\" must be either 
-10 (in which case it is assumed to have the form \"yyyymmddhh\") or 12 (in
-which case it is assumed to have the form \"yyyymmddhhmn\" where mn is the 
-two-digit minute):
+The number of digits in the input argument \"cdate\" must be either 10 
+(in which case it is assumed to have the form \"yyyymmddhh\") or 12 (in
+which case it is assumed to have the form \"yyyymmddhhmn\" where mn is 
+the two-digit minute):
   cdate = \"$cdate\"
   nchars_cdate = ${nchars_cdate}"
   fi
