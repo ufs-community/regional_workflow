@@ -99,7 +99,7 @@ The arguments in brackets are optional.  Examples:
      lbc_spec_fhrs='( \"1\" \"2\" \"5\" )'
 
    This will place the files needed for generating both ICs and LBCs in
-   the subdirectory \"./nomads_data/2021081500\" under the directory in 
+   the subdirectory \"nomads_data/2021081500\" under the directory in 
    which this script is located.
 
 2) On Cheyenne, to fetch just the analysis files for the cycles starting 
@@ -132,8 +132,8 @@ for which to fetch files.  Note that:
 * Normally, all_cdates should be specified as an array on the command 
   line as follows:
     all_cdates='( \"cdate1\" \"cdate2\" ... )'
-  However, if file(s) for only one cycle time are needed, it may be 
-  specified as a scalar, i.e.
+  However, if the file(s) for only one cycle time are to be fetched, 
+  it may be specified as a scalar, i.e.
     all_cdates=\"cdate1\"
 * By default, for each cycle time, both the analysis files [needed to
   generate initial conditions (ICs) for the FV3LAM] and the forecast 
@@ -143,14 +143,14 @@ for which to fetch files.  Note that:
 
 file_types:
 Array specifying which types of files (analysis and/or forecast) to 
-fetch for each cycle date.  Note that:
+fetch for each cycle time.  Note that:
 * file_types may have at most two elements.  Each element may be either
   \"ANL\" or \"FCST\".  If it contains only one element, then if that
   element is set to \"ANL\", only the analysis files will be fetched 
   for each cycle, and if it is set to \"FCST\", only the forecast files
   will be fetched.  If it is set to the array
     ( \"ANL\" \"FCST\" )
-  or
+  or to the array
     ( \"FCST\" \"ANL\" )
   then both analysis and forecast files will be fetched.
 * This is an optional argument.  If it is not specified, it will get 
@@ -160,56 +160,68 @@ fetch for each cycle date.  Note that:
   line, e.g.
     file_types='( \"ANL\" )'
   or
-    file_types='( \"ANL\" \"FCST\", ... )'
-  However, if only one type of file is to be obtained, it may be specified
+    file_types='( \"FCST\" \"ANL\" )'
+  However, if only one type of file is to be fetched, it may be specified
   as a scalar, e.g.
     file_types=\"FCST\"
 
 data_basedir:
 The base directory under which the external model files will be stored.
 Note that:
-* This is an optional argument.  If it is not specified, it will get
-  set to \"./nomads_data\".
-* This argument may be an absolute or a relative directory.  If relative, 
-  it is with respect to the directory in which this script is located.
-* If this directory does not already exist, it will be created.  If it
-  does exist, the old one will be renamed by appending to its name the
-  string \"_oldNNN\", where NNN is a 3-digit integer, e.g. \"_old003\".
+* This is an optional argument.  If it is not specified, it will get set
+  to \"nomads_data\".
+* data_basedir may be set to an absolute or a relative directory.  If 
+  relative, it is with respect to the directory in which this script is 
+  located.
+* If the directory that data_basedir is set to does not already exist, 
+  it will be created.  If it does exist, the existing one will be renamed 
+  by appending to its name the string \"_oldNNN\", where NNN is a 3-digit 
+  integer, e.g. \"_old003\".
 * A separate subdirectory with a name of the form \"YYYYMMDDHH\" will 
   be created under this base directory for each cycle time specified 
   in all_cdates, and the external model files for each cycle will be 
   placed in the corresponding subdirectory.  
 
 lbc_spec_fhrs:
-Array containing the forecat hours for which to obtain external model 
+Array containing the forecat hours for which to fetch external model 
 forecast files.  Note that:
-* This array must be specified if file_types contains the element \"FCST\" 
-  or if file_types is not specified on the command line (because in that
-  case, file_types will get reset to a default value that includes \"FCST\").
-* This does not need to be specified if file_types is set on the command
-  line to a value that does not contain the element \"FCST\", i.e. if 
-  file_types is set as
+* lbc_spec_fhrs must be specified if file_types contains the element 
+  \"FCST\" or if file_types is not specified on the command line 
+  (because in that case, file_types will get set to a default value that 
+  includes \"FCST\").
+* lbc_spec_fhrs does not need to be specified if file_types is set on 
+  the command line to a value that does not contain the element \"FCST\", 
+  i.e. if file_types is set as
     file_types='( \"ANL\" )' 
   or
     file_types=\"ANL\" 
 * Normally, lbc_spec_fhrs should be specified as an array on the command 
   line, e.g.
     lbc_spec_fhrs='( \"1\" \"2\" ... )'
-  However, if the forecast file(s) are to be obtained for only a single 
+  However, if the forecast file(s) are to be fetched for only a single 
   hour, it may be specified as a scalar, e.g.
-    lbc_spec_fhrs=\"2\"
-"
+    lbc_spec_fhrs=\"2\""
 #
 #-----------------------------------------------------------------------
 #
-# Check to see if usage help for this script is being requested.  If so,
-# print it out and exit with a 0 exit code (success).
+# If this script is being called without arguments, print out the usage
+# message and exit with a nonzero code (failure).  If it is being called 
+# with the appropriate help flag, print out the usage message and exit 
+# with a 0 code (success).
 #
 #-----------------------------------------------------------------------
 #
 help_flag="--help"
-if [ "$#" -eq "0" ] || \
-   [ "$#" -eq "1" -a "$1" = "${help_flag}" ]; then
+how_to_see_usage_str="\
+Type
+  ./${scrfunc_fn} ${help_flag}
+to get help on usage."
+if [ "$#" -eq "0" ]; then
+  print_info_msg "${how_to_see_usage_str}"
+  exit 1
+fi
+
+if [ "$#" -eq "1" -a "$1" = "${help_flag}" ]; then
   print_info_msg "${usage_str}"
   exit 0
 fi
@@ -346,7 +358,7 @@ fi
 # string), reset it to its default value.  Then check if an identically 
 # named directory already exists and if so, move (rename) it.
 #
-data_basedir="${data_basedir:-./nomads_data}"
+data_basedir="${data_basedir:-nomads_data}"
 VERBOSE="TRUE"  # Needed by the check_for_preexist_dir_file function.
 check_for_preexist_dir_file "${data_basedir}" "rename"
 #
@@ -356,7 +368,7 @@ check_for_preexist_dir_file "${data_basedir}" "rename"
 if is_element_of "file_types" "FCST"; then
   if [ -z "${lbc_spec_fhrs}" ]; then
     print_err_msg_exit "\
-The set of forecast hours (lbc_spec_fhrs) for which to obtain forecast 
+The set of forecast hours (lbc_spec_fhrs) for which to fetch forecast 
 files cannot be empty when the array argument file_types contains the
 element \"FCST\" or when file_types is not specified on the command line
 (in which case both analysis and forecast files will be fetched):
@@ -398,7 +410,7 @@ fi
 #-----------------------------------------------------------------------
 #
 # The following are variables that must exist but are not actually used
-# in obtaining files from NOMADS.
+# in fetching files from NOMADS.
 #
 EXTRN_MDL_DIR_FILE_LAYOUT=""
 EXTRN_MDL_FNS_ICS=("")
@@ -438,8 +450,7 @@ for (( i=0; i<${num_cdates}; i++ )); do
 
     cdate="${all_cdates[$i]}"
     print_info_msg "
-Attempting to obtain external model files from NOMADS for:
-  ics_or_lbcs = \"${ics_or_lbcs}\"
+Attempting to fetch external model ${file_type} file(s) from NOMADS for:
   cdate = \"$cdate\"
 "
 #
@@ -481,11 +492,13 @@ Attempting to obtain external model files from NOMADS for:
       arcvrel_dir="${__arcvrel_dir}" \
       fns="${fns_str}" || \
     print_err_msg_exit "\
-Attempt to obtain external model files from NOMADS for the current cycle
-date (cdate) was unsuccessful:
+Attempt to fetch external model files from NOMADS for the current cycle
+time (cdate) was unsuccessful:
   cdate = \"$cdate\"
-Exiting loop over cycle dates since this is probably due to inaccessiblity
-of NOMADS host.  ${how_to_see_usage_str}"
+Exiting loop over cycle times since this is probably due to inaccessiblity
+of the NOMADS host from the current machine (MACHINE):
+  MACHINE = \"$MACHINE\"
+${how_to_see_usage_str}"
 
   done
 
