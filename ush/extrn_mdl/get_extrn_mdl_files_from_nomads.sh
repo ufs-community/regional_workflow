@@ -3,7 +3,7 @@
 #
 # This file defines a function that fetches external model files from
 # NOMADS (NOAA Operational Model Archive and Distribution System) and
-# places them in the current cycle's external model file staging directory 
+# places them in the current cycle's external model file staging directory
 # (staging_dir).
 #
 #-----------------------------------------------------------------------
@@ -39,7 +39,7 @@ function get_extrn_mdl_files_from_nomads() {
 #-----------------------------------------------------------------------
 #
 # For debugging purposes, print out values of arguments passed to this
-# script/function.  Note that these will be printed out only if VERBOSE 
+# script/function.  Note that these will be printed out only if VERBOSE
 # is set to TRUE.
 #
 #-----------------------------------------------------------------------
@@ -83,7 +83,7 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-# Set the format of the FV3GFS files.  Currently, the only supported 
+# Set the format of the FV3GFS files.  Currently, the only supported
 # format is "grib2".
 #
 #-----------------------------------------------------------------------
@@ -129,18 +129,18 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-# First, set the base URL for NOMADS. 
+# First, set the base URL for NOMADS.
 #
   basedir="/pub/data/nccf/com/gfs/prod"
   nomads_base_url="https://$host$basedir"
 #
-# Now append to the NOMADS base URL the relative path to the files 
-# specified by arcvrel_dir (which depends on the cycle date and time) to 
+# Now append to the NOMADS base URL the relative path to the files
+# specified by arcvrel_dir (which depends on the cycle date and time) to
 # get the full URL where the files are located.
 #
   prefix="${nomads_base_url}/${arcvrel_dir}/"
 #
-# For clarity, replace any occurrences of the substring "/./" in prefix 
+# For clarity, replace any occurrences of the substring "/./" in prefix
 # with a single "/".
 #
   prefix=$( printf "%s" "$prefix" | sed -r -e 's|/\./|/|g' )
@@ -162,7 +162,7 @@ Returning with a nonzero return code.
 
     file_url="${file_urls[$i]}"
 
-    wget_log_fn="log.wget"                                             
+    wget_log_fn="log.wget.${fns[$i]}"
     wget --continue \
          --directory-prefix="${staging_dir}" \
          --output-file="${staging_dir}/${wget_log_fn}" \
