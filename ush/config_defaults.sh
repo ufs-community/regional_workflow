@@ -703,21 +703,6 @@ EXTRN_MDL_FNS_LBCS_SUFFIX=""
 #
 #-----------------------------------------------------------------------
 #
-# Set NOMADS online data associated parameters. Definitions:
-#
-# NOMADS:
-# Flag controlling whether or not using NOMADS online data.
-#
-# NOMADS_file_type:
-# Flag controlling the format of data.
-#
-#-----------------------------------------------------------------------
-#
-NOMADS="FALSE"
-NOMADS_file_type="nemsio"
-#
-#-----------------------------------------------------------------------
-#
 # Set CCPP-associated parameters.  Definitions:
 #
 # CCPP_PHYS_SUITE:

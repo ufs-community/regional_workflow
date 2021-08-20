@@ -79,8 +79,13 @@ function check_nomads_access() {
 #
 #-----------------------------------------------------------------------
 #
+  print_info_msg "
+Attempting to ping host ${num_pings} times for at most ${wait_time_secs} seconds:
+  host = \"$host\"
+..."
+
   ping -c "${num_pings}" -w ${wait_time_secs} "$host" || { \
-    print_info_msg "\
+    print_info_msg "
 Unable to ping the host after ${wait_time_secs} seconds:
   host = \"$host\"
 Returning with a nonzero return code.

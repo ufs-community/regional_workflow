@@ -893,11 +893,30 @@ Done.
 #
 # If necessary, run the NOMADS script to source external model data.
 #
-if [ "${NOMADS}" = "TRUE" ]; then
-  echo "Getting NOMADS online data"
-  echo "NOMADS_file_type=" $NOMADS_file_type
-  cd $EXPTDIR
-  $USHDIR/NOMADS_get_extrn_mdl_files.sh $DATE_FIRST_CYCL $CYCL_HRS $NOMADS_file_type $FCST_LEN_HRS $LBC_SPEC_INTVL_HRS
+if is_element_of "EXTRN_MDL_DATA_SOURCES" "nomads"; then
+
+  all_cdates_str="( "$( printf "\"%s\" " "${ALL_CDATES[@]}" )")" 
+  lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${LBC_SPEC_FHRS[@]}" )")" 
+
+  if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] && \
+     [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
+    $USHDIR/get_FV3GFS_grib2_files_from_NOMADS.sh \
+      machine="$MACHINE" \
+      all_cdates="${all_cdates_str}" \
+      file_types="ICS" \
+      data_basedir="$EXPTDIR/${EXTRN_MDL_NAME_ICS}/for_ICS" \
+  fi
+
+  if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] && \
+     [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
+    $USHDIR/get_FV3GFS_grib2_files_from_NOMADS.sh \
+      machine="$MACHINE" \
+      all_cdates="${all_cdates_str}" \
+      file_types="LBCS" \
+      data_basedir="$EXPTDIR/${EXTRN_MDL_NAME_LBCS}/for_LBCS" \
+      lbc_spec_fhrs="${lbc_spec_fhrs_str}"
+  fi
+
 fi
 #
 #-----------------------------------------------------------------------
