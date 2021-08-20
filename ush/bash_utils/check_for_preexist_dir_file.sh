@@ -127,8 +127,12 @@ where the arguments are defined as follows:
         old_indx=$( printf "%03d" "$i" )
         old_dir_or_file="${dir_or_file}_old${old_indx}"
       done
-
-      print_info_msg "$VERBOSE" "
+#
+# If a global variable named VERBOSE is defined, use it to determine 
+# whether or not to print out a message before renaming the file or 
+# directory.  If VERBOSE is not defined, don't print out a message.
+#
+      print_info_msg "${VERBOSE:-FALSE}" "
 Specified directory or file (dir_or_file) already exists:
   dir_or_file = \"${dir_or_file}\"
 Moving (renaming) preexisting directory or file to:
