@@ -116,7 +116,7 @@ case ${PREDEF_GRID_NAME} in
 
   ESGgrid_WIDE_HALO_WIDTH="6"
 
-  DT_ATMOS="${DT_ATMOS:-30}"
+  DT_ATMOS="${DT_ATMOS:-40}"
 
   LAYOUT_X="${LAYOUT_X:-5}"
   LAYOUT_Y="${LAYOUT_Y:-2}"

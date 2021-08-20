@@ -1729,15 +1729,20 @@ When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 grid files already exist in the directory 
 
   \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
+
 where
+
   FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
+
 Thus, the MAKE_GRID_TN task must not be run (i.e. RUN_TASK_MAKE_GRID must 
 be set to \"FALSE\"), and the directory in which to look for the grid 
 files (i.e. GRID_DIR) must be set to the one above.  Current values for 
 these quantities are:
+
   RUN_TASK_MAKE_GRID = \"${RUN_TASK_MAKE_GRID}\"
   GRID_DIR = \"${GRID_DIR}\"
+
 Resetting RUN_TASK_MAKE_GRID to \"FALSE\" and GRID_DIR to the one above.
 Reset values are:
 "
@@ -1762,9 +1767,12 @@ Reset values are:
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 orography files already exist in the directory 
   \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
+
 where
+
   FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
+
 Thus, the MAKE_OROG_TN task must not be run (i.e. RUN_TASK_MAKE_OROG must 
 be set to \"FALSE\"), and the directory in which to look for the orography 
 files (i.e. OROG_DIR) must be set to the one above.  Current values for 
@@ -1796,10 +1804,14 @@ Reset values are:
     msg="
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 surface climatology files already exist in the directory 
+
   \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
+
 where
+
   FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
+
 Thus, the MAKE_SFC_CLIMO_TN task must not be run (i.e. RUN_TASK_MAKE_SFC_CLIMO 
 must be set to \"FALSE\"), and the directory in which to look for the 
 surface climatology files (i.e. SFC_CLIMO_DIR) must be set to the one 
@@ -2493,6 +2505,7 @@ line_list=$( sed -r \
 
 print_info_msg "$VERBOSE" "
 The variable \"line_list\" contains:
+
 ${line_list}
 "
 #
@@ -2730,12 +2743,14 @@ UFS_UTILS_DIR="${UFS_UTILS_DIR}"
 SFC_CLIMO_INPUT_DIR="${SFC_CLIMO_INPUT_DIR}"
 TOPO_DIR="${TOPO_DIR}"
 EMC_POST_DIR="${EMC_POST_DIR}"
+
 EXPTDIR="$EXPTDIR"
 LOGDIR="$LOGDIR"
 CYCLE_BASEDIR="${CYCLE_BASEDIR}"
 GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
+
 NDIGITS_ENSMEM_NAMES="${NDIGITS_ENSMEM_NAMES}"
 ENSMEM_NAMES=( $( printf "\"%s\" " "${ENSMEM_NAMES[@]}" ))
 FV3_NML_ENSMEM_FPS=( $( printf "\"%s\" " "${FV3_NML_ENSMEM_FPS[@]}" ))
