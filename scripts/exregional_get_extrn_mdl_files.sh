@@ -16,11 +16,11 @@
 #
 #-----------------------------------------------------------------------
 #
-. $USHDIR/extrn_mdl/set_extrn_mdl_filenames.sh
-. $USHDIR/extrn_mdl/set_extrn_mdl_arcv_file_dir_names.sh
 . $USHDIR/extrn_mdl/get_extrn_mdl_files_from_disk.sh
 . $USHDIR/extrn_mdl/get_extrn_mdl_files_from_noaa_hpss.sh
 . $USHDIR/extrn_mdl/get_extrn_mdl_files_from_nomads.sh
+. $USHDIR/extrn_mdl/set_extrn_mdl_arcv_file_dir_names.sh
+. $USHDIR/extrn_mdl/set_extrn_mdl_filenames.sh
 #
 #-----------------------------------------------------------------------
 #
