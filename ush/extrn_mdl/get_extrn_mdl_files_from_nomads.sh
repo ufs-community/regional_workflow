@@ -36,7 +36,7 @@ function get_extrn_mdl_files_from_nomads() {
 #
 #-----------------------------------------------------------------------
 #
-  local ushdir="${scrfunc_dir}"
+  local ushdir="${scrfunc_dir%/*}"
 #
 #-----------------------------------------------------------------------
 #
@@ -64,6 +64,7 @@ function get_extrn_mdl_files_from_nomads() {
 #-----------------------------------------------------------------------
 #
   local valid_args=( \
+    "check_access" \
     "extrn_mdl_name" \
     "ics_or_lbcs" \
     "staging_dir" \
@@ -92,7 +93,7 @@ function get_extrn_mdl_files_from_nomads() {
         file_url \
         file_urls \
         fv3gfs_file_fmt \
-        host \
+        host_nomads \
         i \
         nomads_base_url \
         num_files \
@@ -142,18 +143,23 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-# Check whether the NOMADS host is accessible from the current machine.
+# If the check_access flag is set to TRUE or is unspecified, check whether 
+# the NOMADS host is accessible from the current machine.
 #
 #-----------------------------------------------------------------------
 #
-  check_nomads_access || { \
-    print_info_msg "\
+  check_access="${check_access:-TRUE}"
+  host_nomads="nomads.ncep.noaa.gov"
+  if [ "${check_access}" = "TRUE" ]; then
+    check_nomads_access host="${host_nomads}" || { \
+      print_info_msg "\
 NOMADS is not accessible from this machine (MACHINE):
   MACHINE = \"$MACHINE\"
 Returning with a nonzero return code.
 ";
-    return 1;
-  }
+      return 1;
+    }
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -164,7 +170,7 @@ Returning with a nonzero return code.
 # First, set the base URL for NOMADS.
 #
   basedir="/pub/data/nccf/com/gfs/prod"
-  nomads_base_url="https://$host$basedir"
+  nomads_base_url="https://${host_nomads}$basedir"
 #
 # Now append to the NOMADS base URL the relative path to the files
 # specified by arcvrel_dir (which depends on the cycle date and time) to

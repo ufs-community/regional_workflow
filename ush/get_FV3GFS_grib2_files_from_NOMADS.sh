@@ -495,9 +495,13 @@ Attempting to fetch external model ${file_type} file(s) from NOMADS for:
 #
 # Get the files from NOMADS.  If this is unsuccessful, exit the loop
 # over the cycle dates because we assume it failed because the NOMADS
-# host is not accessible from the current machine.
+# host is not accessible from the current machine.  Note that we do 
+# not check access to NOMADS within the get_extrn_mdl_files_from_nomads
+# function called below (check_access="FALSE") because we have already
+# checked for access up above before entering this loop.
 #
     get_extrn_mdl_files_from_nomads \
+      check_access="FALSE" \
       extrn_mdl_name="${extrn_mdl_name}" \
       ics_or_lbcs="${ics_or_lbcs}" \
       staging_dir="${staging_dir}" \
