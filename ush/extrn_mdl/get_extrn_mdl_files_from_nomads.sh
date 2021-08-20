@@ -12,6 +12,42 @@ function get_extrn_mdl_files_from_nomads() {
 #
 #-----------------------------------------------------------------------
 #
+# Get the full path to the file in which this script/function is located
+# (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
+# which the file is located (scrfunc_dir).
+#
+#-----------------------------------------------------------------------
+#
+  local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+  local scrfunc_fn=$( basename "${scrfunc_fp}" )
+  local scrfunc_dir=$( dirname "${scrfunc_fp}" )
+#
+#-----------------------------------------------------------------------
+#
+# Get the name of this function.
+#
+#-----------------------------------------------------------------------
+#
+  local func_name="${FUNCNAME[0]}"
+#
+#-----------------------------------------------------------------------
+#
+# Set directories.
+#
+#-----------------------------------------------------------------------
+#
+  local ushdir="${scrfunc_dir}"
+#
+#-----------------------------------------------------------------------
+#
+# Source necessary files.
+#
+#-----------------------------------------------------------------------
+#
+  . $ushdir/extrn_mdl/check_nomads_access.sh
+#
+#-----------------------------------------------------------------------
+#
 # Save current shell options (in a global array).  Then set new options
 # for this script/function.
 #
@@ -39,12 +75,12 @@ function get_extrn_mdl_files_from_nomads() {
 #-----------------------------------------------------------------------
 #
 # For debugging purposes, print out values of arguments passed to this
-# script/function.  Note that these will be printed out only if VERBOSE
-# is set to TRUE.
+# script or function.  Note that these will be printed out only if an
+# environment variable named VERBOSE exists and is set to TRUE.
 #
 #-----------------------------------------------------------------------
 #
-  print_input_args valid_args
+  print_input_args "valid_args"
 #
 #-----------------------------------------------------------------------
 #
@@ -110,13 +146,9 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-  wait_time_secs="30"
-  host="nomads.ncep.noaa.gov"
-  ping -c 4 -w ${wait_time_secs} "$host" || { \
+  check_nomads_access || { \
     print_info_msg "\
-Unable to ping the host after ${wait_time_secs} seconds:
-  host = \"$host\"
-Assuming the host is unreachable from this machine (MACHINE):
+NOMADS is not accessible from this machine (MACHINE):
   MACHINE = \"$MACHINE\"
 Returning with a nonzero return code.
 ";
@@ -181,7 +213,8 @@ Returning with a nonzero return code.
 #
 #-----------------------------------------------------------------------
 #
-# Restore the shell options saved at the beginning of this script/function.
+# Restore the shell options saved at the beginning of this script or
+# function.
 #
 #-----------------------------------------------------------------------
 #
