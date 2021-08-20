@@ -1,14 +1,14 @@
 #
 #-----------------------------------------------------------------------
 #
-# This file defines a function that prints to stdout the names and val-
-# ues of a specified list of variables that are the valid arguments to 
-# the script or function that calls this function.  It is mainly used 
-# for debugging to check that the argument values passed to the calling
-# script/function have been set correctly.  Note that if a global varia-
-# ble named VERBOSE is not defined, the message will be printed out.  If
-# a global variable named VERBOSE is defined, then the message will be 
-# printed out only if VERBOSE is set to TRUE.
+# This file defines a function that prints to stdout the names and values
+# of a specified list of variables that are the valid arguments to the 
+# script or function that calls this function.  It is mainly used for 
+# debugging to check that the argument values passed to the calling 
+# script or function have been set correctly.  Note that if a global 
+# variable named VERBOSE is not defined, the message will be printed 
+# out.  If a global variable named VERBOSE is defined, then the message 
+# will be printed out only if VERBOSE is set to TRUE.
 # 
 #-----------------------------------------------------------------------
 #
@@ -99,12 +99,12 @@ function.
 #-----------------------------------------------------------------------
 #
   local array_name_valid_caller_args \
-        valid_caller_args \
-        script_or_function \
+        i \
+        line \
         msg \
         num_valid_args \
-        i \
-        line
+        script_or_function \
+        valid_caller_args
 #
 #-----------------------------------------------------------------------
 #
@@ -168,17 +168,13 @@ have been set as follows:
 #
 #-----------------------------------------------------------------------
 #
-# If a global variable named VERBOSE is not defined, print out the mes-
-# sage.  If it is defined, print out the message only if VERBOSE is set
-# to TRUE.
+# If a global variable named VERBOSE is defined, use it to determine 
+# whether or not to print out the message.  If VERBOSE is not defined, 
+# don't print out the message.
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -v VERBOSE ]; then
-    print_info_msg "$msg"
-  else
-    print_info_msg "$VERBOSE" "$msg"
-  fi
+  print_info_msg "${VERBOSE:-FALSE}" "$msg"
 #
 #-----------------------------------------------------------------------
 #
