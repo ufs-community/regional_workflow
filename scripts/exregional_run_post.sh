@@ -276,9 +276,21 @@ EOF
 print_info_msg "$VERBOSE" "
 Starting post-processing for fhr = $fhr hr..."
 
-${APRUN} ${EXECDIR}/ncep_post < itag || print_err_msg_exit "\
-Call to executable to run post for forecast hour $fhr returned with non-
-zero exit code."
+#
+##### RRFS-CMAQ ########## start #####
+#
+if [ ${FCST_MODEL} = "fv3gfs_aqm" ]; then
+  ${APRUN} ${EXECDIR}/upp.x < itag || print_err_msg_exit "\
+  Call to executable to run post for forecast hour $fhr returned with non-
+  zero exit code."
+else
+  ${APRUN} ${EXECDIR}/ncep_post < itag || print_err_msg_exit "\
+  Call to executable to run post for forecast hour $fhr returned with non-
+  zero exit code."
+fi
+#
+##### RRFS-CMAQ ########## end   #####
+
 #
 #-----------------------------------------------------------------------
 #
@@ -331,7 +343,17 @@ post_renamed_fn_suffix="f${fhr}${post_mn_or_null}.${tmmark}.grib2"
 cd_vrfy "${postprd_dir}"
 basetime=$( date --date "$yyyymmdd $hh" +%y%j%H%M )
 symlink_suffix="_${basetime}f${fhr}${post_mn}"
-fids=( "bgdawp" "bgrd3d" )
+#
+##### RRFS-CMAQ ########## start #####
+#
+if [ ${FCST_MODEL} = "fv3gfs_aqm" ]; then
+  fids=( "prslev" "natlev" )
+else
+  fids=( "bgdawp" "bgrd3d" )
+fi
+#
+##### RRFS-CMAQ ########## end   #####
+#
 for fid in "${fids[@]}"; do
   FID="${fid^^}"
   post_orig_fn="${FID}.${post_fn_suffix}"
