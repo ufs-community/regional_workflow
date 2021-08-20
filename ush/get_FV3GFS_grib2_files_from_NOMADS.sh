@@ -56,11 +56,11 @@ ushdir="$homerrfs/ush"
 #
 #-----------------------------------------------------------------------
 #
-. $ushdir/source_util_funcs.sh
-. $ushdir/valid_param_vals.sh
+. $ushdir/extrn_mdl/check_nomads_access.sh
+. $ushdir/extrn_mdl/get_extrn_mdl_files_from_nomads.sh
 . $ushdir/extrn_mdl/set_extrn_mdl_filenames.sh
 . $ushdir/extrn_mdl/set_extrn_mdl_arcv_file_dir_names.sh
-. $ushdir/extrn_mdl/get_extrn_mdl_files_from_nomads.sh
+. $ushdir/valid_param_vals.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -129,8 +129,8 @@ for which to fetch files.  Note that:
   YYYYY is the four-digit year, MM is the two-digit month, DD is the 
   two-digit day, and HH is the two-digit hour of the cycle's starting 
   date and time.  
-* Normally, all_cdates should be specified as an array on the command 
-  line as follows:
+* Normally, in the call to this function, all_cdates should be specified 
+  as an array as follows:
     all_cdates='( \"cdate1\" \"cdate2\" ... )'
   However, if the file(s) for only one cycle time are to be fetched, 
   it may be specified as a scalar, i.e.
@@ -156,8 +156,8 @@ fetch for each cycle time.  Note that:
 * This is an optional argument.  If it is not specified, it will get 
   set to the array ( \"ANL\" \"FCST\" ), i.e. both analysis and forecast
   files will be fetched.
-* Normally, file_types should be specified as an array on the command 
-  line, e.g.
+* Normally, in the call to this function, file_types should be specified 
+  as an array line, e.g.
     file_types='( \"ANL\" )'
   or
     file_types='( \"FCST\" \"ANL\" )'
@@ -186,17 +186,17 @@ lbc_spec_fhrs:
 Array containing the forecat hours for which to fetch external model 
 forecast files.  Note that:
 * lbc_spec_fhrs must be specified if file_types contains the element 
-  \"FCST\" or if file_types is not specified on the command line 
+  \"FCST\" or if file_types is not specified in the call to this function
   (because in that case, file_types will get set to a default value that 
   includes \"FCST\").
-* lbc_spec_fhrs does not need to be specified if file_types is set on 
-  the command line to a value that does not contain the element \"FCST\", 
-  i.e. if file_types is set as
+* lbc_spec_fhrs does not need to be specified if file_types is set in
+  the call to this function to a value that does not contain the element 
+  \"FCST\", i.e. if file_types is set as
     file_types='( \"ANL\" )' 
   or
     file_types=\"ANL\" 
-* Normally, lbc_spec_fhrs should be specified as an array on the command 
-  line, e.g.
+* Normally, in the call to this function, lbc_spec_fhrs should be specified 
+  as an array, e.g.
     lbc_spec_fhrs='( \"1\" \"2\" ... )'
   However, if the forecast file(s) are to be fetched for only a single 
   hour, it may be specified as a scalar, e.g.
@@ -246,7 +246,7 @@ process_args valid_args "$@"
 #-----------------------------------------------------------------------
 #
 # For debugging purposes, print out values of arguments passed to this
-# script/function.  Note that these will be printed out only if VERBOSE
+# script or function.  Note that these will be printed out only if VERBOSE
 # is set to TRUE.
 #
 #-----------------------------------------------------------------------
@@ -266,14 +266,14 @@ to get help on usage."
 #
 #-----------------------------------------------------------------------
 #
-# Process command-line arguments.
+# Process input arguments.
 #
 #-----------------------------------------------------------------------
 #
 # Certain arguments that are assumed to be arrays in the code below are
-# (for convenience) allowed to be specified as scalars on the command 
-# line if they consist of a single element.  If necessary, convert any
-# such arguments to arrays here.
+# (for convenience) allowed to be specified as scalars in the call to 
+# this function if they consist of a single element.  If necessary, 
+# convert any such arguments to arrays.
 #
 is_array "all_cdates" || all_cdates=( "${all_cdates}" )
 is_array "file_types" || file_types=( "${file_types}" )
@@ -354,12 +354,12 @@ The two elements of file_types must be distinct but aren't:
 ${how_to_see_usage_str}"
 fi
 #
-# If data_basedir is not set on the command line (or is set to a null
-# string), reset it to its default value.  Then check if an identically 
-# named directory already exists and if so, move (rename) it.
+# If data_basedir is not set in the call to this function (or is set 
+# to a null string), reset it to its default value.  Then check if an 
+# identically named directory already exists and if so, move (rename) 
+# it.
 #
 data_basedir="${data_basedir:-nomads_data}"
-VERBOSE="TRUE"  # Needed by the check_for_preexist_dir_file function.
 check_for_preexist_dir_file "${data_basedir}" "rename"
 #
 # If forecast files are to be fetched, make sure that lbc_spec_fhrs is 
@@ -370,15 +370,17 @@ if is_element_of "file_types" "FCST"; then
     print_err_msg_exit "\
 The set of forecast hours (lbc_spec_fhrs) for which to fetch forecast 
 files cannot be empty when the array argument file_types contains the
-element \"FCST\" or when file_types is not specified on the command line
-(in which case both analysis and forecast files will be fetched):
+element \"FCST\" or when file_types is not specified in the call to 
+this function (in which case both analysis and forecast files will be 
+fetched):
   file_types = ${file_types_str} 
 ${how_to_see_usage_str}"
   fi
 fi
 #
-# If lbc_spec_fhrs is specified on the command line (to a non-empty 
-# value), make sure that each of its elements consists of only digits.
+# If lbc_spec_fhrs is specified in the call to this function (to a non-
+# empty value), make sure that each of its elements consists of only 
+# digits.
 # 
 lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${lbc_spec_fhrs[@]}" )")"
 num_lbc_spec_fhrs="${#lbc_spec_fhrs[@]}"
@@ -429,6 +431,16 @@ data_src="nomads"
 extrn_mdl_name="FV3GFS"
 FV3GFS_FILE_FMT_ICS="grib2"
 FV3GFS_FILE_FMT_LBCS="grib2"
+#
+#-----------------------------------------------------------------------
+#
+# Check whether the NOMADS host is accessible from the current machine.
+#
+#-----------------------------------------------------------------------
+#
+check_nomads_access || print_err_msg_exit "\
+NOMADS is not accessible from this machine (MACHINE):
+  MACHINE = \"$MACHINE\""
 #
 #-----------------------------------------------------------------------
 #
