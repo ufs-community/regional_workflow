@@ -335,9 +335,9 @@ fids=${POST_FIDS}
 for fid in "${fids[@]}"; do
   FID="${fid^^}"
   if [ "${FID}" = "BGDAWP" ] || [ "${FID}" = "PRSLEV" ]; then
-    FID_OUT = "BGDAWQ"
+    FID_OUT="BGDAWQ"
   elif [ "${FID}" = "BGRD3D" ] || [ "${FID}" = "NATLEV" ]; then
-    FID_OUT = "BGRD3D"
+    FID_OUT="BGRD3D"
   else
     print_err_msg_exit "\
 The wrong FIDS_POST were set in config.sh:
