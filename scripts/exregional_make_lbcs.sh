@@ -540,7 +540,7 @@ located in the following directory:
 # the forecast hour of the FV3-LAM (which is not necessarily the same as
 # that of the external model since their start times may be offset).
 #
-  fcst_hhh_FV3LAM=$( printf "%03d" "${LBC_SPEC_FCST_HRS[$i]}" )
+  fcst_hhh_FV3LAM=$( printf "%03d" "${LBC_SPEC_FHRS[$i]}" )
   mv_vrfy gfs.bndy.nc ${lbcs_dir}/gfs_bndy.tile7.${fcst_hhh_FV3LAM}.nc
 
 done

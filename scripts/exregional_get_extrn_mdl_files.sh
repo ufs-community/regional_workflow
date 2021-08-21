@@ -162,7 +162,7 @@ lbc_spec_fhrs=()
 
 if [ "${ics_or_lbcs}" = "LBCS" ]; then
 
-  lbc_spec_fhrs=( "${LBC_SPEC_FCST_HRS[@]}" )
+  lbc_spec_fhrs=( "${LBC_SPEC_FHRS[@]}" )
 #
 # Add the temporal offset specified by extrn_mdl_temporal_offset_hrs 
 # (which is in units of hours) to the array of LBC update forecast hours 

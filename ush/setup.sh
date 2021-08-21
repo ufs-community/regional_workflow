@@ -1069,8 +1069,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-LBC_SPEC_FCST_HRS=($( seq ${LBC_SPEC_INTVL_HRS} ${LBC_SPEC_INTVL_HRS} \
-                          ${FCST_LEN_HRS} ))
+LBC_SPEC_FHRS=($( seq ${LBC_SPEC_INTVL_HRS} ${LBC_SPEC_INTVL_HRS} \
+                      ${FCST_LEN_HRS} ))
 #
 #-----------------------------------------------------------------------
 #
@@ -2877,11 +2877,11 @@ OZONE_PARAM="${OZONE_PARAM}"
 #-----------------------------------------------------------------------
 #
 # Boundary condition update times (in units of forecast hours).  Note that
-# LBC_SPEC_FCST_HRS is an array, even if it has only one element.
+# LBC_SPEC_FHRS is an array, even if it has only one element.
 #
 #-----------------------------------------------------------------------
 #
-LBC_SPEC_FCST_HRS=(${LBC_SPEC_FCST_HRS[@]})
+LBC_SPEC_FHRS=(${LBC_SPEC_FHRS[@]})
 #
 #-----------------------------------------------------------------------
 #
