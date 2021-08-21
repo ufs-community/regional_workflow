@@ -298,6 +298,12 @@ DOT_OR_USCORE="_"
 # FCST_MODEL:
 # Name of forecast model (default=ufs-weather-model)
 #
+# POST_EXEC_FN:
+# Name of the post-processing executable
+#
+# POST_FIDS:
+# Output file prefixes of post-processing 
+#
 # WFLOW_XML_FN:
 # Name of the rocoto workflow XML file that the experiment generation
 # script creates and that defines the workflow for the experiment.
@@ -350,6 +356,8 @@ NEMS_CONFIG_FN="nems.configure"
 FV3_EXEC_FN="ufs_model"
 
 FCST_MODEL="ufs-weather-model"
+POST_EXEC_FN="ncep_post"
+POST_FIDS=( "bgdawp" "bgrd3d" )
 
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"

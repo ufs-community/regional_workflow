@@ -276,7 +276,7 @@ EOF
 print_info_msg "$VERBOSE" "
 Starting post-processing for fhr = $fhr hr..."
 
-${APRUN} ${EXECDIR}/ncep_post < itag || print_err_msg_exit "\
+${APRUN} ${EXECDIR}/${POST_EXEC_FN} < itag || print_err_msg_exit "\
 Call to executable to run post for forecast hour $fhr returned with non-
 zero exit code."
 #
@@ -331,14 +331,23 @@ post_renamed_fn_suffix="f${fhr}${post_mn_or_null}.${tmmark}.grib2"
 cd_vrfy "${postprd_dir}"
 basetime=$( date --date "$yyyymmdd $hh" +%y%j%H%M )
 symlink_suffix="_${basetime}f${fhr}${post_mn}"
-fids=( "bgdawp" "bgrd3d" )
+fids=${POST_FIDS}
 for fid in "${fids[@]}"; do
   FID="${fid^^}"
+  if [ "${FID}" = "BGDAWP" ] || [ "${FID}" = "PRSLEV" ]; then
+    FID_OUT = "BGDAWQ"
+  elif [ "${FID}" = "BGRD3D" ] || [ "${FID}" = "NATLEV" ]; then
+    FID_OUT = "BGRD3D"
+  else
+    print_err_msg_exit "\
+The wrong FIDS_POST were set in config.sh:
+  FIDS_POST = \"${FIDS_POST}\""
+  fi
   post_orig_fn="${FID}.${post_fn_suffix}"
   post_renamed_fn="${NET}.t${cyc}z.${fid}${post_renamed_fn_suffix}"
   mv_vrfy ${tmp_dir}/${post_orig_fn} ${post_renamed_fn}
   create_symlink_to_file target="${post_renamed_fn}" \
-                         symlink="${FID}${symlink_suffix}" \
+                         symlink="${FID_OUT}${symlink_suffix}" \
                          relative="TRUE"
 done
 
