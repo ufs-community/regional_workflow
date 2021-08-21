@@ -92,6 +92,10 @@ Returning with a nonzero return code.
 ";
     return 1;
   }
+
+  print_info_msg "
+The host is accessible:
+  host = \"$host\""
 #
 #-----------------------------------------------------------------------
 #

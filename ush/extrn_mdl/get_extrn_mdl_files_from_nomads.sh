@@ -151,6 +151,8 @@ Returning with a nonzero return code.
   check_access="${check_access:-TRUE}"
   host_nomads="nomads.ncep.noaa.gov"
   if [ "${check_access}" = "TRUE" ]; then
+    print_info_msg "
+Checking access to NOMADS..."
     check_nomads_access host="${host_nomads}" || { \
       print_info_msg "\
 NOMADS is not accessible from this machine (MACHINE):
@@ -159,6 +161,9 @@ Returning with a nonzero return code.
 ";
       return 1;
     }
+    print_info_msg "
+NOMADS is accessible from this machine (MACHINE):
+  MACHINE = \"$MACHINE\""
   fi
 #
 #-----------------------------------------------------------------------
