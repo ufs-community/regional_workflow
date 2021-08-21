@@ -335,16 +335,17 @@ fids=${POST_FIDS}
 for fid in "${fids[@]}"; do
   FID="${fid^^}"
   if [ "${FID}" = "BGDAWP" ] || [ "${FID}" = "PRSLEV" ]; then
-    FID_OUT="BGDAWQ"
+    fid_out="bgdawp"
   elif [ "${FID}" = "BGRD3D" ] || [ "${FID}" = "NATLEV" ]; then
-    FID_OUT="BGRD3D"
+    fid_out="bgrd3d"
   else
     print_err_msg_exit "\
 The wrong FIDS_POST were set in config.sh:
   FIDS_POST = \"${FIDS_POST}\""
   fi
+  FID_OUT="${fid_out^^}"
   post_orig_fn="${FID}.${post_fn_suffix}"
-  post_renamed_fn="${NET}.t${cyc}z.${fid}${post_renamed_fn_suffix}"
+  post_renamed_fn="${NET}.t${cyc}z.${fid_out}${post_renamed_fn_suffix}"
   mv_vrfy ${tmp_dir}/${post_orig_fn} ${post_renamed_fn}
   create_symlink_to_file target="${post_renamed_fn}" \
                          symlink="${FID_OUT}${symlink_suffix}" \
