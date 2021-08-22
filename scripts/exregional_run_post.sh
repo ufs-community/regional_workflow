@@ -340,8 +340,8 @@ for fid in "${fids[@]}"; do
     fid_out="bgrd3d"
   else
     print_err_msg_exit "\
-The wrong FIDS_POST were set in config.sh:
-  FIDS_POST = \"${FIDS_POST}\""
+The POST_FIDS were NOT set correctly in config.sh:
+  POST_FIDS = \"${POST_FIDS}\""
   fi
   FID_OUT="${fid_out^^}"
   post_orig_fn="${FID}.${post_fn_suffix}"
