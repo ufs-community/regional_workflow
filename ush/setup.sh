@@ -132,147 +132,95 @@ check_var_valid_value "RUN_ENVIR" "valid_vals_RUN_ENVIR"
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that VERBOSE is set to a valid value.
+# Make sure that the various boolean experiment variables are set to 
+# valid values.  Then reset them to either "TRUE" or "FALSE" so we don't 
+# have to consider other valid values later on.
 #
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "VERBOSE" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_VERBOSE}" \
-                             outvarname_boolean="RUN_TASK_VERBOSE"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that USE_CRON_TO_RELAUNCH is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+set_boolean_to_TRUE_or_FALSE boolean_value="$VERBOSE" \
+                             outvarname_boolean="VERBOSE"
+
 check_var_valid_value "USE_CRON_TO_RELAUNCH" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_USE_CRON_TO_RELAUNCH}" \
-                             outvarname_boolean="RUN_TASK_USE_CRON_TO_RELAUNCH"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_MAKE_GRID is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+set_boolean_to_TRUE_or_FALSE boolean_value="${USE_CRON_TO_RELAUNCH}" \
+                             outvarname_boolean="USE_CRON_TO_RELAUNCH"
+
 check_var_valid_value "RUN_TASK_MAKE_GRID" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_MAKE_GRID}" \
+set_boolean_to_TRUE_or_FALSE boolean_value="${RUN_TASK_MAKE_GRID}" \
                              outvarname_boolean="RUN_TASK_MAKE_GRID"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_MAKE_OROG is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+
 check_var_valid_value "RUN_TASK_MAKE_OROG" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_MAKE_OROG}" \
+set_boolean_to_TRUE_or_FALSE boolean_value="${RUN_TASK_MAKE_OROG}" \
                              outvarname_boolean="RUN_TASK_MAKE_OROG"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_MAKE_SFC_CLIMO is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+
 check_var_valid_value "RUN_TASK_MAKE_SFC_CLIMO" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_MAKE_SFC_CLIMO}" \
+set_boolean_to_TRUE_or_FALSE boolean_value="${RUN_TASK_MAKE_SFC_CLIMO}" \
                              outvarname_boolean="RUN_TASK_MAKE_SFC_CLIMO"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_GET_EXTRN_ICS is set to a valid value.  Then
-# reset it to either "TRUE" or "FALSE" so we don't have to consider other 
-# valid values later on.
-#
-#-----------------------------------------------------------------------
-#
+
 check_var_valid_value "RUN_TASK_GET_EXTRN_ICS" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_GET_EXTRN_ICS}" \
+set_boolean_to_TRUE_or_FALSE boolean_value="${RUN_TASK_GET_EXTRN_ICS}" \
                              outvarname_boolean="RUN_TASK_GET_EXTRN_ICS"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_GET_EXTRN_LBCS is set to a valid value.  Then
-# reset it to either "TRUE" or "FALSE" so we don't have to consider other 
-# valid values later on.
-#
-#-----------------------------------------------------------------------
-#
+
 check_var_valid_value "RUN_TASK_GET_EXTRN_LBCS" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_GET_EXTRN_LBCS}" \
+set_boolean_to_TRUE_or_FALSE boolean_value="${RUN_TASK_GET_EXTRN_LBCS}" \
                              outvarname_boolean="RUN_TASK_GET_EXTRN_LBCS"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_RUN_POST is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+
 check_var_valid_value "RUN_TASK_RUN_POST" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_RUN_POST}" \
+set_boolean_to_TRUE_or_FALSE boolean_value="${RUN_TASK_RUN_POST}" \
                              outvarname_boolean="RUN_TASK_RUN_POST"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_VX_GRIDSTAT is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+
 check_var_valid_value "RUN_TASK_VX_GRIDSTAT" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_VX_GRIDSTAT}" \
+set_boolean_to_TRUE_or_FALSE boolean_value="${RUN_TASK_VX_GRIDSTAT}" \
                              outvarname_boolean="RUN_TASK_VX_GRIDSTAT"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_VX_POINTSTAT is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+
 check_var_valid_value "RUN_TASK_VX_POINTSTAT" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_VX_POINTSTAT}" \
+set_boolean_to_TRUE_or_FALSE boolean_value="${RUN_TASK_VX_POINTSTAT}" \
                              outvarname_boolean="RUN_TASK_VX_POINTSTAT"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that DO_SHUM is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+
 check_var_valid_value "DO_SHUM" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_DO_SHUM}" \
-                             outvarname_boolean="RUN_TASK_DO_SHUM"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that DO_SPPT is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+set_boolean_to_TRUE_or_FALSE boolean_value="${DO_SHUM}" \
+                             outvarname_boolean="DO_SHUM"
+
 check_var_valid_value "DO_SPPT" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_DO_SPPT}" \
-                             outvarname_boolean="RUN_TASK_DO_SPPT"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that DO_SKEB is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+set_boolean_to_TRUE_or_FALSE boolean_value="${DO_SPPT}" \
+                             outvarname_boolean="DO_SPPT"
+
 check_var_valid_value "DO_SKEB" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_DO_SKEB}" \
-                             outvarname_boolean="RUN_TASK_DO_SKEB"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that DO_SPP is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+set_boolean_to_TRUE_or_FALSE boolean_value="${DO_SKEB}" \
+                             outvarname_boolean="DO_SKEB"
+
 check_var_valid_value "DO_SPP" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_DO_SPP}" \
-                             outvarname_boolean="RUN_TASK_DO_SPP"
+set_boolean_to_TRUE_or_FALSE boolean_value="${DO_SPP}" \
+                             outvarname_boolean="DO_SPP"
+
+check_var_valid_value "USE_FVCOM" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean_value="${USE_FVCOM}" \
+                             outvarname_boolean="USE_FVCOM"
+
+check_var_valid_value "SUB_HOURLY_POST" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean_value="${SUB_HOURLY_POST}" \
+                             outvarname_boolean="SUB_HOURLY_POST"
+
+check_var_valid_value "USE_CUSTOM_POST_CONFIG_FILE" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean_value="${USE_CUSTOM_POST_CONFIG_FILE}" \
+                             outvarname_boolean="USE_CUSTOM_POST_CONFIG_FILE"
+
+check_var_valid_value "DO_ENSEMBLE" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean_value="${DO_ENSEMBLE}" \
+                             outvarname_boolean="DO_ENSEMBLE"
+
+check_var_valid_value "WRITE_DOPOST" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean_value="${WRITE_DOPOST}" \
+                             outvarname_boolean="WRITE_DOPOST"
+
+check_var_valid_value "QUILTING" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean_value="$QUILTING" \
+                             outvarname_boolean="QUILTING"
+
+check_var_valid_value "PRINT_ESMF" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean_value="${PRINT_ESMF}" \
+                             outvarname_boolean="PRINT_ESMF"
 #
 #-----------------------------------------------------------------------
 #
@@ -305,26 +253,6 @@ N_VAR_SPP=0
 if [ "${DO_SPP}" = "TRUE" ]; then
   N_VAR_SPP=${#SPP_VAR_LIST[@]}
 fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that USE_FVCOM is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "USE_FVCOM" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_USE_FVCOM}" \
-                             outvarname_boolean="RUN_TASK_USE_FVCOM"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that SUB_HOURLY_POST is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "SUB_HOURLY_POST" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_SUB_HOURLY_POST}" \
-                             outvarname_boolean="RUN_TASK_SUB_HOURLY_POST"
 #
 #-----------------------------------------------------------------------
 #
@@ -870,16 +798,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that USE_CUSTOM_POST_CONFIG_FILE is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "USE_CUSTOM_POST_CONFIG_FILE" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_USE_CUSTOM_POST_CONFIG_FILE}" \
-                             outvarname_boolean="RUN_TASK_USE_CUSTOM_POST_CONFIG_FILE"
-#
-#-----------------------------------------------------------------------
-#
 # If using a custom post configuration file, make sure that it exists.
 #
 #-----------------------------------------------------------------------
@@ -1407,17 +1325,13 @@ check_var_valid_value "EXTRN_MDL_DIR_FILE_LAYOUT" \
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that DO_ENSEMBLE is set to a valid value.  Then set the names
-# of the ensemble members.  These will be used to set the ensemble member
-# directories.  Also, set the full path to the FV3 namelist file corresponding
-# to each ensemble member.
+# If doing ensemble forecasts, set the names of the ensemble members.
+# These will be used to set the ensemble member directories.  Also, set 
+# the full path to the FV3 namelist file corresponding to each ensemble 
+# member.
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "DO_ENSEMBLE" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_DO_ENSEMBLE}" \
-                             outvarname_boolean="RUN_TASK_DO_ENSEMBLE"
-
 NDIGITS_ENSMEM_NAMES="0"
 ENSMEM_NAMES=("")
 FV3_NML_ENSMEM_FPS=("")
@@ -2045,19 +1959,13 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that WRITE_DOPOST is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "WRITE_DOPOST" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_WRITE_DOPOST}" \
-                             outvarname_boolean="RUN_TASK_WRITE_DOPOST"
-#
 # If doing inline post (i.e. if WRITE_DOPOST is set to "TRUE"), turn off
 # the RUN_POST_TN task(s) since post will now be performed as part of 
 # the RUN_FCST_TN task.  Also, the workflow is not set up to do inline 
 # post along with sub-hourly post, so if sub_hourly post is turned on, 
 # quit with an appropriate error message.
+#
+#-----------------------------------------------------------------------
 #
 if [ "${WRITE_DOPOST}" = "TRUE" ]; then
   RUN_TASK_RUN_POST="FALSE"
@@ -2066,26 +1974,6 @@ if [ "${WRITE_DOPOST}" = "TRUE" ]; then
 SUB_HOURLY_POST is NOT available with Inline Post yet."
   fi
 fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that QUILTING is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "QUILTING" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_QUILTING}" \
-                             outvarname_boolean="RUN_TASK_QUILTING"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that PRINT_ESMF is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "PRINT_ESMF" "valid_vals_BOOLEAN"
-set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_PRINT_ESMF}" \
-                             outvarname_boolean="RUN_TASK_PRINT_ESMF"
 #
 #-----------------------------------------------------------------------
 #
