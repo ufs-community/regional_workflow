@@ -16,6 +16,7 @@
 #
 #-----------------------------------------------------------------------
 #
+. $USHDIR/extrn_mdl/create_extrn_mdl_var_defns_file.sh
 . $USHDIR/extrn_mdl/get_extrn_mdl_files_from_disk.sh
 . $USHDIR/extrn_mdl/get_extrn_mdl_files_from_noaa_hpss.sh
 . $USHDIR/extrn_mdl/get_extrn_mdl_files_from_nomads.sh
@@ -150,11 +151,11 @@ cdate=$( date --utc --date \
 #
 # If fetching external model files for the purpose of creating lateral
 # boundary conditions (LBCs), set lbc_spec_fhrs to the array of forecast 
-# hours at which the LBCs are to be specified, starting with the 2nd such 
-# time (i.e. the one having array index 1).  We do not include the first 
-# hour (hour 0) because at this initial time, the LBCs are obtained from 
-# the analysis fields provided by the external model (as opposed to a 
-# forecast field).  Note that 
+# hours (of the external model, not of the FV3LAM) at which the LBCs are 
+# to be specified, starting with the 2nd such time (i.e. the one having 
+# array index 1).  We do not include the first hour (hour 0) because at 
+# this initial time, the LBCs are obtained from the analysis fields 
+# provided by the external model (as opposed to a forecast field).
 #
 #-----------------------------------------------------------------------
 #
@@ -373,9 +374,10 @@ done
 #
 #-----------------------------------------------------------------------
 #
-# Create a variable definitions file (in bash syntax) and save in it the
-# values of several external-model-associated variables generated in this
-# script that will be needed by downstream workflow tasks.
+# Call a function to create a variable definitions file (in bash script
+# syntax) and save in it the values of several external-model-associated 
+# variables generated in this script that will be needed by downstream 
+# workflow tasks.
 #
 #-----------------------------------------------------------------------
 #
@@ -385,37 +387,19 @@ elif [ "${ics_or_lbcs}" = "LBCS" ]; then
   var_defns_fn="${EXTRN_MDL_LBCS_VAR_DEFNS_FN}"
 fi
 var_defns_fp="${staging_dir}/${var_defns_fn}"
-check_for_preexist_dir_file "${var_defns_fp}" "delete"
 
-settings="\
-DATA_SRC=\"${data_src}\"
-EXTRN_MDL_CDATE=\"${cdate}\"
-EXTRN_MDL_STAGING_DIR=\"${staging_dir}\"
-EXTRN_MDL_FNS=${fns_str}"
-#
-# If the external model files obtained above were for generating LBCS (as
-# opposed to ICs), then add to the external model variable definitions
-# file the array variable EXTRN_MDL_LBC_SPEC_FHRS containing the forecast
-# hours at which the lateral boundary conditions are specified.
-#
-if [ "${ics_or_lbcs}" = "LBCS" ]; then
-  lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${lbc_spec_fhrs[@]}" )")"
-  settings="$settings
-EXTRN_MDL_LBC_SPEC_FHRS=${lbc_spec_fhrs_str}"
-fi
-
-{ cat << EOM >> "${var_defns_fp}"
-$settings
-EOM
-} || print_err_msg_exit "\
-Heredoc (cat) command to create a variable definitions file associated
-with the external model from which to generate ${ics_or_lbcs} returned with a
-nonzero status.  The full path to this variable definitions file is:
-  var_defns_fp = \"${var_defns_fp}\""
+create_extrn_mdl_var_defns_file \
+  var_defns_fp="${var_defns_fp}" \
+  ics_or_lbcs="${ics_or_lbcs}" \
+  extrn_mdl_cdate="$cdate" \
+  extrn_mdl_staging_dir="${staging_dir}" \
+  extrn_mdl_fns="${fns_str}" \
+  extrn_mdl_lbc_spec_fhrs="${lbc_spec_fhrs_str}"
 #
 #-----------------------------------------------------------------------
 #
-# Restore the shell options saved at the beginning of this script/function.
+# Restore the shell options saved at the beginning of this script or
+# function.
 #
 #-----------------------------------------------------------------------
 #
