@@ -29,7 +29,7 @@ function set_boolean_to_TRUE_or_FALSE() {
 #-----------------------------------------------------------------------
 #
   local valid_args=( \
-    "boolean" \
+    "boolean_value" \
     "outvarname_boolean" \
     )
   process_args valid_args "$@"
@@ -54,11 +54,21 @@ function set_boolean_to_TRUE_or_FALSE() {
 #
 #-----------------------------------------------------------------------
 #
-# Set b to either "TRUE" or "FALSE" depending on the value of the input
-# argument "boolean".
+# Make sure that boolean_value is set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
+  valid_vals_boolean=( "TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no" )
+  check_var_valid_value "boolean_value" "valid_vals_BOOLEAN"
+#
+#-----------------------------------------------------------------------
+#
+# Set b to either "TRUE" or "FALSE" depending on the value of the input
+# argument "boolean_value".
+#
+#-----------------------------------------------------------------------
+#
+  b="${boolean_value}"
   if [ "$b" = "true" ] || [ "$b" = "YES" ] || [ "$b" = "yes" ]; then
     b="TRUE"
   elif [ "$b" = "false" ] || [ "$b" = "NO" ] || [ "$b" = "no" ]; then
