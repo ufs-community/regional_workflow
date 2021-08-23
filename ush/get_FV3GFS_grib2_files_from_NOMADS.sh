@@ -157,9 +157,9 @@ fetch for each cycle time.  Note that:
   or to the array
     ( \"FCST\" \"ANL\" )
   then both analysis and forecast files will be fetched.
-* This is an optional argument.  If it is not specified, it will get 
-  set to the array ( \"ANL\" \"FCST\" ), i.e. both analysis and forecast
-  files will be fetched.
+* This is an optional argument.  If it is not specified in the call to
+  this script, it will get set to the array ( \"ANL\" \"FCST\" ), i.e. 
+  both analysis and forecast files will be fetched.
 * Normally, in the call to this script, file_types should be specified 
   as an array line, e.g.
     file_types='( \"ANL\" )'
@@ -192,8 +192,9 @@ forecast files.  Note that:
 data_basedir:
 The base directory under which the external model files will be stored.
 Note that:
-* This is an optional argument.  If it is not specified, it will get set
-  to \"nomads_data\".
+* This is an optional argument.  If it is not specified in the call to
+  this script (or if it is set to a null string), it will get set to 
+  \"nomads_data\".
 * data_basedir may be set to an absolute or a relative directory.  If 
   relative, it is with respect to the directory in which this script is 
   located.
@@ -215,8 +216,8 @@ external model files.  Note that:
 * The full path to the external model files for a given cycle date and
   time of the form \"YYYYMMDDHH\" (cdate) is given by
     \${data_basedir}/\$cdate/\${data_relbasedir}\"
-* If data_relsubdir is not specified in the call to this script, it will
-  get set to an empty string.
+* If data_relsubdir is not specified in the call to this script (or if 
+  it is set to a null string), it will get set to an empty string.
 
 preexisting_dir_method:
 Method to use to deal with preexisting data directories.  For a given
@@ -396,14 +397,14 @@ The two elements of file_types must be distinct but aren't:
 ${how_to_see_usage_str}"
 fi
 #
-# If data_basedir is not set in the call to this script (or is set to a 
-# null string), reset it to its default value.
+# If data_basedir is not (or if it is set to a null string), reset it to 
+# its default value.
 #
 data_basedir=${data_basedir:-"nomads_data"}
 #
-# If preexisting_dir_method is not set in the call to this script (or 
-# is set to a null string), reset it its default value.  Then ensure 
-# that it is set to a valid value.
+# If preexisting_dir_method is not set (or if is set to a null string), 
+# reset it to its default value.  Then ensure that it is set to a valid 
+# value.
 #
 preexisting_dir_method=${preexisting_dir_method:-"none"}
 check_var_valid_value "preexisting_dir_method" "valid_vals_PREEXISTING_DIR_METHOD" 
