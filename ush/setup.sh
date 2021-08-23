@@ -136,19 +136,9 @@ check_var_valid_value "RUN_ENVIR" "valid_vals_RUN_ENVIR"
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "VERBOSE" "valid_vals_VERBOSE"
-#
-# Set VERBOSE to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-VERBOSE=${VERBOSE^^}
-if [ "$VERBOSE" = "TRUE" ] || \
-   [ "$VERBOSE" = "YES" ]; then
-  VERBOSE="TRUE"
-elif [ "$VERBOSE" = "FALSE" ] || \
-     [ "$VERBOSE" = "NO" ]; then
-  VERBOSE="FALSE"
-fi
+check_var_valid_value "VERBOSE" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_VERBOSE}" \
+                             outvarname_boolean="RUN_TASK_VERBOSE"
 #
 #-----------------------------------------------------------------------
 #
@@ -156,19 +146,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "USE_CRON_TO_RELAUNCH" "valid_vals_USE_CRON_TO_RELAUNCH"
-#
-# Set USE_CRON_TO_RELAUNCH to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-USE_CRON_TO_RELAUNCH=${USE_CRON_TO_RELAUNCH^^}
-if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ] || \
-   [ "${USE_CRON_TO_RELAUNCH}" = "YES" ]; then
-  USE_CRON_TO_RELAUNCH="TRUE"
-elif [ "${USE_CRON_TO_RELAUNCH}" = "FALSE" ] || \
-     [ "${USE_CRON_TO_RELAUNCH}" = "NO" ]; then
-  USE_CRON_TO_RELAUNCH="FALSE"
-fi
+check_var_valid_value "USE_CRON_TO_RELAUNCH" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_USE_CRON_TO_RELAUNCH}" \
+                             outvarname_boolean="RUN_TASK_USE_CRON_TO_RELAUNCH"
 #
 #-----------------------------------------------------------------------
 #
@@ -176,19 +156,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_MAKE_GRID" "valid_vals_RUN_TASK_MAKE_GRID"
-#
-# Set RUN_TASK_MAKE_GRID to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
-#
-RUN_TASK_MAKE_GRID=${RUN_TASK_MAKE_GRID^^}
-if [ "${RUN_TASK_MAKE_GRID}" = "TRUE" ] || \
-   [ "${RUN_TASK_MAKE_GRID}" = "YES" ]; then
-  RUN_TASK_MAKE_GRID="TRUE"
-elif [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ] || \
-     [ "${RUN_TASK_MAKE_GRID}" = "NO" ]; then
-  RUN_TASK_MAKE_GRID="FALSE"
-fi
+check_var_valid_value "RUN_TASK_MAKE_GRID" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_MAKE_GRID}" \
+                             outvarname_boolean="RUN_TASK_MAKE_GRID"
 #
 #-----------------------------------------------------------------------
 #
@@ -196,19 +166,19 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_MAKE_OROG" "valid_vals_RUN_TASK_MAKE_OROG"
+check_var_valid_value "RUN_TASK_MAKE_OROG" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_MAKE_OROG}" \
+                             outvarname_boolean="RUN_TASK_MAKE_OROG"
 #
-# Set RUN_TASK_MAKE_OROG to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
+#-----------------------------------------------------------------------
 #
-RUN_TASK_MAKE_OROG=${RUN_TASK_MAKE_OROG^^}
-if [ "${RUN_TASK_MAKE_OROG}" = "TRUE" ] || \
-   [ "${RUN_TASK_MAKE_OROG}" = "YES" ]; then
-  RUN_TASK_MAKE_OROG="TRUE"
-elif [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ] || \
-     [ "${RUN_TASK_MAKE_OROG}" = "NO" ]; then
-  RUN_TASK_MAKE_OROG="FALSE"
-fi
+# Make sure that RUN_TASK_MAKE_SFC_CLIMO is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_MAKE_SFC_CLIMO" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_MAKE_SFC_CLIMO}" \
+                             outvarname_boolean="RUN_TASK_MAKE_SFC_CLIMO"
 #
 #-----------------------------------------------------------------------
 #
@@ -218,7 +188,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_GET_EXTRN_ICS" "valid_vals_RUN_TASK_GET_EXTRN_ICS"
+check_var_valid_value "RUN_TASK_GET_EXTRN_ICS" "valid_vals_BOOLEAN"
 set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_GET_EXTRN_ICS}" \
                              outvarname_boolean="RUN_TASK_GET_EXTRN_ICS"
 #
@@ -230,30 +200,9 @@ set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_GET_EXTRN_ICS}" \
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_GET_EXTRN_LBCS" "valid_vals_RUN_TASK_GET_EXTRN_LBCS"
+check_var_valid_value "RUN_TASK_GET_EXTRN_LBCS" "valid_vals_BOOLEAN"
 set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_GET_EXTRN_LBCS}" \
                              outvarname_boolean="RUN_TASK_GET_EXTRN_LBCS"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_MAKE_SFC_CLIMO is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value \
-  "RUN_TASK_MAKE_SFC_CLIMO" "valid_vals_RUN_TASK_MAKE_SFC_CLIMO"
-#
-# Set RUN_TASK_MAKE_SFC_CLIMO to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-RUN_TASK_MAKE_SFC_CLIMO=${RUN_TASK_MAKE_SFC_CLIMO^^}
-if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] || \
-   [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "YES" ]; then
-  RUN_TASK_MAKE_SFC_CLIMO="TRUE"
-elif [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ] || \
-     [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "NO" ]; then
-  RUN_TASK_MAKE_SFC_CLIMO="FALSE"
-fi
 #
 #-----------------------------------------------------------------------
 #
@@ -261,20 +210,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value \
-  "RUN_TASK_RUN_POST" "valid_vals_RUN_TASK_RUN_POST"
-#
-# Set RUN_TASK_RUN_POST to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-RUN_TASK_RUN_POST=${RUN_TASK_RUN_POST^^}
-if [ "${RUN_TASK_RUN_POST}" = "TRUE" ] || \
-   [ "${RUN_TASK_RUN_POST}" = "YES" ]; then
-  RUN_TASK_RUN_POST="TRUE"
-elif [ "${RUN_TASK_RUN_POST}" = "FALSE" ] || \
-     [ "${RUN_TASK_RUN_POST}" = "NO" ]; then
-  RUN_TASK_RUN_POST="FALSE"
-fi
+check_var_valid_value "RUN_TASK_RUN_POST" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_RUN_POST}" \
+                             outvarname_boolean="RUN_TASK_RUN_POST"
 #
 #-----------------------------------------------------------------------
 #
@@ -282,19 +220,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_VX_GRIDSTAT" "valid_vals_RUN_TASK_VX_GRIDSTAT"
-#
-# Set RUN_TASK_VX_GRIDSTAT to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
-#
-RUN_TASK_VX_GRIDSTAT=${RUN_TASK_VX_GRIDSTAT^^}
-if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
-   [ "${RUN_TASK_VX_GRIDSTAT}" = "YES" ]; then
-  RUN_TASK_VX_GRIDSTAT="TRUE"
-elif [ "${RUN_TASK_VX_GRIDSTAT}" = "FALSE" ] || \
-     [ "${RUN_TASK_VX_GRIDSTAT}" = "NO" ]; then
-  RUN_TASK_VX_GRIDSTAT="FALSE"
-fi
+check_var_valid_value "RUN_TASK_VX_GRIDSTAT" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_VX_GRIDSTAT}" \
+                             outvarname_boolean="RUN_TASK_VX_GRIDSTAT"
 #
 #-----------------------------------------------------------------------
 #
@@ -302,19 +230,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_VX_POINTSTAT" "valid_vals_RUN_TASK_VX_POINTSTAT"
-#
-# Set RUN_TASK_VX_POINTSTAT to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
-#
-RUN_TASK_VX_POINTSTAT=${RUN_TASK_VX_POINTSTAT^^}
-if [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ] || \
-   [ "${RUN_TASK_VX_POINTSTAT}" = "YES" ]; then
-  RUN_TASK_VX_POINTSTAT="TRUE"
-elif [ "${RUN_TASK_VX_POINTSTAT}" = "FALSE" ] || \
-     [ "${RUN_TASK_VX_POINTSTAT}" = "NO" ]; then
-  RUN_TASK_VX_POINTSTAT="FALSE"
-fi
+check_var_valid_value "RUN_TASK_VX_POINTSTAT" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_VX_POINTSTAT}" \
+                             outvarname_boolean="RUN_TASK_VX_POINTSTAT"
 #
 #-----------------------------------------------------------------------
 #
@@ -322,19 +240,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "DO_SHUM" "valid_vals_DO_SHUM"
-#
-# Set DO_SHUM to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-DO_SHUM=${DO_SHUM^^}
-if [ "${DO_SHUM}" = "TRUE" ] || \
-   [ "${DO_SHUM}" = "YES" ]; then
-  DO_SHUM="TRUE"
-elif [ "${DO_SHUM}" = "FALSE" ] || \
-     [ "${DO_SHUM}" = "NO" ]; then
-  DO_SHUM="FALSE"
-fi
+check_var_valid_value "DO_SHUM" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_DO_SHUM}" \
+                             outvarname_boolean="RUN_TASK_DO_SHUM"
 #
 #-----------------------------------------------------------------------
 #
@@ -342,19 +250,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "DO_SPPT" "valid_vals_DO_SPPT"
-#
-# Set DO_SPPT to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-DO_SPPT=${DO_SPPT^^}
-if [ "${DO_SPPT}" = "TRUE" ] || \
-   [ "${DO_SPPT}" = "YES" ]; then
-  DO_SPPT="TRUE"
-elif [ "${DO_SPPT}" = "FALSE" ] || \
-     [ "${DO_SPPT}" = "NO" ]; then
-  DO_SPPT="FALSE"
-fi
+check_var_valid_value "DO_SPPT" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_DO_SPPT}" \
+                             outvarname_boolean="RUN_TASK_DO_SPPT"
 #
 #-----------------------------------------------------------------------
 #
@@ -362,19 +260,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "DO_SKEB" "valid_vals_DO_SKEB"
-#
-# Set DO_SKEB to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-DO_SKEB=${DO_SKEB^^}
-if [ "${DO_SKEB}" = "TRUE" ] || \
-   [ "${DO_SKEB}" = "YES" ]; then
-  DO_SKEB="TRUE"
-elif [ "${DO_SKEB}" = "FALSE" ] || \
-     [ "${DO_SKEB}" = "NO" ]; then
-  DO_SKEB="FALSE"
-fi
+check_var_valid_value "DO_SKEB" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_DO_SKEB}" \
+                             outvarname_boolean="RUN_TASK_DO_SKEB"
 #
 #-----------------------------------------------------------------------
 #
@@ -382,19 +270,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "DO_SPP" "valid_vals_DO_SPP"
-#
-# Set DO_SPP to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-DO_SPP=${DO_SPP^^}
-if [ "${DO_SPP}" = "TRUE" ] || \
-   [ "${DO_SPP}" = "YES" ]; then
-  DO_SPP="TRUE"
-elif [ "${DO_SPP}" = "FALSE" ] || \
-     [ "${DO_SPP}" = "NO" ]; then
-  DO_SPP="FALSE"
-fi
+check_var_valid_value "DO_SPP" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_DO_SPP}" \
+                             outvarname_boolean="RUN_TASK_DO_SPP"
 #
 #-----------------------------------------------------------------------
 #
@@ -430,45 +308,23 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that USE_FVCOM is set to a valid value and assign directory
-# and file names.
+# Make sure that USE_FVCOM is set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
-#
-# Set USE_FVCOM to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-USE_FVCOM=${USE_FVCOM^^}
-if [ "$USE_FVCOM" = "TRUE" ] || \
-   [ "$USE_FVCOM" = "YES" ]; then
-  USE_FVCOM="TRUE"
-elif [ "$USE_FVCOM" = "FALSE" ] || \
-     [ "$USE_FVCOM" = "NO" ]; then
-  USE_FVCOM="FALSE"
-fi
+check_var_valid_value "USE_FVCOM" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_USE_FVCOM}" \
+                             outvarname_boolean="RUN_TASK_USE_FVCOM"
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that SUB_HOURLY_POST and DT_SUBHOURLY_POST_MNTS are set to 
-# valid values.
+# Make sure that SUB_HOURLY_POST is set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "SUB_HOURLY_POST" "valid_vals_SUB_HOURLY_POST"
-#
-# Set SUB_HOURLY_POST to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-SUB_HOURLY_POST=${SUB_HOURLY_POST^^}
-if [ "${SUB_HOURLY_POST}" = "TRUE" ] || \
-   [ "${SUB_HOURLY_POST}" = "YES" ]; then
-  SUB_HOURLY_POST="TRUE"
-elif [ "${SUB_HOURLY_POST}" = "FALSE" ] || \
-     [ "${SUB_HOURLY_POST}" = "NO" ]; then
-  SUB_HOURLY_POST="FALSE"
-fi
+check_var_valid_value "SUB_HOURLY_POST" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_SUB_HOURLY_POST}" \
+                             outvarname_boolean="RUN_TASK_SUB_HOURLY_POST"
 #
 #-----------------------------------------------------------------------
 #
@@ -1018,20 +874,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value \
-  "USE_CUSTOM_POST_CONFIG_FILE" "valid_vals_USE_CUSTOM_POST_CONFIG_FILE"
-#
-# Set USE_CUSTOM_POST_CONFIG_FILE to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-USE_CUSTOM_POST_CONFIG_FILE=${USE_CUSTOM_POST_CONFIG_FILE^^}
-if [ "$USE_CUSTOM_POST_CONFIG_FILE" = "TRUE" ] || \
-   [ "$USE_CUSTOM_POST_CONFIG_FILE" = "YES" ]; then
-  USE_CUSTOM_POST_CONFIG_FILE="TRUE"
-elif [ "$USE_CUSTOM_POST_CONFIG_FILE" = "FALSE" ] || \
-     [ "$USE_CUSTOM_POST_CONFIG_FILE" = "NO" ]; then
-  USE_CUSTOM_POST_CONFIG_FILE="FALSE"
-fi
+check_var_valid_value "USE_CUSTOM_POST_CONFIG_FILE" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_USE_CUSTOM_POST_CONFIG_FILE}" \
+                             outvarname_boolean="RUN_TASK_USE_CUSTOM_POST_CONFIG_FILE"
 #
 #-----------------------------------------------------------------------
 #
@@ -1569,19 +1414,9 @@ check_var_valid_value "EXTRN_MDL_DIR_FILE_LAYOUT" \
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "DO_ENSEMBLE" "valid_vals_DO_ENSEMBLE"
-#
-# Set DO_ENSEMBLE to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-DO_ENSEMBLE=${DO_ENSEMBLE^^}
-if [ "$DO_ENSEMBLE" = "TRUE" ] || \
-   [ "$DO_ENSEMBLE" = "YES" ]; then
-  DO_ENSEMBLE="TRUE"
-elif [ "$DO_ENSEMBLE" = "FALSE" ] || \
-     [ "$DO_ENSEMBLE" = "NO" ]; then
-  DO_ENSEMBLE="FALSE"
-fi
+check_var_valid_value "DO_ENSEMBLE" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_DO_ENSEMBLE}" \
+                             outvarname_boolean="RUN_TASK_DO_ENSEMBLE"
 
 NDIGITS_ENSMEM_NAMES="0"
 ENSMEM_NAMES=("")
@@ -2214,28 +2049,22 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "WRITE_DOPOST" "valid_vals_WRITE_DOPOST"
+check_var_valid_value "WRITE_DOPOST" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_WRITE_DOPOST}" \
+                             outvarname_boolean="RUN_TASK_WRITE_DOPOST"
 #
-# Set WRITE_DOPOST to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
+# If doing inline post (i.e. if WRITE_DOPOST is set to "TRUE"), turn off
+# the RUN_POST_TN task(s) since post will now be performed as part of 
+# the RUN_FCST_TN task.  Also, the workflow is not set up to do inline 
+# post along with sub-hourly post, so if sub_hourly post is turned on, 
+# quit with an appropriate error message.
 #
-WRITE_DOPOST=${WRITE_DOPOST^^}
-if [ "$WRITE_DOPOST" = "TRUE" ] || \
-   [ "$WRITE_DOPOST" = "YES" ]; then
-  WRITE_DOPOST="TRUE"
-
-# Turn off run_post
+if [ "${WRITE_DOPOST}" = "TRUE" ]; then
   RUN_TASK_RUN_POST="FALSE"
-
-# Check if SUB_HOURLY_POST is on
   if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
     print_err_msg_exit "\
 SUB_HOURLY_POST is NOT available with Inline Post yet."
   fi
-
-elif [ "$WRITE_DOPOST" = "FALSE" ] || \
-     [ "$WRITE_DOPOST" = "NO" ]; then
-  WRITE_DOPOST="FALSE"
 fi
 #
 #-----------------------------------------------------------------------
@@ -2244,19 +2073,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "QUILTING" "valid_vals_QUILTING"
-#
-# Set QUILTING to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-QUILTING=${QUILTING^^}
-if [ "$QUILTING" = "TRUE" ] || \
-   [ "$QUILTING" = "YES" ]; then
-  QUILTING="TRUE"
-elif [ "$QUILTING" = "FALSE" ] || \
-     [ "$QUILTING" = "NO" ]; then
-  QUILTING="FALSE"
-fi
+check_var_valid_value "QUILTING" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_QUILTING}" \
+                             outvarname_boolean="RUN_TASK_QUILTING"
 #
 #-----------------------------------------------------------------------
 #
@@ -2264,19 +2083,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "PRINT_ESMF" "valid_vals_PRINT_ESMF"
-#
-# Set PRINT_ESMF to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-PRINT_ESMF=${PRINT_ESMF^^}
-if [ "${PRINT_ESMF}" = "TRUE" ] || \
-   [ "${PRINT_ESMF}" = "YES" ]; then
-  PRINT_ESMF="TRUE"
-elif [ "${PRINT_ESMF}" = "FALSE" ] || \
-     [ "${PRINT_ESMF}" = "NO" ]; then
-  PRINT_ESMF="FALSE"
-fi
+check_var_valid_value "PRINT_ESMF" "valid_vals_BOOLEAN"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_PRINT_ESMF}" \
+                             outvarname_boolean="RUN_TASK_PRINT_ESMF"
 #
 #-----------------------------------------------------------------------
 #
