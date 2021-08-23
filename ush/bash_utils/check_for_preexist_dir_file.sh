@@ -84,7 +84,7 @@ where the arguments are defined as follows:
 #
 #-----------------------------------------------------------------------
 #
-  local valid_vals_method=( "delete" "rename" "quit" )
+  local valid_vals_method=( "delete" "rename" "quit" "none" )
   check_var_valid_value "method" "valid_vals_method"
 #
 #-----------------------------------------------------------------------
@@ -106,7 +106,6 @@ where the arguments are defined as follows:
 #-----------------------------------------------------------------------
 #
     "delete")
-
       rm_vrfy -rf "${dir_or_file}"
       ;;
 #
@@ -118,7 +117,6 @@ where the arguments are defined as follows:
 #-----------------------------------------------------------------------
 #
     "rename")
-
       local i=1
       local old_indx=$( printf "%03d" "$i" )
       local old_dir_or_file="${dir_or_file}_old${old_indx}"
@@ -150,10 +148,18 @@ Moving (renaming) preexisting directory or file to:
 #-----------------------------------------------------------------------
 #
     "quit")
-
       print_err_msg_exit "\
 Specified directory or file (dir_or_file) already exists:
   dir_or_file = \"${dir_or_file}\""
+      ;;
+#
+#-----------------------------------------------------------------------
+#
+# If method is set to "none", take no action.
+#
+#-----------------------------------------------------------------------
+#
+    "none")
       ;;
 
     esac
@@ -170,5 +176,3 @@ Specified directory or file (dir_or_file) already exists:
   { restore_shell_opts; } > /dev/null 2>&1
 
 }
-
-
