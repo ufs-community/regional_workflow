@@ -56,7 +56,7 @@ function set_extrn_mdl_arcv_file_dir_names() {
 #
 #-----------------------------------------------------------------------
 #
-  print_input_args valid_args
+  print_input_args "valid_args"
 #
 #-----------------------------------------------------------------------
 #
