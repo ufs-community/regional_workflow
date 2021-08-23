@@ -65,7 +65,7 @@ ushdir="$homerrfs/ush"
 #-----------------------------------------------------------------------
 #
 # Save current shell options (in a global array).  Then set new options
-# for this script/function.
+# for this script or function.
 #
 #-----------------------------------------------------------------------
 #
@@ -84,8 +84,10 @@ Usage:
     machine=... \\
     all_cdates=... \\
     [file_types=...] \\
+    lbc_spec_fhrs=... \\
     [data_basedir=...] \\
-    lbc_spec_fhrs=...
+    [data_relsubdir=...] \\
+    [preexisting_dir_method=...]
 
 The arguments in brackets are optional.  Examples:
 
@@ -104,14 +106,16 @@ The arguments in brackets are optional.  Examples:
 
 2) On Cheyenne, to fetch just the analysis files for the cycles starting 
    at 2021081500 and 2021081600 and place them in the subdirectories 
-   \"./my_data/2021081500\" and \"./my_data/2021081600\", respectively, 
-   under the directory in which this script is located, use
+   \"./my_data/2021081500/analysis\" and \"./my_data/2021081600/analysis\", 
+   respectively, under the directory in which this script is located, 
+   use
 
   ./${scrfunc_fn} \\
     machine=\"cheyenne\" \\
     all_cdates='( \"2021081500\" \"2021081600\" )' \\
+    file_types=\"ANL\" \\
     data_basedir=\"./my_data\" \\
-    file_types=\"ANL\"
+    data_relsubir=\"analysis\" 
 
 The arguments are defined as follows:
 
@@ -129,7 +133,7 @@ for which to fetch files.  Note that:
   YYYYY is the four-digit year, MM is the two-digit month, DD is the 
   two-digit day, and HH is the two-digit hour of the cycle's starting 
   date and time.  
-* Normally, in the call to this function, all_cdates should be specified 
+* Normally, in the call to this script, all_cdates should be specified 
   as an array as follows:
     all_cdates='( \"cdate1\" \"cdate2\" ... )'
   However, if the file(s) for only one cycle time are to be fetched, 
@@ -156,7 +160,7 @@ fetch for each cycle time.  Note that:
 * This is an optional argument.  If it is not specified, it will get 
   set to the array ( \"ANL\" \"FCST\" ), i.e. both analysis and forecast
   files will be fetched.
-* Normally, in the call to this function, file_types should be specified 
+* Normally, in the call to this script, file_types should be specified 
   as an array line, e.g.
     file_types='( \"ANL\" )'
   or
@@ -164,6 +168,26 @@ fetch for each cycle time.  Note that:
   However, if only one type of file is to be fetched, it may be specified
   as a scalar, e.g.
     file_types=\"FCST\"
+
+lbc_spec_fhrs:
+Array containing the forecat hours for which to fetch external model 
+forecast files.  Note that:
+* lbc_spec_fhrs must be specified if file_types contains the element 
+  \"FCST\" or if file_types is not specified in the call to this script
+  (because in that case, file_types will get set to a default value that 
+  includes \"FCST\").
+* lbc_spec_fhrs does not need to be specified if file_types is set in
+  the call to this script to a value that does not contain the element 
+  \"FCST\", i.e. if file_types is set as
+    file_types='( \"ANL\" )' 
+  or
+    file_types=\"ANL\" 
+* Normally, in the call to this script, lbc_spec_fhrs should be specified 
+  as an array, e.g.
+    lbc_spec_fhrs='( \"1\" \"2\" ... )'
+  However, if the forecast file(s) are to be fetched for only a single 
+  hour, it may be specified as a scalar, e.g.
+    lbc_spec_fhrs=\"2\"
 
 data_basedir:
 The base directory under which the external model files will be stored.
@@ -173,34 +197,49 @@ Note that:
 * data_basedir may be set to an absolute or a relative directory.  If 
   relative, it is with respect to the directory in which this script is 
   located.
-* If the directory that data_basedir is set to does not already exist, 
-  it will be created.  If it does exist, the existing one will be renamed 
-  by appending to its name the string \"_oldNNN\", where NNN is a 3-digit 
-  integer, e.g. \"_old003\".
-* A separate subdirectory with a name of the form \"YYYYMMDDHH\" will 
-  be created under this base directory for each cycle time specified 
-  in all_cdates, and the external model files for each cycle will be 
-  placed in the corresponding subdirectory.  
+* A subdirectory with a relative path of
+    \$cdate/\${data_relbasedir}\"
+  will be created under this base directory for each cycle time (cdate) 
+  specified in all_cdates, and the external model files for the cycle
+  will be placed in this subdirectory.  Here, cdate is the starting date 
+  and time of the cycle (in the form \"YYYYMMDDHH\" described above), 
+  and data_relsubdir is a cycle-independent relative path specified as 
+  an argument to this script.  Thus, the full path to the external model
+  files for the cycle will be
+    \${data_basedir}/\$cdate/\${data_relbasedir}\"
 
-lbc_spec_fhrs:
-Array containing the forecat hours for which to fetch external model 
-forecast files.  Note that:
-* lbc_spec_fhrs must be specified if file_types contains the element 
-  \"FCST\" or if file_types is not specified in the call to this function
-  (because in that case, file_types will get set to a default value that 
-  includes \"FCST\").
-* lbc_spec_fhrs does not need to be specified if file_types is set in
-  the call to this function to a value that does not contain the element 
-  \"FCST\", i.e. if file_types is set as
-    file_types='( \"ANL\" )' 
-  or
-    file_types=\"ANL\" 
-* Normally, in the call to this function, lbc_spec_fhrs should be specified 
-  as an array, e.g.
-    lbc_spec_fhrs='( \"1\" \"2\" ... )'
-  However, if the forecast file(s) are to be fetched for only a single 
-  hour, it may be specified as a scalar, e.g.
-    lbc_spec_fhrs=\"2\""
+data_relsubdir:
+The relative path to append to each cycle date and time to obtain the 
+relative directory (with respect to data_basedir) in which to place the
+external model files.  Note that:
+* The full path to the external model files for a given cycle date and
+  time of the form \"YYYYMMDDHH\" (cdate) is given by
+    \${data_basedir}/\$cdate/\${data_relbasedir}\"
+* If data_relsubdir is not specified in the call to this script, it will
+  get set to an empty string.
+
+preexisting_dir_method:
+Method to use to deal with preexisting data directories.  For a given
+cycle, the absolute path to the directory in which the external files
+will be saved is
+    \${data_basedir}/\$cdate/\${data_relbasedir}\"
+Note that:
+* If preexisting_dir_method is not specified in the call to this script
+  (or if it set to a null string), it will get set to \"none\".  
+* Valid (and non-empty) values for preexisting_dir_method are:
+    $( printf "\"%s\" " "${valid_vals_PREEXISTING_DIR_METHOD[@]}" )
+  The behavior each of these elicits is:
+  * \"delete\":
+    Delete the preexisting directory.
+  * \"rename\":
+    Rename the preexisting directory by appending to its name the string 
+    \"_oldNNN\", where NNN is a 3-digit integer, e.g. \"_old003\".
+  * \"quit\":
+    Exit the script.
+  * \"none\":
+    Do nothing." || \
+print_err_msg_exit "\
+Something went wrong while setting the variable \"usage_str\"."
 #
 #-----------------------------------------------------------------------
 #
@@ -228,9 +267,10 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Specify the set of valid argument names for this script/function.  Then
-# process the arguments provided to this script/function (which should
-# consist of a set of name-value pairs of the form arg1="value1", etc).
+# Specify the set of valid argument names for this script or function.  
+# Then process the arguments provided to this script or function (which 
+# should consist of a set of name-value pairs of the form arg1="value1", 
+# etc).
 #
 #-----------------------------------------------------------------------
 #
@@ -238,8 +278,10 @@ valid_args=( \
   "machine" \
   "all_cdates" \
   "file_types" \
-  "data_basedir" \
   "lbc_spec_fhrs" \
+  "data_basedir" \
+  "data_relsubdir" \
+  "preexisting_dir_method" \
   )
 process_args valid_args "$@"
 #
@@ -272,8 +314,8 @@ to get help on usage."
 #
 # Certain arguments that are assumed to be arrays in the code below are
 # (for convenience) allowed to be specified as scalars in the call to 
-# this function if they consist of a single element.  If necessary, 
-# convert any such arguments to arrays.
+# this script if they consist of a single element.  If necessary, convert 
+# any such arguments to arrays.
 #
 is_array "all_cdates" || all_cdates=( "${all_cdates}" )
 is_array "file_types" || file_types=( "${file_types}" )
@@ -354,13 +396,17 @@ The two elements of file_types must be distinct but aren't:
 ${how_to_see_usage_str}"
 fi
 #
-# If data_basedir is not set in the call to this function (or is set 
-# to a null string), reset it to its default value.  Then check if an 
-# identically named directory already exists and if so, move (rename) 
-# it.
+# If data_basedir is not set in the call to this script (or is set to a 
+# null string), reset it to its default value.
 #
-data_basedir="${data_basedir:-nomads_data}"
-check_for_preexist_dir_file "${data_basedir}" "rename"
+data_basedir=${data_basedir:-"nomads_data"}
+#
+# If preexisting_dir_method is not set in the call to this script (or 
+# is set to a null string), reset it its default value.  Then ensure 
+# that it is set to a valid value.
+#
+preexisting_dir_method=${preexisting_dir_method:-"none"}
+check_var_valid_value "preexisting_dir_method" "valid_vals_PREEXISTING_DIR_METHOD" 
 #
 # If forecast files are to be fetched, make sure that lbc_spec_fhrs is 
 # specified.
@@ -371,14 +417,14 @@ if is_element_of "file_types" "FCST"; then
 The set of forecast hours (lbc_spec_fhrs) for which to fetch forecast 
 files cannot be empty when the array argument file_types contains the
 element \"FCST\" or when file_types is not specified in the call to 
-this function (in which case both analysis and forecast files will be 
+this script (in which case both analysis and forecast files will be 
 fetched):
   file_types = ${file_types_str} 
 ${how_to_see_usage_str}"
   fi
 fi
 #
-# If lbc_spec_fhrs is specified in the call to this function (to a non-
+# If lbc_spec_fhrs is specified in the call to this script (to a non-
 # empty value), make sure that each of its elements consists of only 
 # digits.
 # 
@@ -438,8 +484,15 @@ FV3GFS_FILE_FMT_LBCS="grib2"
 #
 #-----------------------------------------------------------------------
 #
+print_info_msg "
+Checking access to NOMADS..."
+
 check_nomads_access || print_err_msg_exit "\
 NOMADS is not accessible from this machine (MACHINE):
+  MACHINE = \"$MACHINE\""
+
+print_info_msg "
+NOMADS is accessible from the this machine (MACHINE):
   MACHINE = \"$MACHINE\""
 #
 #-----------------------------------------------------------------------
@@ -466,10 +519,23 @@ Attempting to fetch external model ${file_type} file(s) from NOMADS for:
   cdate = \"$cdate\"
 "
 #
-# Create the directory in which the external model files for this cycle
-# will be saved.
+# Create the full path to the directory in which the external model files 
+# for this cycle will be placed.  Then, if preexisting_dir_method is not
+# set to a null string, check if an identically named directory already 
+# exists and if so, deal with it as specified by preexisting_dir_method.  
+# Finally, create the directory.
 #
-    staging_dir="${data_basedir}/$cdate"
+# Note that the bash parameter expansion
+#
+#   ${data_relsubdir:+/${data_relsubdir}}
+#
+# evaluates to a null string if data_relsubdir is null or unset, and it
+# evaluates to the string "/${data_relsubdir}" if data_relsubdir is set.
+#
+    staging_dir="${data_basedir}/$cdate${data_relsubdir:+/${data_relsubdir}}"
+    if [ ! -z "${preexisting_dir_method}" ]; then
+      check_for_preexist_dir_file "${data_basedir}" "${preexisting_dir_method}"
+    fi
     mkdir_vrfy -p "${staging_dir}"
 #
 # Get the names of the external modle files on NOMADS (in __fns).
