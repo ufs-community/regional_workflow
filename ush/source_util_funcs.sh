@@ -198,6 +198,15 @@ function source_util_funcs() {
 #-----------------------------------------------------------------------
 #
   . ${bashutils_dir}/parse_cdate.sh
+#
+#-----------------------------------------------------------------------
+#
+# Source the file containing the function that ensures that a Boolean
+# variable is set to either "TRUE" or "FALSE".
+#
+#-----------------------------------------------------------------------
+#
+  . ${bashutils_dir}/set_boolean_to_TRUE_or_FALSE.sh
 
 }
 source_util_funcs
