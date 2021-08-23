@@ -493,13 +493,14 @@ NOMADS is not accessible from this machine (MACHINE):
   MACHINE = \"$MACHINE\""
 
 print_info_msg "
-NOMADS is accessible from the this machine (MACHINE):
+NOMADS is accessible from this machine (MACHINE):
   MACHINE = \"$MACHINE\""
 #
 #-----------------------------------------------------------------------
 #
-# Loop over all specified cycle times and try to get the external model 
-# files for each.
+# Loop over all specified cycle times and file types (analysis and 
+# forecast) and try to get the external model files for each such 
+# combination.
 #
 #-----------------------------------------------------------------------
 #
