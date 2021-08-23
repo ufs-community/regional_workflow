@@ -1213,7 +1213,7 @@ VX_POINTSTAT_TN="run_pointstatvx"
 #-----------------------------------------------------------------------
 #
 # Set flags (and related directories) that determine whether various
-# workflow tasks should be run.  Note that the MAKE_GRID_TN, MAKE_OROG_TN, 
+# workflow tasks should be run.  Note that MAKE_GRID_TN, MAKE_OROG_TN, 
 # and MAKE_SFC_CLIMO_TN are all cycle-independent tasks, i.e. if they 
 # are to be run, they do so only once at the beginning of the workflow 
 # before any cycles are run.  Definitions:
@@ -1241,6 +1241,12 @@ VX_POINTSTAT_TN="run_pointstatvx"
 # SFC_CLIMO_DIR:
 # Same as GRID_DIR but for the MAKE_SFC_CLIMO_TN task.
 #
+# RUN_TASK_GET_EXTRN_ICS:
+# Flag that determines whether the GET_EXTRN_ICS_TN task is to be run.
+#
+# RUN_TASK_GET_EXTRN_LBCS:
+# Flag that determines whether the GET_EXTRN_LBCS_TN task is to be run.
+#
 # RUN_TASK_RUN_POST:
 # Flag that determines whether the RUN_POST_TN task is to be run.
 # 
@@ -1262,6 +1268,10 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
+
+RUN_TASK_GET_EXTRN_ICS="TRUE"
+
+RUN_TASK_GET_EXTRN_LBCS="TRUE"
 
 RUN_TASK_RUN_POST="TRUE"
 
@@ -1306,15 +1316,16 @@ SFC_CLIMO_FIELDS=( \
 # task (orog.x and shave.x). Can be the same as FIXgsm.
 #
 # SFC_CLIMO_INPUT_DIR:
-# The location on disk of the static surface climatology input fields, used by 
-# sfc_climo_gen. These files are only used if RUN_TASK_MAKE_SFC_CLIMO=TRUE
+# The location on disk of the static surface climatology input fields 
+# used by the sfc_climo_gen code (called by the MAKE_SFC_CLIMO_TN task).
+# These files are only used if RUN_TASK_MAKE_SFC_CLIMO is set to "TRUE".
 #
 # FNGLAC, ..., FNMSKH:
 # Names of (some of the) global data files that are assumed to exist in 
-# a system directory specified (this directory is machine-dependent; 
-# the experiment generation scripts will set it and store it in the 
-# variable FIXgsm).  These file names also appear directly in the forecast 
-# model's input namelist file.
+# a system directory specified (this directory is machine-dependent; the
+# experiment generation scripts will set it and store it in the variable 
+# FIXgsm).  These file names also appear directly in the forecast model's 
+# input namelist file.
 #
 # FIXgsm_FILES_TO_COPY_TO_FIXam:
 # If not running in NCO mode, this array contains the names of the files
@@ -1358,7 +1369,8 @@ SFC_CLIMO_FIELDS=( \
 #
 # Because the default values are dependent on the platform, we set these
 # to a null string which will then be overwritten in setup.sh unless the
-# user has specified a different value in config.sh
+# user has specified a different value in config.sh.
+#
 FIXgsm=""
 TOPO_DIR=""
 SFC_CLIMO_INPUT_DIR=""

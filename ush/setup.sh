@@ -212,6 +212,30 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that RUN_TASK_GET_EXTRN_ICS is set to a valid value.  Then
+# reset it to either "TRUE" or "FALSE" so we don't have to consider other 
+# valid values later on.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_GET_EXTRN_ICS" "valid_vals_RUN_TASK_GET_EXTRN_ICS"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_GET_EXTRN_ICS}" \
+                             outvarname_boolean="RUN_TASK_GET_EXTRN_ICS"
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_GET_EXTRN_LBCS is set to a valid value.  Then
+# reset it to either "TRUE" or "FALSE" so we don't have to consider other 
+# valid values later on.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_GET_EXTRN_LBCS" "valid_vals_RUN_TASK_GET_EXTRN_LBCS"
+set_boolean_to_TRUE_or_FALSE boolean="${RUN_TASK_GET_EXTRN_LBCS}" \
+                             outvarname_boolean="RUN_TASK_GET_EXTRN_LBCS"
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that RUN_TASK_MAKE_SFC_CLIMO is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -2310,7 +2334,6 @@ fi
 #-----------------------------------------------------------------------
 #
 NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
-
 #
 #-----------------------------------------------------------------------
 #
@@ -2358,6 +2381,79 @@ set_thompson_mp_fix_files \
 #
 #-----------------------------------------------------------------------
 #
+# If the first element of EXTRN_MDL_DATA_SOURCES is set to "nomads", try
+# fetching the files from NOMADS (and placing them in the appropriate
+# location under the experiment directory.  If successful, reset the 
+# flags RUN_TASK_GET_EXTRN_ICS and/or RUN_TASK_GET_EXTRN_LBCS.
+#
+# Note that as of 20210822, the function that is called below can only 
+# fetch grib2-formatted files from the FV3GFS external model.  Other 
+# models and/or file formats may be added later, in which case the code 
+# below must be modified.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${EXTRN_MDL_DATA_SOURCES[0]}" = "nomads" ]; then
+
+  all_cdates_str="( "$( printf "\"%s\" " "${ALL_CDATES[@]}" )")"
+  lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${LBC_SPEC_FHRS[@]}" )")"
+
+  if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] && \
+     [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
+
+    print_info_msg "
+Attempting to fetch external model files for ICs from NOMADS for:
+  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
+  FV3GFS_FILE_FMT_ICS = \"${FV3GFS_FILE_FMT_ICS}\""
+
+    $USHDIR/get_FV3GFS_grib2_files_from_NOMADS.sh \
+      machine="$MACHINE" \
+      all_cdates="${all_cdates_str}" \
+      file_types="ANL" \
+      data_basedir="$EXPTDIR" \
+      data_relsubdir="${EXTRN_MDL_NAME_ICS}/for_ICS"
+
+    if [ "$?" -eq "0" ]; then
+      print_info_msg "
+Successfully fetched external model files for ICs from NOMADS.  Resetting
+RUN_TASK_GET_EXTRN_ICS to \"FALSE\" since the \"${GET_EXTRN_ICS_TN}\" task
+no longer needs to be run..."
+      RUN_TASK_GET_EXTRN_ICS="FALSE"
+    fi
+
+  fi
+
+  if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] && \
+     [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
+
+    print_info_msg "
+Attempting to fetch external model files for LBCs from NOMADS for:
+  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
+  FV3GFS_FILE_FMT_LBCS = \"${FV3GFS_FILE_FMT_LBCS}\"
+"
+
+    $USHDIR/get_FV3GFS_grib2_files_from_NOMADS.sh \
+      machine="$MACHINE" \
+      all_cdates="${all_cdates_str}" \
+      file_types="FCST" \
+      data_basedir="$EXPTDIR" \
+      data_relsubdir="${EXTRN_MDL_NAME_LBCS}/for_LBCS" \
+      lbc_spec_fhrs="${lbc_spec_fhrs_str}"
+
+    if [ "$?" -eq "0" ]; then
+      print_info_msg "
+Successfully fetched external model files for ICs from NOMADS.  Resetting
+RUN_TASK_GET_EXTRN_LBCS to \"FALSE\" since the \"${GET_EXTRN_LBCS_TN}\" task
+no longer needs to be run..."
+      RUN_TASK_GET_EXTRN_LBCS="FALSE"
+    fi
+
+  fi
+
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Generate the shell script that will appear in the experiment directory
 # (EXPTDIR) and will contain definitions of variables needed by the va-
 # rious scripts in the workflow.  We refer to this as the experiment/
@@ -2385,7 +2481,7 @@ set_thompson_mp_fix_files \
 #
 #-----------------------------------------------------------------------
 #
-GLOBAL_VAR_DEFNS_FP="$EXPTDIR/$GLOBAL_VAR_DEFNS_FN"
+GLOBAL_VAR_DEFNS_FP="$EXPTDIR/${GLOBAL_VAR_DEFNS_FN}"
 cp_vrfy $USHDIR/${EXPT_DEFAULT_CONFIG_FN} ${GLOBAL_VAR_DEFNS_FP}
 #
 #-----------------------------------------------------------------------

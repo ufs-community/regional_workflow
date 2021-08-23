@@ -277,12 +277,13 @@ settings="\
   'maxtries_vx_gridstat_24h': ${MAXTRIES_VX_GRIDSTAT_24h}
   'maxtries_vx_pointstat': ${MAXTRIES_VX_POINTSTAT}
 #
-# Flags that specify whether to run the preprocessing or
-# verification-related tasks.
+# Flags that specify whether to run various tasks.
 #
   'run_task_make_grid': ${RUN_TASK_MAKE_GRID}
   'run_task_make_orog': ${RUN_TASK_MAKE_OROG}
   'run_task_make_sfc_climo': ${RUN_TASK_MAKE_SFC_CLIMO}
+  'run_task_get_extrn_ics': ${RUN_TASK_GET_EXTRN_ICS}
+  'run_task_get_extrn_lbcs': ${RUN_TASK_GET_EXTRN_LBCS}
   'run_task_run_post': ${RUN_TASK_RUN_POST}
   'run_task_get_obs_ccpa': ${RUN_TASK_GET_OBS_CCPA}
   'run_task_get_obs_mrms': ${RUN_TASK_GET_OBS_MRMS}
@@ -578,9 +579,9 @@ Setting parameters in FV3 namelist file (FV3_NML_FP):
   FV3_NML_FP = \"${FV3_NML_FP}\""
 #
 # Set npx and npy, which are just NX plus 1 and NY plus 1, respectively.
-# These need to be set in the FV3-LAM Fortran namelist file.  They represent
-# the number of cell vertices in the x and y directions on the regional
-# grid.
+# These need to be set in the FV3-LAM Fortran namelist file.  They 
+# represent the number of cell vertices in the x and y directions on the 
+# regional grid.
 #
 npx=$((NX+1))
 npy=$((NY+1))
@@ -786,11 +787,9 @@ $settings"
 # configurations is not known until the grid is created.
 #
 if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
-
   set_FV3nml_sfc_climo_filenames || print_err_msg_exit "\
 Call to function to set surface climatology file names in the FV3 namelist
 file failed."
-
 fi
 #
 #-----------------------------------------------------------------------
@@ -890,34 +889,6 @@ edit the cron table):
 
 Done.
 "
-#
-# If necessary, run the NOMADS script to source external model data.
-#
-if is_element_of "EXTRN_MDL_DATA_SOURCES" "nomads"; then
-
-  all_cdates_str="( "$( printf "\"%s\" " "${ALL_CDATES[@]}" )")" 
-  lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${LBC_SPEC_FHRS[@]}" )")" 
-
-  if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] && \
-     [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
-    $USHDIR/get_FV3GFS_grib2_files_from_NOMADS.sh \
-      machine="$MACHINE" \
-      all_cdates="${all_cdates_str}" \
-      file_types="ICS" \
-      data_basedir="$EXPTDIR/${EXTRN_MDL_NAME_ICS}/for_ICS" \
-  fi
-
-  if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] && \
-     [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
-    $USHDIR/get_FV3GFS_grib2_files_from_NOMADS.sh \
-      machine="$MACHINE" \
-      all_cdates="${all_cdates_str}" \
-      file_types="LBCS" \
-      data_basedir="$EXPTDIR/${EXTRN_MDL_NAME_LBCS}/for_LBCS" \
-      lbc_spec_fhrs="${lbc_spec_fhrs_str}"
-  fi
-
-fi
 #
 #-----------------------------------------------------------------------
 #

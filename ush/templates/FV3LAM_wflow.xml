@@ -54,6 +54,8 @@ Flags that specify whether to run the preprocessing and/or verification tasks.
 <!ENTITY RUN_TASK_MAKE_GRID      "{{ run_task_make_grid | upper }}">
 <!ENTITY RUN_TASK_MAKE_OROG      "{{ run_task_make_orog | upper }}">
 <!ENTITY RUN_TASK_MAKE_SFC_CLIMO "{{ run_task_make_sfc_climo | upper }}">
+<!ENTITY RUN_TASK_GET_EXTRN_ICS  "{{ run_task_get_extrn_ics | upper }}">
+<!ENTITY RUN_TASK_GET_EXTRN_LBCS "{{ run_task_get_extrn_ics | upper }}">
 
 <!--
 Number of physical cores per node for the current machine.  This is used
@@ -237,6 +239,7 @@ MODULES_RUN_TASK_FP script.
 
   </task>
 {%- endif %}
+{%- if run_task_get_extrn_ics %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -265,6 +268,8 @@ MODULES_RUN_TASK_FP script.
     <envar><name>ICS_OR_LBCS</name><value>ICS</value></envar>
 
   </task>
+{%- endif %}
+{%- if run_task_get_extrn_lbcs %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -293,6 +298,7 @@ MODULES_RUN_TASK_FP script.
     <envar><name>ICS_OR_LBCS</name><value>LBCS</value></envar>
 
   </task>
+{%- endif %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -325,7 +331,10 @@ MODULES_RUN_TASK_FP script.
 
     <dependency>
       <and>
-        <taskdep task="&GET_EXTRN_ICS_TN;"/>
+        <or>
+          <taskdep task="&GET_EXTRN_ICS_TN;"/>
+          <streq><left>&RUN_TASK_GET_EXTRN_ICS;</left><right>FALSE</right></streq>
+        </or>
         <or>
 <!--          <taskdep task="&MAKE_GRID_TN;"/> -->
           <datadep age="00:00:00:05">&LOGDIR;/&MAKE_GRID_TN;_task_complete.txt</datadep>
@@ -367,7 +376,10 @@ MODULES_RUN_TASK_FP script.
 
     <dependency>
       <and>
-        <taskdep task="&GET_EXTRN_LBCS_TN;"/>
+        <or>
+          <taskdep task="&GET_EXTRN_LBCS_TN;"/>
+          <streq><left>&RUN_TASK_GET_EXTRN_LBCS;</left><right>FALSE</right></streq>
+        </or>
         <or>
 <!--          <taskdep task="&MAKE_GRID_TN;"/> -->
           <datadep age="00:00:00:05">&LOGDIR;/&MAKE_GRID_TN;_task_complete.txt</datadep>
