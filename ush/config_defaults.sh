@@ -694,10 +694,10 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #-----------------------------------------------------------------------
 #
 EXTRN_MDL_DATA_SOURCES=( "disk" "noaa_hpss" "nomads" )
-EXTRN_MDL_BASEDIRS_ICS=()
-EXTRN_MDL_BASEDIRS_LBCS=()
+EXTRN_MDL_BASEDIRS_ICS=( "" )
+EXTRN_MDL_BASEDIRS_LBCS=( "" )
 EXTRN_MDL_DIR_FILE_LAYOUT="native_to_extrn_mdl"
-EXTRN_MDL_FNS_ICS=()
+EXTRN_MDL_FNS_ICS=( "" )
 EXTRN_MDL_FNS_LBCS_PREFIX=""
 EXTRN_MDL_FNS_LBCS_SUFFIX=""
 #
@@ -1636,9 +1636,9 @@ NUM_ENS_MEMBERS="1"
 #
 #-----------------------------------------------------------------------
 #
-DO_SHUM="false"
-DO_SPPT="false"
-DO_SKEB="false"
+DO_SHUM="FALSE"
+DO_SPPT="FALSE"
+DO_SKEB="FALSE"
 SHUM_MAG="0.006" #Variable "shum" in input.nml
 SHUM_LSCALE="150000"
 SHUM_TSCALE="21600" #Variable "shum_tau" in input.nml
@@ -1652,7 +1652,7 @@ SKEB_LSCALE="150000"
 SKEB_TSCALE="21600" #Variable "skeb_tau" in input.nml
 SKEB_INT="3600" #Variable "skebint" in input.nml
 SKEB_VDOF="10"
-USE_ZMTNBLCK="false"
+USE_ZMTNBLCK="FALSE"  # This doesn't seem to be used anywhere in the workflow.  Remove??
 #
 #-----------------------------------------------------------------------
 #
@@ -1669,7 +1669,7 @@ USE_ZMTNBLCK="false"
 #
 #-----------------------------------------------------------------------
 #
-DO_SPP="false"
+DO_SPP="FALSE"
 SPP_VAR_LIST=( "pbl" )
 SPP_MAG_LIST=( "0.2" ) #Variable "spp_prt_list" in input.nml
 SPP_LSCALE=( "150000.0" )
