@@ -1,5 +1,6 @@
 MACHINE="wcoss_dell_p3"
 ACCOUNT="CMAQ-T2O"
+EXPT_BASEDIR="/gpfs/dell1/ptmp/$USER/expt_dirs"
 EXPT_SUBDIR="test_cmaq_conus13_1day"
 
 #QUEUE_DEFAULT="dev2"
