@@ -2083,10 +2083,28 @@ set_thompson_mp_fix_files \
 # location under the experiment directory.  If successful, reset the 
 # flags RUN_TASK_GET_EXTRN_ICS and/or RUN_TASK_GET_EXTRN_LBCS.
 #
-# Note that as of 20210822, the function that is called below can only 
-# fetch grib2-formatted files from the FV3GFS external model.  Other 
-# models and/or file formats may be added later, in which case the code 
-# below must be modified.
+# Note that as of 20210822, the stand-alone script that is called below 
+# (get_FV3GFS_grib2_files_from_NOMADS.sh) can only fetch grib2-formatted 
+# files from the FV3GFS external model.  Other models and/or file formats 
+# may be added later, in which case the code below must be modified.
+#
+# Also, note the following in the way get_FV3GFS_grib2_files_from_NOMADS.sh
+# is called:
+#
+# 1) This script has to be called from within a subsell [i.e. using 
+#    $( ... )] because it reloads the default experiment configuration 
+#    file, and that would overwrite the experiment variables with default 
+#    values if it were done in the current shell.
+#
+# 2) Normally, the stdout of a subshell goes into the variable on the 
+#    left-hand-side of the equal sign (in this case "tmp") while the 
+#    stderr goes to the stderr of the parent shell (which is just the 
+#    screen).  Here, however, we want both to go to the screen so the
+#    user can see what the script is doing.  The "1>&2" inside the 
+#    subshell redirects stdout from the subshell to go to the same 
+#    location as the stderr (i.e. the screen).  This causes nothing to 
+#    go into the variable "tmp" and all messages that are meant to go
+#    to the screen in the called script to in fact appear on the screen.
 #
 #-----------------------------------------------------------------------
 #
@@ -2094,7 +2112,9 @@ if [ "${EXTRN_MDL_DATA_SOURCES[0]}" = "nomads" ]; then
 
   all_cdates_str="( "$( printf "\"%s\" " "${ALL_CDATES[@]}" )")"
   lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${LBC_SPEC_FHRS[@]}" )")"
-
+#
+# First, consider ICs.
+#
   if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] && \
      [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
 
@@ -2102,13 +2122,18 @@ if [ "${EXTRN_MDL_DATA_SOURCES[0]}" = "nomads" ]; then
 Attempting to fetch external model files for ICs from NOMADS for:
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\"
   FV3GFS_FILE_FMT_ICS = \"${FV3GFS_FILE_FMT_ICS}\""
-
-    $USHDIR/get_FV3GFS_grib2_files_from_NOMADS.sh \
-      machine="$MACHINE" \
-      all_cdates="${all_cdates_str}" \
-      file_types="ANL" \
-      data_basedir="$EXPTDIR" \
-      data_relsubdir="${EXTRN_MDL_NAME_ICS}/for_ICS"
+#
+# Call the stand-alone script that gets FV3GFS grib2 files from NOMADS.
+# See explanation above for details of what is happening here.
+#
+    tmp=$( \
+      $USHDIR/get_FV3GFS_grib2_files_from_NOMADS.sh \
+        machine="$MACHINE" \
+        all_cdates="${all_cdates_str}" \
+        file_types="ANL" \
+        data_basedir="$EXPTDIR" \
+        data_relsubdir="${EXTRN_MDL_NAME_ICS}/for_ICS" 1>&2 \
+    )
 
     if [ "$?" -eq "0" ]; then
       print_info_msg "
@@ -2116,10 +2141,17 @@ Successfully fetched external model files for ICs from NOMADS.  Resetting
 RUN_TASK_GET_EXTRN_ICS to \"FALSE\" since the \"${GET_EXTRN_ICS_TN}\" task
 no longer needs to be run..."
       RUN_TASK_GET_EXTRN_ICS="FALSE"
+    else
+      print_info_msg "
+Fetching of external model files for ICs from NOMADS failed.  Another 
+attempt will be made by the \"${GET_EXTRN_ICS_TN}\" workflow task, possibly
+from a source other than NOMADS."
     fi
 
   fi
-
+#
+# Now consider LBCs.
+#
   if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] && \
      [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
 
@@ -2128,14 +2160,19 @@ Attempting to fetch external model files for LBCs from NOMADS for:
   EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\"
   FV3GFS_FILE_FMT_LBCS = \"${FV3GFS_FILE_FMT_LBCS}\"
 "
-
-    $USHDIR/get_FV3GFS_grib2_files_from_NOMADS.sh \
-      machine="$MACHINE" \
-      all_cdates="${all_cdates_str}" \
-      file_types="FCST" \
-      data_basedir="$EXPTDIR" \
-      data_relsubdir="${EXTRN_MDL_NAME_LBCS}/for_LBCS" \
-      lbc_spec_fhrs="${lbc_spec_fhrs_str}"
+#
+# Call the stand-alone script that gets FV3GFS grib2 files from NOMADS.
+# See explanation above for details of what is happening here.
+#
+    tmp=$( \
+      $USHDIR/get_FV3GFS_grib2_files_from_NOMADS.sh \
+        machine="$MACHINE" \
+        all_cdates="${all_cdates_str}" \
+        file_types="FCST" \
+        data_basedir="$EXPTDIR" \
+        data_relsubdir="${EXTRN_MDL_NAME_LBCS}/for_LBCS" \
+        lbc_spec_fhrs="${lbc_spec_fhrs_str}" 1>&2 \
+    )
 
     if [ "$?" -eq "0" ]; then
       print_info_msg "
@@ -2143,6 +2180,11 @@ Successfully fetched external model files for ICs from NOMADS.  Resetting
 RUN_TASK_GET_EXTRN_LBCS to \"FALSE\" since the \"${GET_EXTRN_LBCS_TN}\" task
 no longer needs to be run..."
       RUN_TASK_GET_EXTRN_LBCS="FALSE"
+    else
+      print_info_msg "
+Fetching of external model files for LBCs from NOMADS failed.  Another 
+attempt will be made by the \"${GET_EXTRN_LBCS_TN}\" workflow task, possibly
+from a source other than NOMADS."
     fi
 
   fi
