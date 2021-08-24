@@ -175,7 +175,17 @@ to the temporary work directory (tmp_dir):
   tmp_dir = \"${tmp_dir}\"
 ===================================================================="
 else
+#
+##### RRFS-CMAQ ########## start #####
+#
+  if [ ${FCST_MODEL} = "fv3gfs_aqm" ]; then
+    post_config_fp="${EMC_POST_DIR}/parm/postxconfig-NT-fv3lam_cmaq.txt"
+  else
   post_config_fp="${EMC_POST_DIR}/parm/postxconfig-NT-fv3lam.txt"
+  fi
+#
+##### RRFS-CMAQ ########## end   #####
+#
   print_info_msg "
 ====================================================================
 Copying the default post flat file specified by post_config_fp to the 
