@@ -56,7 +56,9 @@ ushdir="$homerrfs/ush"
 #
 #-----------------------------------------------------------------------
 #
+. $ushdir/config_defaults.sh
 . $ushdir/extrn_mdl/check_nomads_access.sh
+. $ushdir/extrn_mdl/create_extrn_mdl_var_defns_file.sh
 . $ushdir/extrn_mdl/get_extrn_mdl_files_from_nomads.sh
 . $ushdir/extrn_mdl/set_extrn_mdl_filenames.sh
 . $ushdir/extrn_mdl/set_extrn_mdl_arcv_file_dir_names.sh
@@ -87,7 +89,8 @@ Usage:
     lbc_spec_fhrs=... \\
     [data_basedir=...] \\
     [data_relsubdir=...] \\
-    [preexisting_dir_method=...]
+    [preexisting_dir_method=...] \\
+    [verbose=...]
 
 The arguments in brackets are optional.  Examples:
 
@@ -127,8 +130,8 @@ Array containing a set of cycle starting times (i.e. dates and hours)
 for which to fetch files.  Note that:
 * The script will try to fetch from NOMADS the external model files 
   for each of the cycle times in all_cdates.  If fetching fails for a 
-  given cycle, the script exits without attempting to fetch files for 
-  any of the remaining cycles in all_cdates.
+  given cycle and file type combination (see description of file_types 
+  below), the script continues to try the next such combination.
 * Each element of all_cdates must have the form \"YYYYMMDDHH\", where 
   YYYYY is the four-digit year, MM is the two-digit month, DD is the 
   two-digit day, and HH is the two-digit hour of the cycle's starting 
@@ -238,7 +241,14 @@ Note that:
   * \"quit\":
     Exit the script.
   * \"none\":
-    Do nothing." || \
+    Do nothing.
+
+verbose:
+Flag that turns on/off extra informational messages.  Currently, this is 
+only used to set the variable VERBOSE that other functions called from 
+this script look for in the environment.  Valid values are \"TRUE\" and 
+\"FALSE\".  If this is not set in the call to this script, it gets set
+to \"FALSE\"." || \
 print_err_msg_exit "\
 Something went wrong while setting the variable \"usage_str\"."
 #
@@ -283,6 +293,7 @@ valid_args=( \
   "data_basedir" \
   "data_relsubdir" \
   "preexisting_dir_method" \
+  "verbose" \
   )
 process_args valid_args "$@"
 #
@@ -312,6 +323,16 @@ to get help on usage."
 # Process input arguments.
 #
 #-----------------------------------------------------------------------
+#
+# If verbose is not set (or if is set to a null string), reset it to its
+# default value ("FALSE").   Then ensure that it is set to a valid value.  
+# Finally, set the variable VERBOSE (that many of the functions called
+# by this script look for in the environment) to verbose.
+#
+verbose="${verbose^^}"
+verbose=${verbose:-"FALSE"}
+check_var_valid_value "verbose" "valid_vals_BOOLEAN" 
+VERBOSE="$verbose"
 #
 # Certain arguments that are assumed to be arrays in the code below are
 # (for convenience) allowed to be specified as scalars in the call to 
@@ -397,8 +418,8 @@ The two elements of file_types must be distinct but aren't:
 ${how_to_see_usage_str}"
 fi
 #
-# If data_basedir is not (or if it is set to a null string), reset it to 
-# its default value.
+# If data_basedir is not set (or if it is set to a null string), reset 
+# it to its default value.
 #
 data_basedir=${data_basedir:-"nomads_data"}
 #
@@ -458,14 +479,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# The following are variables that must exist but are not actually used
-# in fetching files from NOMADS.
-#
-EXTRN_MDL_DIR_FILE_LAYOUT=""
-EXTRN_MDL_FNS_ICS=("")
-EXTRN_MDL_FNS_LBCS_PREFIX=""
-EXTRN_MDL_FNS_LBCS_SUFFIX=""
-#
 # This script considers only NOMADS as a data source.
 #
 data_src="nomads"
@@ -518,8 +531,7 @@ for (( i=0; i<${num_cdates}; i++ )); do
     cdate="${all_cdates[$i]}"
     print_info_msg "
 Attempting to fetch external model ${file_type} file(s) from NOMADS for:
-  cdate = \"$cdate\"
-"
+  cdate = \"$cdate\""
 #
 # Create the full path to the directory in which the external model files 
 # for this cycle will be placed.  Then, if preexisting_dir_method is not
@@ -549,7 +561,7 @@ Attempting to fetch external model ${file_type} file(s) from NOMADS for:
       cdate="$cdate" \
       lbc_spec_fhrs="${lbc_spec_fhrs_str}" \
       outvarname_fns="__fns"
-  
+
     fns_str="( "$( printf "\"%s\" " "${__fns[@]}" )")"
 #
 # Get the relative (cycle-dependent) path (in __arcvrel_dir) that will
@@ -561,12 +573,10 @@ Attempting to fetch external model ${file_type} file(s) from NOMADS for:
       cdate="$cdate" \
       outvarname_arcvrel_dir="__arcvrel_dir"
 #
-# Get the files from NOMADS.  If this is unsuccessful, exit the loop
-# over the cycle dates because we assume it failed because the NOMADS
-# host is not accessible from the current machine.  Note that we do 
-# not check access to NOMADS within the get_extrn_mdl_files_from_nomads
-# function called below (check_access="FALSE") because we have already
-# checked for access up above before entering this loop.
+# Get the files from NOMADS.  Note that we do not check access to NOMADS 
+# within the get_extrn_mdl_files_from_nomads function called below (i.e.
+# we set check_access="FALSE") because we have already checked for access 
+# up above before entering this loop.
 #
     get_extrn_mdl_files_from_nomads \
       check_access="FALSE" \
@@ -574,15 +584,47 @@ Attempting to fetch external model ${file_type} file(s) from NOMADS for:
       ics_or_lbcs="${ics_or_lbcs}" \
       staging_dir="${staging_dir}" \
       arcvrel_dir="${__arcvrel_dir}" \
-      fns="${fns_str}" || \
-    print_err_msg_exit "\
-Attempt to fetch external model files from NOMADS for the current cycle
-time (cdate) was unsuccessful:
+      fns="${fns_str}"
+#
+# Print out a message informing whether the fetching was successful.  If
+# it failed, we skip the rest of the loop and continue to try the next 
+# cycle time and file type combination.
+#
+    if [ "$?" -eq "0" ]; then
+      print_info_msg "
+Successfully fetched external model ${file_type} file(s) from NOMADS for
+the current cycle (cdate):
+  cdate = \"$cdate\""
+    else
+      print_info_msg "\
+Attempt to fetch external model ${file_type} files from NOMADS for the 
+current cycle time (cdate) failed:
   cdate = \"$cdate\"
-Exiting loop over cycle times since this is probably due to inaccessiblity
-of the NOMADS host from the current machine (MACHINE):
-  MACHINE = \"$MACHINE\"
-${how_to_see_usage_str}"
+Skipping rest of current loop to try the next cycle time and file type 
+combination."
+      continue
+    fi
+#
+# Call a function to create a variable definitions file (in bash script
+# syntax) that contains several external-model-associated variables
+# generated in this script.  If the external model files are to be used
+# in the UFS SRW App workflow, these definition files will be needed by
+# various workflow tasks.
+#
+    if [ "${ics_or_lbcs}" = "ICS" ]; then
+      var_defns_fn="${EXTRN_MDL_ICS_VAR_DEFNS_FN}"
+    elif [ "${ics_or_lbcs}" = "LBCS" ]; then
+      var_defns_fn="${EXTRN_MDL_LBCS_VAR_DEFNS_FN}"
+    fi
+    var_defns_fp="${staging_dir}/${var_defns_fn}"
+
+    create_extrn_mdl_var_defns_file \
+      extrn_mdl_var_defns_fp="${var_defns_fp}" \
+      ics_or_lbcs="${ics_or_lbcs}" \
+      extrn_mdl_cdate="$cdate" \
+      extrn_mdl_staging_dir="${staging_dir}" \
+      extrn_mdl_fns="${fns_str}" \
+      extrn_mdl_lbc_spec_fhrs="${lbc_spec_fhrs_str}"
 
   done
 
@@ -596,3 +638,4 @@ done
 #-----------------------------------------------------------------------
 #
 { restore_shell_opts; } > /dev/null 2>&1
+
