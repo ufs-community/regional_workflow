@@ -96,9 +96,9 @@ function set_user_specified_extrn_mdl_file_info() {
     fi
   elif [ "${extrn_mdl_name_ics}" = "HRRR" ] || \
        [ "${extrn_mdl_name_ics}" = "RAP" ]; then
-    extrn_mdl_fns_ics=( "${extrn_mdl_name_ics,,}.out.for_f000" )
+    extrn_mdl_fns_ics=( "${extrn_mdl_name_ics,,}.out.f000" )
   elif [ "${extrn_mdl_name_ics}" = "NAM" ]; then
-    extrn_mdl_fns_ics=( "${extrn_mdl_name_ics,,}.out.for_f000" )
+    extrn_mdl_fns_ics=( "${extrn_mdl_name_ics,,}.out.f000" )
   fi
 #
 #-----------------------------------------------------------------------
@@ -122,8 +122,8 @@ function set_user_specified_extrn_mdl_file_info() {
     fi
   elif [ "${extrn_mdl_name_lbcs}" = "HRRR" ] || \
        [ "${extrn_mdl_name_lbcs}" = "RAP" ]; then
-    extrn_mdl_fns_lbcs_prefix=""
-    extrn_mdl_fns_lbcs_suffix=".nc"
+    extrn_mdl_fns_lbcs_prefix="${extrn_mdl_name_lbcs,,}.out.f"
+    extrn_mdl_fns_lbcs_suffix=""
   elif [ "${extrn_mdl_name_lbcs}" = "NAM" ]; then
     extrn_mdl_fns_lbcs_prefix=""
     extrn_mdl_fns_lbcs_suffix=""

@@ -957,11 +957,17 @@ should be located has not been specified for this machine (MACHINE):
       extrn_mdl_basedir_ics="${extrn_mdl_basedir}/${EXTRN_MDL_NAME_ICS}"
       if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
         extrn_mdl_basedir_ics="${extrn_mdl_basedir_ics}/${FV3GFS_FILE_FMT_ICS}"
+      elif [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ] || \
+           [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ]; then
+        extrn_mdl_basedir_ics="${extrn_mdl_basedir_ics}/grib2"
       fi
 
       extrn_mdl_basedir_lbcs="${extrn_mdl_basedir}/${EXTRN_MDL_NAME_LBCS}"
       if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
         extrn_mdl_basedir_lbcs="${extrn_mdl_basedir_lbcs}/${FV3GFS_FILE_FMT_LBCS}"
+      elif [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ] || \
+           [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ]; then
+        extrn_mdl_basedir_lbcs="${extrn_mdl_basedir_lbcs}/grib2"
       fi
 
       expt_config_str=${expt_config_str}"
