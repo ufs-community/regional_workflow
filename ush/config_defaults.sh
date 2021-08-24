@@ -226,7 +226,7 @@ EXPT_SUBDIR=""
 #
 #-----------------------------------------------------------------------
 #
-COMINgfs="/base/path/of/directory/containing/gfs/input/files"
+COMINgfs=""
 FIXLAM_NCO_BASEDIR=""
 STMP="/base/path/of/directory/containing/model/input/and/raw/output/files"
 NET="rrfs"

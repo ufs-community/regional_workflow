@@ -216,10 +216,10 @@ function set_extrn_mdl_arcv_file_dir_names() {
 # option for the latter may be added in the future.
 #
 # The zip archive files for RAPX are named such that the forecast files
-# for odd-numbered starting hours (e.g. 01, 03, ..., 23) are stored
+# for odd-numbered starting hours (e.g. 01, 03, ..., 21, 23) are stored
 # together with the forecast files for the corresponding preceding even-
-# numbered starting hours (e.g. 00, 02, ..., 22, respectively), in an
-# archive file whose name contains only the even-numbered hour.  Thus,
+# numbered starting hours (e.g. 00, 02, ..., 20, 22, respectively), in 
+# an archive file whose name contains only the even-numbered hour.  Thus,
 # in forming the name of the archive file, if the starting hour (hh) is
 # odd, we reduce it by one to get the corresponding even-numbered hour
 # and use that to form the archive file name.
