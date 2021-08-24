@@ -56,8 +56,8 @@ This is the ex-script for the task that generates initial condition
 #-----------------------------------------------------------------------
 #
 valid_args=( \
-"ics_dir" \
-)
+  "ics_dir" \
+  )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
