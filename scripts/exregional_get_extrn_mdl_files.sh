@@ -375,9 +375,9 @@ done
 #-----------------------------------------------------------------------
 #
 # Call a function to create a variable definitions file (in bash script
-# syntax) and save in it the values of several external-model-associated 
-# variables generated in this script that will be needed by downstream 
-# workflow tasks.
+# syntax) that contains several external-model-associated variables 
+# generated in this script that will be needed by downstream workflow 
+# tasks.
 #
 #-----------------------------------------------------------------------
 #
@@ -389,7 +389,7 @@ fi
 var_defns_fp="${staging_dir}/${var_defns_fn}"
 
 create_extrn_mdl_var_defns_file \
-  var_defns_fp="${var_defns_fp}" \
+  extrn_mdl_var_defns_fp="${var_defns_fp}" \
   ics_or_lbcs="${ics_or_lbcs}" \
   extrn_mdl_cdate="$cdate" \
   extrn_mdl_staging_dir="${staging_dir}" \
