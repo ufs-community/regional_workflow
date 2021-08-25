@@ -760,7 +760,7 @@ This is probably because it is a directory.  Please correct and rerun."
   test_names=("${prim_test_names[@]}")
   test_subdirs=("${prim_test_subdirs[@]}")
   if [ "${num_alt_tests}" -gt "0" ]; then
-    test_names+=("${alt_test_subdirs[@]:-}")
+    test_names+=("${alt_test_names[@]:-}")
     test_subdirs+=("${alt_test_subdirs[@]:-}")
   fi
 #
