@@ -975,8 +975,8 @@ should be located has not been specified for this machine (MACHINE):
 # Base directories in which to search for external mode files for 
 # generating ICs and LBCs.
 #
-EXTRN_MDL_BASEDIRS_ICS=( "${extrn_mdl_basedir_ics}" )
-EXTRN_MDL_BASEDIRS_LBCS=( "${extrn_mdl_basedir_lbcs}" )"
+EXTRN_MDL_BASEDIRS_ICS=( $( printf "\"%s\" " "${extrn_mdl_basedir_ics}" ))
+EXTRN_MDL_BASEDIRS_LBCS=( $( printf "\"%s\" " "${extrn_mdl_basedir_lbcs}" ))"
 #
 # If using a user-specified direcory structure and file naming convention, 
 # set the parameters needed for constructing the user-specified external 
@@ -1000,8 +1000,8 @@ EXTRN_MDL_BASEDIRS_LBCS=( "${extrn_mdl_basedir_lbcs}" )"
 # EXTRN_MDL_DIR_FILE_LAYOUT has been set above to \"user_spec\".
 #
 EXTRN_MDL_FNS_ICS=( $( printf "\"%s\" " "${__extrn_mdl_fns_ics[@]}" ))
-EXTRN_MDL_FNS_LBCS_PREFIX="${__extrn_mdl_fns_lbcs_prefix}"
-EXTRN_MDL_FNS_LBCS_SUFFIX="${__extrn_mdl_fns_lbcs_suffix}""
+EXTRN_MDL_FNS_LBCS_PREFIX=\"${__extrn_mdl_fns_lbcs_prefix}\"
+EXTRN_MDL_FNS_LBCS_SUFFIX=\"${__extrn_mdl_fns_lbcs_suffix}\""
 
       fi
 

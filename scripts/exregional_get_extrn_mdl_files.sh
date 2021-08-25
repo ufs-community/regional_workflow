@@ -159,7 +159,7 @@ cdate=$( date --utc --date \
 #
 #-----------------------------------------------------------------------
 #
-lbc_spec_fhrs=()
+lbc_spec_fhrs=( "" )
 
 if [ "${ics_or_lbcs}" = "LBCS" ]; then
 
