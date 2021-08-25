@@ -8,8 +8,10 @@
 # LBCs will be derived).
 #
 # Note that NOMADS hosts only the most recent few days' files.  For this 
-# reason, the starting day of the forecast is set here to be "1 days ago" 
-# (i.e. yesterday).
+# reason, the first cycle day of the experiment is set here to be "2 days 
+# ago" and the last cycle day is set to "1 days ago" (i.e. yesterday).  
+# We use two cycle days to test the capability of the scripts to fetch 
+# files from NOMADS for multiple cycles. 
 #
 
 RUN_ENVIR="community"
@@ -25,8 +27,8 @@ FV3GFS_FILE_FMT_LBCS="grib2"
 
 EXTRN_MDL_DATA_SOURCES=( "nomads" )
 
-DATE_FIRST_CYCL=$( date --utc --date="1 days ago" "+%Y%m%d" )
-DATE_LAST_CYCL="${DATE_FIRST_CYCL}"
+DATE_FIRST_CYCL=$( date --utc --date="2 days ago" "+%Y%m%d" )
+DATE_LAST_CYCL=$( date --utc --date="1 days ago" "+%Y%m%d" )
 CYCL_HRS=( "00" )
 
 FCST_LEN_HRS="6"
