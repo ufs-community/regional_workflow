@@ -958,16 +958,16 @@ should be located has not been specified for this machine (MACHINE):
       extrn_mdl_basedir_ics="${extrn_mdl_basedir}/${EXTRN_MDL_NAME_ICS}"
       if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
         extrn_mdl_basedir_ics="${extrn_mdl_basedir_ics}/${FV3GFS_FILE_FMT_ICS}"
-      elif [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ] || \
-           [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ]; then
+      elif [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ] || \
+           [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ]; then
         extrn_mdl_basedir_ics="${extrn_mdl_basedir_ics}/grib2"
       fi
 
       extrn_mdl_basedir_lbcs="${extrn_mdl_basedir}/${EXTRN_MDL_NAME_LBCS}"
       if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ]; then
         extrn_mdl_basedir_lbcs="${extrn_mdl_basedir_lbcs}/${FV3GFS_FILE_FMT_LBCS}"
-      elif [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ] || \
-           [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ]; then
+      elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ] || \
+           [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ]; then
         extrn_mdl_basedir_lbcs="${extrn_mdl_basedir_lbcs}/grib2"
       fi
 
@@ -1022,19 +1022,26 @@ EXTRN_MDL_FNS_LBCS_SUFFIX=\"${__extrn_mdl_fns_lbcs_suffix}\""
     if [ "$MACHINE" = "HERA" ]; then
       met_install_dir="/contrib/met/10.0.0"
       metplus_path="/contrib/METplus/METplus-4.0.0"
+      ccpa_obs_dir="/scratch2/BMC/det/UFS_SRW_app/v1p0/obs_data/ccpa/proc"
+      mrms_obs_dir="/scratch2/BMC/det/UFS_SRW_app/v1p0/obs_data/mrms/proc"
+      ndas_obs_dir="/scratch2/BMC/det/UFS_SRW_app/v1p0/obs_data/ndas/proc"
     else
       print_err_msg_exit "\
-The MET and MET+ paths (met_install_dir and metplus_path) have not been
-specified for this machine (MACHINE):
+The MET and MET+ paths (MET_INSTALL_DIR and METPLUS_PATH) and/or the 
+observations directories (CCPA_OBS_DIR, MRMS_OBS_DIR, and NDAS_OBS_DIR) 
+have not been specified for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
 
     expt_config_str=${expt_config_str}"
 #
-# MET and MET+ paths.
+# MET, MET+, and various observations paths.
 #
+MET_INSTALL_DIR=\"${met_install_dir}\"
 METPLUS_PATH=\"${metplus_path}\"
-MET_INSTALL_DIR=\"${met_install_dir}\""
+CCPA_OBS_DIR=\"${ccpa_obs_dir}\"
+MRMS_OBS_DIR=\"${mrms_obs_dir}\"
+NDAS_OBS_DIR=\"${ndas_obs_dir}\""
 
   fi
 #

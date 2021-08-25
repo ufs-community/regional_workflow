@@ -388,6 +388,15 @@ esac
 #
 #-----------------------------------------------------------------------
 #
+# Calculate PPN_RUN_FCST from NCORES_PER_NODE and OMP_NUM_THREADS_RUN_FCST
+#
+#-----------------------------------------------------------------------
+#
+PPN_RUN_FCST_OPT="$(( ${NCORES_PER_NODE} / ${OMP_NUM_THREADS_RUN_FCST} ))"
+PPN_RUN_FCST=${PPN_RUN_FCST:-${PPN_RUN_FCST_OPT}}
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that the job scheduler set above is valid.
 #
 #-----------------------------------------------------------------------
