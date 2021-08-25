@@ -282,37 +282,37 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-user_spec_tests_fp=$( readlink -f "${tests_file}" )
+user_specified_tests_fp=$( readlink -f "${tests_file}" )
 
-if [ ! -f "${user_spec_tests_fp}" ]; then
+if [ ! -f "${user_specified_tests_fp}" ]; then
   print_err_msg_exit "\
 The file containing the user-specified list of WE2E tests to run
 (tests_file) that is passed in as an argument to this script does not
 exit:
   tests_file = \"${tests_file}\"
 The full path to this script is:
-  user_spec_tests_fp = \"${user_spec_tests_fp}\"
+  user_specified_tests_fp = \"${user_specified_tests_fp}\"
 Please ensure that this file exists and rerun."
 fi
 #
 #-----------------------------------------------------------------------
 #
-# Read in each line of the file specified by user_spec_tests_fp and add
-# each non-empty line to the array user_spec_tests.  Note that the read
-# command will remove any leading and trailing whitespace from each line
-# in user_spec_tests_fp [because it treats whatever character(s) the bash
-# variable IFS (Internal Field Separator) is set to as word separators
-# on each line, and IFS is by default set to a space, a tab, and a
-# newline].
+# Read in each line of the file specified by user_specified_tests_fp and 
+# add each non-empty line to the array user_specified_tests.  Note that 
+# the read command will remove any leading and trailing whitespace from 
+# each line in user_specified_tests_fp [because it treats whatever 
+# character(s) the bash variable IFS (Internal Field Separator) is set 
+# to as word separators on each line, and IFS is by default set to a 
+# space, a tab, and a newline].
 #
 #-----------------------------------------------------------------------
 #
-user_spec_tests=()
+user_specified_tests=()
 while read -r line; do
   if [ ! -z "$line" ]; then
-    user_spec_tests+=("$line")
+    user_specified_tests+=("$line")
   fi
-done < "${user_spec_tests_fp}"
+done < "${user_specified_tests_fp}"
 #
 #-----------------------------------------------------------------------
 #
@@ -406,7 +406,7 @@ num_avail_WE2E_tests="${#avail_WE2E_test_names[@]}"
 #
 #-----------------------------------------------------------------------
 #
-# Loop through the elements of the array user_spec_tests and perform
+# Loop through the elements of the array user_specified_tests and perform
 # sanity checks.  For each such element (i.e. for each WE2E test to run
 # specified by the user), make sure that:
 #
@@ -432,22 +432,22 @@ subdirs_tests_to_run=()
 #
 # Initialize the array that will contain the remaining available WE2E
 # test names (including alternate names, if any) after finding a match
-# for the i-th user-specified test name to run in user_spec_tests.
+# for the i-th user-specified test name to run in user_specified_tests.
 #
 remaining_avail_WE2E_test_names=( "${avail_WE2E_test_names[@]}" )
 
-num_user_spec_tests="${#user_spec_tests[@]}"
-for (( i=0; i<${num_user_spec_tests}; i++ )); do
+num_user_specified_tests="${#user_specified_tests[@]}"
+for (( i=0; i<${num_user_specified_tests}; i++ )); do
 
-  user_spec_test="${user_spec_tests[$i]}"
+  user_specified_test="${user_specified_tests[$i]}"
 
   print_info_msg "\
-  Checking user-specified WE2E test:  \"${user_spec_test}\""
+  Checking user-specified WE2E test:  \"${user_specified_test}\""
 #
-# For the current user-specified WE2E test (user_spec_test), loop through
-# the list of all remaining available WE2E test names (i.e. the ones that
-# haven't yet been matched to any of the user-specified test names to
-# run) and make sure that:
+# For the current user-specified WE2E test (user_specified_test), loop 
+# through the list of all remaining available WE2E test names (i.e. the 
+# ones that haven't yet been matched to any of the user-specified test 
+# names to run) and make sure that:
 #
 # 1) The name of the test exists (either as a primary test name or an
 #    alternate test name) in the list of all available WE2E test names.
@@ -469,8 +469,9 @@ for (( i=0; i<${num_user_spec_tests}; i++ )); do
     test_name="${avail_WE2E_test_names[$j]}"
     test_id="${avail_WE2E_test_ids[$j]}"
 #
-# Check whether the name of the current user-specified test (user_spec_test)
-# matches any of the names in the full list of WE2E tests.  If so:
+# Check whether the name of the current user-specified test (in the 
+# variable user_specified_test) matches any of the names in the full 
+# list of WE2E tests.  If so:
 #
 # 1) Set match_found to "TRUE".
 # 2) Make sure that the test to run doesn't have a test ID that is
@@ -478,14 +479,14 @@ for (( i=0; i<${num_user_spec_tests}; i++ )); do
 #    list of tests to run (which would mean the two tests are identical).
 #    If so, print out an error message and exit.
 #
-    if [ "${test_name}" = "${user_spec_test}" ]; then
+    if [ "${test_name}" = "${user_specified_test}" ]; then
 
       match_found="TRUE"
 
       is_element_of "ids_tests_to_run" "${test_id}" && {
 
-        user_spec_tests_str=$(printf "    \"%s\"\n" "${user_spec_tests[@]}")
-        user_spec_tests_str=$(printf "(\n%s\n    )" "${user_spec_tests_str}")
+        user_specified_tests_str=$(printf "    \"%s\"\n" "${user_specified_tests[@]}")
+        user_specified_tests_str=$(printf "(\n%s\n    )" "${user_specified_tests_str}")
 
         all_names_for_test=()
         for (( k=0; k<${num_avail_WE2E_tests}; k++ )); do
@@ -496,17 +497,17 @@ for (( i=0; i<${num_user_spec_tests}; i++ )); do
         all_names_for_test_str=$(printf "  \"%s\"\n" "${all_names_for_test[@]}")
 
         print_err_msg_exit "\
-The current user-specified test to run (user_spec_test) is already included
-in the list of tests to run (user_spec_tests), either under the same name
-or an alternate name:
-  user_spec_test = \"${user_spec_test}\"
-  user_spec_tests = ${user_spec_tests_str}
+The current user-specified test to run (user_specified_test) is already 
+included in the list of tests to run (user_specified_tests), either under 
+the same name or an alternate name:
+  user_specified_test = \"${user_specified_test}\"
+  user_specified_tests = ${user_specified_tests_str}
 This test has the following primary and possible alternate names:
 ${all_names_for_test_str}
 In order to avoid repeating the same WE2E test (and thus waste computational
 resources), only one of these test names can be specified in the list of
 tests to run.  Please modify this list in the file
-  user_spec_tests_fp = \"${user_spec_tests_fp}\"
+  user_specified_tests_fp = \"${user_specified_tests_fp}\"
 accordingly and rerun."
 
       }
@@ -515,7 +516,7 @@ accordingly and rerun."
 # category subdirectory to the arrays that contain the sanity-checked
 # versions of of these quantities.
 #
-      names_tests_to_run+=("${user_spec_test}")
+      names_tests_to_run+=("${user_specified_test}")
       ids_tests_to_run+=("${test_id}")
       subdirs_tests_to_run+=("${avail_WE2E_test_subdirs[$j]}")
 #
@@ -539,12 +540,12 @@ accordingly and rerun."
   if [ "${match_found}" = "FALSE" ]; then
     avail_WE2E_test_names_str=$( printf "  \"%s\"\n" "${avail_WE2E_test_names[@]}" )
     print_err_msg_exit "\
-The name current user-specified test to run (user_spec_test) does not
-match any of the names (either primary or alternate) of the available
+The name current user-specified test to run (user_specified_test) does 
+not match any of the names (either primary or alternate) of the available
 WE2E tests:
-  user_spec_test = \"${user_spec_test}\"
-Valid values for user_spec_test consist of the names (primary or alternate)
-of the available WE2E tests, which are:
+  user_specified_test = \"${user_specified_test}\"
+Valid values for user_specified_test consist of the names (primary or 
+alternate) of the available WE2E tests, which are:
 ${avail_WE2E_test_names_str}
 Each name in the user-specified list of tests to run:
   1) Must match one of the (primary or alternate) test names of the
@@ -558,7 +559,7 @@ to the rules above and rerun.  This list is in the file specified by the
 input variable tests_file:
   tests_file = \"${tests_file}\"
 The full path to this file is:
-  user_spec_tests_fp = \"${user_spec_tests_fp}\""
+  user_specified_tests_fp = \"${user_specified_tests_fp}\""
   fi
 
 done
