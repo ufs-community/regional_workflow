@@ -1814,6 +1814,11 @@ if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
     output_varname_jstart_of_t7_with_halo_on_t6sg="JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG" \
     output_varname_jend_of_t7_with_halo_on_t6sg="JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG"
 #
+# Set to default values those grid parameters that do not apply to a 
+# GFDLgrid type of grid.
+#
+  PAZI=""
+#
 #-----------------------------------------------------------------------
 #
 # Now consider Jim Purser's map projection/grid generation method.
