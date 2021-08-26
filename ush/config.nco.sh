@@ -24,11 +24,30 @@ EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
 
 #
-# The following must be modified for different platforms and users.
+# The following must be modified for different platforms and users.  
+# Definitions:
+#
+# RUN:
+# Name of model run; used in forming path to output files.  See details
+# in config_defaults.sh.
+#
+# COMINgfs:
+# Path to directory containing files from the external model (FV3GFS).
+#
+# FIXLAM_NCO_BASEDIR:
+# Path to directory containing the pregenerated grid, orography, and 
+# surface climatology "fixed" files to use for the experiment.
+#
+# STMP:
+# Path to directory STMP that mostly contains input files.
+#
+# PTMP:
+# Path to directory PTMP in which the experiment's output files will be 
+# placed.
 #
 RUN="an_experiment"
-COMINgfs="/scratch1/NCEPDEV/hwrf/noscrub/hafs-input/COMGFS"     # Path to directory containing files from the external model (FV3GFS).
-FIXLAM_NCO_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"            # Path to directory containing the pregenerated grid, orography, and surface climatology "fixed" files to use for the experiment.
-STMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/stmp"  # Path to directory STMP that mostly contains input files.
-PTMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"  # Path to directory PTMP in which the experiment's output files will be placed.
+COMINgfs="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files/FV3GFS/nemsio"
+FIXLAM_NCO_BASEDIR="/scratch2/BMC/det/FV3LAM_pregen"
+STMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/stmp"
+PTMP="/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/NCO_dirs/ptmp"
 
