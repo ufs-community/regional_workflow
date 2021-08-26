@@ -1334,6 +1334,39 @@ check_var_valid_value "EXTRN_MDL_DIR_FILE_LAYOUT" \
 #
 #-----------------------------------------------------------------------
 #
+# In NCO mode, EXTRN_MDL_DIR_FILE_LAYOUT must be set to "native_to_extrn_mdl".
+# Reset it if necessary.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${RUN_ENVIR}" = "nco" ]; then
+
+  if [ "${EXTRN_MDL_DIR_FILE_LAYOUT}" = "user_spec" ]; then
+
+    msg="
+When RUN_ENVIR is set to \"nco\", the workflow assumes that the external
+model's directory structure and file naming convention are the ones native
+to the external model (as opposed to being user-specified), i.e. that 
+EXTRN_MDL_DIR_FILE_LAYOUT is set to \"native_to_extrn_mdl\".  However, the
+current value of EXTRN_MDL_DIR_FILE_LAYOUT is:
+  EXTRN_MDL_DIR_FILE_LAYOUT = \"${EXTRN_MDL_DIR_FILE_LAYOUT}\"
+Resetting EXTRN_MDL_DIR_FILE_LAYOUT to \"native_to_extrn_mdl\".  Reset
+value is:"
+
+    EXTRN_MDL_DIR_FILE_LAYOUT="native_to_extrn_mdl"
+
+    msg="$msg""
+  EXTRN_MDL_DIR_FILE_LAYOUT = \"${EXTRN_MDL_DIR_FILE_LAYOUT}\"
+"
+
+    print_info_msg "$msg"
+
+  fi
+
+fi
+#
+#-----------------------------------------------------------------------
+#
 # If doing ensemble forecasts, set the names of the ensemble members.
 # These will be used to set the ensemble member directories.  Also, set 
 # the full path to the FV3 namelist file corresponding to each ensemble 
