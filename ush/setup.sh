@@ -1741,7 +1741,7 @@ fi
 # to use for generating ICs (extrn_mdl_default_basedir) and, if it is 
 # not an empty string, append it to EXTRN_MDL_BASEDIRS_ICS.  [Note that 
 # this default value depends on both the external model and the machine 
-#(as well as the experiment mode, i.e. NCO or community, so it may not 
+# (as well as the experiment mode, i.e. NCO or community, so it may not 
 # be defined for all such combinations.  In such cases, it will get set 
 # below to a null string.]
 #
@@ -1757,6 +1757,23 @@ set_extrn_mdl_default_basedir \
 
 if [ ! -z "${extrn_mdl_default_basedir}" ]; then
   EXTRN_MDL_BASEDIRS_ICS+=( "${extrn_mdl_default_basedir}" )
+fi
+#
+# For clarity, remove those elements of EXTRN_MDL_BASEDIRS_ICS that are 
+# null strings (e.g. left over from the default value).
+#
+tmp=()
+for (( i=0; i<${#EXTRN_MDL_BASEDIRS_ICS[@]}; i++ )); do
+  basedir="${EXTRN_MDL_BASEDIRS_ICS[$i]}"
+  if [ ! -z "$basedir" ]; then
+    tmp+=( "$basedir" )
+  fi
+done
+
+if [ "${#tmp[@]}" -ne "0" ]; then
+  EXTRN_MDL_BASEDIRS_ICS=( "${tmp[@]}" )
+else
+  EXTRN_MDL_BASEDIRS_ICS=( "" )
 fi
 #
 #-----------------------------------------------------------------------
@@ -1775,6 +1792,23 @@ set_extrn_mdl_default_basedir \
 
 if [ ! -z "${extrn_mdl_default_basedir}" ]; then
   EXTRN_MDL_BASEDIRS_LBCS+=( "${extrn_mdl_default_basedir}" )
+fi
+#
+# For clarity, remove those elements of EXTRN_MDL_BASEDIRS_LBCS that are 
+# null strings (e.g. left over from the default value).
+#
+tmp=()
+for (( i=0; i<${#EXTRN_MDL_BASEDIRS_LBCS[@]}; i++ )); do
+  basedir="${EXTRN_MDL_BASEDIRS_LBCS[$i]}"
+  if [ ! -z "$basedir" ]; then
+    tmp+=( "$basedir" )
+  fi
+done
+
+if [ "${#tmp[@]}" -ne "0" ]; then
+  EXTRN_MDL_BASEDIRS_LBCS=( "${tmp[@]}" )
+else
+  EXTRN_MDL_BASEDIRS_LBCS=( "" )
 fi
 #
 #-----------------------------------------------------------------------
