@@ -329,7 +329,9 @@ ules_dir) for the specified task (task_name) failed:
 # now.
 
 if [ -n "${SRW_ENV:-}" ] ; then
+  set +u
   conda activate ${SRW_ENV}
+  set -u
 fi
 
 #
