@@ -681,7 +681,7 @@ the <task> tag to be identical to the ones above for other output times.
 {%- endif %}
 
 
-{% if run_task_get_obs_ccpa %}
+{%- if run_task_get_obs_ccpa %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -712,9 +712,9 @@ the <task> tag to be identical to the ones above for other output times.
     <envar><name>ACCUM</name><value>01</value></envar>
 
   </task>
-{% endif %}
+{%- endif %}
 
-{% if run_task_get_obs_mrms %}
+{%- if run_task_get_obs_mrms %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -746,9 +746,9 @@ the <task> tag to be identical to the ones above for other output times.
     <envar><name>VAR</name><value>REFC RETOP</value></envar>
  
   </task>
-{% endif %}
+{%- endif %}
 
-{% if run_task_get_obs_ndas %}
+{%- if run_task_get_obs_ndas %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -778,9 +778,9 @@ the <task> tag to be identical to the ones above for other output times.
     <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
 
   </task>
-{% endif %}
+{%- endif %}
 
-{% if run_task_vx_gridstat %}
+{%- if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -804,9 +804,9 @@ the <task> tag to be identical to the ones above for other output times.
     <envar><name>FHR</name><value><cyclestr> {% for h in range(1, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>VAR</name><value>APCP</value></envar>
     <envar><name>ACCUM</name><value>01</value></envar>
-    {% if do_ensemble %}
+    {%- if do_ensemble %}
     <envar><name>SLASH_ENSMEM_SUBDIR</name><value><cyclestr>{{ slash_ensmem_subdir }}</cyclestr></value></envar>
-    {% endif %}
+    {%- endif %}
 
     <dependency>
       {%- if run_task_get_obs_ccpa %}
@@ -828,9 +828,9 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-{% endif %}
+{%- endif %}
 
-{% if run_task_vx_gridstat %}
+{%- if run_task_vx_gridstat %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -853,9 +853,9 @@ the <task> tag to be identical to the ones above for other output times.
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
     <envar><name>FHR</name><value><cyclestr> {% for h in range(1, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>VAR</name><value>REFC</value></envar>
-    {% if do_ensemble %}
+    {%- if do_ensemble %}
     <envar><name>SLASH_ENSMEM_SUBDIR</name><value><cyclestr>{{ slash_ensmem_subdir }}</cyclestr></value></envar>
-    {% endif %}
+    {%- endif %}
 
     <dependency>
       {%- if run_task_get_obs_mrms %}
@@ -877,7 +877,7 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-{% endif %}
+{%- endif %}
 
 {%- if run_task_vx_gridstat %}
 <!--
@@ -902,9 +902,9 @@ the <task> tag to be identical to the ones above for other output times.
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
     <envar><name>FHR</name><value><cyclestr> {% for h in range(1, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>VAR</name><value>RETOP</value></envar>
-    {% if do_ensemble %}
+    {%- if do_ensemble %}
     <envar><name>SLASH_ENSMEM_SUBDIR</name><value><cyclestr>{{ slash_ensmem_subdir }}</cyclestr></value></envar>
-    {% endif %}
+    {%- endif %}
 
     <dependency>
       {%- if run_task_get_obs_mrms %}
@@ -928,7 +928,7 @@ the <task> tag to be identical to the ones above for other output times.
   </task>
 {%- endif %}
 
-{% if run_task_vx_gridstat and fcst_len_hrs >= 3 %}
+{%- if run_task_vx_gridstat and fcst_len_hrs >= 3 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -952,18 +952,18 @@ the <task> tag to be identical to the ones above for other output times.
     <envar><name>FHR</name><value><cyclestr> {% for h in range(3, fcst_len_hrs+1, 3) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>VAR</name><value>APCP</value></envar>
     <envar><name>ACCUM</name><value>03</value></envar>
-    {% if do_ensemble %}
+    {%- if do_ensemble %}
     <envar><name>SLASH_ENSMEM_SUBDIR</name><value><cyclestr>{{ slash_ensmem_subdir }}</cyclestr></value></envar>
-    {% endif %}
+    {%- endif %}
 
     <dependency>
       <taskdep task="&VX_GRIDSTAT_TN;{{ uscore_ensmem_name }}"/>
     </dependency>
 
   </task>
-{% endif %}
+{%- endif %}
 
-{% if run_task_vx_gridstat and fcst_len_hrs >= 6 %}
+{%- if run_task_vx_gridstat and fcst_len_hrs >= 6 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -987,18 +987,18 @@ the <task> tag to be identical to the ones above for other output times.
     <envar><name>FHR</name><value><cyclestr> {% for h in range(6, fcst_len_hrs+1, 6) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>VAR</name><value>APCP</value></envar>
     <envar><name>ACCUM</name><value>06</value></envar>
-    {% if do_ensemble %}
+    {%- if do_ensemble %}
     <envar><name>SLASH_ENSMEM_SUBDIR</name><value><cyclestr>{{ slash_ensmem_subdir }}</cyclestr></value></envar>
-    {% endif %}
+    {%- endif %}
 
     <dependency>
       <taskdep task="&VX_GRIDSTAT_TN;{{ uscore_ensmem_name }}"/>
     </dependency>
 
   </task>
-{% endif %}
+{%- endif %}
 
-{% if run_task_vx_gridstat and fcst_len_hrs >= 24 %}
+{%- if run_task_vx_gridstat and fcst_len_hrs >= 24 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1022,18 +1022,18 @@ the <task> tag to be identical to the ones above for other output times.
     <envar><name>FHR</name><value><cyclestr> {% for h in range(24, fcst_len_hrs+1, 24) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
     <envar><name>VAR</name><value>APCP</value></envar>
     <envar><name>ACCUM</name><value>24</value></envar>
-    {% if do_ensemble %}
+    {%- if do_ensemble %}
     <envar><name>SLASH_ENSMEM_SUBDIR</name><value><cyclestr>{{ slash_ensmem_subdir }}</cyclestr></value></envar>
-    {% endif %}
+    {%- endif %}
 
     <dependency>
       <taskdep task="&VX_GRIDSTAT_TN;{{ uscore_ensmem_name }}"/>
     </dependency>
 
   </task>
-{% endif %}
+{%- endif %}
 
-{% if run_task_vx_pointstat %}
+{%- if run_task_vx_pointstat %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1055,9 +1055,9 @@ the <task> tag to be identical to the ones above for other output times.
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
     <envar><name>cyc</name><value><cyclestr>@H</cyclestr></value></envar>
     <envar><name>FHR</name><value><cyclestr> {% for h in range(0, fcst_len_hrs+1) %}{{ " %02d" % h  }}{% endfor %} </cyclestr></value></envar>
-    {% if do_ensemble %}
+    {%- if do_ensemble %}
     <envar><name>SLASH_ENSMEM_SUBDIR</name><value><cyclestr>{{ slash_ensmem_subdir }}</cyclestr></value></envar>
-    {% endif %}
+    {%- endif %}
 
     <dependency>
       {%- if run_task_get_obs_ndas %}
@@ -1079,14 +1079,13 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-{% endif %}
+{%- endif %}
 
-{% if do_ensemble %}
+{%- if do_ensemble %}
   </metatask>
-{% endif %}
+{%- endif %}
 
-
-{% if run_task_vx_ensgrid %}
+{%- if run_task_vx_ensgrid %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1117,7 +1116,7 @@ the <task> tag to be identical to the ones above for other output times.
 
   </task>
 
-{% if fcst_len_hrs >= 3 %}
+{%- if fcst_len_hrs >= 3 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1148,8 +1147,8 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-{% endif %}
-{% if fcst_len_hrs >= 6 %}   
+{%- endif %}
+{%- if fcst_len_hrs >= 6 %}   
 <!--
 ************************************************************************
 ************************************************************************
@@ -1180,8 +1179,8 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-{% endif %}
-{% if fcst_len_hrs >= 24 %}
+{%- endif %}
+{%- if fcst_len_hrs >= 24 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1212,7 +1211,7 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-{% endif %}
+{%- endif %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1333,7 +1332,7 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-{% if fcst_len_hrs >= 3 %}
+{%- if fcst_len_hrs >= 3 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1395,8 +1394,8 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-{% endif %}
-{% if fcst_len_hrs >= 6 %}
+{%- endif %}
+{%- if fcst_len_hrs >= 6 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1458,8 +1457,8 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-{% endif %}
-{% if fcst_len_hrs >= 24 %}
+{%- endif %}
+{%- if fcst_len_hrs >= 24 %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1521,7 +1520,7 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-{% endif %}
+{%- endif %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1581,9 +1580,9 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-{% endif %}
+{%- endif %}
 
-{% if run_task_vx_enspoint %}
+{%- if run_task_vx_enspoint %}
 <!--
 ************************************************************************
 ************************************************************************
@@ -1668,5 +1667,5 @@ the <task> tag to be identical to the ones above for other output times.
 
   </task>
 
-{% endif %}
+{%- endif %}
 </workflow>

@@ -26,10 +26,11 @@ obtype = "${OBTYPE}";
 
 //
 // Verification grid
+// May be set separately in each "field" entry
 //
 regrid = {
    to_grid    = ${REGRID_TO_GRID};
-   method     = BUDGET;
+   method     = BILIN;
    width      = 2;
    vld_thresh = 0.5;
    shape      = SQUARE;
@@ -51,7 +52,7 @@ nc_var_str    = "";
 // Ensemble product fields to be processed
 //
 ens = {
-   ens_thresh = ${ENS_THRESH};
+   ens_thresh = 0.05;
    vld_thresh = 1.0;
 
    field = [ ${ENS_FIELD} ];
@@ -60,14 +61,40 @@ ens = {
 ////////////////////////////////////////////////////////////////////////////////
 
 //
+// Neighborhood ensemble probabilities
+//
+nbrhd_prob = {
+   width      = [ 5 ];
+   shape      = CIRCLE;
+   vld_thresh = 0.0;
+}
+
+//
+// NMEP smoothing methods
+//
+nmep_smooth = {
+   vld_thresh      = 0.0;
+   shape           = CIRCLE;
+   gaussian_dx     = 81.27;
+   gaussian_radius = 120;
+   type = [
+      {
+         method = GAUSSIAN;
+         width  = 1;
+      }
+   ];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+//
 // Forecast and observation fields to be verified
 //
 fcst = {
-   field = [ ${FCST_FIELD}  ];
+  field = [ ${FCST_FIELD} ];
 }
-
 obs = {
-   field = [ ${OBS_FIELD}  ];
+  field = [ ${OBS_FIELD} ];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,14 +103,15 @@ obs = {
 // Point observation filtering options
 // May be set separately in each "obs.field" entry
 //
-message_type   = [];
+${METPLUS_MESSAGE_TYPE}
+sid_inc        = [];
 sid_exc        = [];
 obs_thresh     = [ NA ];
 obs_quality    = [];
-duplicate_flag = UNIQUE;
+duplicate_flag = NONE;
 obs_summary    = NONE;
 obs_perc_value = 50;
-skip_const     = TRUE;
+skip_const     = FALSE;
 
 //
 // Observation error options
@@ -101,7 +129,7 @@ obs_error = {
 }
 
 //
-// Mapping of message type group name to comma-separated list of values.
+// Mapping of message type group name to comma-separated list of values
 //
 message_type_group_map = [
    { key = "SURFACE"; val = "ADPSFC,SFCSHP,MSONET";               },
@@ -122,7 +150,6 @@ ens_phist_bin_size = 0.05;
 // May be set separately in each "fcst.field" entry
 //
 prob_cat_thresh = [];
-
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -176,9 +203,10 @@ obs_window = {
 // Verification masking regions
 //
 mask = {
-   grid = [];
-   poly = [ "${MET_INSTALL_DIR}/share/met/poly/CONUS.poly" ];
-   sid = [];
+   ${METPLUS_MASK_GRID}
+   ${METPLUS_MASK_POLY}
+   sid   = [];
+   llpnt = [];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -186,7 +214,7 @@ mask = {
 //
 // Confidence interval settings
 //
-ci_alpha  = [ 0.01 ];
+ci_alpha  = [ 0.05 ];
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -196,8 +224,14 @@ ci_alpha  = [ 0.01 ];
 interp = {
    field      = BOTH;
    vld_thresh = 1.0;
-   type       = [ { method = NEAREST; width = 1; } ];
-   shape      = SQUARE;
+   shape  = SQUARE;
+
+   type = [
+      {
+         method = NEAREST;
+         width  = 1;
+      }
+   ];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -206,11 +240,11 @@ interp = {
 // Statistical output types
 //
 output_flag = {
-   ecnt  = NONE;
+   ecnt  = STAT;
    rps   = NONE;
    rhist = STAT;
    phist = STAT;
-   orank = NONE;
+   orank = STAT;
    ssvar = STAT;
    relp  = STAT;
 }
@@ -228,12 +262,12 @@ ensemble_flag = {
    plus      = FALSE;
    min       = FALSE;
    max       = FALSE;
-   range     = FALSE;
+   range     = TRUE;
    vld_count = TRUE;
    frequency = TRUE;
    nep       = FALSE;
-   nmep      = FALSE;   
-   rank      = FALSE;
+   nmep      = FALSE;
+   rank      = TRUE;
    weight    = FALSE;
 }
 

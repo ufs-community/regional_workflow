@@ -166,11 +166,6 @@ obs_window = {
 //
 mask = {
    grid = ${POINT_STAT_GRID};
-//   poly = [
-//           "${FIXverif_global}/vx_mask_files/grid2obs/CONUS.nc",
-//           "${FIXverif_global}/vx_mask_files/grid2obs/EAST.nc",
-//           "${FIXverif_global}/vx_mask_files/grid2obs/WEST.nc"
-//           ];
    poly = ${POINT_STAT_POLY};
    sid = ${POINT_STAT_STATION_ID};
    llpnt = [];
@@ -236,16 +231,16 @@ output_flag = {
    cts    = NONE;
    mctc   = NONE;
    mcts   = NONE;
-   cnt    = STAT;
-   sl1l2  = STAT;
+   cnt    = NONE;
+   sl1l2  = NONE;
    sal1l2 = NONE;
-   vl1l2  = STAT;
+   vl1l2  = NONE;
    val1l2 = NONE;
-   vcnt   = STAT;
-   pct    = NONE;
-   pstd   = NONE;
-   pjc    = NONE;
-   prc    = NONE;
+   vcnt   = NONE;
+   pct    = STAT;
+   pstd   = STAT;
+   pjc    = STAT;
+   prc    = STAT;
    eclv   = NONE;
    mpr    = NONE;
 }

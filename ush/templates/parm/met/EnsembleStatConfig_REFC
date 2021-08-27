@@ -184,9 +184,10 @@ obs_window = {
 // Verification masking regions
 //
 mask = {
-   grid = [];
-   poly = [ "${MET_INSTALL_DIR}/share/met/poly/CONUS.poly" ];
-   sid = [];
+   ${METPLUS_MASK_GRID}
+   ${METPLUS_MASK_POLY}
+   sid   = [];
+   llpnt = [];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
