@@ -190,10 +190,6 @@ function source_util_funcs() {
 #
   . ${bashutils_dir}/create_symlink_to_file.sh
 
-##### RRFS-CMAQ ########## start #####
-  . ${scrfunc_dir}/get_platform_info.sh
-##### RRFS-CMAQ ########## end   #####
-
 }
 source_util_funcs
 

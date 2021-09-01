@@ -71,21 +71,41 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-# Set number of OpenMP threads
+# Set OpenMP variables.
 #
 #-----------------------------------------------------------------------
 #
-export NUM_OMP_THREADS=1
+export OMP_NUM_THREADS=1
 #
 #-----------------------------------------------------------------------
 #
-# Retrieve platform's parallel application launcher command.
+# Load modules.
 #
 #-----------------------------------------------------------------------
 #
-get_platform_info \
-    num_threads="${NUM_OMP_THREADS}" \
-    varname_run_cmd="PLAUNCH"
+case "$MACHINE" in
+
+  "WCOSS_DELL_P3")
+    ulimit -s unlimited
+    ulimit -a
+    APRUN="mpirun -n ${PPN_RUN_NEXUS}"
+    ;;
+
+  "HERA")
+    ulimit -s unlimited
+    ulimit -a
+    APRUN="srun -l"
+    ;;
+
+  *)
+    print_err_msg_exit "\
+Run command has not been specified for this machine:
+  MACHINE = \"$MACHINE\"
+  APRUN = \"$APRUN\""
+    ;;
+
+esac
+
 #
 #-----------------------------------------------------------------------
 #
@@ -177,11 +197,10 @@ fi
 #
 # Execute NEXUS
 #
-${PLAUNCH} ${EXECDIR}/nexus -c NEXUS_Config.rc -r grid_spec.nc || \
+${APRUN} ${EXECDIR}/nexus -c NEXUS_Config.rc -r grid_spec.nc || \
 print_err_msg_exit "\
 Call to execute nexus standalone for the FV3LAM failed
 "
-
 
 #
 # Print message indicating successful completion of script.
