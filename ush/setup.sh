@@ -1583,8 +1583,7 @@ NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}"
 
 ##### RRFS-CMAQ ########## start #####
 #
-AQM_RC_TMPL_FN="${AQM_RC_FN}"
-AQM_RC_TMPL_FP="${TEMPLATE_DIR}/${AQM_RC_TMPL_FN}"
+AQM_RC_FP="${TEMPLATE_DIR}/${AQM_RC_FN}"
 #--- replace template file names/paths
 if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   DIAG_TABLE_TMPL_FN="${DIAG_TABLE_FN}.${FCST_MODEL}_${CCPP_PHYS_SUITE}"
@@ -2933,8 +2932,7 @@ THOMPSON_MP_CLIMO_FN="${THOMPSON_MP_CLIMO_FN}"
 THOMPSON_MP_CLIMO_FP="${THOMPSON_MP_CLIMO_FP}"
 #
 ##### RRFS-CMAQ ########## start #####
-AQM_RC_TMPL_FN="${AQM_RC_TMPL_FN}"
-AQM_RC_TMPL_FP="${AQM_RC_TMPL_FP}"
+AQM_RC_FP="${AQM_RC_FP}"
 ##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------

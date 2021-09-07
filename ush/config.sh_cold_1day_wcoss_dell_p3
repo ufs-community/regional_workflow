@@ -49,6 +49,8 @@ LAYOUT_X="33"
 LAYOUT_Y="8"
 BLOCKSIZE="29"
 
+AQM_RC_FN="aqm.rc"
+
 AQM_CONFIG_DIR="/gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/epa/data"
 AQM_BIO_DIR="/gpfs/dell2/emc/modeling/noscrub/Jianping.Huang/fv3sar/aqm/bio"
 AQM_BIO_FILE="BEIS_RRFScmaq_C775.ncf"

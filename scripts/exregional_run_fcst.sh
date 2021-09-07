@@ -490,9 +490,10 @@ fi
 
 #
 ##### RRFS-CMAQ ########## start #####
-#
-AQM_RC_FP="${run_dir}/${AQM_RC_FN}"
-cp_vrfy ${AQM_RC_TMPL_FP} ${AQM_RC_FP}
+# AQM_RC_IN_FN: input file name of cmaq
+AQM_RC_IN_FN="aqm.rc"
+AQM_RC_IN_FP="${run_dir}/${AQM_RC_IN_FN}"
+cp_vrfy ${AQM_RC_FP} ${AQM_RC_IN_FP}
 
 YYYY=${CDATE:0:4}
 MM=${CDATE:4:2}
@@ -519,19 +520,19 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-if [ ! -z "${AQM_RC_FP}" ]; then
+if [ ! -z "${AQM_RC_IN_FP}" ]; then
   print_info_msg "$VERBOSE" "
 Setting parameters in file:
-  AQM_RC_FP = \"${AQM_RC_FP}\""
+  AQM_RC_IN_FP = \"${AQM_RC_IN_FP}\""
 
-  set_file_param "${AQM_RC_FP}" "init_concentrations" "${init_concentrations}"
-  set_file_param "${AQM_RC_FP}" "aqm_config_dir" "${AQM_CONFIG_DIR%/}"
-  set_file_param "${AQM_RC_FP}" "aqm_bio_dir" "${AQM_BIO_DIR%/}"
-  set_file_param "${AQM_RC_FP}" "aqm_bio_file" "${AQM_BIO_FILE}"
-  set_file_param "${AQM_RC_FP}" "aqm_fire_dir" "${AQM_FIRE_DIR%/}"
-  set_file_param "${AQM_RC_FP}" "YYYYMMDD" "${YYYYMMDD}"
-  set_file_param "${AQM_RC_FP}" "aqm_fire_file" "${AQM_FIRE_FILE}"
-  set_file_param "${AQM_RC_FP}" "YYMMDD" "${YYMMDD}"
+  set_file_param "${AQM_RC_IN_FP}" "init_concentrations" "${init_concentrations}"
+  set_file_param "${AQM_RC_IN_FP}" "aqm_config_dir" "${AQM_CONFIG_DIR%/}"
+  set_file_param "${AQM_RC_IN_FP}" "aqm_bio_dir" "${AQM_BIO_DIR%/}"
+  set_file_param "${AQM_RC_IN_FP}" "aqm_bio_file" "${AQM_BIO_FILE}"
+  set_file_param "${AQM_RC_IN_FP}" "aqm_fire_dir" "${AQM_FIRE_DIR%/}"
+  set_file_param "${AQM_RC_IN_FP}" "YYYYMMDD" "${YYYYMMDD}"
+  set_file_param "${AQM_RC_IN_FP}" "aqm_fire_file" "${AQM_FIRE_FILE}"
+  set_file_param "${AQM_RC_IN_FP}" "YYMMDD" "${YYMMDD}"
 fi
 #
 ##### RRFS-CMAQ ########## end   #####

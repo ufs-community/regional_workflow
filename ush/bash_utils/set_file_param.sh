@@ -146,7 +146,7 @@ Setting parameter \"$param\" in file \"$file\" to \"$value\" ..."
 #
 ##### RRFS-CMAQ ########## start #####
 #
-  "${AQM_RC_FN}")
+  "${AQM_RC_IN_FN}")
     regex_search="(<$param>)"
     regex_replace="$value"
     ;;
