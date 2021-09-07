@@ -189,7 +189,7 @@ temporary work directory (tmp_dir):
 ===================================================================="
 fi
 cp_vrfy ${post_config_fp} ./postxconfig-NT.txt
-cp_vrfy ${EMC_POST_DIR}/parm/params_grib2_tbl_new .
+cp_vrfy ${UPP_DIR}/parm/params_grib2_tbl_new .
 #
 #-----------------------------------------------------------------------
 #
