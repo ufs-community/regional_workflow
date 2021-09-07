@@ -164,7 +164,7 @@ esac
 #-----------------------------------------------------------------------
 #
 rm_vrfy -f fort.*
-cp_vrfy ${EMC_POST_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
+cp_vrfy ${UPP_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
 if [ ${USE_CUSTOM_POST_CONFIG_FILE} = "TRUE" ]; then
   post_config_fp="${CUSTOM_POST_CONFIG_FP}"
   print_info_msg "
@@ -176,9 +176,9 @@ to the temporary work directory (tmp_dir):
 ===================================================================="
 else
   if [ ${FCST_MODEL} = "fv3gfs_aqm" ]; then
-    post_config_fp="${EMC_POST_DIR}/parm/postxconfig-NT-fv3lam_cmaq.txt"
+    post_config_fp="${UPP_DIR}/parm/postxconfig-NT-fv3lam_cmaq.txt"
   else
-    post_config_fp="${EMC_POST_DIR}/parm/postxconfig-NT-fv3lam.txt"
+    post_config_fp="${UPP_DIR}/parm/postxconfig-NT-fv3lam.txt"
   fi
   print_info_msg "
 ====================================================================
