@@ -111,10 +111,8 @@ INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
 
 if [ ${VAR} == "APCP" ]; then
   LOG_SUFFIX=ensgrid_prob_${CDATE}_${VAR}_${ACCUM}h
-elif [[ ${VAR} == "REFC" || ${VAR} == "RETOP" ]]; then
-  LOG_SUFFIX=ensgrid_prob_${CDATE}_${VAR}
 else
-  echo "No variable defined"
+  LOG_SUFFIX=ensgrid_prob_${CDATE}_${VAR}
 fi
 
 #
@@ -162,12 +160,10 @@ if [ ${VAR} == "APCP" ]; then
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/GridStat_${VAR}${acc}_prob.conf
-elif [[ ${VAR} == "REFC" || ${VAR} == "RETOP" ]]; then
+else
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/GridStat_${VAR}_prob.conf
-else
-  echo "No variable defined"
 fi
 
 #

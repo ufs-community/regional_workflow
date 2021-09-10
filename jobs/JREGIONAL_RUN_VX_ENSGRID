@@ -57,33 +57,6 @@ on gridded fields by initialization time for all forecast hours.
 #
 #-----------------------------------------------------------------------
 #
-# If it doesn't already exist, create the directory (vx_dir) in 
-# which to store ensemble-stat output. 
-#
-# Note that there may be a preexisting version of vx_dir from previous 
-# runs of this script (e.g. from the workflow task that runs this script 
-# failing and then being called again). Thus, we first make sure 
-# preexisting versions are deleted.
-#
-#-----------------------------------------------------------------------
-#
-
-#if [ "${RUN_ENVIR}" = "nco" ]; then
-#  COMOUT="$COMROOT/$NET/$envir/$RUN.$PDY/$cyc"
-#  vx_dir="$COMOUT"
-#else
-#  vx_dir="${CYCLE_DIR}/metprd"
-#fi
-#mkdir_vrfy -p "${vx_dir}"
-
-#ensemblestat_dir="${vx_dir}/ensemble_stat"
-##check_for_preexist_dir "${ensemblestat_dir}" "delete"
-#mkdir_vrfy -p "${ensemblestat_dir}"
-
-#cd_vrfy "${ensemblestat_dir}"
-#
-#-----------------------------------------------------------------------
-#
 # Call the ex-script for this J-job and pass to it the necessary varia-
 # bles. 
 #

@@ -71,7 +71,7 @@ process_args valid_args "$@"
 print_input_args valid_args
 #-----------------------------------------------------------------------
 #
-# Begin grid-to-grid vx on ensemble output.
+# Begin grid-to-point vx on ensemble output.
 #
 #-----------------------------------------------------------------------
 #

@@ -1816,8 +1816,10 @@ Thus, the MAKE_SFC_CLIMO_TN task must not be run (i.e. RUN_TASK_MAKE_SFC_CLIMO
 must be set to \"FALSE\"), and the directory in which to look for the 
 surface climatology files (i.e. SFC_CLIMO_DIR) must be set to the one 
 above.  Current values for these quantities are:
+
   RUN_TASK_MAKE_SFC_CLIMO = \"${RUN_TASK_MAKE_SFC_CLIMO}\"
   SFC_CLIMO_DIR = \"${SFC_CLIMO_DIR}\"
+
 Resetting RUN_TASK_MAKE_SFC_CLIMO to \"FALSE\" and SFC_CLIMO_DIR to the 
 one above.  Reset values are:
 "

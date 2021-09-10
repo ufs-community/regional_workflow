@@ -75,7 +75,7 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-print_info_msg "$VERBOSE" "Starting ensemble-stat verification"
+print_info_msg "$VERBOSE" "Starting point-based ensemble-stat verification"
 
 #
 #-----------------------------------------------------------------------

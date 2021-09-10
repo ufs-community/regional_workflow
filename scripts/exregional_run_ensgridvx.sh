@@ -113,10 +113,8 @@ NUM_PAD=${NDIGITS_ENSMEM_NAMES}
 
 if [ ${VAR} == "APCP" ]; then
   LOG_SUFFIX=ensgrid_${CDATE}_${VAR}_${ACCUM}h
-elif [[ ${VAR} == "REFC"  || ${VAR} == "RETOP" ]]; then
-  LOG_SUFFIX=ensgrid_${CDATE}_${VAR}
 else
-  echo "No variable defined"
+  LOG_SUFFIX=ensgrid_${CDATE}_${VAR}
 fi
 
 #
@@ -153,12 +151,10 @@ if [ ${VAR} == "APCP" ]; then
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/EnsembleStat_${VAR}${acc}.conf
-elif [[ ${VAR} == "REFC"  || ${VAR} == "RETOP" ]]; then
+else
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/EnsembleStat_${VAR}.conf
-else
-  echo "No variable defined"
 fi
 
 #
