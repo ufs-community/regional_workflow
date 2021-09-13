@@ -1023,13 +1023,11 @@ EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
 #-----------------------------------------------------------------------
 #
   if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
-     [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ] || \
-     [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" ] || \
-     [ "${RUN_TASK_VX_ENSPOINT}" = "TRUE" ]; then
+     [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ]; then
 
     if [ "$MACHINE" = "WCOSS_CRAY" ]; then
-      met_install_dir="/gpfs/hps/nco/ops/nwprod/met.v9.1.3"
-      metplus_path="/gpfs/hps/nco/ops/nwprod/metplus.v3.1.1/METplus-3.1.1"
+      met_install_dir="/gpfs/hps3/emc/meso/noscrub/emc.metplus/met/10.0.0"
+      metplus_path="/gpfs/hps3/emc/meso/noscrub/emc.metplus/METplus/METplus-4.0.0"
       ccpa_obs_dir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/obs_data/ccpa/proc"
       mrms_obs_dir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/obs_data/mrms/proc"
       ndas_obs_dir="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/obs_data/ndas/proc"
