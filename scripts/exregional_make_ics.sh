@@ -100,8 +100,7 @@ case "$MACHINE" in
 
   "JET")
     ulimit -s unlimited
-    nprocs=$(( NNODES_MAKE_ICS*PPN_MAKE_ICS ))
-    APRUN="mpirun -np $nprocs"
+    APRUN="srun"
     ;;
 
   "GAEA")
