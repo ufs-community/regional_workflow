@@ -1,4 +1,4 @@
-#!/bin/sh -l
+#!/bin/bash
 set -x
 
 #
@@ -131,8 +131,6 @@ export MET_BIN_EXEC
 export METPLUS_PATH
 export METPLUS_CONF
 export MET_CONFIG
-export OBS_DIR
-export VAR
 export MODEL
 export NET
 export NUM_ENS_MEMBERS 
@@ -147,7 +145,7 @@ export LOG_SUFFIX
 #-----------------------------------------------------------------------
 #
 if [ ${VAR} == "APCP" ]; then
-  export acc="${ACCUM}h" # for stats output prefix in EnsembleStatConfig
+  acc="${ACCUM}h" # for stats output prefix in EnsembleStatConfig
   ${METPLUS_PATH}/ush/master_metplus.py \
     -c ${METPLUS_CONF}/common.conf \
     -c ${METPLUS_CONF}/EnsembleStat_${VAR}${acc}.conf

@@ -680,7 +680,6 @@ the <task> tag to be identical to the ones above for other output times.
   {%- endif %}
 {%- endif %}
 
-
 {%- if run_task_get_obs_ccpa %}
 <!--
 ************************************************************************

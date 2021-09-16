@@ -1,4 +1,4 @@
-#!/bin/sh -l
+#!/bin/bash
 set -x
 
 #
@@ -148,8 +148,6 @@ export MET_BIN_EXEC
 export METPLUS_PATH
 export METPLUS_CONF
 export MET_CONFIG
-export OBS_DIR
-export VAR
 export MODEL
 export NET
 
