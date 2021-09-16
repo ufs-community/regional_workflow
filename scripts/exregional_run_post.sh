@@ -171,7 +171,7 @@ esac
 #-----------------------------------------------------------------------
 #
 rm_vrfy -f fort.*
-cp_vrfy ${EMC_POST_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
+cp_vrfy ${UPP_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
 if [ ${USE_CUSTOM_POST_CONFIG_FILE} = "TRUE" ]; then
   post_config_fp="${CUSTOM_POST_CONFIG_FP}"
   print_info_msg "
@@ -182,7 +182,7 @@ to the temporary work directory (tmp_dir):
   tmp_dir = \"${tmp_dir}\"
 ===================================================================="
 else
-  post_config_fp="${EMC_POST_DIR}/parm/postxconfig-NT-fv3lam.txt"
+  post_config_fp="${UPP_DIR}/parm/postxconfig-NT-fv3lam.txt"
   print_info_msg "
 ====================================================================
 Copying the default post flat file specified by post_config_fp to the 
@@ -192,7 +192,7 @@ temporary work directory (tmp_dir):
 ===================================================================="
 fi
 cp_vrfy ${post_config_fp} ./postxconfig-NT.txt
-cp_vrfy ${EMC_POST_DIR}/parm/params_grib2_tbl_new .
+cp_vrfy ${UPP_DIR}/parm/params_grib2_tbl_new .
 #
 #-----------------------------------------------------------------------
 #
@@ -283,7 +283,7 @@ EOF
 print_info_msg "$VERBOSE" "
 Starting post-processing for fhr = $fhr hr..."
 
-${APRUN} ${EXECDIR}/ncep_post < itag || print_err_msg_exit "\
+${APRUN} ${EXECDIR}/upp.x < itag || print_err_msg_exit "\
 Call to executable to run post for forecast hour $fhr returned with non-
 zero exit code."
 #
@@ -332,13 +332,13 @@ post_renamed_fn_suffix="f${fhr}${post_mn_or_null}.${tmmark}.grib2"
 #
 # For convenience, change location to postprd_dir (where the final output
 # from UPP will be located).  Then loop through the two files that UPP
-# generates (i.e. "...bgdawp..." and "...bgrd3d..." files) and move, 
+# generates (i.e. "...prslev..." and "...natlev..." files) and move, 
 # rename, and create symlinks to them.
 #
 cd_vrfy "${postprd_dir}"
 basetime=$( $DATE_UTIL --date "$yyyymmdd $hh" +%y%j%H%M )
 symlink_suffix="_${basetime}f${fhr}${post_mn}"
-fids=( "bgdawp" "bgrd3d" )
+fids=( "prslev" "natlev" )
 for fid in "${fids[@]}"; do
   FID=$(echo_uppercase $fid)
   post_orig_fn="${FID}.${post_fn_suffix}"

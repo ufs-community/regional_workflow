@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+. ${GLOBAL_VAR_DEFNS_FP}
 
 # This script pulls MRMS data from the NOAA HPSS
 # Top-level MRMS directory
@@ -122,7 +124,7 @@ while [[ ${cur_ut} -le ${end_valid_ut} ]]; do
       hour=0
       while [[ ${hour} -le 23 ]]; do
         echo "hour=${hour}"
-        python ${SCRIPTSDIR}/mrms_pull_topofhour.py ${vyyyy}${vmm}${vdd}${hour} ${mrms_proc} ${mrms_raw} ${field_base_name} ${level}
+        python ${USHDIR}/mrms_pull_topofhour.py ${vyyyy}${vmm}${vdd}${hour} ${mrms_proc} ${mrms_raw} ${field_base_name} ${level}
       hour=$((${hour} + 1)) # hourly increment
       done
     fi

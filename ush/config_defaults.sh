@@ -513,7 +513,7 @@ WRITE_DOPOST="FALSE"
 # HPSS has an example of the expected file naming structure: 
 # regional_workflow/scripts/exregional_get_mrms_files.sh. This script 
 # calls the script used to identify the MRMS file closest to the valid 
-# time: regional_workflow/scripts/mrms_pull_topofhour.py.
+# time: regional_workflow/ush/mrms_pull_topofhour.py.
 #
 # NDAS_OBS_DIR:
 # User-specified location of top-level directory where NDAS prepbufr 
@@ -678,7 +678,6 @@ NOMADS_file_type="nemsio"
 # directory or the cycle directories under it.
 #
 #-----------------------------------------------------------------------
-#
 CCPP_PHYS_SUITE="FV3_GFS_v15p2"
 #
 #-----------------------------------------------------------------------
@@ -1178,6 +1177,25 @@ VX_GRIDSTAT_03h_TN="run_gridstatvx_03h"
 VX_GRIDSTAT_06h_TN="run_gridstatvx_06h"
 VX_GRIDSTAT_24h_TN="run_gridstatvx_24h"
 VX_POINTSTAT_TN="run_pointstatvx"
+VX_ENSGRID_TN="run_ensgridvx"
+VX_ENSGRID_03h_TN="run_ensgridvx_03h"
+VX_ENSGRID_06h_TN="run_ensgridvx_06h"
+VX_ENSGRID_24h_TN="run_ensgridvx_24h"
+VX_ENSGRID_REFC_TN="run_ensgridvx_refc"
+VX_ENSGRID_RETOP_TN="run_ensgridvx_retop"
+VX_ENSGRID_MEAN_TN="run_ensgridvx_mean"
+VX_ENSGRID_PROB_TN="run_ensgridvx_prob"
+VX_ENSGRID_MEAN_03h_TN="run_ensgridvx_mean_03h"
+VX_ENSGRID_PROB_03h_TN="run_ensgridvx_prob_03h"
+VX_ENSGRID_MEAN_06h_TN="run_ensgridvx_mean_06h"
+VX_ENSGRID_PROB_06h_TN="run_ensgridvx_prob_06h"
+VX_ENSGRID_MEAN_24h_TN="run_ensgridvx_mean_24h"
+VX_ENSGRID_PROB_24h_TN="run_ensgridvx_prob_24h"
+VX_ENSGRID_PROB_REFC_TN="run_ensgridvx_prob_refc"
+VX_ENSGRID_PROB_RETOP_TN="run_ensgridvx_prob_retop"
+VX_ENSPOINT_TN="run_enspointvx"
+VX_ENSPOINT_MEAN_TN="run_enspointvx_mean"
+VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
 #
 #-----------------------------------------------------------------------
 #
@@ -1221,6 +1239,15 @@ VX_POINTSTAT_TN="run_pointstatvx"
 # Flag that determines whether the point-stat verification task is to be
 # run.
 #
+# RUN_TASK_VX_ENSGRID:
+# Flag that determines whether the ensemble-stat verification for gridded
+# data task is to be run. 
+#
+# RUN_TASK_VX_ENSPOINT:
+# Flag that determines whether the ensemble point verification task is
+# to be run. If this flag is set, both ensemble-stat point verification
+# and point verification of ensemble-stat output is computed.
+#
 #-----------------------------------------------------------------------
 #
 RUN_TASK_MAKE_GRID="TRUE"
@@ -1243,6 +1270,10 @@ RUN_TASK_GET_OBS_NDAS="FALSE"
 RUN_TASK_VX_GRIDSTAT="FALSE"
 
 RUN_TASK_VX_POINTSTAT="FALSE"
+
+RUN_TASK_VX_ENSGRID="FALSE"
+
+RUN_TASK_VX_ENSPOINT="FALSE"
 #
 #-----------------------------------------------------------------------
 #
@@ -1451,6 +1482,12 @@ NNODES_GET_OBS_MRMS="1"
 NNODES_GET_OBS_NDAS="1"
 NNODES_VX_GRIDSTAT="1"
 NNODES_VX_POINTSTAT="1"
+NNODES_VX_ENSGRID="1"
+NNODES_VX_ENSGRID_MEAN="1"
+NNODES_VX_ENSGRID_PROB="1"
+NNODES_VX_ENSPOINT="1"
+NNODES_VX_ENSPOINT_MEAN="1"
+NNODES_VX_ENSPOINT_PROB="1"
 #
 # Number of MPI processes per node.
 #
@@ -1468,6 +1505,12 @@ PPN_GET_OBS_MRMS="1"
 PPN_GET_OBS_NDAS="1"
 PPN_VX_GRIDSTAT="1"
 PPN_VX_POINTSTAT="1"
+PPN_VX_ENSGRID="1"
+PPN_VX_ENSGRID_MEAN="1"
+PPN_VX_ENSGRID_PROB="1"
+PPN_VX_ENSPOINT="1"
+PPN_VX_ENSPOINT_MEAN="1"
+PPN_VX_ENSPOINT_PROB="1"
 #
 # Walltimes.
 #
@@ -1485,6 +1528,12 @@ WTIME_GET_OBS_MRMS="00:45:00"
 WTIME_GET_OBS_NDAS="02:00:00"
 WTIME_VX_GRIDSTAT="02:00:00"
 WTIME_VX_POINTSTAT="01:00:00"
+WTIME_VX_ENSGRID="01:00:00"
+WTIME_VX_ENSGRID_MEAN="01:00:00"
+WTIME_VX_ENSGRID_PROB="01:00:00"
+WTIME_VX_ENSPOINT="01:00:00"
+WTIME_VX_ENSPOINT_MEAN="01:00:00"
+WTIME_VX_ENSPOINT_PROB="01:00:00"
 #
 # Maximum number of attempts.
 #
@@ -1507,6 +1556,25 @@ MAXTRIES_VX_GRIDSTAT_03h="1"
 MAXTRIES_VX_GRIDSTAT_06h="1"
 MAXTRIES_VX_GRIDSTAT_24h="1"
 MAXTRIES_VX_POINTSTAT="1"
+MAXTRIES_VX_ENSGRID="1"
+MAXTRIES_VX_ENSGRID_REFC="1"
+MAXTRIES_VX_ENSGRID_RETOP="1"
+MAXTRIES_VX_ENSGRID_03h="1"
+MAXTRIES_VX_ENSGRID_06h="1"
+MAXTRIES_VX_ENSGRID_24h="1"
+MAXTRIES_VX_ENSGRID_MEAN="1"
+MAXTRIES_VX_ENSGRID_PROB="1"
+MAXTRIES_VX_ENSGRID_MEAN_03h="1"
+MAXTRIES_VX_ENSGRID_PROB_03h="1"
+MAXTRIES_VX_ENSGRID_MEAN_06h="1"
+MAXTRIES_VX_ENSGRID_PROB_06h="1"
+MAXTRIES_VX_ENSGRID_MEAN_24h="1"
+MAXTRIES_VX_ENSGRID_PROB_24h="1"
+MAXTRIES_VX_ENSGRID_PROB_REFC="1"
+MAXTRIES_VX_ENSGRID_PROB_RETOP="1"
+MAXTRIES_VX_ENSPOINT="1"
+MAXTRIES_VX_ENSPOINT_MEAN="1"
+MAXTRIES_VX_ENSPOINT_PROB="1"
 #
 #-----------------------------------------------------------------------
 #
@@ -1544,7 +1612,7 @@ DT_SUBHOURLY_POST_MNTS="00"
 # should be used for post-processing the model data. If this is set to
 # "TRUE", then the workflow will use the custom post-processing (UPP) 
 # configuration file specified in CUSTOM_POST_CONFIG_FP. Otherwise, a 
-# default configuration file provided in the EMC_post repository will be 
+# default configuration file provided in the UPP repository will be 
 # used.
 #
 # CUSTOM_POST_CONFIG_FP:

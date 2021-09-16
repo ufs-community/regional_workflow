@@ -290,6 +290,49 @@ elif [ "${RUN_TASK_VX_POINTSTAT}" = "FALSE" ] || \
      [ "${RUN_TASK_VX_POINTSTAT}" = "NO" ]; then
   RUN_TASK_VX_POINTSTAT="FALSE"
 fi
+
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_VX_ENSGRID is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_VX_ENSGRID" "valid_vals_RUN_TASK_VX_ENSGRID"
+#
+# Set RUN_TASK_VX_ENSGRID to either "TRUE" or "FALSE" so we don't have to
+# consider other valid values later on.
+#
+RUN_TASK_VX_ENSGRID=${RUN_TASK_VX_ENSGRID^^}
+if [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" ] || \
+   [ "${RUN_TASK_VX_ENSGRID}" = "YES" ]; then
+  RUN_TASK_VX_ENSGRID="TRUE"
+elif [ "${RUN_TASK_VX_ENSGRID}" = "FALSE" ] || \
+     [ "${RUN_TASK_VX_ENSGRID}" = "NO" ]; then
+  RUN_TASK_VX_ENSGRID="FALSE"
+fi
+
+#
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_VX_ENSPOINT is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_VX_ENSPOINT" "valid_vals_RUN_TASK_VX_ENSPOINT"
+#
+# Set RUN_TASK_VX_ENSPOINT to either "TRUE" or "FALSE" so we don't have to
+# consider other valid values later on.
+#
+RUN_TASK_VX_ENSPOINT=${RUN_TASK_VX_ENSPOINT^^}
+if [ "${RUN_TASK_VX_ENSPOINT}" = "TRUE" ] || \
+   [ "${RUN_TASK_VX_ENSPOINT}" = "YES" ]; then
+  RUN_TASK_VX_ENSPOINT="TRUE"
+elif [ "${RUN_TASK_VX_ENSPOINT}" = "FALSE" ] || \
+     [ "${RUN_TASK_VX_ENSPOINT}" = "NO" ]; then
+  RUN_TASK_VX_ENSPOINT="FALSE"
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1004,21 +1047,21 @@ Please clone the external repository containing the code in this direct-
 ory, build the executables, and then rerun the workflow."
 fi
 #
-# Get the base directory of the EMC_post code.
+# Get the base directory of the UPP code.
 #
-external_name="EMC_post"
-EMC_POST_DIR=$( \
+external_name="UPP"
+UPP_DIR=$( \
 get_manage_externals_config_property \
 "${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
 print_err_msg_exit "\
 Call to function get_manage_externals_config_property failed."
 
-EMC_POST_DIR="${SR_WX_APP_TOP_DIR}/${EMC_POST_DIR}"
-if [ ! -d "${EMC_POST_DIR}" ]; then
+UPP_DIR="${SR_WX_APP_TOP_DIR}/${UPP_DIR}"
+if [ ! -d "${UPP_DIR}" ]; then
   print_err_msg_exit "\
-The base directory in which the EMC_post source code should be located
-(EMC_POST_DIR) does not exist:
-  EMS_POST_DIR = \"${EMC_POST_DIR}\"
+The base directory in which the UPP source code should be located
+(UPP_DIR) does not exist:
+  UPP_DIR = \"${UPP_DIR}\"
 Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
 fi
@@ -1750,7 +1793,6 @@ Reset values are:
     msg="
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 orography files already exist in the directory 
-
   \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
 
 where
@@ -1855,6 +1897,26 @@ Reset value is:"
 
     msg="$msg""
   RUN_TASK_VX_POINTSTAT = \"${RUN_TASK_VX_POINTSTAT}\"
+"
+
+    print_info_msg "$msg"
+
+  fi
+
+  if [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" ] || \
+     [ "${RUN_TASK_VX_ENSGRID}" = "FALSE" ]; then
+
+    msg="
+When RUN_ENVIR is set to \"nco\", it is assumed that the verification
+will not be run.
+  RUN_TASK_VX_ENSGRID = \"${RUN_TASK_VX_ENSGRID}\"
+Resetting RUN_TASK_VX_ENSGRID to \"FALSE\" 
+Reset value is:"
+
+    RUN_TASK_VX_ENSGRID="FALSE"
+
+    msg="$msg""
+  RUN_TASK_VX_ENSGRID = \"${RUN_TASK_VX_ENSGRID}\"
 "
 
     print_info_msg "$msg"
@@ -2711,7 +2773,7 @@ UFS_WTHR_MDL_DIR="${UFS_WTHR_MDL_DIR}"
 UFS_UTILS_DIR="${UFS_UTILS_DIR}"
 SFC_CLIMO_INPUT_DIR="${SFC_CLIMO_INPUT_DIR}"
 TOPO_DIR="${TOPO_DIR}"
-EMC_POST_DIR="${EMC_POST_DIR}"
+UPP_DIR="${UPP_DIR}"
 
 EXPTDIR="$EXPTDIR"
 LOGDIR="$LOGDIR"
@@ -2808,7 +2870,6 @@ NX="${NX}"
 NY="${NY}"
 NHW="${NHW}"
 STRETCH_FAC="${STRETCH_FAC}"
-PAZI="${PAZI}"
 
 RES_IN_FIXLAM_FILENAMES="${RES_IN_FIXLAM_FILENAMES}"
 #
@@ -2871,6 +2932,7 @@ DEL_ANGLE_X_SG="${DEL_ANGLE_X_SG}"
 DEL_ANGLE_Y_SG="${DEL_ANGLE_Y_SG}"
 NEG_NX_OF_DOM_WITH_WIDE_HALO="${NEG_NX_OF_DOM_WITH_WIDE_HALO}"
 NEG_NY_OF_DOM_WITH_WIDE_HALO="${NEG_NY_OF_DOM_WITH_WIDE_HALO}"
+PAZI="${PAZI}"
 EOM
 } || print_err_msg_exit "\
 Heredoc (cat) command to append grid parameters to variable definitions
