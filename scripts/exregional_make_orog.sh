@@ -341,11 +341,11 @@ if [ "${CCPP_PHYS_SUITE}" = "FV3_HRRR" ]; then
   ls_fn="geo_em.d01.lat-lon.2.5m.HGT_M.nc"
   ss_fn="HGT.Beljaars_filtered.lat-lon.30s_res.nc"
   create_symlink_to_file target="${grid_fp_gwd}" symlink="${tmp_dir}/${grid_fn_gwd}" \
-                         relative="${relative_link_flag}"
+                         relative="TRUE"
   create_symlink_to_file target="${FIXam}/${ls_fn}" symlink="${tmp_dir}/${ls_fn}" \
-                         relative="${relative_link_flag}"
+                         relative="TRUE"
   create_symlink_to_file target="${FIXam}/${ss_fn}" symlink="${tmp_dir}/${ss_fn}" \
-                         relative="${relative_link_flag}"
+                         relative="TRUE"
 
   input_redirect_fn="grid_info.dat"
   cat > "${input_redirect_fn}" <<EOF
