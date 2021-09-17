@@ -2286,7 +2286,7 @@ check_var_valid_value "WRITE_DOPOST" "valid_vals_WRITE_DOPOST"
 # Set WRITE_DOPOST to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
 #
-WRITE_DOPOST=$(echo_uppercase WRITE_DOPOST)
+WRITE_DOPOST=$(echo_uppercase $WRITE_DOPOST)
 if [ "$WRITE_DOPOST" = "TRUE" ] || \
    [ "$WRITE_DOPOST" = "YES" ]; then
   WRITE_DOPOST="TRUE"
