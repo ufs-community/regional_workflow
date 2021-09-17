@@ -303,7 +303,7 @@ check_var_valid_value "RUN_TASK_VX_ENSGRID" "valid_vals_RUN_TASK_VX_ENSGRID"
 # Set RUN_TASK_VX_ENSGRID to either "TRUE" or "FALSE" so we don't have to
 # consider other valid values later on.
 #
-RUN_TASK_VX_ENSGRID=${RUN_TASK_VX_ENSGRID^^}
+RUN_TASK_VX_ENSGRID==$(echo_uppercase $RUN_TASK_VX_ENSGRID)
 if [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" ] || \
    [ "${RUN_TASK_VX_ENSGRID}" = "YES" ]; then
   RUN_TASK_VX_ENSGRID="TRUE"
@@ -325,7 +325,7 @@ check_var_valid_value "RUN_TASK_VX_ENSPOINT" "valid_vals_RUN_TASK_VX_ENSPOINT"
 # Set RUN_TASK_VX_ENSPOINT to either "TRUE" or "FALSE" so we don't have to
 # consider other valid values later on.
 #
-RUN_TASK_VX_ENSPOINT=${RUN_TASK_VX_ENSPOINT^^}
+RUN_TASK_VX_ENSPOINT=$(echo_uppercase $RUN_TASK_VX_ENSPOINT)
 if [ "${RUN_TASK_VX_ENSPOINT}" = "TRUE" ] || \
    [ "${RUN_TASK_VX_ENSPOINT}" = "YES" ]; then
   RUN_TASK_VX_ENSPOINT="TRUE"
@@ -2286,7 +2286,7 @@ check_var_valid_value "WRITE_DOPOST" "valid_vals_WRITE_DOPOST"
 # Set WRITE_DOPOST to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
 #
-WRITE_DOPOST=$(echo_uppercase WRITE_DOPOST)
+WRITE_DOPOST=$(echo_uppercase $WRITE_DOPOST)
 if [ "$WRITE_DOPOST" = "TRUE" ] || \
    [ "$WRITE_DOPOST" = "YES" ]; then
   WRITE_DOPOST="TRUE"

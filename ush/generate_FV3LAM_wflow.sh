@@ -1058,7 +1058,7 @@ rm "${tmp_fp}"
 # ful, move the log file in which the "tee" command saved the output of
 # the function to the experiment directory.
 #
-if [ $retval -eq 0 ]; then
+if [[ $retval == 0 ]]; then
   mv "${log_fp}" "$exptdir"
 #
 # If the call to the generate_FV3LAM_wflow function above was not suc-
