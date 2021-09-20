@@ -615,6 +615,7 @@ bination of external model (extrn_mdl_name) and analysis or forecast
     sysbasedir="${EXTRN_MDL_SYSBASEDIR_LBCS}"
   fi
 
+  sysdir=""
   case "${extrn_mdl_name}" in
 
 #
