@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script reorganizes the CCPA data into a more intuitive structure:
 # A valid YYYYMMDD directory is created, and all files for the valid day are placed within the directory.
@@ -47,9 +47,9 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
   mm=`echo ${init} | cut -c5-6`    # month (MM) of initialization time
   dd=`echo ${init} | cut -c7-8`    # day (DD) of initialization time
   hh=`echo ${init} | cut -c9-10`   # hour (HH) of initialization time
-  init_ut=`date -ud ''${yyyy}-${mm}-${dd}' UTC '${hh}':00:00' +%s` # convert initialization time to universal time
+  init_ut=`$DATE_UTIL -ud ''${yyyy}-${mm}-${dd}' UTC '${hh}':00:00' +%s` # convert initialization time to universal time
   vdate_ut=`expr ${init_ut} + ${fcst_sec}` # calculate current forecast time in universal time
-  vdate=`date -ud '1970-01-01 UTC '${vdate_ut}' seconds' +%Y%m%d%H` # convert universal time to standard time
+  vdate=`$DATE_UTIL -ud '1970-01-01 UTC '${vdate_ut}' seconds' +%Y%m%d%H` # convert universal time to standard time
   vyyyymmdd=`echo ${vdate} | cut -c1-8`  # forecast time (YYYYMMDD)
   vyyyy=`echo ${vdate} | cut -c1-4`  # year (YYYY) of valid time
   vmm=`echo ${vdate} | cut -c5-6`    # month (MM) of valid time
@@ -60,7 +60,7 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
 
   # Calculate valid date - 1 day
   vdate_ut_m1=`expr ${vdate_ut} - 86400` 
-  vdate_m1=`date -ud '1970-01-01 UTC '${vdate_ut_m1}' seconds' +%Y%m%d%H` 
+  vdate_m1=`$DATE_UTIL -ud '1970-01-01 UTC '${vdate_ut_m1}' seconds' +%Y%m%d%H` 
   vyyyymmdd_m1=`echo ${vdate_m1} | cut -c1-8` 
   vyyyy_m1=`echo ${vdate_m1} | cut -c1-4`
   vmm_m1=`echo ${vdate_m1} | cut -c5-6` 
@@ -69,7 +69,7 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
 
   # Calculate valid date + 1 day
   vdate_ut_p1=`expr ${vdate_ut} + 86400`
-  vdate_p1=`date -ud '1970-01-01 UTC '${vdate_ut_p1}' seconds' +%Y%m%d%H`
+  vdate_p1=`$DATE_UTIL -ud '1970-01-01 UTC '${vdate_ut_p1}' seconds' +%Y%m%d%H`
   vyyyymmdd_p1=`echo ${vdate_p1} | cut -c1-8`
   vyyyy_p1=`echo ${vdate_p1} | cut -c1-4`
   vmm_p1=`echo ${vdate_p1} | cut -c5-6` 
@@ -150,7 +150,8 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
         htar -xvf ${TarFile} `htar -tf ${TarFile} | egrep "ccpa.t${vhh}z.${accum}h.hrap.conus.gb2" | awk '{print $7}'`
       fi
 
-      # One hour CCPA files have incorrect metadeta in the files under the "00" directory. After data is pulled, reorganize into correct valid yyyymmdd structure.
+      # One hour CCPA files have incorrect metadeta in the files under the "00" directory from 20180718 to 20210504.
+      # After data is pulled, reorganize into correct valid yyyymmdd structure.
       if [[ ${vhh_noZero} -ge 1 && ${vhh_noZero} -le 6 ]]; then
         cp $ccpa_raw/${vyyyymmdd}/06/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
       elif [[ ${vhh_noZero} -ge 7 && ${vhh_noZero} -le 12 ]]; then
@@ -158,9 +159,17 @@ while [[ ${current_fcst} -le ${fcst_length} ]]; do
       elif [[ ${vhh_noZero} -ge 13 && ${vhh_noZero} -le 18 ]]; then
         cp $ccpa_raw/${vyyyymmdd}/18/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
       elif [[ ${vhh_noZero} -ge 19 && ${vhh_noZero} -le 23 ]]; then
-        wgrib2 $ccpa_raw/${vyyyymmdd_p1}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -set_date -24hr -grib $ccpa_proc/${vyyyymmdd}/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -s
+        if [[ ${vyyyymmdd} -ge 20180718 && ${vyyyymmdd} -le 20210504 ]]; then
+          wgrib2 $ccpa_raw/${vyyyymmdd_p1}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -set_date -24hr -grib $ccpa_proc/${vyyyymmdd}/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -s
+        else
+          cp $ccpa_raw/${vyyyymmdd_p1}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
+        fi
       elif [[ ${vhh_noZero} -eq 0 ]]; then
-        wgrib2 $ccpa_raw/${vyyyymmdd}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -set_date -24hr -grib $ccpa_proc/${vyyyymmdd}/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -s
+        if [[ ${vyyyymmdd} -ge 20180718 && ${vyyyymmdd} -le 20210504 ]]; then
+          wgrib2 $ccpa_raw/${vyyyymmdd}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -set_date -24hr -grib $ccpa_proc/${vyyyymmdd}/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 -s
+        else
+          cp $ccpa_raw/${vyyyymmdd}/00/ccpa.t${vhh}z.${accum}h.hrap.conus.gb2 $ccpa_proc/${vyyyymmdd}
+        fi
       fi
 
     elif [[ ${accum} == "03" ]]; then
