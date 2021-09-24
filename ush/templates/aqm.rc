@@ -265,7 +265,7 @@ fire_species::
     PNCOM   0.3232     PM2.5       KG/M2/S
     PNH4    0.0088     PM2.5       KG/M2/S
     PNO3    0.0013     PM2.5       KG/M2/S
-    POC     0.0013     PM2.5       KG/M2/S
+    POC     0.4618     PM2.5       KG/M2/S
     PSI     0.0018     PM2.5       KG/M2/S
     PSO4    0.0126     PM2.5       KG/M2/S
     PTI     0.0001     PM2.5       KG/M2/S
