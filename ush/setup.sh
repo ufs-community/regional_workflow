@@ -975,6 +975,58 @@ fi
 #
 ##### RRFS-CMAQ ########## end   #####
 #
+##### RRFS-CMAQ-DA ########## start #####
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_CHEM_ANAL is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_CHEM_ANAL" "valid_vals_RUN_TASK_CHEM_ANAL"
+RUN_TASK_CHEM_ANAL=${RUN_TASK_CHEM_ANAL^^}
+if [ "${RUN_TASK_CHEM_ANAL}" = "TRUE" ] || \
+   [ "${RUN_TASK_CHEM_ANAL}" = "YES" ]; then
+  RUN_TASK_CHEM_ANAL="TRUE"
+elif [ "${RUN_TASK_CHEM_ANAL}" = "FALSE" ] || \
+     [ "${RUN_TASK_CHEM_ANAL}" = "NO" ]; then
+  RUN_TASK_CHEM_ANAL="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that USE_CHEM_ANAL is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "USE_CHEM_ANAL" "valid_vals_USE_CHEM_ANAL"
+USE_CHEM_ANAL=${USE_CHEM_ANAL^^}
+if [ "${USE_CHEM_ANAL}" = "TRUE" ] || \
+   [ "${USE_CHEM_ANAL}" = "YES" ]; then
+  USE_CHEM_ANAL="TRUE"
+elif [ "${USE_CHEM_ANAL}" = "FALSE" ] || \
+     [ "${USE_CHEM_ANAL}" = "NO" ]; then
+  USE_CHEM_ANAL="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RUN_TASK_DACYC is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_DACYC" "valid_vals_RUN_TASK_DACYC"
+RUN_TASK_DACYC=${RUN_TASK_DACYC^^}
+if [ "${RUN_TASK_DACYC}" = "TRUE" ] || \
+   [ "${RUN_TASK_DACYC}" = "YES" ]; then
+  RUN_TASK_DACYC="TRUE"
+elif [ "${RUN_TASK_DACYC}" = "FALSE" ] || \
+     [ "${RUN_TASK_DACYC}" = "NO" ]; then
+  RUN_TASK_DACYC="FALSE"
+fi
+#
+##### RRFS-CMAQ-DA ########## end   #####
+#
 #-----------------------------------------------------------------------
 #
 # Set various directories.
@@ -1160,6 +1212,50 @@ esac
 #
 ##### RRFS-CMAQ ########## end   #####
 #
+##### RRFS-CMAQ-DA ########## start #####
+#
+JEDI_DIR="${SR_WX_APP_TOP_DIR}/src/JEDI"
+
+case $MACHINE in
+
+"WCOSS_DELL_P3")
+  DA_OBS_DIR=${DA_OBS_DIR:-""}
+  FIXgsi=${FIXgsi:-""}
+  FIXcrtm=${FIXcrtm:-""}
+  AIRCRAFT_REJECT=${AIRCRAFT_REJECT:-""}
+  SFCOBS_USELIST=${SFCOBS_USELIST:-""}
+  AODPATH=${AODPATH:-""}
+  PMPATH=${PMPATH:-""}
+  ;;
+
+"HERA")
+  DA_OBS_DIR=${DA_OBS_DIR:-"/scratch1/NCEPDEV/da/Cory.R.Martin/Datasets/Observations/RRFS-CMAQ/"}
+  FIXgsi=${FIXgsi:-"/scratch2/BMC/wrfruc/rli/WF1/fix/fix_gsi"}
+  FIXcrtm=${FIXcrtm:-"/scratch2/BMC/wrfruc/rli/WF1/fix/fix_crtm"}
+  AIRCRAFT_REJECT=${AIRCRAFT_REJECT:-"/scratch2/BMC/wrfruc/rli/WF1/fix/fix_gsi"}
+  SFCOBS_USELIST=${SFCOBS_USELIST:-"/scratch2/BMC/wrfruc/rli/WF1/fix/fix_gsi"}
+  AODPATH=${AODPATH:-""}
+  PMPATH=${PMPATH:-""}
+  ;;
+
+  *)
+    print_err_msg_exit "\
+One or more DA directories have not been specified for this machine:
+  MACHINE = \"$MACHINE\"
+  DA_OBS_DIR = \"${DA_OBS_DIR:-\"\"}
+  FIXgsi = \"${FIXgsi:-\"\"}
+  FIXcrtm = \"${FIXcrtm:-\"\"}
+  AIRCRAFT_REJECT = \"${AIRCRAFT_REJECT:-\"\"}
+  SFCOBS_USELIST = \"${SFCOBS_USELIST:-\"\"}
+  AODPATH = \"${AODPATH:-\"\"}
+  PMPATH = \"${PMPATH:-\"\"}
+You can specify the missing location(s) in config.sh"
+    ;;
+
+esac
+#
+##### RRFS-CMAQ-DA ########## end   #####
+#
 #-----------------------------------------------------------------------
 #
 # Set the base directories in which codes obtained from external reposi-
@@ -1231,6 +1327,52 @@ The base directory in which the UPP source code should be located
 Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
 fi
+
+#
+##### RRFS-CMAQ-DA ########## start #####
+#
+#
+# Get the base directory of the NEXUS code if required
+#
+external_name="arl_nexus"
+ARL_NEXUS_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+ARL_NEXUS_DIR="${SR_WX_APP_TOP_DIR}/${ARL_NEXUS_DIR}"
+if [ ! -d "${ARL_NEXUS_DIR}" ]; then
+  print_err_msg_exit "\
+The base directory in which the arl_nexus source code should be located
+(ARL_NEXUS_DIR) does not exist:
+  ARL_NEXUS_DIR = \"${ARL_NEXUS_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+fi
+#
+# Get the base directory of the JEDI code if required
+#
+external_name="jedi-fv3-bundle"
+JEDI_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+JEDI_DIR="${SR_WX_APP_TOP_DIR}/${JEDI_DIR}"
+if [ ! -d "${JEDI_DIR}" ]; then
+  print_err_msg_exit "\
+The base directory in which the JEDI source code should be located
+(JEDI_DIR) does not exist:
+  JEDI_DIR = \"${JEDI_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+fi
+DA_OBS_DIR="${DA_OBS_DIR}"
+
+#
+##### RRFS-CMAQ-DA ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -2592,6 +2734,17 @@ fi
 NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 
 #
+##### RRFS-CMAQ-DA ########## start #####
+#
+#-----------------------------------------------------------------------
+#
+# Calculate the number of nodes needed for JEDI analysis
+# for this we are going to use the same input.nml so the
+# number should be layout_x * layout_y
+PE_JEDI=$(( LAYOUT_X*LAYOUT_Y ))
+#
+##### RRFS-CMAQ-DA ########## end   #####
+#
 #-----------------------------------------------------------------------
 #
 # Call the function that checks whether the RUC land surface model (LSM)
@@ -2970,7 +3123,15 @@ CYCLE_BASEDIR="${CYCLE_BASEDIR}"
 GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
-
+#
+##### RRFS-CMAQ-DA ########## start #####
+#
+ARL_NEXUS_DIR="${ARL_NEXUS_DIR}"
+JEDI_DIR="${JEDI_DIR}"
+PE_JEDI="${PE_JEDI}"
+#
+##### RRFS-CMAQ-DA ########## end   #####
+#
 NDIGITS_ENSMEM_NAMES="${NDIGITS_ENSMEM_NAMES}"
 ENSMEM_NAMES=( $( printf "\"%s\" " "${ENSMEM_NAMES[@]}" ))
 FV3_NML_ENSMEM_FPS=( $( printf "\"%s\" " "${FV3_NML_ENSMEM_FPS[@]}" ))

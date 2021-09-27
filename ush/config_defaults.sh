@@ -1905,3 +1905,55 @@ RESTART_WORKFLOW="FALSE"
 RESTART_CYCLE_DIR="/path/to/restart/cycle/dir"
 #
 ##### RRFS-CMAQ ########## end   #####
+#
+##### RRFS-CMAQ-DA ########## start #####
+#
+#-----------------------------------------------------------------------
+#
+# RUN_TASK_CHEM_ANAL:
+# Set to "TRUE" or "FALSE" to enable/disable chemical data assimiation step
+# Set to "TRUE" to generate NO2 tasks
+#
+# USE_CHEM_ANAL:
+# Set to "TRUE" or "FALSE" to enable using updated chem analysis restart file
+#
+# DA_OBS_DIR:
+# Path to IODA formatted observations for assimilation
+# This would be BUFR for GSI or IODA-formatted files for JEDI
+#
+# RUN_TASK_DACYC:
+# GSI analysis for AOD PM2.5
+# Set to "TRUE" to generate PM2.5/AOD DA tasks
+#
+# ENKF_FCST:
+# Path of ensemble members for hybrid GSI
+#
+#-----------------------------------------------------------------------
+#
+RUN_TASK_CHEM_ANAL="FALSE"
+USE_CHEM_ANAL="TRUE"
+DA_OBS_DIR=""
+
+FIXgsi=""
+FIXcrtm=""
+AIRCRAFT_REJECT=""
+SFCOBS_USELIST=""
+OBSPATH=""
+AODPATH=""
+PMPATH=""
+AOD_LUTS="1"
+
+RUN_TASK_DACYC="FALSE"
+DA_CYCLE_INTERV="6"
+ANALYSIS_CYCLEDEF="00 01 01 01 2100 *"
+FORECAST_CYCLEDEF="00 01 01 01 2100 *"
+
+ENKF_FCST=""
+
+RUN_CHEM_ANAL_TN="run_chem_anal"
+ANAL_GSI_INPUT_TN="anal_gsi_input"
+ANAL_GSI_RESTART_TN="anal_gsi_restart"
+#
+##### RRFS-CMAQ-DA ########## end   #####
+
+

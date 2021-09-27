@@ -367,6 +367,18 @@ has not been specified for this external model and machine combination:
 
         fns=( "atm" "sfc" )
         suffix="anl.nemsio"
+#
+##### RRFS-CMAQ-DA ########## start #####
+#
+        if [ ${time_offset_hrs} -eq 0 ]; then
+          suffix="anl.nemsio"
+        else
+          fcst_hhh=( $( printf "%03d " "${time_offset_hrs}" ) )
+          suffix="f${fcst_hhh}.nemsio"
+        fi
+#
+##### RRFS-CMAQ-DA ########## end #####
+#
         fns=( "${fns[@]/%/$suffix}" )
 
 # Set names of external files if searching on disk.

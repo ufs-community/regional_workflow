@@ -76,11 +76,9 @@ print_input_args valid_args
 #
 case $MACHINE in
 #
-"WCOSS_C" | "WCOSS")
+"WCOSS_DELL_P3")
 #
-
-  if [ "${USE_CCPP}" = "TRUE" ]; then
-  
+  if [ "${USE_CCPP}" = "TRUE" ]; then 
 # Needed to change to the experiment directory because the module files
 # for the CCPP-enabled version of FV3 have been copied to there.
 
@@ -92,9 +90,7 @@ case $MACHINE in
     module load modules.fv3
     module list
     set -x
-  
   else
-  
     . /apps/lmod/lmod/init/sh
     module purge
     module use /scratch4/NCEPDEV/nems/noscrub/emc.nemspara/soft/modulefiles
@@ -106,40 +102,6 @@ case $MACHINE in
   ulimit -s unlimited
   ulimit -a
   APRUN="mpirun -l -np ${PE_MEMBER01}"
-  ;;
-#
-"THEIA")
-#
-
-  if [ "${USE_CCPP}" = "TRUE" ]; then
-  
-# Need to change to the experiment directory to correctly load necessary 
-# modules for CCPP-version of FV3SAR in lines below
-    cd_vrfy ${EXPTDIR}
-  
-    set +x
-    source ./module-setup.sh
-    module use $( pwd -P )
-    module load modules.fv3
-    module load contrib wrap-mpi
-    module list
-    set -x
-  
-  else
-  
-    . /apps/lmod/lmod/init/sh
-    module purge
-    module use /scratch4/NCEPDEV/nems/noscrub/emc.nemspara/soft/modulefiles
-    module load intel/16.1.150 impi/5.1.1.109 netcdf/4.3.0 
-    module load contrib wrap-mpi 
-    module list
-  
-  fi
-
-  ulimit -s unlimited
-  ulimit -a
-  np=${SLURM_NTASKS}
-  APRUN="mpirun -np ${np}"
   ;;
 #
 "HERA")
@@ -389,13 +351,8 @@ obs_files_target[1]=satwndbufr
 obs_files_source[2]=${OBSPATH}/${YYYYMMDDHH}.rap.t${HH}z.nexrad.tm00.bufr_d
 obs_files_target[2]=l2rwbufr
 
-#obs_files_source[3]=${AODPATH}/${YYYYMMDD}/VIIRS/VIIRS.AOD.Prepbufr.${HH}H.QC00
-#obs_files_target[3]=viirsbufr
-
 obs_files_source[3]=${PMPATH}/${YYYYMMDD}/pm25.airnow.${YYYYMMDDHH}.bufr
 obs_files_target[3]=pm25bufr
-
-
 
 obs_number=${#obs_files_source[@]}
 for (( i=0; i<${obs_number}; i++ ));

@@ -132,7 +132,7 @@ if [ "${RUN_TASK_MAKE_GRID}" = "TRUE" ]; then
 fi
 
 # Symlink to mosaic file with a completely different name.
-target="${FIXsar}/${CRES}${DOT_OR_USCORE}mosaic.halo${NH3}.nc"   # Should this point to this halo4 file or a halo3 file???
+target="${FIXLAM}/${CRES}${DOT_OR_USCORE}mosaic.halo${NH3}.nc"   # Should this point to this halo4 file or a halo3 file???
 symlink="grid_spec.nc"
 if [ -f "${target}" ]; then
   ln_vrfy -sf ${relative_or_null} $target $symlink
@@ -146,7 +146,7 @@ fi
 mosaic_fn="grid_spec.nc"
 grid_fn=$( get_charvar_from_netcdf "${mosaic_fn}" "gridfiles" )
 
-target="${FIXsar}/${grid_fn}"
+target="${FIXLAM}/${grid_fn}"
 symlink="${grid_fn}"
 if [ -f "${target}" ]; then
   ln_vrfy -sf ${relative_or_null} $target $symlink
@@ -168,7 +168,7 @@ fi
 # Note that even though the message says "Stopped", the task still con-
 # sumes core-hours.
 #
-target="${FIXsar}/${CRES}${DOT_OR_USCORE}grid.tile${TILE_RGNL}.halo${NH4}.nc"
+target="${FIXLAM}/${CRES}${DOT_OR_USCORE}grid.tile${TILE_RGNL}.halo${NH4}.nc"
 symlink="grid.tile${TILE_RGNL}.halo${NH4}.nc"
 if [ -f "${target}" ]; then
   ln_vrfy -sf ${relative_or_null} $target $symlink
@@ -178,15 +178,13 @@ Cannot create symlink because target does not exist:
   target = \"$target}\""
 fi
 
-
-
 relative_or_null=""
 if [ "${RUN_TASK_MAKE_OROG}" = "TRUE" ]; then
   relative_or_null="--relative"
 fi
 
 # Symlink to halo-0 orography file with "${CRES}_" and "halo0" stripped from name.
-target="${FIXsar}/${CRES}${DOT_OR_USCORE}oro_data.tile${TILE_RGNL}.halo${NH0}.nc"
+target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data.tile${TILE_RGNL}.halo${NH0}.nc"
 symlink="oro_data.nc"
 if [ -f "${target}" ]; then
   ln_vrfy -sf ${relative_or_null} $target $symlink
@@ -209,7 +207,7 @@ fi
 # Note that even though the message says "Stopped", the task still con-
 # sumes core-hours.
 #
-target="${FIXsar}/${CRES}${DOT_OR_USCORE}oro_data.tile${TILE_RGNL}.halo${NH4}.nc"
+target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data.tile${TILE_RGNL}.halo${NH4}.nc"
 symlink="oro_data.tile${TILE_RGNL}.halo${NH4}.nc"
 if [ -f "${target}" ]; then
   ln_vrfy -sf ${relative_or_null} $target $symlink
