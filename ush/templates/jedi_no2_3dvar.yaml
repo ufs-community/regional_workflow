@@ -1,0 +1,139 @@
+cost function:
+  cost type: 3D-Var
+  window begin: '%windowbegin%'
+  window length: PT%windt%H
+  analysis variables: [no2]
+  geometry:
+    fms initialization:
+      namelist filename: Data/fv3files/fmsmpp.nml
+      field table filename: Data/fv3files/field_table_lam_cmaq
+    namelist filename: Data/input.nml
+    akbk: Data/fv3files/akbk64.nc4
+    fieldsets:
+    - fieldset: Data/fieldsets/dynamics_lam_cmaq.yaml
+    - fieldset: Data/fieldsets/lam_cmaq.yaml
+    - fieldset: Data/fieldsets/ufo.yaml
+  background:
+    filetype: gfs
+    datapath: %bkgdir%
+    filename_core: %bkgprefix%.fv_core.res.tile1.nc
+    filename_trcr: %bkgprefix%.fv_tracer.res.tile1.nc
+    filename_sfcd: %bkgprefix%.sfc_data.nc
+    filename_sfcw: %bkgprefix%.fv_srf_wnd.res.tile1.nc
+    filename_cplr: %bkgprefix%.coupler.res
+    state variables: [u,v,T,DELP,ps,sphum,phis,no2]
+  background error:
+    covariance model: BUMP
+    date: '%bumpdate%'
+    bump:
+      prefix: Data/bump/bump_lam_cmaq
+      method: cor
+      strategy: specific_univariate
+      load_nicas_local: 1
+      verbosity: main
+      io_keys:
+      - "no2-no2"
+      io_values:
+      - "fixed_150km_0.1"
+  observations:
+  - obs space:
+      name: NO2
+      obsdatain:
+        obsfile: Data/obs/tropomi_no2_%obsdate%.nc
+      obsdataout:
+        obsfile: Data/hofx/tropomi_no2_3dvar_%obsdate%.nc
+      simulated variables: [nitrogen_dioxide_in_tropospheric_column]
+    obs filters:
+    - filter: Domain Check
+      where:
+      - variable:
+          name: quality_assurance_value@MetaData
+        minvalue: 0.9
+    - filter: GOMsaver
+      filename: Data/tropomi_no2_geovals_%obsdate%.nc
+    - filter: Bounds Check
+      filter variables:
+      - name: nitrogen_dioxide_in_tropospheric_column
+      test variables:
+      - name: LAMDomainCheck@ObsFunction
+        options:
+          map_projection: gnomonic_ed # only option currently supported
+          #TODO / NOTE: below will need to be generalized later for all domains
+          save: true # will save the DerivedValue to IODA output file
+          npx: 200
+          npy: 110
+          plat: 38.5
+          plon: -97.5
+          a: 0.21423
+          k: -0.23209
+          dx: 0.1124152007
+          dy: 0.1124152007
+      minvalue: 1.0 # will filter all obs outside of the specified limited area domain
+    - filter: Gaussian Thinning
+      horizontal_mesh:  50.0 # hoping this means one ob per 50 km box
+    obs operator:
+      name: AvgKernel
+      obs options:
+        nlayers_kernel: 34
+        ak: [0, 22.83594, 424.4141, 1387.547, 3057.266, 5564.383,
+             8163.375, 11901.34, 14898.45, 17471.84, 19290.23,
+             20361.82, 20337.86, 19859.39, 19031.29, 18308.43,
+             17008.79, 15508.26, 13881.33, 12766.87, 11116.66,
+             9562.683, 8608.525, 7311.869, 6156.074, 4490.817,
+             3381.744, 2265.432, 1423.77, 823.9678, 427.5925,
+             191.3386, 69.52058, 18.60893, 0]
+        bk: [1, 0.991984, 0.969513, 0.931881, 0.873929, 0.790717,
+             0.704669, 0.576692, 0.466003, 0.358254, 0.263242,
+             0.16891, 0.111505, 0.077958, 0.051773, 0.038026,
+             0.022355, 0.011806, 0.005378, 0.002857, 0.00089,
+             0.000199, 5.9e-05, 0, 0, 0, 0, 0, 0, 0, 0,
+             0, 0, 0, 0 ]
+        AvgKernelVar: averaging_kernel_level
+        tracer variables: [no2]
+        tropospheric column: true
+        total column: false
+        model units coeff: 1e-6 # ppmv to 1/1
+        hofx units coeff: 1.6605392e-20 # molec/cm2 to mol/m2
+    obs error:
+      covariance model: diagonal
+variational:
+  minimizer:
+    algorithm: DRIPCG
+  iterations:
+  - ninner: 50
+    gradient norm reduction: 1e-10
+    test: on
+    geometry:
+      namelist filename: Data/input.nml
+      akbk: Data/fv3files/akbk64.nc4
+      fieldsets:
+      - fieldset: Data/fieldsets/dynamics_lam_cmaq.yaml
+      - fieldset: Data/fieldsets/lam_cmaq.yaml
+      - fieldset: Data/fieldsets/ufo.yaml
+    diagnostics:
+      departures: ombg
+  - ninner: 50
+    gradient norm reduction: 1e-10
+    test: on
+    geometry:
+      namelist filename: Data/input.nml
+      akbk: Data/fv3files/akbk64.nc4
+      fieldsets:
+      - fieldset: Data/fieldsets/dynamics_lam_cmaq.yaml
+      - fieldset: Data/fieldsets/lam_cmaq.yaml
+      - fieldset: Data/fieldsets/ufo.yaml
+    diagnostics:
+      departures: ombg1
+final:
+  diagnostics:
+    departures: oman
+output:
+  filetype: gfs
+  datapath: Data/analysis/
+  filename_core: 3dvar_anl.fv_core.res.nc
+  filename_trcr: 3dvar_anl.fv_tracer.res.nc
+  filename_sfcd: 3dvar_anl.sfc_data.nc
+  filename_sfcw: 3dvar_anl.fv_srf_wnd.res.nc
+  filename_cplr: 3dvar_anl.coupler.res
+  first: PT0H
+  frequency: PT1H

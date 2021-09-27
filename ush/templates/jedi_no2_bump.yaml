@@ -1,0 +1,55 @@
+geometry:
+  fms initialization:
+    namelist filename: Data/fv3files/fmsmpp.nml
+    field table filename: Data/fv3files/field_table_lam_cmaq
+  namelist filename: Data/input.nml
+  akbk: Data/fv3files/akbk64.nc4
+  fieldsets:
+    - fieldset: Data/fieldsets/dynamics_lam_cmaq.yaml
+    - fieldset: Data/fieldsets/lam_cmaq.yaml
+    - fieldset: Data/fieldsets/ufo.yaml
+input variables: [no2]
+date: '%bumpdate%'
+background:
+  filetype: gfs
+  datapath: %bkgdir%
+  filename_core: %bkgprefix%.fv_core.res.tile1.nc
+  filename_trcr: %bkgprefix%.fv_tracer.res.tile1.nc
+  filename_sfcd: %bkgprefix%.sfc_data.nc
+  filename_sfcw: %bkgprefix%.fv_srf_wnd.res.tile1.nc
+  filename_cplr: %bkgprefix%.coupler.res
+  state variables: [no2]
+bump:
+  prefix: Data/bump/bump_lam_cmaq
+  verbosity: main
+  universe_rad: 150000.0
+  strategy: specific_univariate
+  new_nicas: 1
+  write_nicas_local: 1
+  resol: 6
+  forced_radii: 1
+  rh:
+    no2: [150000.0]
+  rv:
+    no2: [0.1]
+  io_keys: [no2-no2]
+  io_values: [fixed_150km_0.1]
+output:
+- parameter: cor_rh
+  filetype: gfs
+  datapath: Data/bump/
+  filename_core: bump_lam_cmaq.cor_rh.fv_core.res.nc
+  filename_trcr: bump_lam_cmaq.cor_rh.fv_tracer.res.nc
+  filename_sfcd: bump_lam_cmaq.cor_rh.sfc_data.nc
+  filename_sfcw: bump_lam_cmaq.cor_rh.fv_srf_wnd.res.nc
+  filename_cplr: bump_lam_cmaq.cor_rh.coupler.res
+  date: '%bumpdate%'
+- parameter: cor_rv
+  filetype: gfs
+  datapath: Data/bump/
+  filename_core: bump_lam_cmaq.cor_rv.fv_core.res.nc
+  filename_trcr: bump_lam_cmaq.cor_rv.fv_tracer.res.nc
+  filename_sfcd: bump_lam_cmaq.cor_rv.sfc_data.nc
+  filename_sfcw: bump_lam_cmaq.cor_rv.fv_srf_wnd.res.nc
+  filename_cplr: bump_lam_cmaq.cor_rv.coupler.res
+  date: '%bumpdate%'

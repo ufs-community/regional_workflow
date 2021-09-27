@@ -1,0 +1,22 @@
+#%Module######################################################################
+## JEDI stack
+##_____________________________________________________
+
+set COMP ifort
+set COMP_MP mpfort
+set COMP_MPI mpiifort
+
+set C_COMP icc
+set C_COMP_MP mpcc
+
+set JEDI_OPT /scratch1/NCEPDEV/jcsda/jedipara/opt/modules
+setenv JEDI_OPT /scratch1/NCEPDEV/jcsda/jedipara/opt/modules
+module use -a $JEDI_OPT/modulefiles/core
+module load jedi/intel-impi/2020.2
+
+
+module load nco
+
+module use -a /scratch2/NCEPDEV/marineda/Jong.Kim/save/modulefiles/
+module load anaconda/3.15.1
+
