@@ -82,6 +82,7 @@ valid_vals_RUN_TASK_RUN_NEXUS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "n
 valid_vals_RUN_ADD_AQM_CHEM_LBCS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_ADD_AQM_GEFS_LBCS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RESTART_WORKFLOW=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
+valid_vals_OPT_DA_RRFS_CMAQ=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_CHEM_ANAL=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_USE_CHEM_ANAL=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_DACYC=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")

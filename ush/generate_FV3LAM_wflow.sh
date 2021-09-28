@@ -432,14 +432,18 @@ settings="\
 #
 ##### RRFS-CMAQ-DA ########## start #####
 #
-  'analysis_cycledef': ${ANALYSIS_CYCLEDEF}
-  'forecast_cycledef': ${FORECAST_CYCLEDEF}
   'run_chem_anal_tn': ${RUN_CHEM_ANAL_TN}
-  'anal_gsi_input_tn': ${ANAL_GSI_INPUT_TN}
+  'run_gsi_anal_tn': ${RUN_GSI_ANAL_TN}
   'anal_gsi_restart_tn': ${ANAL_GSI_RESTART_TN}
   'run_task_chem_anal': ${RUN_TASK_CHEM_ANAL}
   'run_task_dacyc': ${RUN_TASK_DACYC}
   'use_chem_anal': ${USE_CHEM_ANAL}
+  'nnodes_run_gsi_anal': ${NNODES_RUN_GSI_ANAL}
+  'ppn_run_gsi_anal': ${PPN_RUN_GSI_ANAL}
+  'wtime_run_chem_anal': ${WTIME_RUN_CHEM_ANAL}
+  'wtiem_run_gis_anal' : ${WTIME_RUN_GSI_ANAL}
+  'maxtries_run_chem_anal': ${MAXTRIES_RUN_CHEM_ANAL}
+  'maxtries_run_gsi_anal': ${MAXTRIES_RUN_GSI_ANAL}
 #
 ##### RRFS-CMAQ-DA ########## end   #####
 #

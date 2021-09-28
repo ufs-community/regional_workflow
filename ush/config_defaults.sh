@@ -1910,6 +1910,10 @@ RESTART_CYCLE_DIR="/path/to/restart/cycle/dir"
 #
 #-----------------------------------------------------------------------
 #
+# OPT_DA_RRFS_CMAQ:
+# Flag to turn on/off for DA runs of RRFS-CMAQ
+# Set to "TRUE" for DA or "FALSE" for non-DA
+#
 # RUN_TASK_CHEM_ANAL:
 # Set to "TRUE" or "FALSE" to enable/disable chemical data assimiation step
 # Set to "TRUE" to generate NO2 tasks
@@ -1930,6 +1934,8 @@ RESTART_CYCLE_DIR="/path/to/restart/cycle/dir"
 #
 #-----------------------------------------------------------------------
 #
+OPT_DA_RRFS_CMAQ="TRUE"
+
 RUN_TASK_CHEM_ANAL="FALSE"
 USE_CHEM_ANAL="TRUE"
 DA_OBS_DIR=""
@@ -1945,14 +1951,20 @@ AOD_LUTS="1"
 
 RUN_TASK_DACYC="FALSE"
 DA_CYCLE_INTERV="6"
-ANALYSIS_CYCLEDEF="00 01 01 01 2100 *"
-FORECAST_CYCLEDEF="00 01 01 01 2100 *"
 
 ENKF_FCST=""
 
 RUN_CHEM_ANAL_TN="run_chem_anal"
-ANAL_GSI_INPUT_TN="anal_gsi_input"
+RUN_GSI_ANAL_TN="run_gsi_anal"
 ANAL_GSI_RESTART_TN="anal_gsi_restart"
+
+NNODES_RUN_GSI_ANAL="4"
+PPN_RUN_GSI_ANAL="24"
+WTIME_RUN_CHEM_ANAL="01:30:00"
+WTIME_RUN_GSI_ANAL="00:50:00"
+MAXTRIES_RUN_CHEM_ANAL="3"
+MAXTRIES_RUN_GSI_ANAL="3"
+
 #
 ##### RRFS-CMAQ-DA ########## end   #####
 

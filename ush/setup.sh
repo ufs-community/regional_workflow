@@ -979,6 +979,22 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that OPT_DA_RRFS_CMAQ is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "OPT_DA_RRFS_CMAQ" "valid_vals_OPT_DA_RRFS_CMAQ"
+OPT_DA_RRFS_CMAQ=${OPT_DA_RRFS_CMAQ^^}
+if [ "${OPT_DA_RRFS_CMAQ}" = "TRUE" ] || \
+   [ "${OPT_DA_RRFS_CMAQ}" = "YES" ]; then
+  OPT_DA_RRFS_CMAQ="TRUE"
+elif [ "${OPT_DA_RRFS_CMAQ}" = "FALSE" ] || \
+     [ "${OPT_DA_RRFS_CMAQ}" = "NO" ]; then
+  OPT_DA_RRFS_CMAQ="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that RUN_TASK_CHEM_ANAL is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -1022,6 +1038,12 @@ if [ "${RUN_TASK_DACYC}" = "TRUE" ] || \
   RUN_TASK_DACYC="TRUE"
 elif [ "${RUN_TASK_DACYC}" = "FALSE" ] || \
      [ "${RUN_TASK_DACYC}" = "NO" ]; then
+  RUN_TASK_DACYC="FALSE"
+fi
+
+if [ "${OPT_DA_RRFS_CMAQ}"="FALSE" ]; then
+  RUN_TASK_CHEM_ANAL="FALSE"
+  USE_CHEM_ANAL="FALSE"
   RUN_TASK_DACYC="FALSE"
 fi
 #
