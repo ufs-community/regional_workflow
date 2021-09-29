@@ -441,7 +441,7 @@ settings="\
   'nnodes_run_gsi_anal': ${NNODES_RUN_GSI_ANAL}
   'ppn_run_gsi_anal': ${PPN_RUN_GSI_ANAL}
   'wtime_run_chem_anal': ${WTIME_RUN_CHEM_ANAL}
-  'wtiem_run_gis_anal' : ${WTIME_RUN_GSI_ANAL}
+  'wtime_run_gsi_anal' : ${WTIME_RUN_GSI_ANAL}
   'maxtries_run_chem_anal': ${MAXTRIES_RUN_CHEM_ANAL}
   'maxtries_run_gsi_anal': ${MAXTRIES_RUN_GSI_ANAL}
 #

@@ -1041,7 +1041,7 @@ elif [ "${RUN_TASK_DACYC}" = "FALSE" ] || \
   RUN_TASK_DACYC="FALSE"
 fi
 
-if [ "${OPT_DA_RRFS_CMAQ}"="FALSE" ]; then
+if [ "${OPT_DA_RRFS_CMAQ}" = "FALSE" ]; then
   RUN_TASK_CHEM_ANAL="FALSE"
   USE_CHEM_ANAL="FALSE"
   RUN_TASK_DACYC="FALSE"
