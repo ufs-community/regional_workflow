@@ -27,7 +27,7 @@
 #
 #-----------------------------------------------------------------------
 #
-scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+scrfunc_fp=$( $READLINK -f "${BASH_SOURCE[0]}" )
 scrfunc_fn=$( basename "${scrfunc_fp}" )
 scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -147,11 +147,18 @@ case "$MACHINE" in
     APRUN="ibrun -n $nprocs"
     ;;
 
+  "MACOS")
+    APRUN=$RUN_CMD_POST
+    ;;
+
+  "LINUX")
+    APRUN=$RUN_CMD_POST
+    ;;
+
   *)
     print_err_msg_exit "\
 Run command has not been specified for this machine:
-  MACHINE = \"$MACHINE\"
-  APRUN = \"$APRUN\""
+  MACHINE = \"$MACHINE\""
     ;;
 
 esac
@@ -164,7 +171,7 @@ esac
 #-----------------------------------------------------------------------
 #
 rm_vrfy -f fort.*
-cp_vrfy ${EMC_POST_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
+cp_vrfy ${UPP_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
 if [ ${USE_CUSTOM_POST_CONFIG_FILE} = "TRUE" ]; then
   post_config_fp="${CUSTOM_POST_CONFIG_FP}"
   print_info_msg "
@@ -175,7 +182,11 @@ to the temporary work directory (tmp_dir):
   tmp_dir = \"${tmp_dir}\"
 ===================================================================="
 else
-  post_config_fp="${EMC_POST_DIR}/parm/postxconfig-NT-fv3lam.txt"
+  if [ ${FCST_MODEL} = "fv3gfs_aqm" ]; then
+    post_config_fp="${UPP_DIR}/parm/postxconfig-NT-fv3lam_cmaq.txt"
+  else
+    post_config_fp="${UPP_DIR}/parm/postxconfig-NT-fv3lam.txt"
+  fi
   print_info_msg "
 ====================================================================
 Copying the default post flat file specified by post_config_fp to the 
@@ -185,7 +196,7 @@ temporary work directory (tmp_dir):
 ===================================================================="
 fi
 cp_vrfy ${post_config_fp} ./postxconfig-NT.txt
-cp_vrfy ${EMC_POST_DIR}/parm/params_grib2_tbl_new .
+cp_vrfy ${UPP_DIR}/parm/params_grib2_tbl_new .
 #
 #-----------------------------------------------------------------------
 #
@@ -230,7 +241,7 @@ tmmark="tm00"
 mnts_secs_str=""
 if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
   if [ ${fhr}${fmn} = "00000" ]; then
-    mnts_secs_str=":"$( date --utc --date "${yyyymmdd} ${hh} UTC + ${dt_atmos} seconds" "+%M:%S" )
+    mnts_secs_str=":"$( $DATE_UTIL --utc --date "${yyyymmdd} ${hh} UTC + ${dt_atmos} seconds" "+%M:%S" )
   else
     mnts_secs_str=":${fmn}:00"
   fi
@@ -244,7 +255,7 @@ phy_file="${run_dir}/phyf${fhr}${mnts_secs_str}.nc"
 # Set parameters that specify the actual time (not forecast time) of the
 # output.
 #
-post_time=$( date --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours + ${fmn} minutes" "+%Y%m%d%H%M" )
+post_time=$( $DATE_UTIL --utc --date "${yyyymmdd} ${hh} UTC + ${fhr} hours + ${fmn} minutes" "+%Y%m%d%H%M" )
 post_yyyy=${post_time:0:4}
 post_mm=${post_time:4:2}
 post_dd=${post_time:6:2}
@@ -253,6 +264,11 @@ post_mn=${post_time:10:2}
 #
 # Create the input text file to the post-processor executable.
 #
+if [ ${FCST_MODEL} = "fv3gfs_aqm" ]; then
+  post_itag_add="aqfcmaq_on=.true.,"
+else
+  post_itag_add=""
+fi
 cat > itag <<EOF
 ${dyn_file}
 netcdf
@@ -262,7 +278,7 @@ FV3R
 ${phy_file}
 
  &NAMPGB
- KPO=47,PO=1000.,975.,950.,925.,900.,875.,850.,825.,800.,775.,750.,725.,700.,675.,650.,625.,600.,575.,550.,525.,500.,475.,450.,425.,400.,375.,350.,325.,300.,275.,250.,225.,200.,175.,150.,125.,100.,70.,50.,30.,20.,10.,7.,5.,3.,2.,1.,
+ KPO=47,PO=1000.,975.,950.,925.,900.,875.,850.,825.,800.,775.,750.,725.,700.,675.,650.,625.,600.,575.,550.,525.,500.,475.,450.,425.,400.,375.,350.,325.,300.,275.,250.,225.,200.,175.,150.,125.,100.,70.,50.,30.,20.,10.,7.,5.,3.,2.,1.,${post_itag_add}
  /
 EOF
 #
@@ -276,7 +292,7 @@ EOF
 print_info_msg "$VERBOSE" "
 Starting post-processing for fhr = $fhr hr..."
 
-${APRUN} ${EXECDIR}/ncep_post < itag || print_err_msg_exit "\
+${APRUN} ${EXECDIR}/upp.x < itag || print_err_msg_exit "\
 Call to executable to run post for forecast hour $fhr returned with non-
 zero exit code."
 #
@@ -325,15 +341,15 @@ post_renamed_fn_suffix="f${fhr}${post_mn_or_null}.${tmmark}.grib2"
 #
 # For convenience, change location to postprd_dir (where the final output
 # from UPP will be located).  Then loop through the two files that UPP
-# generates (i.e. "...bgdawp..." and "...bgrd3d..." files) and move, 
+# generates (i.e. "...prslev..." and "...natlev..." files) and move, 
 # rename, and create symlinks to them.
 #
 cd_vrfy "${postprd_dir}"
-basetime=$( date --date "$yyyymmdd $hh" +%y%j%H%M )
+basetime=$( $DATE_UTIL --date "$yyyymmdd $hh" +%y%j%H%M )
 symlink_suffix="_${basetime}f${fhr}${post_mn}"
-fids=( "bgdawp" "bgrd3d" )
+fids=( "prslev" "natlev" )
 for fid in "${fids[@]}"; do
-  FID="${fid^^}"
+  FID=$(echo_uppercase $fid)
   post_orig_fn="${FID}.${post_fn_suffix}"
   post_renamed_fn="${NET}.t${cyc}z.${fid}${post_renamed_fn_suffix}"
   mv_vrfy ${tmp_dir}/${post_orig_fn} ${post_renamed_fn}
