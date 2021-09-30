@@ -40,7 +40,7 @@ RUN_ADD_AQM_GEFS_LBCS="TRUE"
 AQM_GEFS_CYC="00"
 
 OPT_DA_RRFS_CMAQ="TRUE"
-RUN_TASK_CHEM_ANAL="FALSE"
+RUN_TASK_CHEM_ANAL="TRUE"
 USE_CHEM_ANAL="TRUE"
 RUN_TASK_DACYC="TRUE"
 
@@ -63,7 +63,7 @@ NEXUS_INPUT_DIR="/scratch1/NCEPDEV/rstprod/nexus_emissions"
 NEXUS_FIX_DIR="/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/nexus/fix"
 NEXUS_GRID_FN="grid_spec_GSD_HRRR_25km.nc"
 
-DA_OBS_DIR="/scratch1/NCEPDEV/da/Cory.R.Martin/Datasets/Observations/RRFS-CMAQ/"
+DA_OBS_DIR="/scratch1/NCEPDEV/da/Cory.R.Martin/Datasets/Observations/RRFS-CMAQ"
 AODPATH="/scratch1/BMC/wrfruc/hwang/viis/viirsaod2bufr/"
 PMPATH="/scratch2/BMC/wrfruc/hwang/wf1/data/PM/anowpm_hourly"
 FIXgsi="/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"

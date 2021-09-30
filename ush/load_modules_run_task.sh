@@ -155,7 +155,11 @@ jjob_fp="$2"
 machine=$(echo_lowercase $MACHINE)
 #
 ##### RRFS-CMAQ ########## start #####
-if [ "${task_name}" != "${RUN_FCST_TN}" ]; then
+#if [ "${task_name}" != "${RUN_FCST_TN}" ]; then
+#
+if [ "${task_name}" != "${RUN_FCST_TN}" ] && [ "${task_name}" != "${RUN_CHEM_ANAL_TN}" ] &&
+   [ "${task_name}" != "${RUN_GSI_ANAL_TN}" ]; then
+#
 ##### RRFS-CMAQ ########## end   #####
 #
 env_fn="build_${machine}_${COMPILER}.env"
