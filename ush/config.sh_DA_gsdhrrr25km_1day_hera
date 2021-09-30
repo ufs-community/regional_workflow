@@ -1,7 +1,7 @@
 MACHINE="hera"
 ACCOUNT="naqfc"
 EXPT_BASEDIR="/scratch2/NCEPDEV/stmp3/$LOGNAME/expt_dirs"
-EXPT_SUBDIR="test_da_hrrr25_1day"
+EXPT_SUBDIR="test_da_no2_gsdhrrr25_1day"
 
 PRINT_ESMF="FALSE"
 
