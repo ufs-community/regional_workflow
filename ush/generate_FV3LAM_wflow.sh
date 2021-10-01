@@ -19,7 +19,11 @@ function generate_FV3LAM_wflow() {
 #
 #-----------------------------------------------------------------------
 #
-local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+if [[ $(uname -s) == Darwin ]]; then
+    local scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+  else
+    local scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+  fi
 local scrfunc_fn=$( basename "${scrfunc_fp}" )
 local scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -193,6 +197,25 @@ settings="\
   'vx_gridstat_06h_tn': ${VX_GRIDSTAT_06h_TN}
   'vx_gridstat_24h_tn': ${VX_GRIDSTAT_24h_TN}
   'vx_pointstat_tn': ${VX_POINTSTAT_TN}
+  'vx_ensgrid_tn': ${VX_ENSGRID_TN}
+  'vx_ensgrid_refc_tn': ${VX_ENSGRID_REFC_TN}
+  'vx_ensgrid_retop_tn': ${VX_ENSGRID_RETOP_TN}
+  'vx_ensgrid_03h_tn': ${VX_ENSGRID_03h_TN}
+  'vx_ensgrid_06h_tn': ${VX_ENSGRID_06h_TN}
+  'vx_ensgrid_24h_tn': ${VX_ENSGRID_24h_TN}
+  'vx_ensgrid_mean_tn': ${VX_ENSGRID_MEAN_TN}
+  'vx_ensgrid_prob_tn': ${VX_ENSGRID_PROB_TN}
+  'vx_ensgrid_mean_03h_tn': ${VX_ENSGRID_MEAN_03h_TN}
+  'vx_ensgrid_prob_03h_tn': ${VX_ENSGRID_PROB_03h_TN}
+  'vx_ensgrid_mean_06h_tn': ${VX_ENSGRID_MEAN_06h_TN}
+  'vx_ensgrid_prob_06h_tn': ${VX_ENSGRID_PROB_06h_TN}
+  'vx_ensgrid_mean_24h_tn': ${VX_ENSGRID_MEAN_24h_TN}
+  'vx_ensgrid_prob_24h_tn': ${VX_ENSGRID_PROB_24h_TN}
+  'vx_ensgrid_prob_refc_tn': ${VX_ENSGRID_PROB_REFC_TN}
+  'vx_ensgrid_prob_retop_tn': ${VX_ENSGRID_PROB_RETOP_TN}
+  'vx_enspoint_tn': ${VX_ENSPOINT_TN}
+  'vx_enspoint_mean_tn': ${VX_ENSPOINT_MEAN_TN}
+  'vx_enspoint_prob_tn': ${VX_ENSPOINT_PROB_TN}
 #
 # Entity used to load the module file for each GET_OBS_* task.
 #
@@ -214,6 +237,12 @@ settings="\
   'nnodes_get_obs_ndas': ${NNODES_GET_OBS_NDAS}
   'nnodes_vx_gridstat': ${NNODES_VX_GRIDSTAT}
   'nnodes_vx_pointstat': ${NNODES_VX_POINTSTAT}
+  'nnodes_vx_ensgrid': ${NNODES_VX_ENSGRID}
+  'nnodes_vx_ensgrid_mean': ${NNODES_VX_ENSGRID_MEAN}
+  'nnodes_vx_ensgrid_prob': ${NNODES_VX_ENSGRID_PROB}
+  'nnodes_vx_enspoint': ${NNODES_VX_ENSPOINT}
+  'nnodes_vx_enspoint_mean': ${NNODES_VX_ENSPOINT_MEAN}
+  'nnodes_vx_enspoint_prob': ${NNODES_VX_ENSPOINT_PROB}
 #
 # Number of cores used for a task
 #
@@ -237,6 +266,12 @@ settings="\
   'ppn_get_obs_ndas': ${PPN_GET_OBS_NDAS}
   'ppn_vx_gridstat': ${PPN_VX_GRIDSTAT}
   'ppn_vx_pointstat': ${PPN_VX_POINTSTAT}
+  'ppn_vx_ensgrid': ${PPN_VX_ENSGRID}
+  'ppn_vx_ensgrid_mean': ${PPN_VX_ENSGRID_MEAN}
+  'ppn_vx_ensgrid_prob': ${PPN_VX_ENSGRID_PROB}
+  'ppn_vx_enspoint': ${PPN_VX_ENSPOINT}
+  'ppn_vx_enspoint_mean': ${PPN_VX_ENSPOINT_MEAN}
+  'ppn_vx_enspoint_prob': ${PPN_VX_ENSPOINT_PROB}
 #
 # Maximum wallclock time for each task.
 #
@@ -254,6 +289,12 @@ settings="\
   'wtime_get_obs_ndas': ${WTIME_GET_OBS_NDAS}
   'wtime_vx_gridstat': ${WTIME_VX_GRIDSTAT}
   'wtime_vx_pointstat': ${WTIME_VX_POINTSTAT}
+  'wtime_vx_ensgrid': ${WTIME_VX_ENSGRID}
+  'wtime_vx_ensgrid_mean': ${WTIME_VX_ENSGRID_MEAN}
+  'wtime_vx_ensgrid_prob': ${WTIME_VX_ENSGRID_PROB}
+  'wtime_vx_enspoint': ${WTIME_VX_ENSPOINT}
+  'wtime_vx_enspoint_mean': ${WTIME_VX_ENSPOINT_MEAN}
+  'wtime_vx_enspoint_prob': ${WTIME_VX_ENSPOINT_PROB}
 #
 # Maximum number of tries for each task.
 #
@@ -276,6 +317,25 @@ settings="\
   'maxtries_vx_gridstat_06h': ${MAXTRIES_VX_GRIDSTAT_06h}
   'maxtries_vx_gridstat_24h': ${MAXTRIES_VX_GRIDSTAT_24h}
   'maxtries_vx_pointstat': ${MAXTRIES_VX_POINTSTAT}
+  'maxtries_vx_ensgrid': ${MAXTRIES_VX_ENSGRID}
+  'maxtries_vx_ensgrid_refc': ${MAXTRIES_VX_ENSGRID_REFC}
+  'maxtries_vx_ensgrid_retop': ${MAXTRIES_VX_ENSGRID_RETOP}
+  'maxtries_vx_ensgrid_03h': ${MAXTRIES_VX_ENSGRID_03h}
+  'maxtries_vx_ensgrid_06h': ${MAXTRIES_VX_ENSGRID_06h}
+  'maxtries_vx_ensgrid_24h': ${MAXTRIES_VX_ENSGRID_24h}
+  'maxtries_vx_ensgrid_mean': ${MAXTRIES_VX_ENSGRID_MEAN}
+  'maxtries_vx_ensgrid_prob': ${MAXTRIES_VX_ENSGRID_PROB}
+  'maxtries_vx_ensgrid_mean_03h': ${MAXTRIES_VX_ENSGRID_MEAN_03h}
+  'maxtries_vx_ensgrid_prob_03h': ${MAXTRIES_VX_ENSGRID_PROB_03h}
+  'maxtries_vx_ensgrid_mean_06h': ${MAXTRIES_VX_ENSGRID_MEAN_06h}
+  'maxtries_vx_ensgrid_prob_06h': ${MAXTRIES_VX_ENSGRID_PROB_06h}
+  'maxtries_vx_ensgrid_mean_24h': ${MAXTRIES_VX_ENSGRID_MEAN_24h}
+  'maxtries_vx_ensgrid_prob_24h': ${MAXTRIES_VX_ENSGRID_PROB_24h}
+  'maxtries_vx_ensgrid_prob_refc': ${MAXTRIES_VX_ENSGRID_PROB_REFC}
+  'maxtries_vx_ensgrid_prob_retop': ${MAXTRIES_VX_ENSGRID_PROB_RETOP}
+  'maxtries_vx_enspoint': ${MAXTRIES_VX_ENSPOINT}
+  'maxtries_vx_enspoint_mean': ${MAXTRIES_VX_ENSPOINT_MEAN}
+  'maxtries_vx_enspoint_prob': ${MAXTRIES_VX_ENSPOINT_PROB}
 #
 # Flags that specify whether to run the preprocessing or
 # verification-related tasks.
@@ -289,6 +349,8 @@ settings="\
   'run_task_get_obs_ndas': ${RUN_TASK_GET_OBS_NDAS}
   'run_task_vx_gridstat': ${RUN_TASK_VX_GRIDSTAT}
   'run_task_vx_pointstat': ${RUN_TASK_VX_POINTSTAT}
+  'run_task_vx_ensgrid': ${RUN_TASK_VX_ENSGRID}
+  'run_task_vx_enspoint': ${RUN_TASK_VX_ENSPOINT}
 #
 # Number of physical cores per node for the current machine.
 #
@@ -350,7 +412,7 @@ settings="\
 #
   'sub_hourly_post': ${SUB_HOURLY_POST}
   'delta_min': ${DT_SUBHOURLY_POST_MNTS}
-  'first_fv3_file_tstr': "000:"`date -d "${DATE_FIRST_CYCL} +${DT_ATMOS} seconds" +%M:%S`
+  'first_fv3_file_tstr': "000:"`$DATE_UTIL -d "${DATE_FIRST_CYCL} +${DT_ATMOS} seconds" +%M:%S`
 " # End of "settings" variable.
 
 print_info_msg $VERBOSE "
@@ -365,12 +427,13 @@ $settings"
 # script to generate the experiment's actual XML file from this template
 # file.
 #
-template_xml_fp="${TEMPLATE_DIR}/${WFLOW_XML_FN}"
-$USHDIR/fill_jinja_template.py -q \
-                               -u "${settings}" \
-                               -t ${template_xml_fp} \
-                               -o ${WFLOW_XML_FP} || \
-  print_err_msg_exit "\
+if [ "${WORKFLOW_MANAGER}" = "rocoto" ]; then
+  template_xml_fp="${TEMPLATE_DIR}/${WFLOW_XML_FN}"
+  $USHDIR/fill_jinja_template.py -q \
+                                 -u "${settings}" \
+                                 -t ${template_xml_fp} \
+                                 -o ${WFLOW_XML_FP} || \
+    print_err_msg_exit "\
 Call to python script fill_jinja_template.py to create a rocoto workflow
 XML file from a template file failed.  Parameters passed to this script
 are:
@@ -381,6 +444,7 @@ are:
   Namelist settings specified on command line:
     settings =
 $settings"
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -410,7 +474,7 @@ if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ]; then
 #
 # Make a backup copy of the user's crontab file and save it in a file.
 #
-  time_stamp=$( date "+%F_%T" )
+  time_stamp=$( $DATE_UTIL "+%F_%T" )
   crontab_backup_fp="$EXPTDIR/crontab.bak.${time_stamp}"
   print_info_msg "
 Copying contents of user cron table to backup file:
@@ -427,7 +491,7 @@ Copying contents of user cron table to backup file:
 # CRONTAB_LINE with backslashes.  Do this next.
 #
   crontab_line_esc_astr=$( printf "%s" "${CRONTAB_LINE}" | \
-                           sed -r -e "s%[*]%\\\\*%g" )
+                           $SED -r -e "s%[*]%\\\\*%g" )
 #
 # In the grep command below, the "^" at the beginning of the string be-
 # ing passed to grep is a start-of-line anchor while the "$" at the end
@@ -491,7 +555,7 @@ if [ "${RUN_ENVIR}" = "nco" ]; then
 # Resolve the target directory that the FIXam symlink points to and check 
 # that it exists.
 #
-  path_resolved=$( readlink -m "$FIXam" )
+  path_resolved=$( $READLINK -m "$FIXam" )
   if [ ! -d "${path_resolved}" ]; then
     print_err_msg_exit "\
 In order to be able to generate a forecast experiment in NCO mode (i.e.
@@ -704,9 +768,9 @@ for (( i=0; i<${num_nml_vars}; i++ )); do
 
   mapping="${FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[$i]}"
   nml_var_name=$( printf "%s\n" "$mapping" | \
-                  sed -n -r -e "s/${regex_search}/\1/p" )
+                  $SED -n -r -e "s/${regex_search}/\1/p" )
   FIXam_fn=$( printf "%s\n" "$mapping" |
-              sed -n -r -e "s/${regex_search}/\2/p" )
+              $SED -n -r -e "s/${regex_search}/\2/p" )
 
   fp="\"\""
   if [ ! -z "${FIXam_fn}" ]; then
@@ -812,9 +876,11 @@ cp_vrfy $USHDIR/${EXPT_CONFIG_FN} $EXPTDIR
 #
 #-----------------------------------------------------------------------
 #
-wflow_db_fn="${WFLOW_XML_FN%.xml}.db"
-rocotorun_cmd="rocotorun -w ${WFLOW_XML_FN} -d ${wflow_db_fn} -v 10"
-rocotostat_cmd="rocotostat -w ${WFLOW_XML_FN} -d ${wflow_db_fn} -v 10"
+if [ "${WORKFLOW_MANAGER}" = "rocoto" ]; then
+  wflow_db_fn="${WFLOW_XML_FN%.xml}.db"
+  rocotorun_cmd="rocotorun -w ${WFLOW_XML_FN} -d ${wflow_db_fn} -v 10"
+  rocotostat_cmd="rocotostat -w ${WFLOW_XML_FN} -d ${wflow_db_fn} -v 10"
+fi
 
 print_info_msg "
 ========================================================================
@@ -830,25 +896,20 @@ The experiment directory is:
   > EXPTDIR=\"$EXPTDIR\"
 
 "
-case "$MACHINE" in
-
-"CHEYENNE")
+#
+#-----------------------------------------------------------------------
+#
+# If rocoto is required, print instructions on how to load and use it
+#
+#-----------------------------------------------------------------------
+#
+if [ "${WORKFLOW_MANAGER}" = "rocoto" ]; then
   print_info_msg "\
 To launch the workflow, first ensure that you have a compatible version
-of rocoto in your \$PATH. On Cheyenne, version 1.3.1 has been pre-built;
-you can load it in your \$PATH with one of the following commands, depending
-on your default shell:
-
-bash:
-  > export PATH=\${PATH}:/glade/p/ral/jntp/tools/rocoto/rocoto-1.3.1/bin/
-
-tcsh:
-  > setenv PATH \${PATH}:/glade/p/ral/jntp/tools/rocoto/rocoto-1.3.1/bin/
-"
-  ;;
-
-*)
-  print_info_msg "\
+of rocoto available. For most pre-configured platforms, rocoto can be
+loaded via a module:
+  > module load rocoto
+For more details on rocoto, see the User's Guide.
 To launch the workflow, first ensure that you have a compatible version
 of rocoto loaded.  For example, to load version 1.3.1 of rocoto, use
 
@@ -856,11 +917,7 @@ of rocoto loaded.  For example, to load version 1.3.1 of rocoto, use
 
 (This version has been tested on hera; later versions may also work but
 have not been tested.)
-"
-  ;;
 
-esac
-print_info_msg "
 To launch the workflow, change location to the experiment directory
 (EXPTDIR) and issue the rocotrun command, as follows:
 
@@ -881,7 +938,9 @@ Note that:
 2) In order for the output of the rocotostat command to be up-to-date,
    the rocotorun command must be issued immediately before the rocoto-
    stat command.
-
+"
+fi
+print_info_msg "
 For automatic resubmission of the workflow (say every 3 minutes), the
 following line can be added to the user's crontab (use \"crontab -e\" to
 edit the cron table):
@@ -933,7 +992,12 @@ set -u
 #
 #-----------------------------------------------------------------------
 #
-scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+if [[ $(uname -s) == Darwin ]]; then
+  command -v greadlink >/dev/null 2>&1 || { echo >&2 "For Darwin-based operating systems (MacOS), the 'greadlink' utility is required to run the UFS SRW Application. Reference the User's Guide for more information about platform requirements. Aborting."; exit 1; }
+  scrfunc_fp=$( greadlink -f "${BASH_SOURCE[0]}" )
+else
+  scrfunc_fp=$( readlink -f "${BASH_SOURCE[0]}" )
+fi
 scrfunc_fn=$( basename "${scrfunc_fp}" )
 scrfunc_dir=$( dirname "${scrfunc_fp}" )
 #
@@ -994,7 +1058,7 @@ rm "${tmp_fp}"
 # ful, move the log file in which the "tee" command saved the output of
 # the function to the experiment directory.
 #
-if [ $retval -eq 0 ]; then
+if [[ $retval == 0 ]]; then
   mv "${log_fp}" "$exptdir"
 #
 # If the call to the generate_FV3LAM_wflow function above was not suc-
