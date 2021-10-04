@@ -1915,14 +1915,14 @@ RESTART_CYCLE_DIR="/path/to/restart/cycle/dir"
 # Set to "TRUE" for DA or "FALSE" for non-DA
 #
 # RUN_TASK_CHEM_ANAL:
-# Set to "TRUE" or "FALSE" to enable/disable chemical data assimiation step
+# Set to "TRUE" or "FALSE" to enable/disable chemical data assimilation step
 # Set to "TRUE" to generate NO2 tasks
 #
 # USE_CHEM_ANAL:
 # Set to "TRUE" or "FALSE" to enable using updated chem analysis restart file
 #
 # DA_OBS_DIR:
-# Path to IODA formatted observations for assimilation
+# Path to IODA formatted observation data for assimilation
 # This would be BUFR for GSI or IODA-formatted files for JEDI
 #
 # RUN_TASK_DACYC:
@@ -1930,7 +1930,7 @@ RESTART_CYCLE_DIR="/path/to/restart/cycle/dir"
 # Set to "TRUE" to generate PM2.5/AOD DA tasks
 #
 # ENKF_FCST:
-# Path of ensemble members for hybrid GSI
+# Path to ensemble members for hybrid GSI
 #
 #-----------------------------------------------------------------------
 #
