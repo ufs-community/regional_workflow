@@ -1911,7 +1911,7 @@ RESTART_CYCLE_DIR="/path/to/restart/cycle/dir"
 #-----------------------------------------------------------------------
 #
 # OPT_DA_RRFS_CMAQ:
-# Flag to turn on/off for DA runs of RRFS-CMAQ
+# Flag to turn on/off DA runs of RRFS-CMAQ
 # Set to "TRUE" for DA or "FALSE" for non-DA
 #
 # RUN_TASK_CHEM_ANAL:
