@@ -1395,6 +1395,27 @@ Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
 fi
 DA_OBS_DIR="${DA_OBS_DIR}"
+
+#
+# Get the base directory of the GSI code if required
+#
+external_name="GSI"
+GSI_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+GSI_DIR="${SR_WX_APP_TOP_DIR}/${GSI_DIR}"
+if [ ! -d "${GSI_DIR}" ]; then
+  print_err_msg_exit "\
+The base directory in which the GSI source code should be located
+(GSI_DIR) does not exist:
+  GSI_DIR = \"${GSI_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+fi
+
 #
 ##### RRFS-CMAQ-DA ########## end   #####
 #
@@ -3155,6 +3176,7 @@ SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
 ARL_NEXUS_DIR="${ARL_NEXUS_DIR}"
 JEDI_DIR="${JEDI_DIR}"
 PE_JEDI="${PE_JEDI}"
+GSI_DIR="${GSI_DIR}"
 #
 ##### RRFS-CMAQ-DA ########## end   #####
 #
