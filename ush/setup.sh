@@ -1351,31 +1351,6 @@ build the executable, and then rerun the workflow."
 fi
 
 #
-##### RRFS-CMAQ-DA ########## start #####
-#
-# Get the base directory of the JEDI code if required
-#
-external_name="jedi-fv3-bundle"
-JEDI_DIR=$( \
-get_manage_externals_config_property \
-"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
-print_err_msg_exit "\
-Call to function get_manage_externals_config_property failed."
-
-JEDI_DIR="${SR_WX_APP_TOP_DIR}/${JEDI_DIR}"
-if [ ! -d "${JEDI_DIR}" ]; then
-  print_err_msg_exit "\
-The base directory in which the JEDI source code should be located
-(JEDI_DIR) does not exist:
-  JEDI_DIR = \"${JEDI_DIR}\"
-Please clone the external repository containing the code in this directory,
-build the executable, and then rerun the workflow."
-fi
-DA_OBS_DIR="${DA_OBS_DIR}"
-
-#
-##### RRFS-CMAQ-DA ########## end   #####
-#
 ##### RRFS-CMAQ ########## start #####
 #
 # Get the base directory of the NEXUS code if required
@@ -1398,6 +1373,32 @@ build the executable, and then rerun the workflow."
 fi
 #
 ##### RRFS-CMAQ ########## end #####
+#
+##### RRFS-CMAQ-DA ########## start #####
+#
+# Get the base directory of the JEDI code if required
+#
+external_name="jedi-fv3-bundle"
+JEDI_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+JEDI_DIR="${SR_WX_APP_TOP_DIR}/${JEDI_DIR}"
+if [ ! -d "${JEDI_DIR}" ]; then
+  print_err_msg_exit "\
+The base directory in which the JEDI source code should be located
+(JEDI_DIR) does not exist:
+  JEDI_DIR = \"${JEDI_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+fi
+DA_OBS_DIR="${DA_OBS_DIR}"
+#
+##### RRFS-CMAQ-DA ########## end   #####
+#
+
 #
 #-----------------------------------------------------------------------
 #
