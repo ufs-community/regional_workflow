@@ -1232,6 +1232,29 @@ Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
 fi
 #
+##### RRFS-CMAQ ########## start #####
+#
+# Get the base directory of the NEXUS code if required
+#
+external_name="arl_nexus"
+ARL_NEXUS_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+ARL_NEXUS_DIR="${SR_WX_APP_TOP_DIR}/${ARL_NEXUS_DIR}"
+if [ ! -d "${ARL_NEXUS_DIR}" ]; then
+  print_err_msg_exit "\
+The base directory in which the arl_nexus source code should be located
+(ARL_NEXUS_DIR) does not exist:
+  ARL_NEXUS_DIR = \"${ARL_NEXUS_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+fi
+#
+##### RRFS-CMAQ ########## end #####
+#
 #-----------------------------------------------------------------------
 #
 # Make sure that USE_CUSTOM_POST_CONFIG_FILE is set to a valid value.
