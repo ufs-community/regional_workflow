@@ -517,7 +517,7 @@ YYMMDD=${CDATE:2:6}
 #
 init_concentrations="false"
 
-if [[ "${RESTART_WORKFLOW}"=="FALSE" && "${CDATE}"=="${DATE_FIRST_CYCL}${CYCL_HRS[0]}" ]]; then
+if [ "${RESTART_WORKFLOW}" = "FALSE" ] && [ "${CDATE}" = "${DATE_FIRST_CYCL}${CYCL_HRS[0]}" ]; then
   init_concentrations="true"
 fi
 #
