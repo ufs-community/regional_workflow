@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 #-----------------------------------------------------------------------
 #
@@ -512,7 +513,7 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 # several queues.  These queues are defined in the default and local 
 # workflow/experiment configuration script.
 #
-# Also, set the machine-dependent flag RELAITVE_OR_NULL that specifies
+# Also, set the machine-dependent flag RELATIVE_OR_NULL that specifies
 # the flag to pass to the link creation command (ln_vrfy) when attempting 
 # to create relative symlinks.  On machines that don't support relative
 # symlinks, it should be set to a null string.
@@ -520,12 +521,11 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #-----------------------------------------------------------------------
 #
 RELATIVE_LINK_FLAG=""
-NCORES_PER_NODE="2" # Need some arbitrary default value to avoid division by zero errors
 case $MACHINE in
 
   "WCOSS_CRAY")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE="24"
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED="lsfcray"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
     QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
@@ -536,7 +536,7 @@ case $MACHINE in
 
   "WCOSS_DELL_P3")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=24
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED="lsf"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
     QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
@@ -547,7 +547,7 @@ case $MACHINE in
 
   "HERA")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=40
+    NCORES_PER_NODE="${NCORES_PER_NODE:-40}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"hera"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
@@ -561,7 +561,7 @@ case $MACHINE in
 
   "ORION")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=40
+    NCORES_PER_NODE="${NCORES_PER_NODE:-40}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"orion"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
@@ -575,7 +575,7 @@ case $MACHINE in
 
   "JET")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=24
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"sjet,vjet,kjet,xjet"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
@@ -589,7 +589,7 @@ case $MACHINE in
 
   "ODIN")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=24
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"workq"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"workq"}
@@ -603,7 +603,7 @@ case $MACHINE in
 
   "CHEYENNE")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=36
+    NCORES_PER_NODE="${NCORES_PER_NODE:-36}"
     SCHED=${SCHED:-"pbspro"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
     QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
@@ -614,7 +614,7 @@ case $MACHINE in
 
   "STAMPEDE")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=68
+    NCORES_PER_NODE="${NCORES_PER_NODE:-68}"
     SCHED="slurm"
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"normal"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
@@ -632,9 +632,19 @@ case $MACHINE in
     ;;
 
   "LINUX")
-    WORKFLOW_MANAGER="none"
-    SCHED="none"
+    WORKFLOW_MANAGER=${WORKFLOW_MANAGER:-"none"}
+    SCHED=${SCHED:-"none"}
     ;;
+
+  "*")
+    NCORES_PER_NODE="2" # Need some arbitrary default value to avoid division by zero errors
+
+    print_info_msg "\
+      You are running on an unknown platform! The default value of
+    NCORES_PER_NODE = ${NCORES_PER_NODE} will be used unless you set
+    this variable in your configuration file."
+    ;;
+
 
 esac
 #

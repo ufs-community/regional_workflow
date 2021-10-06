@@ -51,6 +51,23 @@ RUN_ENVIR="nco"
 # default, but if the machine name is set to a platform that supports
 # rocoto, this will be overwritten and set to "rocoto".
 #
+# NCORES_PER_NODE:
+# The number of cores available per node on the compute platform. Set
+# for supported platforms in setup.sh, but is now also configurable for
+# all platforms.
+#
+# LMOD_PATH:
+# Path to the LMOD sh file on your Linux system. Is set automatically
+# for supported machines.
+#
+# BUILD_ENV_FN:
+# Name of alternative build environment file to use if using an
+# unsupported platform. Is set automatically for supported machines.
+#
+# WFLOW_ENV_FN:
+# Name of alternative workflow environment file to use if using an
+# unsupported platform. Is set automatically for supported machines.
+#
 # SCHED:
 # The job scheduler to use (e.g. slurm).  Set this to an empty string in
 # order for the experiment generation script to set it depending on the
@@ -109,6 +126,10 @@ RUN_ENVIR="nco"
 MACHINE="BIG_COMPUTER"
 ACCOUNT="project_name"
 WORKFLOW_MANAGER="none"
+NCORES_PER_NODE=""
+LMOD_PATH=""
+BUILD_ENV_FN=""
+WFLOW_ENV_FN=""
 SCHED=""
 PARTITION_DEFAULT=""
 QUEUE_DEFAULT=""
