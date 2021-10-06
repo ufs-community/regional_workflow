@@ -462,34 +462,6 @@ MODULES_RUN_TASK_FP script.
 
   </task>
   {%- endif %}
-  {%- if run_task_chem_anal %}
-<!--
-************************************************************************
-************************************************************************
--->
-  <task name="&RUN_CHEM_ANAL_TN;" cycledefs="cycled" maxtries="{{ maxtries_run_chem_anal }}">
-
-    &RSRV_DEFAULT;
-    <command>&LOAD_MODULES_RUN_TASK_FP; "&RUN_CHEM_ANAL_TN;" "&JOBSDIR;/JREGIONAL_RUN_CHEM_ANAL"</command>
-    <nodes>{{ nnodes_run_fcst }}:ppn={{ ppn_run_fcst }}</nodes>
-    <walltime>{{ wtime_run_chem_anal }}</walltime>
-    <nodesize>&NCORES_PER_NODE;</nodesize>
-    <jobname>&RUN_CHEM_ANAL_TN;</jobname>
-    <join><cyclestr>&LOGDIR;/&RUN_CHEM_ANAL_TN;_@Y@m@d@H.log</cyclestr></join>
-
-    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
-    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
-    <envar><name>PREV_CYCLE_DIR</name><value><cyclestr offset="-{{- cycl_incr -}}">&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
-    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
-    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
-    <dependency>
-        <or>
-          <datadep age="00:00:00:05"><cyclestr offset="-{{- cycl_incr -}}">&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr>/RESTART/<cyclestr>@Y@m@d.@H@M@S.fv_tracer.res.tile1.nc</cyclestr></datadep>
-          <datadep age="00:00:00:05"><cyclestr offset="-{{- cycl_incr -}}">&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr>/RESTART/fv_tracer.res.tile1.nc</datadep>
-        </or>
-    </dependency>
-  </task>
-  {%- endif %}  
   {%- if run_task_dacyc %}
 <!--
 ************************************************************************
@@ -521,6 +493,39 @@ MODULES_RUN_TASK_FP script.
 
   </task>
   {%- endif %}
+  {%- if run_task_chem_anal %}
+<!--
+************************************************************************
+************************************************************************
+-->
+  <task name="&RUN_CHEM_ANAL_TN;" cycledefs="cycled" maxtries="{{ maxtries_run_chem_anal }}">
+
+    &RSRV_DEFAULT;
+    <command>&LOAD_MODULES_RUN_TASK_FP; "&RUN_CHEM_ANAL_TN;" "&JOBSDIR;/JREGIONAL_RUN_CHEM_ANAL"</command>
+    <nodes>{{ nnodes_run_fcst }}:ppn={{ ppn_run_fcst }}</nodes>
+    <walltime>{{ wtime_run_chem_anal }}</walltime>
+    <nodesize>&NCORES_PER_NODE;</nodesize>
+    <jobname>&RUN_CHEM_ANAL_TN;</jobname>
+    <join><cyclestr>&LOGDIR;/&RUN_CHEM_ANAL_TN;_@Y@m@d@H.log</cyclestr></join>
+
+    <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
+    <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PREV_CYCLE_DIR</name><value><cyclestr offset="-{{- cycl_incr -}}">&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
+    <dependency>
+      <and>
+  {%- if run_task_dacyc %}
+        <taskdep task="&ANAL_GSI_RESTART_TN;"/>
+  {%- endif %}
+        <or>
+          <datadep age="00:00:00:05"><cyclestr offset="-{{- cycl_incr -}}">&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr>/RESTART/<cyclestr>@Y@m@d.@H@M@S.fv_tracer.res.tile1.nc</cyclestr></datadep>
+          <datadep age="00:00:00:05"><cyclestr offset="-{{- cycl_incr -}}">&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr>/RESTART/fv_tracer.res.tile1.nc</datadep>
+        </or>
+      </and>
+    </dependency>
+  </task>
+  {%- endif %}  
 <!--
 ************************************************************************
 ************************************************************************
