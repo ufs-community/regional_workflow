@@ -1252,10 +1252,10 @@ case $MACHINE in
 
 "HERA")
   DA_OBS_DIR=${DA_OBS_DIR:-"/scratch1/NCEPDEV/da/Cory.R.Martin/Datasets/Observations/RRFS-CMAQ/"}
-  FIXgsi=${FIXgsi:-"/scratch2/BMC/wrfruc/rli/WF1/fix/fix_gsi"}
-  FIXcrtm=${FIXcrtm:-"/scratch2/BMC/wrfruc/rli/WF1/fix/fix_crtm"}
-  AIRCRAFT_REJECT=${AIRCRAFT_REJECT:-"/scratch2/BMC/wrfruc/rli/WF1/fix/fix_gsi"}
-  SFCOBS_USELIST=${SFCOBS_USELIST:-"/scratch2/BMC/wrfruc/rli/WF1/fix/fix_gsi"}
+  FIXgsi=${FIXgsi:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
+  FIXcrtm=${FIXcrtm:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/CRTM/fix"}
+  AIRCRAFT_REJECT=${AIRCRAFT_REJECT:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
+  SFCOBS_USELIST=${SFCOBS_USELIST:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
   AODPATH=${AODPATH:-""}
   PMPATH=${PMPATH:-""}
   ;;
