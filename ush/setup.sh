@@ -450,6 +450,8 @@ fi
 #
 # Make sure that USE_FVCOM is set to a valid value and assign directory
 # and file names.
+# 
+# Set FVCOM_WCSTART to all lowercase "warm" or "cold"
 #
 #-----------------------------------------------------------------------
 #
@@ -466,6 +468,7 @@ elif [ "$USE_FVCOM" = "FALSE" ] || \
      [ "$USE_FVCOM" = "NO" ]; then
   USE_FVCOM="FALSE"
 fi
+FVCOM_WCSTART=$(echo_lowercase $FVCOM_WCSTART)
 #
 #-----------------------------------------------------------------------
 #
