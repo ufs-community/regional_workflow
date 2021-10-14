@@ -681,9 +681,6 @@ The variable ACCOUNT cannot be empty if you are using a workflow manager:
   ACCOUNT = \"$ACCOUNT\"
   WORKFLOW_MANAGER = \"$WORKFLOW_MANAGER\""
   fi
-  RUN_CMD_UTILS=""
-  RUN_CMD_FCST=""
-  RUN_CMD_POST=""
 fi
 #
 #-----------------------------------------------------------------------
@@ -2949,6 +2946,15 @@ Heredoc (cat) command to append grid parameters to variable definitions
 file returned with a nonzero status."
 
 fi
+#
+#-----------------------------------------------------------------------
+#
+# Because RUN_CMD_FCST can include PE_MEMBER01 (and theoretically other
+# variables calculated in this script), delete the first occurance of it
+# in the var_defns file, and write it again at the end.
+#
+#-----------------------------------------------------------------------
+$SED -i '/^RUN_CMD_FCST=/d' $GLOBAL_VAR_DEFNS_FP
 #
 #-----------------------------------------------------------------------
 #
