@@ -22,7 +22,7 @@ background:
 bump:
   prefix: Data/bump/bump_lam_cmaq
   verbosity: main
-  universe_rad: 150000.0
+  universe_rad: 300000.0
   strategy: specific_univariate
   new_nicas: 1
   write_nicas_local: 1
