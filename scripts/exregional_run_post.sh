@@ -104,7 +104,7 @@ case "$MACHINE" in
     export MP_LABELIO=yes
     export OMP_NUM_THREADS=$threads
 
-    APRUN="aprun -j 1 -n${ntasks} -N${ptile} -d${threads} -cc depth"
+    RUN_CMD_POST="aprun -j 1 -n${ntasks} -N${ptile} -d${threads} -cc depth"
     ;;
 
   "WCOSS_DELL_P3")
@@ -117,48 +117,11 @@ case "$MACHINE" in
     export MP_LABELIO=yes
     export OMP_NUM_THREADS=$threads
 
-    APRUN="mpirun"
+    RUN_CMD_POST="mpirun"
     ;;
 
-  "HERA")
-    APRUN="srun"
-    ;;
-
-  "ORION")
-    APRUN="srun"
-    ;;
-
-  "JET")
-    APRUN="srun"
-    ;;
-
-  "ODIN")
-    APRUN="srun -n 1"
-    ;;
-
-  "CHEYENNE")
-    module list
-    nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
-    APRUN="mpirun -np $nprocs"
-    ;;
-
-  "STAMPEDE")
-    nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
-    APRUN="ibrun -n $nprocs"
-    ;;
-
-  "MACOS")
-    APRUN=$RUN_CMD_POST
-    ;;
-
-  "LINUX")
-    APRUN=$RUN_CMD_POST
-    ;;
-
-  *)
-    print_err_msg_exit "\
-Run command has not been specified for this machine:
-  MACHINE = \"$MACHINE\""
+  "*")
+    source ${MACHINE_FILE}
     ;;
 
 esac
@@ -292,7 +255,7 @@ EOF
 print_info_msg "$VERBOSE" "
 Starting post-processing for fhr = $fhr hr..."
 
-${APRUN} ${EXECDIR}/upp.x < itag || print_err_msg_exit "\
+${RUN_CMD_POST} ${EXECDIR}/upp.x < itag || print_err_msg_exit "\
 Call to executable to run post for forecast hour $fhr returned with non-
 zero exit code."
 #

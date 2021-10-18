@@ -325,6 +325,30 @@ has not been specified for this external model and machine combination:
 #
 #-----------------------------------------------------------------------
 #
+# Set the system directory (i.e. a directory on disk) in which the external
+# model output files for the specified cycle date (cdate) may be located.
+# Note that this will be used by the calling script only if the output
+# files for the specified cdate actually exist at this location.  Otherwise,
+# the files will be searched for on the mass store (HPSS).
+#
+# sysdir should contain the full path and file name template to be
+# filled in by the following code, except for the GSMGFS files, which
+# are handled in this script.
+#
+#-----------------------------------------------------------------------
+#
+
+  if [ "${anl_or_fcst}" = "ANL" ]; then
+    sysdir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_ICS})
+  elif [ "${anl_or_fcst}" = "FCST" ]; then
+    sysdir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_LBCS})
+  fi
+  if [ -z "${sysdir}" ] ; then
+    quit_unless_user_spec_data
+  fi
+#
+#-----------------------------------------------------------------------
+#
 # Set the external model output file names that must be obtained (from 
 # disk if available, otherwise from HPSS).
 #
@@ -347,6 +371,7 @@ has not been specified for this external model and machine combination:
   "ANL")
 
     fcst_hh="00"
+    fcst_hhh="000"
     fcst_mn="00"
 
     case "${extrn_mdl_name}" in
@@ -382,13 +407,9 @@ has not been specified for this external model and machine combination:
         prefix="gfs.t${hh}z."
         fns_in_arcv=( "${fns[@]/#/$prefix}" )
 
-      elif [ "${fv3gfs_file_fmt}" = "grib2" ]; then
+      else
 
-# GSK 12/16/2019:
-# Turns out that the .f000 file contains certain necessary fields that
-# are not in the .anl file, so switch to the former.
-#        fns=( "gfs.t${hh}z.pgrb2.0p25.anl" )  # Get only 0.25 degree files for now.
-#        fns=( "gfs.t${hh}z.pgrb2.0p25.f000" )  # Get only 0.25 degree files for now.
+
         fns_on_disk=( "gfs.t${hh}z.pgrb2.0p25.f000" )  # Get only 0.25 degree files for now.
         fns_in_arcv=( "gfs.t${hh}z.pgrb2.0p25.f000" )  # Get only 0.25 degree files for now.
      
@@ -597,188 +618,6 @@ bination of external model (extrn_mdl_name) and analysis or forecast
     esac
     ;;
 
-  esac
-#
-#-----------------------------------------------------------------------
-#
-# Set the system directory (i.e. a directory on disk) in which the external
-# model output files for the specified cycle date (cdate) may be located.
-# Note that this will be used by the calling script only if the output
-# files for the specified cdate actually exist at this location.  Otherwise,
-# the files will be searched for on the mass store (HPSS).
-#
-#-----------------------------------------------------------------------
-#
-  if [ "${anl_or_fcst}" = "ANL" ]; then
-    sysbasedir="${EXTRN_MDL_SYSBASEDIR_ICS}"
-  elif [ "${anl_or_fcst}" = "FCST" ]; then
-    sysbasedir="${EXTRN_MDL_SYSBASEDIR_LBCS}"
-  fi
-
-  sysdir=""
-  case "${extrn_mdl_name}" in
-
-#
-# It is not clear which, if any, systems the (old) spectral GFS model is 
-# available on, so set sysdir for this external model to a null string.
-#
-  "GSMGFS")
-    case "$MACHINE" in
-    "WCOSS_CRAY")
-      sysdir=""
-      ;;
-    "WCOSS_DELL_P3")
-      sysdir=""
-      ;;
-    "HERA")
-      sysdir=""
-      ;;
-    "ORION")
-      sysdir="$sysbasedir"
-      ;;
-    "JET")
-      sysdir=""
-      ;;
-    "ODIN")
-      sysdir="$sysbasedir"
-      ;;
-    "CHEYENNE")
-      sysdir=""
-      ;;
-    "STAMPEDE")
-      sysdir="$sysbasedir"
-      ;;
-    *)
-      quit_unless_user_spec_data
-      ;;
-    esac
-    ;;
-
-
-  "FV3GFS")
-    case "$MACHINE" in
-    "WCOSS_CRAY")
-      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
-      ;;
-    "WCOSS_DELL_P3")
-      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
-      ;;
-    "HERA")
-      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
-      ;;
-    "ORION")
-      sysdir="$sysbasedir"
-      ;;
-    "JET")
-      sysdir="$sysbasedir"
-      ;;
-    "ODIN")
-      sysdir="$sysbasedir/${yyyymmdd}"
-      ;;
-    "CHEYENNE")
-      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}"
-      ;;
-    "STAMPEDE")
-      sysdir="$sysbasedir"
-      ;;
-    *)
-      quit_unless_user_spec_data
-      ;;
-    esac
-    ;;
-
-
-  "RAP")
-    case "$MACHINE" in
-    "WCOSS_CRAY")
-      sysdir="$sysbasedir"
-      ;;
-    "WCOSS_DELL_P3")
-      sysdir="$sysbasedir"
-      ;;
-    "HERA")
-      sysdir="$sysbasedir"
-      ;;
-    "ORION")
-      sysdir="$sysbasedir"
-      ;;
-    "JET")
-      sysdir="$sysbasedir/${yyyymmdd}${hh}/postprd"
-      ;;
-    "ODIN")
-      sysdir="$sysbasedir"
-      ;;
-    "CHEYENNE")
-      sysdir="$sysbasedir"
-      ;;
-    *)
-      quit_unless_user_spec_data
-      ;;
-    esac
-    ;;
-
-
-  "HRRR")
-    case "$MACHINE" in
-    "WCOSS_CRAY")
-      sysdir="$sysbasedir"
-      ;;
-    "WCOSS_DELL_P3")
-      sysdir="$sysbasedir"
-      ;;
-    "HERA")
-      sysdir="$sysbasedir"
-      ;;
-    "ORION")
-      sysdir="$sysbasedir"
-      ;;
-    "JET")
-      sysdir="$sysbasedir/${yyyymmdd}${hh}/postprd"
-      ;;
-    "ODIN")
-      sysdir="$sysbasedir"
-      ;;
-    "CHEYENNE")
-      sysdir="$sysbasedir"
-      ;;
-    *)
-      quit_unless_user_spec_data
-      ;;
-    esac
-    ;;
-
-  "NAM")
-    case "$MACHINE" in
-    "WCOSS_CRAY")
-      sysdir="$sysbasedir"
-      ;;
-    "WCOSS_DELL_P3")
-      sysdir="$sysbasedir"
-      ;;
-    "HERA")
-      sysdir="$sysbasedir"
-      ;;
-    "ORION")
-      sysdir="$sysbasedir"
-      ;;
-    "JET")
-      sysdir="$sysbasedir"
-      ;;
-    "ODIN")
-      sysdir="$sysbasedir"
-      ;;
-    "CHEYENNE")
-      sysdir="$sysbasedir"
-      ;;
-    *)
-      quit_unless_user_spec_data
-      ;;
-    esac
-    ;;
-
-
-  *)
-    quit_unless_user_spec_data
   esac
 #
 #-----------------------------------------------------------------------

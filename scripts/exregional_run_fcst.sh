@@ -106,66 +106,20 @@ case "$MACHINE" in
     ulimit -a
 
     if [ ${PE_MEMBER01} -gt 24 ];then
-      APRUN="aprun -b -j1 -n${PE_MEMBER01} -N24 -d1 -cc depth"
+      RUN_CMD_FCST="aprun -b -j1 -n${PE_MEMBER01} -N24 -d1 -cc depth"
     else
-      APRUN="aprun -b -j1 -n24 -N24 -d1 -cc depth"
+      RUN_CMD_FCST="aprun -b -j1 -n24 -N24 -d1 -cc depth"
     fi
     ;;
 
   "WCOSS_DELL_P3")
     ulimit -s unlimited
     ulimit -a
-    APRUN="mpirun -l -np ${PE_MEMBER01}"
+    RUN_CMD_FCST="mpirun -l -np ${PE_MEMBER01}"
     ;;
 
-  "HERA")
-    ulimit -s unlimited
-    ulimit -a
-    APRUN="srun"
-    ;;
-
-  "ORION")
-    ulimit -s unlimited
-    ulimit -a
-    APRUN="srun"
-    ;;
-
-  "JET")
-    ulimit -s unlimited
-    ulimit -a
-    APRUN="srun"
-    ;;
-
-  "ODIN")
-    module list
-    ulimit -s unlimited
-    ulimit -a
-    APRUN="srun -n ${PE_MEMBER01}"
-    ;;
-
-  "CHEYENNE")
-    module list
-    nprocs=$(( NNODES_RUN_FCST*PPN_RUN_FCST ))
-    APRUN="mpirun -np $nprocs"
-    ;;
-
-  "STAMPEDE")
-    module list
-    APRUN="ibrun -np ${PE_MEMBER01}"
-    ;;
-
-  "MACOS")
-    APRUN=$RUN_CMD_FCST
-    ;;
-
-  "LINUX")
-    APRUN=$RUN_CMD_FCST
-    ;;
-
-  *)
-    print_err_msg_exit "\
-Run command has not been specified for this machine:
-  MACHINE = \"$MACHINE\""
+  "*")
+    source ${MACHINE_FILE}
     ;;
 
 esac
@@ -529,7 +483,7 @@ Call to function to create a diag table file for the current cycle's
 #
 #-----------------------------------------------------------------------
 #
-$APRUN ${FV3_EXEC_FP} || print_err_msg_exit "\
+${RUN_CMD_FCST} ${FV3_EXEC_FP} || print_err_msg_exit "\
 Call to executable to run FV3-LAM forecast returned with nonzero exit
 code."
 #
