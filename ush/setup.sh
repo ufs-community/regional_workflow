@@ -959,6 +959,27 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that RUN_TASK_RUN_POST_STAT is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_RUN_POST_STAT" "valid_vals_RUN_TASK_RUN_POST_STAT"
+RUN_TASK_RUN_POST_STAT=${RUN_TASK_RUN_POST_STAT^^}
+if [ "${RUN_TASK_RUN_POST_STAT}" = "TRUE" ] || \
+   [ "${RUN_TASK_RUN_POST_STAT}" = "YES" ]; then
+  RUN_TASK_RUN_POST_STAT="TRUE"
+
+  if [ ${FCST_LEN_HRS} -lt "40" ]; then
+    RUN_TASK_RUN_POST_STAT="FALSE"
+  fi
+
+elif [ "${RUN_TASK_RUN_POST_STAT}" = "FALSE" ] || \
+     [ "${RUN_TASK_RUN_POST_STAT}" = "NO" ]; then
+  RUN_TASK_RUN_POST_STAT="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that RESTART_WORKFLOW is set to a valid value.
 #
 #-----------------------------------------------------------------------

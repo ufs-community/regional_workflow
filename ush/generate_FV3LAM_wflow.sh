@@ -405,6 +405,7 @@ settings="\
   'add_aqm_ics_tn': ${ADD_AQM_ICS_TN}
   'add_aqm_lbcs_tn': ${ADD_AQM_LBCS_TN}
   'run_nexus_tn': ${RUN_NEXUS_TN}
+  'run_post_stat_tn': ${RUN_POST_STAT_TN}
   'restart_workflow': ${RESTART_WORKFLOW}
   'restart_cycle_dir': !!str ${RESTART_CYCLE_DIR}
   'cycl_first': ${ALL_CDATES[0]}00
@@ -415,18 +416,23 @@ settings="\
   'nnodes_add_aqm_ics': ${NNODES_ADD_AQM_ICS}
   'nnodes_add_aqm_lbcs': ${NNODES_ADD_AQM_LBCS}
   'nnodes_run_nexus': ${NNODES_RUN_NEXUS}
+  'nnodes_run_post_stat': ${NNODES_RUN_POST_STAT}
   'ppn_add_aqm_ics': ${PPN_ADD_AQM_ICS}
   'ppn_add_aqm_lbcs': ${PPN_ADD_AQM_LBCS}
   'ppn_run_nexus': ${PPN_RUN_NEXUS}
+  'ppn_run_post_stat': ${PPN_RUN_POST_STAT}
   'wtime_add_aqm_ics': ${WTIME_ADD_AQM_ICS}
   'wtime_add_aqm_lbcs': ${WTIME_ADD_AQM_LBCS}
   'wtime_run_nexus': ${WTIME_RUN_NEXUS}
+  'wtime_run_post_stat': ${WTIME_RUN_POST_STAT}
   'maxtries_add_aqm_ics': ${MAXTRIES_ADD_AQM_ICS}
   'maxtries_add_aqm_lbcs': ${MAXTRIES_ADD_AQM_LBCS}
   'maxtries_run_nexus': ${MAXTRIES_RUN_NEXUS}
+  'maxtries_run_post_stat': ${MAXTRIES_RUN_POST_STAT}
   'run_task_add_aqm_ics': ${RUN_TASK_ADD_AQM_ICS}
   'run_task_add_aqm_lbcs': ${RUN_TASK_ADD_AQM_LBCS}
   'run_task_run_nexus': ${RUN_TASK_RUN_NEXUS}
+  'run_task_run_post_stat': ${RUN_TASK_RUN_POST_STAT}
 #
 ##### RRFS-CMAQ ########## end   #####
 #
