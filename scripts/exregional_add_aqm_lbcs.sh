@@ -197,7 +197,9 @@ if [ ${RUN_ADD_AQM_GEFS_LBCS} = "TRUE" ]; then
   mkdir_vrfy -p "$workdir"
   cp_vrfy ${CYCLE_DIR}/INPUT/gfs_bndy.tile7.???.nc $workdir
 
-  GEFS_CYC_DIFF=$( printf "%02d" "$(( ${CYCL_HRS} - ${AQM_GEFS_CYC} ))" )
+  RUN_CYC="${CDATE:8:2}"
+
+  GEFS_CYC_DIFF=$( printf "%02d" "$(( ${RUN_CYC} - ${AQM_GEFS_CYC} ))" )
 
   NUMTS="$(( ${FCST_LEN_HRS} / ${LBC_SPEC_INTVL_HRS} + 1 ))"
 
