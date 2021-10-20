@@ -1,7 +1,7 @@
 MACHINE="wcoss_dell_p3"
 ACCOUNT="CMAQ-T2O"
 EXPT_BASEDIR="/gpfs/dell1/ptmp/$USER/expt_dirs"
-EXPT_SUBDIR="test_cmaq_conus13_3days"
+EXPT_SUBDIR="test_cmaq_conus13_2days"
 
 #QUEUE_DEFAULT="dev2"
 #QUEUE_HPSS="dev2_transfer"
@@ -26,7 +26,7 @@ FCST_LEN_HRS="48"
 LBC_SPEC_INTVL_HRS="6"
 
 DATE_FIRST_CYCL="20190810"
-DATE_LAST_CYCL="20190812"
+DATE_LAST_CYCL="20190811"
 CYCL_HRS=( "12" )
 CYCL_INC="24"
 
