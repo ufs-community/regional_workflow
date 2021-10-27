@@ -451,11 +451,12 @@ fi
 # Make sure that USE_FVCOM is set to a valid value and assign directory
 # and file names.
 # 
-# Set FVCOM_WCSTART to all lowercase "warm" or "cold"
+# Make sure that FVCOM_WCSTART is set to lowercase "warm" or "cold"
 #
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
+check_var_valid_value "FVCOM_WCSTART" "valid_vals_FVCOM_WCSTART"
 #
 # Set USE_FVCOM to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
