@@ -41,7 +41,12 @@ RUN_ENVIR="nco"
 # Set machine and queue parameters.  Definitions:
 #
 # MACHINE:
-# Machine on which the workflow will run.
+# Machine on which the workflow will run. If you are NOT on a named,
+# supported platform, and you want to use the Rocoto workflow manager,
+# you will need set MACHINE="linux" and WORKFLOW_MANAGER="rocoto". This
+# combination will assume a Slurm batch manager when generating the XML.
+# Please see ush/valid_param_vals.sh for a full list of supported
+# platforms.
 #
 # ACCOUNT:
 # The account under which to submit jobs to the queue.
@@ -49,7 +54,10 @@ RUN_ENVIR="nco"
 # WORKFLOW_MANAGER:
 # The workflow manager to use (e.g. rocoto). This is set to "none" by
 # default, but if the machine name is set to a platform that supports
-# rocoto, this will be overwritten and set to "rocoto".
+# rocoto, this will be overwritten and set to "rocoto". If set
+# explicitly to rocoto along with the use of the MACHINE=linux target,
+# the configuration layer assumes a Slurm batch manager when generating
+# the XML. Valid options: "rocoto" or "none"
 #
 # NCORES_PER_NODE:
 # The number of cores available per node on the compute platform. Set
