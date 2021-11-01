@@ -2949,7 +2949,7 @@ fi
 #-----------------------------------------------------------------------
 #
 # Because RUN_CMD_FCST can include PE_MEMBER01 (and theoretically other
-# variables calculated in this script), delete the first occurance of it
+# variables calculated in this script), delete the first occurrence of it
 # in the var_defns file, and write it again at the end.
 #
 #-----------------------------------------------------------------------
