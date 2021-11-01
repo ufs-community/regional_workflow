@@ -668,9 +668,8 @@ check_var_valid_value "SCHED" "valid_vals_SCHED"
 #
 #-----------------------------------------------------------------------
 #
-# If we are using a workflow manager, run some checks. First, 
-# verify that the ACCOUNT variable is not empty. Second, ensure that the
-# custom RUN_CMD variables are not set.
+# If we are using a workflow manager check that the ACCOUNT variable is
+# not empty.
 #
 #-----------------------------------------------------------------------
 #
