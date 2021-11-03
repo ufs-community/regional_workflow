@@ -376,7 +376,7 @@ settings="\
   'date_last_cycl': ${DATE_LAST_CYCL}
   'cdate_first_cycl': !datetime ${DATE_FIRST_CYCL}${CYCL_HRS[0]}
   'cycl_hrs': [ $( printf "\'%s\', " "${CYCL_HRS[@]}" ) ]
-  'cycl_freq': !!str 24:00:00
+  'cycl_freq': !!str ${CYCL_INC}:00:00
 #
 # Forecast length (same for all cycles).
 #
@@ -411,8 +411,6 @@ settings="\
   'cycl_first': ${ALL_CDATES[0]}00
   'cycl_next': ${ALL_CDATES[1]:-${ALL_CDATES[0]}}00
   'cycl_last': ${ALL_CDATES[@]: -1}00
-  'cycl_freq': !!str ${CYCL_INC/00/24}:00:00
-  'cycl_incr': !!str ${CYCL_INC}:00:00
   'nnodes_add_aqm_ics': ${NNODES_ADD_AQM_ICS}
   'nnodes_add_aqm_lbcs': ${NNODES_ADD_AQM_LBCS}
   'nnodes_run_nexus': ${NNODES_RUN_NEXUS}

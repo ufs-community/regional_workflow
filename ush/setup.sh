@@ -838,6 +838,19 @@ does not have this form:
 done
 #
 #-----------------------------------------------------------------------
+# Calculate cycle increment for cycle frequency (cycl_freq).
+# if only one CYCL_HRS exists, CYCL_INC sets to 24 hours.
+# if two or more CYCL_HRS, CYCL_INC is calculated from the first two.
+#-----------------------------------------------------------------------
+#
+if [ "$i" -le "1" ]; then
+  CYCL_INC="24"
+else
+  CYCL_INC="$(( ${CYCL_HRS[1]} - ${CYCL_HRS[0]} ))"
+  CYCL_INC=( $( printf "%02d " "${CYCL_INC}" ) )
+fi
+#
+#-----------------------------------------------------------------------
 #
 # Call a function to generate the array ALL_CDATES containing the cycle 
 # dates/hours for which to run forecasts.  The elements of this array
@@ -3442,6 +3455,7 @@ NUM_CYCLES="${NUM_CYCLES}"
 ALL_CDATES=( \\
 $( printf "\"%s\" \\\\\n" "${ALL_CDATES[@]}" )
 )
+CYCL_INC="${CYCL_INC}"
 #
 #-----------------------------------------------------------------------
 #
