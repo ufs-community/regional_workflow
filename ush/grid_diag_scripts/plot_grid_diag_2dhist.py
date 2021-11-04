@@ -145,8 +145,8 @@ ax.grid(True, which = 'major', axis = 'both', linestyle = '--',
 ##
 ax.set_ylabel(args.var1 + ' ' + args.var1_units)
 ax.set_xlabel(args.var2 + ' ' + args.var2_units)
-plt.xlim(0, 70)
-plt.ylim(0, 70)
+#plt.xlim(0, 70)
+#plt.ylim(0, 70)
 plt.title('MET GridDiag 2D Histogram')
 ##cbar = plt.colorbar(
 ##    hist, ticks = np.linspace(0.0, data_max, 11))
