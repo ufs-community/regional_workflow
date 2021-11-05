@@ -107,10 +107,14 @@ case "$MACHINE" in
     ;;
 
   "HERA")
+    ulimit -s unlimited
+    ulimit -a
     APRUN="time"
     ;;
 
   "ORION")
+    ulimit -s unlimited
+    ulimit -a
     APRUN="time"
     ;;
 
