@@ -84,9 +84,16 @@ if output_base is None or model is None:
    grid_diag_out = '/scratch2/BMC/fv3lam/RRFS_baseline/expt_dirs/RRFS_baseline_summer/GridDiag/grid_diag_out_FV3_RRFS_v1alpha_3km_summer_' + start_date + '-' + end_date + '_f' + start_fhr + '-' + end_fhr + '.nc'
 
 else:
-   grid_diag_out = output_base + '/grid_diag_out_' + model + '_' + var1 + '-' + var2 + '_' + start_date + '-' + end_date + '_f' + start_fhr + '-' + end_fhr + '.nc'
+   grid_diag_out = output_base + '/grid_diag_out_' + model + '_' + var1 + '_' + var1_lev + '-' + var2 + '_' + var2_lev + '_' + start_date + '-' + end_date + '_f' + start_fhr + '-' + end_fhr + '.nc'
 
 print("grid_diag_out = " + grid_diag_out)
+
+#From here on, if we need "APCP" it should be read as "APCP_01"
+if var1 == "APCP":
+   var1 = "APCP_01"
+
+if var2 == "APCP":
+   var2 = "APCP_01"
 
 file_id = Dataset(grid_diag_out, 'r')
 hist_str = 'hist_' + var1 + '_' + var1_lev + '_' + var2 + '_' + var2_lev
@@ -143,8 +150,8 @@ ax = plt.gca()
 ax.grid(True, which = 'major', axis = 'both', linestyle = '--', 
         color = (0.5, 0.5, 0.5))
 ##
-ax.set_ylabel(args.var1 + ' ' + args.var1_units)
-ax.set_xlabel(args.var2 + ' ' + args.var2_units)
+ax.set_ylabel(var1 + ' ' + var1_lev + ' (' + var1_units + ')')
+ax.set_xlabel(var2 + ' ' + var2_lev + ' (' + var2_units + ')')
 #plt.xlim(0, 70)
 #plt.ylim(0, 70)
 plt.title('MET GridDiag 2D Histogram')
@@ -154,7 +161,7 @@ cbar = plt.colorbar()
 cbar.ax.set_ylabel('Probability (%)')
 ##
 
-plotname='2dhist_' + var1 + var1_lev + '_' + var2 + var2_lev + '_' + start_date + '_' + end_date + '_fhr' + start_fhr + '-' + end_fhr
+plotname='images/2dhist_' + var1 + '_' + var1_lev + '_' + var2 + '_' + var2_lev + '_' + start_date + '_' + end_date + '_fhr' + start_fhr + '-' + end_fhr
 index=0
 if os.path.exists(plotname + '.png'):
     while os.path.exists(plotname + '_' + str(index) + '.png'):
