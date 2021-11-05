@@ -30,27 +30,92 @@ INPUT_BASE=/scratch2/BMC/fv3lam/RRFS_baseline
 OUTPUT_BASE=/scratch2/BMC/fv3lam/RRFS_baseline/expt_dirs/RRFS_baseline_summer/GridDiag
 
 #export VAR1='RETOP'
-#export VAR1_OPTS='convert(x) = x * 3.28084 * 0.001; n_bins = 30; range  = [0, 60]; cnt_thresh = [ >15 ];'
+#export VAR1_OPTS='convert(x) = x * 3.28084 * 0.001; n_bins = 60; range  = [0, 60]; cnt_thresh = [ >15 ];'
 #export VAR1_UNITS='kft'
 #export VAR1_LEV='L0'
 
-export VAR1='HPBL'
-export VAR1_OPTS='n_bins = 260; range  = [0, 2600]; cnt_thresh = [ >15 ];'
-export VAR1_UNITS='m'
-export VAR1_LEV='L0'
+export VAR1='TMP'
+export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 150; range  = [190, 340];'
+export VAR1_UNITS='K'
+export VAR1_LEV='Z2'
 
-export VAR2='GUST'
-export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 40; range  = [0, 40];'
-export VAR2_UNITS='m/s'
-export VAR2_LEV='L0'
+export VAR2='DPT'
+export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 60; range  = [240, 300];'
+export VAR2_UNITS='K'
+export VAR2_LEV='Z2'
+
+#export VAR1='GUST'
+#export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 40; range  = [0, 40];'
+#export VAR1_UNITS='m/s'
+#export VAR1_LEV='L0'
+
+#export VAR1='PRES'
+#export VAR1_OPTS='convert(x) = x * 0.01; cnt_thresh = [ >15 ]; n_bins = 90; range  = [600, 1050];'
+#export VAR1_UNITS='hPa'
+#export VAR1_LEV='L0'
 
 #export VAR2='TMP'
-#export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 110; range  = [190, 300];'
+#export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 70; range  = [220, 290];'
 #export VAR2_UNITS='K'
-#export VAR2_LEV='Z2'
+#export VAR2_LEV='P500'
+
+#export VAR1='TMP'
+#export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 70; range  = [230, 300];'
+#export VAR1_UNITS='K'
+#export VAR1_LEV='P700'
+
+#export VAR2='TMP'
+#export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 70; range  = [240, 310];'
+#export VAR2_UNITS='K'
+#export VAR2_LEV='P850'
+
+#export VAR1='TMP'
+#export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 80; range  = [240, 320];'
+#export VAR1_UNITS='K'
+#export VAR1_LEV='P925'
+
+#export VAR1='TMP'
+#export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 90; range  = [240, 330];'
+#export VAR1_UNITS='K'
+#export VAR1_LEV='P1000'
+
+#export VAR2='APCP'
+#export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 100; range  = [0, 250];'
+#export VAR2_UNITS='kg/m^2'
+#export VAR2_LEV='L0'
+
+#export VAR2='TCDC'
+#export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 100; range  = [0, 100];'
+#export VAR2_UNITS='kg/m^2'
+#export VAR2_LEV='L0'
+
+#export VAR1='HPBL'
+#export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 500; range  = [0, 5000];'
+#export VAR1_UNITS='m'
+#export VAR1_LEV='L0'
+
+#export VAR1='CAPE'
+#export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 500; range  = [0, 5000];'
+#export VAR1_UNITS='kJ/kg'
+#export VAR1_LEV='L0'
+
+#export VAR1='SNOD'
+#export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 100; range  = [0, 5];'
+#export VAR1_UNITS='m'
+#export VAR1_LEV='L0'
+
+#export VAR2='USWRF'
+#export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 100; range  = [0, 1000];'
+#export VAR2_UNITS='W/m^2'
+#export VAR2_LEV='L0'
+
+#export VAR2='DSWRF'
+#export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 120; range  = [0, 1200];'
+#export VAR2_UNITS='W/m^2'
+#export VAR2_LEV='L0'
 
 #export VAR2='REFC'
-#export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 70; range  = [0, 70];'
+#export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 80; range  = [0, 80];'
 #export VAR2_UNITS='dBz'
 #export VAR2_LEV='L0'
 
@@ -94,19 +159,24 @@ ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common.conf \
   -c ${METPLUS_CONF}/GridDiag_2vars.conf
 
+retVal=$?
+
 cd $SLURM_SUBMIT_DIR
 
-echo `pwd`
+if [ $retVal -eq 0 ]; then
+  export plotting_queue="plot_commands.txt"
 
-export plotting_queue="plot_commands.txt"
-
-cat << EOF >> $plotting_queue
+  cat << EOF >> $plotting_queue
 #Completed on `date`
 python3 plot_grid_diag_2dhist.py -v1=$VAR1 -v2=$VAR2 -v1l=$VAR1_LEV -v2l=$VAR2_LEV -u1=$VAR1_UNITS -u2=$VAR2_UNITS -s=$INIT_BEG -e=$INIT_END -sfhr=$FHR_FIRST -efhr=$FHR_LAST -ob=$OUTPUT_BASE -m=$MODEL
 EOF
-echo "METplus complete, plotting commands written to"
-echo $plotting_queue
-chmod +x $plotting_queue
+  echo "METplus complete, plotting commands written to"
+  echo $plotting_queue
+  chmod +x $plotting_queue
+else
+  touch FAIL_${VAR1}${VAR1_LEV}_${VAR2}${VAR2_LEV}
+  echo METplus failed, nothing to plot
+fi
 
 echo
 echo "Done!"
