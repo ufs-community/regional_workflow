@@ -639,14 +639,19 @@ case $MACHINE in
   "*")
     NCORES_PER_NODE="2" # Need some arbitrary default value to avoid division by zero errors
 
-    print_info_msg "\
-      You are running on an unknown platform! The default value of
-    NCORES_PER_NODE = ${NCORES_PER_NODE} will be used unless you set
-    this variable in your configuration file."
+    print_err_msg_exit "\
+      You are running on an unknown platform! MACHINE=${MACHINE} is not a valid
+    choice."
     ;;
 
-
 esac
+
+if [ -z "$NCORES_PER_NODE" ]; then
+    print_err_msg_exit "\
+      NCORES_PER_NODE is a required setting for your platform! Please
+    set it in config.sh.
+      MACHINE = ${MACHINE}"
+fi
 #
 #-----------------------------------------------------------------------
 #
