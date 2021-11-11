@@ -107,8 +107,6 @@ case "$MACHINE" in
     ;;
 
   "HERA")
-    ulimit -s unlimited
-    ulimit -a
     APRUN="time"
     ;;
 
