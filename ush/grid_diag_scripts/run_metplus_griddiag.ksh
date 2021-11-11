@@ -67,4 +67,4 @@ cd ${OUTPUT_BASE}
 
 ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common.conf \
-  -c ${METPLUS_CONF}/GridDiag_RETOP.conf
+  -c ${METPLUS_CONF}/GridDiag_REFC.conf
