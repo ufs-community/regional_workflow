@@ -1,14 +1,20 @@
 import os
 import numpy as np
 from netCDF4 import Dataset
+import sys
 
-import matplotlib.pyplot as plt
-from matplotlib.colors import BoundaryNorm
-## Added for logarithmic color scale
-import matplotlib.colors as colors
+try:
+   import matplotlib.pyplot as plt
+   from matplotlib.colors import BoundaryNorm
+   ## Added for logarithmic color scale
+   import matplotlib.colors as colors
+except ImportError:
+   print('Error: can not import matplotlib')
+   print("On the Hera machine you can set the environment using Anaconda:\n")
+   print(" module use -a /contrib/miniconda3/modulefiles\n module load miniconda3\n conda activate pygraf\n")
+   sys.exit(1)
 
 import argparse
-import sys
 
 # Parse input arguments
 parser = argparse.ArgumentParser()
