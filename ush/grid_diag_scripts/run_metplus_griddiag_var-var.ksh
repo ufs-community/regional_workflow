@@ -8,6 +8,45 @@
 #SBATCH --job-name=metplus_griddiag
 #SBATCH -o run_metplus_griddiag_var-var.log
 
+#################################
+# How to use this script
+#################################
+
+# This script will run MET's GridDiag tool to create statistics comparing
+# two variables within the model output. Specifically this script has been
+# used, in conjunction with the python plotting script plot_grid_diag_2dhist.py,
+# to create 2d histogram plots for these two variables for the given period
+#
+# Some specific variables need to be set for each model variable you wish to
+# analyze/compare. 
+# The settings needed for each variable are described as follows:
+# 
+# VAR1, VAR2: The name of the variables as defined in the GRIB2 model output
+# VAR1_OPTS, VAR2_OPTS: Options for modifying and binning each variable in MET;
+#                       see the MET config file for details
+# VAR1_UNITS, VAR2_UNITS: [optional] The units of each variable; used for plotting only
+# VAR1_LEV, VAR2_LEV: The vertical level of each variable you wish to plot; see the MET
+#                     users guide for more details:
+# https://met.readthedocs.io/en/main_v10.0/Users_Guide/config_options.html#settings-common-to-multiple-tools
+
+
+# Once this script is run, it will create a MET GridDiag output file (.nc)
+# in the ${OUTPUT_BASE} directory. MET will be run according to the settings
+# in the MET config file ${METPLUS_CONF}/GridDiag_2vars.conf
+#
+# In addition, when this script finishes, it will write the proper plotting
+# commands in the file `plot_commands.txt`. These commands can be copy-pasted,
+# or the file can be run as a shell script (provided the correct python packages
+# are loaded; you will need to activate the "pygraf" conda module:
+#
+# module use -a /contrib/miniconda3/modulefiles
+# module load miniconda3
+# conda activate pygraf
+#
+# As a side note: the reason the plotting commands are not included in this script
+# is due to Hera-specific limitations; python scripts using certain graphics
+# packages will not run on Hera compute nodes for some reason.
+
 # Set up environment on Hera 
 module purge
 module use -a /contrib/anaconda/modulefiles
@@ -34,15 +73,15 @@ OUTPUT_BASE=/scratch2/BMC/fv3lam/RRFS_baseline/expt_dirs/RRFS_baseline_summer/Gr
 #export VAR1_UNITS='kft'
 #export VAR1_LEV='L0'
 
-export VAR1='TMP'
-export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 150; range  = [190, 340];'
-export VAR1_UNITS='K'
-export VAR1_LEV='Z2'
+#export VAR1='TMP'
+#export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 150; range  = [190, 340];'
+#export VAR1_UNITS='K'
+#export VAR1_LEV='Z2'
 
-export VAR2='DPT'
-export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 60; range  = [240, 300];'
-export VAR2_UNITS='K'
-export VAR2_LEV='Z2'
+#export VAR1='DPT'
+#export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 60; range  = [240, 300];'
+#export VAR1_UNITS='K'
+#export VAR1_LEV='Z2'
 
 #export VAR1='GUST'
 #export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 40; range  = [0, 40];'
@@ -79,10 +118,10 @@ export VAR2_LEV='Z2'
 #export VAR1_UNITS='K'
 #export VAR1_LEV='P1000'
 
-#export VAR2='APCP'
-#export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 100; range  = [0, 250];'
-#export VAR2_UNITS='kg/m^2'
-#export VAR2_LEV='L0'
+export VAR1='APCP'
+export VAR1_OPTS='cnt_thresh = [ >15 ]; n_bins = 100; range  = [0, 250];'
+export VAR1_UNITS='kg/m^2'
+export VAR1_LEV='L0'
 
 #export VAR2='TCDC'
 #export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 100; range  = [0, 100];'
@@ -114,10 +153,10 @@ export VAR2_LEV='Z2'
 #export VAR2_UNITS='W/m^2'
 #export VAR2_LEV='L0'
 
-#export VAR2='REFC'
-#export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 80; range  = [0, 80];'
-#export VAR2_UNITS='dBz'
-#export VAR2_LEV='L0'
+export VAR2='REFC'
+export VAR2_OPTS='cnt_thresh = [ >15 ]; n_bins = 80; range  = [0, 80];'
+export VAR2_UNITS='dBz'
+export VAR2_LEV='L0'
 
 export MET_INSTALL_DIR
 export MET_BIN_EXEC
