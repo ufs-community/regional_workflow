@@ -88,12 +88,12 @@ else:
 
 print("grid_diag_out = " + grid_diag_out)
 
-#From here on, if we need "APCP" it should be read as "APCP_01"
+#From here on, if we need "APCP" it should be read as "APCP_00"
 if var1 == "APCP":
-   var1 = "APCP_01"
+   var1 = "APCP_00"
 
 if var2 == "APCP":
-   var2 = "APCP_01"
+   var2 = "APCP_00"
 
 file_id = Dataset(grid_diag_out, 'r')
 hist_str = 'hist_' + var1 + '_' + var1_lev + '_' + var2 + '_' + var2_lev
@@ -154,7 +154,7 @@ ax.set_ylabel(var1 + ' ' + var1_lev + ' (' + var1_units + ')')
 ax.set_xlabel(var2 + ' ' + var2_lev + ' (' + var2_units + ')')
 #plt.xlim(0, 70)
 #plt.ylim(0, 70)
-plt.title('MET GridDiag 2D Histogram')
+plt.title('MET GridDiag 2D Histogram, ' + start_date + '-' + end_date + '_fhr' + start_fhr + '-' + end_fhr)
 ##cbar = plt.colorbar(
 ##    hist, ticks = np.linspace(0.0, data_max, 11))
 cbar = plt.colorbar()
