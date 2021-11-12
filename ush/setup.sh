@@ -838,16 +838,27 @@ does not have this form:
 done
 #
 #-----------------------------------------------------------------------
-# Calculate cycle increment for cycle frequency (cycl_freq).
-# if only one CYCL_HRS exists, CYCL_INC sets to 24 hours.
-# if two or more CYCL_HRS, CYCL_INC is calculated from the first two.
+# Check cycle increment for cycle frequency (cycl_freq).
+# only if INCR_CYCL_FREQ < 24.
 #-----------------------------------------------------------------------
 #
-if [ "$i" -le "1" ]; then
-  CYCL_INC="24"
-else
-  CYCL_INC="$(( ${CYCL_HRS[1]} - ${CYCL_HRS[0]} ))"
-  CYCL_INC=( $( printf "%02d " "${CYCL_INC}" ) )
+if [ "${INCR_CYCL_FREQ}" -lt "24" ] && [ "$i" -gt "1" ]; then
+  cycl_intv="$(( 24/$i ))"
+ 
+  im1=$(( $i-1 ))
+  for itmp in $( seq 1 ${im1} ); do 
+    itm1=$(( ${itmp}-1 ))
+    cycl_next="$(( ${CYCL_HRS[itm1]} + ${cycl_intv} ))"
+    cycl_next=( $( printf "%02d " "${cycl_next}" ) )
+    if [ "${cycl_next}" -ne "${CYCL_HRS[$itmp]}" ]; then
+      print_err_msg_exit "\
+Element #${itmp} of CYCL_HRS does not match with the increment of cycle
+frequency:
+  CYCL_HRS = $CYCL_HRS_str
+  INCR_CYCL_FREQ = $INCR_CYCL_FREQ
+  CYCL_HRS[$itmp] = \"${CYCL_HRS[$itmp]}\""
+    fi
+  done
 fi
 #
 #-----------------------------------------------------------------------
@@ -3455,7 +3466,7 @@ NUM_CYCLES="${NUM_CYCLES}"
 ALL_CDATES=( \\
 $( printf "\"%s\" \\\\\n" "${ALL_CDATES[@]}" )
 )
-CYCL_INC="${CYCL_INC}"
+INCR_CYCL_FREQ="${INCR_CYCL_FREQ}"
 #
 #-----------------------------------------------------------------------
 #
