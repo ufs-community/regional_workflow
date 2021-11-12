@@ -159,7 +159,7 @@ YYYYMMDD=${YYYYMMDDHH:0:8}
 cd_vrfy ${ANALWORKDIR}
 fixdir=$FIXgsi
 fixgriddir=$FIXgsi/${PREDEF_GRID_NAME}
-DA_CYCLE_INTERV=${CYCL_INC}
+DA_CYCLE_INTERV=${INCR_CYCL_FREQ}
 if [ ${BKTYPE} -eq 1 ]; then  # cold start, use background from INPUT
   bkpath=${CYCLE_DIR}/INPUT
 else
