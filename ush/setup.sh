@@ -3466,7 +3466,6 @@ NUM_CYCLES="${NUM_CYCLES}"
 ALL_CDATES=( \\
 $( printf "\"%s\" \\\\\n" "${ALL_CDATES[@]}" )
 )
-INCR_CYCL_FREQ="${INCR_CYCL_FREQ}"
 #
 #-----------------------------------------------------------------------
 #
