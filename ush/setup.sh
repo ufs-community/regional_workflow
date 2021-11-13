@@ -853,6 +853,39 @@ does not have this form:
 done
 #
 #-----------------------------------------------------------------------
+# Check cycle increment for cycle frequency (cycl_freq).
+# only if INCR_CYCL_FREQ < 24.
+#-----------------------------------------------------------------------
+#
+if [ "${INCR_CYCL_FREQ}" -lt "24" ] && [ "$i" -gt "1" ]; then
+  cycl_intv="$(( 24/$i ))"
+  cycl_intv=( $( printf "%02d " "${cycl_intv}" ) )
+  INCR_CYCL_FREQ=( $( printf "%02d " "${INCR_CYCL_FREQ}" ) )
+  if [ "${cycl_intv}" -ne "${INCR_CYCL_FREQ}" ]; then
+    print_err_msg_exit "\
+The number of CYCL_HRS does not match with that expected by INCR_CYCL_FREQ:
+  INCR_CYCL_FREQ = ${INCR_CYCL_FREQ}
+  cycle interval by the number of CYCL_HRS = ${cycl_intv}
+  CYCL_HRS = $CYCL_HRS_str "
+  fi
+
+  im1=$(( $i-1 ))
+  for itmp in $( seq 1 ${im1} ); do
+    itm1=$(( ${itmp}-1 ))
+    cycl_next="$(( ${CYCL_HRS[itm1]} + ${INCR_CYCL_FREQ} ))"
+    cycl_next=( $( printf "%02d " "${cycl_next}" ) )
+    if [ "${cycl_next}" -ne "${CYCL_HRS[$itmp]}" ]; then
+      print_err_msg_exit "\
+Element #${itmp} of CYCL_HRS does not match with the increment of cycle
+frequency INCR_CYCL_FREQ:
+  CYCL_HRS = $CYCL_HRS_str
+  INCR_CYCL_FREQ = ${INCR_CYCL_FREQ}
+  CYCL_HRS[$itmp] = \"${CYCL_HRS[$itmp]}\""
+    fi
+  done
+fi
+#
+#-----------------------------------------------------------------------
 #
 # Call a function to generate the array ALL_CDATES containing the cycle 
 # dates/hours for which to run forecasts.  The elements of this array
