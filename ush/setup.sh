@@ -2380,6 +2380,18 @@ component if it is being used) are:
 #
 #-----------------------------------------------------------------------
 #
+# Set up RUN_CMD for MACOS and LINUX
+#
+#-----------------------------------------------------------------------
+#
+if [ "$MACHINE" = "MACOS" ] && [ "$MACHINE" = "LINUX" ]; then
+  RUN_CMD_UTILS=${RUN_CMD_UTILS:-"mpirun -np 1"}
+  RUN_CMD_FCST=${RUN_CMD_FCST:-"mpirun -np ${PE_MEMBER01}"}
+  RUN_CMD_POST=${RUN_CMD_POST:-"mpirun -np 1"}
+fi
+#
+#-----------------------------------------------------------------------
+#
 # If the write-component is going to be used to write output files to 
 # disk (i.e. if QUILTING is set to "TRUE"), make sure that the grid type 
 # used by the write-component (WRTCMP_output_grid) is set to a valid value.
@@ -2957,15 +2969,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Because RUN_CMD_FCST can include PE_MEMBER01 (and theoretically other
-# variables calculated in this script), delete the first occurrence of it
-# in the var_defns file, and write it again at the end.
-#
-#-----------------------------------------------------------------------
-$SED -i '/^RUN_CMD_FCST=/d' $GLOBAL_VAR_DEFNS_FP
-#
-#-----------------------------------------------------------------------
-#
 # Continue appending variable definitions to the variable definitions 
 # file.
 #
@@ -3064,7 +3067,7 @@ FVCOM_FILE="${FVCOM_FILE}"
 #
 NCORES_PER_NODE="${NCORES_PER_NODE}"
 PE_MEMBER01="${PE_MEMBER01}"
-RUN_CMD_FCST=$(eval echo ${RUN_CMD_FCST})
+RUN_CMD_FCST="${RUN_CMD_FCST}"
 #
 #-----------------------------------------------------------------------
 #
