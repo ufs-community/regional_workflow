@@ -2384,7 +2384,7 @@ component if it is being used) are:
 #
 #-----------------------------------------------------------------------
 #
-if [ "$MACHINE" = "MACOS" ] && [ "$MACHINE" = "LINUX" ]; then
+if [ "$MACHINE" = "MACOS" ] || [ "$MACHINE" = "LINUX" ]; then
   RUN_CMD_UTILS=${RUN_CMD_UTILS:-"mpirun -np 1"}
   RUN_CMD_FCST=${RUN_CMD_FCST:-"mpirun -np ${PE_MEMBER01}"}
   RUN_CMD_POST=${RUN_CMD_POST:-"mpirun -np 1"}
