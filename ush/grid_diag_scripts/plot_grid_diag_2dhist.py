@@ -122,7 +122,12 @@ cbar = plt.colorbar()
 cbar.ax.set_ylabel('Probability (%)')
 ##
 
-plotname='images/2dhist_' + var1 + '_' + var1_lev + '_' + var2 + '_' + var2_lev + '_' + start_date + '_' + end_date + '_fhr' + start_fhr + '-' + end_fhr
+imagedir = 'images'
+
+if not os.path.exists(imagedir):
+    os.makedirs(imagedir)
+
+plotname=f'{imagedir}/2dhist_{var1}_{var1_lev}_{var2}_{var2_lev}_{start_date}_{end_date}_fhr{start_fhr}-{end_fhr}'
 index=0
 if os.path.exists(plotname + '.png'):
     while os.path.exists(plotname + '_' + str(index) + '.png'):
