@@ -194,48 +194,22 @@ Loading modules for task \"${task_name}\" ..."
 module use "${modules_dir}" || print_err_msg_exit "\
 Call to \"module use\" command failed."
 
-<<<<<<< HEAD
-  #
-  # If NOT using the default modulefile...
-  #
-#  if [ ${use_default_modulefile} -eq 0 ]; then
 #
-#     module use -a "${modules_dir}" || print_err_msg_exit "\
-#Call to \"module use\" command failed."
-#    
-    #
-    # Load the .local module file if available for the given task
-    #
+# Load the .local module file if available for the given task
 #
+
 ##### RRFS-CMAQ ########## start #####
 if [ "${task_name}" = "${RUN_FCST_TN}" ]; then
-    modulefile_local="${RUN_FCST_TN}.local.${FCST_MODEL}"
+  modulefile_local="${RUN_FCST_TN}.local.${FCST_MODEL}"
 else
 ##### RRFS-CMAQ ########## end   #####
 #
-    modulefile_local="${task_name}.local"
+  modulefile_local="${task_name}.local"
 #
 ##### RRFS-CMAQ ########## start #####
 fi
 ##### RRFS-CMAQ ########## end   #####
 #
-
-    if [ -f ${modules_dir}/${modulefile_local} ]; then
-      module load "${modulefile_local}" || print_err_msg_exit "\
-Loading .local module file (in directory specified by mod-
-ules_dir) for the specified task (task_name) failed:
-  task_name = \"${task_name}\"
-  modulefile_local = \"${modulefile_local}\"
-  modules_dir = \"${modules_dir}\""    
-    fi
-
-#  else # using default modulefile
-=======
->>>>>>> origin/develop
-#
-# Load the .local module file if available for the given task
-#
-modulefile_local="${task_name}.local"
 if [ -f ${modules_dir}/${modulefile_local} ]; then
   module load "${modulefile_local}" || print_err_msg_exit "\
   Loading .local module file (in directory specified by mod-
