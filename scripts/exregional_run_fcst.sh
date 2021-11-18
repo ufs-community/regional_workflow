@@ -167,6 +167,8 @@ case "$MACHINE" in
     ;;
 
   "LINUX")
+    ulimit -s unlimited
+    ulimit -a
     APRUN=$RUN_CMD_FCST
     ;;
 
