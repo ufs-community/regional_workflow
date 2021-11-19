@@ -1,5 +1,4 @@
-total_member:            1
-PE_MEMBER01:             {{ PE_MEMBER01 }}
+print_esmf:              {{ print_esmf }}
 start_year:              {{ start_year }}
 start_month:             {{ start_month }}
 start_day:               {{ start_day }}
@@ -7,18 +6,12 @@ start_hour:              {{ start_hour }}
 start_minute:            0
 start_second:            0
 nhours_fcst:             {{ nhours_fcst }}
-RUN_CONTINUE:            .false.
-ENS_SPS:                 .false.
+
 dt_atmos:                {{ dt_atmos }}
 cpl:                     {{ cpl }}
 calendar:                'julian'
-memuse_verbose:          .false.
-atmos_nthreads:          {{ atmos_nthreads }}
-use_hyper_thread:        .false.
-debug_affinity:          .true.
 restart_interval:        {{ restart_interval }}
 output_1st_tstep_rst:    .false.
-print_esmf:              {{ print_esmf }}
 write_dopost:            {{ write_dopost }}
 quilting:                {{ quilting }}
 
@@ -29,29 +22,26 @@ quilting:                {{ quilting }}
 write_groups:            {{ write_groups }}
 write_tasks_per_group:   {{ write_tasks_per_group }}
 num_files:               2
-filename_base:           'dyn''phy'
-output_file:             'netcdf'
-write_nemsioflip:        .false.
-write_fsyncflag:         .false.
+filename_base:           'dyn' 'phy'
+output_file:             'netcdf' 'netcdf'
+ideflate:                0
+nbits:                   0
+ichunk2d:                -1
+jchunk2d:                -1
+ichunk3d:                -1
+jchunk3d:                -1
+kchunk3d:                -1
 #
 # Write-component output frequency parameter definitions:
 #
-# nfhout:
-# Output frequency in hours after forecast hour "nfhmax_hf".
-#
-# nfhmax_hf:
-# Number of forecast hours until output frequency "nfhout" takes affect.
-#
-# nfhout_hf:
-# Output frequency in hours until forecast hour "nfhmax_hf".
+# output_fh:
+# Output frequency in hours.
 #
 # nsout:
 # Output frequency in time steps (positive values override "nfhout" and 
 # "nfhout_hf").
 #
-nfhout:     {{ nfhout }}
-nfhmax_hf:  60
-nfhout_hf:  1
+output_fh:  {{ nfhout }}  -1
 nsout:      {{ nsout }}
 #
 # Coordinate system used by the output grid.

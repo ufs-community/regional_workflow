@@ -10,7 +10,6 @@
 &atmos_model_nml
     chksum_debug = .false.
     dycore_only = .false.
-    fdiag = 1
 /
 
 &cires_ugwp_nml
@@ -174,7 +173,6 @@
     ltaerosol = .true.
     lwhtr = .true.
     n_var_lndp = 0
-    ncld = 5
     nsradar_reset = 3600
     nst_anl = .true.
     nstf_name = 2,1,0,0,0
