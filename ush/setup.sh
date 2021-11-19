@@ -152,6 +152,36 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that DEBUG is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "DEBUG" "valid_vals_DEBUG"
+#
+# Set DEBUG to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+DEBUG=$(echo_uppercase $DEBUG)
+if [ "$DEBUG" = "TRUE" ] || \
+   [ "$DEBUG" = "YES" ]; then
+  DEBUG="TRUE"
+elif [ "$DEBUG" = "FALSE" ] || \
+     [ "$DEBUG" = "NO" ]; then
+  DEBUG="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# If DEBUG is set to "TRUE", make sure that VERBOSE is also set to "TRUE".
+#
+#-----------------------------------------------------------------------
+#
+if [ "$DEBUG" = "TRUE" ]; then
+  VERBOSE="TRUE" 
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Make sure that USE_CRON_TO_RELAUNCH is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -792,9 +822,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-DATE_OR_NULL=$( printf "%s" "${DATE_FIRST_CYCL}" | \
+date_or_null=$( printf "%s" "${DATE_FIRST_CYCL}" | \
                 $SED -n -r -e "s/^([0-9]{8})$/\1/p" )
-if [ -z "${DATE_OR_NULL}" ]; then
+if [ -z "${date_or_null}" ]; then
   print_err_msg_exit "\
 DATE_FIRST_CYCL must be a string consisting of exactly 8 digits of the 
 form \"YYYYMMDD\", where YYYY is the 4-digit year, MM is the 2-digit 
@@ -802,9 +832,9 @@ month, and DD is the 2-digit day-of-month.
   DATE_FIRST_CYCL = \"${DATE_FIRST_CYCL}\""
 fi
 
-DATE_OR_NULL=$( printf "%s" "${DATE_LAST_CYCL}" | \
+date_or_null=$( printf "%s" "${DATE_LAST_CYCL}" | \
                 $SED -n -r -e "s/^([0-9]{8})$/\1/p" )
-if [ -z "${DATE_OR_NULL}" ]; then
+if [ -z "${date_or_null}" ]; then
   print_err_msg_exit "\
 DATE_LAST_CYCL must be a string consisting of exactly 8 digits of the 
 form \"YYYYMMDD\", where YYYY is the 4-digit year, MM is the 2-digit 
@@ -2549,8 +2579,9 @@ line_list=$( $SED -r \
              -e "/^$/d" \
              ${GLOBAL_VAR_DEFNS_FP} )
 
-print_info_msg "$VERBOSE" "
-The variable \"line_list\" contains:
+print_info_msg "$DEBUG" "
+Before updating default values of experiment variables, the variable 
+\"line_list\" contains:
 
 ${line_list}
 "
@@ -2613,7 +2644,7 @@ while read crnt_line; do
 #
   if [ ! -z $var_name ]; then
 
-    print_info_msg "$VERBOSE" "
+    print_info_msg "$DEBUG" "
 var_name = \"${var_name}\""
 #
 # If the variable specified in var_name is set in the current environ-
