@@ -51,6 +51,11 @@ cd_vrfy ${scrfunc_dir}
 #-----------------------------------------------------------------------
 #
 . ./source_util_funcs.sh
+
+print_info_msg "
+========================================================================
+Starting function ${func_name}() in \"${scrfunc_fn}\"...
+========================================================================"
 #
 #-----------------------------------------------------------------------
 #
@@ -172,11 +177,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If DEBUG is set to "TRUE", make sure that VERBOSE is also set to "TRUE".
+# If DEBUG is set to "TRUE" but VERBOSE is set to "FALSE", reset VERBOSE 
+# to "TRUE" to print out all of the VERBOSE output (in addition to any
+# DEBUG output).
 #
 #-----------------------------------------------------------------------
 #
-if [ "$DEBUG" = "TRUE" ]; then
+if [ "$DEBUG" = "TRUE" ] && [ "$VERBOSE" = "FALSE" ]; then
+  print_info_msg "
+Resetting VERBOSE to \"TRUE\" because DEBUG has been set to \"TRUE\"..."
   VERBOSE="TRUE" 
 fi
 #
@@ -2580,8 +2589,8 @@ line_list=$( $SED -r \
              ${GLOBAL_VAR_DEFNS_FP} )
 
 print_info_msg "$DEBUG" "
-Before updating default values of experiment variables, the variable 
-\"line_list\" contains:
+Before updating default values of experiment variables to user-specified
+values, the variable \"line_list\" contains:
 
 ${line_list}
 "
@@ -2624,6 +2633,17 @@ $SED -i -r -e "s|$regexp|\1\n\n${str_to_insert}\n|g" ${GLOBAL_VAR_DEFNS_FP}
 #
 # Loop through the lines in line_list.
 #
+print_info_msg "
+Generating the global experiment variable definitions file specified by
+GLOBAL_VAR_DEFNS_FN:
+  GLOBAL_VAR_DEFNS_FN = \"${GLOBAL_VAR_DEFNS_FN}\"
+Full path to this file is:
+  GLOBAL_VAR_DEFNS_FP = \"${GLOBAL_VAR_DEFNS_FP}\"
+For more detailed information, set DEBUG to \"TRUE\" in the experiment
+configuration file (\"${EXPT_CONFIG_FN}\")."
+
+template_var_names=()
+template_var_values=()
 while read crnt_line; do
 #
 # Try to obtain the name of the variable being set on the current line.
@@ -2635,9 +2655,6 @@ while read crnt_line; do
 # set to.
 #
   var_name=$( printf "%s" "${crnt_line}" | $SED -n -r -e "s/^([^ ]*)=.*/\1/p" )
-#echo
-#echo "============================"
-#printf "%s\n" "var_name = \"${var_name}\""
 #
 # If var_name is not empty, then a variable name was found in the cur-
 # rent line in line_list.
@@ -3118,7 +3135,7 @@ definitions file returned with a nonzero status."
 #
 print_info_msg "
 ========================================================================
-Setup script completed successfully!!!
+Function ${func_name}() in \"${scrfunc_fn}\" completed successfully!!!
 ========================================================================"
 #
 #-----------------------------------------------------------------------
