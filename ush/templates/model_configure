@@ -1,3 +1,5 @@
+total_member:            1
+PE_MEMBER01:             {{ PE_MEMBER01 }}
 print_esmf:              {{ print_esmf }}
 start_year:              {{ start_year }}
 start_month:             {{ start_month }}
@@ -6,15 +8,19 @@ start_hour:              {{ start_hour }}
 start_minute:            0
 start_second:            0
 nhours_fcst:             {{ nhours_fcst }}
-
+RUN_CONTINUE:            .false.
+ENS_SPS:                 .false.
 dt_atmos:                {{ dt_atmos }}
 cpl:                     {{ cpl }}
 calendar:                'julian'
+memuse_verbose:          .false.
+atmos_nthreads:          {{ atmos_nthreads }}
 restart_interval:        {{ restart_interval }}
 output_1st_tstep_rst:    .false.
 write_dopost:            {{ write_dopost }}
 quilting:                {{ quilting }}
-
+ideflate:                0
+nbits:                   0
 {% if quilting  %}
 #
 # Write-component (quilting) computational parameters.
@@ -24,8 +30,6 @@ write_tasks_per_group:   {{ write_tasks_per_group }}
 num_files:               2
 filename_base:           'dyn' 'phy'
 output_file:             'netcdf' 'netcdf'
-ideflate:                0
-nbits:                   0
 #
 # Write-component output frequency parameter definitions:
 #
