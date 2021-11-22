@@ -26,11 +26,6 @@ filename_base:           'dyn' 'phy'
 output_file:             'netcdf' 'netcdf'
 ideflate:                0
 nbits:                   0
-ichunk2d:                -1
-jchunk2d:                -1
-ichunk3d:                -1
-jchunk3d:                -1
-kchunk3d:                -1
 #
 # Write-component output frequency parameter definitions:
 #
