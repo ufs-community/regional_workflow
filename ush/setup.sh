@@ -3098,7 +3098,7 @@ FVCOM_FILE="${FVCOM_FILE}"
 #
 NCORES_PER_NODE="${NCORES_PER_NODE}"
 PE_MEMBER01="${PE_MEMBER01}"
-RUN_CMD_FCST=$(eval echo ${RUN_CMD_FCST})
+RUN_CMD_FCST="$(eval echo \'${RUN_CMD_FCST}\')"
 #
 #-----------------------------------------------------------------------
 #
