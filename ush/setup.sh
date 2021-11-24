@@ -872,9 +872,9 @@ The number of CYCL_HRS does not match with that expected by INCR_CYCL_FREQ:
   im1=$(( $i-1 ))
   for itmp in $( seq 1 ${im1} ); do
     itm1=$(( ${itmp}-1 ))
-    cycl_next="$(( ${CYCL_HRS[itm1]} + ${INCR_CYCL_FREQ} ))"
-    cycl_next=( $( printf "%02d " "${cycl_next}" ) )
-    if [ "${cycl_next}" -ne "${CYCL_HRS[$itmp]}" ]; then
+    cycl_next_itmp="$(( ${CYCL_HRS[itm1]} + ${INCR_CYCL_FREQ} ))"
+    cycl_next_itmp=( $( printf "%02d " "${cycl_next_itmp}" ) )
+    if [ "${cycl_next_itmp}" -ne "${CYCL_HRS[$itmp]}" ]; then
       print_err_msg_exit "\
 Element #${itmp} of CYCL_HRS does not match with the increment of cycle
 frequency INCR_CYCL_FREQ:
@@ -899,6 +899,7 @@ set_cycle_dates \
   date_start="${DATE_FIRST_CYCL}" \
   date_end="${DATE_LAST_CYCL}" \
   cycle_hrs="${CYCL_HRS_str}" \
+  incr_cycl_freq="${INCR_CYCL_FREQ}" \
   output_varname_all_cdates="ALL_CDATES"
 
 NUM_CYCLES="${#ALL_CDATES[@]}"
