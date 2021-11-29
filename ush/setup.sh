@@ -2683,7 +2683,7 @@ var_name = \"${var_name}\""
 #
 # will retrun the string "x" if the variable specified in var_name is 
 # set (to either an empty or non-empty string), and it will return an
-# empty string if the variable specified in var_name is unset (i.e. i
+# empty string if the variable specified in var_name is unset (i.e. is
 # undefined).
 #
     unset "var_value"
