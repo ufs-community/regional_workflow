@@ -51,7 +51,7 @@ MODULE_INIT_PATH=${MODULE_INIT_PATH:-/glade/u/apps/ch/opt/lmod/8.1.7/lmod/8.1.7/
 
 # Architecture information
 WORKFLOW_MANAGER="rocoto"
-NCORES_PER_NODE=36
+NCORES_PER_NODE="${NCORES_PER_NODE:-36}"
 SCHED=${SCHED:-"pbspro"}
 QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
 QUEUE_HPSS=${QUEUE_HPSS:-"regular"}

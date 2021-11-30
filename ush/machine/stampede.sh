@@ -40,21 +40,23 @@ function file_location() {
 }
 
 
-# Architecture information
-WORKFLOW_MANAGER="rocoto"
-NCORES_PER_NODE=68
-SCHED="slurm"
-YSBASEDIR_ICS=${EXTRN_MDL_SYSBASEDIR_ICS:-$(file_location \
+SYSBASEDIR_ICS=${EXTRN_MDL_SYSBASEDIR_ICS:-$(file_location \
   ${EXTRN_MDL_NAME_ICS} \
   ${FV3GFS_FILE_FMT_ICS})}
 EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
   ${EXTRN_MDL_NAME_LBCS} \
   ${FV3GFS_FILE_FMT_ICS})}
 
+# Architecture information
+WORKFLOW_MANAGER="rocoto"
+NCORES_PER_NODE="${NCORES_PER_NODE:-68}"
+SCHED=${SCHED:-"slurm"}
+PARTITION_DEFAULT=${PARTITION_DEFAULT:-"normal"}
 QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
 PARTITION_HPSS=${PARTITION_HPSS:-"normal"}
 QUEUE_HPSS=${QUEUE_HPSS:-"normal"}
 PARTITION_FCST=${PARTITION_FCST:-"normal"}
+QUEUE_FCST=${QUEUE_FCST:-"normal"}
 
 # UFS SRW App specific paths
 FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}

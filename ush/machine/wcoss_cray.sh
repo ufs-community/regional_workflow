@@ -62,8 +62,8 @@ MODULE_INIT_PATH=${MODULE_INIT_PATH:-/opt/modules/default/init/sh}
 
 # Architecture information
 WORKFLOW_MANAGER="rocoto"
-NCORES_PER_NODE="24"
-SCHED="lsfcray"
+NCORES_PER_NODE=${NCORES_PER_NODE:-24}
+SCHED=${SCHED:-"lsfcray"}
 QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
 QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
 QUEUE_FCST=${QUEUE_FCST:-"dev"}

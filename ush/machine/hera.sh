@@ -60,13 +60,14 @@ MODULE_INIT_PATH=${MODULE_INIT_PATH:-/apps/lmod/lmod/init/sh}
 
 # Architecture information
 WORKFLOW_MANAGER="rocoto"
-NCORES_PER_NODE=40
+NCORES_PER_NODE=${NCORES_PER_NODE:-40}
 SCHED=${SCHED:-"slurm"}
 PARTITION_DEFAULT=${PARTITION_DEFAULT:-"hera"}
 QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
 PARTITION_HPSS=${PARTITION_HPSS:-"service"}
 QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
 PARTITION_FCST=${PARTITION_FCST:-"hera"}
+QUEUE_FCST=${QUEUE_FCST:-"batch"}
 
 # UFS SRW App specific paths
 FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
