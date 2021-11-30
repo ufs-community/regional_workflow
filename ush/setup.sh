@@ -281,6 +281,7 @@ SR_WX_APP_TOP_DIR=${scrfunc_dir%/*/*}
 #
 #-----------------------------------------------------------------------
 #
+set -x
 mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
 property_name="local_path"
 #
@@ -292,7 +293,8 @@ get_manage_externals_config_property \
 "${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
 print_err_msg_exit "\
 Call to function get_manage_externals_config_property failed."
-
+HOMErrfs="${SR_WX_APP_TOP_DIR}/${HOMErrfs}"
+set +x
 #
 # Get the base directory of the FV3 forecast model code.
 #
@@ -389,7 +391,7 @@ RELATIVE_LINK_FLAG="--relative"
 MACHINE_FILE=${USHDIR}/machine/$(echo_lowercase $MACHINE).sh
 source ${MACHINE_FILE}
 
-if [ -z "${NCORES_PER_NODE}" ]; then
+if [ -z "${NCORES_PER_NODE:-}" ]; then
   print_err_msg_exit "\
     NCORES_PER_NODE has not been specified in the file ${MACHINE_FILE}
     Please ensure this value has been set for your desired platform. "
@@ -2075,9 +2077,6 @@ while read crnt_line; do
 # set to.
 #
   var_name=$( printf "%s" "${crnt_line}" | $SED -n -r -e "s/^([^ ]*)=.*/\1/p" )
-#echo
-#echo "============================"
-#printf "%s\n" "var_name = \"${var_name}\""
 #
 # If var_name is not empty, then a variable name was found in the cur-
 # rent line in line_list.
@@ -2115,12 +2114,13 @@ var_name = \"${var_name}\""
 #
 # If the variable contains only one element, then it is a scalar.  (It
 # could be a 1-element array, but it is simpler to treat it as a sca-
-# lar.)  In this case, we enclose its value in double quotes and save
-# the result in var_value.
+# lar.)  In this case, we enclose its value in single quotes and save
+# the result in var_value. No variable expansion should be happening
+# from variables saved in the var_defns file.
 #
       if [ "$num_elems" -eq 1 ]; then
         var_value="${!var_name}"
-        var_value="\"${var_value}\""
+        var_value="\'${var_value}\'"
 #
 # If the variable contains more than one element, then it is an array.
 # In this case, we build var_value in two steps as follows:
@@ -2140,14 +2140,10 @@ var_name = \"${var_name}\""
 
         if [ "${arrays_on_one_line}" = "TRUE" ]; then
           var_value=$(printf "\"%s\" " "${!array_name_at}")
-#          var_value=$(printf "\"%s\" \\\\\\ \\\n" "${!array_name_at}")
         else
-#          var_value=$(printf "%s" "\\\\\\n")
           var_value="\\\\\n"
           for (( i=0; i<${num_elems}; i++ )); do
-#            var_value=$(printf "%s\"%s\" %s" "${var_value}" "${array[$i]}" "\\\\\\n")
             var_value="${var_value}\"${array[$i]}\" \\\\\n"
-#            var_value="${var_value}\"${array[$i]}\" "
           done
         fi
         var_value="( $var_value)"
@@ -2462,7 +2458,7 @@ OZONE_PARAM="${OZONE_PARAM}"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYSBASEDIR_ICS="${EXTRN_MDL_SYSBASEDIR_ICS}"
+EXTRN_MDL_SYSBASEDIR_ICS='${EXTRN_MDL_SYSBASEDIR_ICS}'
 #
 #-----------------------------------------------------------------------
 #
@@ -2474,7 +2470,7 @@ EXTRN_MDL_SYSBASEDIR_ICS="${EXTRN_MDL_SYSBASEDIR_ICS}"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYSBASEDIR_LBCS="${EXTRN_MDL_SYSBASEDIR_LBCS}"
+EXTRN_MDL_SYSBASEDIR_LBCS='${EXTRN_MDL_SYSBASEDIR_LBCS}'
 #
 #-----------------------------------------------------------------------
 #

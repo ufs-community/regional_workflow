@@ -337,7 +337,7 @@ has not been specified for this external model and machine combination:
 #
 #-----------------------------------------------------------------------
 #
-
+set -x
   if [ "${anl_or_fcst}" = "ANL" ]; then
     sysdir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_ICS})
   elif [ "${anl_or_fcst}" = "FCST" ]; then
@@ -346,6 +346,7 @@ has not been specified for this external model and machine combination:
   if [ -z "${sysdir}" ] ; then
     quit_unless_user_spec_data
   fi
+set +x
 #
 #-----------------------------------------------------------------------
 #

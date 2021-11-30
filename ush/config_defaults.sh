@@ -608,8 +608,8 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYSBASEDIR_ICS=""
-EXTRN_MDL_SYSBASEDIR_LBCS=""
+EXTRN_MDL_SYSBASEDIR_ICS=''
+EXTRN_MDL_SYSBASEDIR_LBCS=''
 #
 #-----------------------------------------------------------------------
 #
