@@ -111,6 +111,15 @@ case "$MACHINE" in
     ;;
 
 esac
+
+if [ -z ${RUN_CMD_SERIAL} ] ; then
+  print_err_msg_exit "\
+  Run command was not set in machine file. \
+  Please set RUN_CMD_SERIAL for your platform"
+else
+  print_info_msg "$VERBOSE" "
+  All executables will be submitted with command \'${RUN_CMD_SERIAL}\'."
+if
 #
 #-----------------------------------------------------------------------
 #
@@ -562,7 +571,8 @@ cd_vrfy -
 make_grid_mosaic_file \
   grid_dir="${GRID_DIR}" \
   grid_fn="${CRES}${DOT_OR_USCORE}grid.tile${TILE_RGNL}.halo${NHW}.nc" \
-  mosaic_fn="${CRES}${DOT_OR_USCORE}mosaic.halo${NHW}.nc" || \
+  mosaic_fn="${CRES}${DOT_OR_USCORE}mosaic.halo${NHW}.nc" \
+  run_cmd="${RUN_CMD_SERIAL}" || \
   print_err_msg_exit "\
 Call to function to generate the mosaic file for a grid with a ${NHW}-cell-wide
 halo failed."
@@ -576,7 +586,8 @@ halo failed."
 make_grid_mosaic_file \
   grid_dir="${GRID_DIR}" \
   grid_fn="${CRES}${DOT_OR_USCORE}grid.tile${TILE_RGNL}.halo${NH3}.nc" \
-  mosaic_fn="${CRES}${DOT_OR_USCORE}mosaic.halo${NH3}.nc" || \
+  mosaic_fn="${CRES}${DOT_OR_USCORE}mosaic.halo${NH3}.nc" \
+  run_cmd="${RUN_CMD_SERIAL}" || \
   print_err_msg_exit "\
 Call to function to generate the mosaic file for a grid with a ${NH3}-cell-wide
 halo failed."
@@ -590,7 +601,8 @@ halo failed."
 make_grid_mosaic_file \
   grid_dir="${GRID_DIR}" \
   grid_fn="${CRES}${DOT_OR_USCORE}grid.tile${TILE_RGNL}.halo${NH4}.nc" \
-  mosaic_fn="${CRES}${DOT_OR_USCORE}mosaic.halo${NH4}.nc" || \
+  mosaic_fn="${CRES}${DOT_OR_USCORE}mosaic.halo${NH4}.nc" \
+  run_cmd="${RUN_CMD_SERIAL}" || \
   print_err_msg_exit "\
 Call to function to generate the mosaic file for a grid with a ${NH4}-cell-wide
 halo failed."

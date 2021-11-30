@@ -158,6 +158,15 @@ case "$MACHINE" in
     ;;
 
 esac
+
+if [ -z ${RUN_CMD_UTILS} ] ; then
+  print_err_msg_exit "\
+  Run command was not set in machine file. \
+  Please set RUN_CMD_UTILS for your platform"
+else
+  print_info_msg "$VERBOSE" "
+  All executables will be submitted with command \'${RUN_CMD_UTILS}\'."
+if
 #
 #-----------------------------------------------------------------------
 #
