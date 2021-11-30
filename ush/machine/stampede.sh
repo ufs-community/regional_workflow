@@ -64,7 +64,7 @@ TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
 
-SERIAL_APRUN="time"
+RUN_CMD_SERIAL="time"
 RUN_CMD_UTILS='ibrun -np $nprocs'
 RUN_CMD_FCST='ibrun -np $nprocs'
 RUN_CMD_POST='ibrun -np $nprocs'

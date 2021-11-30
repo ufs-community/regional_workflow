@@ -98,7 +98,7 @@ case "$MACHINE" in
     RUN_CMD_UTILS="mpirun"
     ;;
 
-  "*")
+  *)
     source ${MACHINE_FILE}
     ;;
 
@@ -106,7 +106,7 @@ esac
 
 nprocs=$(( NNODES_MAKE_LBCS*PPN_MAKE_LBCS ))
 
-if [ -z ${RUN_CMD_UTILS} ] ; then
+if [ -z ${RUN_CMD_UTILS:-} ] ; then
   print_err_msg_exit "\
   Run command was not set in machine file. \
   Please set RUN_CMD_UTILS for your platform"
@@ -114,7 +114,7 @@ else
   RUN_CMD_UTILS=$(eval echo ${RUN_CMD_UTILS})
   print_info_msg "$VERBOSE" "
   All executables will be submitted with command \'${RUN_CMD_UTILS}\'."
-if
+fi
 #
 #-----------------------------------------------------------------------
 #

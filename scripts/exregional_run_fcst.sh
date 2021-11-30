@@ -118,7 +118,7 @@ case "$MACHINE" in
     RUN_CMD_FCST="mpirun -l -np ${PE_MEMBER01}"
     ;;
 
-  "*")
+  *)
     source ${MACHINE_FILE}
     ;;
 
@@ -126,7 +126,7 @@ esac
 
 nprocs=$(( NNODES_RUN_FCST*PPN_RUN_FCST ))
 
-if [ -z ${RUN_CMD_FCST} ] ; then
+if [ -z ${RUN_CMD_FCST:-} ] ; then
   print_err_msg_exit "\
   Run command was not set in machine file. \
   Please set RUN_CMD_FCST for your platform"
@@ -134,7 +134,7 @@ else
   RUN_CMD_FCST=$(eval echo ${RUN_CMD_FCST})
   print_info_msg "$VERBOSE" "
   All executables will be submitted with command \'${RUN_CMD_FCST}\'."
-if
+fi
 #
 #-----------------------------------------------------------------------
 #

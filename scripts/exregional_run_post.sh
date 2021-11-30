@@ -120,14 +120,14 @@ case "$MACHINE" in
     RUN_CMD_POST="mpirun"
     ;;
 
-  "*")
+  *)
     source ${MACHINE_FILE}
     ;;
 
 esac
 
 nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
-if [ -z ${RUN_CMD_POST} ] ; then
+if [ -z ${RUN_CMD_POST:-} ] ; then
   print_err_msg_exit "\
   Run command was not set in machine file. \
   Please set RUN_CMD_POST for your platform"
@@ -135,7 +135,7 @@ else
   RUN_CMD_POST=$(eval echo ${RUN_CMD_POST})
   print_info_msg "$VERBOSE" "
   All executables will be submitted with command \'${RUN_CMD_POST}\'."
-if
+fi
 #
 #-----------------------------------------------------------------------
 #

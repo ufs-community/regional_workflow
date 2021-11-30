@@ -106,20 +106,20 @@ case "$MACHINE" in
     ulimit -s unlimited
     ;;
 
-  "*")
+  *)
     source ${MACHINE_FILE}
     ;;
 
 esac
 
-if [ -z ${RUN_CMD_SERIAL} ] ; then
-  print_err_msg_exit "\
+if [ -z ${RUN_CMD_SERIAL:-} ] ; then
+  print_err_msg_exit " \
   Run command was not set in machine file. \
   Please set RUN_CMD_SERIAL for your platform"
 else
   print_info_msg "$VERBOSE" "
   All executables will be submitted with command \'${RUN_CMD_SERIAL}\'."
-if
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -487,7 +487,7 @@ fi
 exec_fn="shave"
 exec_fp="$EXECDIR/${exec_fn}"
 if [ ! -f "${exec_fp}" ]; then
-  print_err_msg_exit "\
+  print_err_msg_exit " \
 The executable (exec_fp) for \"shaving\" down the halo in the grid file
 does not exist:
   exec_fp = \"${exec_fp}\"

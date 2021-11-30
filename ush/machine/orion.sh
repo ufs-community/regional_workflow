@@ -49,7 +49,7 @@ TOPO_DIR=${TOPO_DIR:-"/work/noaa/global/glopara/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/noaa/global/glopara/fix/fix_sfc_climo"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
 
-SERIAL_APRUN="time"
+RUN_CMD_SERIAL="time"
 RUN_CMD_UTILS="srun"
 RUN_CMD_FCST="srun"
 RUN_CMD_POST="srun"

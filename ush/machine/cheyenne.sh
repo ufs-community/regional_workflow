@@ -63,7 +63,7 @@ TOPO_DIR=${TOPO_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
 
-SERIAL_APRUN="time"
+RUN_CMD_SERIAL="time"
 RUN_CMD_UTILS='mpirun -np $nprocs'
 RUN_CMD_FCST='mpirun -np $nprocs'
 RUN_CMD_POST='mpirun -np $nprocs'

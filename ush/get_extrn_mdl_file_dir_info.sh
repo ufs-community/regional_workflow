@@ -408,12 +408,11 @@ set +x
         prefix="gfs.t${hh}z."
         fns_in_arcv=( "${fns[@]/#/$prefix}" )
 
-      else
-
+      elif [ "${fv3gfs_file_fmt}" = "grib2" ]; then
 
         fns_on_disk=( "gfs.t${hh}z.pgrb2.0p25.f000" )  # Get only 0.25 degree files for now.
         fns_in_arcv=( "gfs.t${hh}z.pgrb2.0p25.f000" )  # Get only 0.25 degree files for now.
-     
+
       elif [ "${fv3gfs_file_fmt}" = "netcdf" ]; then
 
         fns=( "atm" "sfc" )

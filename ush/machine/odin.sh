@@ -64,7 +64,7 @@ TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
 
-SERIAL_APRUN="srun -n 1"
+RUN_CMD_SERIAL="srun -n 1"
 RUN_CMD_UTILS='srun -n $nprocs'
 RUN_CMD_FCST='srun -n ${PE_MEMBER01}'
 RUN_CMD_POST="srun -n 1"
