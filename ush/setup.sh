@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 #-----------------------------------------------------------------------
 #
@@ -213,7 +214,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-
 check_var_valid_value "SUB_HOURLY_POST" "valid_vals_SUB_HOURLY_POST"
 SUB_HOURLY_POST=$(boolify $SUB_HOURLY_POST)
 #
@@ -224,6 +224,20 @@ SUB_HOURLY_POST=$(boolify $SUB_HOURLY_POST)
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "DOT_OR_USCORE" "valid_vals_DOT_OR_USCORE"
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that USE_FVCOM is set to a valid value and assign directory
+# and file names.
+# 
+# Make sure that FVCOM_WCSTART is set to lowercase "warm" or "cold"
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
+USE_FVCOM=$(boolify $USE_FVCOM)
+check_var_valid_value "FVCOM_WCSTART" "valid_vals_FVCOM_WCSTART"
+FVCOM_WCSTART=$(echo_lowercase $FVCOM_WCSTART)
 #
 #-----------------------------------------------------------------------
 #
@@ -407,6 +421,8 @@ One or more fix file directories have not been specified for this machine:
   FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR:-\"\"}
 You can specify the missing location(s) in ${machine_file}"
 fi
+
+
 #
 #-----------------------------------------------------------------------
 #
@@ -428,9 +444,8 @@ check_var_valid_value "SCHED" "valid_vals_SCHED"
 #
 #-----------------------------------------------------------------------
 #
-# If we are using a workflow manager, run some checks. First, 
-# verify that the ACCOUNT variable is not empty. Second, ensure that the
-# custom RUN_CMD variables are not set.
+# If we are using a workflow manager check that the ACCOUNT variable is
+# not empty.
 #
 #-----------------------------------------------------------------------
 #
@@ -441,9 +456,6 @@ The variable ACCOUNT cannot be empty if you are using a workflow manager:
   ACCOUNT = \"$ACCOUNT\"
   WORKFLOW_MANAGER = \"$WORKFLOW_MANAGER\""
   fi
-  RUN_CMD_UTILS=""
-  RUN_CMD_FCST=""
-  RUN_CMD_POST=""
 fi
 #
 #-----------------------------------------------------------------------
@@ -2421,6 +2433,15 @@ Heredoc (cat) command to append grid parameters to variable definitions
 file returned with a nonzero status."
 
 fi
+#
+#-----------------------------------------------------------------------
+#
+# Because RUN_CMD_FCST can include PE_MEMBER01 (and theoretically other
+# variables calculated in this script), delete the first occurrence of it
+# in the var_defns file, and write it again at the end.
+#
+#-----------------------------------------------------------------------
+$SED -i '/^RUN_CMD_FCST=/d' $GLOBAL_VAR_DEFNS_FP
 #
 #-----------------------------------------------------------------------
 #

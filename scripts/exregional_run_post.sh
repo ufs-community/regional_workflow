@@ -126,11 +126,13 @@ case "$MACHINE" in
 
 esac
 
+nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
 if [ -z ${RUN_CMD_POST} ] ; then
   print_err_msg_exit "\
   Run command was not set in machine file. \
   Please set RUN_CMD_POST for your platform"
 else
+  RUN_CMD_POST=$(eval echo ${RUN_CMD_POST})
   print_info_msg "$VERBOSE" "
   All executables will be submitted with command \'${RUN_CMD_POST}\'."
 if
@@ -204,8 +206,8 @@ tmmark="tm00"
 # minutes and seconds of the corresponding output forecast time.
 #
 # Note that if the forecast model is instructed to output at some hourly
-# interval (via the nfhout and nfhout_hf parameters in the MODEL_CONFIG_FN
-# file, with nsout set to a non-positive value), then the write-component
+# interval (via the output_fh parameter in the MODEL_CONFIG_FN file, 
+# with nsout set to a non-positive value), then the write-component
 # output file names will not contain any suffix for the minutes and seconds.
 # For this reason, when SUB_HOURLY_POST is not set to "TRUE", mnts_sec_str
 # must be set to a null string.

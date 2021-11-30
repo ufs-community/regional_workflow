@@ -104,14 +104,19 @@ case "$MACHINE" in
 
 esac
 
+nprocs=$(( NNODES_MAKE_ICS*PPN_MAKE_ICS ))
+
 if [ -z ${RUN_CMD_UTILS} ] ; then
   print_err_msg_exit "\
   Run command was not set in machine file. \
   Please set RUN_CMD_UTILS for your platform"
 else
+  RUN_CMD_UTILS=$(eval echo ${RUN_CMD_UTILS})
   print_info_msg "$VERBOSE" "
   All executables will be submitted with command \'${RUN_CMD_UTILS}\'."
 if
+
+
 #
 #-----------------------------------------------------------------------
 #
@@ -629,8 +634,10 @@ mv_vrfy gfs.bndy.nc ${ics_dir}/gfs_bndy.tile${TILE_RGNL}.000.nc
 #
 if [ "${USE_FVCOM}" = "TRUE" ]; then
 
+#Format for fvcom_time: YYYY-MM-DDTHH:00:00.000000
   fvcom_exec_fn="fvcom_to_FV3"
   fvcom_exec_fp="$EXECDIR/${fvcom_exec_fn}"
+  fvcom_time="${DATE_FIRST_CYCL:0:4}-${DATE_FIRST_CYCL:4:2}-${DATE_FIRST_CYCL:6:2}T${CYCL_HRS[0]}:00:00.000000"
   if [ ! -f "${fvcom_exec_fp}" ]; then
     print_err_msg_exit "\
 The executable (fvcom_exec_fp) for processing FVCOM data onto FV3-LAM
@@ -651,13 +658,15 @@ Please check the following user defined variables:
 
   cp_vrfy ${fvcom_data_fp} ${ics_dir}/fvcom.nc
   cd_vrfy ${ics_dir}
-  ${RUN_CMD_UTILS} ${fvcom_exec_fn} sfc_data.tile${TILE_RGNL}.halo${NH0}.nc fvcom.nc || \
+  ${RUN_CMD_UTILS} ${fvcom_exec_fn} sfc_data.tile${TILE_RGNL}.halo${NH0}.nc fvcom.nc ${FVCOM_WCSTART} ${fvcom_time}|| \
   print_err_msg_exit "\
 Call to executable (fvcom_exe) to modify sfc fields for FV3-LAM failed:
   fvcom_exe = \"${fvcom_exe}\"
 The following variables were being used:
   FVCOM_DIR = \"${FVCOM_DIR}\"
   FVCOM_FILE = \"${FVCOM_FILE}\"
+  fvcom_time = \"${fvcom_time}\"
+  FVCOM_WCSTART = \"${FVCOM_WCSTART}\"
   ics_dir = \"${ics_dir}\"
   fvcom_exe_dir = \"${fvcom_exe_dir}\"
   fvcom_exe = \"${fvcom_exe}\""
