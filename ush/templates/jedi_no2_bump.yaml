@@ -9,7 +9,6 @@ geometry:
     - fieldset: Data/fieldsets/lam_cmaq.yaml
     - fieldset: Data/fieldsets/ufo.yaml
 input variables: [no2]
-date: '%bumpdate%'
 background:
   filetype: gfs
   datapath: %bkgdir%
@@ -24,32 +23,32 @@ bump:
   verbosity: main
   universe_rad: 300000.0
   strategy: specific_univariate
-  new_nicas: 1
-  write_nicas_local: 1
+  new_nicas: true
+  write_nicas_local: true
   resol: 6
-  forced_radii: 1
+  forced_radii: true
   rh:
     no2: [150000.0]
   rv:
     no2: [0.1]
   io_keys: [no2-no2]
   io_values: [fixed_150km_0.1]
-output:
-- parameter: cor_rh
-  filetype: gfs
-  datapath: Data/bump/
-  filename_core: bump_lam_cmaq.cor_rh.fv_core.res.nc
-  filename_trcr: bump_lam_cmaq.cor_rh.fv_tracer.res.nc
-  filename_sfcd: bump_lam_cmaq.cor_rh.sfc_data.nc
-  filename_sfcw: bump_lam_cmaq.cor_rh.fv_srf_wnd.res.nc
-  filename_cplr: bump_lam_cmaq.cor_rh.coupler.res
-  date: '%bumpdate%'
-- parameter: cor_rv
-  filetype: gfs
-  datapath: Data/bump/
-  filename_core: bump_lam_cmaq.cor_rv.fv_core.res.nc
-  filename_trcr: bump_lam_cmaq.cor_rv.fv_tracer.res.nc
-  filename_sfcd: bump_lam_cmaq.cor_rv.sfc_data.nc
-  filename_sfcw: bump_lam_cmaq.cor_rv.fv_srf_wnd.res.nc
-  filename_cplr: bump_lam_cmaq.cor_rv.coupler.res
-  date: '%bumpdate%'
+  output:
+  - parameter: cor_rh
+    filetype: gfs
+    datapath: Data/bump/
+    filename_core: bump_lam_cmaq.cor_rh.fv_core.res.nc
+    filename_trcr: bump_lam_cmaq.cor_rh.fv_tracer.res.nc
+    filename_sfcd: bump_lam_cmaq.cor_rh.sfc_data.nc
+    filename_sfcw: bump_lam_cmaq.cor_rh.fv_srf_wnd.res.nc
+    filename_cplr: bump_lam_cmaq.cor_rh.coupler.res
+    date: '%bumpdate%'
+  - parameter: cor_rv
+    filetype: gfs
+    datapath: Data/bump/
+    filename_core: bump_lam_cmaq.cor_rv.fv_core.res.nc
+    filename_trcr: bump_lam_cmaq.cor_rv.fv_tracer.res.nc
+    filename_sfcd: bump_lam_cmaq.cor_rv.sfc_data.nc
+    filename_sfcw: bump_lam_cmaq.cor_rv.fv_srf_wnd.res.nc
+    filename_cplr: bump_lam_cmaq.cor_rv.coupler.res
+    date: '%bumpdate%'
