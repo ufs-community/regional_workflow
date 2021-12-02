@@ -23,18 +23,23 @@ cost function:
     filename_cplr: %bkgprefix%.coupler.res
     state variables: [u,v,T,DELP,ps,sphum,phis,no2]
   background error:
-    covariance model: BUMP
-    date: '%bumpdate%'
-    bump:
-      prefix: Data/bump/bump_lam_cmaq
-      method: cor
-      strategy: specific_univariate
-      load_nicas_local: 1
-      verbosity: main
-      io_keys:
-      - "no2-no2"
-      io_values:
-      - "fixed_150km_0.1"
+    covariance model: SABER
+    saber blocks:
+    - saber block name: BUMP_NICAS
+      saber central block: true
+      iterative inverse: true
+      input variables: [no2]
+      output variables: [no2]
+      bump:
+        prefix: Data/bump/bump_lam_cmaq
+        method: cor
+        strategy: specific_univariate
+        load_nicas_local: true
+        verbosity: main
+        io_keys:
+        - "no2-no2"
+        io_values:
+        - "fixed_150km_0.1"
   observations:
   - obs space:
       name: NO2
