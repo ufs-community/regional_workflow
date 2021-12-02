@@ -110,7 +110,7 @@ print_info_msg "$VERBOSE" "
 Creating links in the JEDI subdirectory of the current cycle's run di-
 rectory to the necessary executables and fix files ..."
 # executables
-ln_vrfy -sf $EXECDIR/fv3jedi_error_covariance_training.x.x ${CYCLE_DIR}/JEDI/.
+ln_vrfy -sf $EXECDIR/fv3jedi_error_covariance_training.x ${CYCLE_DIR}/JEDI/.
 ln_vrfy -sf $EXECDIR/fv3jedi_var.x ${CYCLE_DIR}/JEDI/.
 # FV3-JEDI fix files
 ln_vrfy -sf $JEDI_DIR/build/fv3-jedi/test/Data/fieldsets ${CYCLE_DIR}/JEDI/Data/fieldsets
