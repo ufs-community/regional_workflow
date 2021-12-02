@@ -1,7 +1,10 @@
+{{ starttime.strftime("%Y%m%d.%H") }}Z.{{ cres }}.32bit.non-hydro.regional
+{{ starttime.strftime("%Y %m %d %H %M %S") }}
+
 #output files
 "grid_spec",              -1,  "months",   1, "days",  "time"
-"atmos_static",           -1,  "hours",    1, "hours", "time"
 #"atmos_4xdaily",           6,  "hours",    1, "days",  "time"
+"atmos_static",           -1,  "hours",    1, "hours", "time"
 "fv3_history",             3,  "hours",    1, "hours", "time"
 "fv3_history2d",           3,  "hours",    1, "hours", "time"
 
