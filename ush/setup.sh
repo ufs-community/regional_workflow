@@ -51,6 +51,11 @@ cd_vrfy ${scrfunc_dir}
 #-----------------------------------------------------------------------
 #
 . ./source_util_funcs.sh
+
+print_info_msg "
+========================================================================
+Starting function ${func_name}() in \"${scrfunc_fn}\"...
+========================================================================"
 #
 #-----------------------------------------------------------------------
 #
@@ -172,11 +177,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If DEBUG is set to "TRUE", make sure that VERBOSE is also set to "TRUE".
+# If DEBUG is set to "TRUE" but VERBOSE is set to "FALSE", reset VERBOSE 
+# to "TRUE" to print out all of the VERBOSE output (in addition to any
+# DEBUG output).
 #
 #-----------------------------------------------------------------------
 #
-if [ "$DEBUG" = "TRUE" ]; then
+if [ "$DEBUG" = "TRUE" ] && [ "$VERBOSE" = "FALSE" ]; then
+  print_info_msg "
+Resetting VERBOSE to \"TRUE\" because DEBUG has been set to \"TRUE\"..."
   VERBOSE="TRUE" 
 fi
 #
@@ -2580,8 +2589,8 @@ line_list=$( $SED -r \
              ${GLOBAL_VAR_DEFNS_FP} )
 
 print_info_msg "$DEBUG" "
-Before updating default values of experiment variables, the variable 
-\"line_list\" contains:
+Before updating default values of experiment variables to user-specified
+values, the variable \"line_list\" contains:
 
 ${line_list}
 "
@@ -2599,10 +2608,10 @@ read -r -d '' str_to_insert << EOM
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
 # Section 1:
-# This section is a copy of the default experiment configuration file 
-# (${EXPT_DEFAULT_CONFIG_FN}) in the shell scripts directory specified by USHDIR 
-# except that variable values have been updated to those for the experiment 
-# (as opposed to the default values).
+# This section is a copy of the default workflow/experiment configura-
+# tion file config_defaults.sh in the shell scripts directory USHDIR ex-
+# cept that variable values have been updated to those set by the setup
+# script (setup.sh).
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
 #
@@ -2611,38 +2620,27 @@ EOM
 # Replace all occurrences of actual newlines in the variable str_to_insert
 # with escaped backslash-n.  This is needed for the sed command below to
 # work properly (i.e. to avoid it failing with an "unterminated `s' command"
-# error message).
+# message).
 #
 str_to_insert=${str_to_insert//$'\n'/\\n}
 #
-# Insert str_to_insert at the top of the file GLOBAL_VAR_DEFNS_FP.
+# Insert str_to_insert into GLOBAL_VAR_DEFNS_FP right after the line
+# containing the name of the interpreter (i.e. the line that starts with
+# the string "#!", e.g. "#!/bin/bash").
 #
-$SED -i -r -e "1i${str_to_insert}\n" ${GLOBAL_VAR_DEFNS_FP}
-#
-# Set the flag that specifies whether or not array variables will be
-# recorded in the variable definitions file on one line or one element 
-# per line.  Then, if writing arrays one element per line (i.e. multiline), 
-# set an escaped-newline character that needs to be included after every 
-# element of each array as the newline character in order for sed to 
-# write the line properly.
-#
-multiline_arrays="TRUE"
-#multiline_arrays="FALSE"
-esc_nl_or_null=""
-if [ "${multiline_arrays}" = "TRUE" ]; then
-  esc_nl_or_null='\\\n'
-fi
+regexp="(^#!.*)"
+$SED -i -r -e "s|$regexp|\1\n\n${str_to_insert}\n|g" ${GLOBAL_VAR_DEFNS_FP}
 #
 # Loop through the lines in line_list.
 #
-print_info_msg "$VERBOSE" "
+print_info_msg "
 Generating the global experiment variable definitions file specified by
 GLOBAL_VAR_DEFNS_FN:
   GLOBAL_VAR_DEFNS_FN = \"${GLOBAL_VAR_DEFNS_FN}\"
 Full path to this file is:
   GLOBAL_VAR_DEFNS_FP = \"${GLOBAL_VAR_DEFNS_FP}\"
 For more detailed information, set DEBUG to \"TRUE\" in the experiment
-configuration file (${EXPT_CONFIG_FN}\")."
+configuration file (\"${EXPT_CONFIG_FN}\")."
 
 template_var_names=()
 template_var_values=()
@@ -2651,34 +2649,34 @@ while read crnt_line; do
 # Try to obtain the name of the variable being set on the current line.
 # This will be successful only if the line consists of one or more char-
 # acters representing the name of a variable (recall that in generating
-# the variable line_list, leading spaces on each line were stripped out),
-# followed by an equal sign, followed by zero or more characters 
-# representing the value that the variable is being set to.
+# the variable line_list, all leading spaces in the lines in the file 
+# have been stripped out), followed by an equal sign, followed by zero
+# or more characters representing the value that the variable is being
+# set to.
 #
   var_name=$( printf "%s" "${crnt_line}" | $SED -n -r -e "s/^([^ ]*)=.*/\1/p" )
 #
-# If var_name is not empty, then a variable name was found on the current 
-# line in line_list.
+# If var_name is not empty, then a variable name was found in the cur-
+# rent line in line_list.
 #
-  if [ ! -z ${var_name} ]; then
+  if [ ! -z $var_name ]; then
 
     print_info_msg "$DEBUG" "
 var_name = \"${var_name}\""
 #
-# If the variable specified in var_name is set in the current environment 
-# (to either an empty or non-empty string), get its value and insert it 
-# in the variable definitions file on the line where that variable is 
-# defined.  Note that 
+# If the variable specified in var_name is set in the current environ-
+# ment (to either an empty or non-empty string), get its value and in-
+# sert it in the variable definitions file on the line where that varia-
+# ble is defined.  Note that 
 #
 #   ${!var_name+x}
 #
 # will retrun the string "x" if the variable specified in var_name is 
 # set (to either an empty or non-empty string), and it will return an
-# empty string if the variable specified in var_name is unset (i.e. i
-# undefined).
+# empty string if the variable specified in var_name is unset (i.e. un-
+# defined).
 #
-    unset "var_value"
-    if [ ! -z "${!var_name+x}" ]; then
+    if [ ! -z ${!var_name+x} ]; then
 #
 # The variable may be a scalar or an array.  Thus, we first treat it as
 # an array and obtain the number of elements that it contains.
@@ -2689,17 +2687,17 @@ var_name = \"${var_name}\""
 #
 # We will now set the variable var_value to the string that needs to be
 # placed on the right-hand side of the assignment operator (=) on the 
-# appropriate line in the variable definitions file.  How this is done 
-# depends on whether the variable is a scalar or an array.
+# appropriate line in variable definitions file.  How this is done de-
+# pends on whether the variable is a scalar or an array.
 #
 # If the variable contains only one element, then it is a scalar.  (It
-# could be a 1-element array, but for simplicity, we treat that case as
-# a scalar.)  In this case, we enclose its value in double quotes and 
-# save the result in var_value.
+# could be a 1-element array, but it is simpler to treat it as a sca-
+# lar.)  In this case, we enclose its value in double quotes and save
+# the result in var_value.
 #
-      if [ "${num_elems}" -eq 1 ]; then
-
-        var_value=\""${!var_name}"\"
+      if [ "$num_elems" -eq 1 ]; then
+        var_value="${!var_name}"
+        var_value="\"${var_value}\""
 #
 # If the variable contains more than one element, then it is an array.
 # In this case, we build var_value in two steps as follows:
@@ -2709,30 +2707,40 @@ var_name = \"${var_name}\""
 #
 # 2) Place parentheses around the double-quoted list of array elements
 #    generated in the first step.  Note that there is no need to put a
-#    space before the closing parenthesis because in step 1, we have
-#    already placed a space after the last element.
+#    space before the closing parenthesis because in step 1, we have al-
+#    ready placed a space after the last element.
 #
       else
 
-#        var_value=$(printf "\"%s\" " "${!array_name_at}")
-        var_value="${esc_nl_or_null}"
-        for (( i=0; i<${num_elems}; i++ )); do
-          var_value="${var_value}\"${array[$i]}\" ${esc_nl_or_null}"
-        done
-        var_value="( ${var_value})"
+        arrays_on_one_line="TRUE"
+        arrays_on_one_line="FALSE"
+
+        if [ "${arrays_on_one_line}" = "TRUE" ]; then
+          var_value=$(printf "\"%s\" " "${!array_name_at}")
+#          var_value=$(printf "\"%s\" \\\\\\ \\\n" "${!array_name_at}")
+        else
+#          var_value=$(printf "%s" "\\\\\\n")
+          var_value="\\\\\n"
+          for (( i=0; i<${num_elems}; i++ )); do
+#            var_value=$(printf "%s\"%s\" %s" "${var_value}" "${array[$i]}" "\\\\\\n")
+            var_value="${var_value}\"${array[$i]}\" \\\\\n"
+#            var_value="${var_value}\"${array[$i]}\" "
+          done
+        fi
+        var_value="( $var_value)"
 
       fi
 #
-# If for some reason the variable specified in var_name is not set in 
-# the current environment (to either an empty or non-empty string), below
-# we will still include it in the variable definitions file and simply 
-# set it to a null string.  Thus, here, we set its value (var_value) to 
-# an empty string).  In this case, we also issue an informational message.
+# If the variable specified in var_name is not set in the current envi-
+# ronment (to either an empty or non-empty string), get its value and 
+# insert it in the variable definitions file on the line where that va-
+# riable is defined.
 #
     else
 
       print_info_msg "
-The variable specified by \"var_name\" is not set in the current environment:
+The variable specified by \"var_name\" is not set in the current envi-
+ronment:
   var_name = \"${var_name}\"
 Setting its value in the variable definitions file to an empty string."
 
@@ -2740,25 +2748,14 @@ Setting its value in the variable definitions file to an empty string."
 
     fi
 #
-# If
-#
-    dollar_or_null=$( printf "%s" "${var_value}" | \
-                      $SED -n -r -e "s/[^\$]*(\$).*/\1/p" )
-    if [ -z "${dollar_or_null}" ]; then
-#
 # Now place var_value on the right-hand side of the assignment statement
-# on the appropriate line in the variable definitions file.
+# on the appropriate line in variable definitions file.
 #
-      set_file_param "${GLOBAL_VAR_DEFNS_FP}" "${var_name}" "${var_value}"
-    else
-      template_var_names+=( "${var_name}" )
-      template_var_values+=( "${var_value}" )
-      $SED -i "/^${var_name}=/d" ${GLOBAL_VAR_DEFNS_FP}
-    fi
+    set_file_param "${GLOBAL_VAR_DEFNS_FP}" "${var_name}" "${var_value}"
 #
-# If var_name is empty, then a variable name was not found on the current 
-# line in line_list.  In this case, print out a warning and move on to 
-# the next line.
+# If var_name is empty, then a variable name was not found in the cur-
+# rent line in line_list.  In this case, print out a warning and move on
+# to the next line.
 #
   else
 
@@ -3008,17 +3005,20 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Because RUN_CMD_FCST can include PE_MEMBER01 (and theoretically other
+# variables calculated in this script), delete the first occurrence of it
+# in the var_defns file, and write it again at the end.
+#
+#-----------------------------------------------------------------------
+$SED -i '/^RUN_CMD_FCST=/d' $GLOBAL_VAR_DEFNS_FP
+#
+#-----------------------------------------------------------------------
+#
 # Continue appending variable definitions to the variable definitions 
 # file.
 #
 #-----------------------------------------------------------------------
 #
-lbc_spec_fcst_hrs_str=$(printf "\"%s\" ${esc_nl_or_null}" "${LBC_SPEC_FCST_HRS[@]}")
-lbc_spec_fcst_hrs_str=$(printf "( ${esc_nl_or_null}%s${esc_nl_or_null:+\n})" "${lbc_spec_fcst_hrs_str}")
-
-all_cdates_str=$(printf "\"%s\" ${esc_nl_or_null}" "${ALL_CDATES[@]}")
-all_cdates_str=$(printf "( ${esc_nl_or_null}%s${esc_nl_or_null:+\n})" "${all_cdates_str}")
-
 { cat << EOM >> ${GLOBAL_VAR_DEFNS_FP}
 #
 #-----------------------------------------------------------------------
@@ -3078,7 +3078,7 @@ EXTRN_MDL_LBCS_OFFSET_HRS="${EXTRN_MDL_LBCS_OFFSET_HRS}"
 #
 #-----------------------------------------------------------------------
 #
-LBC_SPEC_FCST_HRS=${lbc_spec_fcst_hrs_str}
+LBC_SPEC_FCST_HRS=(${LBC_SPEC_FCST_HRS[@]})
 #
 #-----------------------------------------------------------------------
 #
@@ -3088,7 +3088,9 @@ LBC_SPEC_FCST_HRS=${lbc_spec_fcst_hrs_str}
 #-----------------------------------------------------------------------
 #
 NUM_CYCLES="${NUM_CYCLES}"
-ALL_CDATES=${all_cdates_str}
+ALL_CDATES=( \\
+$( printf "\"%s\" \\\\\n" "${ALL_CDATES[@]}" )
+)
 #
 #-----------------------------------------------------------------------
 #
@@ -3110,6 +3112,7 @@ FVCOM_FILE="${FVCOM_FILE}"
 #
 NCORES_PER_NODE="${NCORES_PER_NODE}"
 PE_MEMBER01="${PE_MEMBER01}"
+RUN_CMD_FCST="$(eval echo \'${RUN_CMD_FCST}\')"
 #
 #-----------------------------------------------------------------------
 #
@@ -3123,47 +3126,6 @@ EOM
 } || print_err_msg_exit "\
 Heredoc (cat) command to append new variable definitions to variable 
 definitions file returned with a nonzero status."
-
-
-
-str_to_insert="
-#
-#-----------------------------------------------------------------------
-#-----------------------------------------------------------------------
-# Section 3:
-# This section defines templates variables, i.e. variables that contain 
-# other (unexpanded) variables in their definitions.  See above for 
-# variable definitions.
-#-----------------------------------------------------------------------
-#-----------------------------------------------------------------------
-#"
-
-num_template_vars="${#template_var_names[@]}"
-for (( i=0; i<${num_template_vars}; i++ )); do
-  str_to_insert=${str_to_insert}"
-${template_var_names[$i]}="
-done
-
-{ cat << EOM >> ${GLOBAL_VAR_DEFNS_FP}
-${str_to_insert}
-EOM
-} || print_err_msg_exit "\
-Heredoc (cat) command to append new variable definitions to variable 
-definitions file returned with a nonzero status."
-
-for (( i=0; i<${num_template_vars}; i++ )); do
-  set_file_param "${GLOBAL_VAR_DEFNS_FP}" \
-                 "${template_var_names[$i]}" "${template_var_values[$i]}"
-done
-#
-#-----------------------------------------------------------------------
-#
-#
-#
-#-----------------------------------------------------------------------
-#
-print_info_msg "$VERBOSE" "
-Done generating the global experiment variable definitions file."
 #
 #-----------------------------------------------------------------------
 #
@@ -3173,7 +3135,7 @@ Done generating the global experiment variable definitions file."
 #
 print_info_msg "
 ========================================================================
-Setup script completed successfully!!!
+Function ${func_name}() in \"${scrfunc_fn}\" completed successfully!!!
 ========================================================================"
 #
 #-----------------------------------------------------------------------
