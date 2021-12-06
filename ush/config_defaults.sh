@@ -1334,7 +1334,7 @@ SFC_CLIMO_FIELDS=( \
 # System directory where MERRA2 aerosol climatology files are located
 #
 # FIXlut:
-# System directory where the loopup tables for optics properties are located
+# System directory where the lookup tables for optics properties are located
 #
 # TOPO_DIR:
 # The location on disk of the static input files used by the make_orog

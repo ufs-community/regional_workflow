@@ -1420,7 +1420,7 @@ check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 #
 # FIXclim:
 # This is the directory that will contain the MERRA2 aerosol climatology 
-# data file and lootup tables for optics properties
+# data file and lookup tables for optics properties
 #
 # FIXLAM:
 # This is the directory that will contain the fixed files or symlinks to
