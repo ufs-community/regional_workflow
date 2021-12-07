@@ -51,6 +51,11 @@ cd_vrfy ${scrfunc_dir}
 #-----------------------------------------------------------------------
 #
 . ./source_util_funcs.sh
+
+print_info_msg "
+========================================================================
+Starting function ${func_name}() in \"${scrfunc_fn}\"...
+========================================================================"
 #
 #-----------------------------------------------------------------------
 #
@@ -172,11 +177,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If DEBUG is set to "TRUE", make sure that VERBOSE is also set to "TRUE".
+# If DEBUG is set to "TRUE" but VERBOSE is set to "FALSE", reset VERBOSE 
+# to "TRUE" to print out all of the VERBOSE output (in addition to any
+# DEBUG output).
 #
 #-----------------------------------------------------------------------
 #
-if [ "$DEBUG" = "TRUE" ]; then
+if [ "$DEBUG" = "TRUE" ] && [ "$VERBOSE" = "FALSE" ]; then
+  print_info_msg "
+Resetting VERBOSE to \"TRUE\" because DEBUG has been set to \"TRUE\"..."
   VERBOSE="TRUE" 
 fi
 #
@@ -2580,8 +2589,8 @@ line_list=$( $SED -r \
              ${GLOBAL_VAR_DEFNS_FP} )
 
 print_info_msg "$DEBUG" "
-Before updating default values of experiment variables, the variable 
-\"line_list\" contains:
+Before updating default values of experiment variables to user-specified
+values, the variable \"line_list\" contains:
 
 ${line_list}
 "
@@ -2635,14 +2644,14 @@ fi
 #
 # Loop through the lines in line_list.
 #
-print_info_msg "$VERBOSE" "
+print_info_msg "
 Generating the global experiment variable definitions file specified by
 GLOBAL_VAR_DEFNS_FN:
   GLOBAL_VAR_DEFNS_FN = \"${GLOBAL_VAR_DEFNS_FN}\"
 Full path to this file is:
   GLOBAL_VAR_DEFNS_FP = \"${GLOBAL_VAR_DEFNS_FP}\"
 For more detailed information, set DEBUG to \"TRUE\" in the experiment
-configuration file (${EXPT_CONFIG_FN}\")."
+configuration file (\"${EXPT_CONFIG_FN}\")."
 
 template_var_names=()
 template_var_values=()
@@ -3173,7 +3182,7 @@ Done generating the global experiment variable definitions file."
 #
 print_info_msg "
 ========================================================================
-Setup script completed successfully!!!
+Function ${func_name}() in \"${scrfunc_fn}\" completed successfully!!!
 ========================================================================"
 #
 #-----------------------------------------------------------------------
