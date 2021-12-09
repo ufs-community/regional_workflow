@@ -22,7 +22,7 @@ function file_location() {
         "netcdf")
           file_tmpl='gfs.t${hh}z.atmf${fcst_hhh}.nc'
           ;;
-        "*")
+        *)
           print_info_msg"\
             The chosen FV3GFS file type is not available from this
           location on Hera."
@@ -37,7 +37,7 @@ function file_location() {
       location='/scratch2/BMC/public/data/gsd/hrrr/conus/wrfnat'
       file_tmpl='${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}'
       ;;
-    "*")
+    *)
       print_info_msg"\
         External model \'${external_model}\' does not have a default
       location on Hera. Will try to pull from HPSS"
@@ -50,7 +50,7 @@ function file_location() {
 
 EXTRN_MDL_SYSBASEDIR_ICS=${EXTRN_MDL_SYSBASEDIR_ICS:-$(file_location \
   ${EXTRN_MDL_NAME_ICS} \
-  ${FV3GFS_FILE_FMT_ICS})}
+  ${FV3GFS_FILE_FMT_ICS})} \
 EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
   ${EXTRN_MDL_NAME_LBCS} \
   ${FV3GFS_FILE_FMT_ICS})}
