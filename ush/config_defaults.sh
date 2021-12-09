@@ -41,7 +41,12 @@ RUN_ENVIR="nco"
 # Set machine and queue parameters.  Definitions:
 #
 # MACHINE:
-# Machine on which the workflow will run.
+# Machine on which the workflow will run. If you are NOT on a named,
+# supported platform, and you want to use the Rocoto workflow manager,
+# you will need set MACHINE="linux" and WORKFLOW_MANAGER="rocoto". This
+# combination will assume a Slurm batch manager when generating the XML.
+# Please see ush/valid_param_vals.sh for a full list of supported
+# platforms.
 #
 # ACCOUNT:
 # The account under which to submit jobs to the queue.
@@ -49,7 +54,27 @@ RUN_ENVIR="nco"
 # WORKFLOW_MANAGER:
 # The workflow manager to use (e.g. rocoto). This is set to "none" by
 # default, but if the machine name is set to a platform that supports
-# rocoto, this will be overwritten and set to "rocoto".
+# rocoto, this will be overwritten and set to "rocoto". If set
+# explicitly to rocoto along with the use of the MACHINE=linux target,
+# the configuration layer assumes a Slurm batch manager when generating
+# the XML. Valid options: "rocoto" or "none"
+#
+# NCORES_PER_NODE:
+# The number of cores available per node on the compute platform. Set
+# for supported platforms in setup.sh, but is now also configurable for
+# all platforms.
+#
+# LMOD_PATH:
+# Path to the LMOD sh file on your Linux system. Is set automatically
+# for supported machines.
+#
+# BUILD_ENV_FN:
+# Name of alternative build environment file to use if using an
+# unsupported platform. Is set automatically for supported machines.
+#
+# WFLOW_ENV_FN:
+# Name of alternative workflow environment file to use if using an
+# unsupported platform. Is set automatically for supported machines.
 #
 # SCHED:
 # The job scheduler to use (e.g. slurm).  Set this to an empty string in
@@ -109,6 +134,10 @@ RUN_ENVIR="nco"
 MACHINE="BIG_COMPUTER"
 ACCOUNT="project_name"
 WORKFLOW_MANAGER="none"
+NCORES_PER_NODE=""
+LMOD_PATH=""
+BUILD_ENV_FN=""
+WFLOW_ENV_FN=""
 SCHED=""
 PARTITION_DEFAULT=""
 QUEUE_DEFAULT=""
@@ -1142,13 +1171,21 @@ PREEXISTING_DIR_METHOD="delete"
 #
 #-----------------------------------------------------------------------
 #
-# Set VERBOSE.  This is a flag that determines whether or not the experiment
-# generation and workflow task scripts tend to print out more informational
-# messages.
+# Set flags for more detailed messages.  Defintitions:
+#
+# VERBOSE:
+# This is a flag that determines whether or not the experiment generation 
+# and workflow task scripts tend to print out more informational messages.
+#
+# DEBUG:
+# This is a flag that determines whether or not very detailed debugging
+# messages are printed to out.  Note that if DEBUG is set to TRUE, then
+# VERBOSE will also get reset to TRUE if it isn't already.
 #
 #-----------------------------------------------------------------------
 #
 VERBOSE="TRUE"
+DEBUG="FALSE"
 #
 #-----------------------------------------------------------------------
 #
@@ -1228,6 +1265,21 @@ VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
 # SFC_CLIMO_DIR:
 # Same as GRID_DIR but for the MAKE_SFC_CLIMO_TN task.
 #
+# RUN_TASK_GET_EXTRN_ICS:
+# Flag that determines whether the GET_EXTRN_ICS_TN task is to be run.
+#
+# RUN_TASK_GET_EXTRN_LBCS:
+# Flag that determines whether the GET_EXTRN_LBCS_TN task is to be run.
+#
+# RUN_TASK_MAKE_ICS:
+# Flag that determines whether the MAKE_ICS_TN task is to be run.
+#
+# RUN_TASK_MAKE_LBCS:
+# Flag that determines whether the MAKE_LBCS_TN task is to be run.
+#
+# RUN_TASK_RUN_FCST:
+# Flag that determines whether the RUN_FCST_TN task is to be run.
+#
 # RUN_TASK_RUN_POST:
 # Flag that determines whether the RUN_POST_TN task is to be run.
 # 
@@ -1259,20 +1311,19 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
 
+RUN_TASK_GET_EXTRN_ICS="TRUE"
+RUN_TASK_GET_EXTRN_LBCS="TRUE"
+RUN_TASK_MAKE_ICS="TRUE"
+RUN_TASK_MAKE_LBCS="TRUE"
+RUN_TASK_RUN_FCST="TRUE"
 RUN_TASK_RUN_POST="TRUE"
 
 RUN_TASK_GET_OBS_CCPA="FALSE"
-
 RUN_TASK_GET_OBS_MRMS="FALSE"
-
 RUN_TASK_GET_OBS_NDAS="FALSE"
-
 RUN_TASK_VX_GRIDSTAT="FALSE"
-
 RUN_TASK_VX_POINTSTAT="FALSE"
-
 RUN_TASK_VX_ENSGRID="FALSE"
-
 RUN_TASK_VX_ENSPOINT="FALSE"
 #
 #-----------------------------------------------------------------------
@@ -1515,7 +1566,7 @@ PPN_VX_ENSPOINT_PROB="1"
 # Walltimes.
 #
 WTIME_MAKE_GRID="00:20:00"
-WTIME_MAKE_OROG="00:20:00"
+WTIME_MAKE_OROG="01:00:00"
 WTIME_MAKE_SFC_CLIMO="00:20:00"
 WTIME_GET_EXTRN_ICS="00:45:00"
 WTIME_GET_EXTRN_LBCS="00:45:00"
@@ -1723,6 +1774,12 @@ HALO_BLEND="10"
 # FV3-LAM grid. This flag will be used in make_ics to modify sfc_data.nc
 # after chgres_cube is run by running the routine process_FVCOM.exe
 #
+# FVCOM_WCSTART:
+# Define if this is a "warm" start or a "cold" start. Setting this to 
+# "warm" will read in sfc_data.nc generated in a RESTART directory.
+# Setting this to "cold" will read in the sfc_data.nc generated from 
+# chgres_cube in the make_ics portion of the workflow.
+#
 # FVCOM_DIR:
 # User defined directory where FVCOM data already interpolated to FV3-LAM
 # grid is located. File name in this path should be "fvcom.nc" to allow
@@ -1735,6 +1792,7 @@ HALO_BLEND="10"
 #------------------------------------------------------------------------
 #
 USE_FVCOM="FALSE"
+FVCOM_WCSTART="cold"
 FVCOM_DIR="/user/defined/dir/to/fvcom/data"
 FVCOM_FILE="fvcom.nc"
 #

@@ -127,7 +127,7 @@ case "$MACHINE" in
   "ORION")
     ulimit -s unlimited
     ulimit -a
-    APRUN="srun"
+    APRUN="srun -n ${PE_MEMBER01}"
     ;;
 
   "JET")
@@ -159,6 +159,8 @@ case "$MACHINE" in
     ;;
 
   "LINUX")
+    ulimit -s unlimited
+    ulimit -a
     APRUN=$RUN_CMD_FCST
     ;;
 
