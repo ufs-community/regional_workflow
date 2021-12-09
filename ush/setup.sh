@@ -698,6 +698,19 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Set the names of the build and workflow environment files (if not 
+# already specified by the user).  These are the files that need to be 
+# sourced before building the component SRW App codes and running various 
+# workflow scripts, respectively.
+#
+#-----------------------------------------------------------------------
+#
+machine=$(echo_lowercase ${MACHINE})
+WFLOW_ENV_FN=${WFLOW_ENV_FN:-"wflow_${machine}.env"}
+BUILD_ENV_FN=${BUILD_ENV_FN:-"build_${machine}_${COMPILER}.env"}
+#
+#-----------------------------------------------------------------------
+#
 # Calculate PPN_RUN_FCST from NCORES_PER_NODE and OMP_NUM_THREADS_RUN_FCST
 #
 #-----------------------------------------------------------------------
