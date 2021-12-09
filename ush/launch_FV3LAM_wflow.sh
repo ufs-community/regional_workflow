@@ -106,14 +106,12 @@ expt_name="${EXPT_SUBDIR}"
 #
 #-----------------------------------------------------------------------
 #
-machine=$(echo_lowercase $MACHINE)
-env_fn=${WFLOW_ENV_FN:-"wflow_${machine}.env"}
-env_fp="${SR_WX_APP_TOP_DIR}/env/${env_fn}"
+env_fp="${SR_WX_APP_TOP_DIR}/env/${WFLOW_ENV_FN}"
 module purge
 source "${env_fp}" || print_err_msg_exit "\
-  Sourcing platform-specific environment file (env_fp) for
-the workflow task failed :
-env_fp = \"${env_fp}\""
+Sourcing platform-specific environment file (env_fp) for the workflow 
+task failed:
+  env_fp = \"${env_fp}\""
 #
 #-----------------------------------------------------------------------
 #
