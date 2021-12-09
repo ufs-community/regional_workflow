@@ -235,18 +235,10 @@ has not been specified for this external model and machine combination:
 #
 #-----------------------------------------------------------------------
 #
-# Extract from cdate_FV3LAM the starting year, month, day, and hour of 
-# the FV3-LAM cycle.  Then subtract the temporal offset specified in 
-# time_offset_hrs (assumed to be given in units of hours) from cdate_FV3LAM
-# to obtain the starting date and time of the external model, express the 
-# result in YYYYMMDDHH format, and save it in cdate.  This is the starting 
-# time of the external model forecast.
+# Set cdate to the start time for the external model being used.
 #
 #-----------------------------------------------------------------------
 #
-  yyyy=${cdate_FV3LAM:0:4}
-  mm=${cdate_FV3LAM:4:2}
-  dd=${cdate_FV3LAM:6:2}
   hh=${cdate_FV3LAM:8:2}
   yyyymmdd=${cdate_FV3LAM:0:8}
 
@@ -254,29 +246,24 @@ has not been specified for this external model and machine combination:
 #
 #-----------------------------------------------------------------------
 #
-# Extract from cdate the starting year, month, day, and hour of the external 
-# model forecast.  Also, set the starting minute to "00" and get the date
-# without the time-of-day.  These are needed below in setting various 
-# directory and file names.
+# Set date/time parameters for the external model offset date/time
 #
 #-----------------------------------------------------------------------
 #
   yyyy=${cdate:0:4}
+  yy=${yyyy:2:4}
   mm=${cdate:4:2}
   dd=${cdate:6:2}
   hh=${cdate:8:2}
   mn="00"
   yyyymmdd=${cdate:0:8}
+  # Julian day -- not 3 digit day of month
+  ddd=$( $DATE_UTIL --utc --date "${yyyy}-${mm}-${dd} ${hh}:${mn} UTC" "+%j" )
 #
 #-----------------------------------------------------------------------
 #
-# Initialize lbc_spec_fhrs to an empty array.  Then, if considering a
-# forecast, reset lbc_spec_fhrs to the array of forecast hours at which 
-# the lateral boundary conditions (LBCs) are to be updated, starting with 
-# the 2nd such time (i.e. the one having array index 1).  We do not include 
-# the first hour (hour 0) because at this initial time, the LBCs are 
-# obtained from the analysis fields provided by the external model (as 
-# opposed to a forecast field).
+# Initialize lbc_spec_fhrs array. Skip the initial time, since it is
+# handled separately.
 #
 #-----------------------------------------------------------------------
 #
@@ -285,15 +272,10 @@ has not been specified for this external model and machine combination:
   if [ "${anl_or_fcst}" = "FCST" ]; then
 
     lbc_spec_fhrs=( "${LBC_SPEC_FCST_HRS[@]}" )
-#
-# Add the temporal offset specified in time_offset_hrs (assumed to be in 
-# units of hours) to the the array of LBC update forecast hours to make
-# up for shifting the starting hour back in time.  After this addition,
-# lbc_spec_fhrs will contain the LBC update forecast hours relative to
-# the start time of the external model run.
-#
+
     num_fhrs=${#lbc_spec_fhrs[@]}
     for (( i=0; i<=$((num_fhrs-1)); i++ )); do
+      # Add in offset to account for shift in initial time
       lbc_spec_fhrs[$i]=$(( ${lbc_spec_fhrs[$i]} + time_offset_hrs ))
     done
 
@@ -301,26 +283,22 @@ has not been specified for this external model and machine combination:
 #
 #-----------------------------------------------------------------------
 #
-# Set additional parameters needed in forming the names of the external
-# model files only under certain circumstances.
+# Retrieve the file path template from the configuration. This template
+# should indicate the full path to the expected location of the files on
+# your platform, and the file name template. Template fields may
+# include, any of:
 #
 #-----------------------------------------------------------------------
 #
-  if [ "${extrn_mdl_name}" = "RAP" ] || \
-     [ "${extrn_mdl_name}" = "HRRR" ] || \
-     [ "${extrn_mdl_name}" = "NAM" ] || \
-     [ "${extrn_mdl_name}" = "FV3GFS" -a "${MACHINE}" = "JET" ]; then
-#
-# Get the Julian day-of-year of the starting date and time of the exter-
-# nal model forecast.
-#
-    ddd=$( $DATE_UTIL --utc --date "${yyyy}-${mm}-${dd} ${hh}:${mn} UTC" "+%j" )
-#
-# Get the last two digits of the year of the starting date and time of 
-# the external model forecast.
-#
-    yy=${yyyy:2:4}
-
+  if [ "${anl_or_fcst}" = "ANL" ]; then
+    #sysdir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_ICS})
+    sysdir=${EXTRN_MDL_SYSBASEDIR_ICS}
+  elif [ "${anl_or_fcst}" = "FCST" ]; then
+    #sysdir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_LBCS})
+    sysdir=${EXTRN_MDL_SYSBASEDIR_LBCS}
+  fi
+  if [ -z "${sysdir}" ] ; then
+    quit_unless_user_spec_data
   fi
 #
 #-----------------------------------------------------------------------
@@ -352,101 +330,52 @@ has not been specified for this external model and machine combination:
     case "${extrn_mdl_name}" in
 
     "GSMGFS")
-#      fns=( "atm" "sfc" "nst" )
-      fns=( "atm" "sfc" )
-      prefix="gfs.t${hh}z."
-      fns=( "${fns[@]/#/$prefix}" )
-      suffix="anl.nemsio"
-      fns_on_disk=( "${fns[@]/%/$suffix}" )
-      fns_in_arcv=( "${fns[@]/%/$suffix}" )
+      fns_on_disk=("gfs.t${hh}z.atmanl.nemsio" "gfs.t${hh}z.sfcanl.nemsio")
+      fns_in_arcv=${fns_on_disk[@]}
       ;;
 
     "FV3GFS")
+      case "${fv3gfs_file_fmt}" in
+        "nemsio")
+          fns_on_disk=("gfs.t${hh}z.atmanl.nemsio" "gfs.t${hh}z.sfcanl.nemsio")
+          fns_in_arcv=${fns_on_disk[@]}
 
-      if [ "${fv3gfs_file_fmt}" = "nemsio" ]; then
-
-        fns=( "atm" "sfc" )
-        suffix="anl.nemsio"
-        fns=( "${fns[@]/%/$suffix}" )
-
-# Set names of external files if searching on disk.
-        if [ "${MACHINE}" = "JET" ]; then
-          prefix="${yy}${ddd}${hh}00.gfs.t${hh}z."
-        else
-          prefix="gfs.t${hh}z."
-        fi
-        fns_on_disk=( "${fns[@]/#/$prefix}" )
-
-# Set names of external files if searching in an archive file, e.g. from
-# HPSS.
-        prefix="gfs.t${hh}z."
-        fns_in_arcv=( "${fns[@]/#/$prefix}" )
-
-      elif [ "${fv3gfs_file_fmt}" = "grib2" ]; then
-
-# GSK 12/16/2019:
-# Turns out that the .f000 file contains certain necessary fields that
-# are not in the .anl file, so switch to the former.
-#        fns=( "gfs.t${hh}z.pgrb2.0p25.anl" )  # Get only 0.25 degree files for now.
-#        fns=( "gfs.t${hh}z.pgrb2.0p25.f000" )  # Get only 0.25 degree files for now.
-        fns_on_disk=( "gfs.t${hh}z.pgrb2.0p25.f000" )  # Get only 0.25 degree files for now.
-        fns_in_arcv=( "gfs.t${hh}z.pgrb2.0p25.f000" )  # Get only 0.25 degree files for now.
-     
-      elif [ "${fv3gfs_file_fmt}" = "netcdf" ]; then
-
-        fns=( "atm" "sfc" )
-        suffix="anl.nc"
-        fns=( "${fns[@]/%/$suffix}" )
-
-# Set names of external files if searching on disk.
-        if [ "${MACHINE}" = "JET" ]; then
-          prefix="${yy}${ddd}${hh}00.gfs.t${hh}z."
-        else
-          prefix="gfs.t${hh}z."
-        fi
-        fns_on_disk=( "${fns[@]/#/$prefix}" )
-
-# Set names of external files if searching in an archive file, e.g. from
-# HPSS.
-        prefix="gfs.t${hh}z."
-        fns_in_arcv=( "${fns[@]/#/$prefix}" )
-
-      fi
+          # File names are prefixed with a date time on Jet
+          if [ "${MACHINE}" = "JET" ]; then
+            prefix="${yy}${ddd}${hh}00"
+            fns_on_disk=( ${fns_on_disk[@]/#/$prefix})
+          fi
+          ;;
+        "grib2")
+          fns_on_disk=( "gfs.t${hh}z.pgrb2.0p25.f000" )
+          fns_in_arcv=$fns_on_disk
+          ;;
+        "netcdf")
+          fns_on_disk=("gfs.t${hh}z.atmanl.nc" "gfs.t${hh}z.sfcanl.nc")
+          fns_in_arcv=$fns_on_disk
+          # File names are prefixed with a date time on Jet
+          if [ "${MACHINE}" = "JET" ]; then
+            prefix="${yy}${ddd}${hh}00"
+            fns_on_disk=( ${fns_on_disk[@]/#/$prefix})
+          fi
+          ;;
+      esac
       ;;
 
     "RAP")
-#
-# Note that this is GSL RAPX data, not operational NCEP RAP data.  An option for the latter
-# may be added in the future.
-#
-      if [ "${MACHINE}" = "JET" ]; then
-        fns_on_disk=( "wrfnat_130_${fcst_hh}.grib2" )
-      else
-        fns_on_disk=( "${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}" )
-      fi
-      fns_in_arcv=( "${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}" )
-      ;;
+      ;& # Fall through. RAP and HRRR follow same naming rules
 
     "HRRR")
-#
-# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An option for the latter
-# may be added in the future.
-#
-      if [ "${MACHINE}" = "JET" ]; then
-        fns_on_disk=( "wrfnat_hrconus_${fcst_hh}.grib2" )
-      else
-        fns_on_disk=( "${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}" )
+      fns_on_disk=( "${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}" )
+      fns_in_arcv=$fns_on_disk
+      if [ "${MACHINE}" = "JET" ]; then 
+        fns_on_disk=( "${yy}${ddd}${hh}${mn}${fcst_mn}${fcst_hh}${fcst_mn}" )
       fi
-      fns_in_arcv=( "${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}" )
       ;;
 
     "NAM")
       fns=( "" )
-      prefix="nam.t${hh}z.bgrdsfi${hh}"
-      fns=( "${fns[@]/#/$prefix}" )
-      suffix=".tm${hh}"
-      fns_on_disk=( "${fns[@]/%/$suffix}" )
-      fns_in_arcv=( "${fns[@]/%/$suffix}" )
+      fns_on_disk="nam.t${hh}z.bgrdsfi${hh}.tm00"
       ;;
 
     *)
@@ -460,7 +389,7 @@ and analysis or forecast (anl_or_fcst):
       fi
       ;;
 
-    esac
+    esac # End external model case for ANL files
     ;;
 #
 #-----------------------------------------------------------------------
@@ -473,114 +402,53 @@ and analysis or forecast (anl_or_fcst):
 
     fcst_mn="00"
 
+    fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
+    fcst_hh=( $( printf "%02d " "${lbc_spec_fhrs[@]}" ) )
+
     case "${extrn_mdl_name}" in
 
     "GSMGFS")
-      fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
-      prefix="gfs.t${hh}z.atmf"
-      fns=( "${fcst_hhh[@]/#/$prefix}" )
-      suffix=".nemsio"
-      fns_on_disk=( "${fns[@]/%/$suffix}" )
-      fns_in_arcv=( "${fns[@]/%/$suffix}" )
+      fn_tmpl="gfs.t${hh}z.atmfFHR3.nemsio"
       ;;
 
     "FV3GFS")
 
       if [ "${fv3gfs_file_fmt}" = "nemsio" ]; then
-
-        fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
-        suffix=".nemsio"
-        fns=( "${fcst_hhh[@]/%/$suffix}" )
-
+        fn_tmpl="gfs.t${hh}z.atmfFHR3.nemsio"
         if [ "${MACHINE}" = "JET" ]; then
-          prefix="${yy}${ddd}${hh}00.gfs.t${hh}z.atmf"
-        else
-          prefix="gfs.t${hh}z.atmf"
+          disk_tmpl="${yy}${ddd}${hh}00.gfs.t${hh}z.atmfFHR3.nemsio"
+          for fhr in ${fcst_hhh[@]} ; do
+            fns_on_disk+=(${disk_tmpl/FHR3/$fhr})
+          done
         fi
-        fns_on_disk=( "${fns[@]/#/$prefix}" )
-
-        prefix="gfs.t${hh}z.atmf"
-        fns_in_arcv=( "${fns[@]/#/$prefix}" )
-
       elif [ "${fv3gfs_file_fmt}" = "grib2" ]; then
-
-        fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
-        prefix="gfs.t${hh}z.pgrb2.0p25.f"
-        fns_on_disk=( "${fcst_hhh[@]/#/$prefix}" )
-        fns_in_arcv=( "${fcst_hhh[@]/#/$prefix}" )
-
+        fn_tmpl="gfs.t${hh}z.pgrb2.0p25.fFHR3"
       elif [ "${fv3gfs_file_fmt}" = "netcdf" ]; then
-
-        fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
-        suffix=".nc"
-        fns=( "${fcst_hhh[@]/%/$suffix}" )
-
+        fn_tmpl="gfs.t${hh}z.atmfFHR3.nc"
         if [ "${MACHINE}" = "JET" ]; then
-          prefix="${yy}${ddd}${hh}00.gfs.t${hh}z.atmf"
-        else
-          prefix="gfs.t${hh}z.atmf"
+          disk_tmpl="${yy}${ddd}${hh}00.gfs.t${hh}z.atmfFHR3.nc"
+          for fhr in ${fcst_hhh[@]} ; do
+            fns_on_disk+=(${disk_tmpl/FHR3/$fhr})
+          done
         fi
-        fns_on_disk=( "${fns[@]/#/$prefix}" )
-
-        prefix="gfs.t${hh}z.atmf"
-        fns_in_arcv=( "${fns[@]/#/$prefix}" )
-
       fi
       ;;
 
     "RAP")
-#
-# Note that this is GSL RAPX data, not operational NCEP RAP data.  An option for the latter
-# may be added in the future.
-#
-      fcst_hh=( $( printf "%02d " "${lbc_spec_fhrs[@]}" ) )
-
-      if [ "${MACHINE}" = "JET" ]; then 
-        prefix="wrfnat_130_"
-        suffix=".grib2"
-      else
-        prefix="${yy}${ddd}${hh}${mn}"
-        suffix="${fcst_mn}"
-      fi
-      fns_on_disk=( "${fcst_hh[@]/#/$prefix}" )
-      fns_on_disk=( "${fns_on_disk[@]/%/$suffix}" )
-
-      prefix="${yy}${ddd}${hh}${mn}"
-      fns_in_arcv=( "${fcst_hh[@]/#/$prefix}" )
-      suffix="${fcst_mn}"
-      fns_in_arcv=( "${fns_in_arcv[@]/%/$suffix}" )
-      ;;
+      ;&  # Fall through since RAP and HRRR are named the same
 
     "HRRR")
-#
-# Note that this is GSL HRRRX data, not operational NCEP HRRR data.  An option for the latter
-# may be added in the future.
-#
-      fcst_hh=( $( printf "%02d " "${lbc_spec_fhrs[@]}" ) )
-
-      if [ "${MACHINE}" = "JET" ]; then
-        prefix="wrfnat_hrconus_"
-        suffix=".grib2"
-      else
-        prefix="${yy}${ddd}${hh}${mn}"
-        suffix="${fcst_mn}"
+      fn_tmpl="${yy}${ddd}${hh}00FHR200"
+      if [ "${MACHINE}" = "JET" ]; then 
+        disk_tmpl="${yy}${ddd}${hh}0000FHR2"
+        for fhr in ${fcst_hhh[@]} ; do
+          fns_on_disk+=(${disk_tmpl/FHR3/$fhr})
+        done
       fi
-      fns_on_disk=( "${fcst_hh[@]/#/$prefix}" )
-      fns_on_disk=( "${fns_on_disk[@]/%/$suffix}" )
-
-      prefix="${yy}${ddd}${hh}${mn}"
-      fns_in_arcv=( "${fcst_hh[@]/#/$prefix}" )
-      suffix="${fcst_mn}"
-      fns_in_arcv=( "${fns_in_arcv[@]/%/$suffix}" )
       ;;
 
     "NAM")
-      fcst_hhh=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
-      prefix="nam.t${hh}z.bgrdsf"
-      fns=( "${fcst_hhh[@]/#/$prefix}" )
-      suffix=""
-      fns_on_disk=( "${fns[@]/%/$suffix}" )
-      fns_in_arcv=( "${fns[@]/%/$suffix}" )
+      fn_tmpl="nam.t${hh}z.bgrdsfFHR3"
       ;;
 
     *)
@@ -594,10 +462,37 @@ bination of external model (extrn_mdl_name) and analysis or forecast
       fi
       ;;
 
-    esac
+    esac # End external model case for FCST files
+
+    #
+    # Expand the archive file names for all forecast hours
+    #
+    if [[ $fn_tmpl =~ FHR3 ]] ; then
+      fhrs=( $( printf "%03d " "${lbc_spec_fhrs[@]}" ) )
+      tmpl=FHR3
+    elif [[ ${fn_tmpl} =~ FHR2 ]] ; then
+      fhrs=( $( printf "%02d " "${lbc_spec_fhrs[@]}" ) )
+      tmpl=FHR2
+    else
+      print_err_msg_exit "\
+        Forecast file name templates are expected to contain a template
+      string, either FHR2 or FHR3"
+    fi
+    for fhr in ${fhrs[@]}; do
+      fns_in_arcv+=(${fn_tmpl/$tmpl/$fhr})
+    done
     ;;
 
-  esac
+  esac ## End ANL FCST case
+
+  if [ -z $fns_in_arcv ] ; then
+    print_err_msg_exit "\
+      The script has not set $fns_in_arcv properly"
+  fi
+
+  if [ -z $fns_on_disk ] ; then
+    fns_on_disk=${fns_in_arcv[@]}
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -615,171 +510,48 @@ bination of external model (extrn_mdl_name) and analysis or forecast
     sysbasedir="${EXTRN_MDL_SYSBASEDIR_LBCS}"
   fi
 
-  sysdir=""
+  # Use the basedir unless otherwise specified for special platform
+  # cases below.
+  sysdir=$sysbasedir
   case "${extrn_mdl_name}" in
 
-#
-# It is not clear which, if any, systems the (old) spectral GFS model is 
-# available on, so set sysdir for this external model to a null string.
-#
-  "GSMGFS")
-    case "$MACHINE" in
-    "WCOSS_CRAY")
-      sysdir=""
+    "FV3GFS")
+      case "$MACHINE" in
+      "WCOSS_CRAY")
+        sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
+        ;;
+      "WCOSS_DELL_P3")
+        sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
+        ;;
+      "HERA")
+        sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
+        ;;
+      "ODIN")
+        sysdir="$sysbasedir/${yyyymmdd}"
+        ;;
+      "CHEYENNE")
+        sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}"
+        ;;
+      esac
       ;;
-    "WCOSS_DELL_P3")
-      sysdir=""
+
+    "RAP")
+      case "$MACHINE" in
+      "JET")
+        sysdir="$sysbasedir/${yyyymmdd}${hh}/postprd"
+        ;;
+      esac
       ;;
-    "HERA")
-      sysdir=""
+
+    "HRRR")
+      case "$MACHINE" in
+      "JET")
+        sysdir="$sysbasedir/${yyyymmdd}${hh}/postprd"
+        ;;
+      esac
       ;;
-    "ORION")
-      sysdir="$sysbasedir"
-      ;;
-    "JET")
-      sysdir=""
-      ;;
-    "ODIN")
-      sysdir="$sysbasedir"
-      ;;
-    "CHEYENNE")
-      sysdir=""
-      ;;
-    "STAMPEDE")
-      sysdir="$sysbasedir"
-      ;;
-    *)
-      quit_unless_user_spec_data
-      ;;
+
     esac
-    ;;
-
-
-  "FV3GFS")
-    case "$MACHINE" in
-    "WCOSS_CRAY")
-      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
-      ;;
-    "WCOSS_DELL_P3")
-      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
-      ;;
-    "HERA")
-      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
-      ;;
-    "ORION")
-      sysdir="$sysbasedir"
-      ;;
-    "JET")
-      sysdir="$sysbasedir"
-      ;;
-    "ODIN")
-      sysdir="$sysbasedir/${yyyymmdd}"
-      ;;
-    "CHEYENNE")
-      sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}"
-      ;;
-    "STAMPEDE")
-      sysdir="$sysbasedir"
-      ;;
-    *)
-      quit_unless_user_spec_data
-      ;;
-    esac
-    ;;
-
-
-  "RAP")
-    case "$MACHINE" in
-    "WCOSS_CRAY")
-      sysdir="$sysbasedir"
-      ;;
-    "WCOSS_DELL_P3")
-      sysdir="$sysbasedir"
-      ;;
-    "HERA")
-      sysdir="$sysbasedir"
-      ;;
-    "ORION")
-      sysdir="$sysbasedir"
-      ;;
-    "JET")
-      sysdir="$sysbasedir/${yyyymmdd}${hh}/postprd"
-      ;;
-    "ODIN")
-      sysdir="$sysbasedir"
-      ;;
-    "CHEYENNE")
-      sysdir="$sysbasedir"
-      ;;
-    *)
-      quit_unless_user_spec_data
-      ;;
-    esac
-    ;;
-
-
-  "HRRR")
-    case "$MACHINE" in
-    "WCOSS_CRAY")
-      sysdir="$sysbasedir"
-      ;;
-    "WCOSS_DELL_P3")
-      sysdir="$sysbasedir"
-      ;;
-    "HERA")
-      sysdir="$sysbasedir"
-      ;;
-    "ORION")
-      sysdir="$sysbasedir"
-      ;;
-    "JET")
-      sysdir="$sysbasedir/${yyyymmdd}${hh}/postprd"
-      ;;
-    "ODIN")
-      sysdir="$sysbasedir"
-      ;;
-    "CHEYENNE")
-      sysdir="$sysbasedir"
-      ;;
-    *)
-      quit_unless_user_spec_data
-      ;;
-    esac
-    ;;
-
-  "NAM")
-    case "$MACHINE" in
-    "WCOSS_CRAY")
-      sysdir="$sysbasedir"
-      ;;
-    "WCOSS_DELL_P3")
-      sysdir="$sysbasedir"
-      ;;
-    "HERA")
-      sysdir="$sysbasedir"
-      ;;
-    "ORION")
-      sysdir="$sysbasedir"
-      ;;
-    "JET")
-      sysdir="$sysbasedir"
-      ;;
-    "ODIN")
-      sysdir="$sysbasedir"
-      ;;
-    "CHEYENNE")
-      sysdir="$sysbasedir"
-      ;;
-    *)
-      quit_unless_user_spec_data
-      ;;
-    esac
-    ;;
-
-
-  *)
-    quit_unless_user_spec_data
-  esac
 #
 #-----------------------------------------------------------------------
 #
