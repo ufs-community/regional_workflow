@@ -261,7 +261,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&RUN_NEXUS_TN;" maxtries="{{ maxtries_run_nexus }}">
+  <task name="&RUN_NEXUS_TN;" cycledefs="forecast" maxtries="{{ maxtries_run_nexus }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&RUN_NEXUS_TN;" "&JOBSDIR;/JREGIONAL_RUN_NEXUS"</command>
@@ -282,7 +282,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&GET_EXTRN_ICS_TN;" maxtries="{{ maxtries_get_extrn_ics }}">
+  <task name="&GET_EXTRN_ICS_TN;" cycledefs="forecast" maxtries="{{ maxtries_get_extrn_ics }}">
 
     &RSRV_HPSS;
   {%- if machine in ["WCOSS_CRAY"] %}
@@ -310,7 +310,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&GET_EXTRN_LBCS_TN;" maxtries="{{ maxtries_get_extrn_lbcs }}">
+  <task name="&GET_EXTRN_LBCS_TN;" cycledefs="forecast" maxtries="{{ maxtries_get_extrn_lbcs }}">
 
     &RSRV_HPSS;
   {%- if machine in ["WCOSS_CRAY"] %}
@@ -348,7 +348,7 @@ MODULES_RUN_TASK_FP script.
 {%- endfor %} </var>
 {%- endif %}
 
-  <task name="&MAKE_ICS_TN;{{ uscore_ensmem_name }}" maxtries="{{ maxtries_make_ics }}">
+  <task name="&MAKE_ICS_TN;{{ uscore_ensmem_name }}" cycledefs="forecast" maxtries="{{ maxtries_make_ics }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&MAKE_ICS_TN;" "&JOBSDIR;/JREGIONAL_MAKE_ICS"</command>
@@ -391,7 +391,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&MAKE_LBCS_TN;{{ uscore_ensmem_name }}" maxtries="{{ maxtries_make_lbcs }}">
+  <task name="&MAKE_LBCS_TN;{{ uscore_ensmem_name }}" cycledefs="forecast" maxtries="{{ maxtries_make_lbcs }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&MAKE_LBCS_TN;" "&JOBSDIR;/JREGIONAL_MAKE_LBCS"</command>
@@ -568,7 +568,7 @@ MODULES_RUN_TASK_FP script.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&ADD_AQM_LBCS_TN;" maxtries="{{ maxtries_add_aqm_lbcs }}">
+  <task name="&ADD_AQM_LBCS_TN;" cycledefs="forecast" maxtries="{{ maxtries_add_aqm_lbcs }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&ADD_AQM_LBCS_TN;" "&JOBSDIR;/JREGIONAL_ADD_AQM_LBCS"</command>
@@ -666,7 +666,7 @@ later below for other output times.
 
     <var name="fhr">000</var>
     <var name="fmn">00</var>
-    <task name="&RUN_POST_TN;{{ uscore_ensmem_name }}_f#fhr##fmn#" maxtries="{{ maxtries_run_post }}">
+    <task name="&RUN_POST_TN;{{ uscore_ensmem_name }}_f#fhr##fmn#" cycledefs="forecast" maxtries="{{ maxtries_run_post }}">
 
       &RSRV_DEFAULT;
       <command>&LOAD_MODULES_RUN_TASK_FP; "&RUN_POST_TN;" "&JOBSDIR;/JREGIONAL_RUN_POST"</command>
@@ -720,7 +720,7 @@ for other output times.
     <metatask>
 
       <var name="fmn">{% for min in range(delta_min, 60, delta_min) %}{{ " %02d" % min }}{% endfor %}</var>
-      <task name="&RUN_POST_TN;{{ uscore_ensmem_name }}_f#fhr##fmn#" maxtries="{{ maxtries_run_post }}">
+      <task name="&RUN_POST_TN;{{ uscore_ensmem_name }}_f#fhr##fmn#" cycledefs="forecast" maxtries="{{ maxtries_run_post }}">
 
         &RSRV_DEFAULT;
         <command>&LOAD_MODULES_RUN_TASK_FP; "&RUN_POST_TN;" "&JOBSDIR;/JREGIONAL_RUN_POST"</command>
@@ -765,7 +765,7 @@ output hours (and all output minutes for each such hour).
     <var name="fhr">{% for h in range(1, fcst_len_hrs) %}{{ " %03d" % h }}{% endfor %}</var>
     <metatask>
       <var name="fmn">{% for min in range(0, 60, delta_min) %}{{ " %02d" % min }}{% endfor %}</var>
-      <task name="&RUN_POST_TN;{{ uscore_ensmem_name }}_f#fhr##fmn#" maxtries="{{ maxtries_run_post }}">
+      <task name="&RUN_POST_TN;{{ uscore_ensmem_name }}_f#fhr##fmn#" cycledefs="forecast" maxtries="{{ maxtries_run_post }}">
   {%- else %}
 <!--
 Define the post-processing tasks for each model output hour.  Note that
@@ -778,7 +778,7 @@ post-processing is performed (i.e. the case in which the minutes are not
 always zero).
 -->
     <var name="fhr">{% for h in range(0, fcst_len_hrs+1) %}{{ " %03d" % h }}{% endfor %}</var>
-      <task name="&RUN_POST_TN;{{ uscore_ensmem_name }}_f#fhr#" maxtries="{{ maxtries_run_post }}">
+      <task name="&RUN_POST_TN;{{ uscore_ensmem_name }}_f#fhr#" cycledefs="forecast" maxtries="{{ maxtries_run_post }}">
   {%- endif %}
 
         &RSRV_DEFAULT;
@@ -847,7 +847,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <var name="fhr">{{ "%03d" % fcst_len_hrs }}</var>
     <var name="fmn">00</var>
-    <task name="&RUN_POST_TN;{{ uscore_ensmem_name }}_f#fhr##fmn#" maxtries="{{ maxtries_run_post }}">
+    <task name="&RUN_POST_TN;{{ uscore_ensmem_name }}_f#fhr##fmn#" cycledefs="forecast" maxtries="{{ maxtries_run_post }}">
 
       &RSRV_DEFAULT;
       <command>&LOAD_MODULES_RUN_TASK_FP; "&RUN_POST_TN;" "&JOBSDIR;/JREGIONAL_RUN_POST"</command>
@@ -886,7 +886,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&RUN_POST_STAT_TN;" maxtries="{{ maxtries_run_post_stat }}">
+  <task name="&RUN_POST_STAT_TN;" cycledefs="forecast" maxtries="{{ maxtries_run_post_stat }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&RUN_POST_STAT_TN;" "&JOBSDIR;/JREGIONAL_RUN_POST_STAT"</command>
@@ -917,7 +917,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&GET_OBS_CCPA_TN;" maxtries="{{ maxtries_get_obs_ccpa }}">
+  <task name="&GET_OBS_CCPA_TN;" cycledefs="forecast" maxtries="{{ maxtries_get_obs_ccpa }}">
 
     &RSRV_HPSS;
   {%- if machine in ["WCOSS_CRAY"] %}
@@ -954,7 +954,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&GET_OBS_MRMS_TN;" maxtries="{{ maxtries_get_obs_mrms }}">
+  <task name="&GET_OBS_MRMS_TN;" cycledefs="forecast" maxtries="{{ maxtries_get_obs_mrms }}">
 
     &RSRV_HPSS;
   {%- if machine in ["WCOSS_CRAY"] %}
@@ -992,7 +992,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&GET_OBS_NDAS_TN;" maxtries="{{ maxtries_get_obs_ndas }}">
+  <task name="&GET_OBS_NDAS_TN;" cycledefs="forecast" maxtries="{{ maxtries_get_obs_ndas }}">
 
     &RSRV_HPSS;
   {%- if machine in ["WCOSS_CRAY"] %}
@@ -1028,7 +1028,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 -->
 
-  <task name="&VX_GRIDSTAT_TN;" maxtries="{{ maxtries_vx_gridstat }}">
+  <task name="&VX_GRIDSTAT_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_gridstat }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_GRIDSTAT"</command>
@@ -1063,7 +1063,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_GRIDSTAT_REFC_TN;" maxtries="{{ maxtries_vx_gridstat_refc }}">
+  <task name="&VX_GRIDSTAT_REFC_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_gridstat_refc }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_GRIDSTAT"</command>
@@ -1097,7 +1097,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_GRIDSTAT_RETOP_TN;" maxtries="{{ maxtries_vx_gridstat_retop }}">
+  <task name="&VX_GRIDSTAT_RETOP_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_gridstat_retop }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_GRIDSTAT"</command>
@@ -1132,7 +1132,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_GRIDSTAT_03h_TN;" maxtries="{{ maxtries_vx_gridstat_03h }}">
+  <task name="&VX_GRIDSTAT_03h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_gridstat_03h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_GRIDSTAT"</command>
@@ -1163,7 +1163,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_GRIDSTAT_06h_TN;" maxtries="{{ maxtries_vx_gridstat_06h }}">
+  <task name="&VX_GRIDSTAT_06h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_gridstat_06h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_GRIDSTAT"</command>
@@ -1194,7 +1194,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_GRIDSTAT_24h_TN;" maxtries="{{ maxtries_vx_gridstat_24h }}">
+  <task name="&VX_GRIDSTAT_24h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_gridstat_24h }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_GRIDSTAT"</command>
@@ -1225,7 +1225,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-  <task name="&VX_POINTSTAT_TN;" maxtries="{{ maxtries_vx_pointstat }}">
+  <task name="&VX_POINTSTAT_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_pointstat }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_POINTSTAT"</command>
