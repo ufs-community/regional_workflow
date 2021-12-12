@@ -63,6 +63,7 @@ Starting function ${func_name}() in \"${scrfunc_fn}\"...
 #
 #-----------------------------------------------------------------------
 #
+. ./check_expt_config_vars.sh
 . ./set_cycle_dates.sh
 . ./set_gridparams_GFDLgrid.sh
 . ./set_gridparams_ESGgrid.sh
@@ -111,7 +112,9 @@ if [ -f "${EXPT_CONFIG_FN}" ]; then
 # configuration file are also assigned default values in the default 
 # configuration file.
 #
-  . ./compare_config_scripts.sh
+  check_expt_config_vars \
+    default_config_fp="./${EXPT_DEFAULT_CONFIG_FN}" \
+    config_fp="./${EXPT_CONFIG_FN}"
 #
 # Now source the user-specified configuration file.
 #
@@ -2528,42 +2531,17 @@ GLOBAL_VAR_DEFNS_FP="$EXPTDIR/${GLOBAL_VAR_DEFNS_FN}"
 # from the default experiment configuration file (EXPT_DEFAULT_CONFIG_FN).  
 # By "primary", we mean those variables that are defined in the default 
 # configuration file and can be reset in the user-specified experiment
-# configuration file (EXPT_CONFIG_FN).  The default values will be 
-# updated below to user-specified ones and the result saved in the 
-# experiment's variable definitions file.
+# configuration file (EXPT_CONFIG_FN).  The default values will be updated 
+# below to user-specified ones and the result saved in the experiment's 
+# variable definitions file.
 #
 #-----------------------------------------------------------------------
 #
 print_info_msg "
 Creating list of default experiment variable definitions..." 
-#
-# Read in all lines in the default experiment configuration file into the 
-# variable default_config_file_contents.  In doing so:
-#
-# 1) Concatenate any line ending with the bash line continuation character 
-#    (a backslash) with the following line.  
-#
-# 2) Remove any leading and trailing whitespace.
-#
-# Note that these two actions are automatically performed by the "read" 
-# utility in the while-loop below.
-#
-default_config_file_contents=$( $SED -r -e "s/(.*)/\1/g" $USHDIR/${EXPT_DEFAULT_CONFIG_FN} )
-tmp=""
-while read crnt_line; do
-  tmp="$tmp${crnt_line}
-"
-done <<< "${default_config_file_contents}"
-default_config_file_contents="$tmp"
-#
-# Generate a variable (default_var_defns) containing a list of experiment 
-# variable definitions by stripping out any comment and empty lines from
-# default_config_file_contents.
-#
-default_var_defns=$( printf "${default_config_file_contents}" | \
-                     $SED -r -e "/^#.*/d"  `# Remove comment lines.` \
-                             -e "/^$/d"    `# Remove empty lines.` \
-                   )
+
+get_bash_file_contents fp="$USHDIR/${EXPT_DEFAULT_CONFIG_FN}" \
+                       output_varname_contents="default_var_defns"
 
 print_info_msg "$DEBUG" "
 The variable \"default_var_defns\" containing default values of primary 
@@ -2587,11 +2565,11 @@ ${default_var_defns}
 #
 #   MY_VAR="\${ANOTHER_VAR}"
 #
-# while var_defns_notempl is for variables whose definitions contain 
-# only a literal string.  These two types are treated separately 
-# because the template variables must be written at the end of the 
-# variable defintions file.  This is in order to ensure that the 
-# (non-template) variables they reference have already been defined.
+# while var_defns_notempl is for variables whose definitions contain only
+# a literal string.  These two types are treated separately because the 
+# template variables must be written at the end of the variable defintions 
+# file.  This is in order to ensure that the (non-template) variables 
+# they reference have already been defined.
 #
 #-----------------------------------------------------------------------
 #
