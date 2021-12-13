@@ -234,7 +234,7 @@ interp = {
 // Statistical output types
 //
 output_flag = {
-   ecnt  = TRUE;
+   ecnt  = STAT;
    rps   = NONE;
    rhist = STAT;
    phist = STAT;
