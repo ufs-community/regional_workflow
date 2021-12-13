@@ -2563,7 +2563,7 @@ ${default_var_defns}
 # var_defns_templ is for template variables, i.e. variables that contain
 # references to other variables in their definitions, e.g.
 #
-#   MY_VAR="\${ANOTHER_VAR}"
+#   MY_VAR='\${ANOTHER_VAR}'
 #
 # while var_defns_notempl is for variables whose definitions contain only
 # a literal string.  These two types are treated separately because the 
@@ -3116,7 +3116,7 @@ N_VAR_SPP=\"${N_VAR_SPP}\"
 # This section defines template variables, i.e. variables that contain 
 # references to other variables in their definitions, e.g.
 #
-#   MY_VAR="\${ANOTHER_VAR}"
+#   MY_VAR='\${ANOTHER_VAR}'
 #
 # They are placed towards the end of this file to ensure that the 
 # referenced variables have already been defined.

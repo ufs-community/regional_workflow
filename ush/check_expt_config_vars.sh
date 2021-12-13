@@ -135,9 +135,9 @@ Skipping to next line."
       regex_search="^${var_name}="
       grep "${regex_search}" <<< "${var_list_default}" > /dev/null 2>&1 || \
       print_err_msg_exit "\
-A variable (var_name) in the user-specified experiment configuration file 
-(config_fp) does not appear in the default experiment configuration file 
-(default_config_fp):
+The variable (var_name) defined on the current line (crnt_line) of the 
+user-specified experiment configuration file (config_fp) does not appear 
+in the default experiment configuration file (default_config_fp):
   config_fp = \"${config_fp}\"
   default_config_fp = \"${default_config_fp}\"
   crnt_line = \"${crnt_line}\"

@@ -112,7 +112,7 @@ The value specified in ${var_name} is not supported:
 # assume the corresponding variable (var_name) is a template variable, 
 # i.e. one whose value contains a reference to another variable, e.g.
 #
-#   MY_VAR="\${ANOTHER_VAR}"
+#   MY_VAR='\${ANOTHER_VAR}'
 #
 # [In bash, VAR_REF_CHAR is a (escaped) dollar sign.]  In this case, it
 # does not make sense to check whether var_value is a valid value since
