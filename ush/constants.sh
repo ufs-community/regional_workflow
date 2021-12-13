@@ -18,9 +18,8 @@ radius_Earth="6371200.0"
 #
 #-----------------------------------------------------------------------
 #
-# Character used to identify a reference (in bash) to a variable in a 
-# given string.  In bash, this is the dollar sign.  For example, if the
-# string is
+# Character (in bash) used in a string to reference the value stored in 
+# a variable.  This is the dollar sign.  For example, if the string is
 #
 #   "Hello, my name is $NAME."
 #
@@ -29,5 +28,5 @@ radius_Earth="6371200.0"
 #
 #-----------------------------------------------------------------------
 #
-VAR_REF_CHAR="\$"
+VARVALUE_REF_CHAR="\$"
 
