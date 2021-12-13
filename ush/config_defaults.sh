@@ -1176,13 +1176,21 @@ PREEXISTING_DIR_METHOD="delete"
 #
 #-----------------------------------------------------------------------
 #
-# Set VERBOSE.  This is a flag that determines whether or not the experiment
-# generation and workflow task scripts tend to print out more informational
-# messages.
+# Set flags for more detailed messages.  Defintitions:
+#
+# VERBOSE:
+# This is a flag that determines whether or not the experiment generation 
+# and workflow task scripts tend to print out more informational messages.
+#
+# DEBUG:
+# This is a flag that determines whether or not very detailed debugging
+# messages are printed to out.  Note that if DEBUG is set to TRUE, then
+# VERBOSE will also get reset to TRUE if it isn't already.
 #
 #-----------------------------------------------------------------------
 #
 VERBOSE="TRUE"
+DEBUG="FALSE"
 #
 #-----------------------------------------------------------------------
 #
@@ -1262,6 +1270,21 @@ VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
 # SFC_CLIMO_DIR:
 # Same as GRID_DIR but for the MAKE_SFC_CLIMO_TN task.
 #
+# RUN_TASK_GET_EXTRN_ICS:
+# Flag that determines whether the GET_EXTRN_ICS_TN task is to be run.
+#
+# RUN_TASK_GET_EXTRN_LBCS:
+# Flag that determines whether the GET_EXTRN_LBCS_TN task is to be run.
+#
+# RUN_TASK_MAKE_ICS:
+# Flag that determines whether the MAKE_ICS_TN task is to be run.
+#
+# RUN_TASK_MAKE_LBCS:
+# Flag that determines whether the MAKE_LBCS_TN task is to be run.
+#
+# RUN_TASK_RUN_FCST:
+# Flag that determines whether the RUN_FCST_TN task is to be run.
+#
 # RUN_TASK_RUN_POST:
 # Flag that determines whether the RUN_POST_TN task is to be run.
 # 
@@ -1293,20 +1316,19 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
 
+RUN_TASK_GET_EXTRN_ICS="TRUE"
+RUN_TASK_GET_EXTRN_LBCS="TRUE"
+RUN_TASK_MAKE_ICS="TRUE"
+RUN_TASK_MAKE_LBCS="TRUE"
+RUN_TASK_RUN_FCST="TRUE"
 RUN_TASK_RUN_POST="TRUE"
 
 RUN_TASK_GET_OBS_CCPA="FALSE"
-
 RUN_TASK_GET_OBS_MRMS="FALSE"
-
 RUN_TASK_GET_OBS_NDAS="FALSE"
-
 RUN_TASK_VX_GRIDSTAT="FALSE"
-
 RUN_TASK_VX_POINTSTAT="FALSE"
-
 RUN_TASK_VX_ENSGRID="FALSE"
-
 RUN_TASK_VX_ENSPOINT="FALSE"
 #
 #-----------------------------------------------------------------------
