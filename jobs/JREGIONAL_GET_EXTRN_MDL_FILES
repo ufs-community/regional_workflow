@@ -189,9 +189,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Set the name of and then create the directory in which to stage the 
-# external model files for the current cycle (if it doesn't already exist).  
-# Then change location to that directory.
+# Create the directory where the exetrnal model files should be stored
 #
 #-----------------------------------------------------------------------
 #
