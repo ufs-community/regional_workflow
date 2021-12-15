@@ -256,6 +256,8 @@ function get_extrn_mdl_file_dir_info() {
   #
   #-----------------------------------------------------------------------
   #
+  declare -a fns_on_disk
+  declare -a fns_in_arcv
   case "${anl_or_fcst}" in
 
     "ANL")
@@ -266,33 +268,29 @@ function get_extrn_mdl_file_dir_info() {
       case "${extrn_mdl_name}" in
 
       "GSMGFS")
-        fns_on_disk=("gfs.t${hh}z.atmanl.nemsio" "gfs.t${hh}z.sfcanl.nemsio")
-        fns_in_arcv=${fns_on_disk[@]}
+        fns_in_arcv=("gfs.t${hh}z.atmanl.nemsio" "gfs.t${hh}z.sfcanl.nemsio")
         ;;
 
       "FV3GFS")
         case "${fv3gfs_file_fmt}" in
           "nemsio")
-            fns_on_disk=("gfs.t${hh}z.atmanl.nemsio" "gfs.t${hh}z.sfcanl.nemsio")
-            fns_in_arcv=${fns_on_disk[@]}
+            fns_in_arcv=("gfs.t${hh}z.atmanl.nemsio" "gfs.t${hh}z.sfcanl.nemsio")
 
             # File names are prefixed with a date time on Jet
             if [ "${MACHINE}" = "JET" ]; then
               prefix="${yy}${ddd}${hh}00"
-              fns_on_disk=( ${fns_on_disk[@]/#/$prefix})
+              fns_on_disk=( ${fns_in_arcv[@]/#/$prefix})
             fi
             ;;
           "grib2")
-            fns_on_disk=( "gfs.t${hh}z.pgrb2.0p25.f000" )
-            fns_in_arcv=$fns_on_disk
+            fns_in_arcv=( "gfs.t${hh}z.pgrb2.0p25.f000" )
             ;;
           "netcdf")
-            fns_on_disk=("gfs.t${hh}z.atmanl.nc" "gfs.t${hh}z.sfcanl.nc")
-            fns_in_arcv=$fns_on_disk
+            fns_in_arcv=("gfs.t${hh}z.atmanl.nc" "gfs.t${hh}z.sfcanl.nc")
             # File names are prefixed with a date time on Jet
             if [ "${MACHINE}" = "JET" ]; then
               prefix="${yy}${ddd}${hh}00"
-              fns_on_disk=( ${fns_on_disk[@]/#/$prefix})
+              fns_on_disk=( ${fns_in_arcv[@]/#/$prefix})
             fi
             ;;
         esac
@@ -302,8 +300,7 @@ function get_extrn_mdl_file_dir_info() {
         ;& # Fall through. RAP and HRRR follow same naming rules
 
       "HRRR")
-        fns_on_disk=( "${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}" )
-        fns_in_arcv=$fns_on_disk
+        fns_in_arcv=( "${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}" )
         if [ "${MACHINE}" = "JET" ]; then 
           fns_on_disk=( "${yy}${ddd}${hh}${mn}${fcst_mn}${fcst_hh}${fcst_mn}" )
         fi
@@ -311,7 +308,7 @@ function get_extrn_mdl_file_dir_info() {
 
       "NAM")
         fns=( "" )
-        fns_on_disk="nam.t${hh}z.bgrdsfi${hh}.tm00"
+        fns_in_arcv=( "nam.t${hh}z.bgrdsfi${hh}.tm00" )
         ;;
 
       *)
@@ -420,8 +417,8 @@ bination of external model (extrn_mdl_name) and analysis or forecast
       The script has not set $fns_in_arcv properly"
   fi
 
-  if [ -z $fns_on_disk ] ; then
-    fns_on_disk=${fns_in_arcv[@]}
+  if [ -z ${fns_on_disk:-} ] ; then
+    fns_on_disk=(${fns_in_arcv[@]})
   fi
   #
   #-----------------------------------------------------------------------
