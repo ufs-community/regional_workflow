@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 #-----------------------------------------------------------------------
 #
@@ -450,10 +451,13 @@ fi
 #
 # Make sure that USE_FVCOM is set to a valid value and assign directory
 # and file names.
+# 
+# Make sure that FVCOM_WCSTART is set to lowercase "warm" or "cold"
 #
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
+check_var_valid_value "FVCOM_WCSTART" "valid_vals_FVCOM_WCSTART"
 #
 # Set USE_FVCOM to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
@@ -466,6 +470,7 @@ elif [ "$USE_FVCOM" = "FALSE" ] || \
      [ "$USE_FVCOM" = "NO" ]; then
   USE_FVCOM="FALSE"
 fi
+FVCOM_WCSTART=$(echo_lowercase $FVCOM_WCSTART)
 #
 #-----------------------------------------------------------------------
 #
@@ -512,7 +517,7 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 # several queues.  These queues are defined in the default and local 
 # workflow/experiment configuration script.
 #
-# Also, set the machine-dependent flag RELAITVE_OR_NULL that specifies
+# Also, set the machine-dependent flag RELATIVE_OR_NULL that specifies
 # the flag to pass to the link creation command (ln_vrfy) when attempting 
 # to create relative symlinks.  On machines that don't support relative
 # symlinks, it should be set to a null string.
@@ -520,12 +525,11 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #-----------------------------------------------------------------------
 #
 RELATIVE_LINK_FLAG=""
-NCORES_PER_NODE="2" # Need some arbitrary default value to avoid division by zero errors
 case $MACHINE in
 
   "WCOSS_CRAY")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE="24"
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED="lsfcray"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
     QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
@@ -536,7 +540,7 @@ case $MACHINE in
 
   "WCOSS_DELL_P3")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=24
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED="lsf"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
     QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
@@ -547,7 +551,7 @@ case $MACHINE in
 
   "HERA")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=40
+    NCORES_PER_NODE="${NCORES_PER_NODE:-40}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"hera"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
@@ -561,7 +565,7 @@ case $MACHINE in
 
   "ORION")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=40
+    NCORES_PER_NODE="${NCORES_PER_NODE:-40}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"orion"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
@@ -575,7 +579,7 @@ case $MACHINE in
 
   "JET")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=24
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"sjet,vjet,kjet,xjet"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
@@ -589,7 +593,7 @@ case $MACHINE in
 
   "ODIN")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=24
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"workq"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"workq"}
@@ -603,7 +607,7 @@ case $MACHINE in
 
   "CHEYENNE")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=36
+    NCORES_PER_NODE="${NCORES_PER_NODE:-36}"
     SCHED=${SCHED:-"pbspro"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
     QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
@@ -614,7 +618,7 @@ case $MACHINE in
 
   "STAMPEDE")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=68
+    NCORES_PER_NODE="${NCORES_PER_NODE:-68}"
     SCHED="slurm"
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"normal"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
@@ -632,11 +636,26 @@ case $MACHINE in
     ;;
 
   "LINUX")
-    WORKFLOW_MANAGER="none"
-    SCHED="none"
+    WORKFLOW_MANAGER=${WORKFLOW_MANAGER:-"none"}
+    SCHED=${SCHED:-"none"}
+    ;;
+
+  "*")
+    NCORES_PER_NODE="2" # Need some arbitrary default value to avoid division by zero errors
+
+    print_err_msg_exit "\
+      You are running on an unknown platform! MACHINE=${MACHINE} is not a valid
+    choice."
     ;;
 
 esac
+
+if [ -z "$NCORES_PER_NODE" ]; then
+    print_err_msg_exit "\
+      NCORES_PER_NODE is a required setting for your platform! Please
+    set it in config.sh.
+      MACHINE = ${MACHINE}"
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -658,9 +677,8 @@ check_var_valid_value "SCHED" "valid_vals_SCHED"
 #
 #-----------------------------------------------------------------------
 #
-# If we are using a workflow manager, run some checks. First, 
-# verify that the ACCOUNT variable is not empty. Second, ensure that the
-# custom RUN_CMD variables are not set.
+# If we are using a workflow manager check that the ACCOUNT variable is
+# not empty.
 #
 #-----------------------------------------------------------------------
 #
@@ -671,9 +689,6 @@ The variable ACCOUNT cannot be empty if you are using a workflow manager:
   ACCOUNT = \"$ACCOUNT\"
   WORKFLOW_MANAGER = \"$WORKFLOW_MANAGER\""
   fi
-  RUN_CMD_UTILS=""
-  RUN_CMD_FCST=""
-  RUN_CMD_POST=""
 fi
 #
 #-----------------------------------------------------------------------
@@ -2942,6 +2957,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Because RUN_CMD_FCST can include PE_MEMBER01 (and theoretically other
+# variables calculated in this script), delete the first occurrence of it
+# in the var_defns file, and write it again at the end.
+#
+#-----------------------------------------------------------------------
+$SED -i '/^RUN_CMD_FCST=/d' $GLOBAL_VAR_DEFNS_FP
+#
+#-----------------------------------------------------------------------
+#
 # Continue appending variable definitions to the variable definitions 
 # file.
 #
@@ -3040,7 +3064,7 @@ FVCOM_FILE="${FVCOM_FILE}"
 #
 NCORES_PER_NODE="${NCORES_PER_NODE}"
 PE_MEMBER01="${PE_MEMBER01}"
-RUN_CMD_FCST="${RUN_CMD_FCST}"
+RUN_CMD_FCST="$(eval echo \'${RUN_CMD_FCST}\')"
 #
 #-----------------------------------------------------------------------
 #
