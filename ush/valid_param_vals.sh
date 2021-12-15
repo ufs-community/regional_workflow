@@ -3,6 +3,7 @@
 #
 valid_vals_RUN_ENVIR=("nco" "community")
 valid_vals_VERBOSE=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
+valid_vals_DEBUG=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_MACHINE=("WCOSS_CRAY" "WCOSS_DELL_P3" "HERA" "ORION" "JET" "ODIN" "CHEYENNE" "STAMPEDE" "LINUX" "MACOS")
 valid_vals_SCHED=("slurm" "pbspro" "lsf" "lsfcray" "none")
 valid_vals_FCST_MODEL=("ufs-weather-model" "fv3gfs_aqm")
@@ -34,6 +35,7 @@ valid_vals_CCPP_PHYS_SUITE=( \
 "FV3_GSD_SAR" \
 "FV3_GSD_v0" \
 "FV3_GFS_v15p2" \
+"FV3_GFS_v15_thompson_mynn_lam3km" \
 "FV3_GFS_v16" \
 "FV3_RRFS_v1beta" \
 "FV3_RRFS_v1alpha" \

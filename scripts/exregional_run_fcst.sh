@@ -127,7 +127,7 @@ case "$MACHINE" in
   "ORION")
     ulimit -s unlimited
     ulimit -a
-    APRUN="srun"
+    APRUN="srun -n ${PE_MEMBER01}"
     ;;
 
   "JET")
@@ -401,6 +401,28 @@ for (( i=0; i<${num_symlinks}; i++ )); do
   create_symlink_to_file target="$target" symlink="$symlink" \
                          relative="${relative_link_flag}"
 
+done
+#
+#-----------------------------------------------------------------------
+#
+# Create links in the current run directory to the MERRA2 aerosol 
+# climatology data files and lookup table for optics properties.
+#
+#-----------------------------------------------------------------------
+#
+for f_nm_path in ${FIXclim}/*; do
+  f_nm=$( basename "${f_nm_path}" )
+  pre_f="${f_nm%%.*}"
+
+  if [ "${pre_f}" = "merra2" ]; then
+    mnth=$( printf "%s\n" "${f_nm}" | grep -o -P '(?<=2014.m).*(?=.nc)' )
+    symlink="${run_dir}/aeroclim.m${mnth}.nc"
+  else
+    symlink="${run_dir}/${pre_f}.dat"
+  fi
+  target="${f_nm_path}"
+  create_symlink_to_file target="$target" symlink="$symlink" \
+                         relative="${relative_link_flag}"
 done
 #
 #-----------------------------------------------------------------------
