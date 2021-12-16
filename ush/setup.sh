@@ -1414,7 +1414,7 @@ must set DT_SUBHOURLY_POST_MNTS to something other than zero."
 #
 # For now, the sub-hourly capability is restricted to having values of 
 # DT_SUBHOURLY_POST_MNTS that evenly divide into 60 minutes.  This is 
-# because the jinja rocoto XML template (FV3LAM_wflow.xml) assumes that
+# because the jinja rocoto XML template (${WFLOW_XML_FN}) assumes that
 # model output is generated at the top of every hour (i.e. at 00 minutes).
 # This restricts DT_SUBHOURLY_POST_MNTS to the following values (inluding
 # both cases with and without a leading 0):
@@ -2599,10 +2599,24 @@ ${default_var_defns}
 #   MY_VAR='\${ANOTHER_VAR}'
 #
 # while var_defns_notempl is for variables whose definitions contain only
-# a literal string.  These two types are treated separately because the 
-# template variables must be written at the end of the variable defintions 
-# file.  This is in order to ensure that the (non-template) variables 
-# they reference have already been defined.
+# a literal string.  These two types are treated separately.  Non-template
+# variables are written to the variable definitions file as they are
+# encountered, whereas template variables (or simply "templates") are
+# saved in an array and written at the end of the file.  This is to 
+# ensure that any non-template variables that the templates reference 
+# are defined before the templates (so that undefined variable errors
+# are not encountered).  If a template is defined as above, i.e. enclosed 
+# in SINGLE quotes and with dollar signs escaped, this should not matter 
+# because variable references will not be expanded when the variable 
+# definitions file is sourced; they will be expanded only when the "eval" 
+# built-in command is used to evaluate the contents of the template.
+# For this reason, use of single quotes is the recommended way of defining 
+# a template in the experiment configuration file.  However, in case 
+# a template is enclosed in double quotes, any varaible references will
+# be expanded/evaluated when the variable definitions file is sourced.
+# In this case, unexpected behavior or failure may be encountered if the
+# referenced variables are not already defined.  To cover this scenario,
+# we place the templates all at the end of the variable definitions file.
 #
 #-----------------------------------------------------------------------
 #
@@ -2629,10 +2643,6 @@ fi
 # variables and values either in var_defns_notempl (if it is not a 
 # template variable, i.e. one that references other variables in its
 # definition) or in var_defns_templ (if it is a template variable).  
-# Note that template variables are separated from non-template ones 
-# because they must be written at the end of the variable defintions 
-# file to ensure that the variables they reference have already been 
-# defined.
 #
 var_defns_notempl=""
 var_defns_templ=""
@@ -2744,7 +2754,7 @@ Setting its value in the variable definitions file to an empty string."
 # referenced variable is one of the experiment variables).
 #
     dollar_or_null=$( printf "%s" "${var_value}" | \
-                      $SED -n -r -e "s/[^\$]*(\$).*/\1/p" )
+                      $SED -n -r -e "s/[^${VARVALUE_REF_CHAR}]*(${VARVALUE_REF_CHAR}).*/\1/p" )
     if [ -z "${dollar_or_null}" ]; then
       printf -v "var_defns_notempl" "${var_defns_notempl}${var_defn}\n"
     else
@@ -3151,8 +3161,6 @@ N_VAR_SPP=\"${N_VAR_SPP}\"
 #
 #   MY_VAR='\${ANOTHER_VAR}'
 #
-# They are placed towards the end of this file to ensure that the 
-# referenced variables have already been defined.
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
 #
