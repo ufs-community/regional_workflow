@@ -992,8 +992,7 @@ fi
 # Directory containing various executable files.
 #
 # TEMPLATE_DIR:
-# Directory in which templates of various FV3-LAM input files are locat-
-# ed.
+# Directory in which templates of various FV3-LAM input files are located.
 #
 # UFS_WTHR_MDL_DIR:
 # Directory in which the (NEMS-enabled) FV3-LAM application is located.
@@ -1559,20 +1558,20 @@ fi
 #
 # The workflow contains templates for the first six of these files.  
 # Template files are versions of these files that contain placeholder
-# (i.e. dummy) values for various parameters.  The experiment/workflow 
-# generation scripts copy these templates to appropriate locations in 
-# the experiment directory (either the top of the experiment directory
-# or one of the cycle subdirectories) and replace the placeholders in
-# these copies by actual values specified in the experiment/workflow 
-# configuration file (or derived from such values).  The scripts then
-# use the resulting "actual" files as inputs to the forecast model.
+# (i.e. dummy) values for various parameters.  The experiment generation 
+# scripts copy these templates to appropriate locations in the experiment 
+# directory (either the top of the experiment directory or one of the 
+# cycle subdirectories) and replace the placeholders in these copies by 
+# actual values specified in the experiment configuration file (or derived 
+# from such values).  The scripts then use the resulting "actual" files 
+# as inputs to the forecast model.
 #
-# Note that the CCPP physics suite defintion file does not have a cor-
-# responding template file because it does not contain any values that
-# need to be replaced according to the experiment/workflow configura-
-# tion.  If using CCPP, this file simply needs to be copied over from 
-# its location in the forecast model's directory structure to the ex-
-# periment directory.
+# Note that the CCPP physics suite defintion file does not have a 
+# corresponding template file because it does not contain any values 
+# that need to be replaced according to the experiment configuration.  
+# If using CCPP, this file simply needs to be copied over from its 
+# location in the forecast model's directory structure to the experiment 
+# directory.
 #
 # Below, we first set the names of the templates for the first six files
 # listed above.  We then set the full paths to these template files.  
