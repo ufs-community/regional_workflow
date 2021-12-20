@@ -9,4 +9,6 @@ module load udreg
 module load ugni
 module load xpmem
 
+module load netcdf
+
 module list
