@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 #-----------------------------------------------------------------------
 #
@@ -50,6 +51,11 @@ cd_vrfy ${scrfunc_dir}
 #-----------------------------------------------------------------------
 #
 . ./source_util_funcs.sh
+
+print_info_msg "
+========================================================================
+Starting function ${func_name}() in \"${scrfunc_fn}\"...
+========================================================================"
 #
 #-----------------------------------------------------------------------
 #
@@ -147,6 +153,40 @@ if [ "$VERBOSE" = "TRUE" ] || \
 elif [ "$VERBOSE" = "FALSE" ] || \
      [ "$VERBOSE" = "NO" ]; then
   VERBOSE="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that DEBUG is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "DEBUG" "valid_vals_DEBUG"
+#
+# Set DEBUG to either "TRUE" or "FALSE" so we don't have to consider
+# other valid values later on.
+#
+DEBUG=$(echo_uppercase $DEBUG)
+if [ "$DEBUG" = "TRUE" ] || \
+   [ "$DEBUG" = "YES" ]; then
+  DEBUG="TRUE"
+elif [ "$DEBUG" = "FALSE" ] || \
+     [ "$DEBUG" = "NO" ]; then
+  DEBUG="FALSE"
+fi
+#
+#-----------------------------------------------------------------------
+#
+# If DEBUG is set to "TRUE" but VERBOSE is set to "FALSE", reset VERBOSE 
+# to "TRUE" to print out all of the VERBOSE output (in addition to any
+# DEBUG output).
+#
+#-----------------------------------------------------------------------
+#
+if [ "$DEBUG" = "TRUE" ] && [ "$VERBOSE" = "FALSE" ]; then
+  print_info_msg "
+Resetting VERBOSE to \"TRUE\" because DEBUG has been set to \"TRUE\"..."
+  VERBOSE="TRUE" 
 fi
 #
 #-----------------------------------------------------------------------
@@ -535,10 +575,13 @@ fi
 #
 # Make sure that USE_FVCOM is set to a valid value and assign directory
 # and file names.
+# 
+# Make sure that FVCOM_WCSTART is set to lowercase "warm" or "cold"
 #
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
+check_var_valid_value "FVCOM_WCSTART" "valid_vals_FVCOM_WCSTART"
 #
 # Set USE_FVCOM to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
@@ -551,6 +594,7 @@ elif [ "$USE_FVCOM" = "FALSE" ] || \
      [ "$USE_FVCOM" = "NO" ]; then
   USE_FVCOM="FALSE"
 fi
+FVCOM_WCSTART=$(echo_lowercase $FVCOM_WCSTART)
 #
 #-----------------------------------------------------------------------
 #
@@ -605,12 +649,11 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #-----------------------------------------------------------------------
 #
 RELATIVE_LINK_FLAG=""
-NCORES_PER_NODE="2" # Need some arbitrary default value to avoid division by zero errors
 case $MACHINE in
 
   "WCOSS_CRAY")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE="24"
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED="lsfcray"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
     QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
@@ -621,7 +664,7 @@ case $MACHINE in
 
   "WCOSS_DELL_P3")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=24
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED="lsf"
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
     QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
@@ -632,7 +675,7 @@ case $MACHINE in
 
   "HERA")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=40
+    NCORES_PER_NODE="${NCORES_PER_NODE:-40}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"hera"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
@@ -646,7 +689,7 @@ case $MACHINE in
 
   "ORION")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=40
+    NCORES_PER_NODE="${NCORES_PER_NODE:-40}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"orion"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
@@ -660,7 +703,7 @@ case $MACHINE in
 
   "JET")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=24
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"sjet,vjet,kjet,xjet"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
@@ -674,7 +717,7 @@ case $MACHINE in
 
   "ODIN")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=24
+    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
     SCHED=${SCHED:-"slurm"}
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"workq"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"workq"}
@@ -688,7 +731,7 @@ case $MACHINE in
 
   "CHEYENNE")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=36
+    NCORES_PER_NODE="${NCORES_PER_NODE:-36}"
     SCHED=${SCHED:-"pbspro"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
     QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
@@ -699,7 +742,7 @@ case $MACHINE in
 
   "STAMPEDE")
     WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE=68
+    NCORES_PER_NODE="${NCORES_PER_NODE:-68}"
     SCHED="slurm"
     PARTITION_DEFAULT=${PARTITION_DEFAULT:-"normal"}
     QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
@@ -717,11 +760,26 @@ case $MACHINE in
     ;;
 
   "LINUX")
-    WORKFLOW_MANAGER="none"
-    SCHED="none"
+    WORKFLOW_MANAGER=${WORKFLOW_MANAGER:-"none"}
+    SCHED=${SCHED:-"none"}
+    ;;
+
+  "*")
+    NCORES_PER_NODE="2" # Need some arbitrary default value to avoid division by zero errors
+
+    print_err_msg_exit "\
+      You are running on an unknown platform! MACHINE=${MACHINE} is not a valid
+    choice."
     ;;
 
 esac
+
+if [ -z "$NCORES_PER_NODE" ]; then
+    print_err_msg_exit "\
+      NCORES_PER_NODE is a required setting for your platform! Please
+    set it in config.sh.
+      MACHINE = ${MACHINE}"
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -743,9 +801,8 @@ check_var_valid_value "SCHED" "valid_vals_SCHED"
 #
 #-----------------------------------------------------------------------
 #
-# If we are using a workflow manager, run some checks. First, 
-# verify that the ACCOUNT variable is not empty. Second, ensure that the
-# custom RUN_CMD variables are not set.
+# If we are using a workflow manager check that the ACCOUNT variable is
+# not empty.
 #
 #-----------------------------------------------------------------------
 #
@@ -756,9 +813,6 @@ The variable ACCOUNT cannot be empty if you are using a workflow manager:
   ACCOUNT = \"$ACCOUNT\"
   WORKFLOW_MANAGER = \"$WORKFLOW_MANAGER\""
   fi
-  RUN_CMD_UTILS=""
-  RUN_CMD_FCST=""
-  RUN_CMD_POST=""
 fi
 #
 #-----------------------------------------------------------------------
@@ -862,9 +916,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-DATE_OR_NULL=$( printf "%s" "${DATE_FIRST_CYCL}" | \
+date_or_null=$( printf "%s" "${DATE_FIRST_CYCL}" | \
                 $SED -n -r -e "s/^([0-9]{8})$/\1/p" )
-if [ -z "${DATE_OR_NULL}" ]; then
+if [ -z "${date_or_null}" ]; then
   print_err_msg_exit "\
 DATE_FIRST_CYCL must be a string consisting of exactly 8 digits of the 
 form \"YYYYMMDD\", where YYYY is the 4-digit year, MM is the 2-digit 
@@ -872,9 +926,9 @@ month, and DD is the 2-digit day-of-month.
   DATE_FIRST_CYCL = \"${DATE_FIRST_CYCL}\""
 fi
 
-DATE_OR_NULL=$( printf "%s" "${DATE_LAST_CYCL}" | \
+date_or_null=$( printf "%s" "${DATE_LAST_CYCL}" | \
                 $SED -n -r -e "s/^([0-9]{8})$/\1/p" )
-if [ -z "${DATE_OR_NULL}" ]; then
+if [ -z "${date_or_null}" ]; then
   print_err_msg_exit "\
 DATE_LAST_CYCL must be a string consisting of exactly 8 digits of the 
 form \"YYYYMMDD\", where YYYY is the 4-digit year, MM is the 2-digit 
@@ -923,6 +977,39 @@ does not have this form:
 done
 #
 #-----------------------------------------------------------------------
+# Check cycle increment for cycle frequency (cycl_freq).
+# only if INCR_CYCL_FREQ < 24.
+#-----------------------------------------------------------------------
+#
+if [ "${INCR_CYCL_FREQ}" -lt "24" ] && [ "$i" -gt "1" ]; then
+  cycl_intv="$(( 24/$i ))"
+  cycl_intv=( $( printf "%02d " "${cycl_intv}" ) )
+  INCR_CYCL_FREQ=( $( printf "%02d " "${INCR_CYCL_FREQ}" ) )
+  if [ "${cycl_intv}" -ne "${INCR_CYCL_FREQ}" ]; then
+    print_err_msg_exit "\
+The number of CYCL_HRS does not match with that expected by INCR_CYCL_FREQ:
+  INCR_CYCL_FREQ = ${INCR_CYCL_FREQ}
+  cycle interval by the number of CYCL_HRS = ${cycl_intv}
+  CYCL_HRS = $CYCL_HRS_str "
+  fi
+
+  im1=$(( $i-1 ))
+  for itmp in $( seq 1 ${im1} ); do
+    itm1=$(( ${itmp}-1 ))
+    cycl_next_itmp="$(( ${CYCL_HRS[itm1]} + ${INCR_CYCL_FREQ} ))"
+    cycl_next_itmp=( $( printf "%02d " "${cycl_next_itmp}" ) )
+    if [ "${cycl_next_itmp}" -ne "${CYCL_HRS[$itmp]}" ]; then
+      print_err_msg_exit "\
+Element #${itmp} of CYCL_HRS does not match with the increment of cycle
+frequency INCR_CYCL_FREQ:
+  CYCL_HRS = $CYCL_HRS_str
+  INCR_CYCL_FREQ = ${INCR_CYCL_FREQ}
+  CYCL_HRS[$itmp] = \"${CYCL_HRS[$itmp]}\""
+    fi
+  done
+fi
+#
+#-----------------------------------------------------------------------
 #
 # Call a function to generate the array ALL_CDATES containing the cycle 
 # dates/hours for which to run forecasts.  The elements of this array
@@ -936,11 +1023,12 @@ set_cycle_dates \
   date_start="${DATE_FIRST_CYCL}" \
   date_end="${DATE_LAST_CYCL}" \
   cycle_hrs="${CYCL_HRS_str}" \
+  incr_cycl_freq="${INCR_CYCL_FREQ}" \
   output_varname_all_cdates="ALL_CDATES"
 
 NUM_CYCLES="${#ALL_CDATES[@]}"
 
-if [ $NUM_CYCLES -gt 30 ] ; then
+if [ $NUM_CYCLES -gt 90 ] ; then
   unset ALL_CDATES
   print_info_msg "$VERBOSE" "
 Too many cycles in ALL_CDATES to list, redefining in abbreviated form."
@@ -1010,6 +1098,8 @@ case "$MACHINE" in
 
   "WCOSS_CRAY")
     FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
+    FIXaer=${FIXaer:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_aer"}
+    FIXlut=${FIXlut:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_lut"}
     TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
     FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
@@ -1017,6 +1107,8 @@ case "$MACHINE" in
 
   "WCOSS_DELL_P3")
     FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
+    FIXaer=${FIXaer:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_aer"}
+    FIXlut=${FIXlut:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_lut"}
     TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
     FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
@@ -1024,6 +1116,8 @@ case "$MACHINE" in
 
   "HERA")
     FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
+    FIXaer=${FIXaer:-"/scratch1/NCEPDEV/global/glopara/fix/fix_aer"}
+    FIXlut=${FIXlut:-"/scratch1/NCEPDEV/global/glopara/fix/fix_lut"}
     TOPO_DIR=${TOPO_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_sfc_climo"}
     FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch2/BMC/det/FV3LAM_pregen"}
@@ -1031,6 +1125,8 @@ case "$MACHINE" in
 
   "ORION")
     FIXgsm=${FIXgsm:-"/work/noaa/global/glopara/fix/fix_am"}
+    FIXaer=${FIXaer:-"/work/noaa/global/glopara/fix/fix_aer"}
+    FIXlut=${FIXlut:-"/work/noaa/global/glopara/fix/fix_lut"}
     TOPO_DIR=${TOPO_DIR:-"/work/noaa/global/glopara/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/noaa/global/glopara/fix/fix_sfc_climo"}
     FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
@@ -1038,6 +1134,8 @@ case "$MACHINE" in
 
   "JET")
     FIXgsm=${FIXgsm:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am"}
+    FIXaer=${FIXaer:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_aer"}
+    FIXlut=${FIXlut:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_lut"}
     TOPO_DIR=${TOPO_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_sfc_climo"}
     FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
@@ -1045,6 +1143,8 @@ case "$MACHINE" in
 
   "ODIN")
     FIXgsm=${FIXgsm:-"/scratch/ywang/fix/theia_fix/fix_am"}
+    FIXaer=${FIXaer:-"/scratch/ywang/fix/theia_fix/fix_aer"}
+    FIXlut=${FIXlut:-"/scratch/ywang/fix/theia_fix/fix_lut"}
     TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
     FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
@@ -1052,6 +1152,8 @@ case "$MACHINE" in
 
   "CHEYENNE")
     FIXgsm=${FIXgsm:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_am"}
+    FIXaer=${FIXaer:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_aer"}
+    FIXlut=${FIXlut:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_lut"}
     TOPO_DIR=${TOPO_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"}
     FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
@@ -1059,17 +1161,21 @@ case "$MACHINE" in
 
   "STAMPEDE")
     FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}
+    FIXaer=${FIXaer:-"/work/00315/tg455890/stampede2/regional_fv3/fix_aer"}
+    FIXlut=${FIXlut:-"/work/00315/tg455890/stampede2/regional_fv3/fix_lut"}
     TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
     SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
     FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
     ;;
 
   *)
-    if [ -z "$FIXgsm" -o -z "$TOPO_DIR" -o -z "$SFC_CLIMO_INPUT_DIR" ]; then 
+    if [ -z "$FIXgsm" -o -z "$FIXaer" -o -z "$FIXlut" -o -z "$TOPO_DIR" -o -z "$SFC_CLIMO_INPUT_DIR" ]; then 
       print_err_msg_exit "\
 One or more fix file directories have not been specified for this machine:
   MACHINE = \"$MACHINE\"
   FIXgsm = \"${FIXgsm:-\"\"}
+  FIXaer = \"${FIXaer:-\"\"}
+  FIXlut = \"${FIXlut:-\"\"}
   TOPO_DIR = \"${TOPO_DIR:-\"\"}
   SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
   FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR:-\"\"}
@@ -1470,6 +1576,10 @@ check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 # the fixed files containing various fields on global grids (which are
 # usually much coarser than the native FV3-LAM grid).
 #
+# FIXclim:
+# This is the directory that will contain the MERRA2 aerosol climatology 
+# data file and lookup tables for optics properties
+#
 # FIXLAM:
 # This is the directory that will contain the fixed files or symlinks to
 # the fixed files containing the grid, orography, and surface climatology
@@ -1504,6 +1614,7 @@ check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 LOGDIR="${EXPTDIR}/log"
 
 FIXam="${EXPTDIR}/fix_am"
+FIXclim="${EXPTDIR}/fix_clim"
 FIXLAM="${EXPTDIR}/fix_lam"
 
 if [ "${RUN_ENVIR}" = "nco" ]; then
@@ -2619,8 +2730,9 @@ line_list=$( $SED -r \
              -e "/^$/d" \
              ${GLOBAL_VAR_DEFNS_FP} )
 
-print_info_msg "$VERBOSE" "
-The variable \"line_list\" contains:
+print_info_msg "$DEBUG" "
+Before updating default values of experiment variables to user-specified
+values, the variable \"line_list\" contains:
 
 ${line_list}
 "
@@ -2638,10 +2750,10 @@ read -r -d '' str_to_insert << EOM
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
 # Section 1:
-# This section is a copy of the default workflow/experiment configura-
-# tion file config_defaults.sh in the shell scripts directory USHDIR ex-
-# cept that variable values have been updated to those set by the setup
-# script (setup.sh).
+# This section is a copy of the default experiment configuration file 
+# (${EXPT_DEFAULT_CONFIG_FN}) in the shell scripts directory specified by USHDIR 
+# except that variable values have been updated to those for the experiment 
+# (as opposed to the default values).
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
 #
@@ -2650,7 +2762,7 @@ EOM
 # Replace all occurrences of actual newlines in the variable str_to_insert
 # with escaped backslash-n.  This is needed for the sed command below to
 # work properly (i.e. to avoid it failing with an "unterminated `s' command"
-# message).
+# error message).
 #
 str_to_insert=${str_to_insert//$'\n'/\\n}
 #
@@ -2663,33 +2775,40 @@ $SED -i -r -e "s|$regexp|\1\n\n${str_to_insert}\n|g" ${GLOBAL_VAR_DEFNS_FP}
 #
 # Loop through the lines in line_list.
 #
+print_info_msg "
+Generating the global experiment variable definitions file specified by
+GLOBAL_VAR_DEFNS_FN:
+  GLOBAL_VAR_DEFNS_FN = \"${GLOBAL_VAR_DEFNS_FN}\"
+Full path to this file is:
+  GLOBAL_VAR_DEFNS_FP = \"${GLOBAL_VAR_DEFNS_FP}\"
+For more detailed information, set DEBUG to \"TRUE\" in the experiment
+configuration file (\"${EXPT_CONFIG_FN}\")."
+
+template_var_names=()
+template_var_values=()
 while read crnt_line; do
 #
 # Try to obtain the name of the variable being set on the current line.
 # This will be successful only if the line consists of one or more char-
 # acters representing the name of a variable (recall that in generating
-# the variable line_list, all leading spaces in the lines in the file 
-# have been stripped out), followed by an equal sign, followed by zero
-# or more characters representing the value that the variable is being
-# set to.
+# the variable line_list, leading spaces on each line were stripped out),
+# followed by an equal sign, followed by zero or more characters 
+# representing the value that the variable is being set to.
 #
   var_name=$( printf "%s" "${crnt_line}" | $SED -n -r -e "s/^([^ ]*)=.*/\1/p" )
-#echo
-#echo "============================"
-#printf "%s\n" "var_name = \"${var_name}\""
 #
-# If var_name is not empty, then a variable name was found in the cur-
-# rent line in line_list.
+# If var_name is not empty, then a variable name was found on the current 
+# line in line_list.
 #
   if [ ! -z $var_name ]; then
 
-    print_info_msg "$VERBOSE" "
+    print_info_msg "$DEBUG" "
 var_name = \"${var_name}\""
 #
-# If the variable specified in var_name is set in the current environ-
-# ment (to either an empty or non-empty string), get its value and in-
-# sert it in the variable definitions file on the line where that varia-
-# ble is defined.  Note that 
+# If the variable specified in var_name is set in the current environment 
+# (to either an empty or non-empty string), get its value and insert it 
+# in the variable definitions file on the line where that variable is 
+# defined.  Note that 
 #
 #   ${!var_name+x}
 #
@@ -2709,13 +2828,13 @@ var_name = \"${var_name}\""
 #
 # We will now set the variable var_value to the string that needs to be
 # placed on the right-hand side of the assignment operator (=) on the 
-# appropriate line in variable definitions file.  How this is done de-
-# pends on whether the variable is a scalar or an array.
+# appropriate line in the variable definitions file.  How this is done 
+# depends on whether the variable is a scalar or an array.
 #
 # If the variable contains only one element, then it is a scalar.  (It
-# could be a 1-element array, but it is simpler to treat it as a sca-
-# lar.)  In this case, we enclose its value in double quotes and save
-# the result in var_value.
+# could be a 1-element array, but for simplicity, we treat that case as
+# a scalar.)  In this case, we enclose its value in double quotes and 
+# save the result in var_value.
 #
       if [ "$num_elems" -eq 1 ]; then
         var_value="${!var_name}"
@@ -2729,8 +2848,8 @@ var_name = \"${var_name}\""
 #
 # 2) Place parentheses around the double-quoted list of array elements
 #    generated in the first step.  Note that there is no need to put a
-#    space before the closing parenthesis because in step 1, we have al-
-#    ready placed a space after the last element.
+#    space before the closing parenthesis because in step 1, we have
+#    already placed a space after the last element.
 #
       else
 
@@ -2753,16 +2872,16 @@ var_name = \"${var_name}\""
 
       fi
 #
-# If the variable specified in var_name is not set in the current envi-
-# ronment (to either an empty or non-empty string), get its value and 
-# insert it in the variable definitions file on the line where that va-
-# riable is defined.
+# If for some reason the variable specified in var_name is not set in 
+# the current environment (to either an empty or non-empty string), below
+# we will still include it in the variable definitions file and simply 
+# set it to a null string.  Thus, here, we set its value (var_value) to 
+# an empty string).  In this case, we also issue an informational message.
 #
     else
 
       print_info_msg "
-The variable specified by \"var_name\" is not set in the current envi-
-ronment:
+The variable specified by \"var_name\" is not set in the current environment:
   var_name = \"${var_name}\"
 Setting its value in the variable definitions file to an empty string."
 
@@ -2771,13 +2890,13 @@ Setting its value in the variable definitions file to an empty string."
     fi
 #
 # Now place var_value on the right-hand side of the assignment statement
-# on the appropriate line in variable definitions file.
+# on the appropriate line in the variable definitions file.
 #
     set_file_param "${GLOBAL_VAR_DEFNS_FP}" "${var_name}" "${var_value}"
 #
-# If var_name is empty, then a variable name was not found in the cur-
-# rent line in line_list.  In this case, print out a warning and move on
-# to the next line.
+# If var_name is empty, then a variable name was not found on the current 
+# line in line_list.  In this case, print out a warning and move on to 
+# the next line.
 #
   else
 
@@ -2846,8 +2965,11 @@ PARMDIR="$PARMDIR"
 MODULES_DIR="${MODULES_DIR}"
 EXECDIR="$EXECDIR"
 FIXam="$FIXam"
+FIXclim="$FIXclim"
 FIXLAM="$FIXLAM"
 FIXgsm="$FIXgsm"
+FIXaer="$FIXaer"
+FIXlut="$FIXlut"
 COMROOT="$COMROOT"
 COMOUT_BASEDIR="${COMOUT_BASEDIR}"
 TEMPLATE_DIR="${TEMPLATE_DIR}"
@@ -3027,6 +3149,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Because RUN_CMD_FCST can include PE_MEMBER01 (and theoretically other
+# variables calculated in this script), delete the first occurrence of it
+# in the var_defns file, and write it again at the end.
+#
+#-----------------------------------------------------------------------
+$SED -i '/^RUN_CMD_FCST=/d' $GLOBAL_VAR_DEFNS_FP
+#
+#-----------------------------------------------------------------------
+#
 # Continue appending variable definitions to the variable definitions 
 # file.
 #
@@ -3125,7 +3256,7 @@ FVCOM_FILE="${FVCOM_FILE}"
 #
 NCORES_PER_NODE="${NCORES_PER_NODE}"
 PE_MEMBER01="${PE_MEMBER01}"
-RUN_CMD_FCST="${RUN_CMD_FCST}"
+RUN_CMD_FCST="$(eval echo \'${RUN_CMD_FCST}\')"
 #
 #-----------------------------------------------------------------------
 #
@@ -3158,7 +3289,7 @@ definitions file returned with a nonzero status."
 #
 print_info_msg "
 ========================================================================
-Setup script completed successfully!!!
+Function ${func_name}() in \"${scrfunc_fn}\" completed successfully!!!
 ========================================================================"
 #
 #-----------------------------------------------------------------------
