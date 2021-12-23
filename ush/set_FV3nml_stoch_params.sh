@@ -99,7 +99,7 @@ function set_FV3nml_stoch_params() {
   iseed_skeb=$(( cdate*1000 + ensmem_num*10 + 3 ))
   iseed_sppt=$(( cdate*1000 + ensmem_num*10 + 1 ))
   iseed_spp=$(( cdate*1000 + ensmem_num*10 + 4 ))
-  iseed_lsm_spp=$(( cdate*1000 + ensmem_num*10 + 5 ))
+  iseed_lsm_spp=$(( cdate*1000 + ensmem_num*10 + 4 ))
 
   settings="\
 'nam_stochy': {
