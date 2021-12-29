@@ -7,7 +7,7 @@ function file_location() {
   # Return the default location of external model files on disk
   # Orion does not currently have any files staged on disk.
 
-  local external_file_fmt external_model file_tmpl location
+  local external_file_fmt external_model location
 
   external_model=${1}
   external_file_fmt=${2}
@@ -21,13 +21,17 @@ function file_location() {
       ;;
 
   esac
-  echo ${location:-}/${file_tmpl}
+  echo ${location:-}
 
 }
 
 
-EXTRN_MDL_SYSBASEDIR_ICS=${EXTRN_MDL_SYSBASEDIR_ICS:-$(file_location ${EXTRN_MDL_NAME_ICS})}
-EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location ${EXTRN_MDL_NAME_LBCS})}
+EXTRN_MDL_SYSBASEDIR_ICS=${EXTRN_MDL_SYSBASEDIR_ICS:-$(file_location \
+  ${EXTRN_MDL_NAME_ICS} \
+    ${FV3GFS_FILE_FMT_ICS})}
+EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
+  ${EXTRN_MDL_NAME_LBCS} \
+  ${FV3GFS_FILE_FMT_ICS})}
 
 # System Installations
 MODULE_INIT_PATH=${MODULE_INIT_PATH:-/apps/lmod/lmod/init/sh}

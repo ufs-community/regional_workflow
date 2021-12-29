@@ -64,7 +64,7 @@ function set_extrn_mdl_params() {
       known_sys_dir=/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001
       ;;
     "CHEYENNE")
-      known_sys_dir=/glade/p/ral/jntp/UFS_CAM/COMGFS}
+      known_sys_dir=/glade/p/ral/jntp/UFS_CAM/COMGFS
       ;;
     esac
     ;;

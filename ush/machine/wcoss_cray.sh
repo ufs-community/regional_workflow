@@ -6,7 +6,7 @@ function file_location() {
 
   # Return the default location of external model files on disk
 
-  local external_file_fmt external_model file_tmpl location
+  local external_file_fmt external_model location
 
   external_model=${1}
   external_file_fmt=${2}
@@ -15,29 +15,15 @@ function file_location() {
 
     "FV3GFS")
       location='/gpfs/dell1/nco/ops/com/gfs/prod/gfs.${yyyymmdd}/${hh}/atmos'
-      case $external_file_fmt in
-        "nemsio")
-          file_tmpl='gfs.t${hh}z.atmf${fcst_hhh}.nemsio'
-          ;;
-        "grib2")
-          file_tmpl='gfs.t${hh}z.pgrb2.0p25.f${fcst_hhh}'
-          ;;
-        "netcdf")
-          file_tmpl='gfs.t${hh}z.atmf${fcst_hhh}.nc'
-          ;;
-      esac
       ;;
     "RAP")
       location='/gpfs/hps/nco/ops/com/rap/prod'
-      file_tmpl='${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}'
       ;;
     "HRRR")
       location='/gpfs/hps/nco/ops/com/hrrr/prod'
-      file_tmpl='${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}'
       ;;
     "NAM")
       location='/gpfs/dell1/nco/ops/com/nam/prod'
-      file_tmpl='nam.t${hh}z.bgrds${fcst_hh}.tm${hh}'
       ;;
     "*")
       print_err_msg_exit"\
@@ -46,7 +32,7 @@ function file_location() {
       ;;
 
   esac
-  echo ${location:-}/${file_tmpl:-}
+  echo ${location:-}
 }
 
 

@@ -6,7 +6,7 @@ function file_location() {
 
   # Return the default location of external model files on disk
 
-  local external_file_fmt external_model file_tmpl location
+  local external_file_fmt external_model location
 
   external_model=${1}
   external_file_fmt=${2}
@@ -14,20 +14,9 @@ function file_location() {
   case ${external_model} in
 
     "GSMGFS")
-      ;&
+      ;& # Fall through. All files in same place
     "FV3GFS")
       location='/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001'
-      case $external_file_fmt in
-        "nemsio")
-          file_tmpl='gfs.t${hh}z.atmf${fcst_hhh}.nemsio'
-          ;;
-        "grib2")
-          file_tmpl='gfs.t${hh}z.pgrb2.0p25.f${fcst_hhh}'
-          ;;
-        "netcdf")
-          file_tmpl='gfs.t${hh}z.atmf${fcst_hhh}.nc'
-          ;;
-      esac
       ;;
     "*")
       print_err_msg_exit"\
@@ -36,7 +25,7 @@ function file_location() {
       ;;
 
   esac
-  echo ${location:-}/${file_tmpl:-}
+  echo ${location:-}
 }
 
 

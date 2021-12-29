@@ -6,7 +6,7 @@ function file_location() {
 
   # Return the default location of external model files on disk
 
-  local external_file_fmt external_model file_tmpl location
+  local external_file_fmt external_model location
 
   external_model=${1}
   external_file_fmt=${2}
@@ -14,28 +14,22 @@ function file_location() {
   case ${external_model} in
     "FV3GFS")
       case $external_file_fmt in
-
         "nemsio")
           location='/public/data/grids/gfs/nemsio'
-          file_tmpl='${yy}${ddd}${hh}00.gfs.t${hh}z.atmf${fcst_hhh}.nemsio'
           ;;
         "grib2")
           location='/public/data/grids/gfs/0p25deg/grib2'
-          file_tmpl='${yy}${ddd}${hh}000${fcst_hhh}'
           ;;
         "netcdf")
           location='/public/data/grids/gfs/anl/netcdf/'
-          file_tmpl='${yy}${ddd}${hh}00.gfs.t${hh}z.atmf${fcst_hhh}.nc'
           ;;
       esac
       ;;
     "RAP")
       location='/public/data/grids/rap/full/wrfprs/grib2'
-      file_tmpl='${yy}${ddd}${hh}000${fcst_hhh}'
       ;;
     "HRRR")
       location='/public/data/grids/hrrr/conus/wrfprs/grib2'
-      file_tmpl='${yy}${ddd}${hh}000${fcst_hhh}'
       ;;
     "*")
       print_info_msg"\
@@ -44,7 +38,7 @@ function file_location() {
       ;;
 
   esac
-  echo ${location:-}/${file_tmpl:-}
+  echo ${location:-}
 }
 
 

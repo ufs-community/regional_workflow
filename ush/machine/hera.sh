@@ -6,7 +6,7 @@ function file_location() {
 
   # Return the default location of external model files on disk
 
-  local external_file_fmt external_model file_tmpl location
+  local external_file_fmt external_model location
 
   external_model=${1}
   external_file_fmt=${2}
@@ -15,27 +15,6 @@ function file_location() {
 
     "FV3GFS")
       location='/scratch1/NCEPDEV/rstprod/com/gfs/prod/gfs.${yyyymmdd}/${hh}/atmos'
-      case $external_file_fmt in
-        "grib2")
-          file_tmpl='gfs.t${hh}z.pgrb2.0p25.f${fcst_hhh}'
-          ;;
-        "netcdf")
-          file_tmpl='gfs.t${hh}z.atmf${fcst_hhh}.nc'
-          ;;
-        *)
-          print_info_msg"\
-            The chosen FV3GFS file type is not available from this
-          location on Hera."
-          ;;
-      esac
-      ;;
-    "RAP")
-      location='/scratch2/BMC/public/data/gsd/rap/full/wrfnat'
-      file_tmpl='${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}'
-      ;;
-    "HRRR")
-      location='/scratch2/BMC/public/data/gsd/hrrr/conus/wrfnat'
-      file_tmpl='${yy}${ddd}${hh}${mn}${fcst_hh}${fcst_mn}'
       ;;
     *)
       print_info_msg"\
@@ -44,13 +23,13 @@ function file_location() {
       ;;
 
   esac
-  echo ${location:-}/${file_tmpl:-}
+  echo ${location:-}
 }
 
 
 EXTRN_MDL_SYSBASEDIR_ICS=${EXTRN_MDL_SYSBASEDIR_ICS:-$(file_location \
   ${EXTRN_MDL_NAME_ICS} \
-  ${FV3GFS_FILE_FMT_ICS})} \
+  ${FV3GFS_FILE_FMT_ICS})}
 EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
   ${EXTRN_MDL_NAME_LBCS} \
   ${FV3GFS_FILE_FMT_ICS})}

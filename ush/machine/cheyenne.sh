@@ -6,7 +6,7 @@ function file_location() {
 
   # Return the default location of external model files on disk
 
-  local external_file_fmt external_model file_tmpl location
+  local external_file_fmt external_model location
 
 
   external_model=${1}
@@ -16,17 +16,6 @@ function file_location() {
 
     "FV3GFS")
       location='/glade/p/ral/jntp/UFS_CAM/COMGFS/gfs.${yyyymmdd}/${hh}'
-      case $external_file_fmt in
-        "nemsio")
-          file_tmpl='gfs.t${hh}z.atmf${fcst_hhh}.nemsio'
-          ;;
-        "grib2")
-          file_tmpl='gfs.t${hh}z.pgrb2.0p25.f${fcst_hhh}'
-          ;;
-        "netcdf")
-          file_tmpl='gfs.t${hh}z.atmf${fcst_hhh}.nc'
-          ;;
-      esac
       ;;
     "*")
       print_info_msg"\
@@ -35,7 +24,7 @@ function file_location() {
       ;;
 
   esac
-  echo ${location:-}/${file_tmpl:-}
+  echo ${location:-}
 
 }
 
