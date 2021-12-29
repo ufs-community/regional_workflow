@@ -2779,7 +2779,7 @@ Setting its value in the variable definitions file to an empty string."
 # referenced variable is one of the experiment variables).
 #
     dollar_or_null=$( printf "%s" "${var_value}" | \
-                      $SED -n -r -e "s/[^${VARVALUE_REF_CHAR}]*(${VARVALUE_REF_CHAR}).*/\1/p" )
+                      $SED -n -r -e "s/[^\$]*(\$).*/\1/p" )
     if [ -z "${dollar_or_null}" ]; then
       printf -v "var_defns_notempl" "${var_defns_notempl}${var_defn}\n"
     else
