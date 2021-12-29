@@ -573,12 +573,12 @@ WRITE_DOPOST="FALSE"
 #-----------------------------------------------------------------------
 #
 MODEL=""
-MET_INSTALL_DIR="/path/to/MET"
+MET_INSTALL_DIR=""
 MET_BIN_EXEC="bin"
-METPLUS_PATH="/path/to/METPlus"
-CCPA_OBS_DIR="/path/to/observation-directory/ccpa/proc"
-MRMS_OBS_DIR="/path/to/observation-directory/mrms/proc"
-NDAS_OBS_DIR="/path/to/observation-directory/ndas/proc"
+METPLUS_PATH=""
+CCPA_OBS_DIR=""
+MRMS_OBS_DIR=""
+NDAS_OBS_DIR=""
 #
 #-----------------------------------------------------------------------
 #

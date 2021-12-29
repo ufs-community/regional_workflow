@@ -59,4 +59,17 @@ RELATIVE_LINK_FLAG=""
 FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
 TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
-FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
+FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/FV3LAM_pregen"}
+
+# MET Installation Locations
+MET_INSTALL_DIR="/gpfs/hps3/emc/meso/noscrub/emc.metplus/met/10.0.0"
+METPLUS_PATH="/gpfs/hps3/emc/meso/noscrub/emc.metplus/METplus/METplus-4.0.0"
+CCPA_OBS_DIR="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/obs_data/ccpa/proc"
+MRMS_OBS_DIR="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/obs_data/mrms/proc"
+NDAS_OBS_DIR="/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/obs_data/ndas/proc"
+MET_BIN_EXEC="exec"
+
+# Test Data Locations
+TEST_PREGEN_BASEDIR=/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/FV3LAM_pregen
+TEST_COMINgfs=/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/COMGFS
+TEST_EXTRN_MDL_SOURCE_BASEDIR=/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/extrn_mdl_files

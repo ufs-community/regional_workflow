@@ -58,5 +58,8 @@ RUN_CMD_UTILS="srun"
 RUN_CMD_FCST='srun -n ${PE_MEMBER01}'
 RUN_CMD_POST="srun"
 
+# Test Data Locations
+TEST_EXTRN_MDL_SOURCE_BASEDIR=/work/noaa/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files
+
 ulimit -s unlimited
 ulimit -a

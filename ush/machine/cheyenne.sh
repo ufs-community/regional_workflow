@@ -57,5 +57,18 @@ RUN_CMD_UTILS='mpirun -np $nprocs'
 RUN_CMD_FCST='mpirun -np $nprocs'
 RUN_CMD_POST='mpirun -np $nprocs'
 
+# MET Installation Locations
+MET_INSTALL_DIR="/glade/p/ral/jntp/MET/MET_releases/10.0.0"
+METPLUS_PATH="/glade/p/ral/jntp/MET/METplus/METplus-4.0.0"
+CCPA_OBS_DIR="/glade/p/ral/jntp/UFS_SRW_app/develop/obs_data/ccpa/proc"
+MRMS_OBS_DIR="/glade/p/ral/jntp/UFS_SRW_app/develop/obs_data/mrms/proc"
+NDAS_OBS_DIR="/glade/p/ral/jntp/UFS_SRW_app/develop/obs_data/ndas/proc"
+MET_BIN_EXEC="bin"
+
+# Test Data Locations
+TEST_PREGEN_BASEDIR=/glade/p/ral/jntp/UFS_CAM/FV3LAM_pregen
+TEST_COMINgfs=/glade/scratch/ketefian/NCO_dirs/COMGFS
+TEST_EXTRN_MDL_SOURCE_BASEDIR=/glade/p/ral/jntp/UFS_SRW_app/staged_extrn_mdl_files
+
 ulimit -s unlimited
 ulimit -a

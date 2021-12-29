@@ -67,12 +67,18 @@ QUEUE_FCST=${QUEUE_FCST:-"batch"}
 FIXgsm=${FIXgsm:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am"}
 TOPO_DIR=${TOPO_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_sfc_climo"}
-FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
+FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"}
 
 RUN_CMD_SERIAL="time"
 RUN_CMD_UTILS="srun"
 RUN_CMD_FCST="srun"
 RUN_CMD_POST="srun"
+
+# Test Data Locations
+TEST_PREGEN_BASEDIR=/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen
+TEST_COMINgfs=/lfs1/HFIP/hwrf-data/hafs-input/COMGFS
+TEST_EXTRN_MDL_SOURCE_BASEDIR=/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files
+
 
 ulimit -s unlimited
 ulimit -a
