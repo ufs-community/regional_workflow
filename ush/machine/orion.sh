@@ -51,7 +51,7 @@ FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
 
 RUN_CMD_SERIAL="time"
 RUN_CMD_UTILS="srun"
-RUN_CMD_FCST="srun"
+RUN_CMD_FCST='srun -n ${PE_MEMBER01}'
 RUN_CMD_POST="srun"
 
 ulimit -s unlimited
