@@ -209,7 +209,7 @@ function get_extrn_mdl_file_dir_info() {
   hh=${cdate:8:2}
   mn="00"
   yyyymmdd=${cdate:0:8}
-  # Julian day -- not 3 digit day of month
+  # ddd is the Julian day -- not 3 digit day of month
   ddd=$( $DATE_UTIL --utc --date "${yyyy}-${mm}-${dd} ${hh}:${mn} UTC" "+%j" )
   #
   #-----------------------------------------------------------------------
@@ -432,56 +432,13 @@ bination of external model (extrn_mdl_name) and analysis or forecast
   #-----------------------------------------------------------------------
   #
   if [ "${anl_or_fcst}" = "ANL" ]; then
-    sysbasedir=${EXTRN_MDL_SYSBASEDIR_ICS}
+    sysbasedir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_ICS})
   elif [ "${anl_or_fcst}" = "FCST" ]; then
-    sysbasedir=${EXTRN_MDL_SYSBASEDIR_LBCS}
+    sysbasedir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_LBCS})
   fi
   if [ -z "${sysbasedir}" ] ; then
     quit_unless_user_spec_data
   fi
-
-  # Use the basedir unless otherwise specified for special platform
-  # cases below.
-  sysdir=$sysbasedir
-  case "${extrn_mdl_name}" in
-
-    "FV3GFS")
-      case "$MACHINE" in
-      "WCOSS_CRAY")
-        sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
-        ;;
-      "WCOSS_DELL_P3")
-        sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
-        ;;
-      "HERA")
-        sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
-        ;;
-      "ODIN")
-        sysdir="$sysbasedir/${yyyymmdd}"
-        ;;
-      "CHEYENNE")
-        sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}"
-        ;;
-      esac
-      ;;
-
-    "RAP")
-      case "$MACHINE" in
-      "JET")
-        sysdir="$sysbasedir/${yyyymmdd}${hh}/postprd"
-        ;;
-      esac
-      ;;
-
-    "HRRR")
-      case "$MACHINE" in
-      "JET")
-        sysdir="$sysbasedir/${yyyymmdd}${hh}/postprd"
-        ;;
-      esac
-      ;;
-
-  esac
   #
   #-----------------------------------------------------------------------
   #
