@@ -714,12 +714,14 @@ BUILD_ENV_FN=${BUILD_ENV_FN:-"build_${machine}_${COMPILER}.env"}
 #
 #-----------------------------------------------------------------------
 #
-# Calculate PPN_RUN_FCST from NCORES_PER_NODE and OMP_NUM_THREADS_RUN_FCST
+# Calculate a default value for the number of processes per node for the
+# RUN_FCST_TN task.  Then set PPN_RUN_FCST to this default value if 
+# PPN_RUN_FCST is not already specified by the user.
 #
 #-----------------------------------------------------------------------
 #
-PPN_RUN_FCST_OPT="$(( ${NCORES_PER_NODE} / ${OMP_NUM_THREADS_RUN_FCST} ))"
-PPN_RUN_FCST=${PPN_RUN_FCST:-${PPN_RUN_FCST_OPT}}
+ppn_run_fcst_default="$(( ${NCORES_PER_NODE} / ${OMP_NUM_THREADS_RUN_FCST} ))"
+PPN_RUN_FCST=${PPN_RUN_FCST:-${ppn_run_fcst_default}}
 #
 #-----------------------------------------------------------------------
 #
