@@ -1127,7 +1127,7 @@ initial conditions (EXTRN_MDL_NAME_ICS) combination:
 
     else 
 
-      if [ ! -d "${EXTRN_MDL_SYSBASEDIR_ICS}" ]; then
+      if [ ! -d "$(dirname ${EXTRN_MDL_SYSBASEDIR_ICS%%\$*})" ]; then
         print_err_msg_exit "\
 The non-default location specified by EXTRN_MDL_SYSBASEDIR_ICS does not 
 exist or is not a directory:
@@ -1137,7 +1137,7 @@ exist or is not a directory:
     fi
 
     set_bash_param "${expt_config_fp}" \
-                   "EXTRN_MDL_SYSBASEDIR_ICS" "${EXTRN_MDL_SYSBASEDIR_ICS}"
+                   "EXTRN_MDL_SYSBASEDIR_ICS" ${EXTRN_MDL_SYSBASEDIR_ICS}
 
   fi
 #
@@ -1164,7 +1164,7 @@ initial conditions (EXTRN_MDL_NAME_LBCS) combination:
 
     else 
 
-      if [ ! -d "${EXTRN_MDL_SYSBASEDIR_LBCS}" ]; then
+      if [ ! -d "$(dirname ${EXTRN_MDL_SYSBASEDIR_LBCS%%\$*})" ]; then
         print_err_msg_exit "\
 The non-default location specified by EXTRN_MDL_SYSBASEDIR_LBCS does not 
 exist or is not a directory:
@@ -1174,7 +1174,7 @@ exist or is not a directory:
     fi
 
     set_bash_param "${expt_config_fp}" \
-                   "EXTRN_MDL_SYSBASEDIR_LBCS" "${EXTRN_MDL_SYSBASEDIR_LBCS}"
+                   "EXTRN_MDL_SYSBASEDIR_LBCS" ${EXTRN_MDL_SYSBASEDIR_LBCS}
 
   fi
 #

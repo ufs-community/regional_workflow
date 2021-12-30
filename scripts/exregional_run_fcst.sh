@@ -374,7 +374,7 @@ done
 #
 #-----------------------------------------------------------------------
 #
-for f_nm_path in ${FIXclim}/*; do
+for f_nm_path in $(ls ${FIXclim}/* ); do
   f_nm=$( basename "${f_nm_path}" )
   pre_f="${f_nm%%.*}"
 

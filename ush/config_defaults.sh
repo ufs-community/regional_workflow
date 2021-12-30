@@ -48,6 +48,11 @@ RUN_ENVIR="nco"
 # Please see ush/valid_param_vals.sh for a full list of supported
 # platforms.
 #
+# MACHINE_FILE:
+# Path to a configuration file with machine-specific settings. If none
+# is provided, setup.sh will attempt to set the path to for a supported
+# platform.
+#
 # ACCOUNT:
 # The account under which to submit jobs to the queue.
 #
@@ -132,6 +137,7 @@ RUN_ENVIR="nco"
 #-----------------------------------------------------------------------
 #
 MACHINE="BIG_COMPUTER"
+MACHINE_FILE=""
 ACCOUNT="project_name"
 WORKFLOW_MANAGER="none"
 NCORES_PER_NODE=""

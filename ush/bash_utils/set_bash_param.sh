@@ -119,17 +119,18 @@ Setting parameter \"$param\" in file \"$file\" to \"$value\" ..."
 #
 #-----------------------------------------------------------------------
 #
-  grep -q -E "${regex_search}" "${file_full_path}" || { \
-    print_err_msg_exit "\
-Specified file (file_full_path) does not contain the searched-for regu-
-lar expression (regex_search):
-  file_full_path = \"${file_full_path}\"
-  param = \"$param\"
-  value = \"$value\"
-  regex_search = ${regex_search}"
-    }; 
+  grep -q -E "${regex_search}" "${file_full_path}"
+  
+  
+  if [ $? = 0 ]  ; then
+    # The variable was found in existing config file. Replace its value.
+    $SED -i -r -e "s%${regex_search}%${regex_replace}%" "${file_full_path}"
 
-  $SED -i -r -e "s%${regex_search}%${regex_replace}%" "${file_full_path}"
+  else
+    # Append a new variable to the end of the config file..
+    echo $'\n'${param}=\'${value}\' >> ${file_full_path}
+
+  fi
 #
 #-----------------------------------------------------------------------
 #

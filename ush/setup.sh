@@ -50,6 +50,7 @@ cd_vrfy ${scrfunc_dir}
 #
 #-----------------------------------------------------------------------
 #
+
 . ./source_util_funcs.sh
 
 print_info_msg "
@@ -146,7 +147,7 @@ DEBUG=$(boolify $DEBUG)
 #
 #-----------------------------------------------------------------------
 #
-# If DEBUG is set to "TRUE", set VERBOSE to to "TRUE" to print out all
+# If DEBUG is set to "TRUE", set VERBOSE to "TRUE" to print out all
 # of the VERBOSE output (in addition to any DEBUG output).
 #
 #-----------------------------------------------------------------------
@@ -316,7 +317,6 @@ SR_WX_APP_TOP_DIR=${scrfunc_dir%/*/*}
 #
 #-----------------------------------------------------------------------
 #
-set -x
 mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
 property_name="local_path"
 #
@@ -423,7 +423,7 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #-----------------------------------------------------------------------
 #
 RELATIVE_LINK_FLAG="--relative"
-MACHINE_FILE=${USHDIR}/machine/$(echo_lowercase $MACHINE).sh
+MACHINE_FILE=${MACHINE_FILE:-${USHDIR}/machine/$(echo_lowercase $MACHINE).sh}
 source ${MACHINE_FILE}
 
 if [ -z "${NCORES_PER_NODE:-}" ]; then
@@ -2044,6 +2044,7 @@ cp_vrfy $USHDIR/${EXPT_DEFAULT_CONFIG_FN} ${GLOBAL_VAR_DEFNS_FP}
 #
 #
 #-----------------------------------------------------------------------
+
 #
 
 # Read all lines of GLOBAL_VAR_DEFNS file into the variable line_list.
@@ -2055,7 +2056,7 @@ line_list=$( $SED -r -e "s/(.*)/\1/g" ${GLOBAL_VAR_DEFNS_FP} )
 rm_vrfy ${GLOBAL_VAR_DEFNS_FP}
 while read crnt_line; do
   printf "%s\n" "${crnt_line}" >> ${GLOBAL_VAR_DEFNS_FP}
-#
+done <<< "${line_list}"
 #-----------------------------------------------------------------------
 #
 # The following comment block needs to be updated because now line_list

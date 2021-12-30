@@ -183,7 +183,7 @@ function get_extrn_mdl_file_dir_info() {
         lbc_spec_fhrs i num_fhrs \
         fcst_hhh fcst_hh fcst_mn \
         prefix suffix fns fns_on_disk fns_in_arcv \
-        sysbasedir sysdir \
+        sysdir \
         arcv_dir arcv_fmt arcv_fns arcv_fps arcvrel_dir
 
   anl_or_fcst=$(echo_uppercase $anl_or_fcst)
@@ -432,12 +432,9 @@ bination of external model (extrn_mdl_name) and analysis or forecast
   #-----------------------------------------------------------------------
   #
   if [ "${anl_or_fcst}" = "ANL" ]; then
-    sysbasedir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_ICS})
+    sysdir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_ICS})
   elif [ "${anl_or_fcst}" = "FCST" ]; then
-    sysbasedir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_LBCS})
-  fi
-  if [ -z "${sysbasedir}" ] ; then
-    quit_unless_user_spec_data
+    sysdir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_LBCS})
   fi
   #
   #-----------------------------------------------------------------------
