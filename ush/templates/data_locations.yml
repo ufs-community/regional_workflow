@@ -1,7 +1,6 @@
 FV3GFS:
   nomads:
-    protocol: wget
-    flags: '-c'
+    protocol: download
     url: https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.{yyyymmdd}/{hh}/
     file_names: &gfs_file_names
       grib2:
@@ -50,7 +49,7 @@ FV3GFS:
     file_names:
       <<: *gfs_file_names
   aws:
-    protocol: wget
+    protocol: download
     flags: '-c'
     url: https://noaa-gfs-bdp-pds.s3.amazonaws.com/gfs.{yyyymmdd}/{hh}/atmos
     file_names:
