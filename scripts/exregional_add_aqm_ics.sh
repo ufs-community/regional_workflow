@@ -174,7 +174,7 @@ ncrename -d xaxis_1,lon -v xaxis_1,lon \
 
 ncks --mk_rec_dmn lev -O -o tmp1.nc tmp2.nc
 
-ncks -d lev,0,0 tmp1.nc tmp1_ptop.nc
+ncks -O -d lev,0,0 tmp1.nc tmp1_ptop.nc
 
 ${ncap_cmd} -s 'lev=lev+1' tmp1.nc tmp1_pfull.nc
 
