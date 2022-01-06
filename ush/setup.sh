@@ -1567,8 +1567,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# The FV3 forecast model needs the following input files in the run di-
-# rectory to start a forecast:
+# The FV3 forecast model needs the following input files in the run 
+# directory to start a forecast:
 #
 #   (1) The data table file
 #   (2) The diagnostics table file
@@ -1576,27 +1576,22 @@ fi
 #   (4) The FV3 namelist file
 #   (5) The model configuration file
 #   (6) The NEMS configuration file
-#
-# If using CCPP, it also needs:
-#
 #   (7) The CCPP physics suite definition file
 #
 # The workflow contains templates for the first six of these files.  
 # Template files are versions of these files that contain placeholder
-# (i.e. dummy) values for various parameters.  The experiment generation 
-# scripts copy these templates to appropriate locations in the experiment 
-# directory (either the top of the experiment directory or one of the 
-# cycle subdirectories) and replace the placeholders in these copies by 
-# actual values specified in the experiment configuration file (or derived 
-# from such values).  The scripts then use the resulting "actual" files 
-# as inputs to the forecast model.
+# (i.e. dummy) values for various parameters.  The experiment generation
+# and/or the forecast task (i.e. J-job) scripts copy these templates to 
+# appropriate locations in the experiment directory (e.g. to the top of 
+# the experiment directory, to one of the cycle subdirectories, etc) and 
+# replace the placeholders with actual values to obtain the files that 
+# are used as inputs to the forecast model.
 #
-# Note that the CCPP physics suite defintion file does not have a 
+# Note that the CCPP physics suite defintion file (SDF) does not have a 
 # corresponding template file because it does not contain any values 
 # that need to be replaced according to the experiment configuration.  
-# If using CCPP, this file simply needs to be copied over from its 
-# location in the forecast model's directory structure to the experiment 
-# directory.
+# This file simply needs to be copied over from its location in the 
+# forecast model's directory structure to the experiment directory.
 #
 # Below, we first set the names of the templates for the first six files
 # listed above.  We then set the full paths to these template files.  
@@ -3168,7 +3163,6 @@ FVCOM_FILE=\"${FVCOM_FILE}\"
 #
 #-----------------------------------------------------------------------
 #
-NCORES_PER_NODE=\"${NCORES_PER_NODE}\"
 PE_MEMBER01=\"${PE_MEMBER01}\"
 #
 #-----------------------------------------------------------------------
