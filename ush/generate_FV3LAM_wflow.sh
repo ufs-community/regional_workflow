@@ -667,6 +667,27 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Copy MERRA2 aerosol climatology data.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${USE_MERRA_CLIMO}" = "TRUE" ]; then
+  print_info_msg "$VERBOSE" "
+Copying MERRA2 aerosol climatology data files from system directory
+(FIXaer/FIXlut) to a subdirectory (FIXclim) in the experiment directory:
+  FIXaer = \"${FIXaer}\"
+  FIXlut = \"${FIXlut}\"
+  FIXclim = \"${FIXclim}\""
+
+  check_for_preexist_dir_file "${FIXclim}" "delete"
+  mkdir_vrfy -p "${FIXclim}"
+
+  cp_vrfy "${FIXaer}/merra2.aerclim"*".nc" "${FIXclim}/"
+  cp_vrfy "${FIXlut}/optics"*".dat" "${FIXclim}/"
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Copy templates of various input files to the experiment directory.
 #
 #-----------------------------------------------------------------------
@@ -690,8 +711,7 @@ if [ "${FCST_MODEL}" = "ufs-weather-model" ]; then
 ##### RRFS-CMAQ ########## end   #####
 #
 print_info_msg "$VERBOSE" "
-  Copying the template NEMS configuration file to the experiment direct-
-  ory..."
+  Copying the template NEMS configuration file to the experiment directory..."
 cp_vrfy "${NEMS_CONFIG_TMPL_FP}" "${NEMS_CONFIG_FP}"
 #
 ##### RRFS-CMAQ ########## start #####

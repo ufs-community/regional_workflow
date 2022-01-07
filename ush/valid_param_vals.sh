@@ -36,6 +36,7 @@ valid_vals_CCPP_PHYS_SUITE=( \
 "FV3_GSD_SAR" \
 "FV3_GSD_v0" \
 "FV3_GFS_v15p2" \
+"FV3_GFS_v15_thompson_mynn_lam3km" \
 "FV3_GFS_v16" \
 "FV3_RRFS_v1beta" \
 "FV3_RRFS_v1alpha" \
@@ -78,6 +79,7 @@ valid_vals_FVCOM_WCSTART=("warm" "WARM" "cold" "COLD")
 valid_vals_COMPILER=("intel" "gnu")
 valid_vals_SUB_HOURLY_POST=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_DT_SUBHOURLY_POST_MNTS=("1" "01" "2" "02" "3" "03" "4" "04" "5" "05" "6" "06" "10" "12" "15" "20" "30")
+valid_vals_USE_MERRA_CLIMO=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_ADD_AQM_ICS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_ADD_AQM_LBCS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_RUN_TASK_RUN_NEXUS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
