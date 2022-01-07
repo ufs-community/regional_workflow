@@ -19,14 +19,10 @@
 #
 . $USHDIR/create_model_configure_file.sh
 . $USHDIR/create_diag_table_file.sh
-#
-##### RRFS-CMAQ ########## start #####
-#
+
 if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   . $USHDIR/create_nems_configure_file.sh
 fi
-#
-##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -458,13 +454,7 @@ create_symlink_to_file target="${FIELD_TABLE_FP}" \
                        symlink="${run_dir}/${FIELD_TABLE_FN}" \
                        relative="${relative_link_flag}"
 
-#
-##### RRFS-CMAQ ########## start #####
-#
 if [ "${FCST_MODEL}" = "ufs-weather-model" ]; then
-#
-##### RRFS-CMAQ ########## end   #####
-#
 create_symlink_to_file target="${NEMS_CONFIG_FP}" \
                        symlink="${run_dir}/${NEMS_CONFIG_FN}" \
                        relative="${relative_link_flag}"
@@ -472,10 +462,7 @@ create_symlink_to_file target="${NEMS_CONFIG_FP}" \
 create_symlink_to_file target="${FIELD_DICT_FP}" \
                        symlink="${run_dir}/${FIELD_DICT_FN}" \
                        relative="${relative_link_flag}"
-
-##### RRFS-CMAQ ########## start #####
 fi
-##### RRFS-CMAQ ########## end   #####
 
 if [ ${WRITE_DOPOST} = "TRUE" ]; then
   cp_vrfy ${UPP_DIR}/parm/nam_micro_lookup.dat ./eta_micro_lookup.dat
