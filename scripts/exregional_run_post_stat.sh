@@ -148,14 +148,17 @@ Run command has not been specified for this machine:
 esac
 #
 
+
 #
 #-----------------------------------------------------------------------
 #
-# Execute Post-UPP Stat
+# Execute UPP-POST-STAT
 #
 #-----------------------------------------------------------------------
 #
-${APRUN} ${EXECDIR}/PM25-O3-upp-stat || \
+cp_vrfy "${SR_WX_APP_TOP_DIR}/src/upp_post_stat/PM25-03-stat" "${EXECDIR}/"
+
+${APRUN} ${EXECDIR}/PM25-O3-stat || \
 print_err_msg_exit "\
 Call to execute Post-UP Stat failed
 "
@@ -168,7 +171,7 @@ Call to execute Post-UP Stat failed
 #
 print_info_msg "
 ========================================================================
-Post-UPP Stat completed successfully.
+UPP-POST-STAT completed successfully.
 
 Exiting script:  \"${scrfunc_fn}\"
 In directory:    \"${scrfunc_dir}\"
