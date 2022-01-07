@@ -9,8 +9,6 @@ module load udreg
 module load ugni
 module load xpmem
 
-module load netcdf
-
 module use /usrx/local/nceplibs/modulefiles
 module load srw-app-python/1.0.0
 
