@@ -434,45 +434,43 @@ file (template_xml_fp):
   'cycl_first': ${ALL_CDATES[0]}00
   'cycl_next': ${ALL_CDATES[1]:-${ALL_CDATES[0]}}00
   'cycl_last': ${ALL_CDATES[@]: -1}00
-  'nnodes_add_aqm_ics': ${NNODES_ADD_AQM_ICS}
-  'nnodes_add_aqm_lbcs': ${NNODES_ADD_AQM_LBCS}
-  'nnodes_run_nexus': ${NNODES_RUN_NEXUS}
-  'nnodes_run_post_stat': ${NNODES_RUN_POST_STAT}
-  'ppn_add_aqm_ics': ${PPN_ADD_AQM_ICS}
-  'ppn_add_aqm_lbcs': ${PPN_ADD_AQM_LBCS}
-  'ppn_run_nexus': ${PPN_RUN_NEXUS}
-  'ppn_run_post_stat': ${PPN_RUN_POST_STAT}
-  'wtime_add_aqm_ics': ${WTIME_ADD_AQM_ICS}
-  'wtime_add_aqm_lbcs': ${WTIME_ADD_AQM_LBCS}
-  'wtime_run_nexus': ${WTIME_RUN_NEXUS}
-  'wtime_run_post_stat': ${WTIME_RUN_POST_STAT}
-  'maxtries_add_aqm_ics': ${MAXTRIES_ADD_AQM_ICS}
-  'maxtries_add_aqm_lbcs': ${MAXTRIES_ADD_AQM_LBCS}
-  'maxtries_run_nexus': ${MAXTRIES_RUN_NEXUS}
-  'maxtries_run_post_stat': ${MAXTRIES_RUN_POST_STAT}
+
   'run_task_add_aqm_ics': ${RUN_TASK_ADD_AQM_ICS}
   'run_task_add_aqm_lbcs': ${RUN_TASK_ADD_AQM_LBCS}
   'run_task_run_nexus': ${RUN_TASK_RUN_NEXUS}
   'run_task_run_post_stat': ${RUN_TASK_RUN_POST_STAT}
-#
-##### RRFS-CMAQ ########## end   #####
-#
-##### RRFS-CMAQ-DA ########## start #####
-#
+
   'run_chem_anal_tn': ${RUN_CHEM_ANAL_TN}
   'run_gsi_anal_tn': ${RUN_GSI_ANAL_TN}
   'anal_gsi_restart_tn': ${ANAL_GSI_RESTART_TN}
   'run_task_chem_anal': ${RUN_TASK_CHEM_ANAL}
   'run_task_dacyc': ${RUN_TASK_DACYC}
   'use_chem_anal': ${USE_CHEM_ANAL}
+
+  'nnodes_add_aqm_ics': ${NNODES_ADD_AQM_ICS}
+  'nnodes_add_aqm_lbcs': ${NNODES_ADD_AQM_LBCS}
+  'nnodes_run_nexus': ${NNODES_RUN_NEXUS}
+  'nnodes_run_post_stat': ${NNODES_RUN_POST_STAT}
   'nnodes_run_gsi_anal': ${NNODES_RUN_GSI_ANAL}
+  'ppn_add_aqm_ics': ${PPN_ADD_AQM_ICS}
+  'ppn_add_aqm_lbcs': ${PPN_ADD_AQM_LBCS}
+  'ppn_run_nexus': ${PPN_RUN_NEXUS}
+  'ppn_run_post_stat': ${PPN_RUN_POST_STAT}
   'ppn_run_gsi_anal': ${PPN_RUN_GSI_ANAL}
+  'wtime_add_aqm_ics': ${WTIME_ADD_AQM_ICS}
+  'wtime_add_aqm_lbcs': ${WTIME_ADD_AQM_LBCS}
+  'wtime_run_nexus': ${WTIME_RUN_NEXUS}
+  'wtime_run_post_stat': ${WTIME_RUN_POST_STAT}
   'wtime_run_chem_anal': ${WTIME_RUN_CHEM_ANAL}
   'wtime_run_gsi_anal' : ${WTIME_RUN_GSI_ANAL}
+  'maxtries_add_aqm_ics': ${MAXTRIES_ADD_AQM_ICS}
+  'maxtries_add_aqm_lbcs': ${MAXTRIES_ADD_AQM_LBCS}
+  'maxtries_run_nexus': ${MAXTRIES_RUN_NEXUS}
+  'maxtries_run_post_stat': ${MAXTRIES_RUN_POST_STAT}
   'maxtries_run_chem_anal': ${MAXTRIES_RUN_CHEM_ANAL}
   'maxtries_run_gsi_anal': ${MAXTRIES_RUN_GSI_ANAL}
 #
-##### RRFS-CMAQ-DA ########## end   #####
+##### RRFS-CMAQ ########## end   #####
 #
 #
 # Ensemble-related parameters.
@@ -703,22 +701,12 @@ print_info_msg "$VERBOSE" "
   Copying the template field table file to the experiment directory..."
 cp_vrfy "${FIELD_TABLE_TMPL_FP}" "${FIELD_TABLE_FP}"
 
-#
-##### RRFS-CMAQ ########## start #####
-#
+
 if [ "${FCST_MODEL}" = "ufs-weather-model" ]; then
-#
-##### RRFS-CMAQ ########## end   #####
-#
-print_info_msg "$VERBOSE" "
+  print_info_msg "$VERBOSE" "
   Copying the template NEMS configuration file to the experiment directory..."
-cp_vrfy "${NEMS_CONFIG_TMPL_FP}" "${NEMS_CONFIG_FP}"
-#
-##### RRFS-CMAQ ########## start #####
-#
+  cp_vrfy "${NEMS_CONFIG_TMPL_FP}" "${NEMS_CONFIG_FP}"
 fi
-#
-##### RRFS-CMAQ ########## end   #####
 #
 # Copy the CCPP physics suite definition file from its location in the
 # clone of the FV3 code repository to the experiment directory (EXPT-
@@ -805,9 +793,8 @@ fi
 # It turns out that setting the variable to an empty string also works
 # to remove it from the namelist!  Which is better to use??
 #
-##### RRFS-CMAQ ########## start #####
-#
-if [[ "${FCST_MODEL}" == "fv3gfs_aqm" && "${CCPP_PHYS_SUITE}" == "FV3_GFS_2017_gfdlmp" ]]; then
+
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ] && [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ]; then
 settings="\
 'atmos_model_nml': {
     'blocksize': $BLOCKSIZE,
@@ -821,10 +808,9 @@ settings="\
     'layout': [${LAYOUT_X}, ${LAYOUT_Y}],
     'bc_update_interval': ${LBC_SPEC_INTVL_HRS},
   }"
+
 else
-#
-##### RRFS-CMAQ ########## end   #####
-#
+
 settings="\
 'atmos_model_nml': {
     'blocksize': $BLOCKSIZE,
@@ -871,10 +857,8 @@ settings="\
     'skeb_vdof': ${SKEB_VDOF},
     'use_zmtnblck': ${USE_ZMTNBLCK},
   }"
-#
-##### RRFS-CMAQ ########## start #####
+
 fi
-##### RRFS-CMAQ ########## end   #####
 #
 # Add to "settings" the values of those namelist variables that specify
 # the paths to fixed files in the FIXam directory.  As above, these namelist

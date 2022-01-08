@@ -976,6 +976,8 @@ fi
 #
 ##### RRFS-CMAQ ########## start #####
 #
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+#
 #-----------------------------------------------------------------------
 #
 # Make sure that RUN_TASK_ADD_AQM_ICS is set to a valid value.
@@ -1106,10 +1108,6 @@ elif [ "${RESTART_WORKFLOW}" = "FALSE" ] || \
   RESTART_WORKFLOW="FALSE"
 fi
 #
-##### RRFS-CMAQ ########## end   #####
-#
-##### RRFS-CMAQ-DA ########## start #####
-#
 #-----------------------------------------------------------------------
 #
 # Make sure that OPT_DA_RRFS_CMAQ is set to a valid value.
@@ -1179,8 +1177,10 @@ if [ "${OPT_DA_RRFS_CMAQ}" = "FALSE" ]; then
   USE_CHEM_ANAL="FALSE"
   RUN_TASK_DACYC="FALSE"
 fi
+
+fi
 #
-##### RRFS-CMAQ-DA ########## end   #####
+##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -1208,8 +1208,7 @@ fi
 # Directory containing various executable files.
 #
 # TEMPLATE_DIR:
-# Directory in which templates of various FV3-LAM input files are locat-
-# ed.
+# Directory in which templates of various FV3-LAM input files are located.
 #
 # UFS_WTHR_MDL_DIR:
 # Directory in which the (NEMS-enabled) FV3-LAM application is located.
@@ -1240,6 +1239,10 @@ TEMPLATE_DIR="$USHDIR/templates"
 VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
 METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
 MET_CONFIG="$TEMPLATE_DIR/parm/met"
+
+ARL_NEXUS_DIR="src/arl_nexus"
+JEDI_DIR="src/jedi"
+GSI_DIR="src/gsi"
 
 case "$MACHINE" in
 
@@ -1334,6 +1337,8 @@ esac
 #
 ##### RRFS-CMAQ ########## start #####
 #
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+
 case $MACHINE in
 
 "WCOSS_DELL_P3")
@@ -1348,6 +1353,13 @@ case $MACHINE in
   NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions"}
   NEXUS_FIX_DIR=${NEXUS_FIX_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/nexus/fix"}
   NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_GSD_HRRR_25km.nc"}
+  DA_OBS_DIR=${DA_OBS_DIR:-""}
+  FIXgsi=${FIXgsi:-""}
+  FIXcrtm=${FIXcrtm:-""}
+  AIRCRAFT_REJECT=${AIRCRAFT_REJECT:-""}
+  SFCOBS_USELIST=${SFCOBS_USELIST:-""}
+  AODPATH=${AODPATH:-""}
+  PMPATH=${PMPATH:-""}
   ;;
 
 "HERA")
@@ -1362,6 +1374,13 @@ case $MACHINE in
   NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/scratch1/NCEPDEV/rstprod/nexus_emissions"}
   NEXUS_FIX_DIR=${NEXUS_FIX_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/nexus/fix"}
   NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_GSD_HRRR_25km.nc"}
+  DA_OBS_DIR=${DA_OBS_DIR:-"/scratch1/NCEPDEV/da/Cory.R.Martin/Datasets/Observations/RRFS-CMAQ/"}
+  FIXgsi=${FIXgsi:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
+  FIXcrtm=${FIXcrtm:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/CRTM/fix"}
+  AIRCRAFT_REJECT=${AIRCRAFT_REJECT:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
+  SFCOBS_USELIST=${SFCOBS_USELIST:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
+  AODPATH=${AODPATH:-""}
+  PMPATH=${PMPATH:-""}
   ;;
 
   *)
@@ -1378,43 +1397,6 @@ One or more AQM directories have not been specified for this machine:
   NEXUS_INPUT_DIR = \"${NEXUS_INPUT_DIR:-\"\"}
   NEXUS_FIX_DIR = \"${NEXUS_FIX_DIR:-\"\"}
   NEXUS_GRID_FN = \"${NEXUS_GRID_FN:-\"\"}
-You can specify the missing location(s) in config.sh"
-    ;;
-
-esac
-#
-##### RRFS-CMAQ ########## end   #####
-#
-##### RRFS-CMAQ-DA ########## start #####
-#
-JEDI_DIR="${SR_WX_APP_TOP_DIR}/src/JEDI"
-
-case $MACHINE in
-
-"WCOSS_DELL_P3")
-  DA_OBS_DIR=${DA_OBS_DIR:-""}
-  FIXgsi=${FIXgsi:-""}
-  FIXcrtm=${FIXcrtm:-""}
-  AIRCRAFT_REJECT=${AIRCRAFT_REJECT:-""}
-  SFCOBS_USELIST=${SFCOBS_USELIST:-""}
-  AODPATH=${AODPATH:-""}
-  PMPATH=${PMPATH:-""}
-  ;;
-
-"HERA")
-  DA_OBS_DIR=${DA_OBS_DIR:-"/scratch1/NCEPDEV/da/Cory.R.Martin/Datasets/Observations/RRFS-CMAQ/"}
-  FIXgsi=${FIXgsi:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
-  FIXcrtm=${FIXcrtm:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/CRTM/fix"}
-  AIRCRAFT_REJECT=${AIRCRAFT_REJECT:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
-  SFCOBS_USELIST=${SFCOBS_USELIST:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
-  AODPATH=${AODPATH:-""}
-  PMPATH=${PMPATH:-""}
-  ;;
-
-  *)
-    print_err_msg_exit "\
-One or more DA directories have not been specified for this machine:
-  MACHINE = \"$MACHINE\"
   DA_OBS_DIR = \"${DA_OBS_DIR:-\"\"}
   FIXgsi = \"${FIXgsi:-\"\"}
   FIXcrtm = \"${FIXcrtm:-\"\"}
@@ -1426,8 +1408,10 @@ You can specify the missing location(s) in config.sh"
     ;;
 
 esac
+
+fi
 #
-##### RRFS-CMAQ-DA ########## end   #####
+##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -1504,6 +1488,8 @@ fi
 #
 ##### RRFS-CMAQ ########## start #####
 #
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+#
 # Get the base directory of the NEXUS code if required
 #
 external_name="arl_nexus"
@@ -1522,10 +1508,8 @@ The base directory in which the arl_nexus source code should be located
 Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
 fi
-#
-##### RRFS-CMAQ ########## end #####
-#
-##### RRFS-CMAQ-DA ########## start #####
+
+if [ "${OPT_DA_RRFS_CMAQ}" = "TRUE" ]; then
 #
 # Get the base directory of the JEDI code if required
 #
@@ -1545,8 +1529,6 @@ The base directory in which the JEDI source code should be located
 Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
 fi
-DA_OBS_DIR="${DA_OBS_DIR}"
-
 #
 # Get the base directory of the GSI code if required
 #
@@ -1567,8 +1549,10 @@ Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
 fi
 
+fi
+fi
 #
-##### RRFS-CMAQ-DA ########## end   #####
+##### RRFS-CMAQ ########## end   #####
 #
 
 #
@@ -1991,24 +1975,17 @@ fi
 dot_ccpp_phys_suite_or_null=".${CCPP_PHYS_SUITE}"
 
 DATA_TABLE_TMPL_FN="${DATA_TABLE_FN}"
-DIAG_TABLE_TMPL_FN="${DIAG_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
-FIELD_TABLE_TMPL_FN="${FIELD_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
-MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_FN}"
-NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}"
-
-##### RRFS-CMAQ ########## start #####
-#
-AQM_RC_FP="${TEMPLATE_DIR}/${AQM_RC_FN}"
-#--- replace template file names/paths
 if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   DIAG_TABLE_TMPL_FN="${DIAG_TABLE_FN}.${FCST_MODEL}_${CCPP_PHYS_SUITE}"
   FIELD_TABLE_TMPL_FN="${FIELD_TABLE_FN}.${FCST_MODEL}_${CCPP_PHYS_SUITE}"
   MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_FN}.${FCST_MODEL}"
   NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}.${FCST_MODEL}"
+else
+DIAG_TABLE_TMPL_FN="${DIAG_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
+FIELD_TABLE_TMPL_FN="${FIELD_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
+MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_FN}"
+NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}"
 fi
-#
-##### RRFS-CMAQ ########## end   #####
-
 DATA_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DATA_TABLE_TMPL_FN}"
 DIAG_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DIAG_TABLE_TMPL_FN}"
 FIELD_TABLE_TMPL_FP="${TEMPLATE_DIR}/${FIELD_TABLE_TMPL_FN}"
@@ -2017,6 +1994,7 @@ FV3_NML_YAML_CONFIG_FP="${TEMPLATE_DIR}/${FV3_NML_YAML_CONFIG_FN}"
 FV3_NML_BASE_ENS_FP="${EXPTDIR}/${FV3_NML_BASE_ENS_FN}"
 MODEL_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${MODEL_CONFIG_TMPL_FN}"
 NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
+AQM_RC_FP="${TEMPLATE_DIR}/${AQM_RC_FN}"
 #
 #-----------------------------------------------------------------------
 #
@@ -2063,10 +2041,7 @@ FIELD_DICT_FN="fd_nems.yaml"
 FIELD_DICT_IN_UWM_FP="${UFS_WTHR_MDL_DIR}/tests/parm/${FIELD_DICT_FN}"
 FIELD_DICT_FP="${EXPTDIR}/${FIELD_DICT_FN}"
 #
-#
-##### RRFS-CMAQ ########## start #####
 if [ ${FCST_MODEL} = "ufs-weather-model" ]; then
-##### RRFS-CMAQ ########## end   #####
 
 if [ ! -f "${FIELD_DICT_IN_UWM_FP}" ]; then
   print_err_msg_exit "\
@@ -2075,9 +2050,7 @@ in the local clone of the ufs-weather-model:
   FIELD_DICT_IN_UWM_FP = \"${FIELD_DICT_IN_UWM_FP}\""
 fi
 
-##### RRFS-CMAQ ########## start #####
 fi
-##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -2935,9 +2908,6 @@ fi
 #-----------------------------------------------------------------------
 #
 NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
-
-#
-##### RRFS-CMAQ-DA ########## start #####
 #
 #-----------------------------------------------------------------------
 #
@@ -2945,8 +2915,6 @@ NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 # for this we are going to use the same input.nml so the
 # number should be layout_x * layout_y
 PE_JEDI=$(( LAYOUT_X*LAYOUT_Y ))
-#
-##### RRFS-CMAQ-DA ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -3337,16 +3305,12 @@ CYCLE_BASEDIR="${CYCLE_BASEDIR}"
 GRID_DIR="${GRID_DIR}"
 OROG_DIR="${OROG_DIR}"
 SFC_CLIMO_DIR="${SFC_CLIMO_DIR}"
-#
-##### RRFS-CMAQ-DA ########## start #####
-#
+
 ARL_NEXUS_DIR="${ARL_NEXUS_DIR}"
 JEDI_DIR="${JEDI_DIR}"
 PE_JEDI="${PE_JEDI}"
 GSI_DIR="${GSI_DIR}"
-#
-##### RRFS-CMAQ-DA ########## end   #####
-#
+
 NDIGITS_ENSMEM_NAMES="${NDIGITS_ENSMEM_NAMES}"
 ENSMEM_NAMES=( $( printf "\"%s\" " "${ENSMEM_NAMES[@]}" ))
 FV3_NML_ENSMEM_FPS=( $( printf "\"%s\" " "${FV3_NML_ENSMEM_FPS[@]}" ))

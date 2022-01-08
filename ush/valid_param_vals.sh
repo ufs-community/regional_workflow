@@ -27,7 +27,6 @@ valid_vals_PREDEF_GRID_NAME=( \
 "GSD_HRRR_AK_50km" \
 "RRFS_NA_13km" \
 "RRFS_NA_3km" \
-"GSD_HRRR_25km" \
 )
 valid_vals_CCPP_PHYS_SUITE=( \
 "FV3_CPT_v0" \

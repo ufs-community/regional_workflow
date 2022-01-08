@@ -91,7 +91,7 @@ field1="PMTF"
 field2="OZCON"
 field3="1 hybrid level"
 
-output_file="${field1}_${field2}.grb2"
+output_file="${field1}_${field2}-01_2_48.grb2"
 
 cd_vrfy "${poststat_dir}"
 
@@ -156,7 +156,8 @@ esac
 #
 #-----------------------------------------------------------------------
 #
-cp_vrfy "${SR_WX_APP_TOP_DIR}/src/upp_post_stat/PM25-03-stat" "${EXECDIR}/"
+cp_vrfy "${SR_WX_APP_TOP_DIR}/src/upp_post_stat/PM25-O3-stat" "${EXECDIR}/"
+chmod +x ${EXECDIR}/PM25-O3-stat
 
 ${APRUN} ${EXECDIR}/PM25-O3-stat || \
 print_err_msg_exit "\

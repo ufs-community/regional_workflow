@@ -479,11 +479,11 @@ create_symlink_to_file target="${FIELD_TABLE_FP}" \
                        relative="${relative_link_flag}"
 
 if [ "${FCST_MODEL}" = "ufs-weather-model" ]; then
-create_symlink_to_file target="${NEMS_CONFIG_FP}" \
+  create_symlink_to_file target="${NEMS_CONFIG_FP}" \
                        symlink="${run_dir}/${NEMS_CONFIG_FN}" \
                        relative="${relative_link_flag}"
 
-create_symlink_to_file target="${FIELD_DICT_FP}" \
+  create_symlink_to_file target="${FIELD_DICT_FP}" \
                        symlink="${run_dir}/${FIELD_DICT_FN}" \
                        relative="${relative_link_flag}"
 fi
@@ -508,19 +508,18 @@ if [ ${WRITE_DOPOST} = "TRUE" ]; then
   cp_vrfy ${UPP_DIR}/parm/params_grib2_tbl_new .
 fi
 
-#
-##### RRFS-CMAQ ########## start #####
-# AQM_RC_IN_FN: input file name of cmaq
-AQM_RC_IN_FN="aqm.rc"
-AQM_RC_IN_FP="${run_dir}/${AQM_RC_IN_FN}"
-cp_vrfy ${AQM_RC_FP} ${AQM_RC_IN_FP}
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+  # AQM_RC_IN_FN: input file name of cmaq
+  AQM_RC_IN_FN="aqm.rc"
+  AQM_RC_IN_FP="${run_dir}/${AQM_RC_IN_FN}"
+  cp_vrfy ${AQM_RC_FP} ${AQM_RC_IN_FP}
 
-YYYY=${CDATE:0:4}
-MM=${CDATE:4:2}
-DD=${CDATE:6:2}
-HH=${CDATE:8:2}
-YYYYMMDD=${CDATE:0:8}
-YYMMDD=${CDATE:2:6}
+  YYYY=${CDATE:0:4}
+  MM=${CDATE:4:2}
+  DD=${CDATE:6:2}
+  HH=${CDATE:8:2}
+  YYYYMMDD=${CDATE:0:8}
+  YYMMDD=${CDATE:2:6}
 #
 #-----------------------------------------------------------------------
 #
@@ -528,11 +527,11 @@ YYMMDD=${CDATE:2:6}
 #
 #-----------------------------------------------------------------------
 #
-init_concentrations="false"
+  init_concentrations="false"
 
-if [ "${RESTART_WORKFLOW}" = "FALSE" ] && [ "${CDATE}" = "${DATE_FIRST_CYCL}${CYCL_HRS[0]}" ]; then
-  init_concentrations="true"
-fi
+  if [ "${RESTART_WORKFLOW}" = "FALSE" ] && [ "${CDATE}" = "${DATE_FIRST_CYCL}${CYCL_HRS[0]}" ]; then
+    init_concentrations="true"
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -540,23 +539,21 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-if [ ! -z "${AQM_RC_IN_FP}" ]; then
-  print_info_msg "$VERBOSE" "
+  if [ ! -z "${AQM_RC_IN_FP}" ]; then
+    print_info_msg "$VERBOSE" "
 Setting parameters in file:
   AQM_RC_IN_FP = \"${AQM_RC_IN_FP}\""
 
-  set_file_param "${AQM_RC_IN_FP}" "init_concentrations" "${init_concentrations}"
-  set_file_param "${AQM_RC_IN_FP}" "aqm_config_dir" "${AQM_CONFIG_DIR%/}"
-  set_file_param "${AQM_RC_IN_FP}" "aqm_bio_dir" "${AQM_BIO_DIR%/}"
-  set_file_param "${AQM_RC_IN_FP}" "aqm_bio_file" "${AQM_BIO_FILE}"
-  set_file_param "${AQM_RC_IN_FP}" "aqm_fire_dir" "${AQM_FIRE_DIR%/}"
-  set_file_param "${AQM_RC_IN_FP}" "YYYYMMDD" "${YYYYMMDD}"
-  set_file_param "${AQM_RC_IN_FP}" "aqm_fire_file" "${AQM_FIRE_FILE}"
-  set_file_param "${AQM_RC_IN_FP}" "YYMMDD" "${YYMMDD}"
+    set_file_param "${AQM_RC_IN_FP}" "init_concentrations" "${init_concentrations}"
+    set_file_param "${AQM_RC_IN_FP}" "aqm_config_dir" "${AQM_CONFIG_DIR%/}"
+    set_file_param "${AQM_RC_IN_FP}" "aqm_bio_dir" "${AQM_BIO_DIR%/}"
+    set_file_param "${AQM_RC_IN_FP}" "aqm_bio_file" "${AQM_BIO_FILE}"
+    set_file_param "${AQM_RC_IN_FP}" "aqm_fire_dir" "${AQM_FIRE_DIR%/}"
+    set_file_param "${AQM_RC_IN_FP}" "YYYYMMDD" "${YYYYMMDD}"
+    set_file_param "${AQM_RC_IN_FP}" "aqm_fire_file" "${AQM_FIRE_FILE}"
+    set_file_param "${AQM_RC_IN_FP}" "YYMMDD" "${YYMMDD}"
+  fi
 fi
-#
-##### RRFS-CMAQ ########## end   #####
-#
 
 if [ "${DO_ENSEMBLE}" = TRUE ]; then
   set_FV3nml_stoch_params cdate="$cdate" || print_err_msg_exit "\
@@ -601,8 +598,6 @@ Call to function to create a diag table file for the current cycle's
 (cdate) run directory (run_dir) failed:
   run_dir = \"${run_dir}\""
 #
-##### RRFS-CMAQ ########## start #####
-#
 #-----------------------------------------------------------------------
 #
 # Call the function that creates the NEMS configuration file within each
@@ -611,7 +606,7 @@ Call to function to create a diag table file for the current cycle's
 #-----------------------------------------------------------------------
 #
 if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
-create_nems_configure_file \
+  create_nems_configure_file \
   run_dir="${run_dir}" \
   dt_atmos="${DT_ATMOS}" || print_err_msg_exit "\
 Call to function to create a NEMS configuration file for the current
@@ -619,8 +614,6 @@ cycle's (cdate) run directory (run_dir) failed:
   cdate = \"${cdate}\"
   run_dir = \"${run_dir}\""
 fi
-#
-##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #

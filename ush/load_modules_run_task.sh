@@ -132,18 +132,17 @@ jjob_fp="$2"
 #-----------------------------------------------------------------------
 #
 
+machine=$(echo_lowercase $MACHINE)
+
+if [[ "${FCST_MODEL}" = "fv3gfs_aqm" && ( "${task_name}" = "${RUN_FCST_TN}" || \
+   "${task_name}" = "${RUN_CHEM_ANAL_TN}" || "${task_name}" = "${RUN_GSI_ANAL_TN}" ) ]]; then
+
 module purge
 
-machine=$(echo_lowercase $MACHINE)
-#
-##### RRFS-CMAQ ########## start #####
-#if [ "${task_name}" != "${RUN_FCST_TN}" ]; then
-#
-if [ "${task_name}" != "${RUN_FCST_TN}" ] && [ "${task_name}" != "${RUN_CHEM_ANAL_TN}" ] &&
-   [ "${task_name}" != "${RUN_GSI_ANAL_TN}" ]; then
-#
-##### RRFS-CMAQ ########## end   #####
-#
+else
+
+module purge
+
 env_fn=${BUILD_ENV_FN:-"build_${machine}_${COMPILER}.env"}
 env_fp="${SR_WX_APP_TOP_DIR}/env/${env_fn}"
 source "${env_fp}" || print_err_msg_exit "\
@@ -151,10 +150,8 @@ Sourcing platform- and compiler-specific environment file (env_fp) for the
 workflow task specified by task_name failed:
   task_name = \"${task_name}\"
   env_fp = \"${env_fp}\""
-#
-##### RRFS-CMAQ ########## start #####
+
 fi
-##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -202,18 +199,12 @@ Call to \"module use\" command failed."
 # Load the .local module file if available for the given task
 #
 
-##### RRFS-CMAQ ########## start #####
-if [ "${task_name}" = "${RUN_FCST_TN}" ]; then
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ] && [ "${task_name}" = "${RUN_FCST_TN}" ]; then
   modulefile_local="${RUN_FCST_TN}.local.${FCST_MODEL}"
 else
-##### RRFS-CMAQ ########## end   #####
-#
   modulefile_local="${task_name}.local"
-#
-##### RRFS-CMAQ ########## start #####
 fi
-##### RRFS-CMAQ ########## end   #####
-#
+
 if [ -f ${modules_dir}/${modulefile_local} ]; then
   module load "${modulefile_local}" || print_err_msg_exit "\
   Loading .local module file (in directory specified by mod-
