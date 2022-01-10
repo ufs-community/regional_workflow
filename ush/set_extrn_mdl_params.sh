@@ -6,9 +6,16 @@
 #
 #-----------------------------------------------------------------------
 #
-function set_extrn_mdl_params() {
+function set_known_sys_dir() {
 
-  local known_sys_dir
+  # Usage:
+  #  set_known_sys_dir model
+  #
+  #  model is the name of the external model
+  #
+  local known_sys_dir model_name
+
+  model=$1
   #
   #-----------------------------------------------------------------------
   #
@@ -28,7 +35,7 @@ function set_extrn_mdl_params() {
 
   # Set some default known locations on supported platforms. Not all
   # platforms have known input locations
-  case "${EXTRN_MDL_NAME_ICS}" in
+  case "${model}" in
 
   "GSMGFS")
     case "$MACHINE" in
@@ -100,6 +107,11 @@ function set_extrn_mdl_params() {
     ;;
 
   esac
+
+  echo $known_sys_dir
+}
+
+function set_extrn_mdl_params() {
   #
   #-----------------------------------------------------------------------
   #
@@ -111,8 +123,10 @@ function set_extrn_mdl_params() {
     EXTRN_MDL_SYSBASEDIR_ICS="${EXTRN_MDL_SYSBASEDIR_ICS:-$COMINgfs}"
     EXTRN_MDL_SYSBASEDIR_LBCS="${EXTRN_MDL_SYSBASEDIR_LBCS:-$COMINgfs}"
   else
-    EXTRN_MDL_SYSBASEDIR_ICS="${EXTRN_MDL_SYSBASEDIR_ICS:-$known_sys_dir}"
-    EXTRN_MDL_SYSBASEDIR_LBCS="${EXTRN_MDL_SYSBASEDIR_LBCS:-$known_sys_dir}"
+    EXTRN_MDL_SYSBASEDIR_ICS="${EXTRN_MDL_SYSBASEDIR_ICS:-$(set_known_sys_dir \
+    ${EXTRN_MDL_NAME_ICS})}"
+    EXTRN_MDL_SYSBASEDIR_LBCS="${EXTRN_MDL_SYSBASEDIR_LBCS:-$(set_known_sys_dir \
+    ${EXTRN_MDL_NAME_LBCS})}"
   fi
 
   #
