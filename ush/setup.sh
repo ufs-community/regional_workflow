@@ -2045,7 +2045,6 @@ Reset value is:"
     print_info_msg "$msg"
 
   fi
-
 #
 #-----------------------------------------------------------------------
 #
@@ -2605,38 +2604,12 @@ ${default_var_defns}
 #
 #-----------------------------------------------------------------------
 #
-# Create lists of primary experiment variable definitions containing 
+# Create a list of primary experiment variable definitions containing 
 # updated values.  By "updated", we mean non-default values.  Values
 # may have been updated due to the presence of user-specified values in 
 # the experiment configuration file (EXPT_CONFIG_FN) or due to other 
 # considerations (e.g. resetting depending on the platform the App is 
 # running on).
-#
-# Note that we generate two lists: var_defns_notempl and var_defns_templ.  
-# var_defns_templ is for template variables, i.e. variables that contain
-# references to other variables in their definitions, e.g.
-#
-#   MY_VAR='\${ANOTHER_VAR}'
-#
-# while var_defns_notempl is for variables whose definitions contain only
-# a literal string.  These two types are treated separately.  Non-template
-# variables are written to the variable definitions file as they are
-# encountered, whereas template variables (or simply "templates") are
-# saved in an array and written at the end of the file.  This is to 
-# ensure that any non-template variables that the templates reference 
-# are defined before the templates (so that undefined variable errors
-# are not encountered).  If a template is defined as above, i.e. enclosed 
-# in SINGLE quotes and with dollar signs escaped, this should not matter 
-# because variable references will not be expanded when the variable 
-# definitions file is sourced; they will be expanded only when the "eval" 
-# built-in command is used to evaluate the contents of the template.
-# For this reason, use of single quotes is the recommended way of defining 
-# a template in the experiment configuration file.  However, in case 
-# a template is enclosed in double quotes, any varaible references will
-# be expanded/evaluated when the variable definitions file is sourced.
-# In this case, unexpected behavior or failure may be encountered if the
-# referenced variables are not already defined.  To cover this scenario,
-# we place the templates all at the end of the variable definitions file.
 #
 #-----------------------------------------------------------------------
 #
@@ -2659,13 +2632,10 @@ fi
 #
 # Loop through the lines in default_var_defns.  Reset the value of the
 # variable on each line to the updated value (e.g. to a user-specified 
-# value, as opposed to the default value).  Save the updated list of 
-# variables and values either in var_defns_notempl (if it is not a 
-# template variable, i.e. one that references other variables in its
-# definition) or in var_defns_templ (if it is a template variable).  
+# value, as opposed to the default value).  The updated list of variables 
+# and values will be saved in var_defns.
 #
-var_defns_notempl=""
-var_defns_templ=""
+var_defns=""
 while read crnt_line; do
 #
 # Try to obtain the name of the variable being set on the current line.
@@ -2718,7 +2688,8 @@ var_name = \"${var_name}\""
 #
       if [ "${num_elems}" -eq 1 ]; then
 
-        var_value=\""${!var_name}"\"
+        var_value="${!var_name}"
+        rhs="'${var_value}'"
 #
 # If the variable contains more than one element, then it is an array.
 # In this case, we build var_value in two steps as follows:
@@ -2739,7 +2710,7 @@ var_name = \"${var_name}\""
         for (( i=0; i<${num_elems}; i++ )); do
           printf -v "var_value" "${var_value}\"${array[$i]}\" ${escbksl_nl_or_null}"
         done
-        var_value="( ${var_value})"
+        rhs="( ${var_value})"
 
       fi
 #
@@ -2756,30 +2727,15 @@ The variable specified by \"var_name\" is not set in the current environment:
   var_name = \"${var_name}\"
 Setting its value in the variable definitions file to an empty string."
 
-      var_value="\"\""
+      rhs="''"
 
     fi
 #
 # Set the line containing the variable's definition.  Then add the line
-# to the appropriate list (var_defns_notempl or var_defns_templ) depending
-# on whether the variable is a template or not.
+# to the list of all variable definitions.
 #
-    var_defn="${var_name}=${var_value}"
-#
-# If the variable value contains a dollar sign, we assume it is a template
-# variable, i.e. one whose definition contains a reference to the value
-# of another variable.  In this case, the line for this variable must 
-# be placed at the end of the variable definitions file to ensure that
-# the variable that it refers to has already been defined (assuming the
-# referenced variable is one of the experiment variables).
-#
-    dollar_or_null=$( printf "%s" "${var_value}" | \
-                      $SED -n -r -e "s/[^\$]*(\$).*/\1/p" )
-    if [ -z "${dollar_or_null}" ]; then
-      printf -v "var_defns_notempl" "${var_defns_notempl}${var_defn}\n"
-    else
-      printf -v "var_defns_templ" "${var_defns_templ}${var_defn}\n"
-    fi
+    var_defn="${var_name}=$rhs"
+    printf -v "var_defns" "${var_defns}${var_defn}\n"
 #
 # If var_name is empty, then a variable name was not found on the current 
 # line in default_var_defns.  In this case, print out a warning and move 
@@ -2825,13 +2781,11 @@ var_defns_file_contents="\
 # This section contains (most of) the primary experiment variables, i.e. 
 # those variables that are defined in the default configuration file 
 # (${EXPT_DEFAULT_CONFIG_FN}) and that can be reset via the user-specified 
-# experiment configuration file (${EXPT_CONFIG_FN}).  Note that primary variables
-# that are template variables (i.e. contain in their definitions references
-# to other variables) are placed towards the end of this file.
+# experiment configuration file (${EXPT_CONFIG_FN}).
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
 #
-${var_defns_notempl}"
+${var_defns}"
 #
 # Append derived/secondary variable definitions (as well as comments) to 
 # the contents of the variable definitions file.
@@ -2863,9 +2817,9 @@ var_defns_file_contents=${var_defns_file_contents}"\
 #
 #-----------------------------------------------------------------------
 #
-WFLOW_LAUNCH_SCRIPT_FP=\"${WFLOW_LAUNCH_SCRIPT_FP}\"
-WFLOW_LAUNCH_LOG_FP=\"${WFLOW_LAUNCH_LOG_FP}\"
-CRONTAB_LINE=\"${CRONTAB_LINE}\"
+WFLOW_LAUNCH_SCRIPT_FP='${WFLOW_LAUNCH_SCRIPT_FP}'
+WFLOW_LAUNCH_LOG_FP='${WFLOW_LAUNCH_LOG_FP}'
+CRONTAB_LINE='${CRONTAB_LINE}'
 #
 #-----------------------------------------------------------------------
 #
@@ -2873,42 +2827,42 @@ CRONTAB_LINE=\"${CRONTAB_LINE}\"
 #
 #-----------------------------------------------------------------------
 #
-SR_WX_APP_TOP_DIR=\"${SR_WX_APP_TOP_DIR}\"
-HOMErrfs=\"$HOMErrfs\"
-USHDIR=\"$USHDIR\"
-SCRIPTSDIR=\"$SCRIPTSDIR\"
-JOBSDIR=\"$JOBSDIR\"
-SORCDIR=\"$SORCDIR\"
-SRC_DIR=\"$SRC_DIR\"
-PARMDIR=\"$PARMDIR\"
-MODULES_DIR=\"${MODULES_DIR}\"
-EXECDIR=\"$EXECDIR\"
-FIXam=\"$FIXam\"
-FIXclim=\"$FIXclim\"
-FIXLAM=\"$FIXLAM\"
-FIXgsm=\"$FIXgsm\"
-FIXaer=\"$FIXaer\"
-FIXlut=\"$FIXlut\"
-COMROOT=\"$COMROOT\"
-COMOUT_BASEDIR=\"${COMOUT_BASEDIR}\"
-TEMPLATE_DIR=\"${TEMPLATE_DIR}\"
-VX_CONFIG_DIR=\"${VX_CONFIG_DIR}\"
-METPLUS_CONF=\"${METPLUS_CONF}\"
-MET_CONFIG=\"${MET_CONFIG}\"
-UFS_WTHR_MDL_DIR=\"${UFS_WTHR_MDL_DIR}\"
-UFS_UTILS_DIR=\"${UFS_UTILS_DIR}\"
-SFC_CLIMO_INPUT_DIR=\"${SFC_CLIMO_INPUT_DIR}\"
-TOPO_DIR=\"${TOPO_DIR}\"
-UPP_DIR=\"${UPP_DIR}\"
+SR_WX_APP_TOP_DIR='${SR_WX_APP_TOP_DIR}'
+HOMErrfs='$HOMErrfs'
+USHDIR='$USHDIR'
+SCRIPTSDIR='$SCRIPTSDIR'
+JOBSDIR='$JOBSDIR'
+SORCDIR='$SORCDIR'
+SRC_DIR='${SRC_DIR}'
+PARMDIR='$PARMDIR'
+MODULES_DIR='${MODULES_DIR}'
+EXECDIR='$EXECDIR'
+FIXam='$FIXam'
+FIXclim='$FIXclim'
+FIXLAM='$FIXLAM'
+FIXgsm='$FIXgsm'
+FIXaer='$FIXaer'
+FIXlut='$FIXlut'
+COMROOT='$COMROOT'
+COMOUT_BASEDIR='${COMOUT_BASEDIR}'
+TEMPLATE_DIR='${TEMPLATE_DIR}'
+VX_CONFIG_DIR='${VX_CONFIG_DIR}'
+METPLUS_CONF='${METPLUS_CONF}'
+MET_CONFIG='${MET_CONFIG}'
+UFS_WTHR_MDL_DIR='${UFS_WTHR_MDL_DIR}'
+UFS_UTILS_DIR='${UFS_UTILS_DIR}'
+SFC_CLIMO_INPUT_DIR='${SFC_CLIMO_INPUT_DIR}'
+TOPO_DIR='${TOPO_DIR}'
+UPP_DIR='${UPP_DIR}'
 
-EXPTDIR=\"$EXPTDIR\"
-LOGDIR=\"$LOGDIR\"
-CYCLE_BASEDIR=\"${CYCLE_BASEDIR}\"
-GRID_DIR=\"${GRID_DIR}\"
-OROG_DIR=\"${OROG_DIR}\"
-SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\"
+EXPTDIR='$EXPTDIR'
+LOGDIR='$LOGDIR'
+CYCLE_BASEDIR='${CYCLE_BASEDIR}'
+GRID_DIR='${GRID_DIR}'
+OROG_DIR='${OROG_DIR}'
+SFC_CLIMO_DIR='${SFC_CLIMO_DIR}'
 
-NDIGITS_ENSMEM_NAMES=\"${NDIGITS_ENSMEM_NAMES}\"
+NDIGITS_ENSMEM_NAMES='${NDIGITS_ENSMEM_NAMES}'
 ENSMEM_NAMES=${ensmem_names_str}
 FV3_NML_ENSMEM_FPS=${fv3_nml_ensmem_fps_str}
 #
@@ -2918,43 +2872,43 @@ FV3_NML_ENSMEM_FPS=${fv3_nml_ensmem_fps_str}
 #
 #-----------------------------------------------------------------------
 #
-GLOBAL_VAR_DEFNS_FP=\"${GLOBAL_VAR_DEFNS_FP}\"
+GLOBAL_VAR_DEFNS_FP='${GLOBAL_VAR_DEFNS_FP}'
 
-DATA_TABLE_TMPL_FN=\"${DATA_TABLE_TMPL_FN}\"
-DIAG_TABLE_TMPL_FN=\"${DIAG_TABLE_TMPL_FN}\"
-FIELD_TABLE_TMPL_FN=\"${FIELD_TABLE_TMPL_FN}\"
-MODEL_CONFIG_TMPL_FN=\"${MODEL_CONFIG_TMPL_FN}\"
-NEMS_CONFIG_TMPL_FN=\"${NEMS_CONFIG_TMPL_FN}\"
+DATA_TABLE_TMPL_FN='${DATA_TABLE_TMPL_FN}'
+DIAG_TABLE_TMPL_FN='${DIAG_TABLE_TMPL_FN}'
+FIELD_TABLE_TMPL_FN='${FIELD_TABLE_TMPL_FN}'
+MODEL_CONFIG_TMPL_FN='${MODEL_CONFIG_TMPL_FN}'
+NEMS_CONFIG_TMPL_FN='${NEMS_CONFIG_TMPL_FN}'
 
-DATA_TABLE_TMPL_FP=\"${DATA_TABLE_TMPL_FP}\"
-DIAG_TABLE_TMPL_FP=\"${DIAG_TABLE_TMPL_FP}\"
-FIELD_TABLE_TMPL_FP=\"${FIELD_TABLE_TMPL_FP}\"
-FV3_NML_BASE_SUITE_FP=\"${FV3_NML_BASE_SUITE_FP}\"
-FV3_NML_YAML_CONFIG_FP=\"${FV3_NML_YAML_CONFIG_FP}\"
-FV3_NML_BASE_ENS_FP=\"${FV3_NML_BASE_ENS_FP}\"
-MODEL_CONFIG_TMPL_FP=\"${MODEL_CONFIG_TMPL_FP}\"
-NEMS_CONFIG_TMPL_FP=\"${NEMS_CONFIG_TMPL_FP}\"
+DATA_TABLE_TMPL_FP='${DATA_TABLE_TMPL_FP}'
+DIAG_TABLE_TMPL_FP='${DIAG_TABLE_TMPL_FP}'
+FIELD_TABLE_TMPL_FP='${FIELD_TABLE_TMPL_FP}'
+FV3_NML_BASE_SUITE_FP='${FV3_NML_BASE_SUITE_FP}'
+FV3_NML_YAML_CONFIG_FP='${FV3_NML_YAML_CONFIG_FP}'
+FV3_NML_BASE_ENS_FP='${FV3_NML_BASE_ENS_FP}'
+MODEL_CONFIG_TMPL_FP='${MODEL_CONFIG_TMPL_FP}'
+NEMS_CONFIG_TMPL_FP='${NEMS_CONFIG_TMPL_FP}'
 
-CCPP_PHYS_SUITE_FN=\"${CCPP_PHYS_SUITE_FN}\"
-CCPP_PHYS_SUITE_IN_CCPP_FP=\"${CCPP_PHYS_SUITE_IN_CCPP_FP}\"
-CCPP_PHYS_SUITE_FP=\"${CCPP_PHYS_SUITE_FP}\"
+CCPP_PHYS_SUITE_FN='${CCPP_PHYS_SUITE_FN}'
+CCPP_PHYS_SUITE_IN_CCPP_FP='${CCPP_PHYS_SUITE_IN_CCPP_FP}'
+CCPP_PHYS_SUITE_FP='${CCPP_PHYS_SUITE_FP}'
 
-FIELD_DICT_FN=\"${FIELD_DICT_FN}\"
-FIELD_DICT_IN_UWM_FP=\"${FIELD_DICT_IN_UWM_FP}\"
-FIELD_DICT_FP=\"${FIELD_DICT_FP}\"
+FIELD_DICT_FN='${FIELD_DICT_FN}'
+FIELD_DICT_IN_UWM_FP='${FIELD_DICT_IN_UWM_FP}'
+FIELD_DICT_FP='${FIELD_DICT_FP}'
 
-DATA_TABLE_FP=\"${DATA_TABLE_FP}\"
-FIELD_TABLE_FP=\"${FIELD_TABLE_FP}\"
-FV3_NML_FN=\"${FV3_NML_FN}\"   # This may not be necessary...
-FV3_NML_FP=\"${FV3_NML_FP}\"
-NEMS_CONFIG_FP=\"${NEMS_CONFIG_FP}\"
+DATA_TABLE_FP='${DATA_TABLE_FP}'
+FIELD_TABLE_FP='${FIELD_TABLE_FP}'
+FV3_NML_FN='${FV3_NML_FN}'
+FV3_NML_FP='${FV3_NML_FP}'
+NEMS_CONFIG_FP='${NEMS_CONFIG_FP}'
 
-FV3_EXEC_FP=\"${FV3_EXEC_FP}\"
+FV3_EXEC_FP='${FV3_EXEC_FP}'
 
-LOAD_MODULES_RUN_TASK_FP=\"${LOAD_MODULES_RUN_TASK_FP}\"
+LOAD_MODULES_RUN_TASK_FP='${LOAD_MODULES_RUN_TASK_FP}'
 
-THOMPSON_MP_CLIMO_FN=\"${THOMPSON_MP_CLIMO_FN}\"
-THOMPSON_MP_CLIMO_FP=\"${THOMPSON_MP_CLIMO_FP}\"
+THOMPSON_MP_CLIMO_FN='${THOMPSON_MP_CLIMO_FN}'
+THOMPSON_MP_CLIMO_FP='${THOMPSON_MP_CLIMO_FP}'
 #
 #-----------------------------------------------------------------------
 #
@@ -2962,7 +2916,7 @@ THOMPSON_MP_CLIMO_FP=\"${THOMPSON_MP_CLIMO_FP}\"
 #
 #-----------------------------------------------------------------------
 #
-RELATIVE_LINK_FLAG=\"${RELATIVE_LINK_FLAG}\"
+RELATIVE_LINK_FLAG='${RELATIVE_LINK_FLAG}'
 #
 #-----------------------------------------------------------------------
 #
@@ -2971,8 +2925,8 @@ RELATIVE_LINK_FLAG=\"${RELATIVE_LINK_FLAG}\"
 #
 #-----------------------------------------------------------------------
 #
-SDF_USES_RUC_LSM=\"${SDF_USES_RUC_LSM}\"
-SDF_USES_THOMPSON_MP=\"${SDF_USES_THOMPSON_MP}\"
+SDF_USES_RUC_LSM='${SDF_USES_RUC_LSM}'
+SDF_USES_THOMPSON_MP='${SDF_USES_THOMPSON_MP}'
 #
 #-----------------------------------------------------------------------
 #
@@ -2981,26 +2935,26 @@ SDF_USES_THOMPSON_MP=\"${SDF_USES_THOMPSON_MP}\"
 #
 #-----------------------------------------------------------------------
 #
-GTYPE=\"$GTYPE\"
-TILE_RGNL=\"${TILE_RGNL}\"
-NH0=\"${NH0}\"
-NH3=\"${NH3}\"
-NH4=\"${NH4}\"
+GTYPE='$GTYPE'
+TILE_RGNL='${TILE_RGNL}'
+NH0='${NH0}'
+NH3='${NH3}'
+NH4='${NH4}'
 
-LON_CTR=\"${LON_CTR}\"
-LAT_CTR=\"${LAT_CTR}\"
-NX=\"${NX}\"
-NY=\"${NY}\"
-NHW=\"${NHW}\"
-STRETCH_FAC=\"${STRETCH_FAC}\"
+LON_CTR='${LON_CTR}'
+LAT_CTR='${LAT_CTR}'
+NX='${NX}'
+NY='${NY}'
+NHW='${NHW}'
+STRETCH_FAC='${STRETCH_FAC}'
 
-RES_IN_FIXLAM_FILENAMES=\"${RES_IN_FIXLAM_FILENAMES}\"
+RES_IN_FIXLAM_FILENAMES='${RES_IN_FIXLAM_FILENAMES}'
 #
 # If running the make_grid task, CRES will be set to a null string during
 # the grid generation step.  It will later be set to an actual value after
 # the make_grid task is complete.
 #
-CRES=\"$CRES\"
+CRES='$CRES'
 "
 #
 #-----------------------------------------------------------------------
@@ -3027,10 +2981,10 @@ if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
 #
 #-----------------------------------------------------------------------
 #
-ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG=\"${ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}\"
-IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG=\"${IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}\"
-JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG=\"${JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}\"
-JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG=\"${JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}\"
+ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG='${ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}'
+IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG='${IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}'
+JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG='${JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}'
+JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG='${JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}'
 "
 
 elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
@@ -3046,11 +3000,11 @@ elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
 #
 #-----------------------------------------------------------------------
 #
-DEL_ANGLE_X_SG=\"${DEL_ANGLE_X_SG}\"
-DEL_ANGLE_Y_SG=\"${DEL_ANGLE_Y_SG}\"
-NEG_NX_OF_DOM_WITH_WIDE_HALO=\"${NEG_NX_OF_DOM_WITH_WIDE_HALO}\"
-NEG_NY_OF_DOM_WITH_WIDE_HALO=\"${NEG_NY_OF_DOM_WITH_WIDE_HALO}\"
-PAZI=\"${PAZI}\"
+DEL_ANGLE_X_SG='${DEL_ANGLE_X_SG}'
+DEL_ANGLE_Y_SG='${DEL_ANGLE_Y_SG}'
+NEG_NX_OF_DOM_WITH_WIDE_HALO='${NEG_NX_OF_DOM_WITH_WIDE_HALO}'
+NEG_NY_OF_DOM_WITH_WIDE_HALO='${NEG_NY_OF_DOM_WITH_WIDE_HALO}'
+PAZI='${PAZI}'
 "
 
 fi
@@ -3078,7 +3032,7 @@ var_defns_file_contents=${var_defns_file_contents}"\
 #
 #-----------------------------------------------------------------------
 #
-CPL=\"${CPL}\"
+CPL='${CPL}'
 #
 #-----------------------------------------------------------------------
 #
@@ -3087,7 +3041,7 @@ CPL=\"${CPL}\"
 #
 #-----------------------------------------------------------------------
 #
-OZONE_PARAM=\"${OZONE_PARAM}\"
+OZONE_PARAM='${OZONE_PARAM}'
 #
 #-----------------------------------------------------------------------
 #
@@ -3099,7 +3053,7 @@ OZONE_PARAM=\"${OZONE_PARAM}\"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYSBASEDIR_ICS=\"${EXTRN_MDL_SYSBASEDIR_ICS}\"
+EXTRN_MDL_SYSBASEDIR_ICS='${EXTRN_MDL_SYSBASEDIR_ICS}'
 #
 #-----------------------------------------------------------------------
 #
@@ -3111,7 +3065,7 @@ EXTRN_MDL_SYSBASEDIR_ICS=\"${EXTRN_MDL_SYSBASEDIR_ICS}\"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYSBASEDIR_LBCS=\"${EXTRN_MDL_SYSBASEDIR_LBCS}\"
+EXTRN_MDL_SYSBASEDIR_LBCS='${EXTRN_MDL_SYSBASEDIR_LBCS}'
 #
 #-----------------------------------------------------------------------
 #
@@ -3120,7 +3074,7 @@ EXTRN_MDL_SYSBASEDIR_LBCS=\"${EXTRN_MDL_SYSBASEDIR_LBCS}\"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_LBCS_OFFSET_HRS=\"${EXTRN_MDL_LBCS_OFFSET_HRS}\"
+EXTRN_MDL_LBCS_OFFSET_HRS='${EXTRN_MDL_LBCS_OFFSET_HRS}'
 #
 #-----------------------------------------------------------------------
 #
@@ -3138,7 +3092,7 @@ LBC_SPEC_FCST_HRS=${lbc_spec_fcst_hrs_str}
 #
 #-----------------------------------------------------------------------
 #
-NUM_CYCLES=\"${NUM_CYCLES}\"
+NUM_CYCLES='${NUM_CYCLES}'
 ALL_CDATES=${all_cdates_str}
 #
 #-----------------------------------------------------------------------
@@ -3153,9 +3107,9 @@ ALL_CDATES=${all_cdates_str}
 #
 #-----------------------------------------------------------------------
 #
-USE_FVCOM=\"${USE_FVCOM}\"
-FVCOM_DIR=\"${FVCOM_DIR}\"
-FVCOM_FILE=\"${FVCOM_FILE}\"
+USE_FVCOM='${USE_FVCOM}'
+FVCOM_DIR='${FVCOM_DIR}'
+FVCOM_FILE='${FVCOM_FILE}'
 #
 #-----------------------------------------------------------------------
 #
@@ -3163,7 +3117,7 @@ FVCOM_FILE=\"${FVCOM_FILE}\"
 #
 #-----------------------------------------------------------------------
 #
-PE_MEMBER01=\"${PE_MEMBER01}\"
+PE_MEMBER01='${PE_MEMBER01}'
 #
 #-----------------------------------------------------------------------
 #
@@ -3173,20 +3127,8 @@ PE_MEMBER01=\"${PE_MEMBER01}\"
 #
 #-----------------------------------------------------------------------
 #
-N_VAR_SPP=\"${N_VAR_SPP}\"
-#
-#-----------------------------------------------------------------------
-#-----------------------------------------------------------------------
-# Section 3:
-# This section defines template variables, i.e. variables that contain 
-# references to other variables in their definitions, e.g.
-#
-#   MY_VAR='\${ANOTHER_VAR}'
-#
-#-----------------------------------------------------------------------
-#-----------------------------------------------------------------------
-#
-${var_defns_templ}"
+N_VAR_SPP='${N_VAR_SPP}'
+"
 #
 # Done with constructing the contents of the variable definitions file,
 # so now write the contents to file.

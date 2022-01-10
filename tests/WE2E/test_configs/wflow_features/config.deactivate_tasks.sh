@@ -51,12 +51,10 @@ RUN_TASK_RUN_POST="FALSE"
 # The following shows examples of how to define template variables.  Here,
 # we define RUN_CMD_UTILS, RUN_CMD_FCST, and RUN_CMD_POST as template 
 # variables.  Note that during this test, these templates aren't actually 
-# expanded/used (using bash's "eval" built-in command) anywhere in the 
-# scripts.  They are included here simply included for demonstration 
-# purposes.  If all goes well, the experiment generation system should 
-# place these templates at the end of the experiment's variable definitions 
-# file.
+# expanded/used (something that would be done using bash's "eval" built-in 
+# command) anywhere in the scripts.  They are included here only to verify
+# that the test completes with some variables defined as templates.
 #
-RUN_CMD_UTILS='cd \$yyyymmdd'
-RUN_CMD_FCST='mpirun -np \${PE_MEMBER01}'
-RUN_CMD_POST='\$( echo hello \$yyyymmdd )'
+RUN_CMD_UTILS='cd $yyyymmdd'
+RUN_CMD_FCST='mpirun -np ${PE_MEMBER01}'
+RUN_CMD_POST='echo hello $yyyymmdd'
