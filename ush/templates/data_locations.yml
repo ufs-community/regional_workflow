@@ -1,7 +1,58 @@
+#
+# This file tracks known data store locations for data used as input to
+# the SRW App configuations.
+#
+# The contents should be organized as follows:
+#
+# Top level: A key corresponding to an external model file or
+# observation dataset accepted by the SRW App.
+#
+# 2nd level: A key corressponding to a named datastore for a given data
+# set. This could be nomads, aws, hpss, etc.
+#
+# 3rd level required:
+#
+# protocol:
+#   indication of how a set of files will be retrieved. Options:
+#   download or htar. The requirements for each protocol are described
+#   below
+#
+# file_names:
+#   Each data store will require an entry that describes the names of
+#   files to be extracted from the data store. These entries are
+#   expected as lists to indicate when multiple files should be
+#   retrieved.  anl and fcst subsections indicate the naming convention
+#   for that type of file. Both are required for external models ICS and
+#   LBCS. Each file name may (and likely should) include templates.
+#
+#   If the SRW App accepts different file formats,
+#   as it does for FV3GFS, an intermediary level indicating the value
+#   associate with a FV3GFS_FILE_FMT_* variable.
+#
+# 3rd level optional:
+#
+#  for download protocol:
+#     url: required. the URL to the location of the data file. May include
+#          templates.
+#
+#  for htar protocol:
+#     archive_path: a list of paths to the potential location of the
+#                   archive file on HPSS. since there may be multiple
+#                   options for a given external model file, the list
+#                   will be searched in order listed below.
+#     archive_file_names: the name of the archive file. this could
+#                   differ for each archive_path option, so one entry is
+#                   needed (even if it's identical) for each entry of
+#                   archive_path provided
+#     archive_internal_dir: (optional) a path to data files stored
+#                   inside a given archive file
+#
+#
+#
 FV3GFS:
   nomads:
     protocol: download
-    url: https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.{yyyymmdd}/{hh}/
+    url: https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/gfs.{yyyymmdd}/{hh}/atmos
     file_names: &gfs_file_names
       grib2:
         anl:
@@ -16,49 +67,39 @@ FV3GFS:
           - gfs.t{hh}z.atmf{fcst_hr:03d}.nemsio
           - gfs.t{hh}z.sfcf{fcst_hr:03d}.nemsio
   hpss:
-    protocal: htar
-    flags: '-xvf'
-    path:
-      - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyy}{mm}/{yyyymmdd}
-      - /NCEPDEV/emc-global/5year/emc.glopara/WCOSS_C/Q2FY19/prfv3rt3/{yyyymmddhh}
+    protocol: htar
+    archive_path:
+      - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
+      - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
     archive_internal_dir:
       - ./gfs.{yyyymmdd}/{hh}
       - ./gfs.{yyyymmdd}/{hh}/atmos
-    archive_names:
+    archive_file_names:
       grib2:
         anl:
-          - com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_pgrb2.tar
           - gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_pgrb2.tar
+          - com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_pgrb2.tar
         fcst:
-          - com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_pgrb2.tar
           - gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_pgrb2.tar
+          - com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_pgrb2.tar
       nemsio:
         anl:
-          - com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nemsioa.tar
           - gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nemsioa.tar
+          - com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nemsioa.tar
         fcst:
-          - [com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nemsioa.tar, com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nemsiob.tar]
-          - [gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nemsioa.tar, gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nemsiob.tar]
+          - ['gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nemsioa.tar', 'gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nemsiob.tar']
+          - ['com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nemsioa.tar', 'com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nemsiob.tar']
       netcdf:
         anl:
-          - com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nca.tar
           - gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nca.tar
+          - com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nca.tar
         fcst:
-          - [com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nca.tar, com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_ncb.tar]
-          - [gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nca.tar, gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_ncb.tar]
+          - ['gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nca.tar', 'gpfs_dell1_nco_ops_com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_ncb.tar']
+          - ['com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_nca.tar', 'com_gfs_prod_gfs.{yyyymmdd}_{hh}.gfs_ncb.tar']
     file_names:
       <<: *gfs_file_names
   aws:
     protocol: download
-    flags: '-c'
     url: https://noaa-gfs-bdp-pds.s3.amazonaws.com/gfs.{yyyymmdd}/{hh}/atmos
     file_names:
       <<: *gfs_file_names
-
-
-
-
-
-
-
-
