@@ -614,6 +614,8 @@ NDAS_OBS_DIR="/path/to/observation-directory/ndas/proc"
 # should start. For example, the forecast should use lateral boundary
 # conditions from the GFS started 6 hours earlier, then
 # EXTRN_MDL_LBCS_OFFSET_HRS=6.
+# Note: the default value is model-dependent and set in
+# set_extrn_mdl_params.sh
 #
 # FV3GFS_FILE_FMT_ICS:
 # If using the FV3GFS model as the source of the ICs (i.e. if EXTRN_MDL_NAME_ICS
@@ -631,7 +633,7 @@ EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
 LBC_SPEC_INTVL_HRS="6"
 EXTRN_MDL_ICS_OFFSET_HRS="0"
-EXTRN_MDL_LBCS_OFFSET_HRS="0"
+EXTRN_MDL_LBCS_OFFSET_HRS=""
 FV3GFS_FILE_FMT_ICS="nemsio"
 FV3GFS_FILE_FMT_LBCS="nemsio"
 #

@@ -124,10 +124,12 @@ function set_extrn_mdl_params() {
   #
   #-----------------------------------------------------------------------
   #
-  EXTRN_MDL_LBCS_OFFSET_HRS=${EXTRN_MDL_LBCS_OFFSET_HRS:-"0"}
   case "${EXTRN_MDL_NAME_LBCS}" in
     "RAP")
       EXTRN_MDL_LBCS_OFFSET_HRS=${EXTRN_MDL_LBCS_OFFSET_HRS:-"3"}
+      ;;
+    "*")
+      EXTRN_MDL_LBCS_OFFSET_HRS=${EXTRN_MDL_LBCS_OFFSET_HRS:-"0"}
       ;;
   esac
 }
