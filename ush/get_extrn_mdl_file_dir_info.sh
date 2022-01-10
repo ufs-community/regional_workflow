@@ -308,7 +308,7 @@ function get_extrn_mdl_file_dir_info() {
 
       "NAM")
         fns=( "" )
-        fns_in_arcv=( "nam.t${hh}z.bgrdsfi${hh}.tm00" )
+        fns_in_arcv=( "nam.t${hh}z.bgrdsf${fcst_hh}.tm00" )
         ;;
 
       *)
