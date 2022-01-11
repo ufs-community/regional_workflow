@@ -87,9 +87,13 @@ where the arguments are defined as follows:
   boundary condition (LBC) output files are obtained from the external
   model (and will be used to update the LBCs of the FV3-LAM).
 
-  varname_extrn_mdl_fns:
-  Name of the global variable that will contain the names of the exter-
-  nal model output files.
+  varname_extrn_mdl_fns_on_disk:
+  Name of the global variable that will contain the expected names of 
+  the external model output files on disk.
+
+  varname_extrn_mdl_fns_in_arcv:
+  Name of the global variable that will contain the expected names of 
+  the external model output files on NOAA HPSS.
 
   varname_extrn_mdl_sysdir:
   Name of the global variable that will contain the system directory in
