@@ -601,7 +601,7 @@ NDAS_OBS_DIR="/path/to/observation-directory/ndas/proc"
 #
 # EXTRN_MDL_ICS_OFFSET_HRS:
 # Users may wish to start a forecast from a forecast of a previous cycle
-# of an external model. This variale sets the number of hours earlier
+# of an external model. This variable sets the number of hours earlier
 # the external model started than when the FV3 forecast configured here
 # should start. For example, the forecast should start from a 6 hour
 # forecast of the GFS, then EXTRN_MDL_ICS_OFFSET_HRS=6.
@@ -609,7 +609,7 @@ NDAS_OBS_DIR="/path/to/observation-directory/ndas/proc"
 # EXTRN_MDL_LBCS_OFFSET_HRS:
 # Users may wish to use lateral boundary conditions from a forecast that
 # was started earlier than the initial time for the FV3 forecast
-# configured here. This variale sets the number of hours earlier
+# configured here. This variable sets the number of hours earlier
 # the external model started than when the FV3 forecast configured here
 # should start. For example, the forecast should use lateral boundary
 # conditions from the GFS started 6 hours earlier, then

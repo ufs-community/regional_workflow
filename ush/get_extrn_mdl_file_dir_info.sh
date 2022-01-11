@@ -414,7 +414,7 @@ bination of external model (extrn_mdl_name) and analysis or forecast
   # Make sure all filenames variables are set.
   if [ -z $fns_in_arcv ] ; then
     print_err_msg_exit "\
-      The script has not set $fns_in_arcv properly"
+      The script has not set \$fns_in_arcv properly"
   fi
 
   if [ -z ${fns_on_disk:-} ] ; then
