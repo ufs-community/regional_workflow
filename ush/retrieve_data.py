@@ -2,18 +2,25 @@
 Script is meant to use a YAML file to retrive data from a variety of
 sources, including known locations on disk, URLs, and HPSS (from
 supported NOAA platforms only).
+
+To see usage:
+
+    python retrieve_data.py
+
+Also see the parse_args function below.
 '''
 
 import argparse
 import datetime as dt
+import logging
 import os
 import shutil
 import subprocess
 
-import requests
 import yaml
 
-def download_file(target_path, url):
+
+def download_file(url):
 
     '''
     Download a file from a url source, and place it in a target location
@@ -28,14 +35,22 @@ def download_file(target_path, url):
       boolean value reflecting state of download.
     '''
 
-    print(f'Trying to download file: {url} to {target_path}')
-
-    with requests.get(url, stream=True) as req:
-        if req.status_code != 200:
-            print(f'INFO: {url} cannot be reached!')
-            return False
-        with open(target_path, 'wb') as target:
-            shutil.copyfileobj(req.raw, target)
+    # wget flags:
+    # -c continue previous attempt
+    # -T timeout seconds
+    # -t number of tries
+    cmd = f'wget -c -T 30 -t 3 {url}'
+    logging.info(f'Running command: \n {cmd}')
+    try:
+        output = subprocess.run(cmd,
+                                check=True,
+                                shell=True,
+                                )
+    except subprocess.CalledProcessError as err:
+        logging.info(err)
+        return False
+    except:
+        raise
 
     return True
 
@@ -53,22 +68,22 @@ def download_requested_files(cla, store_specs):
     if cla.file_type is not None:
         file_names = file_names[cla.file_type]
     file_names = file_names[cla.anl_or_fcst]
+    target_path = fill_template(cla.output_path,
+                                cla.cycle_date)
 
-    unavialable = {}
+    logging.info(f'Downloaded files will be placed here: \n {target_path}')
+    orig_path = os.getcwd()
+    os.chdir(target_path)
+    unavailable = {}
     for base_url in base_urls:
         for fcst_hr in cla.fcst_hrs:
             for file_name in file_names:
                 url = os.path.join(base_url, file_name)
                 url = fill_template(url, cla.cycle_date, fcst_hr)
-                target_path = os.path.join(cla.output_path, file_name)
-                target_path = fill_template(target_path,
-                                            cla.cycle_date, fcst_hr)
-                downloaded = download_file(
-                    target_path=target_path,
-                    url=url,
-                    )
+                downloaded = download_file(url)
                 if not downloaded:
                     unavailable[fcst_hr] = target_path
+    os.chdir(orig_path)
     return unavailable
 
 def fhr_list(args):
@@ -130,7 +145,11 @@ def htar_requested_files(cla, store_specs):
     provided data store specs file to download a set of files requested
     by the user. It calls retrieve_tar for each individual file that
     should be fetched and then untar_file to stage individual files on
-    disk. '''
+    disk.
+
+    This function exepcts that the output directory exists and is
+    writable.
+    '''
 
     archive_paths = store_specs['archive_path']
     archive_paths = archive_paths if isinstance(archive_paths, list) \
@@ -145,8 +164,13 @@ def htar_requested_files(cla, store_specs):
     unavailable = {}
     existing_archive = None
 
+    logging.debug(f'Will try to look for: '\
+            f' {list(zip(archive_paths, archive_file_names))}')
+
     # Narrow down which HPSS files are available for this date
-    for archive_path, archive_file_names in zip(archive_paths, archive_file_names):
+    for list_item, (archive_path, archive_file_names) in \
+        enumerate(zip(archive_paths, archive_file_names)):
+
         if not isinstance(archive_file_names, list):
             archive_file_names = [archive_file_names]
 
@@ -163,15 +187,17 @@ def htar_requested_files(cla, store_specs):
                                     shell=True,
                                     )
         except subprocess.CalledProcessError as excep:
-            print(f'{file_path} is not available!')
-        else:
-            if output.returncode == 0:
-                existing_archive = file_path
-                print(f'Found HPSS file: {file_path}')
-                break
+            logging.warning(f'{file_path} is not available!')
+            continue
+        logging.debug(f'{output}')
+        logging.debug(f'OUTPUT for hsi is: \n {output.stderr.decode("utf-8") }')
+        if output.returncode == 0:
+            existing_archive = file_path
+            logging.info(f'Found HPSS file: {file_path}')
+            break
 
-    if not existing_archive:
-        print(f'No archive files were found!')
+    if existing_archive is None:
+        logging.warning(f'No archive files were found!')
         return unavailable
 
     # Use the found archive file path to get the necessary files
@@ -181,29 +207,50 @@ def htar_requested_files(cla, store_specs):
     file_names = file_names[cla.anl_or_fcst]
 
     archive_internal_dirs = store_specs.get('archive_internal_dir', [''])
+    logging.debug(f'Grabbing item {list_item} of {archive_internal_dirs}')
+    archive_internal_dir = archive_internal_dirs[list_item]
 
     output_path = fill_template(cla.output_path, cla.cycle_date)
-    print(f'Will place files in {os.path.abspath(output_path)}')
+    logging.info(f'Will place files in {os.path.abspath(output_path)}')
     orig_path = os.getcwd()
     os.chdir(output_path)
+    logging.debug(f'CWD: {os.getcwd()}')
 
     files_exist = False
     source_paths = []
-    for archive_internal_dir in archive_internal_dirs:
-        for fcst_hr in cla.fcst_hrs:
-            for file_name in file_names:
-                source_path = os.path.join(archive_internal_dir, file_name)
-                source_paths.append(fill_template(source_path,
-                    cla.cycle_date, fcst_hr))
-        cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
-        print(f'Running command \n {cmd}')
-        output = subprocess.run(cmd,
-                                capture_output=True,
-                                check=True,
-                                shell=True,
-                                )
-        if output.returncode == 0:
-            break
+    for fcst_hr in cla.fcst_hrs:
+        for file_name in file_names:
+            source_path = os.path.join(archive_internal_dir, file_name)
+            source_paths.append(fill_template(source_path,
+                cla.cycle_date, fcst_hr))
+    cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
+    logging.info(f'Running command \n {cmd}')
+    output = subprocess.run(cmd,
+                            check=True,
+                            shell=True,
+                            )
+
+    # Check to make sure the files exist on disk
+    for file_path in source_paths:
+        local_file_path = os.path.join(output_path,file_path)
+        if not os.path.exists(local_file_path):
+            logging.info(f'File does not exist: {local_file_path}')
+        else:
+            file_name = os.path.basename(file_path)
+            expected_output_loc = os.path.join(output_path, file_name)
+            if not local_file_path == expected_output_loc:
+                logging.info(f'Moving {local_file_path} to ' \
+                             f'{expected_output_loc}')
+                shutil.move(local_file_path, expected_output_loc)
+
+    # Clean up directories from inside archive, if they exist
+    left_over_dir = fill_template(archive_internal_dir,
+                                cla.cycle_date)
+
+    if os.path.exists(left_over_dir):
+        logging.info(f'Removing {left_over_dir}')
+        os.removedirs(left_over_dir)
+
     os.chdir(orig_path)
 
 def load_config(arg):
@@ -231,10 +278,25 @@ def path_exists(arg):
         raise argparse.ArgumentTypeError(msg)
 
     if not os.access(arg, os.X_OK|os.W_OK):
-        print(f'ERROR: {arg} is not writeable!')
+        logging.error(f'{arg} is not writeable!')
         raise argparse.ArgumentTypeError(msg)
 
     return arg
+
+def setup_logging(debug=False):
+
+    ''' Calls initialization functions for logging package, and sets the
+    user-defined level for logging in the script.'''
+
+    level = logging.WARNING
+    if debug:
+        level = logging.DEBUG
+
+    logging.basicConfig(format='%(levelname)s: %(message)s \n ', level=level)
+    if debug:
+        logging.info('Logging level set to DEBUG')
+
+
 
 def to_datetime(arg):
     ''' Return a datetime object give a string like YYYYMMDDHH.
@@ -248,6 +310,8 @@ def main(cla):
     paths in priority order.
     '''
 
+    setup_logging(cla.debug)
+
     known_data_info =  cla.config.get(cla.external_model)
     if known_data_info is None:
         msg = ('No data stores have been defined for',
@@ -256,7 +320,7 @@ def main(cla):
 
     unavailable = {}
     for data_store in cla.data_stores:
-        print(f'Checking {data_store} for {cla.external_model}')
+        logging.info(f'Checking {data_store} for {cla.external_model}')
         store_specs = known_data_info.get(data_store)
 
         if store_specs is None:
@@ -328,6 +392,7 @@ def parse_args():
         '--output_path',
         help='Path to a location on disk. Path is expected to exist.',
         required=True,
+        type=os.path.abspath,
         )
 
     # Optional
@@ -335,6 +400,11 @@ def parse_args():
         '--config',
         help='Full path to YAML with known data information',
         type=load_config,
+        )
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='Print debug messages',
         )
     parser.add_argument(
         '--file_type',
