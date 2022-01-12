@@ -127,12 +127,29 @@ def fill_template(template_str, cycle_date, fcst_hr=0):
     Rerturn:
       filled template string
     '''
+
+    hh = cycle_date.strftime('%H')
+    # One strategy for binning data files at NCEP is to put them into 6
+    # cycle bins. The archive file names include the low and high end of the
+    # range. Set the range as would be indicated in the archive file
+    # here. Integer division is intentional here.
+    low_end = int(hh) // 6 * 6
+    bin6 = f'{low_end:02d}-{low_end+5:02d}'
+
+    # Another strategy is to bundle odd cycle hours with their next
+    # lowest even cycle hour. Files are named only with the even hour.
+    # Integer division is intentional here.
+    hh_even = f'{int(hh) // 2 * 2:02d}'
+
     return template_str.format(
+        bin6=bin6,
         fcst_hr=fcst_hr,
         dd=cycle_date.strftime('%d'),
-        hh=cycle_date.strftime('%H'),
-        mm=cycle_date.strftime('%m'),
+        hh=hh,
+        hh_even=hh_even,
         jjj=cycle_date.strftime('%j'),
+        mm=cycle_date.strftime('%m'),
+        yy=cycle_date.strftime('%y'),
         yyyy=cycle_date.strftime('%Y'),
         yyyymm=cycle_date.strftime('%Y%m'),
         yyyymmdd=cycle_date.strftime('%Y%m%d'),
@@ -159,7 +176,9 @@ def htar_requested_files(cla, store_specs):
     archive_file_names = store_specs.get('archive_file_names', {})
     if cla.file_type is not None:
         archive_file_names = archive_file_names[cla.file_type]
-    archive_file_names = archive_file_names[cla.anl_or_fcst]
+
+    if isinstance(archive_file_names, dict):
+        archive_file_names = archive_file_names[cla.anl_or_fcst]
 
     unavailable = {}
     existing_archive = None
@@ -206,7 +225,7 @@ def htar_requested_files(cla, store_specs):
         file_names = file_names[cla.file_type]
     file_names = file_names[cla.anl_or_fcst]
 
-    archive_internal_dirs = store_specs.get('archive_internal_dir', [''])
+    archive_internal_dirs = store_specs.get('archive_internal_dir', ['./'])
     logging.debug(f'Grabbing item {list_item} of {archive_internal_dirs}')
     archive_internal_dir = archive_internal_dirs[list_item]
 
@@ -247,7 +266,7 @@ def htar_requested_files(cla, store_specs):
     left_over_dir = fill_template(archive_internal_dir,
                                 cla.cycle_date)
 
-    if os.path.exists(left_over_dir):
+    if os.path.exists(left_over_dir) and left_over_dir != './':
         logging.info(f'Removing {left_over_dir}')
         os.removedirs(left_over_dir)
 
@@ -373,7 +392,8 @@ def parse_args():
         )
     parser.add_argument(
         '--external_model',
-        choices=('FV3GFS', 'GSMGFS', 'HRRR', 'NAM', 'RAP'),
+        choices=('FV3GFS', 'GSMGFS', 'HRRR', 'NAM', 'RAP', 'RAPx',
+        'HRRRx'),
         help='External model label',
         required=True,
         )

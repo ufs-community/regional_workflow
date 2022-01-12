@@ -1,4 +1,3 @@
-#
 # This file tracks known data store locations for data used as input to
 # the SRW App configuations.
 #
@@ -103,3 +102,88 @@ FV3GFS:
     url: https://noaa-gfs-bdp-pds.s3.amazonaws.com/gfs.{yyyymmdd}/{hh}/atmos
     file_names:
       <<: *gfs_file_names
+
+RAP:
+  hpss:
+    protocol: htar
+    archive_format: tar
+    archive_path:
+      - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
+    archive_file_names:
+      # RAP forecasts are binned into 6 hour tar files.
+      - com_rap_prod_rap.{yyyymmdd}{bin6}.wrf.tar
+    file_names: &rap_file_names
+      anl:
+        - rap.t{hh}z.wrfnatf{fcst_hr:02d}.grib2
+      fcst:
+        - rap.t{hh}z.wrfnatf{fcst_hr:02d}.grib2
+  aws:
+    protocol: download
+    url: https://noaa-rap-pds.s3.amazonaws.com/rap.{yyyymmdd}
+    file_names:
+      <<: *rap_file_names
+
+RAPx:
+  hpss:
+    protocol: htar
+    archive_format: zip
+    archive_path:
+      - /BMC/fdr/Permanent/{yyyy}/{mm}/{dd}/data/fsl/rap/full/wrfnat
+    archive_file_names:
+      # RAPx bins two cycles togehter, and named by the lower even value
+      # of the cycle hour.
+      - '{yyyymmdd}{hh_even}00.zip'
+    file_names:
+      anl:
+        - '{yy}{jjj}{hh}00{fcst_hr:02d}00'
+      fcst:
+        - '{yy}{jjj}{hh}00{fcst_hr:02d}00'
+
+HRRR:
+  hpss:
+    protocol: htar
+    archive_format: tar
+    archive_path:
+      - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
+    archive_file_names:
+      # HRRR forecasts are binned into 6 hour tar files.
+      - com_hrrr_prod_hrrr.{yyyymmdd}_conus{bin6}.wrfnatdng.tar
+    file_names: &hrrr_file_names
+      anl:
+        - hrrr.t{hh}z.wrfnatf{fcst_hr:02d}.grib2
+      fcst:
+        - hrrr.t{hh}z.wrfnatf{fcst_hr:02d}.grib2
+  aws:
+    protocol: download
+    url: https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.{yyyymmdd}/conus/
+    file_names:
+      <<: *hrrr_file_names
+
+HRRRx:
+  hpss:
+    protocol: htar
+    archive_format: zip
+    archive_path:
+      - /BMC/fdr/Permanent/{yyyy}/{mm}/{dd}/data/fsl/hrrr/conus/wrfnat
+    archive_file_names:
+      - '{yyyymmddhh}00.zip'
+    file_names:
+      anl:
+        - '{yy}{jjj}{hh}00{fcst_hr:02d}00'
+      fcst:
+        - '{yy}{jjj}{hh}00{fcst_hr:02d}00'
+
+NAM:
+  hpss:
+    protocol: htar
+    archive_format: tar
+    archive_path:
+      - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
+    archive_file_names:
+      - com_nam_prod_nam.{yyyymmddhh}.bgrid.tar
+    file_names:
+      anl:
+        - nam.t{hh}z.bgrdsf{fcst_hr:03d}.tm00
+      fcst:
+        - nam.t{hh}z.bgrdsf{fcst_hr:03d}
+
