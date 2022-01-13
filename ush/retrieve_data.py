@@ -156,6 +156,32 @@ def fill_template(template_str, cycle_date, fcst_hr=0):
         yyyymmddhh=cycle_date.strftime('%Y%m%d%H'),
         )
 
+def hsi_single_file(file_path, mode='ls'):
+
+    ''' Call hsi as a subprocess for Python and return information about
+    whether the file_path was found.
+
+    Arguments:
+        file_path    path on HPSS
+        mode         the hsi command to run. ls is default. may also
+                     pass "get" to retrieve the file path
+
+    '''
+    cmd = f'hsi {mode} {file_path}'
+
+    logging.info(f'Running command \n {cmd}')
+    try:
+        output = subprocess.run(cmd,
+                                check=True,
+                                shell=True,
+                                )
+    except subprocess.CalledProcessError as excep:
+        logging.warning(f'{file_path} is not available!')
+        return ''
+    #logging.debug(f'OUTPUT for hsi is: \n {output.stderr.decode("utf-8") }')
+
+    return file_path
+
 def htar_requested_files(cla, store_specs):
 
     ''' This function interacts with the "hpss" protocol in a
@@ -198,24 +224,13 @@ def htar_requested_files(cla, store_specs):
         file_path = os.path.join(archive_path, archive_file_names[0])
         file_path = fill_template(file_path, cla.cycle_date)
 
-        cmd = f'hsi ls {file_path}'
-        try:
-            output = subprocess.run(cmd,
-                                    capture_output=True,
-                                    check=True,
-                                    shell=True,
-                                    )
-        except subprocess.CalledProcessError as excep:
-            logging.warning(f'{file_path} is not available!')
-            continue
-        logging.debug(f'{output}')
-        logging.debug(f'OUTPUT for hsi is: \n {output.stderr.decode("utf-8") }')
-        if output.returncode == 0:
-            existing_archive = file_path
+        existing_archive = hsi_single_file(file_path)
+
+        if existing_archive:
             logging.info(f'Found HPSS file: {file_path}')
             break
 
-    if existing_archive is None:
+    if not existing_archive:
         logging.warning(f'No archive files were found!')
         return unavailable
 
@@ -242,12 +257,24 @@ def htar_requested_files(cla, store_specs):
             source_path = os.path.join(archive_internal_dir, file_name)
             source_paths.append(fill_template(source_path,
                 cla.cycle_date, fcst_hr))
-    cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
+
+
+    if store_specs.get('archive_format', 'tar') == 'zip':
+        # Get the entire file from HPSS
+        existing_archive = hsi_single_file(existing_archive, mode='get')
+
+        # Grab only the necessary files from the archive
+        cmd = f'unzip -o {existing_archive} {" ".join(source_paths)}'
+
+    else:
+        cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
+
     logging.info(f'Running command \n {cmd}')
     output = subprocess.run(cmd,
                             check=True,
                             shell=True,
                             )
+
 
     # Check to make sure the files exist on disk
     for file_path in source_paths:
@@ -269,6 +296,11 @@ def htar_requested_files(cla, store_specs):
     if os.path.exists(left_over_dir) and left_over_dir != './':
         logging.info(f'Removing {left_over_dir}')
         os.removedirs(left_over_dir)
+
+    # If an archive exists on disk, remove it
+    local_archive = os.path.basename(existing_archive)
+    if os.path.exists(local_archive):
+        os.remove(local_archive)
 
     os.chdir(orig_path)
 
