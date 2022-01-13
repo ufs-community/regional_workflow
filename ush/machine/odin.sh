@@ -49,6 +49,8 @@ QUEUE_FCST=${QUEUE_FCST:-"workq"}
 
 # UFS SRW App specific paths
 FIXgsm=${FIXgsm:-"/scratch/ywang/fix/theia_fix/fix_am"}
+FIXaer=${FIXaer:-"/scratch/ywang/fix/theia_fix/fix_aer"}
+FIXlut=${FIXlut:-"/scratch/ywang/fix/theia_fix/fix_lut"}
 TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}

@@ -49,6 +49,8 @@ QUEUE_FCST=${QUEUE_FCST:-"batch"}
 
 # UFS SRW App specific paths
 FIXgsm=${FIXgsm:-"/work/noaa/global/glopara/fix/fix_am"}
+FIXaer=${FIXaer:-"/work/noaa/global/glopara/fix/fix_aer"}
+FIXlut=${FIXlut:-"/work/noaa/global/glopara/fix/fix_lut"}
 TOPO_DIR=${TOPO_DIR:-"/work/noaa/global/glopara/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/noaa/global/glopara/fix/fix_sfc_climo"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}

@@ -50,6 +50,8 @@ QUEUE_FCST=${QUEUE_FCST:-"batch"}
 
 # UFS SRW App specific paths
 FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
+FIXaer=${FIXaer:-"/scratch1/NCEPDEV/global/glopara/fix/fix_aer"}
+FIXlut=${FIXlut:-"/scratch1/NCEPDEV/global/glopara/fix/fix_lut"}
 TOPO_DIR=${TOPO_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_sfc_climo"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch2/BMC/det/FV3LAM_pregen"}
