@@ -612,7 +612,7 @@ NDAS_OBS_DIR=""
 #
 # EXTRN_MDL_ICS_OFFSET_HRS:
 # Users may wish to start a forecast from a forecast of a previous cycle
-# of an external model. This variale sets the number of hours earlier
+# of an external model. This variable sets the number of hours earlier
 # the external model started than when the FV3 forecast configured here
 # should start. For example, the forecast should start from a 6 hour
 # forecast of the GFS, then EXTRN_MDL_ICS_OFFSET_HRS=6.
@@ -620,11 +620,13 @@ NDAS_OBS_DIR=""
 # EXTRN_MDL_LBCS_OFFSET_HRS:
 # Users may wish to use lateral boundary conditions from a forecast that
 # was started earlier than the initial time for the FV3 forecast
-# configured here. This variale sets the number of hours earlier
+# configured here. This variable sets the number of hours earlier
 # the external model started than when the FV3 forecast configured here
 # should start. For example, the forecast should use lateral boundary
 # conditions from the GFS started 6 hours earlier, then
 # EXTRN_MDL_LBCS_OFFSET_HRS=6.
+# Note: the default value is model-dependent and set in
+# set_extrn_mdl_params.sh
 #
 # FV3GFS_FILE_FMT_ICS:
 # If using the FV3GFS model as the source of the ICs (i.e. if EXTRN_MDL_NAME_ICS
@@ -642,7 +644,7 @@ EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
 LBC_SPEC_INTVL_HRS="6"
 EXTRN_MDL_ICS_OFFSET_HRS="0"
-EXTRN_MDL_LBCS_OFFSET_HRS="0"
+EXTRN_MDL_LBCS_OFFSET_HRS=""
 FV3GFS_FILE_FMT_ICS="nemsio"
 FV3GFS_FILE_FMT_LBCS="nemsio"
 #
@@ -1354,6 +1356,15 @@ RUN_TASK_VX_GRIDSTAT="FALSE"
 RUN_TASK_VX_POINTSTAT="FALSE"
 RUN_TASK_VX_ENSGRID="FALSE"
 RUN_TASK_VX_ENSPOINT="FALSE"
+#
+#-----------------------------------------------------------------------
+#
+# Flag that determines whether MERRA2 aerosol climatology data and
+# lookup tables for optics properties are obtained
+#
+#-----------------------------------------------------------------------
+#
+USE_MERRA_CLIMO="FALSE"
 #
 #-----------------------------------------------------------------------
 #

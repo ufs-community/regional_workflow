@@ -87,9 +87,13 @@ where the arguments are defined as follows:
   boundary condition (LBC) output files are obtained from the external
   model (and will be used to update the LBCs of the FV3-LAM).
 
-  varname_extrn_mdl_fns:
-  Name of the global variable that will contain the names of the exter-
-  nal model output files.
+  varname_extrn_mdl_fns_on_disk:
+  Name of the global variable that will contain the expected names of 
+  the external model output files on disk.
+
+  varname_extrn_mdl_fns_in_arcv:
+  Name of the global variable that will contain the expected names of 
+  the external model output files on NOAA HPSS.
 
   varname_extrn_mdl_sysdir:
   Name of the global variable that will contain the system directory in
@@ -183,7 +187,7 @@ function get_extrn_mdl_file_dir_info() {
         lbc_spec_fhrs i num_fhrs \
         fcst_hhh fcst_hh fcst_mn \
         prefix suffix fns fns_on_disk fns_in_arcv \
-        sysdir \
+        sysbasedir sysdir \
         arcv_dir arcv_fmt arcv_fns arcv_fps arcvrel_dir
 
   anl_or_fcst=$(echo_uppercase $anl_or_fcst)
@@ -308,7 +312,7 @@ function get_extrn_mdl_file_dir_info() {
 
       "NAM")
         fns=( "" )
-        fns_in_arcv=( "nam.t${hh}z.bgrdsfi${hh}.tm00" )
+        fns_in_arcv=( "nam.t${hh}z.bgrdsf${fcst_hh}.tm00" )
         ;;
 
       *)
@@ -414,7 +418,7 @@ bination of external model (extrn_mdl_name) and analysis or forecast
   # Make sure all filenames variables are set.
   if [ -z $fns_in_arcv ] ; then
     print_err_msg_exit "\
-      The script has not set $fns_in_arcv properly"
+      The script has not set \$fns_in_arcv properly"
   fi
 
   if [ -z ${fns_on_disk:-} ] ; then
@@ -432,9 +436,54 @@ bination of external model (extrn_mdl_name) and analysis or forecast
   #-----------------------------------------------------------------------
   #
   if [ "${anl_or_fcst}" = "ANL" ]; then
-    sysdir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_ICS})
+    sysbasedir=${EXTRN_MDL_SYSBASEDIR_ICS}
   elif [ "${anl_or_fcst}" = "FCST" ]; then
-    sysdir=$(eval echo ${EXTRN_MDL_SYSBASEDIR_LBCS})
+    sysbasedir=${EXTRN_MDL_SYSBASEDIR_LBCS}
+  fi
+
+  sysdir=$sysbasedir
+  # Use the basedir unless otherwise specified for special platform
+  # cases below.
+  if [ -n "${sysbasedir}" ] ; then
+    case "${extrn_mdl_name}" in
+
+      "FV3GFS")
+        case "$MACHINE" in
+        "WCOSS_CRAY")
+          sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
+          ;;
+        "WCOSS_DELL_P3")
+          sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
+          ;;
+        "HERA")
+          sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}/atmos"
+          ;;
+        "ODIN")
+          sysdir="$sysbasedir/${yyyymmdd}"
+          ;;
+        "CHEYENNE")
+          sysdir="$sysbasedir/gfs.${yyyymmdd}/${hh}"
+          ;;
+        esac
+        ;;
+
+      "RAP")
+        case "$MACHINE" in
+        "JET")
+          sysdir="$sysbasedir/${yyyymmdd}${hh}/postprd"
+          ;;
+        esac
+        ;;
+
+      "HRRR")
+        case "$MACHINE" in
+        "JET")
+          sysdir="$sysbasedir/${yyyymmdd}${hh}/postprd"
+          ;;
+        esac
+        ;;
+
+    esac
   fi
   #
   #-----------------------------------------------------------------------

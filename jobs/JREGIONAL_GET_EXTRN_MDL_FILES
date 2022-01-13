@@ -180,11 +180,11 @@ if [ "${ICS_OR_LBCS}" = "ICS" ]; then
     time_offset_hrs=0
   else
     anl_or_fcst="FCST"
-    time_offset_hrs=${EXTRN_MDL_ICS_OFFSET_HRS}
+    time_offset_hrs=${EXTRN_MDL_ICS_OFFSET_HRS:-0}
   fi
 elif [ "${ICS_OR_LBCS}" = "LBCS" ]; then
   anl_or_fcst="FCST"
-  time_offset_hrs="${EXTRN_MDL_LBCS_OFFSET_HRS}"
+  time_offset_hrs=${EXTRN_MDL_LBCS_OFFSET_HRS:-0}
 fi
 #
 #-----------------------------------------------------------------------
