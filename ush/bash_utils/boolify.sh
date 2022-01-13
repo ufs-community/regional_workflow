@@ -20,51 +20,15 @@ function boolify() {
 #
 #-----------------------------------------------------------------------
 #
-# Get the name of this function.
+# Get the name of this function and input.
 #
 #-----------------------------------------------------------------------
 #
   local func_name="${FUNCNAME[0]}"
-#
-#-----------------------------------------------------------------------
-#
-# Get information about the script or function that calls this function.
-# Note that caller_name will be set as follows:
-#
-# 1) If the caller is a function, caller_name will be set to the name of
-#    that function.
-# 2) If the caller is a sourced script, caller_name will be set to
-#    "script".  Note that a sourced script cannot be the top level
-#    script since by defintion, it is sourced by another script or func-
-#    tion.
-# 3) If the caller is the top-level script, caller_name will be set to
-#    "main".
-#
-# Thus, if caller_name is set to "script" or "main", the caller is a
-# script, and if it is set to anything else, the caller is a function.
-#
-#-----------------------------------------------------------------------
-#
-  local caller_fp=$( $READLINK -f "${BASH_SOURCE[1]}" )
-  local caller_fn=$( basename "${caller_fp}" )
-  local caller_dir=$( dirname "${caller_fp}" )
-  local caller_name="${FUNCNAME[1]}"
-#
-# Get input string
-
   local input uc_input
 
   if [ "$#" -eq 1 ]; then
-
     input="$1"
-
-#
-#-----------------------------------------------------------------------
-#
-# If no arguments or more than one, print out a usage message and exit.
-#
-#-----------------------------------------------------------------------
-#
   else
 
     print_err_msg_exit "
@@ -82,25 +46,24 @@ where:
   string:
   This is the string that should be converted to TRUE or FALSE
 "
-
   fi
 
-uc_input=$(echo_uppercase $input)
-if [ "$uc_input" = "TRUE" ] || \
-     [ "$uc_input" = "YES" ]; then
-  echo "TRUE"
-elif [ "$uc_input" = "FALSE" ] || \
-       [ "$uc_input" = "NO" ]; then
-  echo "FALSE"
-fi
+  uc_input=$(echo_uppercase $input)
+  if [ "$uc_input" = "TRUE" ] || \
+       [ "$uc_input" = "YES" ]; then
+    echo "TRUE"
+  elif [ "$uc_input" = "FALSE" ] || \
+         [ "$uc_input" = "NO" ]; then
+    echo "FALSE"
+  fi
 
-#
-#-----------------------------------------------------------------------
-#
-# Restore the shell options saved at the beginning of this script/func-
-# tion.
-#
-#-----------------------------------------------------------------------
-#
+  #
+  #-----------------------------------------------------------------------
+  #
+  # Restore the shell options saved at the beginning of this script/func-
+  # tion.
+  #
+  #-----------------------------------------------------------------------
+  #
   { restore_shell_opts; } > /dev/null 2>&1
 }
