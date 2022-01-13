@@ -566,14 +566,7 @@ check_var_valid_value "USE_MERRA_CLIMO" "valid_vals_USE_MERRA_CLIMO"
 # Set USE_MERRA_CLIMO to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
 #
-USE_MERRA_CLIMO=$(echo_uppercase $USE_MERRA_CLIMO)
-if [ "${USE_MERRA_CLIMO}" = "TRUE" ] || \
-   [ "${USE_MERRA_CLIMO}" = "YES" ]; then
-  USE_MERRA_CLIMO="TRUE"
-elif [ "${USE_MERRA_CLIMO}" = "FALSE" ] || \
-     [ "${USE_MERRA_CLIMO}" = "NO" ]; then
-  USE_MERRA_CLIMO="FALSE"
-fi
+USE_MERRA_CLIMO=$(boolify $USE_MERRA_CLIMO)
 # Force to "TRUE" in case of FV3_GFS_v15_thompson_mynn_lam3km:
 if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15_thompson_mynn_lam3km" ]; then
   USE_MERRA_CLIMO="TRUE"
