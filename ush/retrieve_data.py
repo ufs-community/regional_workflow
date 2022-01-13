@@ -86,6 +86,11 @@ def download_requested_files(cla, data_store, store_specs):
                     if unavailable.get(data_store) is None:
                         unavailable[data_store] = []
                     unavailable[data_store].append(target_path)
+                    os.chdir(orig_path)
+                    # Returning here assumes that if the first file
+                    # isn't found, none of the others will be. Don't
+                    # waste time timing out on every requested file.
+                    return unavailable
     os.chdir(orig_path)
     return unavailable
 
