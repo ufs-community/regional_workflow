@@ -988,42 +988,42 @@ EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
 
     check=0
     if [ ! -d ${MET_INSTALL_DIR} ] ; then
-      echo "\
+      print_info_msg "\
         The MET installation location must be set for this machine!
           MET_INSTALL_DIR = \"${MET_INSTALL_DIR}\""
       check=1
     fi
 
     if [ ! -d ${METPLUS_PATH} ] ; then
-      echo "\
+      print_info_msg "\
         The MET+ installation location must be set for this machine!
           METPLUS_PATH = \"${METPLUS_PATH}\""
       check=1
     fi
 
     if [ -z ${MET_BIN_EXEC} ] ; then
-      echo "\
+      print_info_msg "\
         The MET execution command must be set for this machine!
           MET_BIN_EXEC = \"${MET_BIN_EXEC}\""
       check=1
     fi
 
     if [ ! -d ${CCPA_OBS_DIR} ] ; then
-      echo "\
+      print_info_msg "\
         The CCPA observation location must be set for this machine!
           CCPA_OBS_DIR = \"${CCPA_OBS_DIR}\""
       check=1
     fi
 
     if [ ! -d ${MRMS_OBS_DIR} ] ; then
-      echo "\
+      print_info_msg "\
         The MRMS observation location must be set for this machine!
           MRMS_OBS_DIR = \"${MRMS_OBS_DIR}\""
       check=1
     fi
 
     if [ ! -d ${NDAS_OBS_DIR} ] ; then
-      echo "\
+      print_info_msg "\
         The NDAS observation location must be set for this machine!
           NDAS_OBS_DIR = \"${NDAS_OBS_DIR}\""
       check=1
@@ -1127,6 +1127,7 @@ initial conditions (EXTRN_MDL_NAME_ICS) combination:
 
     else 
 
+      # Check the base directory for the specified location.
       if [ ! -d "$(dirname ${EXTRN_MDL_SYSBASEDIR_ICS%%\$*})" ]; then
         print_err_msg_exit "\
 The non-default location specified by EXTRN_MDL_SYSBASEDIR_ICS does not 
@@ -1136,6 +1137,8 @@ exist or is not a directory:
 
     fi
 
+    # Maintain any templates in EXTRN_MDL_SYSBASEDIR_ICS -- don't use
+    # quotes.
     set_bash_param "${expt_config_fp}" \
                    "EXTRN_MDL_SYSBASEDIR_ICS" ${EXTRN_MDL_SYSBASEDIR_ICS}
 

@@ -159,11 +159,14 @@ case "$MACHINE" in
 
 esac
 
+nprocs=$(( NNODES_MAKE_SFC_CLIMO*PPN_MAKE_SFC_CLIMO ))
+
 if [ -z ${RUN_CMD_UTILS:-} ] ; then
   print_err_msg_exit "\
   Run command was not set in machine file. \
   Please set RUN_CMD_UTILS for your platform"
 else
+  RUN_CMD_UTILS=$(eval echo ${RUN_CMD_UTILS})
   print_info_msg "$VERBOSE" "
   All executables will be submitted with command \'${RUN_CMD_UTILS}\'."
 fi

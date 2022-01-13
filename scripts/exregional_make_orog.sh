@@ -126,6 +126,7 @@ if [ -z ${RUN_CMD_SERIAL:-} ] ; then
   Run command was not set in machine file. \
   Please set RUN_CMD_SERIAL for your platform"
 else
+  RUN_CMD_SERIAL=$(eval echo ${RUN_CMD_SERIAL})
   print_info_msg "$VERBOSE" "
   All executables will be submitted with command \'${RUN_CMD_SERIAL}\'."
 fi
