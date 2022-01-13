@@ -109,6 +109,8 @@ RAP:
     archive_format: tar
     archive_path:
       - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
+    archive_internal_dir:
+      - ./
     archive_file_names:
       # RAP forecasts are binned into 6 hour tar files.
       - com_rap_prod_rap.{yyyymmdd}{bin6}.wrf.tar
@@ -145,6 +147,8 @@ HRRR:
     archive_format: tar
     archive_path:
       - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
+    archive_internal_dir:
+      - ./
     archive_file_names:
       # HRRR forecasts are binned into 6 hour tar files.
       - com_hrrr_prod_hrrr.{yyyymmdd}_conus{bin6}.wrfnatdng.tar

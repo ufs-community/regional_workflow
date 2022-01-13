@@ -54,7 +54,7 @@ def download_file(url):
 
     return True
 
-def download_requested_files(cla, store_specs):
+def download_requested_files(cla, data_store, store_specs):
 
     ''' This function interacts with the "download" protocol in a
     provided data store specs file to download a set of files requested
@@ -82,7 +82,10 @@ def download_requested_files(cla, store_specs):
                 url = fill_template(url, cla.cycle_date, fcst_hr)
                 downloaded = download_file(url)
                 if not downloaded:
-                    unavailable[fcst_hr] = target_path
+
+                    if unavailable.get(data_store) is None:
+                        unavailable[data_store] = []
+                    unavailable[data_store].append(target_path)
     os.chdir(orig_path)
     return unavailable
 
@@ -182,7 +185,7 @@ def hsi_single_file(file_path, mode='ls'):
 
     return file_path
 
-def htar_requested_files(cla, store_specs):
+def hpss_requested_files(cla, store_specs):
 
     ''' This function interacts with the "hpss" protocol in a
     provided data store specs file to download a set of files requested
@@ -212,9 +215,10 @@ def htar_requested_files(cla, store_specs):
     logging.debug(f'Will try to look for: '\
             f' {list(zip(archive_paths, archive_file_names))}')
 
+    zipped_archive_file_paths = zip(archive_paths, archive_file_names)
     # Narrow down which HPSS files are available for this date
     for list_item, (archive_path, archive_file_names) in \
-        enumerate(zip(archive_paths, archive_file_names)):
+        enumerate(zipped_archive_file_paths):
 
         if not isinstance(archive_file_names, list):
             archive_file_names = [archive_file_names]
@@ -232,6 +236,7 @@ def htar_requested_files(cla, store_specs):
 
     if not existing_archive:
         logging.warning(f'No archive files were found!')
+        unavailable['archive'] = list(zipped_archive_file_paths)
         return unavailable
 
     # Use the found archive file path to get the necessary files
@@ -240,7 +245,7 @@ def htar_requested_files(cla, store_specs):
         file_names = file_names[cla.file_type]
     file_names = file_names[cla.anl_or_fcst]
 
-    archive_internal_dirs = store_specs.get('archive_internal_dir', ['./'])
+    archive_internal_dirs = store_specs.get('archive_internal_dir', [''])
     logging.debug(f'Grabbing item {list_item} of {archive_internal_dirs}')
     archive_internal_dir = archive_internal_dirs[list_item]
 
@@ -264,7 +269,7 @@ def htar_requested_files(cla, store_specs):
         existing_archive = hsi_single_file(existing_archive, mode='get')
 
         # Grab only the necessary files from the archive
-        cmd = f'unzip -o {existing_archive} {" ".join(source_paths)}'
+        cmd = f'unzip -o {os.path.basename(existing_archive)} {" ".join(source_paths)}'
 
     else:
         cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
@@ -275,12 +280,12 @@ def htar_requested_files(cla, store_specs):
                             shell=True,
                             )
 
-
     # Check to make sure the files exist on disk
     for file_path in source_paths:
         local_file_path = os.path.join(output_path,file_path)
         if not os.path.exists(local_file_path):
             logging.info(f'File does not exist: {local_file_path}')
+            unavailable['hpss'] = source_paths
         else:
             file_name = os.path.basename(file_path)
             expected_output_loc = os.path.join(output_path, file_name)
@@ -379,14 +384,20 @@ def main(cla):
             raise KeyError(msg)
 
         if store_specs['protocol'] == 'download':
-            unavailable = download_requested_files(cla, store_specs)
+            unavailable = download_requested_files(cla, data_store, store_specs)
 
         if store_specs['protocol'] == 'htar':
-            unavailable = htar_requested_files(cla, store_specs)
+            unavailable = hpss_requested_files(cla, store_specs)
 
         if not unavailable:
             # All files are found. Stop looking!
             break
+
+        logging.warning(f'Requested files are unavialable from {data_store}')
+
+    if unavailable:
+        logging.error(f'Could not find any of the requested files.')
+        exit(1)
 
 def parse_args():
 
