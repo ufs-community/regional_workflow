@@ -1,3 +1,4 @@
+# pylint: disable=logging-fstring-interpolation
 '''
 Script is meant to use a YAML file to retrive data from a variety of
 sources, including known locations on disk, URLs, and HPSS (from
@@ -16,9 +17,41 @@ import logging
 import os
 import shutil
 import subprocess
+import sys
 
 import yaml
 
+def clean_up_output_dir(expected_subdir, local_archive, output_path, source_paths):
+
+    ''' Remove expected sub-directories and existing_archive files on
+    disk once all files have been extracted and put into the specified
+    output location. '''
+
+    unavailable = {}
+    # Check to make sure the files exist on disk
+    for file_path in source_paths:
+        local_file_path = os.path.join(output_path,file_path)
+        if not os.path.exists(local_file_path):
+            logging.info(f'File does not exist: {local_file_path}')
+            unavailable['hpss'] = source_paths
+        else:
+            file_name = os.path.basename(file_path)
+            expected_output_loc = os.path.join(output_path, file_name)
+            if not local_file_path == expected_output_loc:
+                logging.info(f'Moving {local_file_path} to ' \
+                             f'{expected_output_loc}')
+                shutil.move(local_file_path, expected_output_loc)
+
+    # Clean up directories from inside archive, if they exist
+    if os.path.exists(expected_subdir) and expected_subdir != './':
+        logging.info(f'Removing {expected_subdir}')
+        os.removedirs(expected_subdir)
+
+    # If an archive exists on disk, remove it
+    if os.path.exists(local_archive):
+        os.remove(local_archive)
+
+    return unavailable
 
 def copy_file(source, destination):
 
@@ -38,10 +71,10 @@ def copy_file(source, destination):
     cmd = f'cp {source} {destination}'
     logging.info(f'Running command: \n {cmd}')
     try:
-        output = subprocess.run(cmd,
-                                check=True,
-                                shell=True,
-                                )
+        subprocess.run(cmd,
+            check=True,
+            shell=True,
+            )
     except subprocess.CalledProcessError as err:
         logging.info(err)
         return False
@@ -67,14 +100,15 @@ def download_file(url):
     cmd = f'wget -c -T 30 -t 3 {url}'
     logging.info(f'Running command: \n {cmd}')
     try:
-        output = subprocess.run(cmd,
-                                check=True,
-                                shell=True,
-                                )
+        subprocess.run(cmd,
+            check=True,
+            shell=True,
+            )
     except subprocess.CalledProcessError as err:
         logging.info(err)
         return False
     except:
+        logging.error('Command failed!')
         raise
 
     return True
@@ -161,24 +195,24 @@ def fill_template(template_str, cycle_date, fcst_hr=0):
       filled template string
     '''
 
-    hh = cycle_date.strftime('%H')
+    cycle_hour = cycle_date.strftime('%H')
     # One strategy for binning data files at NCEP is to put them into 6
     # cycle bins. The archive file names include the low and high end of the
     # range. Set the range as would be indicated in the archive file
     # here. Integer division is intentional here.
-    low_end = int(hh) // 6 * 6
+    low_end = int(cycle_hour) // 6 * 6
     bin6 = f'{low_end:02d}-{low_end+5:02d}'
 
     # Another strategy is to bundle odd cycle hours with their next
     # lowest even cycle hour. Files are named only with the even hour.
     # Integer division is intentional here.
-    hh_even = f'{int(hh) // 2 * 2:02d}'
+    hh_even = f'{int(cycle_hour) // 2 * 2:02d}'
 
     return template_str.format(
         bin6=bin6,
         fcst_hr=fcst_hr,
         dd=cycle_date.strftime('%d'),
-        hh=hh,
+        hh=cycle_hour,
         hh_even=hh_even,
         jjj=cycle_date.strftime('%j'),
         mm=cycle_date.strftime('%m'),
@@ -188,6 +222,35 @@ def fill_template(template_str, cycle_date, fcst_hr=0):
         yyyymmdd=cycle_date.strftime('%Y%m%d'),
         yyyymmddhh=cycle_date.strftime('%Y%m%d%H'),
         )
+
+def find_archive_files(paths, file_names, cycle_date):
+
+    ''' Given an equal-length set of archive paths and archive file
+    names, and a cycle date, check HPSS via hsi to make sure at least
+    one set exists. Return the path of the existing archive, along with
+    the item in set of paths that was found.'''
+
+    zipped_archive_file_paths = zip(paths, file_names)
+
+    # Narrow down which HPSS files are available for this date
+    for list_item, (archive_path, archive_file_names) in \
+        enumerate(zipped_archive_file_paths):
+
+        if not isinstance(archive_file_names, list):
+            archive_file_names = [archive_file_names]
+
+        # Only test the first item in the list, it will tell us if this
+        # set exists at this date.
+        file_path = os.path.join(archive_path, archive_file_names[0])
+        file_path = fill_template(file_path, cycle_date)
+
+        existing_archive = hsi_single_file(file_path)
+
+        if existing_archive:
+            logging.info(f'Found HPSS file: {file_path}')
+            return existing_archive, list_item
+
+    return '', 0
 
 def get_requested_files(cla, file_names, input_locs, method='disk'):
 
@@ -235,7 +298,7 @@ def get_requested_files(cla, file_names, input_locs, method='disk'):
 
                 if method == 'disk':
                     retrieved = copy_file(loc, target_path)
-  
+
                 if method == 'download':
                     retrieved = download_file(loc)
 
@@ -267,14 +330,13 @@ def hsi_single_file(file_path, mode='ls'):
 
     logging.info(f'Running command \n {cmd}')
     try:
-        output = subprocess.run(cmd,
-                                check=True,
-                                shell=True,
-                                )
-    except subprocess.CalledProcessError as excep:
+        subprocess.run(cmd,
+                       check=True,
+                       shell=True,
+                       )
+    except subprocess.CalledProcessError:
         logging.warning(f'{file_path} is not available!')
         return ''
-    #logging.debug(f'OUTPUT for hsi is: \n {output.stderr.decode("utf-8") }')
 
     return file_path
 
@@ -311,28 +373,14 @@ def hpss_requested_files(cla, store_specs):
     logging.debug(f'Will try to look for: '\
             f' {list(zip(archive_paths, archive_file_names))}')
 
-    zipped_archive_file_paths = zip(archive_paths, archive_file_names)
-    # Narrow down which HPSS files are available for this date
-    for list_item, (archive_path, archive_file_names) in \
-        enumerate(zipped_archive_file_paths):
-
-        if not isinstance(archive_file_names, list):
-            archive_file_names = [archive_file_names]
-
-        # Only test the first item in the list, it will tell us if this
-        # set exists at this date.
-        file_path = os.path.join(archive_path, archive_file_names[0])
-        file_path = fill_template(file_path, cla.cycle_date)
-
-        existing_archive = hsi_single_file(file_path)
-
-        if existing_archive:
-            logging.info(f'Found HPSS file: {file_path}')
-            break
+    existing_archive, which_archive = find_archive_files(archive_paths,
+                                                         archive_file_names,
+                                                         cla.cycle_date,
+                                                         )
 
     if not existing_archive:
-        logging.warning(f'No archive files were found!')
-        unavailable['archive'] = list(zipped_archive_file_paths)
+        logging.warning('No archive files were found!')
+        unavailable['archive'] = list(zip(archive_paths, archive_file_names))
         return unavailable
 
     # Use the found archive file path to get the necessary files
@@ -341,9 +389,10 @@ def hpss_requested_files(cla, store_specs):
         file_names = file_names[cla.file_type]
     file_names = file_names[cla.anl_or_fcst]
 
-    archive_internal_dirs = store_specs.get('archive_internal_dir', [''])
-    logging.debug(f'Grabbing item {list_item} of {archive_internal_dirs}')
-    archive_internal_dir = archive_internal_dirs[list_item]
+    logging.debug(f'Grabbing archive number {which_archive} in list.')
+    archive_internal_dir = store_specs.get('archive_internal_dir', [''])[which_archive]
+    archive_internal_dir = fill_template(archive_internal_dir,
+                                         cla.cycle_date)
 
     output_path = fill_template(cla.output_path, cla.cycle_date)
     logging.info(f'Will place files in {os.path.abspath(output_path)}')
@@ -351,14 +400,14 @@ def hpss_requested_files(cla, store_specs):
     os.chdir(output_path)
     logging.debug(f'CWD: {os.getcwd()}')
 
-    files_exist = False
     source_paths = []
     for fcst_hr in cla.fcst_hrs:
         for file_name in file_names:
-            source_path = os.path.join(archive_internal_dir, file_name)
-            source_paths.append(fill_template(source_path,
-                cla.cycle_date, fcst_hr))
-
+            source_paths.append(fill_template(
+                os.path.join(archive_internal_dir, file_name),
+                cla.cycle_date,
+                fcst_hr,
+                ))
 
     if store_specs.get('archive_format', 'tar') == 'zip':
         # Get the entire file from HPSS
@@ -371,39 +420,22 @@ def hpss_requested_files(cla, store_specs):
         cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
 
     logging.info(f'Running command \n {cmd}')
-    output = subprocess.run(cmd,
-                            check=True,
-                            shell=True,
-                            )
+    subprocess.run(cmd,
+                   check=True,
+                   shell=True,
+                   )
 
-    # Check to make sure the files exist on disk
-    for file_path in source_paths:
-        local_file_path = os.path.join(output_path,file_path)
-        if not os.path.exists(local_file_path):
-            logging.info(f'File does not exist: {local_file_path}')
-            unavailable['hpss'] = source_paths
-        else:
-            file_name = os.path.basename(file_path)
-            expected_output_loc = os.path.join(output_path, file_name)
-            if not local_file_path == expected_output_loc:
-                logging.info(f'Moving {local_file_path} to ' \
-                             f'{expected_output_loc}')
-                shutil.move(local_file_path, expected_output_loc)
-
-    # Clean up directories from inside archive, if they exist
-    left_over_dir = fill_template(archive_internal_dir,
-                                cla.cycle_date)
-
-    if os.path.exists(left_over_dir) and left_over_dir != './':
-        logging.info(f'Removing {left_over_dir}')
-        os.removedirs(left_over_dir)
-
-    # If an archive exists on disk, remove it
-    local_archive = os.path.basename(existing_archive)
-    if os.path.exists(local_archive):
-        os.remove(local_archive)
+    # Check that files exist and Remove any data transfer artifacts.
+    unavailable = clean_up_output_dir(
+        expected_subdir=archive_internal_dir,
+        local_archive=os.path.basename(existing_archive),
+        output_path=output_path,
+        source_paths=source_paths,
+        )
 
     os.chdir(orig_path)
+
+    return unavailable
 
 def load_str(arg):
 
@@ -523,8 +555,8 @@ def main(cla):
         logging.warning(f'Requested files are unavialable from {data_store}')
 
     if unavailable:
-        logging.error(f'Could not find any of the requested files.')
-        exit(1)
+        logging.error('Could not find any of the requested files.')
+        sys.exit(1)
 
 def parse_args():
 
@@ -627,8 +659,8 @@ if __name__ == '__main__':
     if 'disk' in CLA.data_stores:
         # Make sure a path was provided.
         if not CLA.input_file_paths:
-            msg = ('You must provide an input_file_path when choosing ' \
-                   ' disk as a data store!')
-            raise argparse.ArgumentTypeError(msg)
+            raise argparse.ArgumentTypeError(
+                ('You must provide an input_file_path when choosing ' \
+                 ' disk as a data store!'))
 
     main(CLA)
