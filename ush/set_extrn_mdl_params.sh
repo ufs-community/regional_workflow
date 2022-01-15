@@ -35,6 +35,7 @@ function set_known_sys_dir() {
 
   # Set some default known locations on supported platforms. Not all
   # platforms have known input locations
+  known_sys_dir=""
   case "${model}" in
 
   "GSMGFS")
