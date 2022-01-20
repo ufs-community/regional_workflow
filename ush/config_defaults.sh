@@ -152,13 +152,14 @@ QUEUE_FCST=""
 # will be ignored unless WORKFLOW_MANAGER="none".  Definitions:
 #
 # RUN_CMD_UTILS:
-# The run command for pre-processing utilities (shave, orog, sfc_climo_gen, etc.)
-# Can be left blank for smaller domains, in which case the executables will run
-# without MPI.
+# The run command for pre-processing utilities (shave, orog, sfc_climo_gen, 
+# etc.) Can be left blank for smaller domains, in which case the executables 
+# will run without MPI.
 #
 # RUN_CMD_FCST:
-# The run command for the model forecast step. This will be appended to the end
-# of the variable definitions file, so it can reference other variables.
+# The run command for the model forecast step. This will be appended to 
+# the end of the variable definitions file, so it can reference other 
+# variables.
 #
 # RUN_CMD_POST:
 # The run command for post-processing (UPP). Can be left blank for smaller 
@@ -167,7 +168,7 @@ QUEUE_FCST=""
 #-----------------------------------------------------------------------
 #
 RUN_CMD_UTILS="mpirun -np 1"
-RUN_CMD_FCST="mpirun -np \${PE_MEMBER01}"
+RUN_CMD_FCST='mpirun -np \${PE_MEMBER01}'
 RUN_CMD_POST="mpirun -np 1"
 #
 #-----------------------------------------------------------------------
@@ -295,7 +296,7 @@ PTMP="/base/path/of/directory/containing/postprocessed/output/files"
 #
 #-----------------------------------------------------------------------
 #
-# Set the sparator character(s) to use in the names of the grid, mosaic,
+# Set the separator character(s) to use in the names of the grid, mosaic,
 # and orography fixed files.
 #
 # Ideally, the same separator should be used in the names of these fixed
@@ -604,6 +605,24 @@ NDAS_OBS_DIR="/path/to/observation-directory/ndas/proc"
 # data availble at least every 6 hours.  It is up to the user to ensure 
 # that this is the case.
 #
+# EXTRN_MDL_ICS_OFFSET_HRS:
+# Users may wish to start a forecast from a forecast of a previous cycle
+# of an external model. This variable sets the number of hours earlier
+# the external model started than when the FV3 forecast configured here
+# should start. For example, the forecast should start from a 6 hour
+# forecast of the GFS, then EXTRN_MDL_ICS_OFFSET_HRS=6.
+
+# EXTRN_MDL_LBCS_OFFSET_HRS:
+# Users may wish to use lateral boundary conditions from a forecast that
+# was started earlier than the initial time for the FV3 forecast
+# configured here. This variable sets the number of hours earlier
+# the external model started than when the FV3 forecast configured here
+# should start. For example, the forecast should use lateral boundary
+# conditions from the GFS started 6 hours earlier, then
+# EXTRN_MDL_LBCS_OFFSET_HRS=6.
+# Note: the default value is model-dependent and set in
+# set_extrn_mdl_params.sh
+#
 # FV3GFS_FILE_FMT_ICS:
 # If using the FV3GFS model as the source of the ICs (i.e. if EXTRN_MDL_NAME_ICS
 # is set to "FV3GFS"), this variable specifies the format of the model
@@ -619,6 +638,8 @@ NDAS_OBS_DIR="/path/to/observation-directory/ndas/proc"
 EXTRN_MDL_NAME_ICS="FV3GFS"
 EXTRN_MDL_NAME_LBCS="FV3GFS"
 LBC_SPEC_INTVL_HRS="6"
+EXTRN_MDL_ICS_OFFSET_HRS="0"
+EXTRN_MDL_LBCS_OFFSET_HRS=""
 FV3GFS_FILE_FMT_ICS="nemsio"
 FV3GFS_FILE_FMT_LBCS="nemsio"
 #
@@ -712,6 +733,7 @@ NOMADS_file_type="nemsio"
 # directory or the cycle directories under it.
 #
 #-----------------------------------------------------------------------
+#
 CCPP_PHYS_SUITE="FV3_GFS_v15p2"
 #
 #-----------------------------------------------------------------------
@@ -1333,6 +1355,15 @@ RUN_TASK_VX_ENSPOINT="FALSE"
 #
 #-----------------------------------------------------------------------
 #
+# Flag that determines whether MERRA2 aerosol climatology data and
+# lookup tables for optics properties are obtained
+#
+#-----------------------------------------------------------------------
+#
+USE_MERRA_CLIMO="FALSE"
+#
+#-----------------------------------------------------------------------
+#
 # Set the array parameter containing the names of all the fields that the
 # MAKE_SFC_CLIMO_TN task generates on the native FV3-LAM grid.
 #
@@ -1725,9 +1756,9 @@ NUM_ENS_MEMBERS="1"
 #
 #-----------------------------------------------------------------------
 #
-DO_SHUM="false"
-DO_SPPT="false"
-DO_SKEB="false"
+DO_SHUM="FALSE"
+DO_SPPT="FALSE"
+DO_SKEB="FALSE"
 SHUM_MAG="0.006" #Variable "shum" in input.nml
 SHUM_LSCALE="150000"
 SHUM_TSCALE="21600" #Variable "shum_tau" in input.nml
@@ -1741,7 +1772,7 @@ SKEB_LSCALE="150000"
 SKEB_TSCALE="21600" #Variable "skeb_tau" in input.nml
 SKEB_INT="3600" #Variable "skebint" in input.nml
 SKEB_VDOF="10"
-USE_ZMTNBLCK="false"
+USE_ZMTNBLCK="FALSE"
 #
 #-----------------------------------------------------------------------
 #

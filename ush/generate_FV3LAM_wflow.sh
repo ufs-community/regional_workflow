@@ -618,18 +618,20 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-print_info_msg "$VERBOSE" "
+if [ "${USE_MERRA_CLIMO}" = "TRUE" ]; then
+  print_info_msg "$VERBOSE" "
 Copying MERRA2 aerosol climatology data files from system directory
 (FIXaer/FIXlut) to a subdirectory (FIXclim) in the experiment directory:
   FIXaer = \"${FIXaer}\"
   FIXlut = \"${FIXlut}\"
   FIXclim = \"${FIXclim}\""
 
-check_for_preexist_dir_file "${FIXclim}" "delete"
-mkdir_vrfy -p "${FIXclim}"
+  check_for_preexist_dir_file "${FIXclim}" "delete"
+  mkdir_vrfy -p "${FIXclim}"
 
-cp_vrfy "${FIXaer}/merra2.aerclim"*".nc" "${FIXclim}/"
-cp_vrfy "${FIXlut}/optics"*".dat" "${FIXclim}/"
+  cp_vrfy "${FIXaer}/merra2.aerclim"*".nc" "${FIXclim}/"
+  cp_vrfy "${FIXlut}/optics"*".dat" "${FIXclim}/"
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1146,8 +1148,8 @@ if [[ $retval == 0 ]]; then
 #
 else
   printf "
-Experiment/workflow generation failed.  Check the log file from the ex-
-periment/workflow generation script in the file specified by log_fp:
+Experiment generation failed.  Check the log file from the experiment 
+generation script in the file specified by log_fp:
   log_fp = \"${log_fp}\"
 Stopping.
 "
