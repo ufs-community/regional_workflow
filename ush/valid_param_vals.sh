@@ -25,6 +25,7 @@ valid_vals_PREDEF_GRID_NAME=( \
 "GSL_HAFSV0.A_13km" \
 "GSL_HAFSV0.A_3km" \
 "GSD_HRRR_AK_50km" \
+"GSD_HRRR_25km" \
 "RRFS_NA_13km" \
 "RRFS_NA_3km" \
 )
