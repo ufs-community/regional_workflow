@@ -2919,7 +2919,6 @@ fi
 #-----------------------------------------------------------------------
 #
 NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
-<<<<<<< HEAD
 #
 #-----------------------------------------------------------------------
 #
@@ -2927,8 +2926,6 @@ NNODES_RUN_FCST=$(( (PE_MEMBER01 + PPN_RUN_FCST - 1)/PPN_RUN_FCST ))
 # for this we are going to use the same input.nml so the
 # number should be layout_x * layout_y
 PE_JEDI=$(( LAYOUT_X*LAYOUT_Y ))
-=======
->>>>>>> 20a149d25fee405885c0923d54c462d6d6ccb338
 #
 #-----------------------------------------------------------------------
 #
