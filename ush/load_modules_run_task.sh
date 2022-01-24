@@ -143,8 +143,9 @@ else
 
 module purge
 
-env_fn=${BUILD_ENV_FN:-"build_${machine}_${COMPILER}.env"}
-env_fp="${SR_WX_APP_TOP_DIR}/env/${env_fn}"
+machine=$(echo_lowercase $MACHINE)
+env_fp="${SR_WX_APP_TOP_DIR}/env/${BUILD_ENV_FN}"
+module use "${SR_WX_APP_TOP_DIR}/env"
 source "${env_fp}" || print_err_msg_exit "\
 Sourcing platform- and compiler-specific environment file (env_fp) for the 
 workflow task specified by task_name failed:
