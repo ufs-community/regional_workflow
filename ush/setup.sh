@@ -3270,6 +3270,12 @@ NDIGITS_ENSMEM_NAMES='${NDIGITS_ENSMEM_NAMES}'
 ENSMEM_NAMES=${ensmem_names_str}
 FV3_NML_ENSMEM_FPS=${fv3_nml_ensmem_fps_str}
 #
+##### RRFS-CMAQ ########## start #####
+ARL_NEXUS_DIR="${ARL_NEXUS_DIR}"
+JEDI_DIR="${JEDI_DIR}"
+GSI_DIR="${GSI_DIR}"
+##### RRFS-CMAQ ########## end   #####
+#
 #-----------------------------------------------------------------------
 #
 # Files.
@@ -3526,6 +3532,13 @@ FVCOM_FILE='${FVCOM_FILE}'
 #-----------------------------------------------------------------------
 #
 PE_MEMBER01='${PE_MEMBER01}'
+
+#
+##### RRFS-CMAQ ########## start #####
+PE_JEDI="${PE_JEDI}"
+##### RRFS-CMAQ ########## end   #####
+#
+
 #
 #-----------------------------------------------------------------------
 #
