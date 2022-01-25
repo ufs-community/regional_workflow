@@ -135,7 +135,7 @@ jjob_fp="$2"
 machine=$(echo_lowercase $MACHINE)
 
 if [[ "${FCST_MODEL}" = "fv3gfs_aqm" && ( "${task_name}" = "${RUN_FCST_TN}" || \
-   "${task_name}" = "${RUN_CHEM_ANAL_TN}" || "${task_name}" = "${RUN_GSI_ANAL_TN}" ) ]]; then
+   "${task_name}" = "${RUN_CHEM_ANL_TN}" || "${task_name}" = "${RUN_GSI_ANL_TN}" ) ]]; then
 
 module purge
 

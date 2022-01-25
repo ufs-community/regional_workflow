@@ -1144,34 +1144,34 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that RUN_TASK_CHEM_ANAL is set to a valid value.
+# Make sure that RUN_TASK_CHEM_ANL is set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_CHEM_ANAL" "valid_vals_RUN_TASK_CHEM_ANAL"
-RUN_TASK_CHEM_ANAL=${RUN_TASK_CHEM_ANAL^^}
-if [ "${RUN_TASK_CHEM_ANAL}" = "TRUE" ] || \
-   [ "${RUN_TASK_CHEM_ANAL}" = "YES" ]; then
-  RUN_TASK_CHEM_ANAL="TRUE"
-elif [ "${RUN_TASK_CHEM_ANAL}" = "FALSE" ] || \
-     [ "${RUN_TASK_CHEM_ANAL}" = "NO" ]; then
-  RUN_TASK_CHEM_ANAL="FALSE"
+check_var_valid_value "RUN_TASK_CHEM_ANL" "valid_vals_RUN_TASK_CHEM_ANL"
+RUN_TASK_CHEM_ANL=${RUN_TASK_CHEM_ANL^^}
+if [ "${RUN_TASK_CHEM_ANL}" = "TRUE" ] || \
+   [ "${RUN_TASK_CHEM_ANL}" = "YES" ]; then
+  RUN_TASK_CHEM_ANL="TRUE"
+elif [ "${RUN_TASK_CHEM_ANL}" = "FALSE" ] || \
+     [ "${RUN_TASK_CHEM_ANL}" = "NO" ]; then
+  RUN_TASK_CHEM_ANL="FALSE"
 fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that USE_CHEM_ANAL is set to a valid value.
+# Make sure that USE_CHEM_ANL is set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "USE_CHEM_ANAL" "valid_vals_USE_CHEM_ANAL"
-USE_CHEM_ANAL=${USE_CHEM_ANAL^^}
-if [ "${USE_CHEM_ANAL}" = "TRUE" ] || \
-   [ "${USE_CHEM_ANAL}" = "YES" ]; then
-  USE_CHEM_ANAL="TRUE"
-elif [ "${USE_CHEM_ANAL}" = "FALSE" ] || \
-     [ "${USE_CHEM_ANAL}" = "NO" ]; then
-  USE_CHEM_ANAL="FALSE"
+check_var_valid_value "USE_CHEM_ANL" "valid_vals_USE_CHEM_ANL"
+USE_CHEM_ANL=${USE_CHEM_ANL^^}
+if [ "${USE_CHEM_ANL}" = "TRUE" ] || \
+   [ "${USE_CHEM_ANL}" = "YES" ]; then
+  USE_CHEM_ANL="TRUE"
+elif [ "${USE_CHEM_ANL}" = "FALSE" ] || \
+     [ "${USE_CHEM_ANL}" = "NO" ]; then
+  USE_CHEM_ANL="FALSE"
 fi
 #
 #-----------------------------------------------------------------------
@@ -1191,8 +1191,8 @@ elif [ "${RUN_TASK_DACYC}" = "FALSE" ] || \
 fi
 
 if [ "${OPT_DA_RRFS_CMAQ}" = "FALSE" ]; then
-  RUN_TASK_CHEM_ANAL="FALSE"
-  USE_CHEM_ANAL="FALSE"
+  RUN_TASK_CHEM_ANL="FALSE"
+  USE_CHEM_ANL="FALSE"
   RUN_TASK_DACYC="FALSE"
 fi
 

@@ -1,5 +1,5 @@
 #%Module#####################################################
-## Module file for run GSI anal task.
+## Module file for run GSI analysis task.
 #############################################################
 
 module purge

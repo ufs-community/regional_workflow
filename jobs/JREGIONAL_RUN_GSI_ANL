@@ -3,12 +3,9 @@
 #
 #-----------------------------------------------------------------------
 #
-# This script copies files from various directories into the experiment
-# directory, creates links to some of them, and modifies others (e.g.
-# templates) to customize them for the current experiment setup.
+# This J-JOB script runs the GSI analysis for RRFS-CMAQ
 #
 #-----------------------------------------------------------------------
-#
 
 #
 #-----------------------------------------------------------------------
@@ -31,7 +28,7 @@
 #
 #-----------------------------------------------------------------------
 #
-# Get the full path to the file in which this script/function is located
+# Get the full path to the file in which this script/function is located 
 # (scrfunc_fp), the name of that file (scrfunc_fn), and the directory in
 # which the file is located (scrfunc_dir).
 #
@@ -52,27 +49,30 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the J-job script for the task that runs a chemical analysis using
-JEDI for the specified cycle.
+This is the J-job script for the task that runs a analysis with FV3 for 
+the specified cycle.
 ========================================================================"
 #
 #-----------------------------------------------------------------------
 #
-# Create the JEDI directories under the cycle directory.
+# Create the working directory under the cycle directory.
 #
 #-----------------------------------------------------------------------
 #
-mkdir_vrfy -p ${CYCLE_DIR}/JEDI
+ANL_WORKDIR=${CYCLE_DIR}/ANL_GSI
+rm -fr ${ANL_WORKDIR}
+mkdir_vrfy -p ${ANL_WORKDIR}
 #
 #-----------------------------------------------------------------------
 #
-# Call the ex-script for this J-job and pass to it the necessary varia-
-# bles.
+# Call the ex-script for this J-job and pass to it the necessary variables.
 #
 #-----------------------------------------------------------------------
 #
-$SCRIPTSDIR/exregional_run_chem_anal.sh \
-  CYCLE_DIR="${CYCLE_DIR}" || \
+$SCRIPTSDIR/exregional_run_gsi_anl.sh \
+             CYCLE_DIR="${CYCLE_DIR}" \
+             ANL_WORKDIR="${ANL_WORKDIR}" \
+             CYCLE_ROOT="${CYCLE_ROOT}" || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #
@@ -96,3 +96,4 @@ In directory:    \"${scrfunc_dir}\"
 #-----------------------------------------------------------------------
 #
 { restore_shell_opts; } > /dev/null 2>&1
+

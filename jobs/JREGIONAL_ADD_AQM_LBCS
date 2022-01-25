@@ -52,30 +52,22 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the J-job script for the task that copies/fetches to a local di-
-rectory (either from disk or HPSS) the aqm boundary conditions from which
-the model needs.
+This is the J-job script for the task that copies/fetches to a local 
+directory (either from disk or HPSS) the aqm boundary conditions from 
+which the model needs.
 ========================================================================"
 #
 #-----------------------------------------------------------------------
 #
-# Create the directory EXTRN_MDL_FILES_BASEDIR_ICS if it doesn't al-
-# ready exist.  This is the directory in which we will create a subdi-
-# rectory for each cycle (i.e. for each CDATE) in which to store the 
-# files from the external model.
+# Create the directory EXTRN_MDL_FILES_DIR if it doesn't already exist.  
+# This is the directory in which we will create a subdirectory for each 
+# cycle (i.e. for each CDATE) in which to store the files from the 
+# external model.
 #
 #-----------------------------------------------------------------------
 #
 EXTRN_MDL_FILES_DIR="${CYCLE_DIR}/AQM/tmp_AQLBCS"
-#
-#-----------------------------------------------------------------------
-#
-# Create the directory specific to the current forecast (whose starting
-# date and time is specified in CDATE) in which to store the external 
-# model files.  Then change location to that directory.
-#
-#-----------------------------------------------------------------------
-#
+
 mkdir_vrfy -p "${EXTRN_MDL_FILES_DIR}"
 cd_vrfy ${EXTRN_MDL_FILES_DIR} || print_err_msg_exit "\
 Could not change directory to EXTRN_MDL_FILES_DIR:
@@ -83,8 +75,7 @@ Could not change directory to EXTRN_MDL_FILES_DIR:
 #
 #-----------------------------------------------------------------------
 #
-# Call the ex-script for this J-job and pass to it the necessary varia-
-# bles.
+# Call the ex-script for this J-job and pass to it the necessary variables.
 #
 #-----------------------------------------------------------------------
 #
@@ -107,8 +98,7 @@ In directory:    \"${scrfunc_dir}\"
 #
 #-----------------------------------------------------------------------
 #
-# Restore the shell options saved at the beginning of this script/func-
-# tion.
+# Restore the shell options saved at the beginning of this script/function.
 #
 #-----------------------------------------------------------------------
 #

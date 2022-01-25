@@ -107,8 +107,8 @@ mkdir_vrfy -p ${CYCLE_DIR}/JEDI/Data
 #-----------------------------------------------------------------------
 #
 print_info_msg "$VERBOSE" "
-Creating links in the JEDI subdirectory of the current cycle's run di-
-rectory to the necessary executables and fix files ..."
+Creating links in the JEDI subdirectory of the current cycle's run directory 
+to the necessary executables and fix files ..."
 # executables
 ln_vrfy -sf $EXECDIR/fv3jedi_error_covariance_training.x ${CYCLE_DIR}/JEDI/.
 ln_vrfy -sf $EXECDIR/fv3jedi_var.x ${CYCLE_DIR}/JEDI/.
@@ -271,11 +271,11 @@ ln_vrfy -sf $rst_dir ${CYCLE_DIR}/JEDI/Data/bkg
 #-----------------------------------------------------------------------
 #
 if [ ! -d "${DA_OBS_DIR}/${CDATE}" ] ; then
-  print_info_msg "!===================================="
+  print_info_msg "!==============================================================="
   print_info_msg "! While setting up the JEDI working directory, it was found that"
   print_info_msg "! ${DA_OBS_DIR}/${CDATE} does not exist. Assuming we will skip analysis step."
   print_info_msg "! Exiting this task gracefully"
-  print_info_msg "!===================================="
+  print_info_msg "!==============================================================="
   rm_vrfy -rf ${CYCLE_DIR}/JEDI/
   exit 0
 fi
@@ -345,7 +345,7 @@ cp_vrfy ${fv_tracer_file} ${fv_tracer_file}.ges
 #
 #-----------------------------------------------------------------------
 #
-if [ "${USE_CHEM_ANAL}" = "TRUE" ]; then
+if [ "${USE_CHEM_ANL}" = "TRUE" ]; then
     print_info_msg "$VERBOSE" "
     Using ncks to merge analysis fields into RESTART file"
     dimvars="xaxis_1,yaxis_1,zaxis_1,Time"
