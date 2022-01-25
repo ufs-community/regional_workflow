@@ -55,7 +55,7 @@ specified cycle.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "CYCLE_DIR" "ANALWORKDIR" "CYCLE_ROOT")
+valid_args=( "CYCLE_DIR" "ANL_WORKDIR" "CYCLE_ROOT")
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -156,7 +156,7 @@ YYYYMMDD=${YYYYMMDDHH:0:8}
 #
 #-----------------------------------------------------------------------
 
-cd_vrfy ${ANALWORKDIR}
+cd_vrfy ${ANL_WORKDIR}
 fixdir=$FIXgsi
 fixgriddir=$FIXgsi/${PREDEF_GRID_NAME}
 DA_CYCLE_INTERV=${INCR_CYCL_FREQ}
@@ -527,7 +527,7 @@ GSI_EXEC="${EXECDIR}/gsi.x"
 if [ -f $GSI_EXEC ]; then
   print_info_msg "$VERBOSE" "
 Copying the GSI executable to the run directory..."
-  cp_vrfy ${GSI_EXEC} ${ANALWORKDIR}/gsi.x
+  cp_vrfy ${GSI_EXEC} ${ANL_WORKDIR}/gsi.x
 else
   print_err_msg_exit "\
 The GSI executable specified in GSI_EXEC does not exist:
@@ -565,21 +565,21 @@ Call to executable to run GSI returned with nonzero exit code."
 #
 
 if [ ${BKTYPE} -eq 1 ]; then  # cold start, put analysis back to current INPUT 
-  cp ${ANALWORKDIR}/fv3_dynvars ${CYCLE_DIR}/INPUT/gfs_data.tile7.halo0.nc
-  cp ${ANALWORKDIR}/fv3_sfcdata ${CYCLE_DIR}/INPUT/sfc_data.tile7.halo0.nc
+  cp ${ANL_WORKDIR}/fv3_dynvars ${CYCLE_DIR}/INPUT/gfs_data.tile7.halo0.nc
+  cp ${ANL_WORKDIR}/fv3_sfcdata ${CYCLE_DIR}/INPUT/sfc_data.tile7.halo0.nc
 
 else                          # cycling, generate INPUT from previous cycle RESTART and GSI analysis
   cp_vrfy ${bkpath}/${restart_prefix}.fv_tracer.res.tile1.nc    ${bkpath}/${restart_prefix}.fv_tracer.res.tile1.nc.org
-  cp_vrfy ${ANALWORKDIR}/fv3_tracer                             ${bkpath}/${restart_prefix}.fv_tracer.res.tile1.nc          
+  cp_vrfy ${ANL_WORKDIR}/fv3_tracer                             ${bkpath}/${restart_prefix}.fv_tracer.res.tile1.nc          
 
   # for warm start               
   #cp_vrfy ${bkpath}/${restart_prefix}.coupler.res               ${CYCLE_DIR}/INPUT/coupler.res
   #cp_vrfy ${bkpath}/${restart_prefix}.fv_core.res.nc            ${CYCLE_DIR}/INPUT/fv_core.res.nc
   #cp_vrfy ${bkpath}/${restart_prefix}.fv_srf_wnd.res.tile1.nc   ${CYCLE_DIR}/INPUT/fv_srf_wnd.res.tile1.nc
   #cp_vrfy ${bkpath}/${restart_prefix}.phy_data.nc               ${CYCLE_DIR}/INPUT/phy_data.nc
-  #cp_vrfy ${ANALWORKDIR}/fv3_dynvars                            ${CYCLE_DIR}/INPUT/fv_core.res.tile1.nc
-  #cp_vrfy ${ANALWORKDIR}/fv3_tracer                             ${CYCLE_DIR}/INPUT/fv_tracer.res.tile1.nc
-  #cp_vrfy ${ANALWORKDIR}/fv3_sfcdata                            ${CYCLE_DIR}/INPUT/sfc_data.nc
+  #cp_vrfy ${ANL_WORKDIR}/fv3_dynvars                            ${CYCLE_DIR}/INPUT/fv_core.res.tile1.nc
+  #cp_vrfy ${ANL_WORKDIR}/fv3_tracer                             ${CYCLE_DIR}/INPUT/fv_tracer.res.tile1.nc
+  #cp_vrfy ${ANL_WORKDIR}/fv3_sfcdata                            ${CYCLE_DIR}/INPUT/sfc_data.nc
   #cp_vrfy ${CYCLE_ROOT}/${YYYYMMDDHHmInterv}/INPUT/gfs_ctrl.nc  ${CYCLE_DIR}/INPUT/gfs_ctrl.nc
 
 fi
@@ -629,7 +629,7 @@ if [ $netcdf_diag = ".true." ]; then
    if [ -f $CAT_EXEC ]; then
       print_info_msg "$VERBOSE" "
         Copying the ncdiag_cat executable to the run directory..."
-      cp_vrfy ${CAT_EXEC} ${ANALWORKDIR}/ncdiag_cat.x
+      cp_vrfy ${CAT_EXEC} ${ANL_WORKDIR}/ncdiag_cat.x
    else
       print_err_msg_exit "\
         The ncdiag_cat executable specified in CAT_EXEC does not exist:
