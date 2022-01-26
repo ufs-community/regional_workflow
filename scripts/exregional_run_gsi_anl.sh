@@ -55,7 +55,7 @@ specified cycle.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "CYCLE_DIR" "ANL_WORKDIR" "CYCLE_ROOT")
+valid_args=( "CYCLE_DIR" "ANL_WORKDIR" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -164,7 +164,7 @@ if [ ${BKTYPE} -eq 1 ]; then  # cold start, use background from INPUT
   bkpath=${CYCLE_DIR}/INPUT
 else
   YYYYMMDDHHmInterv=`date +%Y%m%d%H -d "${START_DATE} ${DA_CYCLE_INTERV} hours ago"`
-  bkpath=${CYCLE_ROOT}/${YYYYMMDDHHmInterv}/RESTART  # cycling, use background from RESTART
+  bkpath=${CYCLE_BASEDIR}/${YYYYMMDDHHmInterv}/RESTART  # cycling, use background from RESTART
 fi
 
 print_info_msg "$VERBOSE" "fixdir is $fixdir"
@@ -309,7 +309,7 @@ else                          # cycle uses background from restart
     else
       n=$((n + ${DA_CYCLE_INTERV}))
       YYYYMMDDHHmInterv=`date +%Y%m%d%H -d "${START_DATE} ${n} hours ago"`
-      bkpath=${CYCLE_ROOT}/${YYYYMMDDHHmInterv}/RESTART  # cycling, use background from RESTART
+      bkpath=${CYCLE_BASEDIR}/${YYYYMMDDHHmInterv}/RESTART  # cycling, use background from RESTART
       print_info_msg "$VERBOSE" "Trying this path: ${bkpath}"
     fi
   done
@@ -580,7 +580,7 @@ else                          # cycling, generate INPUT from previous cycle REST
   #cp_vrfy ${ANL_WORKDIR}/fv3_dynvars                            ${CYCLE_DIR}/INPUT/fv_core.res.tile1.nc
   #cp_vrfy ${ANL_WORKDIR}/fv3_tracer                             ${CYCLE_DIR}/INPUT/fv_tracer.res.tile1.nc
   #cp_vrfy ${ANL_WORKDIR}/fv3_sfcdata                            ${CYCLE_DIR}/INPUT/sfc_data.nc
-  #cp_vrfy ${CYCLE_ROOT}/${YYYYMMDDHHmInterv}/INPUT/gfs_ctrl.nc  ${CYCLE_DIR}/INPUT/gfs_ctrl.nc
+  #cp_vrfy ${CYCLE_BASEDIR}/${YYYYMMDDHHmInterv}/INPUT/gfs_ctrl.nc  ${CYCLE_DIR}/INPUT/gfs_ctrl.nc
 
 fi
 

@@ -442,7 +442,6 @@ file (template_xml_fp):
 
   'run_chem_anl_tn': ${RUN_CHEM_ANL_TN}
   'run_gsi_anl_tn': ${RUN_GSI_ANL_TN}
-  'anl_gsi_restart_tn': ${ANL_GSI_RESTART_TN}
   'run_task_chem_anl': ${RUN_TASK_CHEM_ANL}
   'run_task_dacyc': ${RUN_TASK_DACYC}
   'use_chem_anl': ${USE_CHEM_ANL}

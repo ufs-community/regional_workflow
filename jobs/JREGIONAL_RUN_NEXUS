@@ -62,8 +62,8 @@ using NEXUS which will output for FV3 (in NetCDF format).
 #
 #-----------------------------------------------------------------------
 #
-NEXUS_DIR="${CYCLE_DIR}/NEXUS"
-mkdir_vrfy -p "${NEXUS_DIR}"
+NEXUS_WORKDIR="${CYCLE_DIR}/NEXUS"
+mkdir_vrfy -p "${NEXUS_WORKDIR}"
 #
 #-----------------------------------------------------------------------
 #
@@ -76,7 +76,8 @@ mkdir_vrfy -p "${NEXUS_DIR}"
 
 $SCRIPTSDIR/exregional_run_nexus.sh \
   CYCLE_DATE="${CDATE}" \
-  CYCLE_DIR="${CYCLE_DIR}" || \
+  CYCLE_DIR="${CYCLE_DIR}" \
+  NEXUS_WORKDIR="${NEXUS_WORKDIR}" || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #

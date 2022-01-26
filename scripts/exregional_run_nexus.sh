@@ -56,7 +56,7 @@ for FV3 (in NetCDF format).
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "CYCLE_DIR" "CYCLE_DATE" )
+valid_args=( "CYCLE_DIR" "CYCLE_DATE" "NEXUS_WORKDIR" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -106,21 +106,17 @@ Run command has not been specified for this machine:
 
 esac
 
-#
-#-----------------------------------------------------------------------
-#
-workdir="${CYCLE_DIR}/NEXUS"
-mkdir_vrfy -p "$workdir"
-cd_vrfy $workdir
+cd_vrfy ${NEXUS_WORKDIR}
 #
 #-----------------------------------------------------------------------
 #
 # Copy the NEXUS config files to the tmp directory  
 #
+#-----------------------------------------------------------------------
 #
-cp_vrfy ${EXECDIR}/nexus ${workdir}
-cp_vrfy ${EXECDIR}/../src/arl_nexus/config/cmaq/*.rc ${workdir}
-cp_vrfy ${NEXUS_FIX_DIR}/${NEXUS_GRID_FN} ${workdir}/grid_spec.nc
+cp_vrfy ${EXECDIR}/nexus ${NEXUS_WORKDIR}
+cp_vrfy ${ARL_NEXUS_DIR}/config/cmaq/*.rc ${NEXUS_WORKDIR}
+cp_vrfy ${NEXUS_FIX_DIR}/${NEXUS_GRID_FN} ${NEXUS_WORKDIR}/grid_spec.nc
 #
 #-----------------------------------------------------------------------
 #
@@ -158,38 +154,38 @@ NEXUS_INPUT_BASE_DIR=${NEXUS_INPUT_DIR}
 # 
 # modify time configuration file
 #
-cp_vrfy ${EXECDIR}/../src/arl_nexus/utils/python/nexus_time_parser.py .
+cp_vrfy ${ARL_NEXUS_DIR}/utils/python/nexus_time_parser.py .
 echo ${start_date} ${end_date} # ${cyc}
-./nexus_time_parser.py -f ${workdir}/HEMCO_sa_Time.rc -s $start_date -e $end_date
+./nexus_time_parser.py -f ${NEXUS_WORKDIR}/HEMCO_sa_Time.rc -s $start_date -e $end_date
 
 #
 #---------------------------------------------------------------------
 #
 # set the root directory to the temporary directory
 #
-cp_vrfy ${EXECDIR}/../src/arl_nexus/utils/python/nexus_root_parser.py .
-./nexus_root_parser.py -f ${workdir}/NEXUS_Config.rc -d ${workdir}/inputs
+cp_vrfy ${ARL_NEXUS_DIR}/utils/python/nexus_root_parser.py .
+./nexus_root_parser.py -f ${NEXUS_WORKDIR}/NEXUS_Config.rc -d ${NEXUS_WORKDIR}/inputs
 
 #
 #----------------------------------------------------------------------
 # Get all the files needed (TEMPORARILY JUST COPY FROM THE DIRECTORY)
-mkdir_vrfy -p ${workdir}/inputs
+mkdir_vrfy -p ${NEXUS_WORKDIR}/inputs
 if [ ${NEI2016} == "TRUE" ]; then #NEI2016
-    cp_vrfy ${EXECDIR}/../src/arl_nexus/utils/python/nexus_nei2016_linker.py .
-    cp_vrfy ${EXECDIR}/../src/arl_nexus/utils/python/nexus_nei2016_control_tilefix.py .
-    mkdir_vrfy -p ${workdir}/inputs/NEI2016v1
-    mkdir_vrfy -p ${workdir}/inputs/NEI2016v1/v2020-07
-    mkdir_vrfy -p ${workdir}/inputs/NEI2016v1/v2020-07/${mm}
-    ./nexus_nei2016_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${workdir}/inputs
+    cp_vrfy ${ARL_NEXUS_DIR}/utils/python/nexus_nei2016_linker.py .
+    cp_vrfy ${ARL_NEXUS_DIR}/utils/python/nexus_nei2016_control_tilefix.py .
+    mkdir_vrfy -p ${NEXUS_WORKDIR}/inputs/NEI2016v1
+    mkdir_vrfy -p ${NEXUS_WORKDIR}/inputs/NEI2016v1/v2020-07
+    mkdir_vrfy -p ${NEXUS_WORKDIR}/inputs/NEI2016v1/v2020-07/${mm}
+    ./nexus_nei2016_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${NEXUS_WORKDIR}/inputs
     ./nexus_nei2016_control_tilefix.py -f NEXUS_Config.rc -d ${yyyymmdd}
 fi
 
 if [ ${TIMEZONES} == 'TRUE' ]; then # TIME ZONES
-    cp_vrfy -r ${NEXUS_INPUT_BASE_DIR}/TIMEZONES ${workdir}/inputs
+    cp_vrfy -r ${NEXUS_INPUT_BASE_DIR}/TIMEZONES ${NEXUS_WORKDIR}/inputs
 fi
 
 if [ ${MASKS} == 'TRUE' ]; then # MASKS
-    cp_vrfy -r ${NEXUS_INPUT_BASE_DIR}/MASKS ${workdir}/inputs
+    cp_vrfy -r ${NEXUS_INPUT_BASE_DIR}/MASKS ${NEXUS_WORKDIR}/inputs
 fi
 
 #

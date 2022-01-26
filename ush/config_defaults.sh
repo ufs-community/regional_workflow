@@ -2046,7 +2046,6 @@ ENKF_FCST=""
 
 RUN_CHEM_ANL_TN="run_chem_anl"
 RUN_GSI_ANL_TN="run_gsi_anl"
-ANL_GSI_RESTART_TN="anl_gsi_restart"
 
 NNODES_ADD_AQM_ICS="1"
 NNODES_ADD_AQM_LBCS="1"
