@@ -1510,64 +1510,63 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
 #
 # Get the base directory of the NEXUS code if required
 #
-external_name="arl_nexus"
-ARL_NEXUS_DIR=$( \
+  external_name="arl_nexus"
+  ARL_NEXUS_DIR=$( \
 get_manage_externals_config_property \
 "${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
 print_err_msg_exit "\
 Call to function get_manage_externals_config_property failed."
 
-ARL_NEXUS_DIR="${SR_WX_APP_TOP_DIR}/${ARL_NEXUS_DIR}"
-if [ ! -d "${ARL_NEXUS_DIR}" ]; then
-  print_err_msg_exit "\
+  ARL_NEXUS_DIR="${SR_WX_APP_TOP_DIR}/${ARL_NEXUS_DIR}"
+  if [ ! -d "${ARL_NEXUS_DIR}" ]; then
+    print_err_msg_exit "\
 The base directory in which the arl_nexus source code should be located
 (ARL_NEXUS_DIR) does not exist:
   ARL_NEXUS_DIR = \"${ARL_NEXUS_DIR}\"
 Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
-fi
+  fi
 
-if [ "${OPT_DA_RRFS_CMAQ}" = "TRUE" ]; then
+  if [ "${OPT_DA_RRFS_CMAQ}" = "TRUE" ]; then
 #
 # Get the base directory of the JEDI code if required
 #
-external_name="jedi-fv3-bundle"
-JEDI_DIR=$( \
+    external_name="jedi-fv3-bundle"
+    JEDI_DIR=$( \
 get_manage_externals_config_property \
 "${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
 print_err_msg_exit "\
 Call to function get_manage_externals_config_property failed."
 
-JEDI_DIR="${SR_WX_APP_TOP_DIR}/${JEDI_DIR}"
-if [ ! -d "${JEDI_DIR}" ]; then
-  print_err_msg_exit "\
+    JEDI_DIR="${SR_WX_APP_TOP_DIR}/${JEDI_DIR}"
+    if [ ! -d "${JEDI_DIR}" ]; then
+      print_err_msg_exit "\
 The base directory in which the JEDI source code should be located
 (JEDI_DIR) does not exist:
   JEDI_DIR = \"${JEDI_DIR}\"
 Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
-fi
+    fi
 #
 # Get the base directory of the GSI code if required
 #
-external_name="GSI"
-GSI_DIR=$( \
+    external_name="GSI"
+    GSI_DIR=$( \
 get_manage_externals_config_property \
 "${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
 print_err_msg_exit "\
 Call to function get_manage_externals_config_property failed."
 
-GSI_DIR="${SR_WX_APP_TOP_DIR}/${GSI_DIR}"
-if [ ! -d "${GSI_DIR}" ]; then
-  print_err_msg_exit "\
+    GSI_DIR="${SR_WX_APP_TOP_DIR}/${GSI_DIR}"
+    if [ ! -d "${GSI_DIR}" ]; then
+      print_err_msg_exit "\
 The base directory in which the GSI source code should be located
 (GSI_DIR) does not exist:
   GSI_DIR = \"${GSI_DIR}\"
 Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
-fi
-
-fi
+    fi
+  fi
 fi
 #
 ##### RRFS-CMAQ ########## end   #####
