@@ -1002,21 +1002,21 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_ADD_AQM_ICS" "valid_vals_RUN_TASK_ADD_AQM_ICS"
-RUN_TASK_ADD_AQM_ICS=${RUN_TASK_ADD_AQM_ICS^^}
-if [ "${RUN_TASK_ADD_AQM_ICS}" = "TRUE" ] || \
-   [ "${RUN_TASK_ADD_AQM_ICS}" = "YES" ]; then
-  RUN_TASK_ADD_AQM_ICS="TRUE"
-elif [ "${RUN_TASK_ADD_AQM_ICS}" = "FALSE" ] || \
-     [ "${RUN_TASK_ADD_AQM_ICS}" = "NO" ]; then
-  RUN_TASK_ADD_AQM_ICS="FALSE"
-fi
+  check_var_valid_value "RUN_TASK_ADD_AQM_ICS" "valid_vals_RUN_TASK_ADD_AQM_ICS"
+  RUN_TASK_ADD_AQM_ICS=${RUN_TASK_ADD_AQM_ICS^^}
+  if [ "${RUN_TASK_ADD_AQM_ICS}" = "TRUE" ] || \
+     [ "${RUN_TASK_ADD_AQM_ICS}" = "YES" ]; then
+    RUN_TASK_ADD_AQM_ICS="TRUE"
+  elif [ "${RUN_TASK_ADD_AQM_ICS}" = "FALSE" ] || \
+       [ "${RUN_TASK_ADD_AQM_ICS}" = "NO" ]; then
+    RUN_TASK_ADD_AQM_ICS="FALSE"
+  fi
 #
-if [ ${#ALL_CDATES[@]} -gt 1 ]; then
-  RUN_TASK_ADD_AQM_ICS="${RUN_TASK_ADD_AQM_ICS:-TRUE}"
-else
-  RUN_TASK_ADD_AQM_ICS="${RUN_TASK_ADD_AQM_ICS:-FALSE}"
-fi
+  if [ ${#ALL_CDATES[@]} -gt 1 ]; then
+    RUN_TASK_ADD_AQM_ICS="${RUN_TASK_ADD_AQM_ICS:-TRUE}"
+  else
+    RUN_TASK_ADD_AQM_ICS="${RUN_TASK_ADD_AQM_ICS:-FALSE}"
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1024,16 +1024,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_ADD_AQM_CHEM_LBCS" "valid_vals_RUN_ADD_AQM_CHEM_LBCS"
-RUN_ADD_AQM_CHEM_LBCS=${RUN_ADD_AQM_CHEM_LBCS^^}
-if [ "${RUN_ADD_AQM_CHEM_LBCS}" = "TRUE" ] || \
-   [ "${RUN_ADD_AQM_CHEM_LBCS}" = "YES" ]; then
-  RUN_ADD_AQM_CHEM_LBCS="TRUE"
-
-elif [ "${RUN_ADD_AQM_CHEM_LBCS}" = "FALSE" ] || \
-     [ "${RUN_ADD_AQM_CHEM_LBCS}" = "NO" ]; then
-  RUN_ADD_AQM_CHEM_LBCS="FALSE"
-fi
+  check_var_valid_value "RUN_ADD_AQM_CHEM_LBCS" "valid_vals_RUN_ADD_AQM_CHEM_LBCS"
+  RUN_ADD_AQM_CHEM_LBCS=${RUN_ADD_AQM_CHEM_LBCS^^}
+  if [ "${RUN_ADD_AQM_CHEM_LBCS}" = "TRUE" ] || \
+     [ "${RUN_ADD_AQM_CHEM_LBCS}" = "YES" ]; then
+    RUN_ADD_AQM_CHEM_LBCS="TRUE"
+  elif [ "${RUN_ADD_AQM_CHEM_LBCS}" = "FALSE" ] || \
+       [ "${RUN_ADD_AQM_CHEM_LBCS}" = "NO" ]; then
+    RUN_ADD_AQM_CHEM_LBCS="FALSE"
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1041,16 +1040,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_ADD_AQM_GEFS_LBCS" "valid_vals_RUN_ADD_AQM_GEFS_LBCS"
-RUN_ADD_AQM_GEFS_LBCS=${RUN_ADD_AQM_GEFS_LBCS^^}
-if [ "${RUN_ADD_AQM_GEFS_LBCS}" = "TRUE" ] || \
-   [ "${RUN_ADD_AQM_GEFS_LBCS}" = "YES" ]; then
-  RUN_ADD_AQM_GEFS_LBCS="TRUE"
-
-elif [ "${RUN_ADD_AQM_GEFS_LBCS}" = "FALSE" ] || \
-     [ "${RUN_ADD_AQM_GEFS_LBCS}" = "NO" ]; then
-  RUN_ADD_AQM_GEFS_LBCS="FALSE"
-fi
+  check_var_valid_value "RUN_ADD_AQM_GEFS_LBCS" "valid_vals_RUN_ADD_AQM_GEFS_LBCS"
+  RUN_ADD_AQM_GEFS_LBCS=${RUN_ADD_AQM_GEFS_LBCS^^}
+  if [ "${RUN_ADD_AQM_GEFS_LBCS}" = "TRUE" ] || \
+     [ "${RUN_ADD_AQM_GEFS_LBCS}" = "YES" ]; then
+    RUN_ADD_AQM_GEFS_LBCS="TRUE"
+  elif [ "${RUN_ADD_AQM_GEFS_LBCS}" = "FALSE" ] || \
+       [ "${RUN_ADD_AQM_GEFS_LBCS}" = "NO" ]; then
+    RUN_ADD_AQM_GEFS_LBCS="FALSE"
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1058,20 +1056,20 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_ADD_AQM_LBCS" "valid_vals_RUN_TASK_ADD_AQM_LBCS"
-RUN_TASK_ADD_AQM_LBCS=${RUN_TASK_ADD_AQM_LBCS^^}
-if [ "${RUN_TASK_ADD_AQM_LBCS}" = "TRUE" ] || \
-   [ "${RUN_TASK_ADD_AQM_LBCS}" = "YES" ]; then
-  RUN_TASK_ADD_AQM_LBCS="TRUE"
-elif [ "${RUN_TASK_ADD_AQM_LBCS}" = "FALSE" ] || \
-     [ "${RUN_TASK_ADD_AQM_LBCS}" = "NO" ]; then
-  RUN_TASK_ADD_AQM_LBCS="FALSE"
-fi
+  check_var_valid_value "RUN_TASK_ADD_AQM_LBCS" "valid_vals_RUN_TASK_ADD_AQM_LBCS"
+  RUN_TASK_ADD_AQM_LBCS=${RUN_TASK_ADD_AQM_LBCS^^}
+  if [ "${RUN_TASK_ADD_AQM_LBCS}" = "TRUE" ] || \
+     [ "${RUN_TASK_ADD_AQM_LBCS}" = "YES" ]; then
+    RUN_TASK_ADD_AQM_LBCS="TRUE"
+  elif [ "${RUN_TASK_ADD_AQM_LBCS}" = "FALSE" ] || \
+       [ "${RUN_TASK_ADD_AQM_LBCS}" = "NO" ]; then
+    RUN_TASK_ADD_AQM_LBCS="FALSE"
+  fi
 
-if [ "${RUN_ADD_AQM_CHEM_LBCS}" = "FALSE" ] && \
-   [ "${RUN_ADD_AQM_GEFS_LBCS}" = "FALSE" ]; then
-  RUN_TASK_ADD_AQM_LBCS="FALSE"
-fi
+  if [ "${RUN_ADD_AQM_CHEM_LBCS}" = "FALSE" ] && \
+     [ "${RUN_ADD_AQM_GEFS_LBCS}" = "FALSE" ]; then
+    RUN_TASK_ADD_AQM_LBCS="FALSE"
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1079,15 +1077,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_RUN_NEXUS" "valid_vals_RUN_TASK_RUN_NEXUS"
-RUN_TASK_RUN_NEXUS=${RUN_TASK_RUN_NEXUS^^}
-if [ "${RUN_TASK_RUN_NEXUS}" = "TRUE" ] || \
-   [ "${RUN_TASK_RUN_NEXUS}" = "YES" ]; then
-  RUN_TASK_RUN_NEXUS="TRUE"
-elif [ "${RUN_TASK_RUN_NEXUS}" = "FALSE" ] || \
-     [ "${RUN_TASK_RUN_NEXUS}" = "NO" ]; then
-  RUN_TASK_RUN_NEXUS="FALSE"
-fi
+  check_var_valid_value "RUN_TASK_RUN_NEXUS" "valid_vals_RUN_TASK_RUN_NEXUS"
+  RUN_TASK_RUN_NEXUS=${RUN_TASK_RUN_NEXUS^^}
+  if [ "${RUN_TASK_RUN_NEXUS}" = "TRUE" ] || \
+     [ "${RUN_TASK_RUN_NEXUS}" = "YES" ]; then
+    RUN_TASK_RUN_NEXUS="TRUE"
+  elif [ "${RUN_TASK_RUN_NEXUS}" = "FALSE" ] || \
+       [ "${RUN_TASK_RUN_NEXUS}" = "NO" ]; then
+    RUN_TASK_RUN_NEXUS="FALSE"
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1095,20 +1093,18 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_RUN_POST_STAT" "valid_vals_RUN_TASK_RUN_POST_STAT"
-RUN_TASK_RUN_POST_STAT=${RUN_TASK_RUN_POST_STAT^^}
-if [ "${RUN_TASK_RUN_POST_STAT}" = "TRUE" ] || \
-   [ "${RUN_TASK_RUN_POST_STAT}" = "YES" ]; then
-  RUN_TASK_RUN_POST_STAT="TRUE"
-
-  if [ ${FCST_LEN_HRS} -lt "40" ]; then
+  check_var_valid_value "RUN_TASK_RUN_POST_STAT" "valid_vals_RUN_TASK_RUN_POST_STAT"
+  RUN_TASK_RUN_POST_STAT=${RUN_TASK_RUN_POST_STAT^^}
+  if [ "${RUN_TASK_RUN_POST_STAT}" = "TRUE" ] || \
+     [ "${RUN_TASK_RUN_POST_STAT}" = "YES" ]; then
+    RUN_TASK_RUN_POST_STAT="TRUE"
+    if [ ${FCST_LEN_HRS} -lt "40" ]; then
+      RUN_TASK_RUN_POST_STAT="FALSE"
+    fi
+  elif [ "${RUN_TASK_RUN_POST_STAT}" = "FALSE" ] || \
+       [ "${RUN_TASK_RUN_POST_STAT}" = "NO" ]; then
     RUN_TASK_RUN_POST_STAT="FALSE"
   fi
-
-elif [ "${RUN_TASK_RUN_POST_STAT}" = "FALSE" ] || \
-     [ "${RUN_TASK_RUN_POST_STAT}" = "NO" ]; then
-  RUN_TASK_RUN_POST_STAT="FALSE"
-fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1116,15 +1112,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RESTART_WORKFLOW" "valid_vals_RESTART_WORKFLOW"
-RESTART_WORKFLOW=${RESTART_WORKFLOW^^}
-if [ "${RESTART_WORKFLOW}" = "TRUE" ] || \
-   [ "${RESTART_WORKFLOW}" = "YES" ]; then
-  RESTART_WORKFLOW="TRUE"
-elif [ "${RESTART_WORKFLOW}" = "FALSE" ] || \
-     [ "${RESTART_WORKFLOW}" = "NO" ]; then
-  RESTART_WORKFLOW="FALSE"
-fi
+  check_var_valid_value "RESTART_WORKFLOW" "valid_vals_RESTART_WORKFLOW"
+  RESTART_WORKFLOW=${RESTART_WORKFLOW^^}
+  if [ "${RESTART_WORKFLOW}" = "TRUE" ] || \
+     [ "${RESTART_WORKFLOW}" = "YES" ]; then
+    RESTART_WORKFLOW="TRUE"
+  elif [ "${RESTART_WORKFLOW}" = "FALSE" ] || \
+       [ "${RESTART_WORKFLOW}" = "NO" ]; then
+    RESTART_WORKFLOW="FALSE"
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1132,15 +1128,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "OPT_DA_RRFS_CMAQ" "valid_vals_OPT_DA_RRFS_CMAQ"
-OPT_DA_RRFS_CMAQ=${OPT_DA_RRFS_CMAQ^^}
-if [ "${OPT_DA_RRFS_CMAQ}" = "TRUE" ] || \
-   [ "${OPT_DA_RRFS_CMAQ}" = "YES" ]; then
-  OPT_DA_RRFS_CMAQ="TRUE"
-elif [ "${OPT_DA_RRFS_CMAQ}" = "FALSE" ] || \
-     [ "${OPT_DA_RRFS_CMAQ}" = "NO" ]; then
-  OPT_DA_RRFS_CMAQ="FALSE"
-fi
+  check_var_valid_value "OPT_DA_RRFS_CMAQ" "valid_vals_OPT_DA_RRFS_CMAQ"
+  OPT_DA_RRFS_CMAQ=${OPT_DA_RRFS_CMAQ^^}
+  if [ "${OPT_DA_RRFS_CMAQ}" = "TRUE" ] || \
+     [ "${OPT_DA_RRFS_CMAQ}" = "YES" ]; then
+    OPT_DA_RRFS_CMAQ="TRUE"
+  elif [ "${OPT_DA_RRFS_CMAQ}" = "FALSE" ] || \
+       [ "${OPT_DA_RRFS_CMAQ}" = "NO" ]; then
+    OPT_DA_RRFS_CMAQ="FALSE"
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1148,15 +1144,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_CHEM_ANL" "valid_vals_RUN_TASK_CHEM_ANL"
-RUN_TASK_CHEM_ANL=${RUN_TASK_CHEM_ANL^^}
-if [ "${RUN_TASK_CHEM_ANL}" = "TRUE" ] || \
-   [ "${RUN_TASK_CHEM_ANL}" = "YES" ]; then
-  RUN_TASK_CHEM_ANL="TRUE"
-elif [ "${RUN_TASK_CHEM_ANL}" = "FALSE" ] || \
-     [ "${RUN_TASK_CHEM_ANL}" = "NO" ]; then
-  RUN_TASK_CHEM_ANL="FALSE"
-fi
+  check_var_valid_value "RUN_TASK_CHEM_ANL" "valid_vals_RUN_TASK_CHEM_ANL"
+  RUN_TASK_CHEM_ANL=${RUN_TASK_CHEM_ANL^^}
+  if [ "${RUN_TASK_CHEM_ANL}" = "TRUE" ] || \
+     [ "${RUN_TASK_CHEM_ANL}" = "YES" ]; then
+    RUN_TASK_CHEM_ANL="TRUE"
+  elif [ "${RUN_TASK_CHEM_ANL}" = "FALSE" ] || \
+       [ "${RUN_TASK_CHEM_ANL}" = "NO" ]; then
+    RUN_TASK_CHEM_ANL="FALSE"
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1164,15 +1160,15 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "USE_CHEM_ANL" "valid_vals_USE_CHEM_ANL"
-USE_CHEM_ANL=${USE_CHEM_ANL^^}
-if [ "${USE_CHEM_ANL}" = "TRUE" ] || \
-   [ "${USE_CHEM_ANL}" = "YES" ]; then
-  USE_CHEM_ANL="TRUE"
-elif [ "${USE_CHEM_ANL}" = "FALSE" ] || \
-     [ "${USE_CHEM_ANL}" = "NO" ]; then
-  USE_CHEM_ANL="FALSE"
-fi
+  check_var_valid_value "USE_CHEM_ANL" "valid_vals_USE_CHEM_ANL"
+  USE_CHEM_ANL=${USE_CHEM_ANL^^}
+  if [ "${USE_CHEM_ANL}" = "TRUE" ] || \
+     [ "${USE_CHEM_ANL}" = "YES" ]; then
+    USE_CHEM_ANL="TRUE"
+  elif [ "${USE_CHEM_ANL}" = "FALSE" ] || \
+       [ "${USE_CHEM_ANL}" = "NO" ]; then
+    USE_CHEM_ANL="FALSE"
+  fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1180,22 +1176,21 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "RUN_TASK_DACYC" "valid_vals_RUN_TASK_DACYC"
-RUN_TASK_DACYC=${RUN_TASK_DACYC^^}
-if [ "${RUN_TASK_DACYC}" = "TRUE" ] || \
-   [ "${RUN_TASK_DACYC}" = "YES" ]; then
-  RUN_TASK_DACYC="TRUE"
-elif [ "${RUN_TASK_DACYC}" = "FALSE" ] || \
-     [ "${RUN_TASK_DACYC}" = "NO" ]; then
-  RUN_TASK_DACYC="FALSE"
-fi
+  check_var_valid_value "RUN_TASK_DACYC" "valid_vals_RUN_TASK_DACYC"
+  RUN_TASK_DACYC=${RUN_TASK_DACYC^^}
+  if [ "${RUN_TASK_DACYC}" = "TRUE" ] || \
+     [ "${RUN_TASK_DACYC}" = "YES" ]; then
+    RUN_TASK_DACYC="TRUE"
+  elif [ "${RUN_TASK_DACYC}" = "FALSE" ] || \
+       [ "${RUN_TASK_DACYC}" = "NO" ]; then
+    RUN_TASK_DACYC="FALSE"
+  fi
 
-if [ "${OPT_DA_RRFS_CMAQ}" = "FALSE" ]; then
-  RUN_TASK_CHEM_ANL="FALSE"
-  USE_CHEM_ANL="FALSE"
-  RUN_TASK_DACYC="FALSE"
-fi
-
+  if [ "${OPT_DA_RRFS_CMAQ}" = "FALSE" ]; then
+    RUN_TASK_CHEM_ANL="FALSE"
+    USE_CHEM_ANL="FALSE"
+    RUN_TASK_DACYC="FALSE"
+  fi
 fi
 #
 ##### RRFS-CMAQ ########## end   #####
@@ -1357,7 +1352,7 @@ esac
 #
 if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
 
-case $MACHINE in
+  case $MACHINE in
 
 "WCOSS_DELL_P3")
   AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/aqm/epa/data"}
@@ -1425,7 +1420,7 @@ One or more AQM directories have not been specified for this machine:
 You can specify the missing location(s) in config.sh"
     ;;
 
-esac
+  esac
 
 fi
 #
@@ -1934,19 +1929,15 @@ FIXclim="${EXPTDIR}/fix_clim"
 FIXLAM="${EXPTDIR}/fix_lam"
 
 if [ "${RUN_ENVIR}" = "nco" ]; then
-
   CYCLE_BASEDIR="$STMP/tmpnwprd/$RUN"
   check_for_preexist_dir_file "${CYCLE_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
   COMROOT="$PTMP/com"
   COMOUT_BASEDIR="$COMROOT/$NET/$envir"
   check_for_preexist_dir_file "${COMOUT_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
-
 else
-
   CYCLE_BASEDIR="$EXPTDIR"
   COMROOT=""
   COMOUT_BASEDIR=""
-
 fi
 #
 #-----------------------------------------------------------------------
@@ -1993,10 +1984,10 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_FN}.${FCST_MODEL}"
   NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}.${FCST_MODEL}"
 else
-DIAG_TABLE_TMPL_FN="${DIAG_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
-FIELD_TABLE_TMPL_FN="${FIELD_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
-MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_FN}"
-NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}"
+  DIAG_TABLE_TMPL_FN="${DIAG_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
+  FIELD_TABLE_TMPL_FN="${FIELD_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
+  MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_FN}"
+  NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}"
 fi
 DATA_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DATA_TABLE_TMPL_FN}"
 DIAG_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DIAG_TABLE_TMPL_FN}"
