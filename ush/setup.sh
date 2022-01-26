@@ -1258,9 +1258,9 @@ VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
 METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
 MET_CONFIG="$TEMPLATE_DIR/parm/met"
 
-ARL_NEXUS_DIR="src/arl_nexus"
-JEDI_DIR="src/jedi"
-GSI_DIR="src/gsi"
+ARL_NEXUS_DIR="${SR_WX_APP_TOP_DIR}/src/arl_nexus"
+JEDI_DIR="${SR_WX_APP_TOP_DIR}/src/jedi"
+GSI_DIR="${SR_WX_APP_TOP_DIR}/src/gsi"
 
 case "$MACHINE" in
 
@@ -2007,7 +2007,9 @@ FV3_NML_YAML_CONFIG_FP="${TEMPLATE_DIR}/${FV3_NML_YAML_CONFIG_FN}"
 FV3_NML_BASE_ENS_FP="${EXPTDIR}/${FV3_NML_BASE_ENS_FN}"
 MODEL_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${MODEL_CONFIG_TMPL_FN}"
 NEMS_CONFIG_TMPL_FP="${TEMPLATE_DIR}/${NEMS_CONFIG_TMPL_FN}"
-AQM_RC_FP="${TEMPLATE_DIR}/${AQM_RC_FN}"
+
+USER_AQM_RC_DIR=${USER_AQM_RC_DIR:-"${TEMPLATE_DIR}"}
+AQM_RC_FP="${USER_AQM_RC_DIR}/${AQM_RC_FN}"
 #
 #-----------------------------------------------------------------------
 #
@@ -3274,6 +3276,7 @@ FV3_NML_ENSMEM_FPS=${fv3_nml_ensmem_fps_str}
 ARL_NEXUS_DIR="${ARL_NEXUS_DIR}"
 JEDI_DIR="${JEDI_DIR}"
 GSI_DIR="${GSI_DIR}"
+AQM_RC_FP="${AQM_RC_FP}"
 ##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
@@ -3319,10 +3322,6 @@ LOAD_MODULES_RUN_TASK_FP='${LOAD_MODULES_RUN_TASK_FP}'
 
 THOMPSON_MP_CLIMO_FN='${THOMPSON_MP_CLIMO_FN}'
 THOMPSON_MP_CLIMO_FP='${THOMPSON_MP_CLIMO_FP}'
-#
-##### RRFS-CMAQ ########## start #####
-AQM_RC_FP="${AQM_RC_FP}"
-##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #

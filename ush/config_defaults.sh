@@ -1913,6 +1913,10 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # AQM_RC_FN:
 # Name of resource file for NOAA Air Quality Model (AQM)
 #
+# USER_AQM_RC_DIR:
+# Path to the directory containg user's own AQM resource file
+# If blank, TEMPLATE_DIR will be specified.
+#
 # AQM_CONFIG_DIR:
 # Configuration directory for AQM
 #
@@ -1988,6 +1992,7 @@ OMP_STACKSIZE_RUN_POST="1024m"
 #-----------------------------------------------------------------------
 #
 
+USER_AQM_RC_DIR=""
 AQM_RC_FN="aqm.rc"
 AQM_CONFIG_DIR=""
 AQM_BIO_DIR=""
