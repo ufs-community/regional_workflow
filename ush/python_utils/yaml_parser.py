@@ -2,25 +2,9 @@
 
 import argparse
 import yaml
-import sys 
+import sys
 
-def shell_rhs(v, oneline=False):
-    """ Given a scalar or array, construct string on rhs
-
-    Args:
-        v: a scalar or array
-    Returns:
-        A string
-    """
-    if isinstance(v, list):
-        if oneline or len(v) <= 4:
-            shell_str = f'( "' + '" "'.join(v) + '" )'
-        else:
-            shell_str = f'( \\\n"' + '" \\\n"'.join(v) + '"\\\n)'
-    else:
-        shell_str = f'"{v}"'
-
-    return shell_str
+from python_utils.environment import list_to_shell_str
  
 def yaml_to_str(cfg):
     """ Get contents of yaml file as string """
@@ -39,7 +23,7 @@ def yaml_to_shell_str(cfg):
 
     shell_str = ''
     for k,v in cfg.items():
-        v1 = shell_rhs(v)
+        v1 = list_to_shell_str(v)
         shell_str += f'{k}={v1}\n'
 
     return shell_str

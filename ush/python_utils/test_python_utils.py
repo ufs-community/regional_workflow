@@ -20,12 +20,12 @@ from python_utils.get_manage_externals_config_property import get_manage_externa
 from python_utils.interpol_to_arbit_CRES import interpol_to_arbit_CRES
 from python_utils.set_bash_param import set_bash_param
 from python_utils.set_file_param import set_file_param
-from python_utils.define_macro_utilities import set_env_var, define_macro_utilities
+from python_utils.define_macro_utilities import define_macro_utilities
 from python_utils.process_args import process_args
 from python_utils.print_input_args import print_input_args
 from python_utils.create_symlink_to_file import create_symlink_to_file
-from python_utils.import_vars import import_vars
-#from python_utils.yaml_parser import yaml_to_shell_str
+from python_utils.environment import import_vars, export_vars, set_env_var, shell_str_to_list
+from python_utils.yaml_parser import yaml_to_shell_str
 
 class Testing(unittest.TestCase):
     def test_change_case(self):
@@ -98,9 +98,9 @@ class Testing(unittest.TestCase):
     def test_create_symlink_to_file(self):
         TARGET = f'{self.PATH}/test_python_utils.py'
         SYMLINK = f'{self.PATH}/test_data/test_python_utils.py'
-        create_symlink_to_file(target=TARGET,symlink=SYMLINK)
+        create_symlink_to_file(TARGET,SYMLINK)
     def test_define_macro_utilities(self):
-        set_env_var('MYVAR','MYVAL',False)
+        set_env_var('MYVAR','MYVAL')
         val = os.getenv('MYVAR')
         self.assertEqual(val,'MYVAL')
         self.assertEqual(os.getenv('SED'),
@@ -119,9 +119,19 @@ class Testing(unittest.TestCase):
         valid_args = { "arg1":1, "arg2":2, "arg3":3, "arg4":4 }
         self.assertEqual( print_input_args(valid_args), 4 )
     def test_import_vars(self):
-        env_vars = ["PWD", "TERM"]
+        #test import
+        global MYVAR
+        set_env_var("MYVAR","MYVAL")
+        env_vars = ["PWD", "MYVAR"]
         import_vars(env_vars=env_vars)
         self.assertEqual( PWD, os.getcwd() )
+        self.assertEqual(MYVAR,"MYVAL")
+        #test export
+        MYVAR="MYNEWVAL"
+        self.assertEqual(os.environ['MYVAR'],'MYVAL')
+        export_vars(env_vars=env_vars)
+        self.assertEqual(os.environ['MYVAR'],'MYNEWVAL')
+        #test custom dictionary
         dictionary = { "Hello": "World!" }
         import_vars(dictionary=dictionary)
         self.assertEqual( Hello, "World!" )

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
 import os
+import configparser
+
 from python_utils.print_msg import print_err_msg_exit
-from python_utils.run_command import run_command
 
 def get_manage_externals_config_property(externals_cfg_fp, external_name, property_name):
     """
@@ -35,21 +36,10 @@ The specified manage_externals configuration file (externals_cfg_fp)
 does not exist:
   externals_cfg_fp = \"{externals_cfg_fp}\"''')
     
-    SED=os.getenv('SED')
+    config = configparser.ConfigParser()
+    config.read(externals_cfg_fp)
 
-    regex_search=f'^[ ]*({property_name})[ ]*=[ ]*([^ ]*).*'
-    cmd = f'{SED} -r -n \
-                -e "/^[ ]*\[{external_name}\]/!b" \
-                -e ":SearchForLine" \
-                -e "s/({regex_search})/\\1/;t FoundLine" \
-                -e "n;bSearchForLine" \
-                -e ":FoundLine" \
-                -e "p;q" \
-                "{externals_cfg_fp}" '
-
-    (ret,line,_) = run_command(cmd)
-
-    if line == None:
+    if not external_name in config.sections():
         print_err_msg_exit(f'''
 In the specified manage_externals configuration file (externals_cfg_fp), 
 the specified property (property_name) was not found for the the speci-
@@ -58,10 +48,7 @@ fied external (external_name):
   external_name = \"{external_name}\"
   property_name = \"{property_name}\"''')
     else:
-        line = line[:-1]
-        cmd = f'printf "%s" "{line}" | {SED} -r -n -e "s/{regex_search}/\\2/p"'
-        (_,property_value,_) = run_command(cmd)
-        return property_value
+        return config[external_name][property_name]
 
     return None
 

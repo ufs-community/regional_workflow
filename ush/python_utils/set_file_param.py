@@ -4,7 +4,7 @@ import os
 from python_utils.print_msg import print_info_msg, print_err_msg_exit
 from python_utils.change_case import lowercase
 from python_utils.run_command import run_command
-from python_utils.import_vars import import_vars
+from python_utils.environment import import_vars
 
 def set_file_param(file_full_path, param, value):
     """ Function to replace placeholder values of variables in
