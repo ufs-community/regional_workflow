@@ -2,7 +2,4 @@
 ## Module file for add_aqm_ics task.
 #############################################################
 
-module purge
-
-module load ips/18.0.1.163
 module load NCO/4.7.0
