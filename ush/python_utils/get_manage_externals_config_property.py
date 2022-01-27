@@ -32,21 +32,21 @@ def get_manage_externals_config_property(externals_cfg_fp, external_name, proper
 
     if not os.path.exists(externals_cfg_fp):
         print_err_msg_exit(f'''
-The specified manage_externals configuration file (externals_cfg_fp) 
-does not exist:
-  externals_cfg_fp = \"{externals_cfg_fp}\"''')
+            The specified manage_externals configuration file (externals_cfg_fp) 
+            does not exist:
+              externals_cfg_fp = \"{externals_cfg_fp}\"''')
     
     config = configparser.ConfigParser()
     config.read(externals_cfg_fp)
 
     if not external_name in config.sections():
         print_err_msg_exit(f'''
-In the specified manage_externals configuration file (externals_cfg_fp), 
-the specified property (property_name) was not found for the the speci-
-fied external (external_name): 
-  externals_cfg_fp = \"{externals_cfg_fp}\"
-  external_name = \"{external_name}\"
-  property_name = \"{property_name}\"''')
+            In the specified manage_externals configuration file (externals_cfg_fp), 
+            the specified property (property_name) was not found for the the speci-
+            fied external (external_name): 
+              externals_cfg_fp = \"{externals_cfg_fp}\"
+              external_name = \"{external_name}\"
+              property_name = \"{property_name}\"''')
     else:
         return config[external_name][property_name]
 

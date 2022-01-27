@@ -2,6 +2,7 @@
 
 import traceback
 import sys
+from textwrap import dedent
 
 def print_err_msg_exit(error_msg="",stack_trace=True):
     """Function to print out an error message to stderr and exit.
@@ -16,7 +17,7 @@ def print_err_msg_exit(error_msg="",stack_trace=True):
         traceback.print_stack(file=sys.stderr)
 
     msg_footer='\nExiting with nonzero status.'
-    print(error_msg + msg_footer, file=sys.stderr)
+    print(dedent(error_msg) + msg_footer, file=sys.stderr)
     sys.exit(1)
 
 def print_info_msg(info_msg,verbose=True):
@@ -29,8 +30,8 @@ def print_info_msg(info_msg,verbose=True):
         True: if message is successfully printed
     """
   
-    if verbose == True or verbose == 'TRUE':
-        print(info_msg) 
+    if verbose == True:
+        print(dedent(info_msg))
         return True
     return False
 

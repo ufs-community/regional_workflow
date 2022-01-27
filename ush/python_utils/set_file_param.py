@@ -60,9 +60,9 @@ def set_file_param(file_full_path, param, value):
         regex_replace = f"\\1{value}\\5"
     else:
         print_err_msg_exit(f'''
-The regular expressions for performing search and replace have not been 
-specified for this file:
-  file = \"{file_}\"''')
+            The regular expressions for performing search and replace have not been 
+            specified for this file:
+              file = \"{file_}\"''')
 
     #use grep to determine if pattern exists
     (err,_,_) = run_command(f"grep -q -E '{regex_search}' '{file_full_path}'")
@@ -71,10 +71,10 @@ specified for this file:
         run_command(f"{SED} -i -r -e 's%{regex_search}%{regex_replace}%' '{file_full_path}'")
     else:
         print_err_msg_exit(f'''
-Specified file (file_full_path) does not contain the searched-for regu-
-lar expression (regex_search):
-  file_full_path = \"{file_full_path}\"
-  param = \"{param}\"
-  value = \"{value}\"
-  regex_search = {regex_search}''')
+            Specified file (file_full_path) does not contain the searched-for regu-
+            lar expression (regex_search):
+              file_full_path = \"{file_full_path}\"
+              param = \"{param}\"
+              value = \"{value}\"
+              regex_search = {regex_search}''')
 

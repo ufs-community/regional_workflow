@@ -62,7 +62,9 @@ def list_to_shell_str(v, oneline=False):
     Returns:
         A string
     """
-    if not v:
+    if isinstance(v,bool):
+        return str(v)
+    elif not v:
         return ''
     elif isinstance(v, list):
         v = [str(i) for i in v]
@@ -91,7 +93,7 @@ def shell_str_to_list(v):
     elif v[0] == '(':
         v = v[1:-1]
         tokens = shlex.split(v)
-        lst = [ get_str_type(itm) for itm in tokens ]
+        lst = [ get_str_type(itm.strip()) for itm in tokens ]
         return lst
     else:
         return get_str_type(v)

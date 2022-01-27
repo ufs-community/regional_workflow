@@ -27,13 +27,13 @@ def check_for_preexist_dir_file(path, method):
             d = now.strftime("_%Y%m%d_%H%M%S")
             new_path = path + d
             print_info_msg(f'''
-Specified directory or file already exists:
-    {path}
-Moving (renaming) preexisting directory or file to:
-    {new_path}''')
+                Specified directory or file already exists:
+                    {path}
+                Moving (renaming) preexisting directory or file to:
+                    {new_path}''')
             mv_vrfy(path, new_path) 
         else:
             print_err_msg_exit(f'''
-Specified directory or file already exists
-    {path}''')
+                Specified directory or file already exists
+                    {path}''')
     

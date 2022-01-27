@@ -45,10 +45,10 @@ def set_bash_param(file_full_path, param, value):
         run_command(f"{SED} -i -r -e 's%{regex_search}%{regex_replace}%' '{file_full_path}'")
     else:
         print_err_msg_exit(f'''
-Specified file (file_full_path) does not contain the searched-for regu-
-lar expression (regex_search):
-  file_full_path = \"{file_full_path}\"
-  param = \"{param}\"
-  value = \"{value}\"
-  regex_search = {regex_search}''')
+            Specified file (file_full_path) does not contain the searched-for regu-
+            lar expression (regex_search):
+              file_full_path = \"{file_full_path}\"
+              param = \"{param}\"
+              value = \"{value}\"
+              regex_search = {regex_search}''')
 

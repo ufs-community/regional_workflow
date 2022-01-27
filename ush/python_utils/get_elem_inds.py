@@ -26,9 +26,5 @@ def get_elem_inds(arr, match, ret_type):
             if arr[i] == match:
                 return i
     else:
-        matches = []
-        for i,e in enumerate(arr):
-            if e == match:
-                matches.append(i)
-        return matches
+        return [i for i,e in enumerate(arr) if e == match]
     

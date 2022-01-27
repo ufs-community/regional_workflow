@@ -32,5 +32,5 @@ def ln_vrfy(*args):
 def mkdir_vrfy(*args):
     return cmd_vrfy('mkdir', *args)
 def cd_vrfy(*args):
-    return cmd_vrfy('cd', *args)
+    return os.chdir(*args)
 

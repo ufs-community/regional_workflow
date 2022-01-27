@@ -23,21 +23,21 @@ def create_symlink_to_file(target,symlink,relative=True):
 
     if target == None:
         print_err_msg_exit(f'''
-The argument \"target\" specifying the target of the symbolic link that
-this function will create was not specified in the call to this function:
-  target = \"{target}\"''')
+            The argument \"target\" specifying the target of the symbolic link that
+            this function will create was not specified in the call to this function:
+              target = \"{target}\"''')
 
     if symlink == None:
         print_err_msg_exit(f'''
-The argument \"symlink\" specifying the target of the symbolic link that
-this function will create was not specified in the call to this function:
-  symlink = \"{symlink}\"''')
+            The argument \"symlink\" specifying the target of the symbolic link that
+            this function will create was not specified in the call to this function:
+              symlink = \"{symlink}\"''')
 
     if not os.path.exists(target):
         print_err_msg_exit(f'''
-Cannot create symlink to specified target file because the latter does
-not exist or is not a file:
-    target = \"{target}\"''')
+            Cannot create symlink to specified target file because the latter does
+            not exist or is not a file:
+                target = \"{target}\"''')
     
     relative_flag=""
     if relative:
