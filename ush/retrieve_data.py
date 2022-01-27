@@ -1,12 +1,25 @@
 # pylint: disable=logging-fstring-interpolation
 '''
-Script is meant to use a YAML file to retrive data from a variety of
-sources, including known locations on disk, URLs, and HPSS (from
-supported NOAA platforms only).
+This script helps users pull data from known data streams, including
+URLS and HPSS (only on supported NOAA platforms), or from user-supplied
+data locations on disk.
 
-To see usage:
+Several supported data streams are included in
+ush/templates/data_locations.yml, which provides locations and naming
+conventions for files commonly used with the SRW App. Provide the file
+to this tool via the --config flag. Users are welcome to provide their
+own file with alternative locations and naming conventions.
 
-    python retrieve_data.py
+When using this script to pull from disk, the user is required to
+provide the path to the data location, which can include Python
+templates. The file names follow those included in the --config file by
+default, or can be user-supplied via the --file_name flag. That flag
+takes a YAML-formatted string that follows the same conventions outlined
+in the ush/templates/data_locations.yml file for naming files.
+
+To see usage for this script:
+
+    python retrieve_data.py -h
 
 Also see the parse_args function below.
 '''
@@ -179,7 +192,8 @@ def fhr_list(args):
 
     return args
 
-def fill_template(template_str, cycle_date, fcst_hr=0):
+def fill_template(template_str, cycle_date, fcst_hr=0,
+        templates_only=False):
 
     ''' Fill in the provided template string with date time information,
     and return the resulting string.
@@ -190,6 +204,8 @@ def fill_template(template_str, cycle_date, fcst_hr=0):
                       date and time information
       fcst_hr         an integer forecast hour. string formatting should
                       be included in the template_str
+      templates_only  boolean value. When True, this function will only
+                      return the templates available.
 
     Rerturn:
       filled template string
@@ -208,7 +224,7 @@ def fill_template(template_str, cycle_date, fcst_hr=0):
     # Integer division is intentional here.
     hh_even = f'{int(cycle_hour) // 2 * 2:02d}'
 
-    return template_str.format(
+    format_values = dict(
         bin6=bin6,
         fcst_hr=fcst_hr,
         dd=cycle_date.strftime('%d'),
@@ -222,6 +238,9 @@ def fill_template(template_str, cycle_date, fcst_hr=0):
         yyyymmdd=cycle_date.strftime('%Y%m%d'),
         yyyymmddhh=cycle_date.strftime('%Y%m%d%H'),
         )
+    if templates_only:
+        return f'{",".join((format_values.keys()))}'
+    return template_str.format(**format_values)
 
 def find_archive_files(paths, file_names, cycle_date):
 
@@ -252,7 +271,7 @@ def find_archive_files(paths, file_names, cycle_date):
 
     return '', 0
 
-def get_requested_files(cla, file_names, input_locs, method='disk'):
+def get_requested_files(cla, file_names, input_loc, method='disk'):
 
     ''' This function copies files from disk locations
     or downloads files from a url, depending on the option specified for
@@ -265,8 +284,8 @@ def get_requested_files(cla, file_names, input_locs, method='disk'):
 
     cla        Namespace object containing command line arguments
     file_names Dict of file names by file type and kind
-    input_locs List of potential data locations, either urls or disk
-               paths.
+    input_loc  A string containing a single data location, either a url
+               or disk path.
     method     Choice of disk or download to indicate protocol for
                retrieval
 
@@ -290,28 +309,27 @@ def get_requested_files(cla, file_names, input_locs, method='disk'):
     orig_path = os.getcwd()
     os.chdir(target_path)
     unavailable = {}
-    for input_loc in input_locs:
-        for fcst_hr in cla.fcst_hrs:
-            for file_name in file_names:
-                loc = os.path.join(input_loc, file_name)
-                loc = fill_template(loc, cla.cycle_date, fcst_hr)
+    for fcst_hr in cla.fcst_hrs:
+        for file_name in file_names:
+            loc = os.path.join(input_loc, file_name)
+            loc = fill_template(loc, cla.cycle_date, fcst_hr)
 
-                if method == 'disk':
-                    retrieved = copy_file(loc, target_path)
+            if method == 'disk':
+                retrieved = copy_file(loc, target_path)
 
-                if method == 'download':
-                    retrieved = download_file(loc)
+            if method == 'download':
+                retrieved = download_file(loc)
 
-                if not retrieved:
+            if not retrieved:
 
-                    if unavailable.get(method) is None:
-                        unavailable[method] = []
-                    unavailable[method].append(target_path)
-                    os.chdir(orig_path)
-                    # Returning here assumes that if the first file
-                    # isn't found, none of the others will be. Don't
-                    # waste time timing out on every requested file.
-                    return unavailable
+                if unavailable.get(method) is None:
+                    unavailable[method] = []
+                unavailable[method].append(target_path)
+                os.chdir(orig_path)
+                # Returning here assumes that if the first file
+                # isn't found, none of the others will be. Don't
+                # waste time timing out on every requested file.
+                return unavailable
     os.chdir(orig_path)
     return unavailable
 
@@ -493,6 +511,10 @@ def to_datetime(arg):
 
     return dt.datetime.strptime(arg, '%Y%m%d%H')
 
+def to_lower(arg):
+    ''' Return a string provided by arg into all lower case. '''
+    return arg.lower()
+
 def main(cla):
     '''
     Uses known location information to try the known locations and file
@@ -522,7 +544,7 @@ def main(cla):
                 raise argparse.ArgumentTypeError(msg)
             unavailable = get_requested_files(cla,
                                               file_names=file_names,
-                                              input_locs=cla.input_file_paths,
+                                              input_loc=cla.input_file_path,
                                               method='disk',
                                               )
 
@@ -537,11 +559,9 @@ def main(cla):
                         either on the command line or on in a config file.')
                 raise argparse.ArgumentTypeError(msg)
 
-            input_locs = store_specs['url']
-            input_locs = input_locs if isinstance(input_locs, list) else [input_locs]
             unavailable = get_requested_files(cla,
                                               file_names=file_names,
-                                              input_locs=input_locs,
+                                              input_loc=store_specs['url'],
                                               method='download',
                                               )
 
@@ -566,8 +586,13 @@ def parse_args():
     argument.
     '''
 
+    description=(
+    'Allowable Python templates for paths, urls, and file names are '\
+    ' defined in the fill_template function and include:\n' \
+    f'{"-"*120}\n' \
+    f'{fill_template("null", dt.datetime.now(), templates_only=True)}')
     parser = argparse.ArgumentParser(
-        description='Retrieve data from various sources.',
+        description=description,
     )
 
     # Required
@@ -580,7 +605,9 @@ def parse_args():
         )
     parser.add_argument(
         '--config',
-        help='Full path to YAML with known data information',
+        help='Full path to a configuration file containing paths and \
+        naming conventions for known data streams. The default included \
+        in this repository is in ush/templates/data_locations.yml',
         type=config_exists,
         )
     parser.add_argument(
@@ -596,12 +623,13 @@ def parse_args():
         first. Choices: hpss, nomads, aws, disk',
         nargs='*',
         required=True,
+        type=to_lower,
         )
     parser.add_argument(
         '--external_model',
         choices=('FV3GFS', 'GSMGFS', 'HRRR', 'NAM', 'RAP', 'RAPx',
         'HRRRx'),
-        help='External model label',
+        help='External model label. This input is case-sensitive',
         required=True,
         )
     parser.add_argument(
@@ -630,10 +658,9 @@ def parse_args():
         )
     parser.add_argument(
         '--file_names',
-        help='Command-line user config options in YAML-formatted \
-        string to indicate file names on disk that are not \
-        consistent with the hpss archive, which are used when \
-        this flag isn\'t used.',
+        help='A YAML-formatted string that indicates the naming \
+        convention the be used for the files retrieved from disk. If \
+        not provided, the default names from hpss are used.',
         type=load_str,
         )
     parser.add_argument(
@@ -642,10 +669,11 @@ def parse_args():
         help='External model file format',
         )
     parser.add_argument(
-        '--input_file_paths',
-        help='Python templates known data input path. File names are ' \
-        'used from file provided by --config file. One path is needed ' \
-        'for each type of file requested.',
+        '--input_file_path',
+        help='A path to data stored on disk. The path may contain \
+        Python templates. File names may be supplied using the \
+        --file_names flag, or the default naming convention will be \
+        taken from the --config file.',
         nargs='*',
         )
     return parser.parse_args()
@@ -658,9 +686,22 @@ if __name__ == '__main__':
 
     if 'disk' in CLA.data_stores:
         # Make sure a path was provided.
-        if not CLA.input_file_paths:
+        if not CLA.input_file_path:
             raise argparse.ArgumentTypeError(
                 ('You must provide an input_file_path when choosing ' \
                  ' disk as a data store!'))
+
+    if 'hpss' in CLA.data_stores:
+        # Make sure hpss module is loaded
+        try:
+            output = subprocess.run('which hsi',
+                                    check=True,
+                                    shell=True,
+                                    capture_output=True,
+                                    )
+        except subprocess.CalledProcessError:
+            logging.error('You requested the hpss data store, but ' \
+                    'the HPSS module isn\'t loaded. This data store ' \
+                    'is only available on NOAA compute platforms.')
 
     main(CLA)
