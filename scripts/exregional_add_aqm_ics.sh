@@ -61,16 +61,6 @@ process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
 #
-# For debugging purposes, print out values of arguments passed to this
-# script.  Note that these will be printed out only if VERBOSE is set to
-# TRUE.
-#
-#-----------------------------------------------------------------------
-#
-#print_input_args valid_args
-#
-#-----------------------------------------------------------------------
-#
 # Check if restart file exists
 #
 #-----------------------------------------------------------------------
