@@ -178,6 +178,17 @@ esac
 #
 #-----------------------------------------------------------------------
 #
+# Get year, month, day, and hour of the the external model forecast.
+#
+#-----------------------------------------------------------------------
+#
+yyyymmdd=${cdate:0:8}
+yymmdd=${cdate:2:6}
+hh=${cdate:8:2}
+#
+#
+#-----------------------------------------------------------------------
+#
 # Set the forecast run directory.
 #
 #-----------------------------------------------------------------------
@@ -514,12 +525,6 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   AQM_RC_IN_FP="${run_dir}/${AQM_RC_IN_FN}"
   cp_vrfy ${AQM_RC_FP} ${AQM_RC_IN_FP}
 
-  YYYY=${CDATE:0:4}
-  MM=${CDATE:4:2}
-  DD=${CDATE:6:2}
-  HH=${CDATE:8:2}
-  YYYYMMDD=${CDATE:0:8}
-  YYMMDD=${CDATE:2:6}
 #
 #-----------------------------------------------------------------------
 #
@@ -549,9 +554,9 @@ Setting parameters in file:
     set_file_param "${AQM_RC_IN_FP}" "aqm_bio_dir" "${AQM_BIO_DIR%/}"
     set_file_param "${AQM_RC_IN_FP}" "aqm_bio_file" "${AQM_BIO_FILE}"
     set_file_param "${AQM_RC_IN_FP}" "aqm_fire_dir" "${AQM_FIRE_DIR%/}"
-    set_file_param "${AQM_RC_IN_FP}" "YYYYMMDD" "${YYYYMMDD}"
+    set_file_param "${AQM_RC_IN_FP}" "YYYYMMDD" "${yyyymmdd}"
     set_file_param "${AQM_RC_IN_FP}" "aqm_fire_file" "${AQM_FIRE_FILE}"
-    set_file_param "${AQM_RC_IN_FP}" "YYMMDD" "${YYMMDD}"
+    set_file_param "${AQM_RC_IN_FP}" "YYMMDD" "${yymmdd}"
   fi
 fi
 
@@ -638,8 +643,6 @@ code."
 #
 if [ ${WRITE_DOPOST} = "TRUE" ]; then
 
-  yyyymmdd=${cdate:0:8}
-  hh=${cdate:8:2}
   cyc=$hh
   tmmark="tm00"
   fmn="00"
