@@ -55,7 +55,7 @@ JEDI for the specified cycle.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "CYCLE_DIR" )
+valid_args=( "JEDI_WORKDIR" "JEDI_WORKDIR_DATA" "JEDI_WORKDIR_INPUT" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -91,17 +91,6 @@ esac
 #
 #-----------------------------------------------------------------------
 #
-# Create JEDI subdirectory
-#
-#-----------------------------------------------------------------------
-#
-print_info_msg "$VERBOSE" "
-Creating JEDI subdirectory..."
-
-mkdir_vrfy -p ${CYCLE_DIR}/JEDI/Data
-#
-#-----------------------------------------------------------------------
-#
 # Create links to fix files and  executables
 #
 #-----------------------------------------------------------------------
@@ -110,21 +99,19 @@ print_info_msg "$VERBOSE" "
 Creating links in the JEDI subdirectory of the current cycle's run directory 
 to the necessary executables and fix files ..."
 # executables
-ln_vrfy -sf $EXECDIR/fv3jedi_error_covariance_training.x ${CYCLE_DIR}/JEDI/.
-ln_vrfy -sf $EXECDIR/fv3jedi_var.x ${CYCLE_DIR}/JEDI/.
+ln_vrfy -sf $EXECDIR/fv3jedi_error_covariance_training.x ${JEDI_WORKDIR}/.
+ln_vrfy -sf $EXECDIR/fv3jedi_var.x ${JEDI_WORKDIR}/.
 # FV3-JEDI fix files
-ln_vrfy -sf $JEDI_DIR/build/fv3-jedi/test/Data/fieldsets ${CYCLE_DIR}/JEDI/Data/fieldsets
-ln_vrfy -sf $JEDI_DIR/build/fv3-jedi/test/Data/fv3files ${CYCLE_DIR}/JEDI/Data/fv3files
+ln_vrfy -sf $JEDI_DIR/build/fv3-jedi/test/Data/fieldsets ${JEDI_WORKDIR_DATA}/fieldsets
+ln_vrfy -sf $JEDI_DIR/build/fv3-jedi/test/Data/fv3files ${JEDI_WORKDIR_DATA}/fv3files
 # FV3 namelist
-ln_vrfy -sf $FV3_NML_FP ${CYCLE_DIR}/JEDI/Data/input.nml
-# FV3 input dir (grid info, etc.)
-mkdir_vrfy -p ${CYCLE_DIR}/JEDI/INPUT
+ln_vrfy -sf $FV3_NML_FP ${JEDI_WORKDIR_DATA}/input.nml
 
 print_info_msg "$VERBOSE" "
 Creating links in the JEDI/INPUT subdirectory of the current cycle's run di-
 rectory to the grid and (filtered) orography files ..."
 
-cd_vrfy ${CYCLE_DIR}/JEDI/INPUT
+cd_vrfy ${JEDI_WORKDIR_INPUT}
 
 relative_or_null=""
 if [ "${RUN_TASK_MAKE_GRID}" = "TRUE" ]; then
@@ -220,16 +207,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# create output directories for the bump, analysis and hofx files
-#
-#-----------------------------------------------------------------------
-#
-mkdir_vrfy -p ${CYCLE_DIR}/JEDI/Data/hofx
-mkdir_vrfy -p ${CYCLE_DIR}/JEDI/Data/analysis
-mkdir_vrfy -p ${CYCLE_DIR}/JEDI/Data/bump
-#
-#-----------------------------------------------------------------------
-#
 # link model forecast file location to bkg/ directory
 #
 #-----------------------------------------------------------------------
@@ -260,7 +237,7 @@ if [ ! -r ${fv_tracer_file} ]; then
   fi
 fi
 
-ln_vrfy -sf $rst_dir ${CYCLE_DIR}/JEDI/Data/bkg
+ln_vrfy -sf $rst_dir ${JEDI_WORKDIR_DATA}/bkg
 
 #
 #-----------------------------------------------------------------------
@@ -276,12 +253,12 @@ if [ ! -d "${DA_OBS_DIR}/${CDATE}" ] ; then
   print_info_msg "! ${DA_OBS_DIR}/${CDATE} does not exist. Assuming we will skip analysis step."
   print_info_msg "! Exiting this task gracefully"
   print_info_msg "!==============================================================="
-  rm_vrfy -rf ${CYCLE_DIR}/JEDI/
+  rm_vrfy -rf ${JEDI_WORKDIR}
   exit 0
 fi
 print_info_msg "$VERBOSE" "
 Linking observation directory ${DA_OBS_DIR}/${CDATE} to working directory"
-ln_vrfy -sf ${DA_OBS_DIR}/${CDATE} ${CYCLE_DIR}/JEDI/Data/obs
+ln_vrfy -sf ${DA_OBS_DIR}/${CDATE} ${JEDI_WORKDIR_DATA}/obs
 #
 #-----------------------------------------------------------------------
 #
@@ -290,7 +267,7 @@ ln_vrfy -sf ${DA_OBS_DIR}/${CDATE} ${CYCLE_DIR}/JEDI/Data/obs
 #
 YAMLS='jedi_no2_3dvar.yaml jedi_no2_bump.yaml'
 TEMPLATEDIR=${USHDIR}/templates
-${USHDIR}/gen_JEDI_yaml.py -i $TEMPLATEDIR -o ${CYCLE_DIR}/JEDI/ -c ${CDATE} -y $YAMLS
+${USHDIR}/gen_JEDI_yaml.py -i $TEMPLATEDIR -o ${JEDI_WORKDIR} -c ${CDATE} -y $YAMLS
 #
 #-----------------------------------------------------------------------
 #
@@ -307,7 +284,7 @@ export OMP_STACKSIZE=1024m
 #
 #-----------------------------------------------------------------------
 #
-cd_vrfy ${CYCLE_DIR}/JEDI/
+cd_vrfy ${JEDI_WORKDIR}
 #
 #-----------------------------------------------------------------------
 #
@@ -349,7 +326,7 @@ if [ "${USE_CHEM_ANL}" = "TRUE" ]; then
     print_info_msg "$VERBOSE" "
     Using ncks to merge analysis fields into RESTART file"
     dimvars="xaxis_1,yaxis_1,zaxis_1,Time"
-    anl_data_dir=${CYCLE_DIR}/JEDI/Data/analysis
+    anl_data_dir=${JEDI_WORKDIR_DATA}/analysis
     fv_tracer_anl=${anl_data_dir}/${CDATE:0:8}.${CDATE:8:2}0000.3dvar_anl.fv_tracer.res.nc
     ncks -A -x -v $dimvars ${fv_tracer_anl} ${fv_tracer_file} || print_err_msg_exit "\
     Call to ncks returned with nonzero exit code."

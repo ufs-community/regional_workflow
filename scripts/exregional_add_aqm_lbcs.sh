@@ -55,7 +55,7 @@ lateral boundary conditions.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=()
+valid_args=( "lbcs_dir" "workdir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -68,29 +68,13 @@ process_args valid_args "$@"
 #
 print_input_args valid_args
 #
-#-----------------------------------------------------------------------
-#
-# We first check whether the external model output files exist on the 
-# system disk (and are older than a certain age).  If so, we simply copy
-# them from the system disk to the location specified by EXTRN_MDL_-
-# FILES_DIR.  If not, we try to fetch them from HPSS.
-#
-# Start by setting EXTRN_MDL_FPS to the full paths that the external mo-
-# del output files would have if they existed on the system disk.  Then
-# count the number of such files that actually exist on disk (i.e. have
-# not yet been scrubbed) and are older than a specified age (to make 
-# sure that they are not still being written to).
-#
-#-----------------------------------------------------------------------
-#
-#
 # Set OpenMP variables.
 #
 #-----------------------------------------------------------------------
 #
-  export KMP_AFFINITY=${KMP_AFFINITY_MAKE_LBCS}
-  export OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_LBCS}
-  export OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_LBCS}
+export KMP_AFFINITY=${KMP_AFFINITY_MAKE_LBCS}
+export OMP_NUM_THREADS=${OMP_NUM_THREADS_MAKE_LBCS}
+export OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_LBCS}
 #
 #-----------------------------------------------------------------------
 #
@@ -144,6 +128,13 @@ print_input_args valid_args
       ;;
   esac
 #
+#-----------------------------------------------------------------------
+#
+# Move to working directory
+#
+#-----------------------------------------------------------------------
+#
+cd_vrfy $workdir
 #
 #-----------------------------------------------------------------------
 #
@@ -151,7 +142,6 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
-
 yyyymmdd="${PDY:0:8}"
 mm="${PDY:4:2}"
 
@@ -165,7 +155,7 @@ if [ ${RUN_ADD_AQM_CHEM_LBCS} = "TRUE" ]; then
   FULL_CHEMICAL_BOUNDARY_FILE=${AQM_LBCS_DIR}/${CHEM_BOUNDARY_CONDITION_FILE}
   if [ -f ${FULL_CHEMICAL_BOUNDARY_FILE} ]; then
     #Copy the boundary condition file to the current location
-    cp ${FULL_CHEMICAL_BOUNDARY_FILE} .
+    cp_vrfy ${FULL_CHEMICAL_BOUNDARY_FILE} .
   else
     print_err_msg_exit "\
 The chemical LBC files do not exist:
@@ -174,8 +164,8 @@ The chemical LBC files do not exist:
 
   for hr in 0 ${LBC_SPEC_FCST_HRS[@]}; do
     fhr=$( printf "%03d" "${hr}" )
-    if [ -r ${CYCLE_DIR}/INPUT/gfs_bndy.tile7.${fhr}.nc ]; then
-        ncks -A ${CHEM_BOUNDARY_CONDITION_FILE} ${CYCLE_DIR}/INPUT/gfs_bndy.tile7.${fhr}.nc
+    if [ -r ${lbcs_dir}/gfs_bndy.tile7.${fhr}.nc ]; then
+        ncks -A ${CHEM_BOUNDARY_CONDITION_FILE} ${lbcs_dir}/gfs_bndy.tile7.${fhr}.nc
     fi
   done
 
@@ -193,9 +183,7 @@ fi
 #
 if [ ${RUN_ADD_AQM_GEFS_LBCS} = "TRUE" ]; then
 
-  workdir="${CYCLE_DIR}/AQM/tmp_AQLBCS"
-  mkdir_vrfy -p "$workdir"
-  cp_vrfy ${CYCLE_DIR}/INPUT/gfs_bndy.tile7.???.nc $workdir
+  cp_vrfy ${lbcs_dir}/gfs_bndy.tile7.???.nc $workdir
 
   RUN_CYC="${CDATE:8:2}"
 
@@ -209,7 +197,7 @@ cat > gefs2lbc-nemsio.ini <<EOF
  dtstep=${LBC_SPEC_INTVL_HRS}
  bndname='aothrj','aecj','aorgcj','asoil','numacc','numcor'
  mofile='${AQM_GEFS_DIR}/$yyyymmdd/${AQM_GEFS_CYC}/gfs.t00z.atmf','.nemsio'
- lbcfile='${CYCLE_DIR}/INPUT/gfs_bndy.tile7.','.nc'
+ lbcfile='${lbcs_dir}/gfs_bndy.tile7.','.nc'
  topofile='${OROG_DIR}/${CRES}_oro_data.tile7.halo4.nc'
 &end
 

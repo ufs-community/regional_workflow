@@ -56,7 +56,7 @@ tial or boundary condition files for the FV3 will be generated.
 #
 #-----------------------------------------------------------------------
 #
-valid_args=()
+valid_args=( "ics_dir" "workdir" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -93,12 +93,10 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Create work directory
+# Move to work directory
 #
 #-----------------------------------------------------------------------
 #
-workdir="${CYCLE_DIR}/AQM/tmp_AQICS"
-mkdir_vrfy -p "${workdir}"
 cd_vrfy ${workdir}
 #
 #-----------------------------------------------------------------------
@@ -142,7 +140,7 @@ print_info_msg "
 #
 #-----------------------------------------------------------------------
 #
-gfs_ic_file=${CYCLE_DIR}/INPUT/gfs_data.tile${TILE_RGNL}.halo${NH0}.nc
+gfs_ic_file=${ics_dir}/gfs_data.tile${TILE_RGNL}.halo${NH0}.nc
 wrk_ic_file=gfs.nc
 
 print_info_msg "

@@ -56,7 +56,7 @@ for FV3 (in NetCDF format).
 #
 #-----------------------------------------------------------------------
 #
-valid_args=( "CYCLE_DIR" "CYCLE_DATE" "NEXUS_WORKDIR" )
+valid_args=( "CYCLE_DATE" "NEXUS_WORKDIR" "NEXUS_WORKDIR_INPUT" )
 process_args valid_args "$@"
 #
 #-----------------------------------------------------------------------
@@ -105,7 +105,13 @@ Run command has not been specified for this machine:
     ;;
 
 esac
-
+#
+#-----------------------------------------------------------------------
+#
+# Move to the NEXUS working directory
+#
+#-----------------------------------------------------------------------
+#
 cd_vrfy ${NEXUS_WORKDIR}
 #
 #-----------------------------------------------------------------------
@@ -164,28 +170,28 @@ echo ${start_date} ${end_date} # ${cyc}
 # set the root directory to the temporary directory
 #
 cp_vrfy ${ARL_NEXUS_DIR}/utils/python/nexus_root_parser.py .
-./nexus_root_parser.py -f ${NEXUS_WORKDIR}/NEXUS_Config.rc -d ${NEXUS_WORKDIR}/inputs
+./nexus_root_parser.py -f ${NEXUS_WORKDIR}/NEXUS_Config.rc -d ${NEXUS_WORKDIR_INPUT}
 
 #
 #----------------------------------------------------------------------
 # Get all the files needed (TEMPORARILY JUST COPY FROM THE DIRECTORY)
-mkdir_vrfy -p ${NEXUS_WORKDIR}/inputs
+#
 if [ ${NEI2016} == "TRUE" ]; then #NEI2016
     cp_vrfy ${ARL_NEXUS_DIR}/utils/python/nexus_nei2016_linker.py .
     cp_vrfy ${ARL_NEXUS_DIR}/utils/python/nexus_nei2016_control_tilefix.py .
-    mkdir_vrfy -p ${NEXUS_WORKDIR}/inputs/NEI2016v1
-    mkdir_vrfy -p ${NEXUS_WORKDIR}/inputs/NEI2016v1/v2020-07
-    mkdir_vrfy -p ${NEXUS_WORKDIR}/inputs/NEI2016v1/v2020-07/${mm}
-    ./nexus_nei2016_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${NEXUS_WORKDIR}/inputs
+    mkdir_vrfy -p ${NEXUS_WORKDIR_INPUT}/NEI2016v1
+    mkdir_vrfy -p ${NEXUS_WORKDIR_INPUT}/NEI2016v1/v2020-07
+    mkdir_vrfy -p ${NEXUS_WORKDIR_INPUT}/NEI2016v1/v2020-07/${mm}
+    ./nexus_nei2016_linker.py --src_dir ${NEXUS_INPUT_BASE_DIR} --date ${yyyymmdd} --work_dir ${NEXUS_WORKDIR_INPUT}
     ./nexus_nei2016_control_tilefix.py -f NEXUS_Config.rc -d ${yyyymmdd}
 fi
 
 if [ ${TIMEZONES} == 'TRUE' ]; then # TIME ZONES
-    cp_vrfy -r ${NEXUS_INPUT_BASE_DIR}/TIMEZONES ${NEXUS_WORKDIR}/inputs
+    cp_vrfy -r ${NEXUS_INPUT_BASE_DIR}/TIMEZONES ${NEXUS_WORKDIR_INPUT}
 fi
 
 if [ ${MASKS} == 'TRUE' ]; then # MASKS
-    cp_vrfy -r ${NEXUS_INPUT_BASE_DIR}/MASKS ${NEXUS_WORKDIR}/inputs
+    cp_vrfy -r ${NEXUS_INPUT_BASE_DIR}/MASKS ${NEXUS_WORKDIR_INPUT}
 fi
 
 #

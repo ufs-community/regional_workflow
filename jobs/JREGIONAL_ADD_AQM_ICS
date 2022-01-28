@@ -59,19 +59,17 @@ which the model needs.
 #
 #-----------------------------------------------------------------------
 #
-# Create the directory EXTRN_MDL_FILES_DIR if it doesn't already exist.  
-# This is the directory in which we will create a subdirectory for each 
-# cycle (i.e. for each CDATE) in which to store the files from the 
-# external model.
+# Set the name of and create the directory in which the output from this
+# script will be placed (if it doesn't already exist).
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_FILES_DIR="${CYCLE_DIR}/AQM/tmp_AQICS"
+ics_dir="${CYCLE_DIR}${SLASH_ENSMEM_SUBDIR}/INPUT"
+mkdir_vrfy -p "${ics_dir}"
 
-mkdir_vrfy -p "${EXTRN_MDL_FILES_DIR}"
-cd_vrfy ${EXTRN_MDL_FILES_DIR} || print_err_msg_exit "\
-Could not change directory to EXTRN_MDL_FILES_DIR:
-  EXTRN_MDL_FILES_DIR = \"${EXTRN_MDL_FILES_DIR}\""
+workdir="${ics_dir}/tmp_AQM_ICS"
+check_for_preexist_dir_file "$workdir" "delete"
+mkdir_vrfy $workdir
 #
 #-----------------------------------------------------------------------
 #
@@ -79,8 +77,9 @@ Could not change directory to EXTRN_MDL_FILES_DIR:
 #
 #-----------------------------------------------------------------------
 #
-
-$SCRIPTSDIR/exregional_add_aqm_ics.sh || \
+$SCRIPTSDIR/exregional_add_aqm_ics.sh \
+  ics_dir="${ics_dir}" \
+  workdir="${workdir}" || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #

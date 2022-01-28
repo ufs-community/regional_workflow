@@ -62,7 +62,19 @@ JEDI for the specified cycle.
 #
 #-----------------------------------------------------------------------
 #
-mkdir_vrfy -p ${CYCLE_DIR}/JEDI
+JEDI_WORKDIR="${CYCLE_DIR}/JEDI"
+mkdir_vrfy -p ${JEDI_WORKDIR}
+
+JEDI_WORKDIR_DATA="${JEDI_WORKDIR}/Data"
+mkdir_vrfy -p ${JEDI_WORKDIR_DATA}
+
+JEDI_WORKDIR_INPUT="${JEDI_WORKDIR}/INPUT"
+mkdir_vrfy -p ${JEDI_WORKDIR_INPUT}
+
+# Output directories for the bump, analysis and hofx files
+mkdir_vrfy -p ${JEDI_WORKDIR_DATA}/hofx
+mkdir_vrfy -p ${JEDI_WORKDIR_DATA}/analysis
+mkdir_vrfy -p ${JEDI_WORKDIR_DATA}/bump
 #
 #-----------------------------------------------------------------------
 #
@@ -71,7 +83,9 @@ mkdir_vrfy -p ${CYCLE_DIR}/JEDI
 #-----------------------------------------------------------------------
 #
 $SCRIPTSDIR/exregional_run_chem_anl.sh \
-  CYCLE_DIR="${CYCLE_DIR}" || \
+  JEDI_WORKDIR="${JEDI_WORKDIR}" \
+  JEDI_WORKDIR_DATA="${JEDI_WORKDIR_DATA}" \
+  JEDI_WORKDIR_INPUT="${JEDI_WORKDIR_INPUT}" || \
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #
