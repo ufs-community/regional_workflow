@@ -1920,7 +1920,7 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # AQM_CONFIG_DIR:
 # Configuration directory for AQM
 #
-# AQM_BIO_DiR:
+# AQM_BIO_DIR:
 # Path to the directory containing AQM bio files
 # 
 # AQM_BIO_FILE:
