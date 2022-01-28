@@ -70,6 +70,15 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
+# Set and export variables.
+#
+#-----------------------------------------------------------------------
+#
+export OMP_NUM_THREADS=1
+export OMP_STACKSIZE=2056M
+#
+#-----------------------------------------------------------------------
+#
 # Load modules.
 #
 #-----------------------------------------------------------------------
@@ -140,14 +149,14 @@ esac
 #
 START_DATE=`echo "${CDATE}" | sed 's/\([[:digit:]]\{2\}\)$/ \1/'`
 
-YYYYMMDDHH=`date +%Y%m%d%H -d "${START_DATE}"`
+yyyymmddhh=`date +%Y%m%d%H -d "${START_DATE}"`
 JJJ=`date +%j -d "${START_DATE}"`
 
-YYYY=${YYYYMMDDHH:0:4}
-MM=${YYYYMMDDHH:4:2}
-DD=${YYYYMMDDHH:6:2}
-HH=${YYYYMMDDHH:8:2}
-YYYYMMDD=${YYYYMMDDHH:0:8}
+yyyy=${yyyymmddhh:0:4}
+mm=${yyyymmddhh:4:2}
+dd=${yyyymmddhh:6:2}
+hh=${yyyymmddhh:8:2}
+yyyymmdd=${yyyymmddhh:0:8}
 #
 #-----------------------------------------------------------------------
 #
@@ -253,7 +262,7 @@ if [[ ${nummem} -eq 80 ]]; then
   print_info_msg "$VERBOSE" "Do hybrid with ${memname}"
   beta1_inv=0.15
   ifhyb=.true.
-  print_info_msg "$VERBOSE" " Cycle ${YYYYMMDDHH}: GSI hybrid uses ${memname} with n_ens=${nummem}" 
+  print_info_msg "$VERBOSE" " Cycle ${yyyymmddhh}: GSI hybrid uses ${memname} with n_ens=${nummem}" 
 fi
 
 fi # ENKF ensemble 
@@ -289,7 +298,7 @@ else                          # cycle uses background from restart
   if [ ${DA_CYCLE_INTERV} -eq ${FCST_LEN_HRS} ]; then
     restart_prefix=""
   elif [ ${DA_CYCLE_INTERV} -lt ${FCST_LEN_HRS} ]; then
-    restart_prefix=${YYYYMMDD}.${HH}0000
+    restart_prefix=${yyyymmdd}.${hh}0000
   else
     print_err_msg_exit "\
     Restart hour should not larger than forecast hour:
@@ -327,10 +336,10 @@ fi
 
 # update times in coupler.res to current cycle time
 cp_vrfy ${fixgriddir}/fv3_coupler.res          coupler.res.tmp
-cat coupler.res.tmp  | sed "s/yyyy/${YYYY}/" > coupler.res.newY
-cat coupler.res.newY | sed "s/mm/${MM}/"     > coupler.res.newM
-cat coupler.res.newM | sed "s/dd/${DD}/"     > coupler.res.newD
-cat coupler.res.newD | sed "s/hh/${HH}/"     > coupler.res.newH
+cat coupler.res.tmp  | sed "s/yyyy/${yyyy}/" > coupler.res.newY
+cat coupler.res.newY | sed "s/mm/${mm}/"     > coupler.res.newM
+cat coupler.res.newM | sed "s/dd/${dd}/"     > coupler.res.newD
+cat coupler.res.newD | sed "s/hh/${hh}/"     > coupler.res.newH
 mv coupler.res.newH coupler.res
 rm coupler.res.newY coupler.res.newM coupler.res.newD
 
@@ -342,16 +351,16 @@ rm coupler.res.newY coupler.res.newM coupler.res.newD
 #
 #-----------------------------------------------------------------------
 
-obs_files_source[0]=${OBSPATH}/${YYYYMMDDHH}.rap.t${HH}z.prepbufr.tm00
+obs_files_source[0]=${OBSPATH}/${yyyymmddhh}.rap.t${hh}z.prepbufr.tm00
 obs_files_target[0]=prepbufr
 
-obs_files_source[1]=${OBSPATH}/${YYYYMMDDHH}.rap.t${HH}z.satwnd.tm00.bufr_d
+obs_files_source[1]=${OBSPATH}/${yyyymmddhh}.rap.t${hh}z.satwnd.tm00.bufr_d
 obs_files_target[1]=satwndbufr
 
-obs_files_source[2]=${OBSPATH}/${YYYYMMDDHH}.rap.t${HH}z.nexrad.tm00.bufr_d
+obs_files_source[2]=${OBSPATH}/${yyyymmddhh}.rap.t${hh}z.nexrad.tm00.bufr_d
 obs_files_target[2]=l2rwbufr
 
-obs_files_source[3]=${PMPATH}/${YYYYMMDD}/pm25.airnow.${YYYYMMDDHH}.bufr
+obs_files_source[3]=${PMPATH}/${yyyymmdd}/pm25.airnow.${yyyymmddhh}.bufr
 obs_files_target[3]=pm25bufr
 
 obs_number=${#obs_files_source[@]}
@@ -365,10 +374,10 @@ do
     print_info_msg "$VERBOSE" "Warning: ${obs_file} does not exist!"
   fi
 done
-ln -sf ${AODPATH}/j01/${YYYYMMDDHH}/VIIRS.AOD.EVENT.Prepbufr.${HH}H.QC1 aod.j01.bufr1
-ln -sf ${AODPATH}/j01/${YYYYMMDDHH}/VIIRS.AOD.Prepbufr.${HH}H.QC1       aod.j01.bufr2
-ln -sf ${AODPATH}/npp/${YYYYMMDDHH}/VIIRS.AOD.EVENT.Prepbufr.${HH}H.QC1 aod.npp.bufr1
-ln -sf ${AODPATH}/npp/${YYYYMMDDHH}/VIIRS.AOD.Prepbufr.${HH}H.QC1       aod.npp.bufr2
+ln -sf ${AODPATH}/j01/${yyyymmddhh}/VIIRS.AOD.EVENT.Prepbufr.${hh}H.QC1 aod.j01.bufr1
+ln -sf ${AODPATH}/j01/${yyyymmddhh}/VIIRS.AOD.Prepbufr.${hh}H.QC1       aod.j01.bufr2
+ln -sf ${AODPATH}/npp/${yyyymmddhh}/VIIRS.AOD.EVENT.Prepbufr.${hh}H.QC1 aod.npp.bufr1
+ln -sf ${AODPATH}/npp/${yyyymmddhh}/VIIRS.AOD.Prepbufr.${hh}H.QC1       aod.npp.bufr2
 
 #-----------------------------------------------------------------------
 #
@@ -537,15 +546,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Set and export variables.
-#
-#-----------------------------------------------------------------------
-#
-export OMP_NUM_THREADS=1
-export OMP_STACKSIZE=2056M
-#
-#-----------------------------------------------------------------------
-#
 # Run the GSI.  Note that we have to launch the forecast from
 # the current cycle's run directory because the GSI executable will look
 # for input files in the current directory.
@@ -616,7 +616,7 @@ if [ $binary_diag = ".true." ]; then
    for type in $listall; do
       count=`ls pe*.${type}_${loop} | wc -l`
       if [[ $count -gt 0 ]]; then
-         `cat pe*.${type}_${loop} > diag_${type}_${string}.${YYYYMMDDHH}`
+         `cat pe*.${type}_${loop} > diag_${type}_${string}.${yyyymmddhh}`
       fi
    done
 fi
@@ -640,7 +640,7 @@ if [ $netcdf_diag = ".true." ]; then
    for type in $listallnc; do
       count=`ls pe*.${type}_${loop}.nc4 | wc -l`
       if [[ $count -gt 0 ]]; then
-         ./ncdiag_cat.x -o ncdiag_${type}_${string}.nc4.${YYYYMMDDHH} pe*.${type}_${loop}.nc4
+         ./ncdiag_cat.x -o ncdiag_${type}_${string}.nc4.${yyyymmddhh} pe*.${type}_${loop}.nc4
       fi
    done
 fi
