@@ -125,7 +125,7 @@ def get_env_var(param):
         value = os.environ[param]
         return shell_str_to_list(value)
 
-def import_vars(dictionary=os.environ, env_vars=None):
+def import_vars(dictionary=os.environ, target_dict=None, env_vars=None):
     """ Import all (or select few) environment/dictionary variables as python global 
     variables of the caller module. Call this function at the beginning of a function
     that uses environment variables.
@@ -145,12 +145,15 @@ def import_vars(dictionary=os.environ, env_vars=None):
     for python.
 
     Args:
-        dictionary: a list of key-value pairs (default=os.environ)
+        dictionary: source dictionary (default=os.environ)
+        target_dict: target dictionary (default=caller module's globals())
         env_vars: list of selected environement/dictionary variables to import, or None,
         in which case all environment/dictionary variables are imported
     Returns:
         None
     """
+    if not target_dict:
+        target_dict = inspect.stack()[1][0].f_globals
 
     if env_vars == None:
         env_vars = dictionary
@@ -158,26 +161,29 @@ def import_vars(dictionary=os.environ, env_vars=None):
         env_vars = { k: dictionary[k] if k in dictionary else None for k in env_vars }
 
     for k,v in env_vars.items():
-        inspect.stack()[1][0].f_globals[k] = shell_str_to_list(v) 
+        target_dict[k] = shell_str_to_list(v) 
 
-def export_vars(dictionary=os.environ, env_vars=None):
+def export_vars(dictionary=os.environ, source_dict=None, env_vars=None):
     """ Export all (or select few) global variables of the caller module
     to either the environement/dictionary. Call this function at the end of
     a function that updates environment variables.
 
     Args:
-        dictionary: a list of key-value pairs (default=os.environ)
-        env_vars: list of selected environement/dictionary variables to import, or None,
-        in which case all environment/dictionary variables are imported
+        dictionary: target dictionary to set (default=os.environ)
+        source_dict: source dictionary (default=caller modules globals())
+        env_vars: list of selected environement/dictionary variables to export, or None,
+        in which case all environment/dictionary variables are exported
     Returns:
         None
     """
+    if not source_dict:
+        source_dict = inspect.stack()[1][0].f_globals
 
     if env_vars == None:
-        env_vars = dictionary
+        env_vars = source_dict
     else:
-        env_vars = { k: dictionary[k] if k in dictionary else None for k in env_vars }
+        env_vars = { k: source_dict[k] if k in source_dict else None for k in env_vars }
 
     for k,v in env_vars.items():
-        dictionary[k] = list_to_shell_str(inspect.stack()[1][0].f_globals[k])
+        dictionary[k] = list_to_shell_str(v)
 
