@@ -142,8 +142,8 @@ cd_vrfy $workdir
 #
 #-----------------------------------------------------------------------
 #
-yyyymmdd="${PDY:0:8}"
-mm="${PDY:4:2}"
+yyyymmdd="${CDATE:0:8}"
+mm="${CDATE:4:2}"
 
 if [ ${RUN_ADD_AQM_CHEM_LBCS} = "TRUE" ]; then
 
