@@ -3,7 +3,7 @@
 import os
 import inspect
 import shlex
-from datetime import datetime
+from datetime import datetime, date
 
 def str_to_date(s):
     """ Get python datetime object from string.
@@ -62,7 +62,10 @@ def list_to_shell_str(v, oneline=False):
     Returns:
         A string
     """
-    if isinstance(v,bool):
+    if isinstance(v,bool) or \
+       isinstance(v,int) or \
+       isinstance(v,float) or \
+       isinstance(v,date):
         return str(v)
     elif not v:
         return ''
@@ -88,6 +91,8 @@ def shell_str_to_list(v):
         a string, list of strings or null string('')
     """
     
+    if not isinstance(v,str):
+        return v
     if not v:
         return None
     elif v[0] == '(':
