@@ -70,6 +70,15 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
+# Set and export variables.
+#
+#-----------------------------------------------------------------------
+#
+export OMP_NUM_THREADS=1
+export OMP_STACKSIZE=1024m
+#
+#-----------------------------------------------------------------------
+#
 # Load modules.
 #
 #-----------------------------------------------------------------------
@@ -97,7 +106,7 @@ esac
 #
 print_info_msg "$VERBOSE" "
 Creating links in the JEDI subdirectory of the current cycle's run directory 
-to the necessary executables and fix files ..."
+to the necessary executables and fix files: \"${JEDI_WORKDIR}\""
 # executables
 ln_vrfy -sf $EXECDIR/fv3jedi_error_covariance_training.x ${JEDI_WORKDIR}/.
 ln_vrfy -sf $EXECDIR/fv3jedi_var.x ${JEDI_WORKDIR}/.
@@ -109,7 +118,7 @@ ln_vrfy -sf $FV3_NML_FP ${JEDI_WORKDIR_DATA}/input.nml
 
 print_info_msg "$VERBOSE" "
 Creating links in the JEDI/INPUT subdirectory of the current cycle's run di-
-rectory to the grid and (filtered) orography files ..."
+rectory to the grid and (filtered) orography files: \"${JEDI_WORKDIR_INPUT}\""
 
 cd_vrfy ${JEDI_WORKDIR_INPUT}
 
@@ -268,15 +277,6 @@ ln_vrfy -sf ${DA_OBS_DIR}/${CDATE} ${JEDI_WORKDIR_DATA}/obs
 YAMLS='jedi_no2_3dvar.yaml jedi_no2_bump.yaml'
 TEMPLATEDIR=${USHDIR}/templates
 ${USHDIR}/gen_JEDI_yaml.py -i $TEMPLATEDIR -o ${JEDI_WORKDIR} -c ${CDATE} -y $YAMLS
-#
-#-----------------------------------------------------------------------
-#
-# Set and export variables.
-#
-#-----------------------------------------------------------------------
-#
-export OMP_NUM_THREADS=1
-export OMP_STACKSIZE=1024m
 #
 #-----------------------------------------------------------------------
 #
