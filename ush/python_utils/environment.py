@@ -93,9 +93,10 @@ def shell_str_to_list(v):
     
     if not isinstance(v,str):
         return v
+    v = v.strip()
     if not v:
         return None
-    elif v[0] == '(':
+    if v[0] == '(':
         v = v[1:-1]
         tokens = shlex.split(v)
         lst = [ get_str_type(itm.strip()) for itm in tokens ]
