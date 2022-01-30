@@ -24,6 +24,21 @@ def str_to_date(s):
         except:
             return None
 
+def date_to_str(d,short=False):
+    """ Get string from python datetime object.
+    It always converts to YYYYMMDDHHMM format
+
+    Args:
+        d: datetime object
+    Returns:
+        string in YYYYMMDDHHMM format
+    """
+    if short:
+        v = d.strftime("%Y%m%d")
+    else:
+        v = d.strftime("%Y%m%d%H%M")
+    return v
+
 def get_str_type(s, just_get_me_the_string = False):
     """ Check if the string contains a float, int, boolean, or just reguar string
     This will be used to automatically convert environment variables to data types
@@ -64,9 +79,10 @@ def list_to_shell_str(v, oneline=False):
     """
     if isinstance(v,bool) or \
        isinstance(v,int) or \
-       isinstance(v,float) or \
-       isinstance(v,date):
+       isinstance(v,float):
         return str(v)
+    elif isinstance(v,date):
+        return date_to_str(v)
     elif not v:
         return ''
     elif isinstance(v, list):
@@ -76,8 +92,7 @@ def list_to_shell_str(v, oneline=False):
         else:
             shell_str = f'( \\\n"' + '" \\\n"'.join(v) + '"\\\n)'
     else:
-        v1 = shlex.quote(str(v))
-        shell_str = f'{v1}'
+        shell_str = f'{v}'
 
     return shell_str
 
@@ -191,5 +206,9 @@ def export_vars(dictionary=os.environ, source_dict=None, env_vars=None):
         env_vars = { k: source_dict[k] if k in source_dict else None for k in env_vars }
 
     for k,v in env_vars.items():
+        if callable(v):
+            continue
+        if k.islower() or k[0] == '_':
+            continue
         dictionary[k] = list_to_shell_str(v)
 

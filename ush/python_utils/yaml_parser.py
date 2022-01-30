@@ -25,8 +25,10 @@ def yaml_to_shell_str(cfg):
     shell_str = ''
     for k,v in cfg.items():
         v1 = list_to_shell_str(v)
-        shell_str += f'{k}={v1}\n'
-
+        if isinstance(v,list):
+            shell_str += f'{k}={v1}\n'
+        else:
+            shell_str += f'{k}="{v1}"\n'
     return shell_str
 
 def yaml_safe_load(file_name):
