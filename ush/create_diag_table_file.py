@@ -3,10 +3,8 @@
 import unittest
 from textwrap import dedent
 
-from python_utils.process_args import process_args
-from python_utils.environment import import_vars,set_env_var
-from python_utils.print_input_args import print_input_args
-from python_utils.define_macro_utilities import define_macro_utilities
+from python_utils import process_args, import_vars, set_env_var, \
+                         print_input_args, define_macro_utilities
 
 def create_diag_table_file(**kwargs):
     """ Creates a diagnostic table file for each cycle to be run

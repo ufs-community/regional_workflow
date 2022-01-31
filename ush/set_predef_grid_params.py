@@ -5,10 +5,8 @@ import os
 
 from constants import radius_Earth,degs_per_radian
 
-from python_utils.process_args import process_args
-from python_utils.environment import import_vars,export_vars,set_env_var,get_env_var
-from python_utils.print_input_args import print_input_args
-from python_utils.define_macro_utilities import define_macro_utilities
+from python_utils import process_args,import_vars,export_vars,set_env_var,get_env_var,\
+                         print_input_args,define_macro_utilities
 
 def set_predef_grid_params():
     """ Sets grid parameters for the specified predfined grid 

@@ -3,12 +3,8 @@
 import os
 import unittest
 
-from python_utils.process_args import process_args
-from python_utils.environment import import_vars,set_env_var
-from python_utils.print_input_args import print_input_args
-from python_utils.run_command import run_command
-from python_utils.print_msg import print_err_msg_exit
-from python_utils.define_macro_utilities import define_macro_utilities
+from python_utils import process_args, import_vars, set_env_var, print_input_args, \
+                         run_command, print_err_msg_exit, define_macro_utilities
 
 def check_ruc_lsm(**kwargs):
     """ This file defines a function that checks whether the RUC land surface

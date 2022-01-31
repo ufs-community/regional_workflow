@@ -4,12 +4,9 @@ import os
 import unittest
 from textwrap import dedent
 
-from python_utils.process_args import process_args
-from python_utils.environment import import_vars,export_vars,set_env_var,list_to_shell_str
-from python_utils.print_input_args import print_input_args
-from python_utils.run_command import run_command
-from python_utils.print_msg import print_info_msg, print_err_msg_exit
-from python_utils.define_macro_utilities import define_macro_utilities
+from python_utils import process_args,import_vars,export_vars,set_env_var,list_to_shell_str,\
+                         print_input_args, run_command, print_info_msg, print_err_msg_exit,\
+                         define_macro_utilities
 
 def set_thompson_mp_fix_files(**kwargs):
     """ Function that first checks whether the Thompson

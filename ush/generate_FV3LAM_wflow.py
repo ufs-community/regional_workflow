@@ -7,14 +7,9 @@ import subprocess
 from multiprocessing import Process
 from textwrap import dedent
 
-from python_utils.print_msg import print_info_msg, print_err_msg_exit
-from python_utils.environment import import_vars
-from python_utils.filesys_cmds_vrfy import cp_vrfy, rm_vrfy, ln_vrfy, mkdir_vrfy, mv_vrfy
-from python_utils.define_macro_utilities import define_macro_utilities
-from python_utils.run_command import run_command
-from python_utils.environment import date_to_str
-from python_utils.create_symlink_to_file import create_symlink_to_file
-from python_utils.check_for_preexist_dir_file import check_for_preexist_dir_file
+from python_utils import print_info_msg, print_err_msg_exit, import_vars, cp_vrfy, \
+                         rm_vrfy, ln_vrfy, mkdir_vrfy, mv_vrfy, run_command, date_to_str, \
+                         define_macro_utilities, create_symlink_to_file, check_for_preexist_dir_file
 
 from setup import setup
 from set_FV3nml_sfc_climo_filenames import set_FV3nml_sfc_climo_filenames
