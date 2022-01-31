@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
 import os
+import inspect
+from textwrap import dedent
+
 from python_utils.change_case import lowercase
 from python_utils.print_msg import print_info_msg
+from python_utils.environment import import_vars
 
 def print_input_args(valid_args):
     """ Print out arguments for debugging purposes
@@ -14,11 +18,8 @@ def print_input_args(valid_args):
     """
 
     # get verbosity from environment
-    DEBUG = os.getenv('DEBUG') 
-    if DEBUG != None and lowercase(DEBUG) == 'false':
-        DEBUG = False
-    else:
-        DEBUG = True
+    IMPORTS = ["DEBUG"]
+    import_vars(env_vars=IMPORTS)
     
     if list(valid_args.keys())[0] == '__unset__':
         valid_arg_names = {}
@@ -26,12 +27,25 @@ def print_input_args(valid_args):
         valid_arg_names = valid_args 
     num_valid_args = len(valid_arg_names)
 
+    filename = inspect.stack()[1].filename
+    function = inspect.stack()[1].function
+    filename_base = os.path.basename(filename)
+
     if num_valid_args == 0:
-        msg = f'''No arguments have been passed to script/function.\n'''
+        msg = dedent(f'''
+            No arguments have been passed to function {function} in script {filename_base} located
+                    
+                \"{filename}\"''')
     else:
-        msg = f'''The arguments to script/function are set as follows:\n\n'''
+        msg = dedent(f'''
+            The arguments to function {function} in script {filename_base} located
+                    
+                \"{filename}\"
+
+            have been set as follows:\n\n''')
+
         for k,v in valid_arg_names.items():
-            msg = msg + f'{k}="{v}"\n'
+            msg = msg + f'  {k}="{v}"\n'
 
     print_info_msg(msg,verbose=DEBUG)
     return num_valid_args
