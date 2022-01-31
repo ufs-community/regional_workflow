@@ -1110,7 +1110,7 @@ MAXTRIES_RUN_POST=\"${MAXTRIES_RUN_POST}\""
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -z "${EXTRN_MDL_SYSBASEDIR_ICS}" ]; then
+  if [ -n "${EXTRN_MDL_SYSBASEDIR_ICS}" ]; then
 
     if [ "${EXTRN_MDL_SYSBASEDIR_ICS}" = "set_to_non_default_location_in_testing_script" ]; then
 
@@ -1125,22 +1125,21 @@ initial conditions (EXTRN_MDL_NAME_ICS) combination:
   EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\""
       fi
 
-    else 
-
-      # Check the base directory for the specified location.
-      if [ ! -d "$(dirname ${EXTRN_MDL_SYSBASEDIR_ICS%%\$*})" ]; then
-        print_err_msg_exit "\
-The non-default location specified by EXTRN_MDL_SYSBASEDIR_ICS does not 
-exist or is not a directory:
-  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\""
-      fi
+      # Maintain any templates in EXTRN_MDL_SYSBASEDIR_ICS -- don't use
+      # quotes.
+      set_bash_param "${expt_config_fp}" \
+                     "EXTRN_MDL_SYSBASEDIR_ICS" ${EXTRN_MDL_SYSBASEDIR_ICS}
 
     fi
 
-    # Maintain any templates in EXTRN_MDL_SYSBASEDIR_ICS -- don't use
-    # quotes.
-    set_bash_param "${expt_config_fp}" \
-                   "EXTRN_MDL_SYSBASEDIR_ICS" ${EXTRN_MDL_SYSBASEDIR_ICS}
+    # Check the base directory for the specified location.
+    if [ ! -d "$(dirname ${EXTRN_MDL_SYSBASEDIR_ICS%%\$*})" ]; then
+      print_err_msg_exit "\
+The non-default location specified by EXTRN_MDL_SYSBASEDIR_ICS does not 
+exist or is not a directory:
+  EXTRN_MDL_NAME_ICS = \"${EXTRN_MDL_NAME_ICS}\""
+    fi
+
 
   fi
 #
@@ -1150,7 +1149,7 @@ exist or is not a directory:
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -z "${EXTRN_MDL_SYSBASEDIR_LBCS}" ]; then
+  if [ -n "${EXTRN_MDL_SYSBASEDIR_LBCS}" ]; then
 
     if [ "${EXTRN_MDL_SYSBASEDIR_LBCS}" = "set_to_non_default_location_in_testing_script" ]; then
 
@@ -1165,19 +1164,21 @@ initial conditions (EXTRN_MDL_NAME_LBCS) combination:
   EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
       fi
 
-    else 
-
-      if [ ! -d "$(dirname ${EXTRN_MDL_SYSBASEDIR_LBCS%%\$*})" ]; then
-        print_err_msg_exit "\
-The non-default location specified by EXTRN_MDL_SYSBASEDIR_LBCS does not 
-exist or is not a directory:
-  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
-      fi
+      # Maintain any templates in EXTRN_MDL_SYSBASEDIR_ICS -- don't use
+      # quotes.
+      set_bash_param "${expt_config_fp}" \
+                     "EXTRN_MDL_SYSBASEDIR_LBCS" ${EXTRN_MDL_SYSBASEDIR_LBCS}
 
     fi
 
-    set_bash_param "${expt_config_fp}" \
-                   "EXTRN_MDL_SYSBASEDIR_LBCS" ${EXTRN_MDL_SYSBASEDIR_LBCS}
+    # Check the base directory for the specified location.
+    if [ ! -d "$(dirname ${EXTRN_MDL_SYSBASEDIR_LBCS%%\$*})" ]; then
+      print_err_msg_exit "\
+The non-default location specified by EXTRN_MDL_SYSBASEDIR_LBCS does not 
+exist or is not a directory:
+  EXTRN_MDL_NAME_LBCS = \"${EXTRN_MDL_NAME_LBCS}\""
+    fi
+
 
   fi
 #
