@@ -33,7 +33,7 @@ def date_to_str(d,short=False):
     Returns:
         string in YYYYMMDDHHMM format
     """
-    if short:
+    if short or (d.hour == 0 and d.minute == 0):
         v = d.strftime("%Y%m%d")
     else:
         v = d.strftime("%Y%m%d%H%M")
