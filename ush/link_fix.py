@@ -210,8 +210,6 @@ def link_fix(**kwargs):
       for fp in files:
     
         fn = os.path.basename(fp)
-        print(fp)
-        print(fn)
       
         (_,res,_) = run_command(f'printf "%s" {fn} | {SED} -n -r -e "s/^C([0-9]*).*/\\1/p"')
         if not res:

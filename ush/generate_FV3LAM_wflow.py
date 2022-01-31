@@ -849,7 +849,7 @@ def generate_FV3LAM_wflow():
     #-----------------------------------------------------------------------
     #
     if WORKFLOW_MANAGER == "rocoto":
-      wflow_db_fn=f"{WFLOW_XML_FN}%.xml.db"
+      wflow_db_fn=f"{os.path.splitext(WFLO_XML_FN)[0]}.db"
       rocotorun_cmd=f"rocotorun -w {WFLOW_XML_FN} -d {wflow_db_fn} -v 10"
       rocotostat_cmd=f"rocotostat -w {WFLOW_XML_FN} -d {wflow_db_fn} -v 10"
     
@@ -924,7 +924,7 @@ def generate_FV3LAM_wflow():
       print("Getting NOMADS online data")
       print(f"NOMADS_file_type= {NOMADS_file_type}")
       cd(EXPTDIR)
-      run_command(f'''{USHDIR}/NOMADS_get_extrn_mdl_files.sh {DATE_FIRST_CYCL} \
+      run_command(f'''{USHDIR}/NOMADS_get_extrn_mdl_files.sh {date_to_str(DATE_FIRST_CYCL,True)} \
                       {CYCL_HRS} {NOMADS_file_type} {FCST_LEN_HRS} {LBC_SPEC_INTVL_HRS}''')
 
 
