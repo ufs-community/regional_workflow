@@ -4,28 +4,7 @@ import unittest
 import glob
 import os
 
-from python_utils.change_case import uppercase, lowercase
-from python_utils.filesys_cmds_vrfy import cmd_vrfy, rm_vrfy
-from python_utils.check_for_preexist_dir_file import check_for_preexist_dir_file
-from python_utils.check_var_valid_value import check_var_valid_value
-from python_utils.count_files import count_files
-from python_utils.filesys_cmds_vrfy import cmd_vrfy, mkdir_vrfy, cp_vrfy
-from python_utils.get_charvar_from_netcdf import get_charvar_from_netcdf
-from python_utils.is_array import is_array
-from python_utils.run_command import run_command
-from python_utils.is_element_of import is_element_of
-from python_utils.print_msg import print_info_msg, print_err_msg_exit
-from python_utils.get_elem_inds import get_elem_inds
-from python_utils.get_manage_externals_config_property import get_manage_externals_config_property
-from python_utils.interpol_to_arbit_CRES import interpol_to_arbit_CRES
-from python_utils.set_bash_param import set_bash_param
-from python_utils.set_file_param import set_file_param
-from python_utils.define_macro_utilities import define_macro_utilities
-from python_utils.process_args import process_args
-from python_utils.print_input_args import print_input_args
-from python_utils.create_symlink_to_file import create_symlink_to_file
-from python_utils.environment import import_vars, export_vars, set_env_var, shell_str_to_list
-from python_utils.yaml_parser import yaml_to_shell_str
+from python_utils import *
 
 class Testing(unittest.TestCase):
     def test_change_case(self):
