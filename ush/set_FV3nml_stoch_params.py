@@ -4,15 +4,10 @@ import unittest
 import os
 from textwrap import dedent
 
-from python_utils.process_args import process_args
-from python_utils.print_input_args import print_input_args
-from python_utils.print_msg import print_info_msg, print_err_msg_exit
-from python_utils.check_var_valid_value import check_var_valid_value
-from python_utils.run_command import run_command
-from python_utils.filesys_cmds_vrfy import mv_vrfy,mkdir_vrfy,cmd_vrfy,cp_vrfy
-from python_utils.environment import import_vars,set_env_var,list_to_shell_str,shell_str_to_list
-from python_utils.change_case import lowercase
-from python_utils.define_macro_utilities import define_macro_utilities
+from python_utils import process_args, print_input_args, print_info_msg, print_err_msg_exit,\
+                         check_var_valid_value, run_command, mv_vrfy,mkdir_vrfy,cmd_vrfy,cp_vrfy,\
+                         rm_vrfy,import_vars,set_env_var,list_to_shell_str,shell_str_to_list,\
+                         lowercase, define_macro_utilities
 
 def set_FV3nml_stoch_params(**kwargs):
     """

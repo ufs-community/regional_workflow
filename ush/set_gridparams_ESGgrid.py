@@ -4,11 +4,8 @@ import unittest
 from datetime import datetime,timedelta
 
 from constants import radius_Earth,degs_per_radian
-
-from python_utils.process_args import process_args
-from python_utils.environment import import_vars,set_env_var
-from python_utils.print_input_args import print_input_args
-from python_utils.define_macro_utilities import define_macro_utilities
+from python_utils import process_args, import_vars, set_env_var, print_input_args, \
+                         define_macro_utilities
 
 def set_gridparams_ESGgrid(**kwargs):
     """ Sets the parameters for a grid that is to be generated using the "ESGgrid" 

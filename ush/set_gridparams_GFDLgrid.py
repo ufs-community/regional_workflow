@@ -5,10 +5,8 @@ from datetime import datetime,timedelta
 
 from constants import radius_Earth,degs_per_radian
 
-from python_utils.process_args import process_args
-from python_utils.environment import import_vars
-from python_utils.print_input_args import print_input_args
-from python_utils.print_msg import print_info_msg, print_err_msg_exit
+from python_utils import process_args, import_vars, print_input_args, \
+                         print_info_msg, print_err_msg_exit
 
 def set_gridparams_GFDLgrid(**kwargs):
     """ Sets the parameters for a grid that is to be generated using the "GFDLgrid" 

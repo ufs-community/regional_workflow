@@ -5,16 +5,12 @@ import sys
 import datetime
 from textwrap import dedent
 
-from python_utils.filesys_cmds_vrfy import cd_vrfy, mkdir_vrfy, rm_vrfy
-from python_utils.check_var_valid_value import check_var_valid_value
-from python_utils.change_case import uppercase,lowercase
-from python_utils.check_for_preexist_dir_file import check_for_preexist_dir_file
-from python_utils.get_manage_externals_config_property import get_manage_externals_config_property
-from python_utils.environment import list_to_shell_str, import_vars, export_vars, get_env_var
-from python_utils.print_msg import print_info_msg, print_err_msg_exit
-from python_utils.yaml_parser import yaml_safe_load, yaml_to_str, yaml_to_shell_str
-from python_utils.run_command import run_command
-from python_utils.set_file_param import set_file_param
+from python_utils import cd_vrfy, mkdir_vrfy, rm_vrfy, check_var_valid_value,\
+                         uppercase,lowercase,check_for_preexist_dir_file,\
+                         get_manage_externals_config_property, list_to_shell_str,\
+                         import_vars, export_vars, get_env_var, print_info_msg,\
+                         print_err_msg_exit, yaml_safe_load, yaml_to_str, yaml_to_shell_str,\
+                         run_command, set_file_param
 
 from set_cycle_dates import set_cycle_dates
 from set_predef_grid_params import set_predef_grid_params

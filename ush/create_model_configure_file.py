@@ -3,11 +3,8 @@
 import unittest
 from datetime import datetime
 
-from python_utils.process_args import process_args
-from python_utils.environment import import_vars,set_env_var
-from python_utils.print_input_args import print_input_args
-from python_utils.run_command import run_command
-from python_utils.print_msg import print_info_msg, print_err_msg_exit
+from python_utils import process_args, import_vars, set_env_var, print_input_args, \
+                         run_command, print_info_msg, print_err_msg_exit
 
 def create_model_configure_file(**kwargs):
     """ Creates a model configuration file in the specified

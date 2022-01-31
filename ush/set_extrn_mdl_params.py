@@ -2,8 +2,8 @@
 
 import unittest
 
-from python_utils.environment import import_vars, export_vars, set_env_var, get_env_var
-from python_utils.print_msg import print_err_msg_exit
+from python_utils import import_vars, export_vars, set_env_var, get_env_var, \
+                         print_err_msg_exit
 
 def set_extrn_mdl_params():
     """ Sets parameters associated with the external model used for initial 

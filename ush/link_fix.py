@@ -4,15 +4,10 @@ import unittest
 import os
 import glob
 
-from python_utils.process_args import process_args
-from python_utils.environment import import_vars, set_env_var
-from python_utils.print_input_args import print_input_args
-from python_utils.print_msg import print_info_msg, print_err_msg_exit
-from python_utils.create_symlink_to_file import create_symlink_to_file
-from python_utils.define_macro_utilities import define_macro_utilities
-from python_utils.check_var_valid_value import check_var_valid_value
-from python_utils.run_command import run_command
-from python_utils.filesys_cmds_vrfy import cd_vrfy,mkdir_vrfy
+from python_utils import process_args, import_vars, set_env_var, print_input_args, \
+                         print_info_msg, print_err_msg_exit, create_symlink_to_file, \
+                         define_macro_utilities, check_var_valid_value, run_command, \
+                         cd_vrfy, mkdir_vrfy
 
 def link_fix(**kwargs):
     """ This file defines a function that ...

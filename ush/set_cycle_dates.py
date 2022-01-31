@@ -3,10 +3,7 @@
 import unittest
 from datetime import datetime,timedelta
 
-from python_utils.process_args import process_args
-from python_utils.environment import import_vars
-from python_utils.print_input_args import print_input_args
-from python_utils.print_msg import print_err_msg_exit
+from python_utils import process_args, import_vars, print_input_args, print_err_msg_exit
 
 def set_cycle_dates(**kwargs):
     """ This file defines a function that, given the starting date (date_start, 
