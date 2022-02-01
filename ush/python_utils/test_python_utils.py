@@ -114,9 +114,9 @@ class Testing(unittest.TestCase):
         dictionary = { "Hello": "World!" }
         import_vars(dictionary=dictionary)
         self.assertEqual( Hello, "World!" )
-    def test_yaml_parser(self):
-        yaml_dict = { "HRS": [ "1", "2" ] }
-        shell_str = yaml_to_shell_str(yaml_dict)
+    def test_config_parser(self):
+        cfg = { "HRS": [ "1", "2" ] }
+        shell_str = cfg_to_shell_str(cfg)
         self.assertEqual( shell_str, 'HRS=( "1" "2" )\n')
     def test_print_msg(self):
         self.assertEqual( print_info_msg("Hello World!", verbose=False), False)

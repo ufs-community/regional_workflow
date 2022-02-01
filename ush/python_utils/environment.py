@@ -51,6 +51,7 @@ def str_to_type(s, just_get_me_the_string = False):
     Returns:
         a float, int, boolean, date, or the string itself when all else fails
     """
+    s = s.strip('"\'')
     if not just_get_me_the_string:
         if s.lower() in ['true','yes','yeah']:
             return True

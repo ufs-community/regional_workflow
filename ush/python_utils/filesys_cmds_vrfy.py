@@ -3,17 +3,16 @@
 import os
 from python_utils.print_msg import print_err_msg_exit
 
-def cmd_vrfy(*args):
+def cmd_vrfy(cmd, *args):
     """ Execute system command
 
     Args:
-        cmd: a linux command
-        *args: arguments of the command
+        cmd: the command
+        *args: its arguments
     Returns:
         Exit code
     """
 
-    cmd = ''
     for a in args:
         cmd += ' ' + str(a)
     ret = os.system(cmd)
