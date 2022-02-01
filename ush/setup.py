@@ -7,7 +7,7 @@ from textwrap import dedent
 
 from python_utils import cd_vrfy, mkdir_vrfy, rm_vrfy, check_var_valid_value,\
                          uppercase,lowercase,check_for_preexist_dir_file,\
-                         get_manage_externals_config_property, list_to_shell_str,\
+                         get_manage_externals_config_property, list_to_str, type_to_str, \
                          import_vars, export_vars, get_env_var, print_info_msg,\
                          print_err_msg_exit, yaml_safe_load, yaml_to_str, yaml_to_shell_str,\
                          run_command, set_file_param
@@ -2032,8 +2032,8 @@ def setup():
         SFC_CLIMO_DIR="{SFC_CLIMO_DIR}"
         
         NDIGITS_ENSMEM_NAMES="{NDIGITS_ENSMEM_NAMES}"
-        ENSMEM_NAMES={list_to_shell_str(ENSMEM_NAMES)}
-        FV3_NML_ENSMEM_FPS={list_to_shell_str(FV3_NML_ENSMEM_FPS)}
+        ENSMEM_NAMES={list_to_str(ENSMEM_NAMES)}
+        FV3_NML_ENSMEM_FPS={list_to_str(FV3_NML_ENSMEM_FPS)}
         #
         #-----------------------------------------------------------------------
         #
@@ -2094,8 +2094,8 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        SDF_USES_RUC_LSM="{SDF_USES_RUC_LSM}"
-        SDF_USES_THOMPSON_MP="{SDF_USES_THOMPSON_MP}"
+        SDF_USES_RUC_LSM="{type_to_str(SDF_USES_RUC_LSM)}"
+        SDF_USES_THOMPSON_MP="{type_to_str(SDF_USES_THOMPSON_MP)}"
         #
         #-----------------------------------------------------------------------
         #
@@ -2205,7 +2205,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        CPL="{CPL}"
+        CPL="{type_to_str(CPL)}"
         #
         #-----------------------------------------------------------------------
         #
@@ -2256,7 +2256,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        LBC_SPEC_FCST_HRS={list_to_shell_str(LBC_SPEC_FCST_HRS)}
+        LBC_SPEC_FCST_HRS={list_to_str(LBC_SPEC_FCST_HRS)}
         #
         #-----------------------------------------------------------------------
         #
@@ -2266,7 +2266,7 @@ def setup():
         #-----------------------------------------------------------------------
         #
         NUM_CYCLES="{NUM_CYCLES}"
-        ALL_CDATES={list_to_shell_str(ALL_CDATES)}
+        ALL_CDATES={list_to_str(ALL_CDATES)}
         #
         #-----------------------------------------------------------------------
         #
@@ -2276,7 +2276,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        USE_FVCOM="{USE_FVCOM}"
+        USE_FVCOM="{type_to_str(USE_FVCOM)}"
         FVCOM_DIR="{FVCOM_DIR}"
         FVCOM_FILE="{FVCOM_FILE}"
         #
