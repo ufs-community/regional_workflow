@@ -3,7 +3,7 @@
 import os
 import configparser
 
-from python_utils.print_msg import print_err_msg_exit
+from .print_msg import print_err_msg_exit
 
 def get_manage_externals_config_property(externals_cfg_fp, external_name, property_name):
     """

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from python_utils.print_msg import print_err_msg_exit
+from .print_msg import print_err_msg_exit
 
 def check_var_valid_value(var, values, err_msg=None):
     """ Check if specified variable has a valid value

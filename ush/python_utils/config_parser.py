@@ -5,8 +5,8 @@ import yaml
 import sys
 import os
 
-from python_utils.environment import list_to_str, str_to_list
-from python_utils.print_msg import print_err_msg_exit
+from .environment import list_to_str, str_to_list
+from .print_msg import print_err_msg_exit
 
 def load_shell_config(config_file):
     """ Loads old style shell config files.
@@ -22,10 +22,17 @@ def load_shell_config(config_file):
 
     with open(config_file) as f:
         config_str = f.read()
-        config_str = config_str.replace("\\\n","")
-        config_str = config_str.replace("#","\n#")
+
+        #take care of nasty same line comments and line continuations
+        config_str = config_str.replace(" #"," \n#")
         lines = config_str.splitlines()
-        lines = [l for l in lines if ( l and l[0] != '#' and l[0] != '\n')]
+        lines = [l.strip() for l in lines \
+                    if (l and l[0] != '#' and l[0] != '\n')]
+        config_str = "\n".join(lines)
+        config_str = config_str.replace("\\\n","")
+        lines = config_str.splitlines()
+
+        #build the dictionary
         cfg = {}
         for l in lines:
             idx = l.find("=")

@@ -4,9 +4,9 @@ import os
 import inspect
 from textwrap import dedent
 
-from python_utils.change_case import lowercase
-from python_utils.print_msg import print_info_msg
-from python_utils.environment import import_vars
+from .change_case import lowercase
+from .print_msg import print_info_msg
+from .environment import import_vars
 
 def print_input_args(valid_args):
     """ Print out arguments for debugging purposes

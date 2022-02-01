@@ -33,7 +33,7 @@ class Testing(unittest.TestCase):
     def test_get_charvar_from_netcdf(self):
         FILE=f'{self.PATH}/test_data/sample.nc'
         val = get_charvar_from_netcdf(FILE, 'pressure')
-        self.assertEqual( val.split()[0], '955.5,')
+        self.assertTrue( val and (val.split()[0], '955.5,'))
     def test_is_array(self):
         arr = [ 2, 'egg', 5 ]
         self.assertTrue( is_array(arr) )
@@ -71,7 +71,9 @@ class Testing(unittest.TestCase):
     def test_set_file_param(self):
         FILE = f'{self.PATH}/test_data/regional_grid.nml'
         cp_vrfy(f'{FILE}.org {FILE}')
-        os.environ["FV3_NML_FN"] = "regional_grid.nml" 
+        set_env_var("WFLOW_XML_FN",None)
+        set_env_var("RGNL_GRID_NML_FN",None)
+        set_env_var("FV3_NML_FN","regional_grid.nml")
         set_file_param(FILE, 'delx', '20')        
         ## Test more of this if they are used ##
     def test_create_symlink_to_file(self):

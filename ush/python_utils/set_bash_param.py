@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
 import os
-from python_utils.print_msg import print_info_msg, print_err_msg_exit
-from python_utils.change_case import lowercase
-from python_utils.run_command import run_command
+from .print_msg import print_info_msg, print_err_msg_exit
+from .change_case import lowercase
+from .run_command import run_command
+from .environment import import_vars
 
 def set_bash_param(file_full_path, param, value):
     """ Function to replace placeholder values of variables in
@@ -22,11 +23,8 @@ def set_bash_param(file_full_path, param, value):
     """
 
     # get verbosity from environment
-    DEBUG = os.getenv('DEBUG') 
-    if DEBUG != None and lowercase(DEBUG) == 'false':
-        DEBUG = False
-    else:
-        DEBUG = True
+    IMPORTS = ["DEBUG"]
+    import_vars(env_vars=IMPORTS)
 
     # print info message
     file_ = os.path.basename(file_full_path)

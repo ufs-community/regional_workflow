@@ -2,9 +2,9 @@
 
 import os
 from datetime import datetime
-from python_utils.print_msg import print_info_msg, print_err_msg_exit
-from python_utils.check_var_valid_value import check_var_valid_value
-from python_utils.filesys_cmds_vrfy import rm_vrfy, mv_vrfy
+from .print_msg import print_info_msg, print_err_msg_exit
+from .check_var_valid_value import check_var_valid_value
+from .filesys_cmds_vrfy import rm_vrfy, mv_vrfy
 
 def check_for_preexist_dir_file(path, method):
     """ Check for preexisting directory and, if present, deal with it

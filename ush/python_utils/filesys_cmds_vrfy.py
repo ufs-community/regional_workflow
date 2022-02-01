@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-from python_utils.print_msg import print_err_msg_exit
+from .print_msg import print_err_msg_exit
 
 def cmd_vrfy(cmd, *args):
     """ Execute system command

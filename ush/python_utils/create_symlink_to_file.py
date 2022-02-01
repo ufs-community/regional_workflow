@@ -2,11 +2,11 @@
 
 import os
 
-from python_utils.process_args import process_args
-from python_utils.print_input_args import print_input_args
-from python_utils.print_msg import print_err_msg_exit
-from python_utils.check_var_valid_value import check_var_valid_value
-from python_utils.filesys_cmds_vrfy import ln_vrfy
+from .process_args import process_args
+from .print_input_args import print_input_args
+from .print_msg import print_err_msg_exit
+from .check_var_valid_value import check_var_valid_value
+from .filesys_cmds_vrfy import ln_vrfy
 
 def create_symlink_to_file(target,symlink,relative=True):
     """ Create a symbolic link to the specified target file.

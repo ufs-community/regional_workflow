@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 import os
-from python_utils.print_msg import print_info_msg, print_err_msg_exit
-from python_utils.change_case import lowercase
-from python_utils.run_command import run_command
-from python_utils.environment import import_vars
+from .print_msg import print_info_msg, print_err_msg_exit
+from .change_case import lowercase
+from .run_command import run_command
+from .environment import import_vars
 
 def set_file_param(file_full_path, param, value):
     """ Function to replace placeholder values of variables in
@@ -22,22 +22,13 @@ def set_file_param(file_full_path, param, value):
             Value to set the parameter to.
     """
 
-    # get verbosity from environment
-    DEBUG = os.getenv('DEBUG') 
-    if DEBUG != None and lowercase(DEBUG) == 'false':
-        DEBUG = False
-    else:
-        DEBUG = True
+    # import all env variables
+    import_vars()
 
     # print info message
     file_ = os.path.basename(file_full_path)
     print_info_msg(f'Setting parameter \"{param}\" in file \"{file_}\" to \"{value}\" ...',
         verbose=DEBUG)
-
-    # import environment variables we need
-    IMPORTS = [ 'SED', 'WFLOW_XML_FN', 'RGNL_GRID_NML_FN', 'FV3_NML_FN',
-                'DIAG_TABLE_FN', 'MODEL_CONFIG_FN', 'GLOBAL_VAR_DEFNS_FN' ]
-    import_vars(dictionary=os.environ, env_vars=IMPORTS)
 
     # set param value based on what type of file it is
     if file_ == WFLOW_XML_FN:

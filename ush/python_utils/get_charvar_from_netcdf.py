@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import os
-from python_utils.print_msg import print_err_msg_exit
-from python_utils.run_command import run_command
+from .print_msg import print_err_msg_exit
+from .run_command import run_command
 
 def get_charvar_from_netcdf(nc_file, nc_var_name):
     """ Searches NetCDF file and extract a scalar variable

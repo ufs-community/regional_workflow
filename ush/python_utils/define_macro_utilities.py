@@ -2,9 +2,9 @@
 
 import os
 
-from python_utils.print_msg import print_err_msg_exit
-from python_utils.run_command import run_command
-from python_utils.environment import set_env_var
+from .print_msg import print_err_msg_exit
+from .run_command import run_command
+from .environment import set_env_var
 
 def check_darwin(cmd):
     """ Check if darwin command exists """

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-from python_utils.change_case import lowercase
-from python_utils.check_var_valid_value import check_var_valid_value
+from .change_case import lowercase
+from .check_var_valid_value import check_var_valid_value
 
 def get_elem_inds(arr, match, ret_type):
     """ Function to return the indices of elements of array

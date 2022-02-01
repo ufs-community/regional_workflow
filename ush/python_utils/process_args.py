@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from python_utils.check_var_valid_value import check_var_valid_value
+from .check_var_valid_value import check_var_valid_value
 
 def process_args(valid_args, **kwargs):
     """ Function to process a list of variable name and value pairs
