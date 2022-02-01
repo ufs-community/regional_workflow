@@ -9,7 +9,7 @@ from python_utils import cd_vrfy, mkdir_vrfy, rm_vrfy, check_var_valid_value,\
                          uppercase,lowercase,check_for_preexist_dir_file,\
                          get_manage_externals_config_property, list_to_str, type_to_str, \
                          import_vars, export_vars, get_env_var, print_info_msg,\
-                         print_err_msg_exit, yaml_safe_load, yaml_to_str, yaml_to_shell_str,\
+                         print_err_msg_exit, load_config_file, cfg_to_yaml_str, cfg_to_shell_str,\
                          run_command, set_file_param
 
 from set_cycle_dates import set_cycle_dates
@@ -57,7 +57,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     EXPT_DEFAULT_CONFIG_FN="config_defaults.yaml"
-    cfg_d = yaml_safe_load(EXPT_DEFAULT_CONFIG_FN)
+    cfg_d = load_config_file(EXPT_DEFAULT_CONFIG_FN)
     import_vars(dictionary=cfg_d)
     #
     #-----------------------------------------------------------------------
@@ -81,7 +81,7 @@ def setup():
     # configuration file are also assigned default values in the default 
     # configuration file.
     #
-      cfg_u = yaml_safe_load(EXPT_CONFIG_FN)
+      cfg_u = load_config_file(EXPT_CONFIG_FN)
       cfg_d.update(cfg_u)
       if cfg_u.items() > cfg_d.items():
         print_err_msg_exit(f'''
@@ -120,7 +120,7 @@ def setup():
     cfg_d.update(update_dict)
 
     # loop through cfg_d and check validity of params
-    cfg_v = yaml_safe_load("valid_param_vals.yaml")
+    cfg_v = load_config_file("valid_param_vals.yaml")
     for k,v in cfg_d.items():
         if v == None:
             continue
@@ -1837,7 +1837,7 @@ def setup():
     # write the updated default dictionary
     global GLOBAL_VAR_DEFNS_FP
     GLOBAL_VAR_DEFNS_FP=f"{EXPTDIR}/{GLOBAL_VAR_DEFNS_FN}"
-    all_lines=yaml_to_shell_str(cfg_d)
+    all_lines=cfg_to_shell_str(cfg_d)
     with open(GLOBAL_VAR_DEFNS_FP,'w') as f:
         f.write(all_lines)
     #

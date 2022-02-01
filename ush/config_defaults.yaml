@@ -394,7 +394,7 @@ DOT_OR_USCORE: "_"
 #
 #-----------------------------------------------------------------------
 #
-EXPT_CONFIG_FN: "config.yaml"
+EXPT_CONFIG_FN: "config.sh"
 
 RGNL_GRID_NML_FN: "regional_grid.nml"
 
