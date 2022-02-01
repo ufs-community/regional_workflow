@@ -79,7 +79,7 @@ RUN_CMD_POST="srun"
 # Test Data Locations
 TEST_PREGEN_BASEDIR=/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen
 TEST_COMINgfs=/lfs1/HFIP/hwrf-data/hafs-input/COMGFS
-TEST_EXTRN_MDL_SOURCE_BASEDIR=/mnt/lfs1/BMC/fim/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files
+TEST_EXTRN_MDL_SOURCE_BASEDIR=/mnt/lfs1/BMC/gsd-fv3/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files
 
 
 ulimit -s unlimited
