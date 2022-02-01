@@ -4,8 +4,8 @@ from .check_var_valid_value import check_var_valid_value
 from .count_files import count_files
 from .create_symlink_to_file import create_symlink_to_file
 from .define_macro_utilities import define_macro_utilities
-from .environment import str_to_date, date_to_str, get_str_type, list_to_shell_str, \
-      shell_str_to_list, set_env_var, get_env_var, import_vars, export_vars
+from .environment import str_to_date, date_to_str, str_to_type, type_to_str, list_to_str, \
+      str_to_list, set_env_var, get_env_var, import_vars, export_vars
 from .filesys_cmds_vrfy import cmd_vrfy, cp_vrfy, mv_vrfy, rm_vrfy, ln_vrfy, mkdir_vrfy, cd_vrfy
 from .get_charvar_from_netcdf import get_charvar_from_netcdf
 from .get_elem_inds import get_elem_inds

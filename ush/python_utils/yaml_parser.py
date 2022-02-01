@@ -4,7 +4,7 @@ import argparse
 import yaml
 import sys
 
-from python_utils.environment import list_to_shell_str
+from python_utils.environment import list_to_str
 from python_utils.print_msg import print_err_msg_exit
  
 def yaml_to_str(cfg):
@@ -24,7 +24,7 @@ def yaml_to_shell_str(cfg):
 
     shell_str = ''
     for k,v in cfg.items():
-        v1 = list_to_shell_str(v)
+        v1 = list_to_str(v)
         if isinstance(v,list):
             shell_str += f'{k}={v1}\n'
         else:

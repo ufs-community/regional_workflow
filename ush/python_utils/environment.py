@@ -39,7 +39,7 @@ def date_to_str(d,short=False):
         v = d.strftime("%Y%m%d%H%M")
     return v
 
-def get_str_type(s, just_get_me_the_string = False):
+def str_to_type(s, just_get_me_the_string = False):
     """ Check if the string contains a float, int, boolean, or just reguar string
     This will be used to automatically convert environment variables to data types
     that are more convenient to work with. If you don't want this functionality,
@@ -68,7 +68,26 @@ def get_str_type(s, just_get_me_the_string = False):
             pass
     return s
 
-def list_to_shell_str(v, oneline=False):
+def type_to_str(v):
+    """ Given a float/int/boolean/date or list of these types, gets a string
+    representing their values 
+
+    Args:
+        v: a variable of the above types
+    Returns:
+        a string
+    """
+    if isinstance(v,bool):
+        return ("TRUE" if v else "FALSE")
+    elif isinstance(v,int) or isinstance(v,float):
+        return str(v)
+    elif isinstance(v,date):
+        return date_to_str(v)
+    elif v == None:
+        return ''
+    return str(v)
+
+def list_to_str(v, oneline=False):
     """ Given a string or list of string, construct a string
     to be used on right hand side of shell environement variables
 
@@ -77,28 +96,22 @@ def list_to_shell_str(v, oneline=False):
     Returns:
         A string
     """
-    if isinstance(v,bool) or \
-       isinstance(v,int) or \
-       isinstance(v,float):
-        return str(v)
-    elif isinstance(v,date):
-        return date_to_str(v)
-    elif not v:
-        return ''
-    elif isinstance(v, list):
-        v = [str(i) for i in v]
+    if isinstance(v,str):
+        return v
+    if isinstance(v, list):
+        v = [type_to_str(i) for i in v]
         if oneline or len(v) <= 4:
             shell_str = f'( "' + '" "'.join(v) + '" )'
         else:
-            shell_str = f'( \\\n"' + '" \\\n"'.join(v) + '"\\\n)'
+            shell_str = f'( \\\n"' + '" \\\n"'.join(v) + '" \\\n)'
     else:
-        shell_str = f'{v}'
+        shell_str = f'{type_to_str(v)}'
 
     return shell_str
 
-def shell_str_to_list(v):
+def str_to_list(v):
     """ Given a string, construct a string or list of strings.
-    Basically does the reverse operation of `list_to_shell_string`.
+    Basically does the reverse operation of `list_to_string`.
 
     Args:
         v: a string
@@ -114,10 +127,10 @@ def shell_str_to_list(v):
     if v[0] == '(':
         v = v[1:-1]
         tokens = shlex.split(v)
-        lst = [ get_str_type(itm.strip()) for itm in tokens ]
+        lst = [ str_to_type(itm.strip()) for itm in tokens if itm.strip() != '']
         return lst
     else:
-        return get_str_type(v)
+        return str_to_type(v)
 
 def set_env_var(param,value):
     """ Set an environement variable
@@ -129,7 +142,7 @@ def set_env_var(param,value):
         None
     """
 
-    os.environ[param] = list_to_shell_str(value)
+    os.environ[param] = list_to_str(value)
 
 def get_env_var(param):
     """ Get the value of an environement variable
@@ -144,7 +157,7 @@ def get_env_var(param):
         return None
     else:
         value = os.environ[param]
-        return shell_str_to_list(value)
+        return str_to_list(value)
 
 def import_vars(dictionary=os.environ, target_dict=None, env_vars=None):
     """ Import all (or select few) environment/dictionary variables as python global 
@@ -182,7 +195,7 @@ def import_vars(dictionary=os.environ, target_dict=None, env_vars=None):
         env_vars = { k: dictionary[k] if k in dictionary else None for k in env_vars }
 
     for k,v in env_vars.items():
-        target_dict[k] = shell_str_to_list(v) 
+        target_dict[k] = str_to_list(v) 
 
 def export_vars(dictionary=os.environ, source_dict=None, env_vars=None):
     """ Export all (or select few) global variables of the caller module
@@ -210,5 +223,5 @@ def export_vars(dictionary=os.environ, source_dict=None, env_vars=None):
             continue
         if k.islower() or k[0] == '_':
             continue
-        dictionary[k] = list_to_shell_str(v)
+        dictionary[k] = list_to_str(v)
 
