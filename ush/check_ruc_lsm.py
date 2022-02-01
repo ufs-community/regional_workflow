@@ -28,7 +28,7 @@ def check_ruc_lsm(**kwargs):
     (_,ruc_lsm_name_or_null,_) = \
         run_command( f'{SED} -r -n -e "s/{regex_search}/\\1/p" "{ccpp_phys_suite_fp}"' )
 
-    if ruc_lsm_name_or_null == None:
+    if ruc_lsm_name_or_null == '':
         return False
     elif ruc_lsm_name_or_null == ruc_lsm_name:
         return True

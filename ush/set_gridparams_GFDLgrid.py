@@ -6,7 +6,7 @@ from datetime import datetime,timedelta
 from constants import radius_Earth,degs_per_radian
 
 from python_utils import process_args, import_vars, print_input_args, \
-                         print_info_msg, print_err_msg_exit
+                         run_command, print_info_msg, print_err_msg_exit
 
 def set_gridparams_GFDLgrid(**kwargs):
     """ Sets the parameters for a grid that is to be generated using the "GFDLgrid" 
@@ -19,7 +19,7 @@ def set_gridparams_GFDLgrid(**kwargs):
     """
 
     valid_args = ['lon_of_t6_ctr', 'lat_of_t6_ctr',
-                  'res_of_t6h', 'stretch_factor',
+                  'res_of_t6g', 'stretch_factor',
                   'refine_ratio_t6g_to_t7g',
                   'istart_of_t7_on_t6g',
                   'iend_of_t7_on_t6g',
@@ -242,10 +242,10 @@ def set_gridparams_GFDLgrid(**kwargs):
     #
     #-----------------------------------------------------------------------
     #
-    istart_of_t7_with_halo_on_t6sg = istart_of_t7_on_t6sg - halo_width_on_t6sg
-    iend_of_t7_with_halo_on_t6sg = iend_of_t7_on_t6sg + halo_width_on_t6sg
-    jstart_of_t7_with_halo_on_t6sg = jstart_of_t7_on_t6sg - halo_width_on_t6sg
-    jend_of_t7_with_halo_on_t6sg = jend_of_t7_on_t6sg + halo_width_on_t6sg
+    istart_of_t7_with_halo_on_t6sg = int(istart_of_t7_on_t6sg - halo_width_on_t6sg)
+    iend_of_t7_with_halo_on_t6sg = int(iend_of_t7_on_t6sg + halo_width_on_t6sg)
+    jstart_of_t7_with_halo_on_t6sg = int(jstart_of_t7_on_t6sg - halo_width_on_t6sg)
+    jend_of_t7_with_halo_on_t6sg = int(jend_of_t7_on_t6sg + halo_width_on_t6sg)
     #
     #-----------------------------------------------------------------------
     #
@@ -297,8 +297,8 @@ def set_gridparams_GFDLgrid(**kwargs):
           halo_width_on_t7g  = {halo_width_on_t7g}''', verbose=VERBOSE)
     
     halo_width_on_t6sg = istart_of_t7_on_t6sg - istart_of_t7_with_halo_on_t6sg
-    halo_width_on_t6g = halo_width_on_t6sg/2
-    halo_width_on_t7g = halo_width_on_t6g*refine_ratio_t6g_to_t7g
+    halo_width_on_t6g = halo_width_on_t6sg//2
+    halo_width_on_t7g = int(halo_width_on_t6g*refine_ratio_t6g_to_t7g)
     
     print_info_msg(f'''
         Values of the halo width on the tile 6 supergrid and on the tile 7 grid 
@@ -318,11 +318,11 @@ def set_gridparams_GFDLgrid(**kwargs):
     #
     nx_of_t7_on_t6sg = iend_of_t7_on_t6sg - istart_of_t7_on_t6sg + 1
     nx_of_t7_on_t6g = nx_of_t7_on_t6sg/2
-    nx_of_t7_on_t7g = nx_of_t7_on_t6g*refine_ratio_t6g_to_t7g
+    nx_of_t7_on_t7g = int(nx_of_t7_on_t6g*refine_ratio_t6g_to_t7g)
     
     ny_of_t7_on_t6sg = jend_of_t7_on_t6sg - jstart_of_t7_on_t6sg + 1
     ny_of_t7_on_t6g = ny_of_t7_on_t6sg/2
-    ny_of_t7_on_t7g = ny_of_t7_on_t6g*refine_ratio_t6g_to_t7g
+    ny_of_t7_on_t7g = int(ny_of_t7_on_t6g*refine_ratio_t6g_to_t7g)
     #
     # The following are set only for informational purposes.
     #

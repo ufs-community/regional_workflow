@@ -1155,21 +1155,16 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    global NDIGITS_ENSMEM_NAMES,ENSMEM_NAMES,FV3_NML_ENSMEM_FPS
+    global NDIGITS_ENSMEM_NAMES,ENSMEM_NAMES,FV3_NML_ENSMEM_FPS,NUM_ENS_MEMBERS
     NDIGITS_ENSMEM_NAMES=0
-    ENSMEM_NAMES=[""]
-    FV3_NML_ENSMEM_FPS=[""]
+    ENSMEM_NAMES=[]
+    FV3_NML_ENSMEM_FPS=[]
     if DO_ENSEMBLE == True:
-      NDIGITS_ENSMEM_NAMES=len(NUM_ENS_MEMBERS)
-    # Strip away all leading zeros in NUM_ENS_MEMBERS by converting it to a 
-    # decimal (leading zeros will cause bash to interpret the number as an 
-    # octal).  Note that the variable definitions file will therefore contain
-    # the version of NUM_ENS_MEMBERS with any leading zeros stripped away.
-      NUM_ENS_MEMBERS = [e.lstrip('0') for e in NUM_ENS_MEMBERS]
+      NDIGITS_ENSMEM_NAMES=len(str(NUM_ENS_MEMBERS))
       fmt=f"0{NDIGITS_ENSMEM_NAMES}d"
       for i in range(NUM_ENS_MEMBERS):
-        ENSMEM_NAMES[i]=f"mem{fmt}".format(i+1)
-        FV3_NML_ENSMEM_FPS[i]=f"{EXPTDIR}/{FV3_NML_FN}_{ENSMEM_NAMES[i]}"
+        ENSMEM_NAMES.append(f"mem{fmt}".format(i+1))
+        FV3_NML_ENSMEM_FPS.append(f"{EXPTDIR}/{FV3_NML_FN}_{ENSMEM_NAMES[i]}")
     #
     #-----------------------------------------------------------------------
     #
@@ -1194,8 +1189,7 @@ def setup():
     WFLOW_LAUNCH_SCRIPT_FP=f"{USHDIR}/{WFLOW_LAUNCH_SCRIPT_FN}"
     WFLOW_LAUNCH_LOG_FP=f"{EXPTDIR}/{WFLOW_LAUNCH_LOG_FN}"
     if USE_CRON_TO_RELAUNCH == True:
-      CRONTAB_LINE=f'''*/{CRON_RELAUNCH_INTVL_MNTS} * * * * cd {EXPTDIR} && \ 
-    ./{WFLOW_LAUNCH_SCRIPT_FN} >> ./{WFLOW_LAUNCH_LOG_FN} 2>&1'''
+      CRONTAB_LINE=f'''*/{CRON_RELAUNCH_INTVL_MNTS} * * * * cd {EXPTDIR} && ./{WFLOW_LAUNCH_SCRIPT_FN} >> ./{WFLOW_LAUNCH_LOG_FN} 2>&1'''
     else:
       CRONTAB_LINE=""
     #
@@ -1723,7 +1717,7 @@ def setup():
     global PE_MEMBER01
     PE_MEMBER01=LAYOUT_X*LAYOUT_Y
     if QUILTING == True:
-      PE_MEMBER01=PE_MEMBER01 + WRTCMP_write_groups*WRTCMP_write_tasks_per_group
+      PE_MEMBER01 = PE_MEMBER01 + WRTCMP_write_groups*WRTCMP_write_tasks_per_group
     
     print_info_msg(f'''
         The number of MPI tasks for the forecast (including those for the write
@@ -1840,62 +1834,8 @@ def setup():
     all_lines=cfg_to_shell_str(cfg_d)
     with open(GLOBAL_VAR_DEFNS_FP,'w') as f:
         f.write(all_lines)
-    #
-    #-----------------------------------------------------------------------
-    #
-    #
-    #
-    #-----------------------------------------------------------------------
-    #
     
-    # Read all lines of GLOBAL_VAR_DEFNS file into the variable line_list.
-    (_,line_list,_)=run_command(f'''{SED} -r -e "s/(.*)/\\1/g" {GLOBAL_VAR_DEFNS_FP}''')
-    #
-    # Loop through the lines in line_list and concatenate lines ending with
-    # the line bash continuation character "\".
-    #
-    rm_vrfy(GLOBAL_VAR_DEFNS_FP)
-    all_lines = '\n'.join( line_list.splitlines() )
-    with open(GLOBAL_VAR_DEFNS_FP,'w') as f:
-        f.write(all_lines)
-    #
-    #-----------------------------------------------------------------------
-    #
-    # The following comment block needs to be updated because now line_list
-    # may contain lines that are not assignment statements (e.g. it may con-
-    # tain if-statements).  Such lines are ignored in the while-loop below.
-    #
-    # Reset each of the variables in the variable definitions file to its 
-    # value in the current environment.  To accomplish this, we:
-    #
-    # 1) Create a list of variable settings by stripping out comments, blank
-    #    lines, extraneous leading whitespace, etc from the variable defini-
-    #    tions file (which is currently identical to the default workflow/
-    #    experiment configuration script) and saving the result in the vari-
-    #    able line_list.  Each line of line_list will have the form
-    #
-    #      VAR=...
-    #
-    #    where the VAR is a variable name and ... is the value from the de-
-    #    fault configuration script (which does not necessarily correspond
-    #    to the current value of the variable).
-    #
-    # 2) Loop through each line of line_list.  For each line, we extract the
-    #    variable name (and save it in the variable var_name), get its value
-    #    from the current environment (using bash indirection, i.e. 
-    #    ${!var_name}), and use the set_file_param() function to replace the
-    #    value of the variable in the variable definitions script (denoted 
-    #    above by ...) with its current value. 
-    #
-    #-----------------------------------------------------------------------
-    #
-    # Also should remove trailing whitespace...
-    (err,line_list,_) = run_command(f''' {SED} -r \
-                 -e "s/^([ ]*)([^ ]+.*)/\\2/g" \
-                 -e "/^#.*/d" \
-                 -e "/^$/d" \
-                 {GLOBAL_VAR_DEFNS_FP}''')
-    
+    # print info message
     msg=dedent(f'''
         Before updating default values of experiment variables to user-specified
         values, the variable \"line_list\" contains:
@@ -1903,45 +1843,9 @@ def setup():
         ''')
 
     msg +=dedent(f'''
-        {line_list}''')
+        {all_lines}''')
 
     print_info_msg(msg,verbose=DEBUG)
-    #
-    #-----------------------------------------------------------------------
-    #
-    # Add a comment at the beginning of the variable definitions file that
-    # indicates that the first section of that file is (mostly) the same as
-    # the configuration file.
-    #
-    #-----------------------------------------------------------------------
-    #
-    str_to_insert = f'''
-        #
-        #-----------------------------------------------------------------------
-        #-----------------------------------------------------------------------
-        # Section 1:
-        # This section is a copy of the default experiment configuration file 
-        # ({EXPT_DEFAULT_CONFIG_FN}) in the shell scripts directory specified by USHDIR 
-        # except that variable values have been updated to those for the experiment 
-        # (as opposed to the default values).
-        #-----------------------------------------------------------------------
-        #-----------------------------------------------------------------------
-        #
-    '''
-    #
-    # Replace all occurrences of actual newlines in the variable str_to_insert
-    # with escaped backslash-n.  This is needed for the sed command below to
-    # work properly (i.e. to avoid it failing with an "unterminated `s' command"
-    # error message).
-    #
-    str_to_insert = str_to_insert.replace('\n', '\\n') 
-    #
-    # Insert str_to_insert into GLOBAL_VAR_DEFNS_FP right after the line
-    # containing the name of the interpreter (i.e. the line that starts with
-    # the string "#!", e.g. "#!/bin/bash").
-    #
-    regexp="(^#!.*)"
-    run_command(f'{SED} -i -r -e "s|{regexp}|\\1\n\n{str_to_insert}\n|g" {GLOBAL_VAR_DEFNS_FP}')
     #
     # Loop through the lines in line_list.
     #
@@ -2123,8 +2027,7 @@ def setup():
         # the grid generation step.  It will later be set to an actual value af-
         # ter the make_grid task is complete.
         #
-        CRES="{CRES}"
-    '''
+        CRES="{CRES}"'''
     with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
         f.write(dedent(msg))
     #
@@ -2154,10 +2057,9 @@ def setup():
         ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG="{ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}"
         IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG="{IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}"
         JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG="{JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}"
-        JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG="{JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}"
-      '''
-      with open(GLOBAL_VAR_DEFNS_FP) as f:
-        f.write(msg)
+        JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG="{JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}"'''
+      with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
+        f.write(dedent(msg))
     
     elif GRID_GEN_METHOD == "ESGgrid":
     
@@ -2176,8 +2078,7 @@ def setup():
         DEL_ANGLE_Y_SG="{DEL_ANGLE_Y_SG}"
         NEG_NX_OF_DOM_WITH_WIDE_HALO="{NEG_NX_OF_DOM_WITH_WIDE_HALO}"
         NEG_NY_OF_DOM_WITH_WIDE_HALO="{NEG_NY_OF_DOM_WITH_WIDE_HALO}"
-        PAZI="{PAZI}"
-      '''
+        PAZI="{PAZI or ""}"'''
       with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
         f.write(dedent(msg))
     #
@@ -2297,8 +2198,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        N_VAR_SPP="{N_VAR_SPP}"
-    '''
+        N_VAR_SPP="{N_VAR_SPP}"'''
 
     with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
       f.write(dedent(msg))

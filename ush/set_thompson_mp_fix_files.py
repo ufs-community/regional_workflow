@@ -48,7 +48,7 @@ def set_thompson_mp_fix_files(**kwargs):
     
     if thompson_mp_name_or_null == thompson_mp_name:
       sdf_uses_thompson_mp=True
-    elif thompson_mp_name_or_null == None:
+    elif thompson_mp_name_or_null == '':
       sdf_uses_thompson_mp=False
     else:
       print_err_msg_exit(f'''
