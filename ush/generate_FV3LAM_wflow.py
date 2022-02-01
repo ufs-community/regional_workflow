@@ -127,6 +127,8 @@ def generate_FV3LAM_wflow():
         (_,time_str,_) = \
             run_command(f'{DATE_UTIL} -d "{date_to_str(DATE_FIRST_CYCL,True)} +{DT_ATMOS} seconds" +%M:%S')
 
+        cycl_hrs_str = [ f"{c:02d}" for c in CYCL_HRS ]
+
         #yaml-string of settings
         settings = f"""
             #
@@ -346,9 +348,9 @@ def generate_FV3LAM_wflow():
             #
               'date_first_cycl': {date_to_str(DATE_FIRST_CYCL,True)}
               'date_last_cycl': {date_to_str(DATE_LAST_CYCL,True)}
-              'cdate_first_cycl': !datetime {date_to_str(DATE_FIRST_CYCL,True)}{CYCL_HRS[0]}
-              'cycl_hrs': {CYCL_HRS}
-              'cycl_freq': !!str {INCR_CYCL_FREQ}:00:00
+              'cdate_first_cycl': !datetime {date_to_str(DATE_FIRST_CYCL,True)}{CYCL_HRS[0]:02d}
+              'cycl_hrs': {cycl_hrs_str}
+              'cycl_freq': !!str {INCR_CYCL_FREQ:02d}:00:00
             #
             # Forecast length (same for all cycles).
             #
@@ -702,8 +704,8 @@ def generate_FV3LAM_wflow():
         'bc_update_interval': {LBC_SPEC_INTVL_HRS},
       }}
     'gfs_physics_nml': {{
-        'kice': {kice or null},
-        'lsoil': {lsoil or null},
+        'kice': {kice or "null"},
+        'lsoil': {lsoil or "null"},
         'do_shum': {DO_SHUM},
         'do_sppt': {DO_SPPT},
         'do_skeb': {DO_SKEB},

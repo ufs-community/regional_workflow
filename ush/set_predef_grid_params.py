@@ -426,7 +426,7 @@ def set_predef_grid_params():
       GFDLgrid_LON_T6_CTR="-97.5"
       GFDLgrid_LAT_T6_CTR="38.5"
       GFDLgrid_STRETCH_FAC="1.4"
-      GFDLgrid_RES="96"
+      GFDLgrid_RES=96
       GFDLgrid_REFINE_RATIO="3"
     
       num_margin_cells_T6_left=12
@@ -479,7 +479,7 @@ def set_predef_grid_params():
       GFDLgrid_LON_T6_CTR="-97.5"
       GFDLgrid_LAT_T6_CTR="38.5"
       GFDLgrid_STRETCH_FAC="1.5"
-      GFDLgrid_RES="768"
+      GFDLgrid_RES=768
       GFDLgrid_REFINE_RATIO="3"
     
       num_margin_cells_T6_left=69
@@ -1068,7 +1068,7 @@ def set_predef_grid_params():
     #    GFDLgrid_LON_T6_CTR="-106.0"
     #    GFDLgrid_LAT_T6_CTR="54.0"
     #    GFDLgrid_STRETCH_FAC="0.63"
-    #    GFDLgrid_RES="384"
+    #    GFDLgrid_RES=384
     #    GFDLgrid_REFINE_RATIO="3"
     #
     #    num_margin_cells_T6_left="10"
