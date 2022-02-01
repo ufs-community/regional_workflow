@@ -146,7 +146,7 @@ case "$MACHINE" in
   "CHEYENNE")
     module list
     nprocs=$(( NNODES_RUN_FCST*PPN_RUN_FCST ))
-    APRUN="mpirun -np $nprocs"
+    APRUN="mpirun -np ${PE_MEMBER01}"
     ;;
 
   "STAMPEDE")
