@@ -4,7 +4,7 @@ import os
 import unittest
 from textwrap import dedent
 
-from python_utils import process_args,import_vars,export_vars,set_env_var,list_to_shell_str,\
+from python_utils import process_args,import_vars,export_vars,set_env_var,list_to_str,\
                          print_input_args, print_info_msg, print_err_msg_exit, run_command,\
                          define_macro_utilities
 
@@ -150,7 +150,7 @@ def set_ozone_param(**kwargs):
         
         ''')
       msg+=dedent(f'''
-          CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING = {list_to_shell_str(CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING)}
+          CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING = {list_to_str(CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING)}
         ''')
       print_info_msg(msg,verbose=VERBOSE)
     

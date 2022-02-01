@@ -6,7 +6,7 @@ from textwrap import dedent
 
 from python_utils import process_args, print_input_args, print_info_msg, print_err_msg_exit,\
                          check_var_valid_value, run_command, mv_vrfy,mkdir_vrfy,cmd_vrfy,cp_vrfy,\
-                         rm_vrfy,import_vars,set_env_var,list_to_shell_str,shell_str_to_list,\
+                         rm_vrfy,import_vars,set_env_var,list_to_str,str_to_list,\
                          lowercase, define_macro_utilities
 
 def set_FV3nml_stoch_params(**kwargs):

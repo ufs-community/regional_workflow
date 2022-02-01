@@ -849,7 +849,7 @@ def generate_FV3LAM_wflow():
     #-----------------------------------------------------------------------
     #
     if WORKFLOW_MANAGER == "rocoto":
-      wflow_db_fn=f"{os.path.splitext(WFLO_XML_FN)[0]}.db"
+      wflow_db_fn=f"{os.path.splitext(WFLOW_XML_FN)[0]}.db"
       rocotorun_cmd=f"rocotorun -w {WFLOW_XML_FN} -d {wflow_db_fn} -v 10"
       rocotostat_cmd=f"rocotostat -w {WFLOW_XML_FN} -d {wflow_db_fn} -v 10"
     
