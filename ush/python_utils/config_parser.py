@@ -7,6 +7,7 @@ import os
 
 from .environment import list_to_str, str_to_list
 from .print_msg import print_err_msg_exit
+from .run_command import run_command
 
 def load_shell_config(config_file):
     """ Loads old style shell config files.
@@ -42,6 +43,24 @@ def load_shell_config(config_file):
         return cfg
 
     return None 
+
+def load_shell_config_complex(config_file):
+    """ If the shell script has more logic than just setting variables,
+    we source the config script in a subshell and gets the variables it set
+    """
+    (_,config_str,_) = run_command(f'''VARS="$(set -o posix; set)";
+                    source ./config.sh;
+                    grep -vFe "$VARS" <<<"$(set -o posix ; set)" | grep -v ^VARS''')
+    lines = config_str.splitlines()
+    
+    #build the dictionary
+    cfg = {}
+    for l in lines:
+        idx = l.find("=")
+        k = l[:idx]
+        v = str_to_list(l[idx+1:])
+        cfg[k] = v
+    return cfg
 
 def cfg_to_yaml_str(cfg):
     """ Get contents of config file as a yaml string """
@@ -82,7 +101,7 @@ def load_config_file(file_name):
     """ Choose yaml/shell file based on extension """
     ext = os.path.splitext(file_name)[1][1:]
     if ext == "sh":
-        return load_shell_config(file_name)
+        return load_shell_config_complex(file_name)
     else:
         return yaml_safe_load(file_name)
 

@@ -128,7 +128,16 @@ def str_to_list(v):
     if v[0] == '(':
         v = v[1:-1]
         tokens = shlex.split(v)
-        lst = [ str_to_type(itm.strip()) for itm in tokens if itm.strip() != '']
+        lst = []
+        for itm in tokens:
+            itm = itm.strip()
+            if itm == '':
+                continue
+            # bash arrays could be stored with indices ([0]=hello ...)
+            if "=" in itm:
+                idx = itm.find("=")
+                itm = itm[idx+1:]
+            lst.append(str_to_type(itm))
         return lst
     else:
         return str_to_type(v)
