@@ -15,6 +15,6 @@ def check_var_valid_value(var, values, err_msg=None):
     if var not in values:
         if not err_msg:
             err_msg = f'The value specified in var = {var} is not supported.'
-        print_err_msg_exit(err_msg + f'var must be set to one of the following {values}')
+        print_err_msg_exit(err_msg + f'{var} must be set to one of the following:\n   {values}')
     return True
 

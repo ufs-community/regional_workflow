@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from textwrap import dedent
 from .check_var_valid_value import check_var_valid_value
 
 def process_args(valid_args, **kwargs):
@@ -42,11 +43,11 @@ def process_args(valid_args, **kwargs):
                   valid_arg_names[{i}] = \"{valid_arg_names[i]}\"''')          
 
     for arg_name,arg_value in kwargs.items():
-        err_msg=f'''
+        err_msg=dedent(f'''
             The specified argument name (arg_name) in the current argument-value 
             pair (arg_val_pair) is not valid:
               arg_name = \"{arg_name}\"
-              arg_val = \"{arg_value}\"'''
+              arg_val = \"{arg_value}\"\n''')
         check_var_valid_value(arg_name, valid_arg_names, err_msg)
 
         idx = valid_arg_names.index(arg_name)

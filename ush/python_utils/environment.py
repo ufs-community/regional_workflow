@@ -222,7 +222,7 @@ def export_vars(dictionary=os.environ, source_dict=None, env_vars=None):
     for k,v in env_vars.items():
         if callable(v):
             continue
-        if k.islower() or k[0] == '_':
+        if not k or k.islower() or k[0] == '_':
             continue
         dictionary[k] = list_to_str(v)
 
