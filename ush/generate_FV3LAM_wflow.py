@@ -557,18 +557,19 @@ def generate_FV3LAM_wflow():
     #
     #-----------------------------------------------------------------------
     #
-    print_info_msg(f'''
-        Copying MERRA2 aerosol climatology data files from system directory
-        (FIXaer/FIXlut) to a subdirectory (FIXclim) in the experiment directory:
-          FIXaer = \"{FIXaer}\"
-          FIXlut = \"{FIXlut}\"
-          FIXclim = \"{FIXclim}\"''',verbose=VERBOSE)
-    
-    check_for_preexist_dir_file(FIXclim,"delete")
-    mkdir_vrfy(f' -p "{FIXclim}"')
-    
-    cp_vrfy(f' "{FIXaer}/merra2.aerclim"*".nc" "{FIXclim}/"')
-    cp_vrfy(f' "{FIXlut}/optics"*".dat" "{FIXclim}/"')
+    if USE_MERRA_CLIMO == True:
+        print_info_msg(f'''
+            Copying MERRA2 aerosol climatology data files from system directory
+            (FIXaer/FIXlut) to a subdirectory (FIXclim) in the experiment directory:
+              FIXaer = \"{FIXaer}\"
+              FIXlut = \"{FIXlut}\"
+              FIXclim = \"{FIXclim}\"''',verbose=VERBOSE)
+        
+        check_for_preexist_dir_file(FIXclim,"delete")
+        mkdir_vrfy(f' -p "{FIXclim}"')
+        
+        cp_vrfy(f' "{FIXaer}/merra2.aerclim"*".nc" "{FIXclim}/"')
+        cp_vrfy(f' "{FIXlut}/optics"*".dat" "{FIXclim}/"')
     #
     #-----------------------------------------------------------------------
     #
@@ -1021,7 +1022,7 @@ if __name__ == "__main__":
     #
     else:
       print_err_msg_exit(f'''
-        Experiment/workflow generation failed.  Check the log file from the ex-
+        Experiment generation failed.  Check the log file from the ex-
         periment/workflow generation script in the file specified by log_fp:
           log_fp = \"{log_fp}\"
         Stopping.''')
