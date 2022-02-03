@@ -10,7 +10,7 @@ from python_utils import cd_vrfy, mkdir_vrfy, rm_vrfy, check_var_valid_value,\
                          get_manage_externals_config_property, list_to_str, type_to_str, \
                          import_vars, export_vars, get_env_var, print_info_msg,\
                          print_err_msg_exit, load_config_file, cfg_to_yaml_str, cfg_to_shell_str,\
-                         run_command, set_file_param
+                         run_command, set_file_param, load_shell_config_complex
 
 from set_cycle_dates import set_cycle_dates
 from set_predef_grid_params import set_predef_grid_params
@@ -81,7 +81,7 @@ def setup():
     # configuration file are also assigned default values in the default 
     # configuration file.
     #
-      cfg_u = load_config_file(EXPT_CONFIG_FN)
+      cfg_u = load_config_file(f"{ushdir}/{EXPT_CONFIG_FN}")
       cfg_d.update(cfg_u)
       if cfg_u.items() > cfg_d.items():
         print_err_msg_exit(f'''
@@ -126,7 +126,7 @@ def setup():
             continue
         vkey = 'valid_vals_' + k
         if (vkey in cfg_v) and not (v in cfg_v[vkey]):
-            print_err_msg_exit(f'''
+            print_info_msg(f'''
                 The variable {k}={v} in {EXPT_DEFAULT_CONFIG_FN} or {EXPT_CONFIG_FN} does not have
                 a valid value. Possible values are:
                     {k} = {cfg_v[vkey]}''')
@@ -172,150 +172,180 @@ def setup():
     N_VAR_SPP=0
     if DO_SPP == True:
       N_VAR_SPP = len(SPP_VAR_LIST)
+
+    #
+    # The current script should be located in the ush subdirectory of the 
+    # workflow directory.  Thus, the workflow directory is the one above the
+    # directory of the current script.
+    #
+    SR_WX_APP_TOP_DIR=os.path.abspath( os.path.dirname(__file__) + \
+                      os.sep + os.pardir + os.sep + os.pardir)
+    
     #
     #-----------------------------------------------------------------------
     #
-    # Set the number of cores per node, the job scheduler, and the names of
-    # several queues.  These queues are defined in the default and local 
-    # workflow/experiment configuration script.
-    #
-    # Also, set the machine-dependent flag RELATIVE_OR_NULL that specifies
-    # the flag to pass to the link creation command (ln_vrfy) when attempting 
-    # to create relative symlinks.  On machines that don't support relative
-    # symlinks, it should be set to a null string.
+    # Set the base directories in which codes obtained from external reposi-
+    # tories (using the manage_externals tool) are placed.  Obtain the rela-
+    # tive paths to these directories by reading them in from the manage_ex-
+    # ternals configuration file.  (Note that these are relative to the lo-
+    # cation of the configuration file.)  Then form the full paths to these
+    # directories.  Finally, make sure that each of these directories actu-
+    # ally exists.
     #
     #-----------------------------------------------------------------------
     #
-    global RELATIVE_LINK_FLAG, WORKFLOW_MANAGER, NCORES_PER_NODE, SCHED, \
+    (_,mng_extrns_cfg_fn,_)=run_command(f'{READLINK} -f "{SR_WX_APP_TOP_DIR}/Externals.cfg"' )
+    property_name="local_path"
+    #
+    # Get the path to the workflow scripts
+    #
+    external_name="regional_workflow"
+    HOMErrfs = get_manage_externals_config_property( \
+        mng_extrns_cfg_fn, external_name, property_name)
+
+    if not HOMErrfs:
+        print_err_msg_exit(f'''
+            Call to function get_manage_externals_config_property failed.''')
+
+    HOMErrfs=f"{SR_WX_APP_TOP_DIR}/{HOMErrfs}"
+    #
+    # Get the base directory of the FV3 forecast model code.
+    #
+    external_name=FCST_MODEL
+    UFS_WTHR_MDL_DIR = get_manage_externals_config_property( \
+        mng_extrns_cfg_fn, external_name,property_name)
+
+    if not UFS_WTHR_MDL_DIR:
+        print_err_msg_exit(f'''
+            Call to function get_manage_externals_config_property failed."''')
+
+    UFS_WTHR_MDL_DIR=f"{SR_WX_APP_TOP_DIR}/{UFS_WTHR_MDL_DIR}"
+    if not os.path.exists(UFS_WTHR_MDL_DIR):
+        print_err_msg_exit(f'''
+            The base directory in which the FV3 source code should be located
+            (UFS_WTHR_MDL_DIR) does not exist:
+              UFS_WTHR_MDL_DIR = \"{UFS_WTHR_MDL_DIR}\"
+            Please clone the external repository containing the code in this directory,
+            build the executable, and then rerun the workflow.''')
+    #
+    # Get the base directory of the UFS_UTILS codes.
+    #
+    external_name="ufs_utils"
+    UFS_UTILS_DIR=get_manage_externals_config_property( \
+        mng_extrns_cfg_fn, external_name, property_name)
+
+    if not UFS_UTILS_DIR:
+        print_err_msg_exit(f'''
+            Call to function get_manage_externals_config_property failed.''')
+    
+    UFS_UTILS_DIR=f"{SR_WX_APP_TOP_DIR}/{UFS_UTILS_DIR}"
+    if not os.path.exists(UFS_UTILS_DIR):
+        print_err_msg_exit(f'''
+            The base directory in which the UFS utilities source codes should be lo-
+            cated (UFS_UTILS_DIR) does not exist:
+              UFS_UTILS_DIR = \"{UFS_UTILS_DIR}\"
+            Please clone the external repository containing the code in this direct-
+            ory, build the executables, and then rerun the workflow.''')
+    #
+    # Get the base directory of the UPP code.
+    #
+    external_name="UPP"
+    UPP_DIR=get_manage_externals_config_property( \
+        mng_extrns_cfg_fn,external_name,property_name )
+    if not UPP_DIR:
+        print_err_msg_exit(f'''
+            Call to function get_manage_externals_config_property failed.''')
+    
+    UPP_DIR=f"{SR_WX_APP_TOP_DIR}/{UPP_DIR}"
+    if not os.path.exists(UPP_DIR):
+        print_err_msg_exit(f'''
+            The base directory in which the UPP source code should be located
+            (UPP_DIR) does not exist:
+              UPP_DIR = \"{UPP_DIR}\"
+            Please clone the external repository containing the code in this directory,
+            build the executable, and then rerun the workflow.''')
+
+    #
+    # Define some other useful paths
+    #
+    global USHDIR, SCRIPTSDIR, JOBSDIR,SORCDIR, SRC_DIR, PARMDIR, MODULES_DIR, EXECDIR, TEMPLATE_DIR, \
+           VX_CONFIG_DIR, METPLUS_CONF, MET_CONFIG
+
+    USHDIR=f"{HOMErrfs}/ush"
+    SCRIPTSDIR=f"{HOMErrfs}/scripts"
+    JOBSDIR=f"{HOMErrfs}/jobs"
+    SORCDIR=f"{HOMErrfs}/sorc"
+    SRC_DIR=f"{SR_WX_APP_TOP_DIR}/src"
+    PARMDIR=f"{HOMErrfs}/parm"
+    MODULES_DIR=f"{HOMErrfs}/modulefiles"
+    EXECDIR=f"{SR_WX_APP_TOP_DIR}/bin"
+    TEMPLATE_DIR=f"{USHDIR}/templates"
+    VX_CONFIG_DIR=f"{TEMPLATE_DIR}/parm"
+    METPLUS_CONF=f"{TEMPLATE_DIR}/parm/metplus"
+    MET_CONFIG=f"{TEMPLATE_DIR}/parm/met"
+    
+    #
+    #-----------------------------------------------------------------------
+    #
+    # Source the machine config file containing architechture information,
+    # queue names, and supported input file paths.
+    #
+    #-----------------------------------------------------------------------
+    #
+    global MACHINE_FILE
+    global FIXgsm, FIXaer, FIXlut, TOPO_DIR, SFC_CLIMO_INPUT_DIR, FIXLAM_NCO_BASEDIR, \
+           RELATIVE_LINK_FLAG, WORKFLOW_MANAGER, NCORES_PER_NODE, SCHED, \
            QUEUE_DEFAULT, QUEUE_HPSS, QUEUE_FCST, \
            PARTITION_DEFAULT, PARTITION_HPSS, PARTITION_FCST
 
-    RELATIVE_LINK_FLAG=""
-    if MACHINE == "WCOSS_CRAY":
-        WORKFLOW_MANAGER="rocoto"
-        NCORES_PER_NODE=NCORES_PER_NODE or 24
-        SCHED="lsfcray"
-        QUEUE_DEFAULT=QUEUE_DEFAULT or "dev"
-        QUEUE_HPSS=QUEUE_HPSS or "dev_transfer"
-        QUEUE_FCST=QUEUE_FCST or "dev"
-    #
-        RELATIVE_LINK_FLAG=""
-    
-    elif MACHINE == "WCOSS_DELL_P3":
-        WORKFLOW_MANAGER="rocoto"
-        NCORES_PER_NODE=NCORES_PER_NODE or 24
-        SCHED="lsf"
-        QUEUE_DEFAULT=QUEUE_DEFAULT or "dev"
-        QUEUE_HPSS=QUEUE_HPSS or "dev_transfer"
-        QUEUE_FCST=QUEUE_FCST or "dev"
-    #
-        RELATIVE_LINK_FLAG="--relative"
-    
-    elif MACHINE == "HERA":
-        WORKFLOW_MANAGER="rocoto"
-        NCORES_PER_NODE=NCORES_PER_NODE or 40
-        SCHED=SCHED or "slurm"
-        PARTITION_DEFAULT=PARTITION_DEFAULT or "hera"
-        QUEUE_DEFAULT=QUEUE_DEFAULT or "batch"
-        PARTITION_HPSS=PARTITION_HPSS or "service"
-        QUEUE_HPSS=QUEUE_HPSS or "batch"
-        PARTITION_FCST=PARTITION_FCST or "hera"
-        QUEUE_FCST=QUEUE_FCST or "batch"
-    #
-        RELATIVE_LINK_FLAG="--relative"
-    
-    elif MACHINE == "ORION":
-        WORKFLOW_MANAGER="rocoto"
-        NCORES_PER_NODE=NCORES_PER_NODE or 40
-        SCHED=SCHED or "slurm"
-        PARTITION_DEFAULT=PARTITION_DEFAULT or "orion"
-        QUEUE_DEFAULT=QUEUE_DEFAULT or "batch"
-        PARTITION_HPSS=PARTITION_HPSS or "service"
-        QUEUE_HPSS=QUEUE_HPSS or "batch"
-        PARTITION_FCST=PARTITION_FCST or "orion"
-        QUEUE_FCST=QUEUE_FCST or "batch"
-    #
-        RELATIVE_LINK_FLAG="--relative"
-    
-    elif MACHINE == "JET":
-        WORKFLOW_MANAGER="rocoto"
-        NCORES_PER_NODE=NCORES_PER_NODE or 24
-        SCHED=SCHED or "slurm"
-        PARTITION_DEFAULT=PARTITION_DEFAULT or "sjet,vjet,kjet,xjet"
-        QUEUE_DEFAULT=QUEUE_DEFAULT or "batch"
-        PARTITION_HPSS=PARTITION_HPSS or "service"
-        QUEUE_HPSS=QUEUE_HPSS or "batch"
-        PARTITION_FCST=PARTITION_FCST or "sjet,vjet,kjet,xjet"
-        QUEUE_FCST=QUEUE_FCST or "batch"
-    #
-        RELATIVE_LINK_FLAG="--relative"
-    
-    elif MACHINE == "ODIN":
-        WORKFLOW_MANAGER="rocoto"
-        NCORES_PER_NODE=NCORES_PER_NODE or 24
-        SCHED=SCHED or "slurm"
-        PARTITION_DEFAULT=PARTITION_DEFAULT or "workq"
-        QUEUE_DEFAULT=QUEUE_DEFAULT or "workq"
-        PARTITION_HPSS=PARTITION_HPSS or "workq"
-        QUEUE_HPSS=QUEUE_HPSS or "workq"
-        PARTITION_FCST=PARTITION_FCST or "workq"
-        QUEUE_FCST=QUEUE_FCST or "workq"
-    #
-        RELATIVE_LINK_FLAG="--relative"
-    
-    elif MACHINE == "CHEYENNE":
-        WORKFLOW_MANAGER="rocoto"
-        NCORES_PER_NODE=NCORES_PER_NODE or 36
-        SCHED=SCHED or "pbspro"
-        QUEUE_DEFAULT=QUEUE_DEFAULT or "regular"
-        QUEUE_HPSS=QUEUE_HPSS or "regular"
-        QUEUE_FCST=QUEUE_FCST or "regular"
-    #
-        RELATIVE_LINK_FLAG="--relative"
-    
-    elif MACHINE == "STAMPEDE":
-        WORKFLOW_MANAGER="rocoto"
-        NCORES_PER_NODE=NCORES_PER_NODE or 68
-        SCHED="slurm"
-        PARTITION_DEFAULT=PARTITION_DEFAULT or "normal"
-        QUEUE_DEFAULT=QUEUE_DEFAULT or "normal"
-        PARTITION_HPSS=PARTITION_HPSS or "normal"
-        QUEUE_HPSS=QUEUE_HPSS or "normal"
-        PARTITION_FCST=PARTITION_FCST or "normal"
-        QUEUE_FCST=QUEUE_FCST or "normal"
-    #
-        RELATIVE_LINK_FLAG="--relative"
-    
-    elif MACHINE == "MACOS":
-        WORKFLOW_MANAGER="none"
-        SCHED="none"
-    
-    elif MACHINE ==  "LINUX":
-        WORKFLOW_MANAGER=WORKFLOW_MANAGER or "none"
-        SCHED=SCHED or "none"
-    
-    else:
-        NCORES_PER_NODE=2 # Need some arbitrary default value to avoid division by zero errors
-    
-        print_err_msg_exit(f'''
-          You are running on an unknown platform! MACHINE={MACHINE} is not a valid
-        choice.''')
+    RELATIVE_LINK_FLAG="--relative"
+    MACHINE_FILE=MACHINE_FILE or f"{USHDIR}/machine/{lowercase(MACHINE)}.sh"
+    machine_cfg = load_shell_config_complex(MACHINE_FILE)
+    import_vars(dictionary=machine_cfg)
     
     if not NCORES_PER_NODE:
-        print_err_msg_exit(f''''
-          NCORES_PER_NODE is a required setting for your platform! Please
-        set it in config.sh.
-          MACHINE = {MACHINE}''')
+      print_err_msg_exit(f"""
+        NCORES_PER_NODE has not been specified in the file ${MACHINE_FILE}
+        Please ensure this value has been set for your desired platform. """)
+    
+    if not (FIXgsm and FIXaer and FIXlut and TOPO_DIR and SFC_CLIMO_INPUT_DIR):
+      print_err_msg_exit(f'''
+        One or more fix file directories have not been specified for this machine:
+          MACHINE = \"{MACHINE}\"
+          FIXgsm = \"{FIXgsm:-\"\"}
+          FIXaer = \"{FIXaer:-\"\"}
+          FIXlut = \"{FIXlut:-\"\"}
+          TOPO_DIR = \"{TOPO_DIR:-\"\"}
+          SFC_CLIMO_INPUT_DIR = \"{SFC_CLIMO_INPUT_DIR:-\"\"}
+          FIXLAM_NCO_BASEDIR = \"{FIXLAM_NCO_BASEDIR:-\"\"}
+        You can specify the missing location(s) in config.sh''')
+
     #
     #-----------------------------------------------------------------------
     #
-    # Calculate PPN_RUN_FCST from NCORES_PER_NODE and OMP_NUM_THREADS_RUN_FCST
+    # Set the names of the build and workflow environment files (if not 
+    # already specified by the user).  These are the files that need to be 
+    # sourced before building the component SRW App codes and running various 
+    # workflow scripts, respectively.
+    #
+    #-----------------------------------------------------------------------
+    #
+    global WFLOW_ENV_FN, BUILD_ENV_FN
+    machine=lowercase(MACHINE)
+    WFLOW_ENV_FN=WFLOW_ENV_FN or f"wflow_{machine}.env"
+    BUILD_ENV_FN=BUILD_ENV_FN or f"build_{machine}_{COMPILER}.env"
+    #
+    #-----------------------------------------------------------------------
+    #
+    # Calculate a default value for the number of processes per node for the
+    # RUN_FCST_TN task.  Then set PPN_RUN_FCST to this default value if 
+    # PPN_RUN_FCST is not already specified by the user.
     #
     #-----------------------------------------------------------------------
     #
     global PPN_RUN_FCST
-    PPN_RUN_FCST_OPT=NCORES_PER_NODE // OMP_NUM_THREADS_RUN_FCST
-    PPN_RUN_FCST=PPN_RUN_FCST or PPN_RUN_FCST_OPT
+    ppn_run_fcst_default = NCORES_PER_NODE // OMP_NUM_THREADS_RUN_FCST
+    PPN_RUN_FCST=PPN_RUN_FCST or ppn_run_fcst_default
     #
     #-----------------------------------------------------------------------
     #
@@ -345,6 +375,16 @@ def setup():
     global TILE_RGNL, GTYPE
     GTYPE="regional"
     TILE_RGNL="7"
+
+    #-----------------------------------------------------------------------
+    #
+    # Set USE_MERRA_CLIMO to either "TRUE" or "FALSE" so we don't
+    # have to consider other valid values later on.
+    #
+    #-----------------------------------------------------------------------
+    global USE_MERRA_CLIMO
+    if USE_MERRA_CLIMO == "FV3_GFS_v15_thompson_mynn_lam3km":
+      USE_MERRA_CLIMO=True
     #
     #-----------------------------------------------------------------------
     #
@@ -463,221 +503,6 @@ def setup():
       print_info_msg(f'''
         Too many cycles in ALL_CDATES to list, redefining in abbreviated form."
         ALL_CDATES="{DATE_FIRST_CYCL}{CYCL_HRS[0]}...{DATE_LAST_CYCL}{CYCL_HRS[-1]}''')
-    #
-    #-----------------------------------------------------------------------
-    #
-    # Set various directories.
-    #
-    # HOMErrfs:
-    # Top directory of the clone of the FV3-LAM workflow git repository.
-    #
-    # USHDIR:
-    # Directory containing the shell scripts called by the workflow.
-    #
-    # SCRIPTSDIR:
-    # Directory containing the ex scripts called by the workflow.
-    #
-    # JOBSSDIR:
-    # Directory containing the jjobs scripts called by the workflow.
-    #
-    # SORCDIR:
-    # Directory containing various source codes.
-    #
-    # PARMDIR:
-    # Directory containing parameter files, template files, etc.
-    #
-    # EXECDIR:
-    # Directory containing various executable files.
-    #
-    # TEMPLATE_DIR:
-    # Directory in which templates of various FV3-LAM input files are locat-
-    # ed.
-    #
-    # UFS_WTHR_MDL_DIR:
-    # Directory in which the (NEMS-enabled) FV3-LAM application is located.
-    # This directory includes subdirectories for FV3, NEMS, and FMS.
-    #
-    #-----------------------------------------------------------------------
-    #
-    
-    #
-    # The current script should be located in the ush subdirectory of the 
-    # workflow directory.  Thus, the workflow directory is the one above the
-    # directory of the current script.  Get the path to this latter directo-
-    # ry and save it in HOMErrfs.
-    #
-    SR_WX_APP_TOP_DIR=os.path.abspath( os.path.dirname(__file__) + \
-                      os.sep + os.pardir + os.sep + os.pardir)
-    # GSK to do:  Get HOMErrfs from Externals.cfg 
-    HOMErrfs=f"{SR_WX_APP_TOP_DIR}/regional_workflow"
-    
-    global USHDIR, SCRIPTSDIR, JOBSDIR,SORCDIR, SRC_DIR, PARMDIR, MODULES_DIR, EXECDIR, TEMPLATE_DIR, \
-           VX_CONFIG_DIR, METPLUS_CONF, MET_CONFIG, FIXgsm, FIXaer, FIXlut, TOPO_DIR, SFC_CLIMO_INPUT_DIR, \
-           FIXLAM_NCO_BASEDIR
-
-    USHDIR=f"{HOMErrfs}/ush"
-    SCRIPTSDIR=f"{HOMErrfs}/scripts"
-    JOBSDIR=f"{HOMErrfs}/jobs"
-    SORCDIR=f"{HOMErrfs}/sorc"
-    SRC_DIR=f"{SR_WX_APP_TOP_DIR}/src"
-    PARMDIR=f"{HOMErrfs}/parm"
-    MODULES_DIR=f"{HOMErrfs}/modulefiles"
-    EXECDIR=f"{SR_WX_APP_TOP_DIR}/bin"
-    TEMPLATE_DIR=f"{USHDIR}/templates"
-    VX_CONFIG_DIR=f"{TEMPLATE_DIR}/parm"
-    METPLUS_CONF=f"{TEMPLATE_DIR}/parm/metplus"
-    MET_CONFIG=f"{TEMPLATE_DIR}/parm/met"
-    
-    if MACHINE == "WCOSS_CRAY":
-        FIXgsm=FIXgsm or "/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"
-        FIXaer=FIXaer or "/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_aer"
-        FIXlut=FIXlut or "/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_lut"
-        TOPO_DIR=TOPO_DIR or "/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"
-        SFC_CLIMO_INPUT_DIR=SFC_CLIMO_INPUT_DIR or "/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"
-        FIXLAM_NCO_BASEDIR=FIXLAM_NCO_BASEDIR or "/needs/to/be/specified"
-    
-    elif MACHINE == "WCOSS_DELL_P3":
-        FIXgsm=FIXgsm or "/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"
-        FIXaer=FIXaer or "/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_aer"
-        FIXlut=FIXlut or "/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_lut"
-        TOPO_DIR=TOPO_DIR or "/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"
-        SFC_CLIMO_INPUT_DIR=SFC_CLIMO_INPUT_DIR or "/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"
-        FIXLAM_NCO_BASEDIR=FIXLAM_NCO_BASEDIR or "/needs/to/be/specified"
-    
-    elif MACHINE == "HERA":
-        FIXgsm=FIXgsm or "/scratch1/NCEPDEV/global/glopara/fix/fix_am"
-        FIXaer=FIXaer or "/scratch1/NCEPDEV/global/glopara/fix/fix_aer"
-        FIXlut=FIXlut or "/scratch1/NCEPDEV/global/glopara/fix/fix_lut"
-        TOPO_DIR=TOPO_DIR or "/scratch1/NCEPDEV/global/glopara/fix/fix_orog"
-        SFC_CLIMO_INPUT_DIR=SFC_CLIMO_INPUT_DIR or "/scratch1/NCEPDEV/global/glopara/fix/fix_sfc_climo"
-        FIXLAM_NCO_BASEDIR=FIXLAM_NCO_BASEDIR or "/scratch2/BMC/det/FV3LAM_pregen"
-    
-    elif MACHINE == "ORION":
-        FIXgsm=FIXgsm or "/work/noaa/global/glopara/fix/fix_am"
-        FIXaer=FIXaer or "/work/noaa/global/glopara/fix/fix_aer"
-        FIXlut=FIXlut or "/work/noaa/global/glopara/fix/fix_lut"
-        TOPO_DIR=TOPO_DIR or "/work/noaa/global/glopara/fix/fix_orog"
-        SFC_CLIMO_INPUT_DIR=SFC_CLIMO_INPUT_DIR or "/work/noaa/global/glopara/fix/fix_sfc_climo"
-        FIXLAM_NCO_BASEDIR=FIXLAM_NCO_BASEDIR or "/needs/to/be/specified"
-    
-    elif MACHINE == "JET":
-        FIXgsm=FIXgsm or "/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am"
-        FIXaer=FIXaer or "/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_aer"
-        FIXlut=FIXlut or "/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_lut"
-        TOPO_DIR=TOPO_DIR or "/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_orog"
-        SFC_CLIMO_INPUT_DIR=SFC_CLIMO_INPUT_DIR or "/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_sfc_climo"
-        FIXLAM_NCO_BASEDIR=FIXLAM_NCO_BASEDIR or "/needs/to/be/specified"
-    
-    elif MACHINE == "ODIN":
-        FIXgsm=FIXgsm or "/scratch/ywang/fix/theia_fix/fix_am"
-        FIXaer=FIXaer or "/scratch/ywang/fix/theia_fix/fix_aer"
-        FIXlut=FIXlut or "/scratch/ywang/fix/theia_fix/fix_lut"
-        TOPO_DIR=TOPO_DIR or "/scratch/ywang/fix/theia_fix/fix_orog"
-        SFC_CLIMO_INPUT_DIR=SFC_CLIMO_INPUT_DIR or "/scratch/ywang/fix/climo_fields_netcdf"
-        FIXLAM_NCO_BASEDIR=FIXLAM_NCO_BASEDIR or "/needs/to/be/specified"
-    
-    elif MACHINE == "CHEYENNE":
-        FIXgsm=FIXgsm or "/glade/p/ral/jntp/UFS_CAM/fix/fix_am"
-        FIXaer=FIXaer or "/glade/p/ral/jntp/UFS_CAM/fix/fix_aer"
-        FIXlut=FIXlut or "/glade/p/ral/jntp/UFS_CAM/fix/fix_lut"
-        TOPO_DIR=TOPO_DIR or "/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"
-        SFC_CLIMO_INPUT_DIR=SFC_CLIMO_INPUT_DIR or "/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"
-        FIXLAM_NCO_BASEDIR=FIXLAM_NCO_BASEDIR or "/needs/to/be/specified"
-    
-    elif MACHINE == "STAMPEDE":
-        FIXgsm=FIXgsm or "/work/00315/tg455890/stampede2/regional_fv3/fix_am"
-        FIXaer=FIXaer or "/work/00315/tg455890/stampede2/regional_fv3/fix_aer"
-        FIXlut=FIXlut or "/work/00315/tg455890/stampede2/regional_fv3/fix_lut"
-        TOPO_DIR=TOPO_DIR or "/work/00315/tg455890/stampede2/regional_fv3/fix_orog"
-        SFC_CLIMO_INPUT_DIR=SFC_CLIMO_INPUT_DIR or "/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"
-        FIXLAM_NCO_BASEDIR=FIXLAM_NCO_BASEDIR or "/needs/to/be/specified"
-    
-    else:
-        if not (FIXgsm and FIXaer and FIXlut and TOPO_DIR and SFC_CLIMO_INPUT_DIR):
-          print_err_msg_exit(f'''
-            One or more fix file directories have not been specified for this machine:
-              MACHINE = \"{MACHINE}\"
-              FIXgsm = \"{FIXgsm:-\"\"}
-              FIXaer = \"{FIXaer:-\"\"}
-              FIXlut = \"{FIXlut:-\"\"}
-              TOPO_DIR = \"{TOPO_DIR:-\"\"}
-              SFC_CLIMO_INPUT_DIR = \"{SFC_CLIMO_INPUT_DIR:-\"\"}
-              FIXLAM_NCO_BASEDIR = \"{FIXLAM_NCO_BASEDIR:-\"\"}
-            You can specify the missing location(s) in config.sh''')
-
-    #
-    #-----------------------------------------------------------------------
-    #
-    # Set the base directories in which codes obtained from external reposi-
-    # tories (using the manage_externals tool) are placed.  Obtain the rela-
-    # tive paths to these directories by reading them in from the manage_ex-
-    # ternals configuration file.  (Note that these are relative to the lo-
-    # cation of the configuration file.)  Then form the full paths to these
-    # directories.  Finally, make sure that each of these directories actu-
-    # ally exists.
-    #
-    #-----------------------------------------------------------------------
-    #
-    (_,mng_extrns_cfg_fn,_)=run_command(f'{READLINK} -f "{SR_WX_APP_TOP_DIR}/Externals.cfg"' )
-    property_name="local_path"
-    #
-    # Get the base directory of the FV3 forecast model code.
-    #
-    external_name=FCST_MODEL
-    UFS_WTHR_MDL_DIR = get_manage_externals_config_property( \
-    mng_extrns_cfg_fn, external_name,property_name)
-
-    if not UFS_WTHR_MDL_DIR:
-        print_err_msg_exit(f'''
-            Call to function get_manage_externals_config_property failed."
-            
-            UFS_WTHR_MDL_DIR="{SR_WX_APP_TOP_DIR}/{UFS_WTHR_MDL_DIR}''')
-
-    UFS_WTHR_MDL_DIR=f"{SR_WX_APP_TOP_DIR}/{UFS_WTHR_MDL_DIR}"
-    if not os.path.exists(UFS_WTHR_MDL_DIR):
-        print_err_msg_exit(f'''
-            The base directory in which the FV3 source code should be located
-            (UFS_WTHR_MDL_DIR) does not exist:
-              UFS_WTHR_MDL_DIR = \"{UFS_WTHR_MDL_DIR}\"
-            Please clone the external repository containing the code in this directory,
-            build the executable, and then rerun the workflow.''')
-    #
-    # Get the base directory of the UFS_UTILS codes.
-    #
-    external_name="ufs_utils"
-    UFS_UTILS_DIR=get_manage_externals_config_property( \
-    mng_extrns_cfg_fn, external_name, property_name)
-
-    if not UFS_UTILS_DIR:
-        print_err_msg_exit(f'''
-            Call to function get_manage_externals_config_property failed.''')
-    
-    UFS_UTILS_DIR=f"{SR_WX_APP_TOP_DIR}/{UFS_UTILS_DIR}"
-    if not os.path.exists(UFS_UTILS_DIR):
-        print_err_msg_exit(f'''
-            The base directory in which the UFS utilities source codes should be lo-
-            cated (UFS_UTILS_DIR) does not exist:
-              UFS_UTILS_DIR = \"{UFS_UTILS_DIR}\"
-            Please clone the external repository containing the code in this direct-
-            ory, build the executables, and then rerun the workflow.''')
-    #
-    # Get the base directory of the UPP code.
-    #
-    external_name="UPP"
-    UPP_DIR=get_manage_externals_config_property( \
-    mng_extrns_cfg_fn,external_name,property_name )
-    if not UPP_DIR:
-        print_err_msg_exit(f'''
-            Call to function get_manage_externals_config_property failed.''')
-    
-    UPP_DIR=f"{SR_WX_APP_TOP_DIR}/{UPP_DIR}"
-    if not os.path.exists(UPP_DIR):
-        print_err_msg_exit(f'''
-            The base directory in which the UPP source code should be located
-            (UPP_DIR) does not exist:
-              UPP_DIR = \"{UPP_DIR}\"
-            Please clone the external repository containing the code in this directory,
-            build the executable, and then rerun the workflow.''')
     #
     #-----------------------------------------------------------------------
     #
@@ -1833,6 +1658,19 @@ def setup():
     GLOBAL_VAR_DEFNS_FP=f"{EXPTDIR}/{GLOBAL_VAR_DEFNS_FN}"
     all_lines=cfg_to_shell_str(cfg_d)
     with open(GLOBAL_VAR_DEFNS_FP,'w') as f:
+        msg = f"""            #
+            #-----------------------------------------------------------------------
+            #-----------------------------------------------------------------------
+            # Section 1:
+            # This section contains (most of) the primary experiment variables, i.e. 
+            # those variables that are defined in the default configuration file 
+            # (config_defaults.sh) and that can be reset via the user-specified 
+            # experiment configuration file (config.sh).
+            #-----------------------------------------------------------------------
+            #-----------------------------------------------------------------------
+            #
+            """
+        f.write(dedent(msg))
         f.write(all_lines)
     
     # print info message
@@ -1847,7 +1685,7 @@ def setup():
 
     print_info_msg(msg,verbose=DEBUG)
     #
-    # Loop through the lines in line_list.
+    # print info message
     #
     print_info_msg(f'''
         Generating the global experiment variable definitions file specified by
@@ -1868,7 +1706,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    msg = f'''
+    msg = f"""
         #
         #-----------------------------------------------------------------------
         #-----------------------------------------------------------------------
@@ -1890,9 +1728,9 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        WFLOW_LAUNCH_SCRIPT_FP="{WFLOW_LAUNCH_SCRIPT_FP}"
-        WFLOW_LAUNCH_LOG_FP="{WFLOW_LAUNCH_LOG_FP}"
-        CRONTAB_LINE="{CRONTAB_LINE}"
+        WFLOW_LAUNCH_SCRIPT_FP='{WFLOW_LAUNCH_SCRIPT_FP}'
+        WFLOW_LAUNCH_LOG_FP='{WFLOW_LAUNCH_LOG_FP}'
+        CRONTAB_LINE='{CRONTAB_LINE}'
         #
         #-----------------------------------------------------------------------
         #
@@ -1900,42 +1738,42 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        SR_WX_APP_TOP_DIR="{SR_WX_APP_TOP_DIR}"
-        HOMErrfs="{HOMErrfs}"
-        USHDIR="{USHDIR}"
-        SCRIPTSDIR="{SCRIPTSDIR}"
-        JOBSDIR="{JOBSDIR}"
-        SORCDIR="{SORCDIR}"
-        SRC_DIR="{SRC_DIR}"
-        PARMDIR="{PARMDIR}"
-        MODULES_DIR="{MODULES_DIR}"
-        EXECDIR="{EXECDIR}"
-        FIXam="{FIXam}"
-        FIXclim="{FIXclim}"
-        FIXLAM="{FIXLAM}"
-        FIXgsm="{FIXgsm}"
-        FIXaer="{FIXaer}"
-        FIXlut="{FIXlut}"
-        COMROOT="{COMROOT}"
-        COMOUT_BASEDIR="{COMOUT_BASEDIR}"
-        TEMPLATE_DIR="{TEMPLATE_DIR}"
-        VX_CONFIG_DIR="{VX_CONFIG_DIR}"
-        METPLUS_CONF="{METPLUS_CONF}"
-        MET_CONFIG="{MET_CONFIG}"
-        UFS_WTHR_MDL_DIR="{UFS_WTHR_MDL_DIR}"
-        UFS_UTILS_DIR="{UFS_UTILS_DIR}"
-        SFC_CLIMO_INPUT_DIR="{SFC_CLIMO_INPUT_DIR}"
-        TOPO_DIR="{TOPO_DIR}"
-        UPP_DIR="{UPP_DIR}"
+        SR_WX_APP_TOP_DIR='{SR_WX_APP_TOP_DIR}'
+        HOMErrfs='{HOMErrfs}'
+        USHDIR='{USHDIR}'
+        SCRIPTSDIR='{SCRIPTSDIR}'
+        JOBSDIR='{JOBSDIR}'
+        SORCDIR='{SORCDIR}'
+        SRC_DIR='{SRC_DIR}'
+        PARMDIR='{PARMDIR}'
+        MODULES_DIR='{MODULES_DIR}'
+        EXECDIR='{EXECDIR}'
+        FIXam='{FIXam}'
+        FIXclim='{FIXclim}'
+        FIXLAM='{FIXLAM}'
+        FIXgsm='{FIXgsm}'
+        FIXaer='{FIXaer}'
+        FIXlut='{FIXlut}'
+        COMROOT='{COMROOT}'
+        COMOUT_BASEDIR='{COMOUT_BASEDIR}'
+        TEMPLATE_DIR='{TEMPLATE_DIR}'
+        VX_CONFIG_DIR='{VX_CONFIG_DIR}'
+        METPLUS_CONF='{METPLUS_CONF}'
+        MET_CONFIG='{MET_CONFIG}'
+        UFS_WTHR_MDL_DIR='{UFS_WTHR_MDL_DIR}'
+        UFS_UTILS_DIR='{UFS_UTILS_DIR}'
+        SFC_CLIMO_INPUT_DIR='{SFC_CLIMO_INPUT_DIR}'
+        TOPO_DIR='{TOPO_DIR}'
+        UPP_DIR='{UPP_DIR}'
         
-        EXPTDIR="{EXPTDIR}"
-        LOGDIR="{LOGDIR}"
-        CYCLE_BASEDIR="{CYCLE_BASEDIR}"
-        GRID_DIR="{GRID_DIR}"
-        OROG_DIR="{OROG_DIR}"
-        SFC_CLIMO_DIR="{SFC_CLIMO_DIR}"
+        EXPTDIR='{EXPTDIR}'
+        LOGDIR='{LOGDIR}'
+        CYCLE_BASEDIR='{CYCLE_BASEDIR}'
+        GRID_DIR='{GRID_DIR}'
+        OROG_DIR='{OROG_DIR}'
+        SFC_CLIMO_DIR='{SFC_CLIMO_DIR}'
         
-        NDIGITS_ENSMEM_NAMES="{NDIGITS_ENSMEM_NAMES}"
+        NDIGITS_ENSMEM_NAMES='{NDIGITS_ENSMEM_NAMES}'
         ENSMEM_NAMES={list_to_str(ENSMEM_NAMES)}
         FV3_NML_ENSMEM_FPS={list_to_str(FV3_NML_ENSMEM_FPS)}
         #
@@ -1945,43 +1783,43 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        GLOBAL_VAR_DEFNS_FP="{GLOBAL_VAR_DEFNS_FP}"
+        GLOBAL_VAR_DEFNS_FP='{GLOBAL_VAR_DEFNS_FP}'
         
-        DATA_TABLE_TMPL_FN="{DATA_TABLE_TMPL_FN}"
-        DIAG_TABLE_TMPL_FN="{DIAG_TABLE_TMPL_FN}"
-        FIELD_TABLE_TMPL_FN="{FIELD_TABLE_TMPL_FN}"
-        MODEL_CONFIG_TMPL_FN="{MODEL_CONFIG_TMPL_FN}"
-        NEMS_CONFIG_TMPL_FN="{NEMS_CONFIG_TMPL_FN}"
+        DATA_TABLE_TMPL_FN='{DATA_TABLE_TMPL_FN}'
+        DIAG_TABLE_TMPL_FN='{DIAG_TABLE_TMPL_FN}'
+        FIELD_TABLE_TMPL_FN='{FIELD_TABLE_TMPL_FN}'
+        MODEL_CONFIG_TMPL_FN='{MODEL_CONFIG_TMPL_FN}'
+        NEMS_CONFIG_TMPL_FN='{NEMS_CONFIG_TMPL_FN}'
         
-        DATA_TABLE_TMPL_FP="{DATA_TABLE_TMPL_FP}"
-        DIAG_TABLE_TMPL_FP="{DIAG_TABLE_TMPL_FP}"
-        FIELD_TABLE_TMPL_FP="{FIELD_TABLE_TMPL_FP}"
-        FV3_NML_BASE_SUITE_FP="{FV3_NML_BASE_SUITE_FP}"
-        FV3_NML_YAML_CONFIG_FP="{FV3_NML_YAML_CONFIG_FP}"
-        FV3_NML_BASE_ENS_FP="{FV3_NML_BASE_ENS_FP}"
-        MODEL_CONFIG_TMPL_FP="{MODEL_CONFIG_TMPL_FP}"
-        NEMS_CONFIG_TMPL_FP="{NEMS_CONFIG_TMPL_FP}"
+        DATA_TABLE_TMPL_FP='{DATA_TABLE_TMPL_FP}'
+        DIAG_TABLE_TMPL_FP='{DIAG_TABLE_TMPL_FP}'
+        FIELD_TABLE_TMPL_FP='{FIELD_TABLE_TMPL_FP}'
+        FV3_NML_BASE_SUITE_FP='{FV3_NML_BASE_SUITE_FP}'
+        FV3_NML_YAML_CONFIG_FP='{FV3_NML_YAML_CONFIG_FP}'
+        FV3_NML_BASE_ENS_FP='{FV3_NML_BASE_ENS_FP}'
+        MODEL_CONFIG_TMPL_FP='{MODEL_CONFIG_TMPL_FP}'
+        NEMS_CONFIG_TMPL_FP='{NEMS_CONFIG_TMPL_FP}'
         
-        CCPP_PHYS_SUITE_FN="{CCPP_PHYS_SUITE_FN}"
-        CCPP_PHYS_SUITE_IN_CCPP_FP="{CCPP_PHYS_SUITE_IN_CCPP_FP}"
-        CCPP_PHYS_SUITE_FP="{CCPP_PHYS_SUITE_FP}"
+        CCPP_PHYS_SUITE_FN='{CCPP_PHYS_SUITE_FN}'
+        CCPP_PHYS_SUITE_IN_CCPP_FP='{CCPP_PHYS_SUITE_IN_CCPP_FP}'
+        CCPP_PHYS_SUITE_FP='{CCPP_PHYS_SUITE_FP}'
         
-        FIELD_DICT_FN="{FIELD_DICT_FN}"
-        FIELD_DICT_IN_UWM_FP="{FIELD_DICT_IN_UWM_FP}"
-        FIELD_DICT_FP="{FIELD_DICT_FP}"
+        FIELD_DICT_FN='{FIELD_DICT_FN}'
+        FIELD_DICT_IN_UWM_FP='{FIELD_DICT_IN_UWM_FP}'
+        FIELD_DICT_FP='{FIELD_DICT_FP}'
         
-        DATA_TABLE_FP="{DATA_TABLE_FP}"
-        FIELD_TABLE_FP="{FIELD_TABLE_FP}"
-        FV3_NML_FN="{FV3_NML_FN}"   # This may not be necessary...
-        FV3_NML_FP="{FV3_NML_FP}"
-        NEMS_CONFIG_FP="{NEMS_CONFIG_FP}"
+        DATA_TABLE_FP='{DATA_TABLE_FP}'
+        FIELD_TABLE_FP='{FIELD_TABLE_FP}'
+        FV3_NML_FN='{FV3_NML_FN}'   # This may not be necessary...
+        FV3_NML_FP='{FV3_NML_FP}'
+        NEMS_CONFIG_FP='{NEMS_CONFIG_FP}'
         
-        FV3_EXEC_FP="{FV3_EXEC_FP}"
+        FV3_EXEC_FP='{FV3_EXEC_FP}'
         
-        LOAD_MODULES_RUN_TASK_FP="{LOAD_MODULES_RUN_TASK_FP}"
+        LOAD_MODULES_RUN_TASK_FP='{LOAD_MODULES_RUN_TASK_FP}'
         
-        THOMPSON_MP_CLIMO_FN="{THOMPSON_MP_CLIMO_FN}"
-        THOMPSON_MP_CLIMO_FP="{THOMPSON_MP_CLIMO_FP}"
+        THOMPSON_MP_CLIMO_FN='{THOMPSON_MP_CLIMO_FN}'
+        THOMPSON_MP_CLIMO_FP='{THOMPSON_MP_CLIMO_FP}'
         #
         #-----------------------------------------------------------------------
         #
@@ -1989,7 +1827,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        RELATIVE_LINK_FLAG="{RELATIVE_LINK_FLAG}"
+        RELATIVE_LINK_FLAG='{RELATIVE_LINK_FLAG}'
         #
         #-----------------------------------------------------------------------
         #
@@ -1998,8 +1836,8 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        SDF_USES_RUC_LSM="{type_to_str(SDF_USES_RUC_LSM)}"
-        SDF_USES_THOMPSON_MP="{type_to_str(SDF_USES_THOMPSON_MP)}"
+        SDF_USES_RUC_LSM='{type_to_str(SDF_USES_RUC_LSM)}'
+        SDF_USES_THOMPSON_MP='{type_to_str(SDF_USES_THOMPSON_MP)}'
         #
         #-----------------------------------------------------------------------
         #
@@ -2008,26 +1846,26 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        GTYPE="{GTYPE}"
-        TILE_RGNL="{TILE_RGNL}"
-        NH0="{NH0}"
-        NH3="{NH3}"
-        NH4="{NH4}"
+        GTYPE='{GTYPE}'
+        TILE_RGNL='{TILE_RGNL}'
+        NH0='{NH0}'
+        NH3='{NH3}'
+        NH4='{NH4}'
         
-        LON_CTR="{LON_CTR}"
-        LAT_CTR="{LAT_CTR}"
-        NX="{NX}"
-        NY="{NY}"
-        NHW="{NHW}"
-        STRETCH_FAC="{STRETCH_FAC}"
+        LON_CTR='{LON_CTR}'
+        LAT_CTR='{LAT_CTR}'
+        NX='{NX}'
+        NY='{NY}'
+        NHW='{NHW}'
+        STRETCH_FAC='{STRETCH_FAC}'
         
-        RES_IN_FIXLAM_FILENAMES="{RES_IN_FIXLAM_FILENAMES}"
+        RES_IN_FIXLAM_FILENAMES='{RES_IN_FIXLAM_FILENAMES}'
         #
         # If running the make_grid task, CRES will be set to a null string du-
         # the grid generation step.  It will later be set to an actual value af-
         # ter the make_grid task is complete.
         #
-        CRES="{CRES}"'''
+        CRES='{CRES}'"""
     with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
         f.write(dedent(msg))
     #
@@ -2040,7 +1878,7 @@ def setup():
     #
     if GRID_GEN_METHOD == "GFDLgrid":
     
-      msg=f'''
+      msg=f"""
         #
         #-----------------------------------------------------------------------
         #
@@ -2054,16 +1892,16 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG="{ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}"
-        IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG="{IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}"
-        JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG="{JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}"
-        JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG="{JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}"'''
+        ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG='{ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}'
+        IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG='{IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}'
+        JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG='{JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}'
+        JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG='{JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG}'"""
       with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
         f.write(dedent(msg))
     
     elif GRID_GEN_METHOD == "ESGgrid":
     
-      msg=f'''
+      msg=f"""
         #
         #-----------------------------------------------------------------------
         #
@@ -2074,11 +1912,11 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        DEL_ANGLE_X_SG="{DEL_ANGLE_X_SG}"
-        DEL_ANGLE_Y_SG="{DEL_ANGLE_Y_SG}"
-        NEG_NX_OF_DOM_WITH_WIDE_HALO="{NEG_NX_OF_DOM_WITH_WIDE_HALO}"
-        NEG_NY_OF_DOM_WITH_WIDE_HALO="{NEG_NY_OF_DOM_WITH_WIDE_HALO}"
-        PAZI="{PAZI or ""}"'''
+        DEL_ANGLE_X_SG='{DEL_ANGLE_X_SG}'
+        DEL_ANGLE_Y_SG='{DEL_ANGLE_Y_SG}'
+        NEG_NX_OF_DOM_WITH_WIDE_HALO='{NEG_NX_OF_DOM_WITH_WIDE_HALO}'
+        NEG_NY_OF_DOM_WITH_WIDE_HALO='{NEG_NY_OF_DOM_WITH_WIDE_HALO}'
+        PAZI='{PAZI or ''}'"""
       with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
         f.write(dedent(msg))
     #
@@ -2098,7 +1936,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    msg = f'''
+    msg = f"""
         #
         #-----------------------------------------------------------------------
         #
@@ -2106,7 +1944,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        CPL="{type_to_str(CPL)}"
+        CPL='{type_to_str(CPL)}'
         #
         #-----------------------------------------------------------------------
         #
@@ -2115,7 +1953,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        OZONE_PARAM="{OZONE_PARAM}"
+        OZONE_PARAM='{OZONE_PARAM}'
         #
         #-----------------------------------------------------------------------
         #
@@ -2127,7 +1965,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        EXTRN_MDL_SYSBASEDIR_ICS="{EXTRN_MDL_SYSBASEDIR_ICS}"
+        EXTRN_MDL_SYSBASEDIR_ICS='{EXTRN_MDL_SYSBASEDIR_ICS}'
         #
         #-----------------------------------------------------------------------
         #
@@ -2139,7 +1977,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        EXTRN_MDL_SYSBASEDIR_LBCS="{EXTRN_MDL_SYSBASEDIR_LBCS}"
+        EXTRN_MDL_SYSBASEDIR_LBCS='{EXTRN_MDL_SYSBASEDIR_LBCS}'
         #
         #-----------------------------------------------------------------------
         #
@@ -2148,7 +1986,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        EXTRN_MDL_LBCS_OFFSET_HRS="{EXTRN_MDL_LBCS_OFFSET_HRS}"
+        EXTRN_MDL_LBCS_OFFSET_HRS='{EXTRN_MDL_LBCS_OFFSET_HRS}'
         #
         #-----------------------------------------------------------------------
         #
@@ -2166,7 +2004,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        NUM_CYCLES="{NUM_CYCLES}"
+        NUM_CYCLES='{NUM_CYCLES}'
         ALL_CDATES={list_to_str(ALL_CDATES)}
         #
         #-----------------------------------------------------------------------
@@ -2177,9 +2015,9 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        USE_FVCOM="{type_to_str(USE_FVCOM)}"
-        FVCOM_DIR="{FVCOM_DIR}"
-        FVCOM_FILE="{FVCOM_FILE}"
+        USE_FVCOM='{type_to_str(USE_FVCOM)}'
+        FVCOM_DIR='{FVCOM_DIR}'
+        FVCOM_FILE='{FVCOM_FILE}'
         #
         #-----------------------------------------------------------------------
         #
@@ -2187,18 +2025,18 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        NCORES_PER_NODE="{NCORES_PER_NODE}"
-        PE_MEMBER01="{PE_MEMBER01}"
-        RUN_CMD_FCST="{RUN_CMD_FCST}"
+        NCORES_PER_NODE='{NCORES_PER_NODE}'
+        PE_MEMBER01='{PE_MEMBER01}'
+        RUN_CMD_FCST='{RUN_CMD_FCST}'
         #
         #-----------------------------------------------------------------------
         #
-        # IF DO_SPP="TRUE," N_VAR_SPP is the number of parameterizations that
+        # IF DO_SPP='TRUE,' N_VAR_SPP is the number of parameterizations that
         # are perturbed with SPP, otherwise N_VAR_SPP=0.
         #
         #-----------------------------------------------------------------------
         #
-        N_VAR_SPP="{N_VAR_SPP}"'''
+        N_VAR_SPP='{N_VAR_SPP}'"""
 
     with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
       f.write(dedent(msg))
