@@ -1360,6 +1360,8 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   AQM_BIO_FILE=${AQM_BIO_FILE:-"BEIS_SARC401.ncf"}
   AQM_FIRE_DIR=${AQM_FIRE_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/emissions/GSCE/GBBEPx.in.C401/Reprocessed"}
   AQM_FIRE_FILE=${AQM_FIRE_FILE:-"GBBEPx_C401GRID.emissions_v003"}
+  AQM_FIRE_FILE_SUFFIX=${AQM_FIRE_FILE_SUFFIX:-".nc"}
+  AQM_RC_FIRE_FREQUENCY=${AQM_RC_FIRE_FREQUENCY:-"static"}
   AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/LBCS/boundary_conditions_v4"}
   AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
   AQM_GEFS_DIR=${AQM_GEFS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/GEFS_aerosol"}
@@ -1381,6 +1383,8 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   AQM_BIO_FILE=${AQM_BIO_FILE:-"BEIS_SARC401.ncf"}
   AQM_FIRE_DIR=${AQM_FIRE_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/emissions/GSCE/GBBEPx.in.C401/Reprocessed"}
   AQM_FIRE_FILE=${AQM_FIRE_FILE:-"GBBEPx_C401GRID.emissions_v003"}
+  AQM_FIRE_FILE_SUFFIX=${AQM_FIRE_FILE_SUFFIX:-".nc"}
+  AQM_RC_FIRE_FREQUENCY=${AQM_RC_FIRE_FREQUENCY:-"static"}
   AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/LBCS/boundary_conditions_v4"}
   AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
   AQM_GEFS_DIR=${AQM_GEFS_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GEFS_aerosol"}
@@ -1398,13 +1402,15 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
 
   *)
     print_err_msg_exit "\
-One or more AQM directories have not been specified for this machine:
+One or more AQM directories and file names have not been specified for this machine:
   MACHINE = \"$MACHINE\"
   AQM_CONFIG_DIR = \"${AQM_CONFIG_DIR:-\"\"}
   AQM_BIO_DIR = \"${AQM_BIO_DIR:-\"\"}
   AQM_BIO_FILE = \"${AQM_BIO_FILE:-\"\"}
   AQM_FIRE_DIR = \"${AQM_FIRE_DIR:-\"\"}
   AQM_FIRE_FILE = \"${AQM_FIRE_FILE:-\"\"}
+  AQM_FIRE_FILE_SUFFIX = \"${AQM_FIRE_FILE_SUFFIX:-\"\"}
+  AQM_RC_FIRE_FREQUENCY = \"${AQM_RC_FIRE_FREQUENCY:-\"\"}
   AQM_LBCS_DIR = \"${AQM_LBCS_DIR:-\"\"}
   AQM_LBCS_FILES = \"${AQM_LBCS_FILES:-\"\"}
   NEXUS_INPUT_DIR = \"${NEXUS_INPUT_DIR:-\"\"}

@@ -1982,8 +1982,14 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # AQM_FIRE_DIR:
 # Path to the directory containing AQM fire files
 #
-# AQM_FILE_FILE:
+# AQM_FIRE_FILE:
 # File name of AQM FIRE file
+#
+# AQM_FIRE_FILE_SUFFIX:
+# Suffix and extension of AQM FIRE file
+#
+# AQM_RC_FIRE_FREQUENCY:
+# Fire frequency in aqm.rc
 #
 # AQM_LBCS_DIR:
 # Path to the directory containing chemical LBC files
@@ -2033,6 +2039,8 @@ AQM_BIO_DIR=""
 AQM_BIO_FILE=""
 AQM_FIRE_DIR=""
 AQM_FIRE_FILE=""
+AQM_FIRE_FILE_SUFFIX=""
+AQM_RC_FIRE_FREQUENCY=""
 AQM_LBCS_DIR=""
 AQM_LBCS_FILES=""
 AQM_GEFS_DIR=""

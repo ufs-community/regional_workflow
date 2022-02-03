@@ -144,11 +144,6 @@ Setting parameter \"$param\" in file \"$file\" to \"$value\" ..."
 #    set_bash_param "${file_fp}" "$param" "$value"
     ;;
 #
-  "${AQM_RC_IN_FN}")
-    regex_search="(<$param>)"
-    regex_replace="$value"
-    ;;
-#
 #-----------------------------------------------------------------------
 #
 # If "file" is set to a disallowed value, print out an error message and

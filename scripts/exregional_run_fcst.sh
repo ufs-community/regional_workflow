@@ -19,8 +19,8 @@
 #
 . $USHDIR/create_model_configure_file.sh
 . $USHDIR/create_diag_table_file.sh
-
 if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+  . $USHDIR/create_aqm_rc_file.sh
   . $USHDIR/create_nems_configure_file.sh
 fi
 #
@@ -523,8 +523,6 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   # AQM_RC_IN_FN: input file name of cmaq
   AQM_RC_IN_FN="aqm.rc"
   AQM_RC_IN_FP="${run_dir}/${AQM_RC_IN_FN}"
-  cp_vrfy ${AQM_RC_FP} ${AQM_RC_IN_FP}
-
 #
 #-----------------------------------------------------------------------
 #
@@ -533,33 +531,33 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
 #-----------------------------------------------------------------------
 #
   init_concentrations="false"
-
   if [ "${RESTART_WORKFLOW}" = "FALSE" ] && [ "${CDATE}" = "${DATE_FIRST_CYCL}${CYCL_HRS[0]}" ]; then
     init_concentrations="true"
   fi
 #
 #-----------------------------------------------------------------------
 #
-# Set parameters in the model configuration files.
+# Call the function that creates the aqm.rc file within each
+# cycle directory.
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -z "${AQM_RC_IN_FP}" ]; then
-    print_info_msg "$VERBOSE" "
-Setting parameters in file:
-  AQM_RC_IN_FP = \"${AQM_RC_IN_FP}\""
+  create_aqm_rc_file \
+  cdate="${cdate}" \
+  run_dir="${run_dir}" \
+  init_concentrations="${init_concentrations}" \
+  aqm_rc_in_fn="${AQM_RC_IN_FN}" \
+  aqm_rc_in_fp="${AQM_RC_IN_FP}" \
+  || print_err_msg_exit "\
+Call to function to create an aqm.rc file for the current
+cycle's (cdate) run directory (run_dir) failed:
+  cdate = \"${cdate}\"
+  run_dir = \"${run_dir}\""
 
-    set_file_param "${AQM_RC_IN_FP}" "init_concentrations" "${init_concentrations}"
-    set_file_param "${AQM_RC_IN_FP}" "aqm_config_dir" "${AQM_CONFIG_DIR%/}"
-    set_file_param "${AQM_RC_IN_FP}" "aqm_bio_dir" "${AQM_BIO_DIR%/}"
-    set_file_param "${AQM_RC_IN_FP}" "aqm_bio_file" "${AQM_BIO_FILE}"
-    set_file_param "${AQM_RC_IN_FP}" "aqm_fire_dir" "${AQM_FIRE_DIR%/}"
-    set_file_param "${AQM_RC_IN_FP}" "YYYYMMDD" "${yyyymmdd}"
-    set_file_param "${AQM_RC_IN_FP}" "aqm_fire_file" "${AQM_FIRE_FILE}"
-    set_file_param "${AQM_RC_IN_FP}" "YYMMDD" "${yymmdd}"
-  fi
 fi
-
+#
+#-----------------------------------------------------------------------
+#
 if [ "${DO_ENSEMBLE}" = TRUE ]; then
   set_FV3nml_stoch_params cdate="$cdate" || print_err_msg_exit "\
 Call to function to create the ensemble-based namelist for the current
