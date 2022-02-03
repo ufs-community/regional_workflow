@@ -1260,6 +1260,12 @@ VX_ENSGRID_PROB_RETOP_TN="run_ensgridvx_prob_retop"
 VX_ENSPOINT_TN="run_enspointvx"
 VX_ENSPOINT_MEAN_TN="run_enspointvx_mean"
 VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
+ADD_AQM_ICS_TN="add_aqm_ics"
+ADD_AQM_LBCS_TN="add_aqm_lbcs"
+RUN_NEXUS_TN="run_nexus"
+RUN_POST_STAT_TN="run_post_stat"
+RUN_CHEM_ANL_TN="run_chem_anl"
+RUN_GSI_ANL_TN="run_gsi_anl"
 #
 #-----------------------------------------------------------------------
 #
@@ -1327,6 +1333,24 @@ VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
 # to be run. If this flag is set, both ensemble-stat point verification
 # and point verification of ensemble-stat output is computed.
 #
+# RUN_TASK_ADD_AQM_LBCS:
+# Flag that determines whether the air quality LBCs generation
+# task is to be run. If this is set to "TRUE", air quality lateral
+# boundary conditions are retrieved and added to meteorological LBCs.
+# If it is set to "FALSE", air quality LBCs are not included.
+#
+# RUN_TASK_RUN_NEXUS:
+# Same as RUN_TASK_MAKE_GRID but for the air quality emission generation
+# task.
+#
+# RUN_TASK_DACYC:
+# GSI analysis for AOD PM2.5
+# Set to "TRUE" to generate PM2.5/AOD DA tasks
+#
+# RUN_TASK_CHEM_ANL:
+# Set to "TRUE" or "FALSE" to enable/disable chemical data assimilation step
+# Set to "TRUE" to generate NO2 tasks
+#
 #-----------------------------------------------------------------------
 #
 RUN_TASK_MAKE_GRID="TRUE"
@@ -1352,6 +1376,13 @@ RUN_TASK_VX_GRIDSTAT="FALSE"
 RUN_TASK_VX_POINTSTAT="FALSE"
 RUN_TASK_VX_ENSGRID="FALSE"
 RUN_TASK_VX_ENSPOINT="FALSE"
+
+RUN_TASK_ADD_AQM_ICS="FALSE"
+RUN_TASK_ADD_AQM_LBCS="FALSE"
+RUN_TASK_RUN_NEXUS="FALSE"
+RUN_TASK_RUN_POST_STAT="FALSE"
+RUN_TASK_DACYC="FALSE"
+RUN_TASK_CHEM_ANL="FALSE"
 #
 #-----------------------------------------------------------------------
 #
@@ -1583,6 +1614,11 @@ NNODES_VX_ENSGRID_PROB="1"
 NNODES_VX_ENSPOINT="1"
 NNODES_VX_ENSPOINT_MEAN="1"
 NNODES_VX_ENSPOINT_PROB="1"
+NNODES_ADD_AQM_ICS="1"
+NNODES_ADD_AQM_LBCS="1"
+NNODES_RUN_NEXUS="1"
+NNODES_RUN_POST_STAT="1"
+NNODES_RUN_GSI_ANL="4"
 #
 # Number of MPI processes per node.
 #
@@ -1606,6 +1642,11 @@ PPN_VX_ENSGRID_PROB="1"
 PPN_VX_ENSPOINT="1"
 PPN_VX_ENSPOINT_MEAN="1"
 PPN_VX_ENSPOINT_PROB="1"
+PPN_ADD_AQM_ICS="1"
+PPN_ADD_AQM_LBCS="24"
+PPN_RUN_NEXUS="24"
+PPN_RUN_POST_STAT="1"
+PPN_RUN_GSI_ANL="24"
 #
 # Walltimes.
 #
@@ -1629,6 +1670,12 @@ WTIME_VX_ENSGRID_PROB="01:00:00"
 WTIME_VX_ENSPOINT="01:00:00"
 WTIME_VX_ENSPOINT_MEAN="01:00:00"
 WTIME_VX_ENSPOINT_PROB="01:00:00"
+WTIME_ADD_AQM_ICS="00:30:00"
+WTIME_ADD_AQM_LBCS="00:30:00"
+WTIME_RUN_NEXUS="00:30:00"
+WTIME_RUN_POST_STAT="00:10:00"
+WTIME_RUN_CHEM_ANL="03:00:00"
+WTIME_RUN_GSI_ANL="00:50:00"
 #
 # Maximum number of attempts.
 #
@@ -1670,6 +1717,12 @@ MAXTRIES_VX_ENSGRID_PROB_RETOP="1"
 MAXTRIES_VX_ENSPOINT="1"
 MAXTRIES_VX_ENSPOINT_MEAN="1"
 MAXTRIES_VX_ENSPOINT_PROB="1"
+MAXTRIES_ADD_AQM_ICS="3"
+MAXTRIES_ADD_AQM_LBCS="3"
+MAXTRIES_RUN_NEXUS="4"
+MAXTRIES_RUN_POST_STAT="3"
+MAXTRIES_RUN_CHEM_ANL="3"
+MAXTRIES_RUN_GSI_ANL="3"
 #
 #-----------------------------------------------------------------------
 #
@@ -1944,16 +1997,6 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # AQM_GEFS_CYC:
 # Cycle of the GEFS aerosol LBC files
 #
-# RUN_TASK_ADD_AQM_LBCS:
-# Flag that determines whether the air quality LBCs generation
-# task is to be run. If this is set to "TRUE", air quality lateral
-# boundary conditions are retrieved and added to meteorological LBCs.
-# If it is set to "FALSE", air quality LBCs are not included.
-#
-# RUN_TASK_RUN_NEXUS:
-# Same as RUN_TASK_MAKE_GRID but for the air quality emission generation
-# task.
-#
 # RUN_ADD_AQM_GEFS_LBCS:
 # Add GEFS aerosol LBCs to chemical LBCs
 #
@@ -1971,10 +2014,6 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # Flag to turn on/off DA runs of RRFS-CMAQ
 # Set to "TRUE" for DA or "FALSE" for non-DA
 #
-# RUN_TASK_CHEM_ANL:
-# Set to "TRUE" or "FALSE" to enable/disable chemical data assimilation step
-# Set to "TRUE" to generate NO2 tasks
-#
 # USE_CHEM_ANL:
 # Set to "TRUE" or "FALSE" to enable using updated chem analysis restart file
 #
@@ -1982,16 +2021,11 @@ OMP_STACKSIZE_RUN_POST="1024m"
 # Path to IODA formatted observation data for assimilation
 # This would be BUFR for GSI or IODA-formatted files for JEDI
 #
-# RUN_TASK_DACYC:
-# GSI analysis for AOD PM2.5
-# Set to "TRUE" to generate PM2.5/AOD DA tasks
-#
 # ENKF_FCST:
 # Path to ensemble members for hybrid GSI
 #
 #-----------------------------------------------------------------------
 #
-
 USER_AQM_RC_DIR=""
 AQM_RC_FN="aqm.rc"
 AQM_CONFIG_DIR=""
@@ -2004,18 +2038,8 @@ AQM_LBCS_FILES=""
 AQM_GEFS_DIR=""
 AQM_GEFS_CYC="00"
 
-ADD_AQM_ICS_TN="add_aqm_ics"
-ADD_AQM_LBCS_TN="add_aqm_lbcs"
-RUN_NEXUS_TN="run_nexus"
-RUN_POST_STAT_TN="run_post_stat"
-
-RUN_TASK_ADD_AQM_ICS="FALSE"
-RUN_TASK_ADD_AQM_LBCS="FALSE"
-RUN_TASK_RUN_NEXUS="FALSE"
-
 RUN_ADD_AQM_CHEM_LBCS="TRUE"
 RUN_ADD_AQM_GEFS_LBCS="FALSE"
-RUN_TASK_RUN_POST_STAT="FALSE"
 
 NEXUS_INPUT_DIR=""
 NEXUS_FIX_DIR=""
@@ -2025,8 +2049,6 @@ RESTART_WORKFLOW="FALSE"
 RESTART_CYCLE_DIR="/path/to/restart/cycle/dir"
 
 OPT_DA_RRFS_CMAQ="FALSE"
-
-RUN_TASK_CHEM_ANL="FALSE"
 USE_CHEM_ANL="TRUE"
 DA_OBS_DIR=""
 
@@ -2039,37 +2061,6 @@ AODPATH=""
 PMPATH=""
 AOD_LUTS="1"
 
-RUN_TASK_DACYC="FALSE"
 DA_CYCLE_INTERV="6"
-
 ENKF_FCST=""
-
-RUN_CHEM_ANL_TN="run_chem_anl"
-RUN_GSI_ANL_TN="run_gsi_anl"
-
-NNODES_ADD_AQM_ICS="1"
-NNODES_ADD_AQM_LBCS="1"
-NNODES_RUN_NEXUS="1"
-NNODES_RUN_POST_STAT="1"
-NNODES_RUN_GSI_ANL="4"
-
-PPN_ADD_AQM_ICS="1"
-PPN_ADD_AQM_LBCS="24"
-PPN_RUN_NEXUS="24"
-PPN_RUN_POST_STAT="1"
-PPN_RUN_GSI_ANL="24"
-
-WTIME_ADD_AQM_ICS="00:30:00"
-WTIME_ADD_AQM_LBCS="00:30:00"
-WTIME_RUN_NEXUS="00:30:00"
-WTIME_RUN_POST_STAT="00:10:00"
-WTIME_RUN_CHEM_ANL="03:00:00"
-WTIME_RUN_GSI_ANL="00:50:00"
-
-MAXTRIES_ADD_AQM_ICS="3"
-MAXTRIES_ADD_AQM_LBCS="3"
-MAXTRIES_RUN_NEXUS="4"
-MAXTRIES_RUN_POST_STAT="3"
-MAXTRIES_RUN_CHEM_ANL="3"
-MAXTRIES_RUN_GSI_ANL="3"
 
