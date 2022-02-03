@@ -4,6 +4,7 @@ import argparse
 import yaml
 import sys
 import os
+from textwrap import dedent
 
 from .environment import list_to_str, str_to_list
 from .print_msg import print_err_msg_exit
@@ -48,9 +49,14 @@ def load_shell_config_complex(config_file):
     """ If the shell script has more logic than just setting variables,
     we source the config script in a subshell and gets the variables it set
     """
-    (_,config_str,_) = run_command(f'''VARS="$(set -o posix; set)";
-                    source ./config.sh;
-                    grep -vFe "$VARS" <<<"$(set -o posix ; set)" | grep -v ^VARS''')
+
+    code = dedent(f'''
+      (set -o posix; set) > /tmp/t1
+      {{ . {config_file}; set +x; }} &>/dev/null
+      (set -o posix; set) > /tmp/t2
+      diff /tmp/t1 /tmp/t2 | grep "> " | cut -c 3-
+    ''')
+    (_,config_str,_) = run_command(code)
     lines = config_str.splitlines()
     
     #build the dictionary
