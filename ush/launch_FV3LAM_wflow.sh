@@ -31,9 +31,6 @@ else
 fi
 scrfunc_fn=$( basename "${scrfunc_fp}" )
 scrfunc_dir=$( dirname "${scrfunc_fp}" )
-
-ushdir="${scrfunc_dir}"
-. $ushdir/source_util_funcs.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -93,7 +90,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Source the variable definitions file for the experiment.
+# Source necessary files.
 #
 #-----------------------------------------------------------------------
 #
@@ -155,10 +152,8 @@ cd_vrfy "$exptdir"
 #
 # Issue the rocotorun command to (re)launch the next task in the workflow.  
 # Then check for error messages in the output of rocotorun.  If any are 
-# found, it means the end-to-end run of the workflow failed.  In this 
-# case, we remove the crontab entry that launches the workflow, and we 
-# append an appropriate failure message at the end of the launch log 
-# file.
+# found, it means the end-to-end run of the workflow failed, so set the
+# status of the workflow to "FAILURE".
 #
 #-----------------------------------------------------------------------
 #
@@ -171,7 +166,7 @@ rm "${tmp_fn}"
 error_msg="sbatch: error: Batch job submission failed:"
 # Job violates accounting/QOS policy (job submit limit, user's size and/or time limits)"
 while read -r line; do
-  grep_output=$( printf "$line" | grep "${error_msg}" )
+  grep_output=$( printf "%s" "$line" | grep "${error_msg}" )
   if [ $? -eq 0 ]; then
     wflow_status="FAILURE"
     break
@@ -182,10 +177,8 @@ done <<< "${rocotorun_output}"
 #
 # Issue the rocotostat command to obtain a table specifying the status 
 # of each task.  Then check for dead tasks in the output of rocotostat.  
-# If any are found, it means the end-to-end run of the workflow failed.  
-# In this case, we remove the crontab entry that launches the workflow,
-# and we append an appropriate failure message at the end of the launch
-# log file.
+# If any are found, it means the end-to-end run of the workflow failed,
+# so set the status of the workflow (wflow_status) to "FAILURE".
 #
 #-----------------------------------------------------------------------
 #
@@ -194,7 +187,7 @@ rocotostat_cmd="rocotostat -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\" -
 rocotostat_output=$( eval ${rocotostat_cmd} 2>&1 )
 error_msg="DEAD"
 while read -r line; do
-  grep_output=$( printf "$line" | grep "${error_msg}" )
+  grep_output=$( printf "%s" "$line" | grep "${error_msg}" )
   if [ $? -eq 0 ]; then
     wflow_status="FAILURE"
     break
@@ -208,7 +201,7 @@ done <<< "${rocotostat_output}"
 #
 #-----------------------------------------------------------------------
 #
-printf "
+printf "%s" "
 
 ========================================================================
 Start of output from script \"${scrfunc_fn}\".
@@ -313,7 +306,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-printf "
+printf "%s" "
 
 Summary of workflow status:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -329,9 +322,9 @@ End of output from script \"${scrfunc_fn}\".
 #
 #-----------------------------------------------------------------------
 #
-# If the workflow status is now either "SUCCESS" or "FAILURE", indicate
-# this by appending an appropriate workflow completion message to the 
-# end of the launch log file.
+# If the workflow status (wflow_status) has been set to either "SUCCESS" 
+# or "FAILURE", indicate this by appending an appropriate workflow 
+# completion message to the end of the launch log file.
 #
 #-----------------------------------------------------------------------
 #
@@ -384,14 +377,14 @@ script for this experiment:
 #
 # Print the workflow completion message to the launch log file.
 #
-  printf "$msg" >> ${WFLOW_LAUNCH_LOG_FN} 2>&1
+  printf "%s" "$msg" >> ${WFLOW_LAUNCH_LOG_FN} 2>&1
 #
 # If the stdout from this script is being sent to the screen (e.g. it is
 # not being redirected to a file), then also print out the workflow 
 # completion message to the screen.
 #
   if [ -t 1 ]; then
-    printf "$msg"
+    printf "%s" "$msg"
   fi
 
 fi
