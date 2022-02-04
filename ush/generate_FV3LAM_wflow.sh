@@ -59,6 +59,7 @@ ushdir="${scrfunc_dir}"
 #-----------------------------------------------------------------------
 #
 . $ushdir/source_util_funcs.sh
+. $ushdir/get_crontab_contents.sh
 . $ushdir/set_FV3nml_sfc_climo_filenames.sh
 #
 #-----------------------------------------------------------------------
@@ -500,11 +501,12 @@ if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ]; then
   print_info_msg "$VERBOSE" "
 Copying contents of user cron table to backup file:
   crontab_backup_fp = \"${crontab_backup_fp}\""
-  if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
-    cp_vrfy "/u/$USER/cron/mycrontab" "${crontab_backup_fp}"
-  else
-    crontab -l > ${crontab_backup_fp}
-  fi
+
+  called_from_cron=${called_from_cron:-"FALSE"}
+  get_crontab_contents called_from_cron=${called_from_cron} \
+                       outvarname_crontab_cmd="crontab_cmd" \
+                       outvarname_crontab_contents="crontab_contents"
+  echo "${crontab_contents}" > "${crontab_backup_fp}"
 #
 # Below, we use "grep" to determine whether the crontab line that the
 # variable CRONTAB_LINE contains is already present in the cron table.
@@ -530,7 +532,7 @@ Copying contents of user cron table to backup file:
   if [ "$MACHINE" = "WCOSS_DELL_P3" ];then
     grep_output=$( grep "^${crontab_line_esc_astr}$" "/u/$USER/cron/mycrontab" )
   else
-    grep_output=$( crontab -l | grep "^${crontab_line_esc_astr}$" )
+    grep_output=$( ${crontab_cmd} -l | grep "^${crontab_line_esc_astr}$" )
   fi
   exit_status=$?
 
@@ -912,8 +914,8 @@ cp_vrfy $USHDIR/${EXPT_CONFIG_FN} $EXPTDIR
 #
 # For convenience, print out the commands that need to be issued on the
 # command line in order to launch the workflow and to check its status.
-# Also, print out the command that should be placed in the user's cron-
-# tab in order for the workflow to be continually resubmitted.
+# Also, print out the line that should be placed in the user's cron table
+# in order for the workflow to be continually resubmitted.
 #
 #-----------------------------------------------------------------------
 #

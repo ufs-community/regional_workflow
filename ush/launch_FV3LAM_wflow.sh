@@ -95,7 +95,32 @@ fi
 #-----------------------------------------------------------------------
 #
 . $exptdir/var_defns.sh
-. ${USHDIR}/source_util_funcs.sh
+. $USHDIR/source_machine_file.sh
+. $USHDIR/constants.sh
+. $USHDIR/source_util_funcs.sh
+. $USHDIR/get_crontab_contents.sh
+#
+#-----------------------------------------------------------------------
+#
+# Declare arguments.
+#
+#-----------------------------------------------------------------------
+#
+valid_args=( \
+  "called_from_cron" \
+  )
+process_args valid_args "$@"
+print_input_args "valid_args"
+#
+#-----------------------------------------------------------------------
+#
+# Make sure called_from_cron is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+called_from_cron=${called_from_cron:-"FALSE"}
+check_var_valid_value "called_from_cron" "valid_vals_BOOLEAN"
+called_from_cron=$(boolify ${called_from_cron})
 #
 #-----------------------------------------------------------------------
 #
@@ -114,7 +139,6 @@ expt_name="${EXPT_SUBDIR}"
 #-----------------------------------------------------------------------
 #
 env_fp="${SR_WX_APP_TOP_DIR}/env/${WFLOW_ENV_FN}"
-module purge
 source "${env_fp}" || print_err_msg_exit "\
 Sourcing platform-specific environment file (env_fp) for the workflow 
 task failed:
@@ -362,17 +386,29 @@ script for this experiment:
     crontab_line_esc_astr=$( printf "%s" "${CRONTAB_LINE}" | \
                              $SED -r -e "s%[*]%\\\\*%g" )
 #
+# Get the full contents of the user's cron table.  
+#
+    get_crontab_contents called_from_cron=${called_from_cron} \
+                         outvarname_crontab_cmd="crontab_cmd" \
+                         outvarname_crontab_contents="crontab_contents"
+#
+# Remove the line in the contents of the cron table corresponding to the 
+# current forecast experiment (if that line is part of the contents).
+# Then record the results back into the user's cron table.
+#
 # In the string passed to the grep command below, we use the line start
 # and line end anchors ("^" and "$", respectively) to ensure that we
 # only find lines in the crontab that contain exactly the string in 
 # crontab_line_esc_astr without any leading or trailing characters.
 #
-    if [ "$MACHINE" = "WCOSS_DELL_P3" ];then
-      grep -v "^${crontab_line_esc_astr}$" "/u/$USER/cron/mycrontab" \
-        > tmpfile && mv_vrfy tmpfile "/u/$USER/cron/mycrontab"
+    crontab_contents=$( echo "${crontab_contents}" | grep -v "^${crontab_line_esc_astr}$" )
+
+    if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      echo "${crontab_contents}" > "/u/$USER/cron/mycrontab"
     else
-      ( crontab -l | grep -v "^${crontab_line_esc_astr}$" ) | crontab -
+      echo "${crontab_contents}" | ${crontab_cmd} 
     fi
+
   fi
 #
 # Print the workflow completion message to the launch log file.
