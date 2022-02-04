@@ -116,7 +116,8 @@ case "$MACHINE" in
     ;;
 
   *)
-    source ${MACHINE_FILE}
+    source $USHDIR/source_machine_file.sh
+    eval ${PRE_TASK_CMDS}
     ;;
 
 esac
