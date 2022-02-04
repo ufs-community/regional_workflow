@@ -48,6 +48,11 @@ RUN_ENVIR="nco"
 # Please see ush/valid_param_vals.sh for a full list of supported
 # platforms.
 #
+# MACHINE_FILE:
+# Path to a configuration file with machine-specific settings. If none
+# is provided, setup.sh will attempt to set the path to for a supported
+# platform.
+#
 # ACCOUNT:
 # The account under which to submit jobs to the queue.
 #
@@ -132,6 +137,7 @@ RUN_ENVIR="nco"
 #-----------------------------------------------------------------------
 #
 MACHINE="BIG_COMPUTER"
+MACHINE_FILE=""
 ACCOUNT="project_name"
 WORKFLOW_MANAGER="none"
 NCORES_PER_NODE=""
@@ -574,12 +580,12 @@ WRITE_DOPOST="FALSE"
 #-----------------------------------------------------------------------
 #
 MODEL=""
-MET_INSTALL_DIR="/path/to/MET"
+MET_INSTALL_DIR=""
 MET_BIN_EXEC="bin"
-METPLUS_PATH="/path/to/METPlus"
-CCPA_OBS_DIR="/path/to/observation-directory/ccpa/proc"
-MRMS_OBS_DIR="/path/to/observation-directory/mrms/proc"
-NDAS_OBS_DIR="/path/to/observation-directory/ndas/proc"
+METPLUS_PATH=""
+CCPA_OBS_DIR=""
+MRMS_OBS_DIR=""
+NDAS_OBS_DIR=""
 #
 #-----------------------------------------------------------------------
 #
@@ -663,8 +669,8 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYSBASEDIR_ICS=""
-EXTRN_MDL_SYSBASEDIR_LBCS=""
+EXTRN_MDL_SYSBASEDIR_ICS=''
+EXTRN_MDL_SYSBASEDIR_LBCS=''
 #
 #-----------------------------------------------------------------------
 #
@@ -2036,13 +2042,13 @@ USER_AQM_RC_DIR=""
 AQM_RC_FN="aqm.rc"
 AQM_CONFIG_DIR=""
 AQM_BIO_DIR=""
-AQM_BIO_FILE=""
+AQM_BIO_FILE="BEIS_SARC401.ncf"
 AQM_FIRE_DIR=""
-AQM_FIRE_FILE=""
-AQM_FIRE_FILE_SUFFIX=""
-AQM_RC_FIRE_FREQUENCY=""
+AQM_FIRE_FILE="GBBEPx_C401GRID.emissions_v003"
+AQM_FIRE_FILE_SUFFIX=".nc"
+AQM_RC_FIRE_FREQUENCY="static"
 AQM_LBCS_DIR=""
-AQM_LBCS_FILES=""
+AQM_LBCS_FILES="gfs_bndy_chen_<MM>.tile7.000.nc"
 AQM_GEFS_DIR=""
 AQM_GEFS_CYC="00"
 
@@ -2051,7 +2057,7 @@ RUN_ADD_AQM_GEFS_LBCS="FALSE"
 
 NEXUS_INPUT_DIR=""
 NEXUS_FIX_DIR=""
-NEXUS_GRID_FN=""
+NEXUS_GRID_FN="grid_spec_GSD_HRRR_25km.nc"
 
 RESTART_WORKFLOW="FALSE"
 RESTART_CYCLE_DIR="/path/to/restart/cycle/dir"

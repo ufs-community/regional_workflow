@@ -50,6 +50,7 @@ cd_vrfy ${scrfunc_dir}
 #
 #-----------------------------------------------------------------------
 #
+
 . ./source_util_funcs.sh
 
 print_info_msg "
@@ -132,330 +133,86 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that RUN_ENVIR is set to a valid value.
+# Make sure that user-defined variables are set to valid values
+#
+# Set binary switch variables to either "TRUE" or "FALSE" by calling
+# boolify so we don't have to consider other valid values later on
 #
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "RUN_ENVIR" "valid_vals_RUN_ENVIR"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that VERBOSE is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+
 check_var_valid_value "VERBOSE" "valid_vals_VERBOSE"
-#
-# Set VERBOSE to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-VERBOSE=$(echo_uppercase $VERBOSE)
-if [ "$VERBOSE" = "TRUE" ] || \
-   [ "$VERBOSE" = "YES" ]; then
-  VERBOSE="TRUE"
-elif [ "$VERBOSE" = "FALSE" ] || \
-     [ "$VERBOSE" = "NO" ]; then
-  VERBOSE="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that DEBUG is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+VERBOSE=$(boolify $VERBOSE)
+
 check_var_valid_value "DEBUG" "valid_vals_DEBUG"
-#
-# Set DEBUG to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-DEBUG=$(echo_uppercase $DEBUG)
-if [ "$DEBUG" = "TRUE" ] || \
-   [ "$DEBUG" = "YES" ]; then
-  DEBUG="TRUE"
-elif [ "$DEBUG" = "FALSE" ] || \
-     [ "$DEBUG" = "NO" ]; then
-  DEBUG="FALSE"
-fi
+DEBUG=$(boolify $DEBUG)
 #
 #-----------------------------------------------------------------------
 #
-# If DEBUG is set to "TRUE" but VERBOSE is set to "FALSE", reset VERBOSE 
-# to "TRUE" to print out all of the VERBOSE output (in addition to any
-# DEBUG output).
+# If DEBUG is set to "TRUE", set VERBOSE to "TRUE" to print out all
+# of the VERBOSE output (in addition to any DEBUG output).
 #
 #-----------------------------------------------------------------------
 #
-if [ "$DEBUG" = "TRUE" ] && [ "$VERBOSE" = "FALSE" ]; then
+if [ "$DEBUG" = "TRUE" ]; then
   print_info_msg "
-Resetting VERBOSE to \"TRUE\" because DEBUG has been set to \"TRUE\"..."
-  VERBOSE="TRUE" 
+Setting VERBOSE to \"TRUE\" because DEBUG has been set to \"TRUE\"..."
+  VERBOSE="TRUE"
 fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that USE_CRON_TO_RELAUNCH is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+
 check_var_valid_value "USE_CRON_TO_RELAUNCH" "valid_vals_USE_CRON_TO_RELAUNCH"
-#
-# Set USE_CRON_TO_RELAUNCH to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-USE_CRON_TO_RELAUNCH=$(echo_uppercase $USE_CRON_TO_RELAUNCH)
-if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ] || \
-   [ "${USE_CRON_TO_RELAUNCH}" = "YES" ]; then
-  USE_CRON_TO_RELAUNCH="TRUE"
-elif [ "${USE_CRON_TO_RELAUNCH}" = "FALSE" ] || \
-     [ "${USE_CRON_TO_RELAUNCH}" = "NO" ]; then
-  USE_CRON_TO_RELAUNCH="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_MAKE_GRID is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+USE_CRON_TO_RELAUNCH=$(boolify $USE_CRON_TO_RELAUNCH)
+
 check_var_valid_value "RUN_TASK_MAKE_GRID" "valid_vals_RUN_TASK_MAKE_GRID"
-#
-# Set RUN_TASK_MAKE_GRID to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
-#
-RUN_TASK_MAKE_GRID=$(echo_uppercase $RUN_TASK_MAKE_GRID)
-if [ "${RUN_TASK_MAKE_GRID}" = "TRUE" ] || \
-   [ "${RUN_TASK_MAKE_GRID}" = "YES" ]; then
-  RUN_TASK_MAKE_GRID="TRUE"
-elif [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ] || \
-     [ "${RUN_TASK_MAKE_GRID}" = "NO" ]; then
-  RUN_TASK_MAKE_GRID="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_MAKE_OROG is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+RUN_TASK_MAKE_GRID=$(boolify $RUN_TASK_MAKE_GRID)
+
 check_var_valid_value "RUN_TASK_MAKE_OROG" "valid_vals_RUN_TASK_MAKE_OROG"
-#
-# Set RUN_TASK_MAKE_OROG to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
-#
-RUN_TASK_MAKE_OROG=$(echo_uppercase $RUN_TASK_MAKE_OROG)
-if [ "${RUN_TASK_MAKE_OROG}" = "TRUE" ] || \
-   [ "${RUN_TASK_MAKE_OROG}" = "YES" ]; then
-  RUN_TASK_MAKE_OROG="TRUE"
-elif [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ] || \
-     [ "${RUN_TASK_MAKE_OROG}" = "NO" ]; then
-  RUN_TASK_MAKE_OROG="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_MAKE_SFC_CLIMO is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+RUN_TASK_MAKE_OROG=$(boolify $RUN_TASK_MAKE_OROG)
+
 check_var_valid_value \
   "RUN_TASK_MAKE_SFC_CLIMO" "valid_vals_RUN_TASK_MAKE_SFC_CLIMO"
-#
-# Set RUN_TASK_MAKE_SFC_CLIMO to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-RUN_TASK_MAKE_SFC_CLIMO=$(echo_uppercase $RUN_TASK_MAKE_SFC_CLIMO)
-if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] || \
-   [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "YES" ]; then
-  RUN_TASK_MAKE_SFC_CLIMO="TRUE"
-elif [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ] || \
-     [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "NO" ]; then
-  RUN_TASK_MAKE_SFC_CLIMO="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_RUN_POST is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+RUN_TASK_MAKE_SFC_CLIMO=$(boolify $RUN_TASK_MAKE_SFC_CLIMO)
+
 check_var_valid_value \
   "RUN_TASK_RUN_POST" "valid_vals_RUN_TASK_RUN_POST"
-#
-# Set RUN_TASK_RUN_POST to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-RUN_TASK_RUN_POST=$(echo_uppercase $RUN_TASK_RUN_POST)
-if [ "${RUN_TASK_RUN_POST}" = "TRUE" ] || \
-   [ "${RUN_TASK_RUN_POST}" = "YES" ]; then
-  RUN_TASK_RUN_POST="TRUE"
-elif [ "${RUN_TASK_RUN_POST}" = "FALSE" ] || \
-     [ "${RUN_TASK_RUN_POST}" = "NO" ]; then
-  RUN_TASK_RUN_POST="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_VX_GRIDSTAT is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+RUN_TASK_RUN_POST=$(boolify $RUN_TASK_RUN_POST)
+
 check_var_valid_value "RUN_TASK_VX_GRIDSTAT" "valid_vals_RUN_TASK_VX_GRIDSTAT"
-#
-# Set RUN_TASK_VX_GRIDSTAT to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
-#
-RUN_TASK_VX_GRIDSTAT=$(echo_uppercase $RUN_TASK_VX_GRIDSTAT)
-if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
-   [ "${RUN_TASK_VX_GRIDSTAT}" = "YES" ]; then
-  RUN_TASK_VX_GRIDSTAT="TRUE"
-elif [ "${RUN_TASK_VX_GRIDSTAT}" = "FALSE" ] || \
-     [ "${RUN_TASK_VX_GRIDSTAT}" = "NO" ]; then
-  RUN_TASK_VX_GRIDSTAT="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_VX_POINTSTAT is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+RUN_TASK_VX_GRIDSTAT=$(boolify $RUN_TASK_VX_GRIDSTAT)
+
 check_var_valid_value "RUN_TASK_VX_POINTSTAT" "valid_vals_RUN_TASK_VX_POINTSTAT"
-#
-# Set RUN_TASK_VX_POINTSTAT to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
-#
-RUN_TASK_VX_POINTSTAT=$(echo_uppercase $RUN_TASK_VX_POINTSTAT)
-if [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ] || \
-   [ "${RUN_TASK_VX_POINTSTAT}" = "YES" ]; then
-  RUN_TASK_VX_POINTSTAT="TRUE"
-elif [ "${RUN_TASK_VX_POINTSTAT}" = "FALSE" ] || \
-     [ "${RUN_TASK_VX_POINTSTAT}" = "NO" ]; then
-  RUN_TASK_VX_POINTSTAT="FALSE"
-fi
+RUN_TASK_VX_POINTSTAT=$(boolify $RUN_TASK_VX_POINTSTAT)
 
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_VX_ENSGRID is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
 check_var_valid_value "RUN_TASK_VX_ENSGRID" "valid_vals_RUN_TASK_VX_ENSGRID"
-#
-# Set RUN_TASK_VX_ENSGRID to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
-#
-RUN_TASK_VX_ENSGRID=$(echo_uppercase $RUN_TASK_VX_ENSGRID)
-if [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" ] || \
-   [ "${RUN_TASK_VX_ENSGRID}" = "YES" ]; then
-  RUN_TASK_VX_ENSGRID="TRUE"
-elif [ "${RUN_TASK_VX_ENSGRID}" = "FALSE" ] || \
-     [ "${RUN_TASK_VX_ENSGRID}" = "NO" ]; then
-  RUN_TASK_VX_ENSGRID="FALSE"
-fi
+RUN_TASK_VX_ENSGRID=$(boolify $RUN_TASK_VX_ENSGRID)
 
-#
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_VX_ENSPOINT is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
 check_var_valid_value "RUN_TASK_VX_ENSPOINT" "valid_vals_RUN_TASK_VX_ENSPOINT"
-#
-# Set RUN_TASK_VX_ENSPOINT to either "TRUE" or "FALSE" so we don't have to
-# consider other valid values later on.
-#
-RUN_TASK_VX_ENSPOINT=$(echo_uppercase $RUN_TASK_VX_ENSPOINT)
-if [ "${RUN_TASK_VX_ENSPOINT}" = "TRUE" ] || \
-   [ "${RUN_TASK_VX_ENSPOINT}" = "YES" ]; then
-  RUN_TASK_VX_ENSPOINT="TRUE"
-elif [ "${RUN_TASK_VX_ENSPOINT}" = "FALSE" ] || \
-     [ "${RUN_TASK_VX_ENSPOINT}" = "NO" ]; then
-  RUN_TASK_VX_ENSPOINT="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that DO_SHUM is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+RUN_TASK_VX_ENSPOINT=$(boolify $RUN_TASK_VX_ENSPOINT)
+
+check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
+USE_FVCOM=$(boolify $USE_FVCOM)
+
 check_var_valid_value "DO_SHUM" "valid_vals_DO_SHUM"
-#
-# Set DO_SHUM to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-DO_SHUM=$(echo_uppercase $DO_SHUM)
-if [ "${DO_SHUM}" = "TRUE" ] || \
-   [ "${DO_SHUM}" = "YES" ]; then
-  DO_SHUM="TRUE"
-elif [ "${DO_SHUM}" = "FALSE" ] || \
-     [ "${DO_SHUM}" = "NO" ]; then
-  DO_SHUM="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that DO_SPPT is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+DO_SHUM=$(boolify $DO_SHUM)
+
 check_var_valid_value "DO_SPPT" "valid_vals_DO_SPPT"
-#
-# Set DO_SPPT to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-DO_SPPT=$(echo_uppercase $DO_SPPT)
-if [ "${DO_SPPT}" = "TRUE" ] || \
-   [ "${DO_SPPT}" = "YES" ]; then
-  DO_SPPT="TRUE"
-elif [ "${DO_SPPT}" = "FALSE" ] || \
-     [ "${DO_SPPT}" = "NO" ]; then
-  DO_SPPT="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that DO_SKEB is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+DO_SPPT=$(boolify $DO_SPPT)
+
 check_var_valid_value "DO_SKEB" "valid_vals_DO_SKEB"
-#
-# Set DO_SKEB to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-DO_SKEB=$(echo_uppercase $DO_SKEB)
-if [ "${DO_SKEB}" = "TRUE" ] || \
-   [ "${DO_SKEB}" = "YES" ]; then
-  DO_SKEB="TRUE"
-elif [ "${DO_SKEB}" = "FALSE" ] || \
-     [ "${DO_SKEB}" = "NO" ]; then
-  DO_SKEB="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that DO_SPP is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+DO_SKEB=$(boolify $DO_SKEB)
+
 check_var_valid_value "DO_SPP" "valid_vals_DO_SPP"
-#
-# Set DO_SPP to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-DO_SPP=$(echo_uppercase $DO_SPP)
-if [ "${DO_SPP}" = "TRUE" ] || \
-   [ "${DO_SPP}" = "YES" ]; then
-  DO_SPP="TRUE"
-elif [ "${DO_SPP}" = "FALSE" ] || \
-     [ "${DO_SPP}" = "NO" ]; then
-  DO_SPP="FALSE"
-fi
+DO_SPP=$(boolify $DO_SPP)
+
+check_var_valid_value "SUB_HOURLY_POST" "valid_vals_SUB_HOURLY_POST"
+SUB_HOURLY_POST=$(boolify $SUB_HOURLY_POST)
+
+check_var_valid_value "DOT_OR_USCORE" "valid_vals_DOT_OR_USCORE"
+
+check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
+USE_FVCOM=$(boolify $USE_FVCOM)
+
 #
 #-----------------------------------------------------------------------
 #
@@ -491,57 +248,245 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that USE_FVCOM is set to a valid value and assign directory
-# and file names.
-# 
 # Make sure that FVCOM_WCSTART is set to lowercase "warm" or "cold"
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
 check_var_valid_value "FVCOM_WCSTART" "valid_vals_FVCOM_WCSTART"
-#
-# Set USE_FVCOM to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-USE_FVCOM=$(echo_uppercase $USE_FVCOM)
-if [ "$USE_FVCOM" = "TRUE" ] || \
-   [ "$USE_FVCOM" = "YES" ]; then
-  USE_FVCOM="TRUE"
-elif [ "$USE_FVCOM" = "FALSE" ] || \
-     [ "$USE_FVCOM" = "NO" ]; then
-  USE_FVCOM="FALSE"
-fi
 FVCOM_WCSTART=$(echo_lowercase $FVCOM_WCSTART)
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that SUB_HOURLY_POST and DT_SUBHOURLY_POST_MNTS are set to 
-# valid values.
+# Make sure that FCST_MODEL is set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "SUB_HOURLY_POST" "valid_vals_SUB_HOURLY_POST"
+check_var_valid_value "FCST_MODEL" "valid_vals_FCST_MODEL"
 #
-# Set SUB_HOURLY_POST to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
+#-----------------------------------------------------------------------
 #
-SUB_HOURLY_POST=$(echo_uppercase $SUB_HOURLY_POST)
-if [ "${SUB_HOURLY_POST}" = "TRUE" ] || \
-   [ "${SUB_HOURLY_POST}" = "YES" ]; then
-  SUB_HOURLY_POST="TRUE"
-elif [ "${SUB_HOURLY_POST}" = "FALSE" ] || \
-     [ "${SUB_HOURLY_POST}" = "NO" ]; then
-  SUB_HOURLY_POST="FALSE"
+# Set CPL to TRUE/FALSE based on FCST_MODEL.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${FCST_MODEL}" = "ufs-weather-model" ]; then
+  CPL="FALSE"
+elif [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+  CPL="TRUE"
+else
+  print_err_msg_exit "\ 
+The coupling flag CPL has not been specified for this value of FCST_MODEL:
+  FCST_MODEL = \"${FCST_MODEL}\""
 fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that DOT_OR_USCORE is set to a valid value.
+# Set various directories.
+#
+# HOMErrfs:
+# Top directory of the clone of the FV3-LAM workflow git repository.
+#
+# USHDIR:
+# Directory containing the shell scripts called by the workflow.
+#
+# SCRIPTSDIR:
+# Directory containing the ex scripts called by the workflow.
+#
+# JOBSSDIR:
+# Directory containing the jjobs scripts called by the workflow.
+#
+# SORCDIR:
+# Directory containing various source codes.
+#
+# PARMDIR:
+# Directory containing parameter files, template files, etc.
+#
+# EXECDIR:
+# Directory containing various executable files.
+#
+# TEMPLATE_DIR:
+# Directory in which templates of various FV3-LAM input files are locat-
+# ed.
+#
+# UFS_WTHR_MDL_DIR:
+# Directory in which the (NEMS-enabled) FV3-LAM application is located.
+# This directory includes subdirectories for FV3, NEMS, and FMS.
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "DOT_OR_USCORE" "valid_vals_DOT_OR_USCORE"
+
+#
+# The current script should be located in the ush subdirectory of the 
+# workflow directory.  Thus, the workflow directory is the one above the
+# directory of the current script.
+#
+SR_WX_APP_TOP_DIR=${scrfunc_dir%/*/*}
+
+#
+#-----------------------------------------------------------------------
+#
+# Set the base directories in which codes obtained from external reposi-
+# tories (using the manage_externals tool) are placed.  Obtain the rela-
+# tive paths to these directories by reading them in from the manage_ex-
+# ternals configuration file.  (Note that these are relative to the lo-
+# cation of the configuration file.)  Then form the full paths to these
+# directories.  Finally, make sure that each of these directories actu-
+# ally exists.
+#
+#-----------------------------------------------------------------------
+#
+mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
+property_name="local_path"
+#
+# Get the path to the workflow scripts
+#
+external_name=regional_workflow
+HOMErrfs=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+HOMErrfs="${SR_WX_APP_TOP_DIR}/${HOMErrfs}"
+set +x
+#
+# Get the base directory of the FV3 forecast model code.
+#
+external_name="${FCST_MODEL}"
+UFS_WTHR_MDL_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+UFS_WTHR_MDL_DIR="${SR_WX_APP_TOP_DIR}/${UFS_WTHR_MDL_DIR}"
+if [ ! -d "${UFS_WTHR_MDL_DIR}" ]; then
+  print_err_msg_exit "\
+The base directory in which the FV3 source code should be located
+(UFS_WTHR_MDL_DIR) does not exist:
+  UFS_WTHR_MDL_DIR = \"${UFS_WTHR_MDL_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+fi
+#
+# Get the base directory of the UFS_UTILS codes.
+#
+external_name="ufs_utils"
+UFS_UTILS_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+UFS_UTILS_DIR="${SR_WX_APP_TOP_DIR}/${UFS_UTILS_DIR}"
+if [ ! -d "${UFS_UTILS_DIR}" ]; then
+  print_err_msg_exit "\
+The base directory in which the UFS utilities source codes should be lo-
+cated (UFS_UTILS_DIR) does not exist:
+  UFS_UTILS_DIR = \"${UFS_UTILS_DIR}\"
+Please clone the external repository containing the code in this direct-
+ory, build the executables, and then rerun the workflow."
+fi
+#
+# Get the base directory of the UPP code.
+#
+external_name="UPP"
+UPP_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+UPP_DIR="${SR_WX_APP_TOP_DIR}/${UPP_DIR}"
+if [ ! -d "${UPP_DIR}" ]; then
+  print_err_msg_exit "\
+The base directory in which the UPP source code should be located
+(UPP_DIR) does not exist:
+  UPP_DIR = \"${UPP_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+fi
+
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+#
+# Get the base directory of the NEXUS code if required
+#
+  external_name="arl_nexus"
+  ARL_NEXUS_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+  ARL_NEXUS_DIR="${SR_WX_APP_TOP_DIR}/${ARL_NEXUS_DIR}"
+  if [ ! -d "${ARL_NEXUS_DIR}" ]; then
+    print_err_msg_exit "\
+The base directory in which the arl_nexus source code should be located
+(ARL_NEXUS_DIR) does not exist:
+  ARL_NEXUS_DIR = \"${ARL_NEXUS_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+  fi
+
+  if [ "${OPT_DA_RRFS_CMAQ}" = "TRUE" ]; then
+#
+# Get the base directory of the JEDI code if required
+#
+    external_name="jedi-fv3-bundle"
+    JEDI_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+    JEDI_DIR="${SR_WX_APP_TOP_DIR}/${JEDI_DIR}"
+    if [ ! -d "${JEDI_DIR}" ]; then
+      print_err_msg_exit "\
+The base directory in which the JEDI source code should be located
+(JEDI_DIR) does not exist:
+  JEDI_DIR = \"${JEDI_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+    fi
+#
+# Get the base directory of the GSI code if required
+#
+    external_name="GSI"
+    GSI_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+    GSI_DIR="${SR_WX_APP_TOP_DIR}/${GSI_DIR}"
+    if [ ! -d "${GSI_DIR}" ]; then
+      print_err_msg_exit "\
+The base directory in which the GSI source code should be located
+(GSI_DIR) does not exist:
+  GSI_DIR = \"${GSI_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+    fi
+  fi
+fi
+
+#
+# Define some other useful paths
+#
+USHDIR="$HOMErrfs/ush"
+SCRIPTSDIR="$HOMErrfs/scripts"
+JOBSDIR="$HOMErrfs/jobs"
+SORCDIR="$HOMErrfs/sorc"
+SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
+PARMDIR="$HOMErrfs/parm"
+MODULES_DIR="$HOMErrfs/modulefiles"
+EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
+TEMPLATE_DIR="$USHDIR/templates"
+VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
+METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
+MET_CONFIG="$TEMPLATE_DIR/parm/met"
+ARL_NEXUS_DIR="${SR_WX_APP_TOP_DIR}/src/arl_nexus"
+JEDI_DIR="${SR_WX_APP_TOP_DIR}/src/jedi"
+GSI_DIR="${SR_WX_APP_TOP_DIR}/src/gsi"
 #
 #-----------------------------------------------------------------------
 #
@@ -555,148 +500,57 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #
 #-----------------------------------------------------------------------
 #
-# Set the number of cores per node, the job scheduler, and the names of
-# several queues.  These queues are defined in the default and local 
-# workflow/experiment configuration script.
-#
-# Also, set the machine-dependent flag RELATIVE_OR_NULL that specifies
-# the flag to pass to the link creation command (ln_vrfy) when attempting 
-# to create relative symlinks.  On machines that don't support relative
-# symlinks, it should be set to a null string.
+# Source the machine config file containing architechture information,
+# queue names, and supported input file paths.
 #
 #-----------------------------------------------------------------------
 #
-RELATIVE_LINK_FLAG=""
-case $MACHINE in
+RELATIVE_LINK_FLAG="--relative"
+MACHINE_FILE=${MACHINE_FILE:-${USHDIR}/machine/$(echo_lowercase $MACHINE).sh}
+source ${MACHINE_FILE}
 
-  "WCOSS_CRAY")
-    WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
-    SCHED="lsfcray"
-    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
-    QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
-    QUEUE_FCST=${QUEUE_FCST:-"dev"}
-#
-    RELATIVE_LINK_FLAG=""
-    ;;
+if [ -z "${NCORES_PER_NODE:-}" ]; then
+  print_err_msg_exit "\
+    NCORES_PER_NODE has not been specified in the file ${MACHINE_FILE}
+    Please ensure this value has been set for your desired platform. "
+fi
 
-  "WCOSS_DELL_P3")
-    WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
-    SCHED="lsf"
-    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"dev"}
-    QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
-    QUEUE_FCST=${QUEUE_FCST:-"dev"}
-#
-    RELATIVE_LINK_FLAG="--relative"
-    ;;
+if [ -z "$FIXgsm" -o -z "$FIXaer" -o -z "$FIXlut" -o -z "$TOPO_DIR" -o -z "$SFC_CLIMO_INPUT_DIR" ]; then
+      print_err_msg_exit "\
+One or more fix file directories have not been specified for this machine:
+  MACHINE = \"$MACHINE\"
+  FIXgsm = \"${FIXgsm:-\"\"}
+  FIXaer = \"${FIXaer:-\"\"}
+  FIXlut = \"${FIXlut:-\"\"}
+  TOPO_DIR = \"${TOPO_DIR:-\"\"}
+  SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
+  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR:-\"\"}
+You can specify the missing location(s) in ${machine_file}"
+fi
 
-  "HERA")
-    WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE="${NCORES_PER_NODE:-40}"
-    SCHED=${SCHED:-"slurm"}
-    PARTITION_DEFAULT=${PARTITION_DEFAULT:-"hera"}
-    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
-    PARTITION_HPSS=${PARTITION_HPSS:-"service"}
-    QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
-    PARTITION_FCST=${PARTITION_FCST:-"hera"}
-    QUEUE_FCST=${QUEUE_FCST:-"batch"}
-#
-    RELATIVE_LINK_FLAG="--relative"
-    ;;
-
-  "ORION")
-    WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE="${NCORES_PER_NODE:-40}"
-    SCHED=${SCHED:-"slurm"}
-    PARTITION_DEFAULT=${PARTITION_DEFAULT:-"orion"}
-    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
-    PARTITION_HPSS=${PARTITION_HPSS:-"service"}
-    QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
-    PARTITION_FCST=${PARTITION_FCST:-"orion"}
-    QUEUE_FCST=${QUEUE_FCST:-"batch"}
-#
-    RELATIVE_LINK_FLAG="--relative"
-    ;;
-
-  "JET")
-    WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
-    SCHED=${SCHED:-"slurm"}
-    PARTITION_DEFAULT=${PARTITION_DEFAULT:-"sjet,vjet,kjet,xjet"}
-    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
-    PARTITION_HPSS=${PARTITION_HPSS:-"service"}
-    QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
-    PARTITION_FCST=${PARTITION_FCST:-"sjet,vjet,kjet,xjet"}
-    QUEUE_FCST=${QUEUE_FCST:-"batch"}
-#
-    RELATIVE_LINK_FLAG="--relative"
-    ;;
-
-  "ODIN")
-    WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE="${NCORES_PER_NODE:-24}"
-    SCHED=${SCHED:-"slurm"}
-    PARTITION_DEFAULT=${PARTITION_DEFAULT:-"workq"}
-    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"workq"}
-    PARTITION_HPSS=${PARTITION_HPSS:-"workq"}
-    QUEUE_HPSS=${QUEUE_HPSS:-"workq"}
-    PARTITION_FCST=${PARTITION_FCST:-"workq"}
-    QUEUE_FCST=${QUEUE_FCST:-"workq"}
-#
-    RELATIVE_LINK_FLAG="--relative"
-    ;;
-
-  "CHEYENNE")
-    WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE="${NCORES_PER_NODE:-36}"
-    SCHED=${SCHED:-"pbspro"}
-    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"regular"}
-    QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
-    QUEUE_FCST=${QUEUE_FCST:-"regular"}
-#
-    RELATIVE_LINK_FLAG="--relative"
-    ;;
-
-  "STAMPEDE")
-    WORKFLOW_MANAGER="rocoto"
-    NCORES_PER_NODE="${NCORES_PER_NODE:-68}"
-    SCHED="slurm"
-    PARTITION_DEFAULT=${PARTITION_DEFAULT:-"normal"}
-    QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
-    PARTITION_HPSS=${PARTITION_HPSS:-"normal"}
-    QUEUE_HPSS=${QUEUE_HPSS:-"normal"}
-    PARTITION_FCST=${PARTITION_FCST:-"normal"}
-    QUEUE_FCST=${QUEUE_FCST:-"normal"}
-#
-    RELATIVE_LINK_FLAG="--relative"
-    ;;
-
-  "MACOS")
-    WORKFLOW_MANAGER="none"
-    SCHED="none"
-    ;;
-
-  "LINUX")
-    WORKFLOW_MANAGER=${WORKFLOW_MANAGER:-"none"}
-    SCHED=${SCHED:-"none"}
-    ;;
-
-  "*")
-    NCORES_PER_NODE="2" # Need some arbitrary default value to avoid division by zero errors
-
-    print_err_msg_exit "\
-      You are running on an unknown platform! MACHINE=${MACHINE} is not a valid
-    choice."
-    ;;
-
-esac
-
-if [ -z "$NCORES_PER_NODE" ]; then
-    print_err_msg_exit "\
-      NCORES_PER_NODE is a required setting for your platform! Please
-    set it in config.sh.
-      MACHINE = ${MACHINE}"
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+  if [ -z "$AQM_CONFIG_DIR" -o -z "$AQM_BIO_DIR" -o -z "$AQM_FIRE_DIR" -o -z "$AQM_LBCS_DIR" -o \ 
+       -z "$AQM_GEFS_DIR" -o -z "$NEXUS_INPUT_DIR" -o -z "$NEXUS_FIX_DIR" -o -z "DA_OBS_DIR" -o \
+       -z "$FIXgsi" -o -z "$FIXcrtm" -o -z "$AIRCRAFT_REJECT" -o -z "$SFCOBS_USELIST" -o \
+       -z "$AODPATH" -o -z "PMPATH" ]; then
+      print_err_msg_exit "\
+One or more fix file directories have not been specified for this machine:
+    MACHINE = \"$MACHINE\"
+    AQM_CONFIG_DIR = \"${AQM_CONFIG_DIR:-\"\"}
+    AQM_BIO_DIR = \"${AQM_BIO_DIR:-\"\"}
+    AQM_FIRE_DIR = \"${AQM_FIRE_DIR:-\"\"}
+    AQM_LBCS_DIR = \"${AQM_LBCS_DIR:-\"\"}
+    NEXUS_INPUT_DIR = \"${NEXUS_INPUT_DIR:-\"\"}
+    NEXUS_FIX_DIR = \"${NEXUS_FIX_DIR:-\"\"}
+    DA_OBS_DIR = \"${DA_OBS_DIR:-\"\"}
+    FIXgsi = \"${FIXgsi:-\"\"}
+    FIXcrtm = \"${FIXcrtm:-\"\"}
+    AIRCRAFT_REJECT = \"${AIRCRAFT_REJECT:-\"\"}
+    SFCOBS_USELIST = \"${SFCOBS_USELIST:-\"\"}
+    AODPATH = \"${AODPATH:-\"\"}
+    PMPATH = \"${PMPATH:-\"\"}
+You can specify the missing location(s) in ${machine_file}"
+  fi
 fi
 #
 #-----------------------------------------------------------------------
@@ -813,45 +667,10 @@ check_var_valid_value \
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "USE_MERRA_CLIMO" "valid_vals_USE_MERRA_CLIMO"
-#
-# Set USE_MERRA_CLIMO to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-USE_MERRA_CLIMO=$(echo_uppercase $USE_MERRA_CLIMO)
-if [ "${USE_MERRA_CLIMO}" = "TRUE" ] || \
-   [ "${USE_MERRA_CLIMO}" = "YES" ]; then
-  USE_MERRA_CLIMO="TRUE"
-elif [ "${USE_MERRA_CLIMO}" = "FALSE" ] || \
-     [ "${USE_MERRA_CLIMO}" = "NO" ]; then
-  USE_MERRA_CLIMO="FALSE"
-fi
+USE_MERRA_CLIMO=$(boolify $USE_MERRA_CLIMO)
 # Force to "TRUE" in case of FV3_GFS_v15_thompson_mynn_lam3km:
 if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15_thompson_mynn_lam3km" ]; then
   USE_MERRA_CLIMO="TRUE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that FCST_MODEL is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value "FCST_MODEL" "valid_vals_FCST_MODEL"
-#
-#-----------------------------------------------------------------------
-#
-# Set CPL to TRUE/FALSE based on FCST_MODEL.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${FCST_MODEL}" = "ufs-weather-model" ]; then
-  CPL="FALSE"
-elif [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
-  CPL="TRUE"
-else
-  print_err_msg_exit "\ 
-The coupling flag CPL has not been specified for this value of FCST_MODEL:
-  FCST_MODEL = \"${FCST_MODEL}\""
 fi
 #
 #-----------------------------------------------------------------------
@@ -992,615 +811,15 @@ Too many cycles in ALL_CDATES to list, redefining in abbreviated form."
 ALL_CDATES="${DATE_FIRST_CYCL}${CYCL_HRS[0]}...${DATE_LAST_CYCL}${CYCL_HRS[-1]}"
 fi
 #
-##### RRFS-CMAQ ########## start #####
-#
-if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_ADD_AQM_ICS is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-  check_var_valid_value "RUN_TASK_ADD_AQM_ICS" "valid_vals_RUN_TASK_ADD_AQM_ICS"
-  RUN_TASK_ADD_AQM_ICS=${RUN_TASK_ADD_AQM_ICS^^}
-  if [ "${RUN_TASK_ADD_AQM_ICS}" = "TRUE" ] || \
-     [ "${RUN_TASK_ADD_AQM_ICS}" = "YES" ]; then
-    RUN_TASK_ADD_AQM_ICS="TRUE"
-  elif [ "${RUN_TASK_ADD_AQM_ICS}" = "FALSE" ] || \
-       [ "${RUN_TASK_ADD_AQM_ICS}" = "NO" ]; then
-    RUN_TASK_ADD_AQM_ICS="FALSE"
-  fi
-#
-  if [ ${#ALL_CDATES[@]} -gt 1 ]; then
-    RUN_TASK_ADD_AQM_ICS="${RUN_TASK_ADD_AQM_ICS:-TRUE}"
-  else
-    RUN_TASK_ADD_AQM_ICS="${RUN_TASK_ADD_AQM_ICS:-FALSE}"
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_ADD_AQM_CHEM_LBCS is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-  check_var_valid_value "RUN_ADD_AQM_CHEM_LBCS" "valid_vals_RUN_ADD_AQM_CHEM_LBCS"
-  RUN_ADD_AQM_CHEM_LBCS=${RUN_ADD_AQM_CHEM_LBCS^^}
-  if [ "${RUN_ADD_AQM_CHEM_LBCS}" = "TRUE" ] || \
-     [ "${RUN_ADD_AQM_CHEM_LBCS}" = "YES" ]; then
-    RUN_ADD_AQM_CHEM_LBCS="TRUE"
-  elif [ "${RUN_ADD_AQM_CHEM_LBCS}" = "FALSE" ] || \
-       [ "${RUN_ADD_AQM_CHEM_LBCS}" = "NO" ]; then
-    RUN_ADD_AQM_CHEM_LBCS="FALSE"
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_ADD_AQM_GEFS_LBCS is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-  check_var_valid_value "RUN_ADD_AQM_GEFS_LBCS" "valid_vals_RUN_ADD_AQM_GEFS_LBCS"
-  RUN_ADD_AQM_GEFS_LBCS=${RUN_ADD_AQM_GEFS_LBCS^^}
-  if [ "${RUN_ADD_AQM_GEFS_LBCS}" = "TRUE" ] || \
-     [ "${RUN_ADD_AQM_GEFS_LBCS}" = "YES" ]; then
-    RUN_ADD_AQM_GEFS_LBCS="TRUE"
-  elif [ "${RUN_ADD_AQM_GEFS_LBCS}" = "FALSE" ] || \
-       [ "${RUN_ADD_AQM_GEFS_LBCS}" = "NO" ]; then
-    RUN_ADD_AQM_GEFS_LBCS="FALSE"
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_ADD_AQM_LBCS is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-  check_var_valid_value "RUN_TASK_ADD_AQM_LBCS" "valid_vals_RUN_TASK_ADD_AQM_LBCS"
-  RUN_TASK_ADD_AQM_LBCS=${RUN_TASK_ADD_AQM_LBCS^^}
-  if [ "${RUN_TASK_ADD_AQM_LBCS}" = "TRUE" ] || \
-     [ "${RUN_TASK_ADD_AQM_LBCS}" = "YES" ]; then
-    RUN_TASK_ADD_AQM_LBCS="TRUE"
-  elif [ "${RUN_TASK_ADD_AQM_LBCS}" = "FALSE" ] || \
-       [ "${RUN_TASK_ADD_AQM_LBCS}" = "NO" ]; then
-    RUN_TASK_ADD_AQM_LBCS="FALSE"
-  fi
-
-  if [ "${RUN_ADD_AQM_CHEM_LBCS}" = "FALSE" ] && \
-     [ "${RUN_ADD_AQM_GEFS_LBCS}" = "FALSE" ]; then
-    RUN_TASK_ADD_AQM_LBCS="FALSE"
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_RUN_NEXUS is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-  check_var_valid_value "RUN_TASK_RUN_NEXUS" "valid_vals_RUN_TASK_RUN_NEXUS"
-  RUN_TASK_RUN_NEXUS=${RUN_TASK_RUN_NEXUS^^}
-  if [ "${RUN_TASK_RUN_NEXUS}" = "TRUE" ] || \
-     [ "${RUN_TASK_RUN_NEXUS}" = "YES" ]; then
-    RUN_TASK_RUN_NEXUS="TRUE"
-  elif [ "${RUN_TASK_RUN_NEXUS}" = "FALSE" ] || \
-       [ "${RUN_TASK_RUN_NEXUS}" = "NO" ]; then
-    RUN_TASK_RUN_NEXUS="FALSE"
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_RUN_POST_STAT is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-  check_var_valid_value "RUN_TASK_RUN_POST_STAT" "valid_vals_RUN_TASK_RUN_POST_STAT"
-  RUN_TASK_RUN_POST_STAT=${RUN_TASK_RUN_POST_STAT^^}
-  if [ "${RUN_TASK_RUN_POST_STAT}" = "TRUE" ] || \
-     [ "${RUN_TASK_RUN_POST_STAT}" = "YES" ]; then
-    RUN_TASK_RUN_POST_STAT="TRUE"
-    if [ ${FCST_LEN_HRS} -lt "40" ]; then
-      RUN_TASK_RUN_POST_STAT="FALSE"
-    fi
-  elif [ "${RUN_TASK_RUN_POST_STAT}" = "FALSE" ] || \
-       [ "${RUN_TASK_RUN_POST_STAT}" = "NO" ]; then
-    RUN_TASK_RUN_POST_STAT="FALSE"
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RESTART_WORKFLOW is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-  check_var_valid_value "RESTART_WORKFLOW" "valid_vals_RESTART_WORKFLOW"
-  RESTART_WORKFLOW=${RESTART_WORKFLOW^^}
-  if [ "${RESTART_WORKFLOW}" = "TRUE" ] || \
-     [ "${RESTART_WORKFLOW}" = "YES" ]; then
-    RESTART_WORKFLOW="TRUE"
-  elif [ "${RESTART_WORKFLOW}" = "FALSE" ] || \
-       [ "${RESTART_WORKFLOW}" = "NO" ]; then
-    RESTART_WORKFLOW="FALSE"
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that OPT_DA_RRFS_CMAQ is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-  check_var_valid_value "OPT_DA_RRFS_CMAQ" "valid_vals_OPT_DA_RRFS_CMAQ"
-  OPT_DA_RRFS_CMAQ=${OPT_DA_RRFS_CMAQ^^}
-  if [ "${OPT_DA_RRFS_CMAQ}" = "TRUE" ] || \
-     [ "${OPT_DA_RRFS_CMAQ}" = "YES" ]; then
-    OPT_DA_RRFS_CMAQ="TRUE"
-  elif [ "${OPT_DA_RRFS_CMAQ}" = "FALSE" ] || \
-       [ "${OPT_DA_RRFS_CMAQ}" = "NO" ]; then
-    OPT_DA_RRFS_CMAQ="FALSE"
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_CHEM_ANL is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-  check_var_valid_value "RUN_TASK_CHEM_ANL" "valid_vals_RUN_TASK_CHEM_ANL"
-  RUN_TASK_CHEM_ANL=${RUN_TASK_CHEM_ANL^^}
-  if [ "${RUN_TASK_CHEM_ANL}" = "TRUE" ] || \
-     [ "${RUN_TASK_CHEM_ANL}" = "YES" ]; then
-    RUN_TASK_CHEM_ANL="TRUE"
-  elif [ "${RUN_TASK_CHEM_ANL}" = "FALSE" ] || \
-       [ "${RUN_TASK_CHEM_ANL}" = "NO" ]; then
-    RUN_TASK_CHEM_ANL="FALSE"
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that USE_CHEM_ANL is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-  check_var_valid_value "USE_CHEM_ANL" "valid_vals_USE_CHEM_ANL"
-  USE_CHEM_ANL=${USE_CHEM_ANL^^}
-  if [ "${USE_CHEM_ANL}" = "TRUE" ] || \
-     [ "${USE_CHEM_ANL}" = "YES" ]; then
-    USE_CHEM_ANL="TRUE"
-  elif [ "${USE_CHEM_ANL}" = "FALSE" ] || \
-       [ "${USE_CHEM_ANL}" = "NO" ]; then
-    USE_CHEM_ANL="FALSE"
-  fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that RUN_TASK_DACYC is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-  check_var_valid_value "RUN_TASK_DACYC" "valid_vals_RUN_TASK_DACYC"
-  RUN_TASK_DACYC=${RUN_TASK_DACYC^^}
-  if [ "${RUN_TASK_DACYC}" = "TRUE" ] || \
-     [ "${RUN_TASK_DACYC}" = "YES" ]; then
-    RUN_TASK_DACYC="TRUE"
-  elif [ "${RUN_TASK_DACYC}" = "FALSE" ] || \
-       [ "${RUN_TASK_DACYC}" = "NO" ]; then
-    RUN_TASK_DACYC="FALSE"
-  fi
-
-  if [ "${OPT_DA_RRFS_CMAQ}" = "FALSE" ]; then
-    RUN_TASK_CHEM_ANL="FALSE"
-    USE_CHEM_ANL="FALSE"
-    RUN_TASK_DACYC="FALSE"
-  fi
-fi
-#
-##### RRFS-CMAQ ########## end   #####
-#
-#-----------------------------------------------------------------------
-#
-# Set various directories.
-#
-# HOMErrfs:
-# Top directory of the clone of the FV3-LAM workflow git repository.
-#
-# USHDIR:
-# Directory containing the shell scripts called by the workflow.
-#
-# SCRIPTSDIR:
-# Directory containing the ex scripts called by the workflow.
-#
-# JOBSSDIR:
-# Directory containing the jjobs scripts called by the workflow.
-#
-# SORCDIR:
-# Directory containing various source codes.
-#
-# PARMDIR:
-# Directory containing parameter files, template files, etc.
-#
-# EXECDIR:
-# Directory containing various executable files.
-#
-# TEMPLATE_DIR:
-# Directory in which templates of various FV3-LAM input files are located.
-#
-# UFS_WTHR_MDL_DIR:
-# Directory in which the (NEMS-enabled) FV3-LAM application is located.
-# This directory includes subdirectories for FV3, NEMS, and FMS.
-#
-#-----------------------------------------------------------------------
-#
-
-#
-# The current script should be located in the ush subdirectory of the 
-# workflow directory.  Thus, the workflow directory is the one above the
-# directory of the current script.  Get the path to this latter directo-
-# ry and save it in HOMErrfs.
-#
-SR_WX_APP_TOP_DIR=${scrfunc_dir%/*/*}
-# GSK to do:  Get HOMErrfs from Externals.cfg 
-HOMErrfs="${SR_WX_APP_TOP_DIR}/regional_workflow"
-
-USHDIR="$HOMErrfs/ush"
-SCRIPTSDIR="$HOMErrfs/scripts"
-JOBSDIR="$HOMErrfs/jobs"
-SORCDIR="$HOMErrfs/sorc"
-SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
-PARMDIR="$HOMErrfs/parm"
-MODULES_DIR="$HOMErrfs/modulefiles"
-EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
-TEMPLATE_DIR="$USHDIR/templates"
-VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
-METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
-MET_CONFIG="$TEMPLATE_DIR/parm/met"
-
-ARL_NEXUS_DIR="${SR_WX_APP_TOP_DIR}/src/arl_nexus"
-JEDI_DIR="${SR_WX_APP_TOP_DIR}/src/jedi"
-GSI_DIR="${SR_WX_APP_TOP_DIR}/src/gsi"
-
-case "$MACHINE" in
-
-  "WCOSS_CRAY")
-    FIXgsm=${FIXgsm:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
-    FIXaer=${FIXaer:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_aer"}
-    FIXlut=${FIXlut:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_lut"}
-    TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
-    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
-    ;;
-
-  "WCOSS_DELL_P3")
-    FIXgsm=${FIXgsm:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_am"}
-    FIXaer=${FIXaer:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_aer"}
-    FIXlut=${FIXlut:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_lut"}
-    TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
-    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
-    ;;
-
-  "HERA")
-    FIXgsm=${FIXgsm:-"/scratch1/NCEPDEV/global/glopara/fix/fix_am"}
-    FIXaer=${FIXaer:-"/scratch1/NCEPDEV/global/glopara/fix/fix_aer"}
-    FIXlut=${FIXlut:-"/scratch1/NCEPDEV/global/glopara/fix/fix_lut"}
-    TOPO_DIR=${TOPO_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_orog"}
-    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/global/glopara/fix/fix_sfc_climo"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch2/BMC/det/FV3LAM_pregen"}
-    ;;
-
-  "ORION")
-    FIXgsm=${FIXgsm:-"/work/noaa/global/glopara/fix/fix_am"}
-    FIXaer=${FIXaer:-"/work/noaa/global/glopara/fix/fix_aer"}
-    FIXlut=${FIXlut:-"/work/noaa/global/glopara/fix/fix_lut"}
-    TOPO_DIR=${TOPO_DIR:-"/work/noaa/global/glopara/fix/fix_orog"}
-    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/noaa/global/glopara/fix/fix_sfc_climo"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
-    ;;
-
-  "JET")
-    FIXgsm=${FIXgsm:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_am"}
-    FIXaer=${FIXaer:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_aer"}
-    FIXlut=${FIXlut:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_lut"}
-    TOPO_DIR=${TOPO_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_orog"}
-    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/fix_sfc_climo"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
-    ;;
-
-  "ODIN")
-    FIXgsm=${FIXgsm:-"/scratch/ywang/fix/theia_fix/fix_am"}
-    FIXaer=${FIXaer:-"/scratch/ywang/fix/theia_fix/fix_aer"}
-    FIXlut=${FIXlut:-"/scratch/ywang/fix/theia_fix/fix_lut"}
-    TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
-    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
-    ;;
-
-  "CHEYENNE")
-    FIXgsm=${FIXgsm:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_am"}
-    FIXaer=${FIXaer:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_aer"}
-    FIXlut=${FIXlut:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_lut"}
-    TOPO_DIR=${TOPO_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/fix_orog"}
-    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/climo_fields_netcdf"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
-    ;;
-
-  "STAMPEDE")
-    FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}
-    FIXaer=${FIXaer:-"/work/00315/tg455890/stampede2/regional_fv3/fix_aer"}
-    FIXlut=${FIXlut:-"/work/00315/tg455890/stampede2/regional_fv3/fix_lut"}
-    TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
-    SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
-    FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
-    ;;
-
-  *)
-    if [ -z "$FIXgsm" -o -z "$FIXaer" -o -z "$FIXlut" -o -z "$TOPO_DIR" -o -z "$SFC_CLIMO_INPUT_DIR" ]; then 
-      print_err_msg_exit "\
-One or more fix file directories have not been specified for this machine:
-  MACHINE = \"$MACHINE\"
-  FIXgsm = \"${FIXgsm:-\"\"}
-  FIXaer = \"${FIXaer:-\"\"}
-  FIXlut = \"${FIXlut:-\"\"}
-  TOPO_DIR = \"${TOPO_DIR:-\"\"}
-  SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR:-\"\"}
-You can specify the missing location(s) in ${EXPT_CONFIG_FN}."
-    fi
-    ;;
-
-esac
-#
-##### RRFS-CMAQ ########## start #####
-#
-if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
-
-  case $MACHINE in
-
-"WCOSS_DELL_P3")
-  AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/aqm/epa/data"}
-  AQM_BIO_DIR=${AQM_BIO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/aqm/bio"}
-  AQM_BIO_FILE=${AQM_BIO_FILE:-"BEIS_SARC401.ncf"}
-  AQM_FIRE_DIR=${AQM_FIRE_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/emissions/GSCE/GBBEPx.in.C401/Reprocessed"}
-  AQM_FIRE_FILE=${AQM_FIRE_FILE:-"GBBEPx_C401GRID.emissions_v003"}
-  AQM_FIRE_FILE_SUFFIX=${AQM_FIRE_FILE_SUFFIX:-".nc"}
-  AQM_RC_FIRE_FREQUENCY=${AQM_RC_FIRE_FREQUENCY:-"static"}
-  AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/LBCS/boundary_conditions_v4"}
-  AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
-  AQM_GEFS_DIR=${AQM_GEFS_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/GEFS_aerosol"}
-  NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/gpfs/dell2/emc/retros/noscrub/Barry.Baker/emissions"}
-  NEXUS_FIX_DIR=${NEXUS_FIX_DIR:-"/gpfs/dell2/emc/modeling/noscrub/RRFS_CMAQ/nexus/fix"}
-  NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_GSD_HRRR_25km.nc"}
-  DA_OBS_DIR=${DA_OBS_DIR:-""}
-  FIXgsi=${FIXgsi:-""}
-  FIXcrtm=${FIXcrtm:-""}
-  AIRCRAFT_REJECT=${AIRCRAFT_REJECT:-""}
-  SFCOBS_USELIST=${SFCOBS_USELIST:-""}
-  AODPATH=${AODPATH:-""}
-  PMPATH=${PMPATH:-""}
-  ;;
-
-"HERA")
-  AQM_CONFIG_DIR=${AQM_CONFIG_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/aqm/epa/data"}
-  AQM_BIO_DIR=${AQM_BIO_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/aqm/bio"}
-  AQM_BIO_FILE=${AQM_BIO_FILE:-"BEIS_SARC401.ncf"}
-  AQM_FIRE_DIR=${AQM_FIRE_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/emissions/GSCE/GBBEPx.in.C401/Reprocessed"}
-  AQM_FIRE_FILE=${AQM_FIRE_FILE:-"GBBEPx_C401GRID.emissions_v003"}
-  AQM_FIRE_FILE_SUFFIX=${AQM_FIRE_FILE_SUFFIX:-".nc"}
-  AQM_RC_FIRE_FREQUENCY=${AQM_RC_FIRE_FREQUENCY:-"static"}
-  AQM_LBCS_DIR=${AQM_LBCS_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/LBCS/boundary_conditions_v4"}
-  AQM_LBCS_FILES=${AQM_LBCS_FILES:-"gfs_bndy_chem_<MM>.tile7.000.nc"}
-  AQM_GEFS_DIR=${AQM_GEFS_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GEFS_aerosol"}
-  NEXUS_INPUT_DIR=${NEXUS_INPUT_DIR:-"/scratch1/NCEPDEV/rstprod/nexus_emissions"}
-  NEXUS_FIX_DIR=${NEXUS_FIX_DIR:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/nexus/fix"}
-  NEXUS_GRID_FN=${NEXUS_GRID_FN:-"grid_spec_GSD_HRRR_25km.nc"}
-  DA_OBS_DIR=${DA_OBS_DIR:-"/scratch1/NCEPDEV/da/Cory.R.Martin/Datasets/Observations/RRFS-CMAQ/"}
-  FIXgsi=${FIXgsi:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
-  FIXcrtm=${FIXcrtm:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/CRTM/fix"}
-  AIRCRAFT_REJECT=${AIRCRAFT_REJECT:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
-  SFCOBS_USELIST=${SFCOBS_USELIST:-"/scratch2/NCEPDEV/naqfc/RRFS_CMAQ/GSI/fix"}
-  AODPATH=${AODPATH:-""}
-  PMPATH=${PMPATH:-""}
-  ;;
-
-  *)
-    print_err_msg_exit "\
-One or more AQM directories and file names have not been specified for this machine:
-  MACHINE = \"$MACHINE\"
-  AQM_CONFIG_DIR = \"${AQM_CONFIG_DIR:-\"\"}
-  AQM_BIO_DIR = \"${AQM_BIO_DIR:-\"\"}
-  AQM_BIO_FILE = \"${AQM_BIO_FILE:-\"\"}
-  AQM_FIRE_DIR = \"${AQM_FIRE_DIR:-\"\"}
-  AQM_FIRE_FILE = \"${AQM_FIRE_FILE:-\"\"}
-  AQM_FIRE_FILE_SUFFIX = \"${AQM_FIRE_FILE_SUFFIX:-\"\"}
-  AQM_RC_FIRE_FREQUENCY = \"${AQM_RC_FIRE_FREQUENCY:-\"\"}
-  AQM_LBCS_DIR = \"${AQM_LBCS_DIR:-\"\"}
-  AQM_LBCS_FILES = \"${AQM_LBCS_FILES:-\"\"}
-  NEXUS_INPUT_DIR = \"${NEXUS_INPUT_DIR:-\"\"}
-  NEXUS_FIX_DIR = \"${NEXUS_FIX_DIR:-\"\"}
-  NEXUS_GRID_FN = \"${NEXUS_GRID_FN:-\"\"}
-  DA_OBS_DIR = \"${DA_OBS_DIR:-\"\"}
-  FIXgsi = \"${FIXgsi:-\"\"}
-  FIXcrtm = \"${FIXcrtm:-\"\"}
-  AIRCRAFT_REJECT = \"${AIRCRAFT_REJECT:-\"\"}
-  SFCOBS_USELIST = \"${SFCOBS_USELIST:-\"\"}
-  AODPATH = \"${AODPATH:-\"\"}
-  PMPATH = \"${PMPATH:-\"\"}
-You can specify the missing location(s) in config.sh"
-    ;;
-
-  esac
-
-fi
-#
-##### RRFS-CMAQ ########## end   #####
-#
-#-----------------------------------------------------------------------
-#
-# Set the base directories in which codes obtained from external reposi-
-# tories (using the manage_externals tool) are placed.  Obtain the rela-
-# tive paths to these directories by reading them in from the manage_ex-
-# ternals configuration file.  (Note that these are relative to the lo-
-# cation of the configuration file.)  Then form the full paths to these
-# directories.  Finally, make sure that each of these directories actu-
-# ally exists.
-#
-#-----------------------------------------------------------------------
-#
-mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
-property_name="local_path"
-#
-# Get the base directory of the FV3 forecast model code.
-#
-external_name="${FCST_MODEL}"
-UFS_WTHR_MDL_DIR=$( \
-get_manage_externals_config_property \
-"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
-print_err_msg_exit "\
-Call to function get_manage_externals_config_property failed."
-
-UFS_WTHR_MDL_DIR="${SR_WX_APP_TOP_DIR}/${UFS_WTHR_MDL_DIR}"
-if [ ! -d "${UFS_WTHR_MDL_DIR}" ]; then
-  print_err_msg_exit "\
-The base directory in which the FV3 source code should be located
-(UFS_WTHR_MDL_DIR) does not exist:
-  UFS_WTHR_MDL_DIR = \"${UFS_WTHR_MDL_DIR}\"
-Please clone the external repository containing the code in this directory,
-build the executable, and then rerun the workflow."
-fi
-#
-# Get the base directory of the UFS_UTILS codes.
-#
-external_name="ufs_utils"
-UFS_UTILS_DIR=$( \
-get_manage_externals_config_property \
-"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
-print_err_msg_exit "\
-Call to function get_manage_externals_config_property failed."
-
-UFS_UTILS_DIR="${SR_WX_APP_TOP_DIR}/${UFS_UTILS_DIR}"
-if [ ! -d "${UFS_UTILS_DIR}" ]; then
-  print_err_msg_exit "\
-The base directory in which the UFS utilities source codes should be lo-
-cated (UFS_UTILS_DIR) does not exist:
-  UFS_UTILS_DIR = \"${UFS_UTILS_DIR}\"
-Please clone the external repository containing the code in this direct-
-ory, build the executables, and then rerun the workflow."
-fi
-#
-# Get the base directory of the UPP code.
-#
-external_name="UPP"
-UPP_DIR=$( \
-get_manage_externals_config_property \
-"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
-print_err_msg_exit "\
-Call to function get_manage_externals_config_property failed."
-
-UPP_DIR="${SR_WX_APP_TOP_DIR}/${UPP_DIR}"
-if [ ! -d "${UPP_DIR}" ]; then
-  print_err_msg_exit "\
-The base directory in which the UPP source code should be located
-(UPP_DIR) does not exist:
-  UPP_DIR = \"${UPP_DIR}\"
-Please clone the external repository containing the code in this directory,
-build the executable, and then rerun the workflow."
-fi
-
-#
-##### RRFS-CMAQ ########## start #####
-#
-if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
-#
-# Get the base directory of the NEXUS code if required
-#
-  external_name="arl_nexus"
-  ARL_NEXUS_DIR=$( \
-get_manage_externals_config_property \
-"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
-print_err_msg_exit "\
-Call to function get_manage_externals_config_property failed."
-
-  ARL_NEXUS_DIR="${SR_WX_APP_TOP_DIR}/${ARL_NEXUS_DIR}"
-  if [ ! -d "${ARL_NEXUS_DIR}" ]; then
-    print_err_msg_exit "\
-The base directory in which the arl_nexus source code should be located
-(ARL_NEXUS_DIR) does not exist:
-  ARL_NEXUS_DIR = \"${ARL_NEXUS_DIR}\"
-Please clone the external repository containing the code in this directory,
-build the executable, and then rerun the workflow."
-  fi
-
-  if [ "${OPT_DA_RRFS_CMAQ}" = "TRUE" ]; then
-#
-# Get the base directory of the JEDI code if required
-#
-    external_name="jedi-fv3-bundle"
-    JEDI_DIR=$( \
-get_manage_externals_config_property \
-"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
-print_err_msg_exit "\
-Call to function get_manage_externals_config_property failed."
-
-    JEDI_DIR="${SR_WX_APP_TOP_DIR}/${JEDI_DIR}"
-    if [ ! -d "${JEDI_DIR}" ]; then
-      print_err_msg_exit "\
-The base directory in which the JEDI source code should be located
-(JEDI_DIR) does not exist:
-  JEDI_DIR = \"${JEDI_DIR}\"
-Please clone the external repository containing the code in this directory,
-build the executable, and then rerun the workflow."
-    fi
-#
-# Get the base directory of the GSI code if required
-#
-    external_name="GSI"
-    GSI_DIR=$( \
-get_manage_externals_config_property \
-"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
-print_err_msg_exit "\
-Call to function get_manage_externals_config_property failed."
-
-    GSI_DIR="${SR_WX_APP_TOP_DIR}/${GSI_DIR}"
-    if [ ! -d "${GSI_DIR}" ]; then
-      print_err_msg_exit "\
-The base directory in which the GSI source code should be located
-(GSI_DIR) does not exist:
-  GSI_DIR = \"${GSI_DIR}\"
-Please clone the external repository containing the code in this directory,
-build the executable, and then rerun the workflow."
-    fi
-  fi
-fi
-#
-##### RRFS-CMAQ ########## end   #####
-#
-
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that USE_CUSTOM_POST_CONFIG_FILE is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-check_var_valid_value \
-  "USE_CUSTOM_POST_CONFIG_FILE" "valid_vals_USE_CUSTOM_POST_CONFIG_FILE"
-#
-# Set USE_CUSTOM_POST_CONFIG_FILE to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
-USE_CUSTOM_POST_CONFIG_FILE=$(echo_uppercase ${USE_CUSTOM_POST_CONFIG_FILE})
-if [ "$USE_CUSTOM_POST_CONFIG_FILE" = "TRUE" ] || \
-   [ "$USE_CUSTOM_POST_CONFIG_FILE" = "YES" ]; then
-  USE_CUSTOM_POST_CONFIG_FILE="TRUE"
-elif [ "$USE_CUSTOM_POST_CONFIG_FILE" = "FALSE" ] || \
-     [ "$USE_CUSTOM_POST_CONFIG_FILE" = "NO" ]; then
-  USE_CUSTOM_POST_CONFIG_FILE="FALSE"
-fi
-#
 #-----------------------------------------------------------------------
 #
 # If using a custom post configuration file, make sure that it exists.
 #
 #-----------------------------------------------------------------------
 #
+check_var_valid_value \
+  "USE_CUSTOM_POST_CONFIG_FILE" "valid_vals_USE_CUSTOM_POST_CONFIG_FILE"
+USE_CUSTOM_POST_CONFIG_FILE=$(boolify $USE_CUSTOM_POST_CONFIG_FILE)
 if [ ${USE_CUSTOM_POST_CONFIG_FILE} = "TRUE" ]; then
   if [ ! -f "${CUSTOM_POST_CONFIG_FP}" ]; then
     print_err_msg_exit "
@@ -1832,7 +1051,66 @@ must set DT_SUBHOURLY_POST_MNTS to something other than zero."
   if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
     check_var_valid_value "DT_SUBHOURLY_POST_MNTS" "valid_vals_DT_SUBHOURLY_POST_MNTS"
   fi
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that RRFS-CMAQ parameter are set to valid values.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+  check_var_valid_value "RUN_TASK_ADD_AQM_ICS" "valid_vals_RUN_TASK_ADD_AQM_ICS"
+  RUN_TASK_ADD_AQM_ICS=$(boolify $RUN_TASK_ADD_AQM_ICS)
+  if [ ${#ALL_CDATES[@]} -gt 1 ]; then
+    RUN_TASK_ADD_AQM_ICS="${RUN_TASK_ADD_AQM_ICS:-TRUE}"
+  else
+    RUN_TASK_ADD_AQM_ICS="${RUN_TASK_ADD_AQM_ICS:-FALSE}"
+  fi
 
+  check_var_valid_value "RUN_ADD_AQM_CHEM_LBCS" "valid_vals_RUN_ADD_AQM_CHEM_LBCS"
+  RUN_ADD_AQM_CHEM_LBCS=$(boolify $RUN_ADD_AQM_CHEM_LBCS)
+
+  check_var_valid_value "RUN_ADD_AQM_GEFS_LBCS" "valid_vals_RUN_ADD_AQM_GEFS_LBCS"
+  RUN_ADD_AQM_GEFS_LBCS=$(boolify $RUN_ADD_AQM_GEFS_LBCS)
+
+  check_var_valid_value "RUN_TASK_ADD_AQM_LBCS" "valid_vals_RUN_TASK_ADD_AQM_LBCS"
+  RUN_TASK_ADD_AQM_LBCS=$(boolify $RUN_TASK_ADD_AQM_LBCS)
+  if [ "${RUN_ADD_AQM_CHEM_LBCS}" = "FALSE" ] && \
+     [ "${RUN_ADD_AQM_GEFS_LBCS}" = "FALSE" ]; then
+    RUN_TASK_ADD_AQM_LBCS="FALSE"
+  fi
+
+  check_var_valid_value "RUN_TASK_RUN_NEXUS" "valid_vals_RUN_TASK_RUN_NEXUS"
+  RUN_TASK_RUN_NEXUS=$(boolify $RUN_TASK_RUN_NEXUS)
+
+  check_var_valid_value "RUN_TASK_RUN_POST_STAT" "valid_vals_RUN_TASK_RUN_POST_STAT"
+  RUN_TASK_RUN_POST_STAT=$(bookify $RUN_TASK_RUN_POST_STAT)
+  if [ "${RUN_TASK_RUN_POST_STAT}" = "TRUE" ] && \
+     [ "${FCST_LEN_HRS}" -lt "40" ]; then
+    RUN_TASK_RUN_POST_STAT="FALSE"
+  fi
+
+  check_var_valid_value "RESTART_WORKFLOW" "valid_vals_RESTART_WORKFLOW"
+  RESTART_WORKFLOW=$(boolify $RESTART_WORKFLOW)
+
+  check_var_valid_value "OPT_DA_RRFS_CMAQ" "valid_vals_OPT_DA_RRFS_CMAQ"
+  OPT_DA_RRFS_CMAQ=$(boolify $OPT_DA_RRFS_CMAQ)
+
+  check_var_valid_value "RUN_TASK_CHEM_ANL" "valid_vals_RUN_TASK_CHEM_ANL"
+  RUN_TASK_CHEM_ANL=$(boolify $RUN_TASK_CHEM_ANL)
+
+  check_var_valid_value "USE_CHEM_ANL" "valid_vals_USE_CHEM_ANL"
+  USE_CHEM_ANL=$(boolify $USE_CHEM_ANL)
+
+  check_var_valid_value "RUN_TASK_DACYC" "valid_vals_RUN_TASK_DACYC"
+  RUN_TASK_DACYC=$(boolify $RUN_TASK_DACYC)
+
+  if [ "${OPT_DA_RRFS_CMAQ}" = "FALSE" ]; then
+    RUN_TASK_CHEM_ANL="FALSE"
+    USE_CHEM_ANL="FALSE"
+    RUN_TASK_DACYC="FALSE"
+  fi
 fi
 #
 #-----------------------------------------------------------------------
@@ -2110,24 +1388,11 @@ FIELD_TABLE_FP="${EXPTDIR}/${FIELD_TABLE_FN}"
 FV3_NML_FN="${FV3_NML_BASE_SUITE_FN%.*}"
 FV3_NML_FP="${EXPTDIR}/${FV3_NML_FN}"
 NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that USE_USER_STAGED_EXTRN_FILES is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+
+
 check_var_valid_value "USE_USER_STAGED_EXTRN_FILES" "valid_vals_USE_USER_STAGED_EXTRN_FILES"
-#
-# Set USE_USER_STAGED_EXTRN_FILES to either "TRUE" or "FALSE" so we don't 
-# have to consider other valid values later on.
-#
-USE_USER_STAGED_EXTRN_FILES=$(echo_uppercase $USE_USER_STAGED_EXTRN_FILES)
-if [ "${USE_USER_STAGED_EXTRN_FILES}" = "YES" ]; then
-  USE_USER_STAGED_EXTRN_FILES="TRUE"
-elif [ "${USE_USER_STAGED_EXTRN_FILES}" = "NO" ]; then
-  USE_USER_STAGED_EXTRN_FILES="FALSE"
-fi
+USE_USER_STAGED_EXTRN_FILES=$(boolify $USE_USER_STAGED_EXTRN_FILES)
+
 #
 #-----------------------------------------------------------------------
 #
@@ -2165,18 +1430,7 @@ fi
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "DO_ENSEMBLE" "valid_vals_DO_ENSEMBLE"
-#
-# Set DO_ENSEMBLE to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-DO_ENSEMBLE=$(echo_uppercase $DO_ENSEMBLE)
-if [ "$DO_ENSEMBLE" = "TRUE" ] || \
-   [ "$DO_ENSEMBLE" = "YES" ]; then
-  DO_ENSEMBLE="TRUE"
-elif [ "$DO_ENSEMBLE" = "FALSE" ] || \
-     [ "$DO_ENSEMBLE" = "NO" ]; then
-  DO_ENSEMBLE="FALSE"
-fi
+DO_ENSEMBLE=$(boolify $DO_ENSEMBLE)
 
 NDIGITS_ENSMEM_NAMES="0"
 ENSMEM_NAMES=("")
@@ -2802,10 +2056,9 @@ check_var_valid_value "WRITE_DOPOST" "valid_vals_WRITE_DOPOST"
 # Set WRITE_DOPOST to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
 #
-WRITE_DOPOST=$(echo_uppercase $WRITE_DOPOST)
-if [ "$WRITE_DOPOST" = "TRUE" ] || \
-   [ "$WRITE_DOPOST" = "YES" ]; then
-  WRITE_DOPOST="TRUE"
+WRITE_DOPOST=$(boolify $WRITE_DOPOST)
+
+if [ "$WRITE_DOPOST" = "TRUE" ] ; then
 
 # Turn off run_post
   RUN_TASK_RUN_POST="FALSE"
@@ -2815,51 +2068,15 @@ if [ "$WRITE_DOPOST" = "TRUE" ] || \
     print_err_msg_exit "\
 SUB_HOURLY_POST is NOT available with Inline Post yet."
   fi
+fi
 
-elif [ "$WRITE_DOPOST" = "FALSE" ] || \
-     [ "$WRITE_DOPOST" = "NO" ]; then
-  WRITE_DOPOST="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that QUILTING is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+
 check_var_valid_value "QUILTING" "valid_vals_QUILTING"
-#
-# Set QUILTING to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-QUILTING=$(echo_uppercase $QUILTING)
-if [ "$QUILTING" = "TRUE" ] || \
-   [ "$QUILTING" = "YES" ]; then
-  QUILTING="TRUE"
-elif [ "$QUILTING" = "FALSE" ] || \
-     [ "$QUILTING" = "NO" ]; then
-  QUILTING="FALSE"
-fi
-#
-#-----------------------------------------------------------------------
-#
-# Make sure that PRINT_ESMF is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
+QUILTING=$(boolify $QUILTING)
+
 check_var_valid_value "PRINT_ESMF" "valid_vals_PRINT_ESMF"
-#
-# Set PRINT_ESMF to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
-PRINT_ESMF=$(echo_uppercase $PRINT_ESMF)
-if [ "${PRINT_ESMF}" = "TRUE" ] || \
-   [ "${PRINT_ESMF}" = "YES" ]; then
-  PRINT_ESMF="TRUE"
-elif [ "${PRINT_ESMF}" = "FALSE" ] || \
-     [ "${PRINT_ESMF}" = "NO" ]; then
-  PRINT_ESMF="FALSE"
-fi
+PRINT_ESMF=$(boolify $PRINT_ESMF)
+
 #
 #-----------------------------------------------------------------------
 #
@@ -2990,6 +2207,7 @@ GLOBAL_VAR_DEFNS_FP="$EXPTDIR/${GLOBAL_VAR_DEFNS_FN}"
 # variable definitions file.
 #
 #-----------------------------------------------------------------------
+
 #
 print_info_msg "
 Creating list of default experiment variable definitions..." 
@@ -3085,8 +2303,9 @@ var_name = \"${var_name}\""
 #
 # If the variable contains only one element, then it is a scalar.  (It
 # could be a 1-element array, but for simplicity, we treat that case as
-# a scalar.)  In this case, we enclose its value in double quotes and 
-# save the result in var_value.
+# a scalar.)  In this case, we enclose its value in single quotes and
+# save the result in var_value. No variable expansion should be
+# happening from variables saved in the var_defns file.
 #
       if [ "${num_elems}" -eq 1 ]; then
 
@@ -3267,13 +2486,11 @@ SFC_CLIMO_DIR='${SFC_CLIMO_DIR}'
 NDIGITS_ENSMEM_NAMES='${NDIGITS_ENSMEM_NAMES}'
 ENSMEM_NAMES=${ensmem_names_str}
 FV3_NML_ENSMEM_FPS=${fv3_nml_ensmem_fps_str}
-#
-##### RRFS-CMAQ ########## start #####
+
 ARL_NEXUS_DIR="${ARL_NEXUS_DIR}"
 JEDI_DIR="${JEDI_DIR}"
 GSI_DIR="${GSI_DIR}"
 AQM_RC_FP="${AQM_RC_FP}"
-##### RRFS-CMAQ ########## end   #####
 #
 #-----------------------------------------------------------------------
 #
@@ -3526,14 +2743,10 @@ FVCOM_FILE='${FVCOM_FILE}'
 #
 #-----------------------------------------------------------------------
 #
+NCORES_PER_NODE='${NCORES_PER_NODE}'
 PE_MEMBER01='${PE_MEMBER01}'
 
-#
-##### RRFS-CMAQ ########## start #####
 PE_JEDI="${PE_JEDI}"
-##### RRFS-CMAQ ########## end   #####
-#
-
 #
 #-----------------------------------------------------------------------
 #
