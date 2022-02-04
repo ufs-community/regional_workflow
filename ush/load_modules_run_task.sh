@@ -131,27 +131,22 @@ jjob_fp="$2"
 #
 #-----------------------------------------------------------------------
 #
-
 machine=$(echo_lowercase $MACHINE)
 
 if [[ "${FCST_MODEL}" = "fv3gfs_aqm" && ( "${task_name}" = "${RUN_FCST_TN}" || \
    "${task_name}" = "${RUN_CHEM_ANL_TN}" || "${task_name}" = "${RUN_GSI_ANL_TN}" ) ]]; then
-
-module purge
-
+  print_info_msg "$VERBOSE" "
+The environment file in \"ufs-srweather-app/env\" is not loaded because the executables ...
+for the task \"${task_name}\" were compiled separately.
+"
 else
-
-module purge
-
-machine=$(echo_lowercase $MACHINE)
-env_fp="${SR_WX_APP_TOP_DIR}/env/${BUILD_ENV_FN}"
-module use "${SR_WX_APP_TOP_DIR}/env"
-source "${env_fp}" || print_err_msg_exit "\
+  env_fp="${SR_WX_APP_TOP_DIR}/env/${BUILD_ENV_FN}"
+  module use "${SR_WX_APP_TOP_DIR}/env"
+  source "${env_fp}" || print_err_msg_exit "\
 Sourcing platform- and compiler-specific environment file (env_fp) for the 
 workflow task specified by task_name failed:
   task_name = \"${task_name}\"
   env_fp = \"${env_fp}\""
-
 fi
 #
 #-----------------------------------------------------------------------
