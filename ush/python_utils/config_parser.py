@@ -12,9 +12,10 @@ from .run_command import run_command
 
 def load_shell_config(config_file):
     """ Loads old style shell config files.
-    Comments are ripped out, and then a dictionary of key-value
-    pairs is constructed with appropriate types. The returned dictionary
-    should be equivalent to one obtained from parsing yaml file
+    First comments are ripped out, and then a dictionary of key-value
+    pairs is constructed with appropriate python data types. The resulting
+    dictionary should be equivalent to one obtained from parsing a yaml file.
+    For more complicated config scripts, use `load_shell_config_complex` instead
 
     Args:
         config_file: file name
@@ -50,6 +51,9 @@ def load_shell_config_complex(config_file):
     we source the config script in a subshell and gets the variables it set
     """
 
+    # Save env vars before and after sourcing the scipt and then
+    # do a diff to get variables specifically defined/updated in the script
+    # Method sounds brittle but seems to work ok so far
     code = dedent(f'''
       (set -o posix; set) > /tmp/t1
       {{ . {config_file}; set +x; }} &>/dev/null
@@ -82,7 +86,7 @@ def cfg_to_shell_str(cfg):
         if isinstance(v,list):
             shell_str += f'{k}={v1}\n'
         else:
-            shell_str += f'{k}="{v1}"\n'
+            shell_str += f"{k}='{v1}'\n"
     return shell_str
 
 def yaml_safe_load(file_name):

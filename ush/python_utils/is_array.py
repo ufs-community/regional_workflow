@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 def is_array(var):
-    """ Checks if variable is an instance of List
+    """ Checks if variable is an instance of a list
 
     Args:
         var: the variable

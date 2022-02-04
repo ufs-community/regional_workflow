@@ -26,7 +26,8 @@ def str_to_date(s):
 
 def date_to_str(d,short=False):
     """ Get string from python datetime object.
-    It always converts to YYYYMMDDHHMM format
+    By default it converts to YYYYMMDDHHMM format unless
+    told otherwise with `short` or HHMM=0
 
     Args:
         d: datetime object
@@ -40,7 +41,7 @@ def date_to_str(d,short=False):
     return v
 
 def str_to_type(s, just_get_me_the_string = False):
-    """ Check if the string contains a float, int, boolean, or just reguar string
+    """ Check if the string contains a float, int, boolean, or just reguar string.
     This will be used to automatically convert environment variables to data types
     that are more convenient to work with. If you don't want this functionality,
     pass just_get_me_the_string = True
@@ -174,18 +175,19 @@ def import_vars(dictionary=os.environ, target_dict=None, env_vars=None):
     variables of the caller module. Call this function at the beginning of a function
     that uses environment variables.
 
-    Note: For ready-only environmental variables calling this function once should be enough.
-    However, if the variable is mutable in the module it is called from, the variable should be
-    explicitly tagged as `global`, and then the variable's value be exported back to the environment
-    with a call to export_vars()
+    Note that for ready-only environmental variables, calling this function once at the 
+    beginning should be enough. However, if the variable is mutable in the module it is 
+    called from, the variable should be explicitly tagged as `global`, and then its value
+    should be exported back to the environment with a call to export_vars()
         
-        import_vars()
-        global MYVAR
-        MYVAR.append("Hello")
-        export_vars()
+        import_vars() # import all environment variables
+        global MY_VAR, MY_LIST_VAR
+        MY_PATH = "/path/to/somewhere"
+        MY_LIST_VAR.append("Hello")
+        export_vars() # these exports all global variables
 
     There doesn't seem to an easier way of imitating the shell script doing way of things, which
-    assume that everything is global unless specifically tagged local, while the opposite is true
+    assumes that everything is global unless specifically tagged local, while the opposite is true
     for python.
 
     Args:
@@ -229,6 +231,7 @@ def export_vars(dictionary=os.environ, source_dict=None, env_vars=None):
         env_vars = { k: source_dict[k] if k in source_dict else None for k in env_vars }
 
     for k,v in env_vars.items():
+        # skip functions and other unlikely variable names
         if callable(v):
             continue
         if not k or k.islower() or k[0] == '_':

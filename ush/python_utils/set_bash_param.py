@@ -8,7 +8,7 @@ from .environment import import_vars
 
 def set_bash_param(file_full_path, param, value):
     """ Function to replace placeholder values of variables in
-        several different types of files with actual values
+    several different types of files with actual values
 
     Args:
         

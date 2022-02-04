@@ -1,8 +1,8 @@
 import glob
 
-def count_files(ext,dir='.'):
-    """ Function to return the number of files in the current directory
-    that end with the specified file extension
+def count_files(ext,dirct='.'):
+    """ Function that returns the number of files in the specified directory
+    ending with the specified file extension
 
     Args:
         ext: File extension string
@@ -11,6 +11,6 @@ def count_files(ext,dir='.'):
         int: Number of files
     """
 
-    files = glob.glob(dir + '/*.' + ext) 
+    files = glob.glob(dirct + '/*.' + ext) 
     return len(files)
     

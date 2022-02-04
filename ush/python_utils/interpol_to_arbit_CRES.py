@@ -2,8 +2,8 @@
 
 def interpol_to_arbit_CRES(RES, RES_array, prop_array):
     """ Function to interpolate (or extrapolate) a grid cell size-dependent property
-        to an arbitrary cubed-sphere resolution using arrays that specify a set of property
-        values for a corresponding set of resolutions
+    to an arbitrary cubed-sphere resolution using arrays that specify a set of property
+    values for a corresponding set of resolutions
 
     Args:
         RES: The cubed-sphere resolution at which to find the value of a property.

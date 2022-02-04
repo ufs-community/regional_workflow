@@ -4,7 +4,8 @@ from textwrap import dedent
 from .check_var_valid_value import check_var_valid_value
 
 def process_args(valid_args, **kwargs):
-    """ Function to process a list of variable name and value pairs
+    """ Function to process a list of variable name-value pairs.
+    It checks whether each argument is a valid argument or not.
 
     Args:
         valid_args: List of valid arguments

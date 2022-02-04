@@ -9,10 +9,10 @@ from .print_msg import print_info_msg
 from .environment import import_vars
 
 def print_input_args(valid_args):
-    """ Print out arguments for debugging purposes
+    """ Prints function arguments for debugging purposes
 
     Args:
-        valid_args: dictionary of key-value pairs
+        valid_args: dictionary of arg-value pairs
     Returns:
         Number of printed arguments
     """
