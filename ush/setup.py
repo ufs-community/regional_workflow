@@ -109,30 +109,6 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Source the script defining the valid values of experiment variables.
-    # And then check the validity of user-defined and default config parameters
-    #
-    #-----------------------------------------------------------------------
-    #
-
-    # update dictionary with globals() values
-    update_dict = {k: globals()[k] for k in cfg_d.keys() if k in globals() }
-    cfg_d.update(update_dict)
-
-    # loop through cfg_d and check validity of params
-    cfg_v = load_config_file("valid_param_vals.yaml")
-    for k,v in cfg_d.items():
-        if v == None:
-            continue
-        vkey = 'valid_vals_' + k
-        if (vkey in cfg_v) and not (v in cfg_v[vkey]):
-            print_info_msg(f'''
-                The variable {k}={v} in {EXPT_DEFAULT_CONFIG_FN} or {EXPT_CONFIG_FN} does not have
-                a valid value. Possible values are:
-                    {k} = {cfg_v[vkey]}''')
-    #
-    #-----------------------------------------------------------------------
-    #
     # Make sure different variables are set to their corresponding valid value
     #
     #-----------------------------------------------------------------------
@@ -2038,6 +2014,30 @@ def setup():
 
     # export all vars
     export_vars()
+
+    #
+    #-----------------------------------------------------------------------
+    #
+    # Check validity of parameters in one place, here in the end.
+    #
+    #-----------------------------------------------------------------------
+    #
+
+    # update dictionary with globals() values
+    update_dict = {k: globals()[k] for k in cfg_d.keys() if k in globals() }
+    cfg_d.update(update_dict)
+
+    # loop through cfg_d and check validity of params
+    cfg_v = load_config_file("valid_param_vals.yaml")
+    for k,v in cfg_d.items():
+        if v == None:
+            continue
+        vkey = 'valid_vals_' + k
+        if (vkey in cfg_v) and not (v in cfg_v[vkey]):
+            print_err_msg_exit(f'''
+                The variable {k}={v} in {EXPT_DEFAULT_CONFIG_FN} or {EXPT_CONFIG_FN} does not have
+                a valid value. Possible values are:
+                    {k} = {cfg_v[vkey]}''')
 
     #
     #-----------------------------------------------------------------------
