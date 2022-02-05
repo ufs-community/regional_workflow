@@ -7,7 +7,7 @@ import subprocess
 from multiprocessing import Process
 from textwrap import dedent
 
-from python_utils import print_info_msg, print_err_msg_exit, import_vars, cp_vrfy, \
+from python_utils import print_info_msg, print_err_msg_exit, import_vars, cp_vrfy, cd_vrfy,\
                          rm_vrfy, ln_vrfy, mkdir_vrfy, mv_vrfy, run_command, date_to_str, \
                          define_macro_utilities, create_symlink_to_file, check_for_preexist_dir_file
 
@@ -926,7 +926,7 @@ def generate_FV3LAM_wflow():
     if NOMADS == True:
       print("Getting NOMADS online data")
       print(f"NOMADS_file_type= {NOMADS_file_type}")
-      cd(EXPTDIR)
+      cd_vrfy(EXPTDIR)
       run_command(f'''{USHDIR}/NOMADS_get_extrn_mdl_files.sh {date_to_str(DATE_FIRST_CYCL,True)} \
                       {CYCL_HRS} {NOMADS_file_type} {FCST_LEN_HRS} {LBC_SPEC_INTVL_HRS}''')
 

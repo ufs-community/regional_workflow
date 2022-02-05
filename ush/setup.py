@@ -1711,10 +1711,9 @@ def setup():
         #-----------------------------------------------------------------------
         #-----------------------------------------------------------------------
         # Section 2:
-        # This section defines variables that have been derived from the ones
-        # above by the setup script (setup.sh) and which are needed by one or
-        # more of the scripts that perform the workflow tasks (those scripts
-        # source this variable definitions file).
+        # This section defines variables that have been derived from the primary
+        # set of experiment variables above (we refer to these as \"derived\" or
+        # \"secondary\" variables).
         #-----------------------------------------------------------------------
         #-----------------------------------------------------------------------
         #
@@ -1722,9 +1721,9 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # Full path to workflow launcher script, its log file, and the line that
-        # gets added to the cron table to launch this script if USE_CRON_TO_RELAUNCH
-        # is set to TRUE.
+        # Full path to workflow (re)launch script, its log file, and the line 
+        # that gets added to the cron table to launch this script if the flag 
+        # USE_CRON_TO_RELAUNCH is set to \"TRUE\".
         #
         #-----------------------------------------------------------------------
         #
@@ -1832,7 +1831,7 @@ def setup():
         #-----------------------------------------------------------------------
         #
         # Parameters that indicate whether or not various parameterizations are 
-        # included in and called by the phsics suite.
+        # included in and called by the physics suite.
         #
         #-----------------------------------------------------------------------
         #
@@ -1841,8 +1840,8 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # Grid configuration parameters needed regardless of grid generation me-
-        # thod used.
+        # Grid configuration parameters needed regardless of grid generation
+        # method used.
         #
         #-----------------------------------------------------------------------
         #
@@ -1861,9 +1860,9 @@ def setup():
         
         RES_IN_FIXLAM_FILENAMES='{RES_IN_FIXLAM_FILENAMES}'
         #
-        # If running the make_grid task, CRES will be set to a null string du-
-        # the grid generation step.  It will later be set to an actual value af-
-        # ter the make_grid task is complete.
+        # If running the make_grid task, CRES will be set to a null string during
+        # the grid generation step.  It will later be set to an actual value after
+        # the make_grid task is complete.
         #
         CRES='{CRES}'"""
     with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
@@ -1883,10 +1882,10 @@ def setup():
         #-----------------------------------------------------------------------
         #
         # Grid configuration parameters for a regional grid generated from a
-        # global parent cubed-sphere grid.  This is the method originally sug-
-        # gested by GFDL since it allows GFDL's nested grid generator to be used
-        # to generate a regional grid.  However, for large regional domains, it
-        # results in grids that have an unacceptably large range of cell sizes
+        # global parent cubed-sphere grid.  This is the method originally 
+        # suggested by GFDL since it allows GFDL's nested grid generator to be 
+        # used to generate a regional grid.  However, for large regional domains, 
+        # it results in grids that have an unacceptably large range of cell sizes
         # (i.e. ratio of maximum to minimum cell size is not sufficiently close
         # to 1).
         #
@@ -1905,10 +1904,10 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # Grid configuration parameters for a regional grid generated indepen-
-        # dently of a global parent grid.  This method was developed by Jim Pur-
-        # ser of EMC and results in very uniform grids (i.e. ratio of maximum to
-        # minimum cell size is very close to 1).
+        # Grid configuration parameters for a regional grid generated independently 
+        # of a global parent grid.  This method was developed by Jim Purser of 
+        # EMC and results in very uniform grids (i.e. ratio of maximum to minimum 
+        # cell size is very close to 1).
         #
         #-----------------------------------------------------------------------
         #
@@ -1922,15 +1921,6 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Because RUN_CMD_FCST can include PE_MEMBER01 (and theoretically other
-    # variables calculated in this script), delete the first occurrence of it
-    # in the var_defns file, and write it again at the end.
-    #
-    #-----------------------------------------------------------------------
-    run_command(f"{SED} -i '/^RUN_CMD_FCST=/d' {GLOBAL_VAR_DEFNS_FP}")
-    #
-    #-----------------------------------------------------------------------
-    #
     # Continue appending variable definitions to the variable definitions 
     # file.
     #
@@ -1940,7 +1930,8 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # CPL: parameter for coupling in model_configure
+        # Flag in the \"${MODEL_CONFIG_FN}\" file for coupling the ocean model to 
+        # the weather model.
         #
         #-----------------------------------------------------------------------
         #
@@ -1957,7 +1948,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # If USE_USER_STAGED_EXTRN_FILES is set to False, this is the system 
+        # If USE_USER_STAGED_EXTRN_FILES is set to \"FALSE\", this is the system 
         # directory in which the workflow scripts will look for the files generated 
         # by the external model specified in EXTRN_MDL_NAME_ICS.  These files will 
         # be used to generate the input initial condition and surface files for 
@@ -1969,7 +1960,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # If USE_USER_STAGED_EXTRN_FILES is set to False, this is the system 
+        # If USE_USER_STAGED_EXTRN_FILES is set to \"FALSE\", this is the system 
         # directory in which the workflow scripts will look for the files generated 
         # by the external model specified in EXTRN_MDL_NAME_LBCS.  These files 
         # will be used to generate the input lateral boundary condition files for 
@@ -1999,8 +1990,8 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # The number of cycles for which to make forecasts and the list of starting
-        # dates/hours of these cycles.
+        # The number of cycles for which to make forecasts and the list of 
+        # starting dates/hours of these cycles.
         #
         #-----------------------------------------------------------------------
         #
@@ -2009,9 +2000,13 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # If USE_FVCOM is set to TRUE, then FVCOM data (located in FVCOM_DIR
-        # in FVCOM_FILE) will be used to update lower boundary conditions during
-        # make_ics.
+        # Parameters that determine whether FVCOM data will be used, and if so, 
+        # their location.
+        #
+        # If USE_FVCOM is set to \"TRUE\", then FVCOM data (in the file FVCOM_FILE
+        # located in the directory FVCOM_DIR) will be used to update the surface 
+        # boundary conditions during the initial conditions generation task 
+        # (MAKE_ICS_TN).
         #
         #-----------------------------------------------------------------------
         #
@@ -2027,12 +2022,12 @@ def setup():
         #
         NCORES_PER_NODE='{NCORES_PER_NODE}'
         PE_MEMBER01='{PE_MEMBER01}'
-        RUN_CMD_FCST='{RUN_CMD_FCST}'
         #
         #-----------------------------------------------------------------------
         #
-        # IF DO_SPP='TRUE,' N_VAR_SPP is the number of parameterizations that
-        # are perturbed with SPP, otherwise N_VAR_SPP=0.
+        # IF DO_SPP is set to \"TRUE\", N_VAR_SPP specifies the number of physics 
+        # parameterizations that are perturbed with SPP.  Otherwise, N_VAR_SPP 
+        # is set 0.
         #
         #-----------------------------------------------------------------------
         #
