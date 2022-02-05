@@ -5,7 +5,7 @@ from datetime import datetime,timedelta
 
 from constants import radius_Earth,degs_per_radian
 
-from python_utils import process_args, import_vars, print_input_args, \
+from python_utils import process_args, import_vars, set_env_var, print_input_args, \
                          run_command, print_info_msg, print_err_msg_exit
 
 def set_gridparams_GFDLgrid(**kwargs):
@@ -418,4 +418,36 @@ def set_gridparams_GFDLgrid(**kwargs):
 
 class Testing(unittest.TestCase):
     def test_set_gridparams_GFDLgrid(self):
-        self.assertTrue(False)
+        (LON_CTR,LAT_CTR,NX,NY,NHW,STRETCH_FAC,
+        ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
+        IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
+        JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
+        JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG) = set_gridparams_GFDLgrid( \
+          lon_of_t6_ctr=-97.5, \
+          lat_of_t6_ctr=38.5, \
+          res_of_t6g=96, \
+          stretch_factor=1.4, \
+          refine_ratio_t6g_to_t7g=3, \
+          istart_of_t7_on_t6g=13, \
+          iend_of_t7_on_t6g=84, \
+          jstart_of_t7_on_t6g=17, \
+          jend_of_t7_on_t6g=80)
+
+        self.assertEqual(\
+          (LON_CTR,LAT_CTR,NX,NY,NHW,STRETCH_FAC,
+           ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
+           IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
+           JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
+           JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG),
+          (-97.5,38.5,216,192,6,1.4,
+           21,
+           172,
+           29,
+           164)
+        )
+
+    def setUp(self):
+        set_env_var('DEBUG',True)
+        set_env_var('VERBOSE',True)
+        set_env_var('NH4', 4)
+

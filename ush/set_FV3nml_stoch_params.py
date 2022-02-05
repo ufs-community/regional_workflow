@@ -86,7 +86,8 @@ class Testing(unittest.TestCase):
         set_FV3nml_stoch_params(cdate=self.cdate)
     def setUp(self):
         define_macro_utilities();
-        set_env_var('DEBUG','TRUE')
+        set_env_var('DEBUG',True)
+        set_env_var('VERBOSE',True)
         USHDIR = os.path.dirname(os.path.abspath(__file__))
         EXPTDIR = USHDIR + "/test_data/expt";
         cp_vrfy(f'{USHDIR}/templates/input.nml.FV3', f'{EXPTDIR}/input.nml')

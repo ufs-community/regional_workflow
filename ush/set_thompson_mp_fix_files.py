@@ -127,8 +127,8 @@ class Testing(unittest.TestCase):
                 thompson_mp_climo_fn="Thompson_MP_MONTHLY_CLIMO.nc") )
     def setUp(self):
         define_macro_utilities();
-        set_env_var('DEBUG','FALSE')
-        set_env_var('VERBOSE','FALSE')
+        set_env_var('DEBUG',True)
+        set_env_var('VERBOSE',True)
         set_env_var('EXTRN_MDL_NAME_ICS',"FV3GFS")
         set_env_var('EXTRN_MDL_NAME_LBCS',"FV3GFS")
         set_env_var('CCPP_PHYS_SUITE',"FV3_GSD_SAR")

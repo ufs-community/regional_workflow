@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
+import os
 import unittest
 from datetime import datetime
 
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
-                         run_command, print_info_msg, print_err_msg_exit
+                         run_command, print_info_msg, print_err_msg_exit, lowercase
 
 def create_model_configure_file(**kwargs):
     """ Creates a model configuration file in the specified
@@ -17,7 +18,7 @@ def create_model_configure_file(**kwargs):
         dt_subhourly_post_mnts
         dt_atmos
     Returns:
-        None
+        Boolean
     """
 
     #process input arguments
@@ -190,11 +191,51 @@ def create_model_configure_file(**kwargs):
               Namelist settings specified on command line:
                 settings =
             {settings}''')
+        return False
+
+    return True
 
 class Testing(unittest.TestCase):
     def test_create_model_configure_file(self):
-        create_model_configure_file()
-        self.assertTrue(False)
+        self.assertTrue(\
+                create_model_configure_file( \
+                      run_dir=f"{os.getenv('USHDIR')}/test_data",
+                      cdate='20210101',
+                      sub_hourly_post=True,
+                      dt_subhourly_post_mnts=4,
+                      dt_atmos=1) )
     def setUp(self):
-        set_env_var('DEBUG','FALSE')
+        USHDIR = os.path.dirname(os.path.abspath(__file__))
+        MODEL_CONFIG_FN='model_configure'
+        MODEL_CONFIG_TMPL_FP = f'{USHDIR}/templates/{MODEL_CONFIG_FN}'
+
+        set_env_var('DEBUG',True)
+        set_env_var('VERBOSE',True)
+        set_env_var('QUILTING',True)
+        set_env_var('PRINT_ESMF',True)
+        set_env_var('CPL',True)
+        set_env_var('WRITE_DOPOST',True)
+        set_env_var("USHDIR",USHDIR)
+        set_env_var('MODEL_CONFIG_FN',MODEL_CONFIG_FN)
+        set_env_var("MODEL_CONFIG_TMPL_FP",MODEL_CONFIG_TMPL_FP)
+        set_env_var('PE_MEMBER01',24)
+        set_env_var('FCST_LEN_HRS',72)
+        set_env_var('DT_ATMOS',1)
+        set_env_var('OMP_NUM_THREADS_RUN_FCST',1)
+        set_env_var('RESTART_INTERVAL',4)
+
+        set_env_var('WRTCMP_write_groups',1)
+        set_env_var('WRTCMP_write_tasks_per_group',2)
+        set_env_var('WRTCMP_output_grid',"lambert_conformal")
+        set_env_var('WRTCMP_cen_lon',-97.5)
+        set_env_var('WRTCMP_cen_lat',35.0)
+        set_env_var('WRTCMP_stdlat1',35.0)
+        set_env_var('WRTCMP_stdlat2',35.0)
+        set_env_var('WRTCMP_nx',199)
+        set_env_var('WRTCMP_ny',111)
+        set_env_var('WRTCMP_lon_lwr_left',-121.23349066)
+        set_env_var('WRTCMP_lat_lwr_left',23.41731593)
+        set_env_var('WRTCMP_dx',3000.0)
+        set_env_var('WRTCMP_dy',3000.0)
+
 
