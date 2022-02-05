@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/bash
 
 #
 #-----------------------------------------------------------------------
@@ -98,6 +98,7 @@ fi
 . $USHDIR/source_machine_file.sh
 . $USHDIR/constants.sh
 . $USHDIR/source_util_funcs.sh
+. $USHDIR/init_env.sh
 . $USHDIR/get_crontab_contents.sh
 #
 #-----------------------------------------------------------------------
@@ -121,6 +122,16 @@ print_input_args "valid_args"
 called_from_cron=${called_from_cron:-"FALSE"}
 check_var_valid_value "called_from_cron" "valid_vals_BOOLEAN"
 called_from_cron=$(boolify ${called_from_cron})
+#
+#-----------------------------------------------------------------------
+#
+# Initialize the environment, e.g. by making the "module" command as well
+# as others available.
+#
+#-----------------------------------------------------------------------
+#
+env_init_scripts_fps_str="( "$(printf "\"%s\" " "${ENV_INIT_SCRIPTS_FPS[@]}")")"
+init_env env_init_scripts_fps="${env_init_scripts_fps_str}"
 #
 #-----------------------------------------------------------------------
 #
