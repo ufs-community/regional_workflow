@@ -82,51 +82,19 @@ export OMP_STACKSIZE=${OMP_STACKSIZE_MAKE_LBCS}
 #
 #-----------------------------------------------------------------------
 #
-  case "$MACHINE" in
+case "$MACHINE" in
 
-    "WCOSS_CRAY")
-      ulimit -s unlimited
-      ulimit -a
-      APRUN="aprun -b -j1 -n48 -N12 -d1 -cc depth"
-      ;;
+  "WCOSS_DELL_P3")
+    ulimit -s unlimited
+    ulimit -a
+    RUN_CMD_UTILS="mpirun"
+    ;;
 
-    "WCOSS_DELL_P3")
-      ulimit -s unlimited
-      ulimit -a
-      APRUN="mpirun"
-      ;;
+  *)
+    source ${MACHINE_FILE}
+    ;;
 
-    "HERA")
-      ulimit -s unlimited
-      ulimit -a
-      APRUN="srun"
-      ;;
-
-    "ORION")
-      ulimit -s unlimited
-      ulimit -a
-      APRUN="srun"
-      ;;
-
-    "JET")
-      ulimit -s unlimited
-      ulimit -a
-      APRUN="srun"
-      ;;
-
-    "ODIN")
-      APRUN="srun"
-      ;;
-
-    "CHEYENNE")
-      nprocs=$(( NNODES_MAKE_LBCS*PPN_MAKE_LBCS ))
-      APRUN="mpirun -np $nprocs"
-      ;;
-
-    "STAMPEDE")
-      APRUN="ibrun"
-      ;;
-  esac
+esac
 #
 #-----------------------------------------------------------------------
 #
@@ -236,7 +204,7 @@ Please ensure that you've built this executable."
 #
 #----------------------------------------------------------------------
 #
-  ${APRUN} -n ${NUMTS} ${exec_fp} || \
+  ${RUN_CMD_UTILS} -n ${NUMTS} ${exec_fp} || \
     print_err_msg_exit "\
 Call to executable (exec_fp) to generate chemical and GEFS LBCs
 file for RRFS-CMAQ failed:

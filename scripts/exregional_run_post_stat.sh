@@ -131,18 +131,11 @@ case "$MACHINE" in
 
   "WCOSS_DELL_P3")
     ulimit -s unlimited
-    APRUN="mpirun"
-    ;;
-
-  "HERA")
-    ulimit -s unlimited
-    APRUN="srun"
+    RUN_CMD_UTILS="mpirun"
     ;;
 
   *)
-    print_err_msg_exit "\
-Run command has not been specified for this machine:
-  MACHINE = \"$MACHINE\""
+    source ${MACHINE_FILE}
     ;;
 
 esac
@@ -159,7 +152,7 @@ esac
 cp_vrfy "${SR_WX_APP_TOP_DIR}/src/upp_post_stat/PM25-O3-stat" "${EXECDIR}/"
 chmod +x ${EXECDIR}/PM25-O3-stat
 
-${APRUN} ${EXECDIR}/PM25-O3-stat || \
+${RUN_CMD_UTILS} ${EXECDIR}/PM25-O3-stat || \
 print_err_msg_exit "\
 Call to execute Post-UP Stat failed
 "

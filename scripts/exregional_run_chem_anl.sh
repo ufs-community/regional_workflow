@@ -83,20 +83,7 @@ export OMP_STACKSIZE=1024m
 #
 #-----------------------------------------------------------------------
 #
-case $MACHINE in
-#
-"WCOSS_DELL_P3")
-  ulimit -s unlimited
-  ulimit -a
-  APRUN="mpirun -l -np ${PE_JEDI}"
-  ;;
-#
-"HERA")
-  ulimit -s unlimited
-  ulimit -a
-  APRUN="srun -n ${PE_JEDI}"
-  ;;
-esac
+source ${MACHINE_FILE}
 #
 #-----------------------------------------------------------------------
 #
@@ -292,7 +279,7 @@ cd_vrfy ${JEDI_WORKDIR}
 #
 #-----------------------------------------------------------------------
 #
-$APRUN ./fv3jedi_error_covariance_training.x jedi_no2_bump.yaml || print_err_msg_exit "\
+${RUN_CMD_UTILS} ./fv3jedi_error_covariance_training.x jedi_no2_bump.yaml || print_err_msg_exit "\
 Call to executable to run fv3jedi_error_covariance_training.x returned with nonzero exit
 code."
 #
@@ -302,7 +289,7 @@ code."
 #
 #-----------------------------------------------------------------------
 #
-$APRUN ./fv3jedi_var.x jedi_no2_3dvar.yaml || print_err_msg_exit "\
+${RUN_CMD_UTILS} ./fv3jedi_var.x jedi_no2_3dvar.yaml || print_err_msg_exit "\
 Call to executable to run fv3jedi_var.x returned with nonzero exit
 code."
 #

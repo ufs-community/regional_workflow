@@ -83,15 +83,7 @@ export OMP_STACKSIZE=2056M
 #
 #-----------------------------------------------------------------------
 #
-case $MACHINE in
-#
-"HERA")
-  ulimit -s unlimited
-  ulimit -a
-  APRUN="srun"
-  ;;
-#
-esac
+source ${MACHINE_FILE}
 #
 #-----------------------------------------------------------------------
 #
@@ -506,7 +498,7 @@ fi
 #-----------------------------------------------------------------------
 #
 # comment out for testing
-$APRUN ./gsi.x < gsiparm.anl > stdout 2>&1 || print_err_msg_exit "\
+${RUN_CMD_UTILS} ./gsi.x < gsiparm.anl > stdout 2>&1 || print_err_msg_exit "\
 Call to executable to run GSI returned with nonzero exit code."
 
 
