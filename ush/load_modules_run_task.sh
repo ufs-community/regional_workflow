@@ -103,6 +103,12 @@ case "$MACHINE" in
     . /glade/u/apps/ch/opt/lmod/8.1.7/lmod/8.1.7/init/sh
     ;;
 #
+  "AWS")
+    set -x
+    ls -l /apps/lmod/lmod/init
+    . /apps/lmod/lmod/init/sh
+    ;;
+#
   *)
     if [[ -n ${LMOD_PATH:-""} && -f ${LMOD_PATH:-""} ]] ; then
       . ${LMOD_PATH}
