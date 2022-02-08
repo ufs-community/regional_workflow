@@ -1189,7 +1189,7 @@ exist or is not a directory:
 #
 #-----------------------------------------------------------------------
 #
-  $ushdir/generate_regional_wflow.sh || \
+  $ushdir/generate_FV3LAM_wflow.sh || \
     print_err_msg_exit "\
 Could not generate an experiment for the test specified by test_name:
   test_name = \"${test_name}\""

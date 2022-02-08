@@ -301,14 +301,14 @@ check_for_preexist_dir_file "${expts_status_fp}" "rename"
 #
 # Loop through the elements of the array expt_subdirs.  For each element
 # (i.e. for each active experiment), change location to the experiment 
-# directory and call the script launch_regional_wflow.sh to update the log 
-# file log.launch_regional_wflow.  Then take the last num_tail_lines of 
+# directory and call the script launch_FV3LAM_wflow.sh to update the log 
+# file log.launch_FV3LAM_wflow.  Then take the last num_tail_lines of 
 # this log file (along with an appropriate message) and add it to the 
 # status report file.
 #
 #-----------------------------------------------------------------------
 #
-launch_wflow_fn="launch_regional_wflow.sh"
+launch_wflow_fn="launch_FV3LAM_wflow.sh"
 num_tail_lines="40"
 
 for (( i=0; i<=$((num_expts-1)); i++ )); do
@@ -324,7 +324,7 @@ Checking workflow status of experiment: \"${expt_subdir}\""
 #
   cd_vrfy "${expt_subdir}"
   launch_msg=$( "${launch_wflow_fn}" 2>&1 )
-  log_tail=$( tail -n ${num_tail_lines} log.launch_regional_wflow )
+  log_tail=$( tail -n ${num_tail_lines} log.launch_FV3LAM_wflow )
 #
 # Record the tail from the log file into the status report file.
 #
