@@ -7,7 +7,7 @@ from .check_var_valid_value import check_var_valid_value
 from .filesys_cmds_vrfy import rm_vrfy, mv_vrfy
 
 def check_for_preexist_dir_file(path, method):
-    """ Check for preexisting directory and, if present, deal with it
+    """ Check for a preexisting directory or file and, if present, deal with it
     according to the specified method
 
     Args:
