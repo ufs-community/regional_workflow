@@ -7,7 +7,7 @@ from textwrap import dedent
 from python_utils import process_args, print_input_args, print_info_msg, print_err_msg_exit,\
                          check_var_valid_value, run_command, mv_vrfy,mkdir_vrfy,cmd_vrfy,cp_vrfy,\
                          rm_vrfy,import_vars,set_env_var,list_to_str,str_to_list,\
-                         lowercase, define_macro_utilities
+                         lowercase, define_macos_utilities
 
 def set_FV3nml_sfc_climo_filenames():
     """
@@ -95,7 +95,7 @@ class Testing(unittest.TestCase):
     def test_set_FV3nml_sfc_climo_filenames(self):
         set_FV3nml_sfc_climo_filenames()
     def setUp(self):
-        define_macro_utilities();
+        define_macos_utilities();
         set_env_var('DEBUG',True)
         set_env_var('VERBOSE',True)
         USHDIR = os.path.dirname(os.path.abspath(__file__))

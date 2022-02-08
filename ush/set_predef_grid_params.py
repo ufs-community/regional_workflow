@@ -6,7 +6,7 @@ import os
 from constants import radius_Earth,degs_per_radian
 
 from python_utils import process_args,import_vars,export_vars,set_env_var,get_env_var,\
-                         print_input_args,define_macro_utilities
+                         print_input_args,define_macos_utilities
 
 def set_predef_grid_params():
     """ Sets grid parameters for the specified predfined grid 
@@ -1203,7 +1203,7 @@ class Testing(unittest.TestCase):
         self.assertEqual(get_env_var('ESGgrid_LON_CTR'),-97.5)
 
     def setUp(self):
-        define_macro_utilities();
+        define_macos_utilities();
         set_env_var('DEBUG',False)
         set_env_var('PREDEF_GRID_NAME',"RRFS_CONUS_3km")
         set_env_var('DT_ATMOS',36)

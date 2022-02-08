@@ -9,7 +9,7 @@ from textwrap import dedent
 
 from python_utils import print_info_msg, print_err_msg_exit, import_vars, cp_vrfy, cd_vrfy,\
                          rm_vrfy, ln_vrfy, mkdir_vrfy, mv_vrfy, run_command, date_to_str, \
-                         define_macro_utilities, create_symlink_to_file, check_for_preexist_dir_file
+                         define_macos_utilities, create_symlink_to_file, check_for_preexist_dir_file
 
 from setup import setup
 from set_FV3nml_sfc_climo_filenames import set_FV3nml_sfc_climo_filenames
@@ -64,7 +64,7 @@ def generate_FV3LAM_wflow():
             python version: {major}.{minor}''')
 
     #define macros
-    define_macro_utilities()
+    define_macos_utilities()
 
     #
     #-----------------------------------------------------------------------

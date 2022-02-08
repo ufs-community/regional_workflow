@@ -6,7 +6,7 @@ from textwrap import dedent
 
 from python_utils import process_args,import_vars,export_vars,set_env_var,list_to_str,\
                          print_input_args, print_info_msg, print_err_msg_exit, run_command,\
-                         define_macro_utilities
+                         define_macos_utilities
 
 def set_ozone_param(**kwargs):
     """ Function that does the following:
@@ -172,7 +172,7 @@ class Testing(unittest.TestCase):
         self.assertEqual( "ozphys_2015",
             set_ozone_param(ccpp_phys_suite_fp="test_data/suite_FV3_GSD_SAR.xml") )
     def setUp(self):
-        define_macro_utilities();
+        define_macos_utilities();
         set_env_var('DEBUG',True)
         set_env_var('VERBOSE',True)
 
