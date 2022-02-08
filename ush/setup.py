@@ -10,7 +10,7 @@ from python_utils import cd_vrfy, mkdir_vrfy, rm_vrfy, check_var_valid_value,\
                          get_manage_externals_config_property, list_to_str, type_to_str, \
                          import_vars, export_vars, get_env_var, print_info_msg,\
                          print_err_msg_exit, load_config_file, cfg_to_yaml_str, cfg_to_shell_str,\
-                         run_command, set_file_param, load_shell_config_complex
+                         run_command, load_shell_config
 
 from set_cycle_dates import set_cycle_dates
 from set_predef_grid_params import set_predef_grid_params
@@ -276,7 +276,7 @@ def setup():
 
     RELATIVE_LINK_FLAG="--relative"
     MACHINE_FILE=MACHINE_FILE or f"{USHDIR}/machine/{lowercase(MACHINE)}.sh"
-    machine_cfg = load_shell_config_complex(MACHINE_FILE)
+    machine_cfg = load_shell_config(MACHINE_FILE)
     import_vars(dictionary=machine_cfg)
     
     if not NCORES_PER_NODE:

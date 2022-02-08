@@ -4,7 +4,7 @@ import os
 import unittest
 
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
-                         run_command, print_err_msg_exit, define_macro_utilities
+                         run_command, print_err_msg_exit, define_macos_utilities
 
 def check_ruc_lsm(**kwargs):
     """ This file defines a function that checks whether the RUC land surface
@@ -43,6 +43,6 @@ class Testing(unittest.TestCase):
     def test_check_ruc_lsm(self):
         self.assertTrue( check_ruc_lsm(ccpp_phys_suite_fp="test_data/suite_FV3_GSD_SAR.xml") )
     def setUp(self):
-        define_macro_utilities();
+        define_macos_utilities();
         set_env_var('DEBUG','FALSE')
 
