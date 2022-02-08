@@ -15,8 +15,6 @@ from .print_input_args import print_input_args
 from .print_msg import print_info_msg, print_err_msg_exit
 from .process_args import process_args
 from .run_command import run_command
-from .set_bash_param import set_bash_param
-from .set_file_param import set_file_param
 from .config_parser import cfg_to_shell_str, cfg_to_yaml_str, yaml_safe_load, load_shell_config, \
                             load_shell_config_complex, load_config_file
 

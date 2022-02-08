@@ -54,22 +54,6 @@ class Testing(unittest.TestCase):
         prop_array = [ 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
         prop = interpol_to_arbit_CRES(RES, RES_array, prop_array)
         self.assertAlmostEqual(prop, 0.35)
-    def test_set_bash_param(self):
-        FILE = f'{self.PATH}/test_data/var_defns.sh'
-        set_bash_param(FILE, 'RUN_ENVIR', 'none')        
-        (_,out,_) = run_command(f'grep RUN_ENVIR {FILE}')
-        self.assertEqual( out, 'RUN_ENVIR="none"')
-        set_bash_param(FILE, 'RUN_ENVIR', 'nco')        
-        (_,out,_) = run_command(f'grep RUN_ENVIR {FILE}')
-        self.assertEqual( out, 'RUN_ENVIR="nco"')
-    def test_set_file_param(self):
-        FILE = f'{self.PATH}/test_data/regional_grid.nml'
-        cp_vrfy(f'{FILE}.org {FILE}')
-        set_env_var("WFLOW_XML_FN",None)
-        set_env_var("RGNL_GRID_NML_FN",None)
-        set_env_var("FV3_NML_FN","regional_grid.nml")
-        set_file_param(FILE, 'delx', '20')        
-        ## Test more of this if they are used ##
     def test_create_symlink_to_file(self):
         TARGET = f'{self.PATH}/test_python_utils.py'
         SYMLINK = f'{self.PATH}/test_data/test_python_utils.py'
