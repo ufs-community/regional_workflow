@@ -11,17 +11,18 @@ class Testing(unittest.TestCase):
         self.assertEqual( uppercase('upper'), 'UPPER' )
         self.assertEqual( lowercase('LOWER'), 'lower' )
     def test_check_for_preexist_dir_file(self):
-        cmd_vrfy('mkdir -p dir')
-        self.assertTrue( os.path.exists('dir') )
-        check_for_preexist_dir_file('dir-1', 'rename')
-        dirs = glob.glob('dir*')
+        cmd_vrfy('mkdir -p test_data/dir')
+        self.assertTrue( os.path.exists('test_data/dir') )
+        check_for_preexist_dir_file('test_data/dir', 'rename')
+        dirs = glob.glob('test_data/dir_*')
         self.assertEqual( len(dirs), 1)
-        rm_vrfy('-rf dir*')
+        rm_vrfy('-rf test_data/dir*')
     def test_check_var_valid_value(self):
         self.assertTrue( check_var_valid_value('rice', [ 'egg', 'spam', 'rice' ]) )
     def test_count_files(self):
+        (_,target_cnt,_) = run_command('ls -l *.py | wc -l')
         cnt = count_files('py')
-        self.assertGreater(cnt, 1)
+        self.assertEqual(cnt, int(target_cnt))
     def test_filesys_cmds(self):
         dPATH=f'{self.PATH}/test_data/dir'
         mkdir_vrfy(dPATH)
