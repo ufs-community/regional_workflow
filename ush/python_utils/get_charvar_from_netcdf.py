@@ -32,7 +32,7 @@ def get_charvar_from_netcdf(nc_file, nc_var_name):
               nc_file = \"{nc_file}\"
               nc_var_name = \"{nc_var_name}\"''')
 
-    if nc_var_value == None:
+    if nc_var_value is None:
         print_err_msg_exit(f'''
             In the specified NetCDF file (nc_file), the specified variable (nc_var_name)
             was not found:

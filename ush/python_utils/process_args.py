@@ -36,7 +36,7 @@ def process_args(valid_args, **kwargs):
     values_args = [None] * num_valid_args
 
     for i,a in enumerate(valid_args):
-        if a == None:
+        if a is None:
             print_err_msg_exit(f'''
                 The list of valid arguments (valid_arg_names) cannot contain empty elements, 
                 but the element with index i={i} is empty:
@@ -52,7 +52,7 @@ def process_args(valid_args, **kwargs):
         check_var_valid_value(arg_name, valid_arg_names, err_msg)
 
         idx = valid_arg_names.index(arg_name)
-        if values_args[idx] != None:
+        if values_args[idx] is not None:
             print_err_msg_exit(f'''
                 The current argument has already been assigned a value:
                   arg_name = \"{arg_name}\"

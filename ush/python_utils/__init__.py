@@ -11,8 +11,6 @@ from .get_charvar_from_netcdf import get_charvar_from_netcdf
 from .get_elem_inds import get_elem_inds
 from .get_manage_externals_config_property import get_manage_externals_config_property
 from .interpol_to_arbit_CRES import interpol_to_arbit_CRES
-from .is_array import is_array
-from .is_element_of import is_element_of
 from .print_input_args import print_input_args
 from .print_msg import print_info_msg, print_err_msg_exit
 from .process_args import process_args

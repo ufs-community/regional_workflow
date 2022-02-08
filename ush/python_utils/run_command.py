@@ -3,7 +3,7 @@
 import subprocess
 
 def run_command(cmd):
-    """ Run systme command in a subprocess
+    """ Run system command in a subprocess
 
     Args:
         cmd: command to execute

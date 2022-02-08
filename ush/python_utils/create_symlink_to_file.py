@@ -21,13 +21,13 @@ def create_symlink_to_file(target,symlink,relative=True):
 
     print_input_args(locals())
 
-    if target == None:
+    if target is None:
         print_err_msg_exit(f'''
             The argument \"target\" specifying the target of the symbolic link that
             this function will create was not specified in the call to this function:
               target = \"{target}\"''')
 
-    if symlink == None:
+    if symlink is None:
         print_err_msg_exit(f'''
             The argument \"symlink\" specifying the target of the symbolic link that
             this function will create was not specified in the call to this function:
@@ -42,7 +42,7 @@ def create_symlink_to_file(target,symlink,relative=True):
     relative_flag=""
     if relative:
         RELATIVE_LINK_FLAG = os.getenv('RELATIVE_LINK_FLAG')
-        if RELATIVE_LINK_FLAG != None:
+        if RELATIVE_LINK_FLAG is not None:
             relative_flag=f'{RELATIVE_LINK_FLAG}'
 
     ln_vrfy(f'-sf {relative_flag} {target} {symlink}')

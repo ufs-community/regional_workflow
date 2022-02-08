@@ -32,7 +32,7 @@ def date_to_str(d,short=False):
     Args:
         d: datetime object
     Returns:
-        string in YYYYMMDDHHMM format
+        string in YYYYMMDDHHMM or YYYYMMDD format
     """
     if short or (d.hour == 0 and d.minute == 0):
         v = d.strftime("%Y%m%d")
@@ -41,7 +41,7 @@ def date_to_str(d,short=False):
     return v
 
 def str_to_type(s, just_get_me_the_string = False):
-    """ Check if the string contains a float, int, boolean, or just reguar string.
+    """ Check if the string contains a float, int, boolean, or just regular string.
     This will be used to automatically convert environment variables to data types
     that are more convenient to work with. If you don't want this functionality,
     pass just_get_me_the_string = True
@@ -59,7 +59,7 @@ def str_to_type(s, just_get_me_the_string = False):
         elif s.lower() in ['false','no','nope']:
             return False
         v = str_to_date(s)
-        if v:
+        if v is not None:
             return v
         if s.isnumeric():
             return int(s)
@@ -82,10 +82,10 @@ def type_to_str(v):
     if isinstance(v,bool):
         return ("TRUE" if v else "FALSE")
     elif isinstance(v,int) or isinstance(v,float):
-        return str(v)
+        pass
     elif isinstance(v,date):
         return date_to_str(v)
-    elif v == None:
+    elif v is None:
         return ''
     return str(v)
 
@@ -144,7 +144,7 @@ def str_to_list(v):
         return str_to_type(v)
 
 def set_env_var(param,value):
-    """ Set an environement variable
+    """ Set an environment variable
 
     Args:
         param: the variable to set
@@ -175,8 +175,8 @@ def import_vars(dictionary=os.environ, target_dict=None, env_vars=None):
     variables of the caller module. Call this function at the beginning of a function
     that uses environment variables.
 
-    Note that for ready-only environmental variables, calling this function once at the 
-    beginning should be enough. However, if the variable is mutable in the module it is 
+    Note that for read-only environmental variables, calling this function once at the 
+    beginning should be enough. However, if the variable is modified in the module it is 
     called from, the variable should be explicitly tagged as `global`, and then its value
     should be exported back to the environment with a call to export_vars()
         
@@ -201,7 +201,7 @@ def import_vars(dictionary=os.environ, target_dict=None, env_vars=None):
     if not target_dict:
         target_dict = inspect.stack()[1][0].f_globals
 
-    if env_vars == None:
+    if env_vars is None:
         env_vars = dictionary
     else:
         env_vars = { k: dictionary[k] if k in dictionary else None for k in env_vars }
@@ -225,7 +225,7 @@ def export_vars(dictionary=os.environ, source_dict=None, env_vars=None):
     if not source_dict:
         source_dict = inspect.stack()[1][0].f_globals
 
-    if env_vars == None:
+    if env_vars is None:
         env_vars = source_dict
     else:
         env_vars = { k: source_dict[k] if k in source_dict else None for k in env_vars }

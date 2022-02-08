@@ -26,7 +26,7 @@ class Testing(unittest.TestCase):
         dPATH=f'{self.PATH}/test_data/dir'
         mkdir_vrfy(dPATH)
         self.assertTrue( os.path.exists(dPATH) )
-        cp_vrfy(f'{self.PATH}/change_case.py {dPATH}/change_cases.py')
+        cp_vrfy(f'{self.PATH}/change_case.py', f'{dPATH}/change_cases.py')
         self.assertTrue( os.path.exists(f'{dPATH}/change_cases.py') )
         cmd_vrfy(f'rm -rf {dPATH}')
         self.assertFalse( os.path.exists('tt.py') )
@@ -34,14 +34,8 @@ class Testing(unittest.TestCase):
         FILE=f'{self.PATH}/test_data/sample.nc'
         val = get_charvar_from_netcdf(FILE, 'pressure')
         self.assertTrue( val and (val.split()[0], '955.5,'))
-    def test_is_array(self):
-        arr = [ 2, 'egg', 5 ]
-        self.assertTrue( is_array(arr) )
     def test_run_command(self):
         self.assertEqual( run_command('echo hello'), (0, 'hello', '') )
-    def test_is_element_of(self):
-        arr = [ 2, 'egg', 5 ]
-        self.assertTrue( is_element_of('egg', arr) )
     def test_get_elem_inds(self):
         arr = [ 'egg', 'spam', 'egg', 'rice', 'egg']
         self.assertEqual( get_elem_inds(arr, 'egg', 'first' ) , 0 )
