@@ -4,7 +4,7 @@
 # (if different from the default location), and the name of the experiment
 # subdirectory.
 #
-MACHINE="AWS"
+MACHINE="AZURE"
 COMPILER="gnu"
 ACCOUNT="none"
 EXPT_SUBDIR="GST_lowres"

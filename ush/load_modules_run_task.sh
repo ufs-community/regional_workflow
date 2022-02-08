@@ -104,8 +104,14 @@ case "$MACHINE" in
     ;;
 #
   "AWS")
-    set -x
-    ls -l /apps/lmod/lmod/init
+    . /apps/lmod/lmod/init/sh
+    ;;
+#
+  "AZURE")
+    . /apps/lmod/lmod/init/sh
+    ;;
+#
+  "SINGULARITY")
     . /apps/lmod/lmod/init/sh
     ;;
 #
