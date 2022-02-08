@@ -1085,7 +1085,7 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   RUN_TASK_RUN_NEXUS=$(boolify $RUN_TASK_RUN_NEXUS)
 
   check_var_valid_value "RUN_TASK_RUN_POST_STAT" "valid_vals_RUN_TASK_RUN_POST_STAT"
-  RUN_TASK_RUN_POST_STAT=$(bookify $RUN_TASK_RUN_POST_STAT)
+  RUN_TASK_RUN_POST_STAT=$(boolify $RUN_TASK_RUN_POST_STAT)
   if [ "${RUN_TASK_RUN_POST_STAT}" = "TRUE" ] && \
      [ "${FCST_LEN_HRS}" -lt "40" ]; then
     RUN_TASK_RUN_POST_STAT="FALSE"
