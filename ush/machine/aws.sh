@@ -51,8 +51,8 @@ SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/contrib/EPIC/fix/fix_sfc_climo"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch2/BMC/det/FV3LAM_pregen"}
 
 RUN_CMD_SERIAL="time"
-RUN_CMD_UTILS='mpirun -np $nprocs'
-RUN_CMD_FCST='mpirun -np ${PE_MEMBER01}'
+RUN_CMD_UTILS='mpirun --mca btl tcp,vader,self -np $nprocs'
+RUN_CMD_FCST='mpirun --mca btl tcp,vader,self -np ${PE_MEMBER01}'
 RUN_CMD_POST='mpirun -np $nprocs'
 
 # MET Installation Locations
