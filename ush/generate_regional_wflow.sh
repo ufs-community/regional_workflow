@@ -9,7 +9,7 @@
 #
 #-----------------------------------------------------------------------
 #
-function generate_FV3LAM_wflow() {
+function generate_regional_wflow() {
 printf "\
 ========================================================================
 ========================================================================
@@ -1058,7 +1058,7 @@ For automatic resubmission of the workflow (say every 3 minutes), the
 following line can be added to the user's crontab (use \"crontab -e\" to
 edit the cron table):
 
-*/3 * * * * cd $EXPTDIR && ./launch_FV3LAM_wflow.sh
+*/3 * * * * cd $EXPTDIR && ./launch_regional_wflow.sh
 "
 
 fi
@@ -1133,11 +1133,11 @@ rm -f "${tmp_fp}"
 # Set the name of and full path to the log file in which the output from
 # the experiment/workflow generation function will be saved.
 #
-log_fn="log.generate_FV3LAM_wflow"
+log_fn="log.generate_regional_wflow"
 log_fp="$ushdir/${log_fn}"
 rm -f "${log_fp}"
 #
-# Call the generate_FV3LAM_wflow function defined above to generate the
+# Call the generate_regional_wflow function defined above to generate the
 # experiment/workflow.  Note that we pipe the output of the function
 # (and possibly other commands) to the "tee" command in order to be able
 # to both save it to a file and print it out to the screen (stdout).
@@ -1150,7 +1150,7 @@ rm -f "${log_fp}"
 # temporary file and read them in outside the subshell later below.
 #
 {
-generate_FV3LAM_wflow 2>&1  # If this exits with an error, the whole {...} group quits, so things don't work...
+generate_regional_wflow 2>&1  # If this exits with an error, the whole {...} group quits, so things don't work...
 retval=$?
 echo "$EXPTDIR" >> "${tmp_fp}"
 echo "$retval" >> "${tmp_fp}"
@@ -1158,8 +1158,8 @@ echo "$retval" >> "${tmp_fp}"
 #
 # Read in experiment/workflow variables needed later below from the tem-
 # porary file created in the subshell above containing the call to the
-# generate_FV3LAM_wflow function.  These variables are not directly
-# available here because the call to generate_FV3LAM_wflow above takes
+# generate_regional_wflow function.  These variables are not directly
+# available here because the call to generate_regional_wflow above takes
 # place in a subshell (due to the fact that we are then piping its out-
 # put to the "tee" command).  Then remove the temporary file.
 #
@@ -1167,14 +1167,14 @@ exptdir=$( sed "1q;d" "${tmp_fp}" )
 retval=$( sed "2q;d" "${tmp_fp}" )
 rm "${tmp_fp}"
 #
-# If the call to the generate_FV3LAM_wflow function above was success-
+# If the call to the generate_regional_wflow function above was success-
 # ful, move the log file in which the "tee" command saved the output of
 # the function to the experiment directory.
 #
 if [[ $retval == 0 ]]; then
   mv "${log_fp}" "$exptdir"
 #
-# If the call to the generate_FV3LAM_wflow function above was not suc-
+# If the call to the generate_regional_wflow function above was not suc-
 # cessful, print out an error message and exit with a nonzero return
 # code.
 #

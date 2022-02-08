@@ -417,12 +417,12 @@ FV3_EXEC_FN="ufs_model"
 
 FCST_MODEL="ufs-weather-model"
 
-WFLOW_XML_FN="FV3LAM_wflow.xml"
+WFLOW_XML_FN="regional_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
 EXTRN_MDL_ICS_VAR_DEFNS_FN="extrn_mdl_ics_var_defns.sh"
 EXTRN_MDL_LBCS_VAR_DEFNS_FN="extrn_mdl_lbcs_var_defns.sh"
-WFLOW_LAUNCH_SCRIPT_FN="launch_FV3LAM_wflow.sh"
-WFLOW_LAUNCH_LOG_FN="log.launch_FV3LAM_wflow"
+WFLOW_LAUNCH_SCRIPT_FN="launch_regional_wflow.sh"
+WFLOW_LAUNCH_LOG_FN="log.launch_regional_wflow"
 #
 #-----------------------------------------------------------------------
 #
