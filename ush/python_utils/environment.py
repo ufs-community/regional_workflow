@@ -170,7 +170,7 @@ def get_env_var(param):
         value = os.environ[param]
         return str_to_list(value)
 
-def import_vars(dictionary=os.environ, target_dict=None, env_vars=None):
+def import_vars(dictionary=None, target_dict=None, env_vars=None):
     """ Import all (or select few) environment/dictionary variables as python global 
     variables of the caller module. Call this function at the beginning of a function
     that uses environment variables.
@@ -198,7 +198,10 @@ def import_vars(dictionary=os.environ, target_dict=None, env_vars=None):
     Returns:
         None
     """
-    if not target_dict:
+    if dictionary is None:
+        dictionary = os.environ
+
+    if target_dict is None:
         target_dict = inspect.stack()[1][0].f_globals
 
     if env_vars is None:
@@ -209,7 +212,7 @@ def import_vars(dictionary=os.environ, target_dict=None, env_vars=None):
     for k,v in env_vars.items():
         target_dict[k] = str_to_list(v) 
 
-def export_vars(dictionary=os.environ, source_dict=None, env_vars=None):
+def export_vars(dictionary=None, source_dict=None, env_vars=None):
     """ Export all (or select few) global variables of the caller module
     to either the environement/dictionary. Call this function at the end of
     a function that updates environment variables.
@@ -222,7 +225,10 @@ def export_vars(dictionary=os.environ, source_dict=None, env_vars=None):
     Returns:
         None
     """
-    if not source_dict:
+    if dictionary is None:
+        dictionary = os.environ
+
+    if source_dict is None:
         source_dict = inspect.stack()[1][0].f_globals
 
     if env_vars is None:

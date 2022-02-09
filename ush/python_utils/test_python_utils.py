@@ -102,6 +102,9 @@ class Testing(unittest.TestCase):
     def test_print_msg(self):
         self.assertEqual( print_info_msg("Hello World!", verbose=False), False)
     def setUp(self):
+        """ setUp is where we do preparation for running the unittests.
+        If you need to download files for running test cases, prepare common stuff
+        for all test cases etc, this is the best place to do it """
         define_macro_utilities();
         set_env_var('DEBUG','FALSE')
         self.PATH = os.path.dirname(__file__)
