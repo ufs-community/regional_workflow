@@ -516,23 +516,23 @@ Copying contents of user cron table to backup file:
   crontab_line_esc_astr=$( printf "%s" "${CRONTAB_LINE}" | \
                            $SED -r -e "s%[*]%\\\\*%g" )
 #
-# In the grep command below, the "^" at the beginning of the string be-
-# ing passed to grep is a start-of-line anchor while the "$" at the end
-# of the string is an end-of-line anchor.  Thus, in order for grep to
-# find a match on any given line of the output of "crontab -l", that
-# line must contain exactly the string in the variable crontab_line_-
-# esc_astr without any leading or trailing characters.  This is to eli-
-# minate situations in which a line in the output of "crontab -l" con-
-# tains the string in crontab_line_esc_astr but is precedeeded, for ex-
-# ample, by the comment character "#" (in which case cron ignores that
-# line) and/or is followed by further commands that are not part of the
-# string in crontab_line_esc_astr (in which case it does something more
-# than the command portion of the string in crontab_line_esc_astr does).
+# In the grep command below, the "^" at the beginning of the string 
+# passed to grep is a start-of-line anchor, and the "$" at the end is
+# an end-of-line anchor.  Thus, in order for grep to find a match on 
+# any given line of the cron table's contents, that line must contain 
+# exactly the string in the variable crontab_line_esc_astr without any 
+# leading or trailing characters.  This is to eliminate situations in 
+# which a line in the cron table contains the string in crontab_line_esc_astr 
+# but is precedeeded, for example, by the comment character "#" (in which
+# case cron ignores that line) and/or is followed by further commands 
+# that are not part of the string in crontab_line_esc_astr (in which 
+# case it does something more than the command portion of the string in 
+# crontab_line_esc_astr does).
 #
   if [ "$MACHINE" = "WCOSS_DELL_P3" ];then
     grep_output=$( grep "^${crontab_line_esc_astr}$" "/u/$USER/cron/mycrontab" )
   else
-    grep_output=$( ${crontab_cmd} -l | grep "^${crontab_line_esc_astr}$" )
+    grep_output=$( echo "${crontab_contents}" | grep "^${crontab_line_esc_astr}$" )
   fi
   exit_status=$?
 
@@ -553,7 +553,7 @@ resubmit SRW workflow:
     if [ "$MACHINE" = "WCOSS_DELL_P3" ];then
       echo "${CRONTAB_LINE}" >> "/u/$USER/cron/mycrontab"      
     else
-      ( crontab -l; echo "${CRONTAB_LINE}" ) | crontab -
+      ( echo "${crontab_contents}"; echo "${CRONTAB_LINE}" ) | ${crontab_cmd}
     fi
 
   fi
@@ -980,14 +980,14 @@ Note that:
    task(s) to the queue.
 
 2) In order for the output of the rocotostat command to be up-to-date,
-   the rocotorun command must be issued immediately before the rocoto-
-   stat command.
+   the rocotorun command must be issued immediately before issuing the 
+   rocotostat command.
 
 For automatic resubmission of the workflow (say every 3 minutes), the
 following line can be added to the user's crontab (use \"crontab -e\" to
 edit the cron table):
 
-*/3 * * * * cd $EXPTDIR && ./launch_FV3LAM_wflow.sh
+*/3 * * * * cd $EXPTDIR && ./launch_FV3LAM_wflow.sh called_from_cron=\"TRUE\"
 "
 
 fi
