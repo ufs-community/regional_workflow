@@ -194,12 +194,13 @@ cd_vrfy "$exptdir"
 #
 tmp_fn="rocotorun_output.txt"
 rocotorun_cmd="rocotorun -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\" -v 10"
-eval ${rocotorun_cmd} > ${tmp_fn} 2>&1
+eval ${rocotorun_cmd} > ${tmp_fn} 2>&1 || \
+  print_err_msg_exit "\
+Call to \"rocotorun\" failed with return code $?."
 rocotorun_output=$( cat "${tmp_fn}" )
 rm "${tmp_fn}"
 
 error_msg="sbatch: error: Batch job submission failed:"
-# Job violates accounting/QOS policy (job submit limit, user's size and/or time limits)"
 while read -r line; do
   grep_output=$( printf "%s" "$line" | grep "${error_msg}" )
   if [ $? -eq 0 ]; then
@@ -218,8 +219,11 @@ done <<< "${rocotorun_output}"
 #-----------------------------------------------------------------------
 #
 rocotostat_cmd="rocotostat -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\" -v 10"
+rocotostat_output=$( eval ${rocotostat_cmd} 2>&1 || \
+                     print_err_msg_exit "\
+Call to \"rocotostat\" failed with return code $?."
+                   )
 
-rocotostat_output=$( eval ${rocotostat_cmd} 2>&1 )
 error_msg="DEAD"
 while read -r line; do
   grep_output=$( printf "%s" "$line" | grep "${error_msg}" )
