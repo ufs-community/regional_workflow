@@ -1,14 +1,13 @@
 #
 #-----------------------------------------------------------------------
 #
-# This file defines a function that sources scripts to initialize various
-# commands in the environment, e.g. the "module" command.  This is done 
-# by sourcing (platform-dependent) scripts that define these commands.  
-# The full paths to these scripts are specified in the machine files by
-# the vairable ENV_INIT_SCRIPTS_FPS.
+# This file defines a function that sources scripts (usually system 
+# scripts) to initialize various commands in the environment, e.g. the 
+# "module" command.  The full paths to these scripts are specified in 
+# the machine files in the array ENV_INIT_SCRIPTS_FPS.
 #
 # env_init_scripts_fps:
-# Full path to the script to source that initializes modules.
+# Full paths to the system scripts to source.
 # 
 #-----------------------------------------------------------------------
 #
