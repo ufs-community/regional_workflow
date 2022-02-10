@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/bin/bash 
 
+set -x
 #
 #-----------------------------------------------------------------------
 #
@@ -91,8 +92,12 @@ case "$MACHINE" in
     . /apps/lmod/lmod/init/sh
     ;;
 #
+  "AWS")
+    . /usr/share/lmod/lmod/init/sh
+    ;;
+#
   "ORION")
-    . /apps/lmod/lmod/init/sh
+    . /usr/share/lmod/lmod/init/sh
     ;;
 #
   "JET")
@@ -101,18 +106,6 @@ case "$MACHINE" in
 #
   "CHEYENNE")
     . /glade/u/apps/ch/opt/lmod/8.1.7/lmod/8.1.7/init/sh
-    ;;
-#
-  "AWS")
-    . /apps/lmod/lmod/init/sh
-    ;;
-#
-  "AZURE")
-    . /apps/lmod/lmod/init/sh
-    ;;
-#
-  "SINGULARITY")
-    . /apps/lmod/lmod/init/sh
     ;;
 #
   *)
@@ -144,9 +137,12 @@ jjob_fp="$2"
 #-----------------------------------------------------------------------
 #
 
+module purge
+
 machine=$(echo_lowercase $MACHINE)
-env_fp="${SR_WX_APP_TOP_DIR}/env/${BUILD_ENV_FN}"
-module use "${SR_WX_APP_TOP_DIR}/env"
+env_fn=${BUILD_ENV_FN:-"build_${machine}_${COMPILER}.env"}
+env_fp="${SR_WX_APP_TOP_DIR}/env/${env_fn}"
+echo "${env_fp}"
 source "${env_fp}" || print_err_msg_exit "\
 Sourcing platform- and compiler-specific environment file (env_fp) for the 
 workflow task specified by task_name failed:
@@ -215,7 +211,6 @@ module list
 # SRW_ENV variable to the name of the environment to be activated. That
 # must be done within the script, and not inside the module. Do that
 # now.
-
 if [ -n "${SRW_ENV:-}" ] ; then
   set +u
   conda activate ${SRW_ENV}

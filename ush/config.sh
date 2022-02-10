@@ -4,7 +4,7 @@
 # (if different from the default location), and the name of the experiment
 # subdirectory.
 #
-MACHINE="SINGULARITY"
+MACHINE="SINGULARITY-MN"
 COMPILER="gnu"
 ACCOUNT="none"
 EXPT_SUBDIR="SING_GST_lowres"

@@ -1338,7 +1338,11 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task.sh"
+if [ "${MACHINE}" = "SINGULARITY-MN" ]; then
+  LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task_container.sh"
+else
+  LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task.sh"
+fi
 #
 #-----------------------------------------------------------------------
 #
