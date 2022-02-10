@@ -22,9 +22,13 @@ function init_env() {
   process_args valid_args "$@"
   print_input_args "valid_args"
 
+  local num_scripts \
+        n \
+        fp
+
   num_scripts="${#env_init_scripts_fps[@]}"
-  for (( i=0; i<${num_scripts}; i++ )); do
-    fp="${env_init_scripts_fps[$i]}"
+  for (( n=0; n<${num_scripts}; n++ )); do
+    fp="${env_init_scripts_fps[$n]}"
     print_info_msg "$DEBUG" "\
 Attempting to source script:
   fp = \"$fp\""
