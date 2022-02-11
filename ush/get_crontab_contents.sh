@@ -45,6 +45,7 @@ function get_crontab_contents() {
   called_from_cron=$( boolify ${called_from_cron} )
 
   if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+    __crontab_cmd__=""
     __crontab_contents__=$( cat "/u/$USER/cron/mycrontab" )
   else
     __crontab_cmd__="crontab"
