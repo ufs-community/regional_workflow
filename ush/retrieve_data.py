@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # pylint: disable=logging-fstring-interpolation
 '''
 This script helps users pull data from known data streams, including
@@ -31,6 +32,8 @@ import os
 import shutil
 import subprocess
 import sys
+from textwrap import dedent
+
 
 import yaml
 
@@ -184,7 +187,7 @@ def fhr_list(args):
     Must ensure that the list contains integers.
     '''
 
-    args = args if isinstance(args, list) else [args]
+    args = args if isinstance(args, list) else list(args)
     arg_len = len(args)
     if arg_len in (2, 3):
         args[1] += 1
@@ -271,7 +274,7 @@ def find_archive_files(paths, file_names, cycle_date):
 
     return '', 0
 
-def get_requested_files(cla, file_names, input_loc, method='disk'):
+def get_requested_files(cla, file_templates, input_loc, method='disk'):
 
     ''' This function copies files from disk locations
     or downloads files from a url, depending on the option specified for
@@ -282,12 +285,13 @@ def get_requested_files(cla, file_names, input_loc, method='disk'):
 
     Arguments:
 
-    cla        Namespace object containing command line arguments
-    file_names Dict of file names by file type and kind
-    input_loc  A string containing a single data location, either a url
-               or disk path.
-    method     Choice of disk or download to indicate protocol for
-               retrieval
+    cla            Namespace object containing command line arguments
+    file_templates Dict of file names by file type and kind, or a list of file
+                   templates
+    input_loc      A string containing a single data location, either a url
+                   or disk path.
+    method         Choice of disk or download to indicate protocol for
+                   retrieval
 
     Returns
     unavailable  a dict whose keys are "method" and whose values are a
@@ -296,12 +300,15 @@ def get_requested_files(cla, file_names, input_loc, method='disk'):
 
     unavailable = {}
 
-    if cla.file_type is not None:
-        file_names = file_names[cla.file_type]
-    file_names = file_names[cla.anl_or_fcst]
+    if isinstance(file_templates, dict):
+        if cla.file_type is not None:
+            file_templates = file_templates[cla.file_type]
+        file_templates = file_templates[cla.anl_or_fcst]
 
-    file_names = file_names if isinstance(file_names, list) else \
-            [file_names]
+    logging.info(f'Getting files named like {file_templates}')
+
+    file_templates = file_templates if isinstance(file_templates, list) else \
+            [file_templates]
     target_path = fill_template(cla.output_path,
                                 cla.cycle_date)
 
@@ -310,8 +317,9 @@ def get_requested_files(cla, file_names, input_loc, method='disk'):
     os.chdir(target_path)
     unavailable = {}
     for fcst_hr in cla.fcst_hrs:
-        for file_name in file_names:
-            loc = os.path.join(input_loc, file_name)
+        for file_template in file_templates:
+            loc = os.path.join(input_loc, file_template)
+            logging.debug(f'Full file path: {loc}')
             loc = fill_template(loc, cla.cycle_date, fcst_hr)
 
             if method == 'disk':
@@ -505,6 +513,29 @@ def setup_logging(debug=False):
 
 
 
+def write_summary_file(cla, data_store, file_templates):
+
+    ''' Given the command line arguments and the data store from which the data
+    was retrieved, write a bash summary file that is needed by the workflow
+    elements downstream. '''
+
+    for tmpl in file_templates:
+        files = [fill_template(tmpl, cla.cycle_date, fh) for fh in cla.fcst_hrs]
+
+    summary_fp = os.path.join(cla.output_path, cla.summary_file)
+    logging.info(f'Writing a summary file to {summary_fp}')
+    file_contents = dedent(f'''
+        DATA_SRC={data_store}
+        EXTRN_MDL_CDATE={cla.cycle_date.strftime('%Y%m%d%H')}
+        EXTRN_MDL_STAGING_DIR={cla.output_path}
+        EXTRN_MDL_FNS=( {' '.join(files)} )
+        EXTRN_MDL_FHRS=( {' '.join([str(i) for i in cla.fcst_hrs])} )
+        ''')
+    logging.info(f'Contents: {file_contents}')
+    with open(summary_fp, "w") as summary:
+        summary.write(file_contents)
+
+
 def to_datetime(arg):
     ''' Return a datetime object give a string like YYYYMMDDHH.
     '''
@@ -521,8 +552,6 @@ def main(cla):
     paths in priority order.
     '''
 
-    setup_logging(cla.debug)
-
     known_data_info =  cla.config.get(cla.external_model)
     if known_data_info is None:
         msg = ('No data stores have been defined for',
@@ -535,15 +564,15 @@ def main(cla):
         store_specs = known_data_info.get(data_store, {})
 
         if data_store == 'disk':
-            file_names = cla.file_names if cla.file_names else \
+            file_templates = cla.file_templates if cla.file_templates else \
                 known_data_info.get('hpss', {}).get('file_names')
-            logging.debug(f'User supplied file names are: {file_names}')
-            if not file_names:
-                msg = ('No file name found. They must be provided \
+            logging.debug(f'User supplied file names are: {file_templates}')
+            if not file_templates:
+                msg = ('No file naming convention found. They must be provided \
                         either on the command line or on in a config file.')
                 raise argparse.ArgumentTypeError(msg)
             unavailable = get_requested_files(cla,
-                                              file_names=file_names,
+                                              file_templates=file_templates,
                                               input_loc=cla.input_file_path,
                                               method='disk',
                                               )
@@ -553,14 +582,14 @@ def main(cla):
             raise KeyError(msg)
 
         if store_specs.get('protocol') == 'download':
-            file_names = store_specs.get('file_names')
-            if not file_names:
-                msg = ('No file name found. They must be provided \
+            file_templates = store_specs.get('file_names')
+            if not file_templates:
+                msg = ('No file name naming convention found. They must be provided \
                         either on the command line or on in a config file.')
                 raise argparse.ArgumentTypeError(msg)
 
             unavailable = get_requested_files(cla,
-                                              file_names=file_names,
+                                              file_templates=file_templates,
                                               input_loc=store_specs['url'],
                                               method='download',
                                               )
@@ -570,6 +599,9 @@ def main(cla):
 
         if not unavailable:
             # All files are found. Stop looking!
+            # Write a variable definitions file for the data, if requested
+            if cla.summary_file:
+                write_summary_file(cla, data_store, file_templates)
             break
 
         logging.warning(f'Requested files are unavialable from {data_store}')
@@ -657,11 +689,11 @@ def parse_args():
         help='Print debug messages',
         )
     parser.add_argument(
-        '--file_names',
-        help='A YAML-formatted string that indicates the naming \
+        '--file_templates',
+        help='One or more file template strings defining the naming \
         convention the be used for the files retrieved from disk. If \
         not provided, the default names from hpss are used.',
-        type=load_str,
+        nargs='*',
         )
     parser.add_argument(
         '--file_type',
@@ -672,9 +704,13 @@ def parse_args():
         '--input_file_path',
         help='A path to data stored on disk. The path may contain \
         Python templates. File names may be supplied using the \
-        --file_names flag, or the default naming convention will be \
+        --file_templates flag, or the default naming convention will be \
         taken from the --config file.',
-        nargs='*',
+        )
+    parser.add_argument(
+        '--summary_file',
+        help='Name of the summary file to be written to the output \
+        directory',
         )
     return parser.parse_args()
 
@@ -683,6 +719,15 @@ if __name__ == '__main__':
     CLA = parse_args()
     CLA.output_path = path_exists(CLA.output_path)
     CLA.fcst_hrs = fhr_list(CLA.fcst_hrs)
+
+
+    setup_logging(CLA.debug)
+    print(f"Running script retrieve_data.py with args:\n",
+          f"{('-' * 80)}\n{('-' * 80)}")
+    for name, val in CLA.__dict__.items():
+        if name not in ['config']:
+            print(f"{name:>15s}: {val}")
+    print(f"{('-' * 80)}\n{('-' * 80)}")
 
     if 'disk' in CLA.data_stores:
         # Make sure a path was provided.
