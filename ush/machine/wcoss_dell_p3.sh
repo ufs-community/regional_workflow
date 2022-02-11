@@ -43,7 +43,8 @@ EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
 # System scripts to source to initialize various commands within workflow
 # scripts (e.g. "module").
 if [ -z ${ENV_INIT_SCRIPTS_FPS:-""} ]; then
-  ENV_INIT_SCRIPTS_FPS=( "/opt/modules/default/init/sh" )
+#  ENV_INIT_SCRIPTS_FPS=( "/opt/modules/default/init/sh" )
+  ENV_INIT_SCRIPTS_FPS=( "/etc/profile" )
 fi
 
 # Commands to run at the start of each workflow task.
