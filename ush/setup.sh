@@ -335,7 +335,7 @@ SR_WX_APP_TOP_DIR=${scrfunc_dir%/*/*}
 #
 #-----------------------------------------------------------------------
 #
-mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/Externals.cfg" )
+mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/comp_conf/COMMON/Externals.cfg" )
 property_name="local_path"
 #
 # Get the path to the workflow scripts
@@ -348,25 +348,7 @@ print_err_msg_exit "\
 Call to function get_manage_externals_config_property failed."
 HOMErrfs="${SR_WX_APP_TOP_DIR}/${HOMErrfs}"
 set +x
-#
-# Get the base directory of the FV3 forecast model code.
-#
-external_name="${FCST_MODEL}"
-UFS_WTHR_MDL_DIR=$( \
-get_manage_externals_config_property \
-"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
-print_err_msg_exit "\
-Call to function get_manage_externals_config_property failed."
 
-UFS_WTHR_MDL_DIR="${SR_WX_APP_TOP_DIR}/${UFS_WTHR_MDL_DIR}"
-if [ ! -d "${UFS_WTHR_MDL_DIR}" ]; then
-  print_err_msg_exit "\
-The base directory in which the FV3 source code should be located
-(UFS_WTHR_MDL_DIR) does not exist:
-  UFS_WTHR_MDL_DIR = \"${UFS_WTHR_MDL_DIR}\"
-Please clone the external repository containing the code in this directory,
-build the executable, and then rerun the workflow."
-fi
 #
 # Get the base directory of the UFS_UTILS codes.
 #
@@ -406,7 +388,33 @@ Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
 fi
 
+#
+# Get the base directory of the forecast model code.
+#
 if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+  mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/comp_conf/RRFS-CMAQ/Externals.cfg" )
+else
+  mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/comp_conf/RRFS/Externals.cfg" )
+fi
+external_name="${FCST_MODEL}"
+UFS_WTHR_MDL_DIR=$( \
+get_manage_externals_config_property \
+"${mng_extrns_cfg_fn}" "${external_name}" "${property_name}" ) || \
+print_err_msg_exit "\
+Call to function get_manage_externals_config_property failed."
+
+UFS_WTHR_MDL_DIR="${SR_WX_APP_TOP_DIR}/${UFS_WTHR_MDL_DIR}"
+if [ ! -d "${UFS_WTHR_MDL_DIR}" ]; then
+  print_err_msg_exit "\
+The base directory in which the FV3 source code should be located
+(UFS_WTHR_MDL_DIR) does not exist:
+  UFS_WTHR_MDL_DIR = \"${UFS_WTHR_MDL_DIR}\"
+Please clone the external repository containing the code in this directory,
+build the executable, and then rerun the workflow."
+fi
+
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
+  mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/comp_conf/RRFS-CMAQ/Externals.cfg" )
 #
 # Get the base directory of the NEXUS code if required
 #
@@ -428,6 +436,7 @@ build the executable, and then rerun the workflow."
   fi
 
   if [ "${OPT_DA_RRFS_CMAQ}" = "TRUE" ]; then
+    mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/comp_conf/RRFS-CMAQ-DA/Externals.cfg" )
 #
 # Get the base directory of the JEDI code if required
 #

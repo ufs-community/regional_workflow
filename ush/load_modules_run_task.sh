@@ -127,26 +127,43 @@ jjob_fp="$2"
 #
 #-----------------------------------------------------------------------
 #
-# Sourcing ufs-srweather-app build env file
+# Load the task-specific build modules
 #
 #-----------------------------------------------------------------------
 #
-machine=$(echo_lowercase $MACHINE)
-
-if [[ "${FCST_MODEL}" = "fv3gfs_aqm" && ( "${task_name}" = "${RUN_FCST_TN}" || \
-   "${task_name}" = "${RUN_CHEM_ANL_TN}" || "${task_name}" = "${RUN_GSI_ANL_TN}" ) ]]; then
-  print_info_msg "$VERBOSE" "
-The environment file in \"ufs-srweather-app/env\" is not loaded because the executables ...
-for the task \"${task_name}\" were compiled separately.
-"
+if [[ "${task_name}" = "${MAKE_GRID_TN}" || "${task_name}" = "${MAKE_OROG_TN}" || 
+      "${task_name}" = "${MAKE_SFC_CLIMO_TN}" || "${task_name}" = "${MAKE_ICS_TN}" ||
+      "${task_name}" = "${MAKE_LBCS_TN}" ]]; then
+  module use ${SR_WX_APP_TOP_DIR}/comp_conf/COMMON/env
+  mod_fp="${SR_WX_APP_TOP_DIR}/comp_conf/COMMON/env/modulefile.UFS_UTILS.lua"
+  if [[ -f "${mod_fp}" ]]; then
+    module load modulefile.UFS_UTILS.lua
+  else
+    module load modulefile.UFS_UTILS
+  fi
+elif [[ "${task_name}" = "${RUN_FCST_TN}" ]]; then
+  if [[ "${FCST_MODEL}" = "fv3gfs_aqm" ]];then
+    module use ${SR_WX_APP_TOP_DIR}/comp_conf/RRFS-CMAQ/env
+    module load modulefile.fv3gfs_aqm
+  else
+    module use ${SR_WX_APP_TOP_DIR}/comp_conf/RRFS/env
+    module load modulefile.ufs-weather-model
+  fi
+elif [[ "${task_name}" = "${RUN_POST_TN}" ]]; then
+  module use ${SR_WX_APP_TOP_DIR}/comp_conf/COMMON/env
+  mod_fp="${SR_WX_APP_TOP_DIR}/comp_conf/COMMON/env/modulefile.UPP.lua"
+  if [[ -f "${mod_fp}" ]]; then
+    module load modulefile.UPP.lua
+  else
+    module load modulefile.UPP
+  fi
+elif [[ "${task_name}" = "${RUN_NEXUS_TN}" ]]; then
+  module use ${SR_WX_APP_TOP_DIR}/comp_conf/RRFS-CMAQ/env
+  module load modulefile.arl_nexus
+elif [[ "${task_name}" = "${ADD_AQM_LBCS_TN}" ]]; then
+  source ${SR_WX_APP_TOP_DIR}/comp_conf/RRFS-CMAQ/env/modulefile.gefs2clbc
 else
-  env_fp="${SR_WX_APP_TOP_DIR}/env/${BUILD_ENV_FN}"
-  module use "${SR_WX_APP_TOP_DIR}/env"
-  source "${env_fp}" || print_err_msg_exit "\
-Sourcing platform- and compiler-specific environment file (env_fp) for the 
-workflow task specified by task_name failed:
-  task_name = \"${task_name}\"
-  env_fp = \"${env_fp}\""
+  print_info_msg "$VERBOSE" "The modules only in regional_workflow/modulefiles will be loaded."
 fi
 #
 #-----------------------------------------------------------------------
@@ -174,6 +191,8 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+machine=$(echo_lowercase $MACHINE)
+
 modules_dir="$HOMErrfs/modulefiles/tasks/$machine"
 modulefile_name="${task_name}"
 default_modules_dir="$HOMErrfs/modulefiles"
@@ -194,12 +213,7 @@ Call to \"module use\" command failed."
 #
 # Load the .local module file if available for the given task
 #
-
-if [ "${FCST_MODEL}" = "fv3gfs_aqm" ] && [ "${task_name}" = "${RUN_FCST_TN}" ]; then
-  modulefile_local="${RUN_FCST_TN}.local.${FCST_MODEL}"
-else
-  modulefile_local="${task_name}.local"
-fi
+modulefile_local="${task_name}.local"
 
 if [ -f ${modules_dir}/${modulefile_local} ]; then
   module load "${modulefile_local}" || print_err_msg_exit "\
