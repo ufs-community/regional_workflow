@@ -377,19 +377,12 @@ DOT_OR_USCORE="_"
 # to each workflow task) in order to make all the experiment variables 
 # available in those scripts.
 #
-# EXTRN_MDL_ICS_VAR_DEFNS_FN:
-# Name of file (a shell script) containing the defintions of variables 
-# associated with the external model from which ICs are generated.  This 
-# file is created by the GET_EXTRN_ICS_TN task because the values of the
-# variables it contains are not known before this task runs.  The file is
-# then sourced by the MAKE_ICS_TN task.
-#
-# EXTRN_MDL_LBCS_VAR_DEFNS_FN:
-# Name of file (a shell script) containing the defintions of variables 
-# associated with the external model from which LBCs are generated.  This 
-# file is created by the GET_EXTRN_LBCS_TN task because the values of the
-# variables it contains are not known before this task runs.  The file is
-# then sourced by the MAKE_ICS_TN task.
+# EXTRN_MDL_VAR_DEFNS_FN:
+# Name of file (a shell script) containing the defintions of variables
+# associated with the external model from which ICs or LBCs are generated.  This
+# file is created by the GET_EXTRN_*_TN task because the values of the variables
+# it contains are not known before this task runs.  The file is then sourced by
+# the MAKE_ICS_TN and MAKE_LBCS_TN tasks.
 #
 # WFLOW_LAUNCH_SCRIPT_FN:
 # Name of the script that can be used to (re)launch the experiment's rocoto
@@ -419,8 +412,7 @@ FCST_MODEL="ufs-weather-model"
 
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
-EXTRN_MDL_ICS_VAR_DEFNS_FN="extrn_mdl_ics_var_defns.sh"
-EXTRN_MDL_LBCS_VAR_DEFNS_FN="extrn_mdl_lbcs_var_defns.sh"
+EXTRN_MDL_VAR_DEFNS_FN="extrn_mdl_var_defns.sh"
 WFLOW_LAUNCH_SCRIPT_FN="launch_FV3LAM_wflow.sh"
 WFLOW_LAUNCH_LOG_FN="log.launch_FV3LAM_wflow"
 #
@@ -694,9 +686,9 @@ EXTRN_MDL_SYSBASEDIR_LBCS=''
 # set to "FALSE".
 # 
 # EXTRN_MDL_FILES_ICS:
-# Array containing the names of the files to search for in the directory
-# specified by EXTRN_MDL_SOURCE_BASEDIR_ICS.  This variable is not used
-# if USE_USER_STAGED_EXTRN_FILES is set to "FALSE".
+# Array containing templates of the names of the files to search for in the
+# directory specified by EXTRN_MDL_SOURCE_BASEDIR_ICS.  This variable is not
+# used if USE_USER_STAGED_EXTRN_FILES is set to "FALSE".
 #
 # EXTRN_MDL_SOURCE_BASEDIR_LBCS:
 # Analogous to EXTRN_MDL_SOURCE_BASEDIR_ICS but for LBCs instead of ICs.
@@ -708,9 +700,9 @@ EXTRN_MDL_SYSBASEDIR_LBCS=''
 #
 USE_USER_STAGED_EXTRN_FILES="FALSE"
 EXTRN_MDL_SOURCE_BASEDIR_ICS=""
-EXTRN_MDL_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
+EXTRN_MDL_FILES_ICS=""
 EXTRN_MDL_SOURCE_BASEDIR_LBCS=""
-EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
+EXTRN_MDL_FILES_LBCS=""
 #
 #-----------------------------------------------------------------------
 #
