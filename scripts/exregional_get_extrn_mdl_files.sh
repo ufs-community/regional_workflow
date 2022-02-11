@@ -56,14 +56,10 @@ boundary condition files for the FV3 will be generated.
 #-----------------------------------------------------------------------
 #
 valid_args=( \
-"anl_or_fcst" \
 "extrn_mdl_cdate" \
 "extrn_mdl_name" \
 "extrn_mdl_staging_dir" \
-"fcst_hrs" \
-"file_names" \
-"file_type" \
-"input_file_path" \
+"time_offset_hrs" \
 )
 process_args valid_args "$@"
 #
@@ -81,22 +77,58 @@ print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
+# Set up variables for call to retrieve_data.py
+#
+#-----------------------------------------------------------------------
+#
+set -x
+if [ "${ICS_OR_LBCS}" = "ICS" ]; then
+  if [ ${time_offset_hrs} -eq 0 ] ; then
+    anl_or_fcst="anl"
+  else
+    anl_or_fcst="fcst"
+  fi
+  fcst_hrs=${time_offset_hrs}
+  file_names=${EXTRN_MDL_FILES_ICS[@]}
+  if [ ${extrn_mdl_name} = FV3GFS ] ; then
+    file_type=$FV3GFS_FILE_FMT_ICS
+  fi
+  input_file_path=${EXTRN_MDL_SOURCE_BASEDIR_ICS:-$EXTRN_MDL_SYSBASEDIR_ICS}
+
+elif [ "${ICS_OR_LBCS}" = "LBCS" ]; then
+  anl_or_fcst="fcst"
+  first_time=$((time_offset_hrs + LBC_SPEC_INTVL_HRS))
+  last_time=$((time_offset_hrs + FCST_LEN_HRS))
+  fcst_hrs="${first_time} ${last_time} ${LBC_SPEC_INTVL_HRS}"
+  file_names=${EXTRN_MDL_FILES_LBCS[@]}
+  if [ ${extrn_mdl_name} = FV3GFS ] ; then
+    file_type=$FV3GFS_FILE_FMT_LBCS
+  fi
+  input_file_path=${EXTRN_MDL_SOURCE_BASEDIR_LBCS:-$EXTRN_MDL_SYSBASEDIR_LBCS}
+fi
+
+#
+#-----------------------------------------------------------------------
+#
 # Set up optional flags for calling retrieve_data.py
 #
 #-----------------------------------------------------------------------
 #
 additional_flags=""
 
-if [ -n ${file_names} ] ; then
-  additional_flags="$additional_flags
-  --file_names ${file_names}"
+if [ -n ${file_names:-} ] ; then
+
+  if [ -n "${file_type:-}" ] ; then 
+    additional_flags="$additional_flags \
+    --file_type ${file_type}"
+  fi
+
+  # Set up the yaml string with a list
+  additional_flags="$additional_flags \
+  --file_templates ${file_names[@]}"
 fi
 
-if [ -n ${file_type} ] ; then 
-  additional_flags="$additional_flags
-  --file_type ${file_type}"
-fi
-
+set +x
 #
 #-----------------------------------------------------------------------
 #
@@ -104,68 +136,26 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-
-${USHDIR}/retrieve_data.py \
+cmd="
+python3 -u ${USHDIR}/retrieve_data.py \
+  --debug \
   --anl_or_fcst ${anl_or_fcst} \
   --config ${USHDIR}/templates/data_locations.yml \
   --cycle_date ${extrn_mdl_cdate} \
   --data_stores disk hpss aws \
-  --external_model ${EXTRN_MDL_NAME} \
-  --fcst_hrs fcst_hrs \
+  --external_model ${extrn_mdl_name} \
+  --fcst_hrs ${fcst_hrs[@]} \
   --output_path ${extrn_mdl_staging_dir} \
   --input_file_path ${input_file_path} \
-  ${additional_flags}
+  --summary_file ${EXTRN_MDL_VAR_DEFNS_FN} \
+  $additional_flags"
 
-#
-#-----------------------------------------------------------------------
-#
-# Create a variable definitions file (a shell script) and save in it the
-# values of several external-model-associated variables generated in this 
-# script that will be needed by downstream workflow tasks.
-#
-#-----------------------------------------------------------------------
-#
-if [ "${ics_or_lbcs}" = "ICS" ]; then
-  extrn_mdl_var_defns_fn="${EXTRN_MDL_ICS_VAR_DEFNS_FN}"
-elif [ "${ics_or_lbcs}" = "LBCS" ]; then
-  extrn_mdl_var_defns_fn="${EXTRN_MDL_LBCS_VAR_DEFNS_FN}"
-fi
-extrn_mdl_var_defns_fp="${extrn_mdl_staging_dir}/${extrn_mdl_var_defns_fn}"
-check_for_preexist_dir_file "${extrn_mdl_var_defns_fp}" "delete"
+$cmd || print_err_msg_exit "\
+Call to retrieve_data.py failed with a non-zero exit status.
 
-if [ "${data_src}" = "disk" ]; then
-  extrn_mdl_fns_str="( "$( printf "\"%s\" " "${extrn_mdl_fns_on_disk[@]}" )")"
-elif [ "${data_src}" = "HPSS" ]; then
-  extrn_mdl_fns_str="( "$( printf "\"%s\" " "${extrn_mdl_fns_in_arcv[@]}" )")"
-elif [ "${data_src}" = "online" ]; then
-  extrn_mdl_fns_str="( "$( printf "\"%s\" " "${extrn_mdl_fns_on_disk[@]}" )")"
-fi
-
-settings="\
-DATA_SRC=\"${data_src}\"
-EXTRN_MDL_CDATE=\"${extrn_mdl_cdate}\"
-EXTRN_MDL_STAGING_DIR=\"${extrn_mdl_staging_dir}\"
-EXTRN_MDL_FNS=${extrn_mdl_fns_str}"
-#
-# If the external model files obtained above were for generating LBCS (as
-# opposed to ICs), then add to the external model variable definitions 
-# file the array variable EXTRN_MDL_LBC_SPEC_FHRS containing the forecast 
-# hours at which the lateral boundary conditions are specified.
-#
-if [ "${ics_or_lbcs}" = "LBCS" ]; then
-  extrn_mdl_lbc_spec_fhrs_str="( "$( printf "\"%s\" " "${extrn_mdl_lbc_spec_fhrs[@]}" )")"
-  settings="$settings
-EXTRN_MDL_LBC_SPEC_FHRS=${extrn_mdl_lbc_spec_fhrs_str}"
-fi
-
-{ cat << EOM >> ${extrn_mdl_var_defns_fp}
-$settings
-EOM
-} || print_err_msg_exit "\
-Heredoc (cat) command to create a variable definitions file associated
-with the external model from which to generate ${ics_or_lbcs} returned with a 
-nonzero status.  The full path to this variable definitions file is:
-  extrn_mdl_var_defns_fp = \"${extrn_mdl_var_defns_fp}\""
+The command was:
+${cmd}
+"
 #
 #-----------------------------------------------------------------------
 #

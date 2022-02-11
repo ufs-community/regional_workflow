@@ -93,30 +93,15 @@ check_var_valid_value "ICS_OR_LBCS" "valid_vals_ICS_OR_LBCS"
 #
 if [ "${ICS_OR_LBCS}" = "ICS" ]; then
   if [ ${EXTRN_MDL_ICS_OFFSET_HRS} -eq 0 ] ; then
-    anl_or_fcst="ANL"
     time_offset_hrs=0
   else
-    anl_or_fcst="FCST"
     time_offset_hrs=${EXTRN_MDL_ICS_OFFSET_HRS:-0}
   fi
   extrn_mdl_name=${EXTRN_MDL_NAME_ICS}
-  fcst_hrs=${time_offset_hrs}
-  file_names=${EXTRN_MDL_FILES_ICS[@]}
-  if [ ${extrn_mdl_name} = FV3GFS ] ; then
-    file_type=$FV3GFS_FILE_FMT_ICS
-  fi
-  input_file_path=${EXTRN_MDL_SOURCE_BASEDIR_ICS:-$EXTRN_MDL_SYSBASEDIR_ICS}
 
 elif [ "${ICS_OR_LBCS}" = "LBCS" ]; then
-  anl_or_fcst="FCST"
   time_offset_hrs=${EXTRN_MDL_LBCS_OFFSET_HRS:-0}
   extrn_mdl_name=${EXTRN_MDL_NAME_LBCS}
-  fcst_hrs="${time_offset_hrs} ${FCST_LEN_HRS} ${LBC_SPEC_INTVL_HRS}"
-  file_names=${EXTRN_MDL_FILES_LBCS[@]}
-  if [ ${extrn_mdl_name} = FV3GFS ] ; then
-    file_type=$FV3GFS_FILE_FMT_LBCS
-  fi
-  input_file_path=${EXTRN_MDL_SOURCE_BASEDIR_LBCS:-$EXTRN_MDL_SYSBASEDIR_LBCS}
 fi
 
 #
@@ -239,14 +224,10 @@ cd_vrfy "${extrn_mdl_staging_dir}"
 #-----------------------------------------------------------------------
 #
 $SCRIPTSDIR/exregional_get_extrn_mdl_files.sh \
-  anl_or_fcst="${anl_or_fcst}" \
   extrn_mdl_cdate="${extrn_mdl_cdate}" \
   extrn_mdl_name="${extrn_mdl_name}" \
   extrn_mdl_staging_dir="${extrn_mdl_staging_dir}" \
-  fcst_hrs="${fcst_hrs}" \
-  file_names="${file_names}" \
-  file_type="${file_type}" \
-  input_file_path="${input_file_path}" ||
+  time_offset_hrs=${time_offset_hrs} ||
 print_err_msg_exit "\
 Call to ex-script corresponding to J-job \"${scrfunc_fn}\" failed."
 #
