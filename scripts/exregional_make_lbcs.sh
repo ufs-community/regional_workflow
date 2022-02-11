@@ -93,10 +93,10 @@ case "$MACHINE" in
     RUN_CMD_UTILS="aprun -b -j1 -n48 -N12 -d1 -cc depth"
     ;;
 
-  "WCOSS_DELL_P3")
-    ulimit -s unlimited
-    RUN_CMD_UTILS="mpirun"
-    ;;
+#  "WCOSS_DELL_P3")
+#    ulimit -s unlimited
+#    RUN_CMD_UTILS="mpirun"
+#    ;;
 
   *)
     source $USHDIR/source_machine_file.sh

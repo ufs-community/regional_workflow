@@ -150,8 +150,9 @@ case "$MACHINE" in
     export threads=1
     export MP_LABELIO=yes
     export OMP_NUM_THREADS=$threads
-    RUN_CMD_UTILS="mpirun"
-    ;;
+#    RUN_CMD_UTILS="mpirun"
+#    ;;
+    ;;&
 
   *)
     source $USHDIR/source_machine_file.sh

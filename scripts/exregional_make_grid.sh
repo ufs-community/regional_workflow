@@ -98,13 +98,13 @@ case "$MACHINE" in
     ulimit -a
     ;;
 
-  "WCOSS_DELL_P3")
-    { save_shell_opts; set +x; } > /dev/null 2>&1
-    module list
-    { restore_shell_opts; } > /dev/null 2>&1
-    export RUN_CMD_SERIAL="mpirun"
-    ulimit -s unlimited
-    ;;
+#  "WCOSS_DELL_P3")
+#    { save_shell_opts; set +x; } > /dev/null 2>&1
+#    module list
+#    { restore_shell_opts; } > /dev/null 2>&1
+#    export RUN_CMD_SERIAL="mpirun"
+#    ulimit -s unlimited
+#    ;;
 
   *)
     source $USHDIR/source_machine_file.sh

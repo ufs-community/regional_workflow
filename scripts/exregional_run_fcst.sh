@@ -112,11 +112,11 @@ case "$MACHINE" in
     fi
     ;;
 
-  "WCOSS_DELL_P3")
-    ulimit -s unlimited
-    ulimit -a
-    RUN_CMD_FCST="mpirun -l -np ${PE_MEMBER01}"
-    ;;
+#  "WCOSS_DELL_P3")
+#    ulimit -s unlimited
+#    ulimit -a
+#    RUN_CMD_FCST="mpirun -l -np ${PE_MEMBER01}"
+#    ;;
 
   *)
     source $USHDIR/source_machine_file.sh

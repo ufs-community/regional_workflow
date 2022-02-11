@@ -31,6 +31,7 @@ function file_location() {
 
   esac
   echo ${location:-}
+
 }
 
 EXTRN_MDL_SYSBASEDIR_ICS=${EXTRN_MDL_SYSBASEDIR_ICS:-$(file_location \
@@ -48,7 +49,7 @@ if [ -z ${ENV_INIT_SCRIPTS_FPS:-""} ]; then
 fi
 
 # Commands to run at the start of each workflow task.
-PRE_TASK_CMDS=''
+PRE_TASK_CMDS='{ ulimit -s unlimited; ulimit -a; }'
 
 # Architecture information
 WORKFLOW_MANAGER="rocoto"
@@ -65,6 +66,11 @@ FIXlut=${FIXlut:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fi
 TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/FV3LAM_pregen"}
+
+RUN_CMD_SERIAL="mpirun"
+RUN_CMD_UTILS="mpirun"
+RUN_CMD_FCST='mpirun -l -np ${PE_MEMBER01}'
+RUN_CMD_POST="mpirun"
 
 # MET Installation Locations
 MET_INSTALL_DIR="/gpfs/dell2/emc/verification/noscrub/emc.metplus/met/10.0.0"

@@ -109,11 +109,11 @@ case "$MACHINE" in
     ulimit -a
     ;;
 
-  "WCOSS_DELL_P3")
-    ulimit -s unlimited
-    ulimit -a
-    RUN_CMD_SERIAL="mpirun"
-    ;;
+#  "WCOSS_DELL_P3")
+#    ulimit -s unlimited
+#    ulimit -a
+#    RUN_CMD_SERIAL="mpirun"
+#    ;;
 
   *)
     source $USHDIR/source_machine_file.sh
