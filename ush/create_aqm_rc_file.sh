@@ -74,7 +74,7 @@ aqm_rc_in_fp \
         aqm_rc_bio_file_fp \
         aqm_rc_fire_file_fp \
         settings
-#
+
 #-----------------------------------------------------------------------
 #
 # Create an aqm.rc file in the specified run directory.
@@ -129,11 +129,11 @@ $settings"
                                  -t ${AQM_RC_FP} \
                                  -o ${aqm_rc_in_fp} || \
   print_err_msg_exit "\
-Call to python script fill_jinja_template.py to create a \"${AQM_RC_IN_FN}\"
+Call to python script fill_jinja_template.py to create a \"${aqm_rc_in_fn}\"
 file from a jinja2 template failed.  Parameters passed to this script are:
-  Full path to template rocoto XML file:
+  Full path to user-owned template aqm.rc file:
     AQM_RC_FP = \"${AQM_RC_FP}\"
-  Full path to output rocoto XML file:
+  Full path to actual input aqm.rc file:
     aqm_rc_in_fp = \"${aqm_rc_in_fp}\"
   Namelist settings specified on command line:
     settings =

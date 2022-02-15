@@ -95,13 +95,13 @@ print_info_msg "$VERBOSE" "
 Creating links in the JEDI subdirectory of the current cycle's run directory 
 to the necessary executables and fix files: \"${JEDI_WORKDIR}\""
 # executables
-ln_vrfy -sf $EXECDIR/fv3jedi_error_covariance_training.x ${JEDI_WORKDIR}/.
-ln_vrfy -sf $EXECDIR/fv3jedi_var.x ${JEDI_WORKDIR}/.
+create_symlink_to_file target="$EXECDIR/fv3jedi_error_covariance_training.x" symlink="${JEDI_WORKDIR}/."
+create_symlink_to_file target="$EXECDIR/fv3jedi_var.x" symlink="${JEDI_WORKDIR}/."
 # FV3-JEDI fix files
 ln_vrfy -sf $JEDI_DIR/build/fv3-jedi/test/Data/fieldsets ${JEDI_WORKDIR_DATA}/fieldsets
 ln_vrfy -sf $JEDI_DIR/build/fv3-jedi/test/Data/fv3files ${JEDI_WORKDIR_DATA}/fv3files
 # FV3 namelist
-ln_vrfy -sf $FV3_NML_FP ${JEDI_WORKDIR_DATA}/input.nml
+create_symlink_to_file target="$FV3_NML_FP" symlink="${JEDI_WORKDIR_DATA}/input.nml"
 
 print_info_msg "$VERBOSE" "
 Creating links in the JEDI/INPUT subdirectory of the current cycle's run di-
@@ -109,21 +109,17 @@ rectory to the grid and (filtered) orography files: \"${JEDI_WORKDIR_INPUT}\""
 
 cd_vrfy ${JEDI_WORKDIR_INPUT}
 
-relative_or_null=""
 if [ "${RUN_TASK_MAKE_GRID}" = "TRUE" ]; then
-  relative_or_null="--relative"
+  relative_link_flag="TRUE"
+else
+  relative_link_flag="FALSE"
 fi
 
 # Symlink to mosaic file with a completely different name.
-target="${FIXLAM}/${CRES}${DOT_OR_USCORE}mosaic.halo${NH3}.nc"   # Should this point to this halo4 file or a halo3 file???
+target="${FIXLAM}/${CRES}${DOT_OR_USCORE}mosaic.halo${NH3}.nc"
 symlink="grid_spec.nc"
-if [ -f "${target}" ]; then
-  ln_vrfy -sf ${relative_or_null} $target $symlink
-else
-  print_err_msg_exit "\
-Cannot create symlink because target does not exist:
-  target = \"$target}\""
-fi
+create_symlink_to_file target="$target" symlink="$symlink" \
+                       relative="${relative_link_flag}"
 
 # Symlink to halo-3 grid file with "halo3" stripped from name.
 mosaic_fn="grid_spec.nc"
@@ -131,13 +127,8 @@ grid_fn=$( get_charvar_from_netcdf "${mosaic_fn}" "gridfiles" )
 
 target="${FIXLAM}/${grid_fn}"
 symlink="${grid_fn}"
-if [ -f "${target}" ]; then
-  ln_vrfy -sf ${relative_or_null} $target $symlink
-else
-  print_err_msg_exit "\
-Cannot create symlink because target does not exist:
-  target = \"$target}\""
-fi
+create_symlink_to_file target="$target" symlink="$symlink" \
+                       relative="${relative_link_flag}"
 
 # Symlink to halo-4 grid file with "${CRES}_" stripped from name.
 #
@@ -153,29 +144,25 @@ fi
 #
 target="${FIXLAM}/${CRES}${DOT_OR_USCORE}grid.tile${TILE_RGNL}.halo${NH4}.nc"
 symlink="grid.tile${TILE_RGNL}.halo${NH4}.nc"
-if [ -f "${target}" ]; then
-  ln_vrfy -sf ${relative_or_null} $target $symlink
-else
-  print_err_msg_exit "\
-Cannot create symlink because target does not exist:
-  target = \"$target}\""
-fi
+create_symlink_to_file target="$target" symlink="$symlink" \
+                       relative="${relative_link_flag}"
 
-relative_or_null=""
+#
+# As with the symlinks grid files above, when creating the symlinks to
+# the orography files, use relative paths if running the MAKE_OROG_TN
+# task and absolute paths otherwise.
+#
 if [ "${RUN_TASK_MAKE_OROG}" = "TRUE" ]; then
-  relative_or_null="--relative"
+  relative_link_flag="TRUE"
+else
+  relative_link_flag="FALSE"
 fi
 
 # Symlink to halo-0 orography file with "${CRES}_" and "halo0" stripped from name.
 target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data.tile${TILE_RGNL}.halo${NH0}.nc"
 symlink="oro_data.nc"
-if [ -f "${target}" ]; then
-  ln_vrfy -sf ${relative_or_null} $target $symlink
-else
-  print_err_msg_exit "\
-Cannot create symlink because target does not exist:
-  target = \"$target}\""
-fi
+create_symlink_to_file target="$target" symlink="$symlink" \
+                       relative="${relative_link_flag}"
 
 #
 # Symlink to halo-4 orography file with "${CRES}_" stripped from name.
@@ -192,13 +179,8 @@ fi
 #
 target="${FIXLAM}/${CRES}${DOT_OR_USCORE}oro_data.tile${TILE_RGNL}.halo${NH4}.nc"
 symlink="oro_data.tile${TILE_RGNL}.halo${NH4}.nc"
-if [ -f "${target}" ]; then
-  ln_vrfy -sf ${relative_or_null} $target $symlink
-else
-  print_err_msg_exit "\
-Cannot create symlink because target does not exist:
-  target = \"$target}\""
-fi
+create_symlink_to_file target="$target" symlink="$symlink" \
+                       relative="${relative_link_flag}"
 
 #
 #-----------------------------------------------------------------------
@@ -220,7 +202,7 @@ if [ ! -r ${fv_tracer_file} ]; then
   Tracer file not found. Checking available restart date:
     requested date: \"${CDATE}\"
     available date: \"${rst_date}\""
-    if [ "${rst_date}" == "${CDATE}" ] ; then
+    if [ "${rst_date}" = "${CDATE}" ] ; then
       fv_tracer_file=${rst_dir}/${rst_file}
       if [ -r ${fv_tracer_file} ]; then
         print_info_msg "

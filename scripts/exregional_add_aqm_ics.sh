@@ -78,7 +78,7 @@ if [ ! -r ${fv_tracer_file} ]; then
   Tracer file not found. Checking available restart date:
     requested date: \"${CDATE}\"
     available date: \"${rst_date}\""
-    if [ "${rst_date}" == "${CDATE}" ] ; then
+    if [ "${rst_date}" = "${CDATE}" ] ; then
       fv_tracer_file=${rst_dir}/${rst_file}
       if [ -r ${fv_tracer_file} ]; then
         print_info_msg "
@@ -151,26 +151,36 @@ print_info_msg "
 cp_vrfy ${gfs_ic_file} ${wrk_ic_file}
 
 exclude_vars="Time,graupel,ice_wat,liq_wat,o3mr,rainwat,snowwat,sphum"
-ncwa -a Time -C -x -v "${exclude_vars}" -O ${fv_tracer_file} tmp1.nc
 
-ncatted -a checksum,,d,s, tmp1.nc
+ncwa -a Time -C -x -v "${exclude_vars}" -O ${fv_tracer_file} tmp1.nc || print_err_msg_exit "\
+Call to NCWA returned with nonzero exit code."
+
+ncatted -a checksum,,d,s, tmp1.nc  || print_err_msg_exit "\
+Call to NCATTED returned with nonzero exit code."
 
 ncrename -d xaxis_1,lon -v xaxis_1,lon \
          -d yaxis_1,lat -v yaxis_1,lat \
          -d zaxis_1,lev -v zaxis_1,lev \
-         -O tmp1.nc tmp2.nc
+         -O tmp1.nc tmp2.nc || print_err_msg_exit "\
+Call to NCRENAME returned with nonzero exit code."
 
-ncks --mk_rec_dmn lev -O -o tmp1.nc tmp2.nc
+ncks --mk_rec_dmn lev -O -o tmp1.nc tmp2.nc || print_err_msg_exit "\
+Call to NCKS returned with nonzero exit code."
 
-ncks -O -d lev,0,0 tmp1.nc tmp1_ptop.nc
+ncks -O -d lev,0,0 tmp1.nc tmp1_ptop.nc || print_err_msg_exit "\
+Call to NCKS returned with nonzero exit code."
 
-${ncap_cmd} -s 'lev=lev+1' tmp1.nc tmp1_pfull.nc
+${ncap_cmd} -s 'lev=lev+1' tmp1.nc tmp1_pfull.nc || print_err_msg_exit "\
+Call to NCAP returned with nonzero exit code."
 
-ncrcat -O -o tmp1.nc tmp1_ptop.nc tmp1_pfull.nc
+ncrcat -O -o tmp1.nc tmp1_ptop.nc tmp1_pfull.nc || print_err_msg_exit "\
+Call to NCRCAT returned with nonzero exit code."
 
-ncks --fix_rec_dmn lev -C -O -o tmp2.nc tmp1.nc
+ncks --fix_rec_dmn lev -C -O -o tmp2.nc tmp1.nc || print_err_msg_exit "\
+Call to NCKS returned with nonzero exit code."
  
-ncks -A -C -x -v lon,lat,lev tmp2.nc ${wrk_ic_file}
+ncks -A -C -x -v lon,lat,lev tmp2.nc ${wrk_ic_file} || print_err_msg_exit "\
+Call to NCKS returned with nonzero exit code."
 
 mv_vrfy ${wrk_ic_file} ${gfs_ic_file}
 

@@ -176,7 +176,7 @@ cp_vrfy ${ARL_NEXUS_DIR}/utils/python/nexus_root_parser.py .
 #----------------------------------------------------------------------
 # Get all the files needed (TEMPORARILY JUST COPY FROM THE DIRECTORY)
 #
-if [ ${NEI2016} == "TRUE" ]; then #NEI2016
+if [ "${NEI2016}" = "TRUE" ]; then #NEI2016
     cp_vrfy ${ARL_NEXUS_DIR}/utils/python/nexus_nei2016_linker.py .
     cp_vrfy ${ARL_NEXUS_DIR}/utils/python/nexus_nei2016_control_tilefix.py .
     mkdir_vrfy -p ${NEXUS_WORKDIR_INPUT}/NEI2016v1
@@ -186,11 +186,11 @@ if [ ${NEI2016} == "TRUE" ]; then #NEI2016
     ./nexus_nei2016_control_tilefix.py -f NEXUS_Config.rc -d ${yyyymmdd}
 fi
 
-if [ ${TIMEZONES} == 'TRUE' ]; then # TIME ZONES
+if [ "${TIMEZONES}" = "TRUE" ]; then # TIME ZONES
     cp_vrfy -r ${NEXUS_INPUT_BASE_DIR}/TIMEZONES ${NEXUS_WORKDIR_INPUT}
 fi
 
-if [ ${MASKS} == 'TRUE' ]; then # MASKS
+if [ "${MASKS}" = "TRUE" ]; then # MASKS
     cp_vrfy -r ${NEXUS_INPUT_BASE_DIR}/MASKS ${NEXUS_WORKDIR_INPUT}
 fi
 

@@ -793,7 +793,7 @@ fi
 # to remove it from the namelist!  Which is better to use??
 #
 
-if [ "${FCST_MODEL}" = "fv3gfs_aqm" ] && [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_2017_gfdlmp" ]; then
+if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
 settings="\
 'atmos_model_nml': {
     'blocksize': $BLOCKSIZE,

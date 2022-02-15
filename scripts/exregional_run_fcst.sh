@@ -484,9 +484,9 @@ if [ ${WRITE_DOPOST} = "TRUE" ]; then
 fi
 
 if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
-  # AQM_RC_IN_FN: input file name of cmaq
-  AQM_RC_IN_FN="aqm.rc"
-  AQM_RC_IN_FP="${run_dir}/${AQM_RC_IN_FN}"
+  # aqm_rc_in_fn: input file name of cmaq
+  aqm_rc_in_fn="aqm.rc"
+  aqm_rc_in_fp="${run_dir}/${aqm_rc_in_fn}"
 #
 #-----------------------------------------------------------------------
 #
@@ -510,8 +510,8 @@ if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
   cdate="${cdate}" \
   run_dir="${run_dir}" \
   init_concentrations="${init_concentrations}" \
-  aqm_rc_in_fn="${AQM_RC_IN_FN}" \
-  aqm_rc_in_fp="${AQM_RC_IN_FP}" \
+  aqm_rc_in_fn="${aqm_rc_in_fn}" \
+  aqm_rc_in_fp="${aqm_rc_in_fp}" \
   || print_err_msg_exit "\
 Call to function to create an aqm.rc file for the current
 cycle's (cdate) run directory (run_dir) failed:

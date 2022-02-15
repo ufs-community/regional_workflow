@@ -494,8 +494,7 @@ VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
 METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
 MET_CONFIG="$TEMPLATE_DIR/parm/met"
 ARL_NEXUS_DIR="${SR_WX_APP_TOP_DIR}/src/arl_nexus"
-JEDI_DIR="${SR_WX_APP_TOP_DIR}/src/jedi"
-GSI_DIR="${SR_WX_APP_TOP_DIR}/src/gsi"
+JEDI_DIR="${SR_WX_APP_TOP_DIR}/build/JEDI"
 #
 #-----------------------------------------------------------------------
 #
@@ -2498,7 +2497,6 @@ FV3_NML_ENSMEM_FPS=${fv3_nml_ensmem_fps_str}
 
 ARL_NEXUS_DIR="${ARL_NEXUS_DIR}"
 JEDI_DIR="${JEDI_DIR}"
-GSI_DIR="${GSI_DIR}"
 AQM_RC_FP="${AQM_RC_FP}"
 #
 #-----------------------------------------------------------------------

@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 #
 #-----------------------------------------------------------------------
@@ -102,11 +101,15 @@ for fhr in $(seq -f "%03g" 1 ${fcst_len_hrs}); do
   input_file="NATLEV_${basetime}f${fhr}00"
 
   if [ ${fhr} = "001" ]; then
-     wgrib2 ${postprd_dir}/${input_file} -match ":${field1}" -match ":${field3}" -GRIB ${output_file}
-     wgrib2 ${postprd_dir}/${input_file} -match ":${field2}" -match ":${field3}" -append -GRIB ${output_file}
+     wgrib2 ${postprd_dir}/${input_file} -match ":${field1}" -match ":${field3}" -GRIB ${output_file} || print_err_msg_exit "\
+Call to run wgrib2 returned with nonzero exit code."
+     wgrib2 ${postprd_dir}/${input_file} -match ":${field2}" -match ":${field3}" -append -GRIB ${output_file} || print_err_msg_exit "\
+Call to run wgrib2 append returned with nonzero exit code."
   else
-     wgrib2 ${postprd_dir}/${input_file} -match ":${field1}" -match ":${field3}" -append -GRIB ${output_file}
-     wgrib2 ${postprd_dir}/${input_file} -match ":${field2}" -match ":${field3}" -append -GRIB ${output_file}
+     wgrib2 ${postprd_dir}/${input_file} -match ":${field1}" -match ":${field3}" -append -GRIB ${output_file} || print_err_msg_exit "\
+Call to run wgrib2 append returned with nonzero exit code."
+     wgrib2 ${postprd_dir}/${input_file} -match ":${field2}" -match ":${field3}" -append -GRIB ${output_file} || print_err_msg_exit "\
+Call to run wgrib2 append returned with nonzero exit code."
   fi
 
 done
