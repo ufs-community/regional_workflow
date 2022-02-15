@@ -1808,7 +1808,7 @@ ISEED_SPP=( "4" "4" "4" "4" "4" )
 # SPP.
 #
 # SPP in for LSM schemes is handled in the &nam_sfcperts namelist 
-# block instead of in &nam_spperts, where all other SPP is implemented.
+# block instead of in &nam_sppperts, where all other SPP is implemented.
 #
 # The default perturbation frequency is determined by the fhcyc namelist 
 # entry.  Since that parameter is set to zero in the SRW App, use 

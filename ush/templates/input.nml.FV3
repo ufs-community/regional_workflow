@@ -210,7 +210,7 @@
     lndp_prt_list = 0.2,0.1,
 /
 
-&nam_spperts
+&nam_sppperts
 /
 
 &nam_stochy

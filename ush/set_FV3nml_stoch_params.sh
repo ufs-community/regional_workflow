@@ -107,7 +107,7 @@ function set_FV3nml_stoch_params() {
   'iseed_skeb': ${iseed_skeb},
   'iseed_sppt': ${iseed_sppt},
   }
-'nam_spperts': {
+'nam_sppperts': {
   'iseed_spp': ${iseed_spp},
   }
 'nam_sfcperts': {

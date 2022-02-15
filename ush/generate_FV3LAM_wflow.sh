@@ -847,10 +847,10 @@ settings="$settings
   }"
 #
 # Add the relevant SPP namelist variables to "settings" when running with 
-# SPP turned on.  Otherwise only include an empty "nam_spperts" stanza.
+# SPP turned on.  Otherwise only include an empty "nam_sppperts" stanza.
 #
 settings="$settings
-'nam_spperts': {"
+'nam_sppperts': {"
 if [ "${DO_SPP}" = "TRUE" ]; then 
 settings="$settings
     'iseed_spp': [ $( printf %s, "${ISEED_SPP[@]}" ) ],
