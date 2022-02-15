@@ -134,33 +134,33 @@ jjob_fp="$2"
 if [[ "${task_name}" = "${MAKE_GRID_TN}" || "${task_name}" = "${MAKE_OROG_TN}" || 
       "${task_name}" = "${MAKE_SFC_CLIMO_TN}" || "${task_name}" = "${MAKE_ICS_TN}" ||
       "${task_name}" = "${MAKE_LBCS_TN}" ]]; then
-  module use ${SR_WX_APP_TOP_DIR}/comp_conf/env
-  mod_fp="${SR_WX_APP_TOP_DIR}/comp_conf/env/modulefile.UFS_UTILS.lua"
+  module use ${SR_WX_APP_TOP_DIR}/components/env
+  mod_fp="${SR_WX_APP_TOP_DIR}/components/env/modulefile.UFS_UTILS.lua"
   if [[ -f "${mod_fp}" ]]; then
     module load modulefile.UFS_UTILS.lua
   else
     module load modulefile.UFS_UTILS
   fi
 elif [[ "${task_name}" = "${RUN_FCST_TN}" ]]; then
-  module use ${SR_WX_APP_TOP_DIR}/comp_conf/env
+  module use ${SR_WX_APP_TOP_DIR}/components/env
   if [[ "${FCST_MODEL}" = "fv3gfs_aqm" ]];then
     module load modulefile.fv3gfs_aqm
   else
     module load modulefile.ufs-weather-model
   fi
 elif [[ "${task_name}" = "${RUN_POST_TN}" ]]; then
-  module use ${SR_WX_APP_TOP_DIR}/comp_conf/env
-  mod_fp="${SR_WX_APP_TOP_DIR}/comp_conf/env/modulefile.UPP.lua"
+  module use ${SR_WX_APP_TOP_DIR}/components/env
+  mod_fp="${SR_WX_APP_TOP_DIR}/compoments/env/modulefile.UPP.lua"
   if [[ -f "${mod_fp}" ]]; then
     module load modulefile.UPP.lua
   else
     module load modulefile.UPP
   fi
 elif [[ "${task_name}" = "${RUN_NEXUS_TN}" ]]; then
-  module use ${SR_WX_APP_TOP_DIR}/comp_conf/env
+  module use ${SR_WX_APP_TOP_DIR}/components/env
   module load modulefile.arl_nexus
 elif [[ "${task_name}" = "${ADD_AQM_LBCS_TN}" ]]; then
-  source ${SR_WX_APP_TOP_DIR}/comp_conf/env/modulefile.gefs2clbc
+  source ${SR_WX_APP_TOP_DIR}/components/env/modulefile.gefs2clbc
 else
   print_info_msg "$VERBOSE" "The modules only in regional_workflow/modulefiles will be loaded."
 fi

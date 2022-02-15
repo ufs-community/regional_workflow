@@ -14,7 +14,7 @@ cost function:
     - fieldset: Data/fieldsets/lam_cmaq.yaml
     - fieldset: Data/fieldsets/ufo.yaml
   background:
-    filetype: gfs
+    filetype: fms restart
     datapath: %bkgdir%
     filename_core: %bkgprefix%.fv_core.res.tile1.nc
     filename_trcr: %bkgprefix%.fv_tracer.res.tile1.nc
@@ -120,7 +120,7 @@ final:
   diagnostics:
     departures: oman
 output:
-  filetype: gfs
+  filetype: fms restart
   datapath: Data/analysis/
   filename_core: 3dvar_anl.fv_core.res.nc
   filename_trcr: 3dvar_anl.fv_tracer.res.nc

@@ -335,7 +335,7 @@ SR_WX_APP_TOP_DIR=${scrfunc_dir%/*/*}
 #
 #-----------------------------------------------------------------------
 #
-mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/comp_conf/COMMON/Externals.cfg" )
+mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/components/COMMON/Externals.cfg" )
 property_name="local_path"
 #
 # Get the path to the workflow scripts
@@ -392,9 +392,9 @@ fi
 # Get the base directory of the forecast model code.
 #
 if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
-  mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/comp_conf/RRFS-CMAQ/Externals.cfg" )
+  mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/components/RRFS-CMAQ/Externals.cfg" )
 else
-  mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/comp_conf/RRFS/Externals.cfg" )
+  mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/components/RRFS/Externals.cfg" )
 fi
 external_name="${FCST_MODEL}"
 UFS_WTHR_MDL_DIR=$( \
@@ -414,7 +414,7 @@ build the executable, and then rerun the workflow."
 fi
 
 if [ "${FCST_MODEL}" = "fv3gfs_aqm" ]; then
-  mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/comp_conf/RRFS-CMAQ/Externals.cfg" )
+  mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/components/RRFS-CMAQ/Externals.cfg" )
 #
 # Get the base directory of the NEXUS code if required
 #
@@ -436,7 +436,7 @@ build the executable, and then rerun the workflow."
   fi
 
   if [ "${OPT_DA_RRFS_CMAQ}" = "TRUE" ]; then
-    mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/comp_conf/RRFS-CMAQ-DA/Externals.cfg" )
+    mng_extrns_cfg_fn=$( $READLINK -f "${SR_WX_APP_TOP_DIR}/components/RRFS-CMAQ-DA/Externals.cfg" )
 #
 # Get the base directory of the JEDI code if required
 #

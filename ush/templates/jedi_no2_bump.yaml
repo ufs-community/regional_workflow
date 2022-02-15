@@ -10,7 +10,7 @@ geometry:
     - fieldset: Data/fieldsets/ufo.yaml
 input variables: [no2]
 background:
-  filetype: gfs
+  filetype: fms restart
   datapath: %bkgdir%
   filename_core: %bkgprefix%.fv_core.res.tile1.nc
   filename_trcr: %bkgprefix%.fv_tracer.res.tile1.nc
@@ -35,7 +35,7 @@ bump:
   io_values: [fixed_150km_0.1]
   output:
   - parameter: cor_rh
-    filetype: gfs
+    filetype: fms restart
     datapath: Data/bump/
     filename_core: bump_lam_cmaq.cor_rh.fv_core.res.nc
     filename_trcr: bump_lam_cmaq.cor_rh.fv_tracer.res.nc
@@ -44,7 +44,7 @@ bump:
     filename_cplr: bump_lam_cmaq.cor_rh.coupler.res
     date: '%bumpdate%'
   - parameter: cor_rv
-    filetype: gfs
+    filetype: fms restart
     datapath: Data/bump/
     filename_core: bump_lam_cmaq.cor_rv.fv_core.res.nc
     filename_trcr: bump_lam_cmaq.cor_rv.fv_tracer.res.nc
