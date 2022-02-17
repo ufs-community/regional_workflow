@@ -92,40 +92,8 @@ export OMP_STACKSIZE=${OMP_STACKSIZE_RUN_POST}
 #
 #-----------------------------------------------------------------------
 #
-case "$MACHINE" in
-
-  "WCOSS_CRAY")
-
-# Specify computational resources.
-    export NODES=2
-    export ntasks=48
-    export ptile=24
-    export threads=1
-    export MP_LABELIO=yes
-    export OMP_NUM_THREADS=$threads
-
-    RUN_CMD_POST="aprun -j 1 -n${ntasks} -N${ptile} -d${threads} -cc depth"
-    ;;
-
-  "WCOSS_DELL_P3")
-
-# Specify computational resources.
-    export NODES=2
-    export ntasks=48
-    export ptile=24
-    export threads=1
-    export MP_LABELIO=yes
-    export OMP_NUM_THREADS=$threads
-
-#    RUN_CMD_POST="mpirun"
-    ;;&
-
-  *)
-    source $USHDIR/source_machine_file.sh
-    eval ${PRE_TASK_CMDS}
-    ;;
-
-esac
+source $USHDIR/source_machine_file.sh
+eval ${PRE_TASK_CMDS}
 
 nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
 if [ -z ${RUN_CMD_POST:-} ] ; then

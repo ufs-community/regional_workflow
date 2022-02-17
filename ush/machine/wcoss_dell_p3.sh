@@ -44,8 +44,7 @@ EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
 # System scripts to source to initialize various commands within workflow
 # scripts (e.g. "module").
 if [ -z ${ENV_INIT_SCRIPTS_FPS:-""} ]; then
-#  ENV_INIT_SCRIPTS_FPS=( "/opt/modules/default/init/sh" )
-  ENV_INIT_SCRIPTS_FPS=( "/etc/profile" )
+  ENV_INIT_SCRIPTS_FPS=( "/etc/profile" "/usrx/local/prod/lmod/lmod/init/sh" )
 fi
 
 # Commands to run at the start of each workflow task.
@@ -67,6 +66,7 @@ TOPO_DIR=${TOPO_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fi
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/dell2/emc/modeling/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/FV3LAM_pregen"}
 
+# Commands to run
 RUN_CMD_SERIAL="mpirun"
 RUN_CMD_UTILS="mpirun"
 RUN_CMD_FCST='mpirun -l -np ${PE_MEMBER01}'

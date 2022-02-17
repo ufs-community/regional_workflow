@@ -43,8 +43,7 @@ EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
 # System scripts to source to initialize various commands within workflow
 # scripts (e.g. "module").
 if [ -z ${ENV_INIT_SCRIPTS_FPS:-""} ]; then
-#  ENV_INIT_SCRIPTS_FPS=( "/opt/modules/default/init/sh" )
-  ENV_INIT_SCRIPTS_FPS=( '$MODULESHOME/init/sh' )
+  ENV_INIT_SCRIPTS_FPS=( "/etc/profile" "/opt/modules/default/init/sh" )
 fi
 
 # Commands to run at the start of each workflow task.
@@ -66,6 +65,16 @@ FIXlut=${FIXlut:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_l
 TOPO_DIR=${TOPO_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_sfc_climo"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/gpfs/hps3/emc/meso/noscrub/UFS_SRW_App/FV3LAM_pregen"}
+
+# Commands to run
+RUN_CMD_SERIAL="aprun -j1 -n1 -N1 -d1 -cc depth"
+RUN_CMD_UTILS="aprun -b -j1 -n48 -N12 -d1 -cc depth"
+if [ ${PE_MEMBER01} -gt 24 ]; then
+  RUN_CMD_FCST="aprun -b -j1 -n${PE_MEMBER01} -N24 -d1 -cc depth"
+else
+  RUN_CMD_FCST='aprun -b -j1 -n${PE_MEMBER01} -N${PE_MEMBER01} -d1 -cc depth'
+fi
+RUN_CMD_POST="aprun -j1 -n48 -N24 -d1 -cc depth"
 
 # MET Installation Locations
 MET_INSTALL_DIR="/gpfs/hps3/emc/meso/noscrub/emc.metplus/met/10.0.0"
