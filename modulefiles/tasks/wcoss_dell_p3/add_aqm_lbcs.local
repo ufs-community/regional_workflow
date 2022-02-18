@@ -2,5 +2,7 @@
 ## Module file for add_aqm_lbcs task.
 #############################################################
 
-module load ips/18.0.1.163
+module load ips/18.0.5.274
+module load impi/18.0.1
+module load lsf/10.1
 module load NCO/4.7.0
