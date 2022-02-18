@@ -104,6 +104,12 @@ eval ${PRE_TASK_CMDS}
 
 nprocs=$(( NNODES_RUN_FCST*PPN_RUN_FCST ))
 
+if [ "${PE_MEMBER01}" -gt "${NCORES_PER_NODE}" ]; then
+  NPEnode=${NCORES_PER_NODE}
+else
+  NPEnode=${PE_MEMBER01}
+fi
+
 if [ -z ${RUN_CMD_FCST:-} ] ; then
   print_err_msg_exit "\
   Run command was not set in machine file. \

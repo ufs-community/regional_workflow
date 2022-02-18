@@ -68,12 +68,9 @@ FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/gpfs/hps3/emc/meso/noscrub/UFS_SRW_Ap
 
 # Commands to run
 RUN_CMD_SERIAL="aprun -j1 -n1 -N1 -d1 -cc depth"
+RUN_CMD_SFC_CLIMO="aprun -j1 -n6 -N6"
 RUN_CMD_UTILS="aprun -b -j1 -n48 -N12 -d1 -cc depth"
-if [ ${PE_MEMBER01} -gt 24 ]; then
-  RUN_CMD_FCST="aprun -b -j1 -n${PE_MEMBER01} -N24 -d1 -cc depth"
-else
-  RUN_CMD_FCST='aprun -b -j1 -n${PE_MEMBER01} -N${PE_MEMBER01} -d1 -cc depth'
-fi
+RUN_CMD_FCST='aprun -b -j1 -n${PE_MEMBER01} -N${NPEnode} -d1 -cc depth'
 RUN_CMD_POST="aprun -j1 -n48 -N24 -d1 -cc depth"
 
 # MET Installation Locations

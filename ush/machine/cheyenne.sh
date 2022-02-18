@@ -58,6 +58,7 @@ SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/glade/p/ral/jntp/UFS_CAM/fix/climo_
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
 
 RUN_CMD_SERIAL="time"
+RUN_CMD_SFC_CLIMO='mpirun -np $nprocs'
 RUN_CMD_UTILS='mpirun -np $nprocs'
 RUN_CMD_FCST='mpirun -np ${PE_MEMBER01}'
 RUN_CMD_POST='mpirun -np $nprocs'

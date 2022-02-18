@@ -63,6 +63,7 @@ SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netc
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
 
 RUN_CMD_SERIAL="srun -n 1"
+RUN_CMD_SFC_CLIMO='srun -n $nprocs'
 RUN_CMD_UTILS='srun -n $nprocs'
 RUN_CMD_FCST='srun -n ${PE_MEMBER01}'
 RUN_CMD_POST="srun -n 1"

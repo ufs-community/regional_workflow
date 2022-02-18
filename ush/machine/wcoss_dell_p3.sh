@@ -68,6 +68,7 @@ FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/gpfs/dell2/emc/modeling/noscrub/UFS_S
 
 # Commands to run
 RUN_CMD_SERIAL="mpirun"
+RUN_CMD_SFC_CLIMO="mpirun"
 RUN_CMD_UTILS="mpirun"
 RUN_CMD_FCST='mpirun -l -np ${PE_MEMBER01}'
 RUN_CMD_POST="mpirun"

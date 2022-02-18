@@ -60,6 +60,7 @@ SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch1/NCEPDEV/global/glopara/fix
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch2/BMC/det/FV3LAM_pregen"}
 
 RUN_CMD_SERIAL="time"
+RUN_CMD_SFC_CLIMO="srun"
 RUN_CMD_UTILS="srun"
 RUN_CMD_FCST="srun"
 RUN_CMD_POST="srun"
