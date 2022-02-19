@@ -103,6 +103,28 @@ FV3GFS:
     file_names:
       <<: *gfs_file_names
 
+GSMGFS:
+  hpss:
+    protocol: htar
+    archive_path:
+      - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
+    archive_internal_dir:
+      anl:
+        - ./
+      fcst:
+        - /gpfs/hps/nco/ops/com/gfs/prod/gfs.{yyyymmdd}
+    archive_file_names:
+      anl:
+        - gpfs_hps_nco_ops_com_gfs_prod_gfs.{yyyymmddhh}.anl.tar
+      fcst:
+        - gpfs_hps_nco_ops_com_gfs_prod_gfs.{yyyymmddhh}.sigma.tar
+    file_names:
+      anl:
+        - gfs.t{hh}z.atmanl.nemsio
+        - gfs.t{hh}z.sfcanl.nemsio
+      fcst:
+        - gfs.t{hh}z.atmf{fcst_hr:03d}.nemsio
+
 RAP:
   hpss:
     protocol: htar
