@@ -46,7 +46,7 @@ def clean_up_output_dir(expected_subdir, local_archive, output_path, source_path
     unavailable = {}
     # Check to make sure the files exist on disk
     for file_path in source_paths:
-        local_file_path = os.path.join(output_path,file_path)
+        local_file_path = os.path.join(output_path, file_path.lstrip("/"))
         if not os.path.exists(local_file_path):
             logging.info(f'File does not exist: {local_file_path}')
             unavailable['hpss'] = source_paths
@@ -415,8 +415,14 @@ def hpss_requested_files(cla, store_specs):
         file_names = file_names[cla.file_type]
     file_names = file_names[cla.anl_or_fcst]
 
+    logging.info(f'Files in archive are named: {file_names}')
+
     logging.debug(f'Grabbing archive number {which_archive} in list.')
-    archive_internal_dir = store_specs.get('archive_internal_dir', [''])[which_archive]
+    archive_internal_dir = store_specs.get('archive_internal_dir', [''])
+    if isinstance(archive_internal_dir, dict):
+        archive_internal_dir = archive_internal_dir.get(cla.anl_or_fcst, [''])
+
+    archive_internal_dir = archive_internal_dir[which_archive]
     archive_internal_dir = fill_template(archive_internal_dir,
                                          cla.cycle_date)
 
@@ -519,8 +525,9 @@ def write_summary_file(cla, data_store, file_templates):
     was retrieved, write a bash summary file that is needed by the workflow
     elements downstream. '''
 
+    files = []
     for tmpl in file_templates:
-        files = [fill_template(tmpl, cla.cycle_date, fh) for fh in cla.fcst_hrs]
+        files.extend([fill_template(tmpl, cla.cycle_date, fh) for fh in cla.fcst_hrs])
 
     summary_fp = os.path.join(cla.output_path, cla.summary_file)
     logging.info(f'Writing a summary file to {summary_fp}')
@@ -552,14 +559,18 @@ def main(cla):
     paths in priority order.
     '''
 
-    known_data_info =  cla.config.get(cla.external_model)
-    if known_data_info is None:
-        msg = ('No data stores have been defined for',
-               f'{cla.external_model}!')
-        raise KeyError(msg)
+    data_stores = cla.data_stores
+    known_data_info =  cla.config.get(cla.external_model, {})
+    if not known_data_info:
+        msg = dedent(f'''No data stores have been defined for
+               {cla.external_model}!''')
+        if cla.input_file_path is None:
+            data_stores = ['disk']
+            raise KeyError(msg)
+        logging.info(msg + ' Only checking provided disk location.')
 
     unavailable = {}
-    for data_store in cla.data_stores:
+    for data_store in data_stores:
         logging.info(f'Checking {data_store} for {cla.external_model}')
         store_specs = known_data_info.get(data_store, {})
 
@@ -581,19 +592,18 @@ def main(cla):
             msg = (f'No information is available for {data_store}.')
             raise KeyError(msg)
 
-        if store_specs.get('protocol') == 'download':
-            file_templates = store_specs.get('file_names')
-            if not file_templates:
-                msg = ('No file name naming convention found. They must be provided \
-                        either on the command line or on in a config file.')
-                raise argparse.ArgumentTypeError(msg)
+        file_templates = store_specs.get('file_names')
+        if not file_templates:
+            msg = ('No file name naming convention found. They must be provided \
+                    either on the command line or on in a config file.')
+            raise argparse.ArgumentTypeError(msg)
 
+        if store_specs.get('protocol') == 'download':
             unavailable = get_requested_files(cla,
                                               file_templates=file_templates,
                                               input_loc=store_specs['url'],
                                               method='download',
                                               )
-
         if store_specs.get('protocol') == 'htar':
             unavailable = hpss_requested_files(cla, store_specs)
 
