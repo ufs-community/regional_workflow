@@ -116,14 +116,13 @@ fi
 #
 additional_flags=""
 
-if [ -n ${file_names:-} ] ; then
 
-  if [ -n "${file_type:-}" ] ; then 
-    additional_flags="$additional_flags \
-    --file_type ${file_type}"
-  fi
+if [ -n "${file_type:-}" ] ; then 
+  additional_flags="$additional_flags \
+  --file_type ${file_type}"
+fi
 
-  # Set up the yaml string with a list
+if [ -n "${file_names:-}" ] ; then
   additional_flags="$additional_flags \
   --file_templates ${file_names[@]}"
 fi
