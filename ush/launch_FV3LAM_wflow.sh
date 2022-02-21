@@ -116,7 +116,7 @@ expt_name="${EXPT_SUBDIR}"
 #
 #-----------------------------------------------------------------------
 #
-env_fp="${HOMErrfs}/env/${WFLOW_ENV_FN}"
+env_fp="${HOMErrfs}/modulefiles/env/${WFLOW_ENV_FN}"
 module purge
 source "${env_fp}" || print_err_msg_exit "\
 Sourcing platform-specific environment file (env_fp) for the workflow 
