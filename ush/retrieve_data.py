@@ -129,46 +129,6 @@ def download_file(url):
 
     return True
 
-def download_requested_files(cla, data_store, store_specs):
-
-    ''' This function interacts with the "download" protocol in a
-    provided data store specs file to download a set of files requested
-    by the user. It calls download_file for each individual file that
-    should be downloaded. '''
-
-    base_urls = store_specs['url']
-    base_urls = base_urls if isinstance(base_urls, list) else [base_urls]
-
-    file_names = store_specs.get('file_names', {})
-    if cla.file_type is not None:
-        file_names = file_names[cla.file_type]
-    file_names = file_names[cla.anl_or_fcst]
-    target_path = fill_template(cla.output_path,
-                                cla.cycle_date)
-
-    logging.info(f'Downloaded files will be placed here: \n {target_path}')
-    orig_path = os.getcwd()
-    os.chdir(target_path)
-    unavailable = {}
-    for base_url in base_urls:
-        for fcst_hr in cla.fcst_hrs:
-            for file_name in file_names:
-                url = os.path.join(base_url, file_name)
-                url = fill_template(url, cla.cycle_date, fcst_hr)
-                downloaded = download_file(url)
-                if not downloaded:
-
-                    if unavailable.get(data_store) is None:
-                        unavailable[data_store] = []
-                    unavailable[data_store].append(target_path)
-                    os.chdir(orig_path)
-                    # Returning here assumes that if the first file
-                    # isn't found, none of the others will be. Don't
-                    # waste time timing out on every requested file.
-                    return unavailable
-    os.chdir(orig_path)
-    return unavailable
-
 def fhr_list(args):
 
     '''
@@ -286,8 +246,7 @@ def get_requested_files(cla, file_templates, input_loc, method='disk'):
     Arguments:
 
     cla            Namespace object containing command line arguments
-    file_templates Dict of file names by file type and kind, or a list of file
-                   templates
+    file_templates a list of file templates
     input_loc      A string containing a single data location, either a url
                    or disk path.
     method         Choice of disk or download to indicate protocol for
@@ -299,11 +258,6 @@ def get_requested_files(cla, file_templates, input_loc, method='disk'):
     '''
 
     unavailable = {}
-
-    if isinstance(file_templates, dict):
-        if cla.file_type is not None:
-            file_templates = file_templates[cla.file_type]
-        file_templates = file_templates[cla.anl_or_fcst]
 
     logging.info(f'Getting files named like {file_templates}')
 
@@ -366,7 +320,7 @@ def hsi_single_file(file_path, mode='ls'):
 
     return file_path
 
-def hpss_requested_files(cla, store_specs):
+def hpss_requested_files(cla, file_names, store_specs):
 
     ''' This function interacts with the "hpss" protocol in a
     provided data store specs file to download a set of files requested
@@ -408,12 +362,6 @@ def hpss_requested_files(cla, store_specs):
         logging.warning('No archive files were found!')
         unavailable['archive'] = list(zip(archive_paths, archive_file_names))
         return unavailable
-
-    # Use the found archive file path to get the necessary files
-    file_names = store_specs.get('file_names', {})
-    if cla.file_type is not None:
-        file_names = file_names[cla.file_type]
-    file_names = file_names[cla.anl_or_fcst]
 
     logging.info(f'Files in archive are named: {file_names}')
 
@@ -592,20 +540,26 @@ def main(cla):
             msg = (f'No information is available for {data_store}.')
             raise KeyError(msg)
 
-        file_templates = store_specs.get('file_names')
-        if not file_templates:
-            msg = ('No file name naming convention found. They must be provided \
-                    either on the command line or on in a config file.')
-            raise argparse.ArgumentTypeError(msg)
+        else:
 
-        if store_specs.get('protocol') == 'download':
-            unavailable = get_requested_files(cla,
-                                              file_templates=file_templates,
-                                              input_loc=store_specs['url'],
-                                              method='download',
-                                              )
-        if store_specs.get('protocol') == 'htar':
-            unavailable = hpss_requested_files(cla, store_specs)
+            file_templates = store_specs.get('file_names')
+            if isinstance(file_templates, dict):
+                if cla.file_type is not None:
+                    file_templates = file_templates[cla.file_type]
+                file_templates = file_templates[cla.anl_or_fcst]
+            if not file_templates:
+                msg = ('No file name naming convention found. They must be provided \
+                        either on the command line or on in a config file.')
+                raise argparse.ArgumentTypeError(msg)
+
+            if store_specs.get('protocol') == 'download':
+                unavailable = get_requested_files(cla,
+                                                  file_templates=file_templates,
+                                                  input_loc=store_specs['url'],
+                                                  method='download',
+                                                  )
+            if store_specs.get('protocol') == 'htar':
+                unavailable = hpss_requested_files(cla, file_templates, store_specs)
 
         if not unavailable:
             # All files are found. Stop looking!
