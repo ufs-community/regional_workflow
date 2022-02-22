@@ -17,8 +17,8 @@
 #
 #   NCEP Central Operations
 #   WCOSS Implementation Standards
-#   April 17, 2019
-#   Version 10.2.0
+#   January 19, 2022
+#   Version 11.0.0
 #
 # RUN_ENVIR is described in this document as follows:
 #
