@@ -420,6 +420,8 @@ script for this experiment:
 
     if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
       echo "${crontab_contents}" > "/u/$USER/cron/mycrontab"
+    elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      ( crontab -l | grep -v "^${crontab_line_esc_astr}$" ) | crontab -
     else
       echo "${crontab_contents}" | ${crontab_cmd} 
     fi

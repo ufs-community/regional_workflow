@@ -529,8 +529,10 @@ Copying contents of user cron table to backup file:
 # case it does something more than the command portion of the string in 
 # crontab_line_esc_astr does).
 #
-  if [ "$MACHINE" = "WCOSS_DELL_P3" ];then
+  if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
     grep_output=$( grep "^${crontab_line_esc_astr}$" "/u/$USER/cron/mycrontab" )
+  elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
+    grep_output=$( crontab -l | grep "^${crontab_line_esc_astr}$" )
   else
     grep_output=$( echo "${crontab_contents}" | grep "^${crontab_line_esc_astr}$" )
   fi
@@ -550,8 +552,10 @@ Adding the following line to the user's cron table in order to automatically
 resubmit SRW workflow:
   CRONTAB_LINE = \"${CRONTAB_LINE}\""
 
-    if [ "$MACHINE" = "WCOSS_DELL_P3" ];then
+    if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
       echo "${CRONTAB_LINE}" >> "/u/$USER/cron/mycrontab"      
+    elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
+      ( crontab -l; echo "${CRONTAB_LINE}" ) | crontab -
     else
       ( echo "${crontab_contents}"; echo "${CRONTAB_LINE}" ) | ${crontab_cmd}
     fi
