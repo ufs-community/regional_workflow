@@ -1817,9 +1817,9 @@ ISEED_SPP=( "4" "4" "4" "4" "4" )
 # Perturbations to soil moisture content (SMC) are only applied at the 
 # first time step.
 #
-# SMC - soil moisture content (volume fraction), VGF - vegetation
-# fraction, ALB - albedo, SAL - salinity, EMI - emissivity, ZOL - 
-# surface roughness (cm), and STC - soil temperature.
+# LSM perturbations include SMC - soil moisture content (volume fraction),
+# VGF - vegetation fraction, ALB - albedo, SAL - salinity, 
+# EMI - emissivity, ZOL - surface roughness (cm), and STC - soil temperature.
 #
 DO_LSM_SPP="false" #If true, sets lndp_type=2
 LSM_SPP_TSCALE=( "21600" "21600" "21600" "21600" "21600" "21600" "21600" )
