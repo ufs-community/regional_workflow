@@ -96,7 +96,7 @@ source $USHDIR/source_machine_file.sh
 eval ${PRE_TASK_CMDS}
 
 nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
-if [ -z ${RUN_CMD_POST:-} ] ; then
+if [ -z "${RUN_CMD_POST:-}" ] ; then
   print_err_msg_exit "\
   Run command was not set in machine file. \
   Please set RUN_CMD_POST for your platform"

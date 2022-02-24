@@ -86,7 +86,7 @@ print_input_args valid_args
 source $USHDIR/source_machine_file.sh
 eval ${PRE_TASK_CMDS}
 
-if [ -z ${RUN_CMD_SERIAL:-} ] ; then
+if [ -z "${RUN_CMD_SERIAL:-}" ] ; then
   print_err_msg_exit " \
   Run command was not set in machine file. \
   Please set RUN_CMD_SERIAL for your platform"

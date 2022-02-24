@@ -273,8 +273,8 @@ ${rocotostat_output}
 # the status of each cycle in the workflow.  The output of this command
 # has the following format:
 #
-#   CYCLE         STATE           ACTIVATED              DEACTIVATED     
-# 201905200000      Active    Nov 07 2019 00:23:30             -          
+#   CYCLE         STATE           ACTIVATED              DEACTIVATED
+# 201905200000      Active    Nov 07 2019 00:23:30             -
 # ...
 #
 # Thus, the first row is a header line containing the column titles, and
