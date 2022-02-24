@@ -1779,7 +1779,7 @@ USE_ZMTNBLCK="FALSE"
 # Set default SPP stochastic physics options. Each SPP option is an array, 
 # applicable (in order) to the scheme/parameter listed in SPP_VAR_LIST. 
 # Enter each value of the array in config.sh as shown below without commas
-# or single quotes (e.g., SPP_VAR_LIST= ( "pbl" "sfc" "mp" "rad" "gwd" ). 
+# or single quotes (e.g., SPP_VAR_LIST=( "pbl" "sfc" "mp" "rad" "gwd" ). 
 # Both commas and single quotes will be added by Jinja when creating the
 # namelist.
 #
