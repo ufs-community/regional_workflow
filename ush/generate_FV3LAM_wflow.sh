@@ -531,8 +531,6 @@ Copying contents of user cron table to backup file:
 #
   if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
     grep_output=$( grep "^${crontab_line_esc_astr}$" "/u/$USER/cron/mycrontab" )
-  elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
-    grep_output=$( crontab -l | grep "^${crontab_line_esc_astr}$" )
   else
     grep_output=$( echo "${crontab_contents}" | grep "^${crontab_line_esc_astr}$" )
   fi
@@ -554,8 +552,6 @@ resubmit SRW workflow:
 
     if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
       echo "${CRONTAB_LINE}" >> "/u/$USER/cron/mycrontab"      
-    elif [ "$MACHINE" = "WCOSS_CRAY" ]; then
-      ( crontab -l; echo "${CRONTAB_LINE}" ) | crontab -
     else
       ( echo "${crontab_contents}"; echo "${CRONTAB_LINE}" ) | ${crontab_cmd}
     fi

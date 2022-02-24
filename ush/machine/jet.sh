@@ -75,7 +75,6 @@ SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/lfs4/HFIP/hfv3gfs/glopara/git/fv3gf
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/mnt/lfs4/BMC/wrfruc/FV3-LAM/pregen"}
 
 RUN_CMD_SERIAL="time"
-RUN_CMD_SFC_CLIMO="srun"
 RUN_CMD_UTILS="srun"
 RUN_CMD_FCST="srun"
 RUN_CMD_POST="srun"

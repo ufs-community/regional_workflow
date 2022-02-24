@@ -63,7 +63,6 @@ SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regio
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
 
 RUN_CMD_SERIAL="time"
-RUN_CMD_SFC_CLIMO='ibrun -np $nprocs'
 RUN_CMD_UTILS='ibrun -np $nprocs'
 RUN_CMD_FCST='ibrun -np $nprocs'
 RUN_CMD_POST='ibrun -np $nprocs'

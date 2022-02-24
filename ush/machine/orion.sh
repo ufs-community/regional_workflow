@@ -59,7 +59,6 @@ SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/noaa/global/glopara/fix/fix_sf
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
 
 RUN_CMD_SERIAL="time"
-RUN_CMD_SFC_CLIMO="srun"
 RUN_CMD_UTILS="srun"
 RUN_CMD_FCST='srun -n ${PE_MEMBER01}'
 RUN_CMD_POST="srun"

@@ -169,7 +169,7 @@ does not exist:
 Please ensure that you've built this executable."
 fi
 
-${RUN_CMD_SFC_CLIMO} ${exec_fp} || \
+${RUN_CMD_UTILS} ${exec_fp} || \
 print_err_msg_exit "\
 Call to executable (exec_fp) to generate surface climatology files returned
 with nonzero exit code:
