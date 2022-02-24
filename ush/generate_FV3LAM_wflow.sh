@@ -772,7 +772,7 @@ settings="\
     'n_var_spp': ${N_VAR_SPP},
     'n_var_lndp': ${N_VAR_LNDP},
     'lndp_type': ${LNDP_TYPE},
-    'lndp_each_step': ${SPP_LSM_EACH_STEP},
+    'lndp_each_step': ${LSM_SPP_EACH_STEP},
     'fhcyc': ${FHCYC_LSM_SPP_OR_NOT}, 
   }
 'nam_stochy': {
@@ -873,11 +873,11 @@ settings="$settings
 if [ "${DO_LSM_SPP}" = "TRUE" ]; then 
 settings="$settings
     'lndp_type': ${LNDP_TYPE},
-    'lndp_tau': [ $( printf %s, "${SPP_LSM_TSCALE[@]}" ) ],
-    'lndp_lscale': [ $( printf %s, "${SPP_LSM_LSCALE[@]}" ) ],
+    'lndp_tau': [ $( printf %s, "${LSM_SPP_TSCALE[@]}" ) ],
+    'lndp_lscale': [ $( printf %s, "${LSM_SPP_LSCALE[@]}" ) ],
     'iseed_lndp': [ $( printf %s, "${ISEED_LSM_SPP[@]}" ) ],
-    'lndp_var_list': [ $( printf %s, "${SPP_LSM_VAR_LIST[@]}" ) ],
-    'lndp_prt_list': [ $( printf %s, "${SPP_LSM_MAG_LIST[@]}" ) ],"
+    'lndp_var_list': [ $( printf %s, "${LSM_SPP_VAR_LIST[@]}" ) ],
+    'lndp_prt_list': [ $( printf %s, "${LSM_SPP_MAG_LIST[@]}" ) ],"
 fi
 settings="$settings
   }"

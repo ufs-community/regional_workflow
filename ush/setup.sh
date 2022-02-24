@@ -511,7 +511,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If running with LSM SPP, count the number of entries in SPP_LSM_VAR_LIST
+# If running with LSM SPP, count the number of entries in LSM_SPP_VAR_LIST
 # to correctly set N_VAR_LNDP, otherwise set it to zero.  Also set 
 # LNDP_TYPE to 2 for LSM SPP, otherwise set it to zero.  Finally, initialize
 # an "FHCYC_LSM_SPP" variable to 0 and set it to 999 if LSM SPP is turned
@@ -526,7 +526,7 @@ N_VAR_LNDP=0
 LNDP_TYPE=0
 FHCYC_LSM_SPP_OR_NOT=0
 if [ "${DO_LSM_SPP}" = "TRUE" ]; then
-  N_VAR_LNDP=${#SPP_LSM_VAR_LIST[@]}
+  N_VAR_LNDP=${#LSM_SPP_VAR_LIST[@]}
   LNDP_TYPE=2
   FHCYC_LSM_SPP_OR_NOT=999
 fi
@@ -558,14 +558,14 @@ fi
 #
 # If running with LSM SPP, confirm that each LSM SPP-related namelist
 # value contains the same number of entries as N_VAR_LNDP (set above to
-# be equal to the number of entries in SPP_LSM_VAR_LIST).
+# be equal to the number of entries in LSM_SPP_VAR_LIST).
 #
 #-----------------------------------------------------------------------
 #
 if [ "${DO_LSM_SPP}" = "TRUE" ]; then
-  if [ "${#SPP_LSM_MAG_LIST[@]}" != "${N_VAR_LNDP}" ] || \
-     [ "${#SPP_LSM_LSCALE[@]}" != "${N_VAR_LNDP}" ] || \
-     [ "${#SPP_LSM_TSCALE[@]}" != "${N_VAR_LNDP}" ] || \
+  if [ "${#LSM_SPP_MAG_LIST[@]}" != "${N_VAR_LNDP}" ] || \
+     [ "${#LSM_SPP_LSCALE[@]}" != "${N_VAR_LNDP}" ] || \
+     [ "${#LSM_SPP_TSCALE[@]}" != "${N_VAR_LNDP}" ] || \
      [ "${#ISEED_LSM_SPP[@]}" != "${N_VAR_LNDP}" ]; then
   print_err_msg_exit "\
 All SPP-related namelist variables set in config.sh must be equal in number

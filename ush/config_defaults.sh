@@ -1776,12 +1776,12 @@ USE_ZMTNBLCK="FALSE"
 #
 #-----------------------------------------------------------------------
 #
-# Set default SPP stochastic physics options.
-# Each SPP option is an array, applicable (in order) to the scheme/parameter
-# listed in SPP_VAR_LIST. Enter each value of the array in config.sh as 
-# shown below without commas or single quotes (e.g., SPP_VAR_LIST=
-# ( "pbl" "sfc" "mp" "rad" "gwd" ). Both commas and single quotes will be 
-# added by Jinja when creating the namelist.
+# Set default SPP stochastic physics options. Each SPP option is an array, 
+# applicable (in order) to the scheme/parameter listed in SPP_VAR_LIST. 
+# Enter each value of the array in config.sh as shown below without commas
+# or single quotes (e.g., SPP_VAR_LIST= ( "pbl" "sfc" "mp" "rad" "gwd" ). 
+# Both commas and single quotes will be added by Jinja when creating the
+# namelist.
 #
 # Note that SPP is currently only available for specific physics schemes 
 # used in the RAP/HRRR physics suite.  Users need to be aware of which SDF
@@ -1807,12 +1807,12 @@ ISEED_SPP=( "4" "4" "4" "4" "4" )
 # Please be aware of the SDF that you choose if you wish to turn on LSM
 # SPP.
 #
-# SPP in for LSM schemes is handled in the &nam_sfcperts namelist 
-# block instead of in &nam_sppperts, where all other SPP is implemented.
+# SPP in LSM schemes is handled in the &nam_sfcperts namelist block 
+# instead of in &nam_sppperts, where all other SPP is implemented.
 #
 # The default perturbation frequency is determined by the fhcyc namelist 
 # entry.  Since that parameter is set to zero in the SRW App, use 
-# SPP_LSM_EACH_STEP to perturb every time step. 
+# LSM_SPP_EACH_STEP to perturb every time step. 
 #
 # Perturbations to soil moisture content (SMC) are only applied at the 
 # first time step.
@@ -1822,12 +1822,12 @@ ISEED_SPP=( "4" "4" "4" "4" "4" )
 # surface roughness (cm), and STC - soil temperature.
 #
 DO_LSM_SPP="false" #If true, sets lndp_type=2
-SPP_LSM_TSCALE=( "21600" "21600" "21600" "21600" "21600" "21600" "21600" )
-SPP_LSM_LSCALE=( "150000" "150000" "150000" "150000" "150000" "150000" "150000" )
+LSM_SPP_TSCALE=( "21600" "21600" "21600" "21600" "21600" "21600" "21600" )
+LSM_SPP_LSCALE=( "150000" "150000" "150000" "150000" "150000" "150000" "150000" )
 ISEED_LSM_SPP=( "5" "5" "5" "5" "5" "5" "5" )
-SPP_LSM_VAR_LIST=( "smc" "vgf" "alb" "sal" "emi" "zol" "stc" )
-SPP_LSM_MAG_LIST=( "0.2" "0.001" "0.001" "0.001" "0.001" "0.001" "0.2" )
-SPP_LSM_EACH_STEP="true" #Sets lndp_each_step=.true.
+LSM_SPP_VAR_LIST=( "smc" "vgf" "alb" "sal" "emi" "zol" "stc" )
+LSM_SPP_MAG_LIST=( "0.2" "0.001" "0.001" "0.001" "0.001" "0.001" "0.2" )
+LSM_SPP_EACH_STEP="true" #Sets lndp_each_step=.true.
 #
 #-----------------------------------------------------------------------
 # 
