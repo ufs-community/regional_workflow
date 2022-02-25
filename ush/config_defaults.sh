@@ -1495,6 +1495,7 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "global_zorclim.1x1.grb" \
 "global_sfc_emissivity_idx.txt" \
 "global_solarconstant_noaa_an.txt" \
+"global_albedo4.1x1.grb" \
 "geo_em.d01.lat-lon.2.5m.HGT_M.nc" \
 "HGT.Beljaars_filtered.lat-lon.30s_res.nc" \
 "replace_with_FIXgsm_ozone_prodloss_filename" \
@@ -1545,6 +1546,7 @@ CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING=( \
 "co2historicaldata_glob.txt | global_co2historicaldata_glob.txt" \
 "co2monthlycyc.txt          | co2monthlycyc.txt" \
 "global_h2oprdlos.f77       | global_h2o_pltc.f77" \
+"global_albedo4.1x1.grb     | global_albedo4.1x1.grb" \
 "global_zorclim.1x1.grb     | global_zorclim.1x1.grb" \
 "sfc_emissivity_idx.txt     | global_sfc_emissivity_idx.txt" \
 "solarconstant_noaa_an.txt  | global_solarconstant_noaa_an.txt" \
@@ -1821,10 +1823,15 @@ ISEED_SPP=( "4" "4" "4" "4" "4" )
 # VGF - vegetation fraction, ALB - albedo, SAL - salinity, 
 # EMI - emissivity, ZOL - surface roughness (cm), and STC - soil temperature.
 #
+# Only six perturbations at a time can be applied currently, but all seven
+# are shown below.  In addition, only five unique iseed values are allowed 
+# at the moment.  Therefore, if the iseeds are set to unique values (instead of
+# a single value), only five perturbations can be applied.
+#
 DO_LSM_SPP="false" #If true, sets lndp_type=2
 LSM_SPP_TSCALE=( "21600" "21600" "21600" "21600" "21600" "21600" "21600" )
 LSM_SPP_LSCALE=( "150000" "150000" "150000" "150000" "150000" "150000" "150000" )
-ISEED_LSM_SPP=( "5" "5" "5" "5" "5" "5" "5" )
+ISEED_LSM_SPP=( "9" "9" "9" "9" "9" "9" "9" )
 LSM_SPP_VAR_LIST=( "smc" "vgf" "alb" "sal" "emi" "zol" "stc" )
 LSM_SPP_MAG_LIST=( "0.2" "0.001" "0.001" "0.001" "0.001" "0.001" "0.2" )
 LSM_SPP_EACH_STEP="true" #Sets lndp_each_step=.true.

@@ -3247,6 +3247,8 @@ N_VAR_SPP='${N_VAR_SPP}'
 #-----------------------------------------------------------------------
 #
 N_VAR_LNDP='${N_VAR_LNDP}'
+#
+#
 "
 #
 # Done with constructing the contents of the variable definitions file,

@@ -80,6 +80,9 @@ function set_FV3nml_stoch_params() {
         iseed_skeb \
         iseed_sppt \
         iseed_spp \
+        iseed_lsm_spp \
+        num_iseed_spp \
+        num_iseed_lsm_spp \
         settings
 #
 #-----------------------------------------------------------------------
@@ -98,8 +101,16 @@ function set_FV3nml_stoch_params() {
   iseed_shum=$(( cdate*1000 + ensmem_num*10 + 2 ))
   iseed_skeb=$(( cdate*1000 + ensmem_num*10 + 3 ))
   iseed_sppt=$(( cdate*1000 + ensmem_num*10 + 1 ))
-  iseed_spp=$(( cdate*1000 + ensmem_num*10 + 4 ))
-  iseed_lsm_spp=$(( cdate*1000 + ensmem_num*10 + 4 ))
+
+  num_iseed_spp=${#ISEED_SPP[@]}
+  for (( i=0; i<${num_iseed_spp}; i++ )); do
+    iseed_spp[$i]=$(( cdate*1000 + ensmem_num*10 + ${ISEED_SPP[$i]} ))
+  done
+
+  num_iseed_lsm_spp=${#ISEED_LSM_SPP[@]}
+  for (( i=0; i<${num_iseed_lsm_spp}; i++ )); do
+    iseed_lsm_spp[$i]=$(( cdate*1000 + ensmem_num*10 + ${ISEED_LSM_SPP[$i]} ))
+  done
 
   settings="\
 'nam_stochy': {
@@ -108,10 +119,10 @@ function set_FV3nml_stoch_params() {
   'iseed_sppt': ${iseed_sppt},
   }
 'nam_sppperts': {
-  'iseed_spp': ${iseed_spp},
+  'iseed_spp': [ $( printf "%s, " "${iseed_spp[@]}" ) ]
   }
 'nam_sfcperts': {
-  'iseed_lndp': ${iseed_lsm_spp},
+  'iseed_lndp': [ $( printf "%s, " "${iseed_lsm_spp[@]}" ) ]
   }"
 
   $USHDIR/set_namelist.py -q \
