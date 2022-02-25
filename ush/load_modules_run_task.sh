@@ -92,7 +92,7 @@ case "$MACHINE" in
     . /apps/lmod/lmod/init/sh
     ;;
 #
-  "AWS")
+  "NOAACLOUD")
     . /usr/share/lmod/lmod/init/sh
     ;;
 #

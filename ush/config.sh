@@ -4,10 +4,10 @@
 # (if different from the default location), and the name of the experiment
 # subdirectory.
 #
-MACHINE="SINGULARITY-MN"
+MACHINE="NOAACLOUD"
 COMPILER="gnu"
 ACCOUNT="none"
-EXPT_SUBDIR="SING_GST_lowres"
+EXPT_SUBDIR="GST_lowres"
 EXPT_BASEDIR="/lustre/$USER/expt_dirs"
 
 VERBOSE="TRUE"
