@@ -48,6 +48,11 @@ RUN_ENVIR="nco"
 # Please see ush/valid_param_vals.sh for a full list of supported
 # platforms.
 #
+# MACHINE_FILE:
+# Path to a configuration file with machine-specific settings. If none
+# is provided, setup.sh will attempt to set the path to for a supported
+# platform.
+#
 # ACCOUNT:
 # The account under which to submit jobs to the queue.
 #
@@ -132,6 +137,7 @@ RUN_ENVIR="nco"
 #-----------------------------------------------------------------------
 #
 MACHINE="BIG_COMPUTER"
+MACHINE_FILE=""
 ACCOUNT="project_name"
 WORKFLOW_MANAGER="none"
 NCORES_PER_NODE=""
@@ -212,10 +218,14 @@ CRON_RELAUNCH_INTVL_MNTS="03"
 #
 # dir_doc_end
 #
+# EXEC_SUBDIR:
+# The name of the subdirectory of ufs-srweather-app where executables are
+# installed.
 #-----------------------------------------------------------------------
 #
 EXPT_BASEDIR=""
 EXPT_SUBDIR=""
+EXEC_SUBDIR="bin"
 #
 #-----------------------------------------------------------------------
 #
@@ -574,12 +584,12 @@ WRITE_DOPOST="FALSE"
 #-----------------------------------------------------------------------
 #
 MODEL=""
-MET_INSTALL_DIR="/path/to/MET"
+MET_INSTALL_DIR=""
 MET_BIN_EXEC="bin"
-METPLUS_PATH="/path/to/METPlus"
-CCPA_OBS_DIR="/path/to/observation-directory/ccpa/proc"
-MRMS_OBS_DIR="/path/to/observation-directory/mrms/proc"
-NDAS_OBS_DIR="/path/to/observation-directory/ndas/proc"
+METPLUS_PATH=""
+CCPA_OBS_DIR=""
+MRMS_OBS_DIR=""
+NDAS_OBS_DIR=""
 #
 #-----------------------------------------------------------------------
 #
@@ -663,8 +673,8 @@ FV3GFS_FILE_FMT_LBCS="nemsio"
 #
 #-----------------------------------------------------------------------
 #
-EXTRN_MDL_SYSBASEDIR_ICS=""
-EXTRN_MDL_SYSBASEDIR_LBCS=""
+EXTRN_MDL_SYSBASEDIR_ICS=''
+EXTRN_MDL_SYSBASEDIR_LBCS=''
 #
 #-----------------------------------------------------------------------
 #
@@ -1721,6 +1731,28 @@ DT_SUBHOURLY_POST_MNTS="00"
 #
 USE_CUSTOM_POST_CONFIG_FILE="FALSE"
 CUSTOM_POST_CONFIG_FP=""
+#
+#-----------------------------------------------------------------------
+#
+# Set parameters associated with outputting satellite fields in the UPP
+# grib2 files using the Community Radiative Transfer Model (CRTM).
+#
+# USE_CRTM:
+# Flag that defines whether external CRTM coefficient files have been
+# staged by the user in order to output synthetic statellite products
+# available within the UPP. If this is set to "TRUE", then the workflow
+# will check for these files in the directory CRTM_DIR. Otherwise, it is
+# assumed that no satellite fields are being requested in the UPP
+# configuration.
+#
+# CRTM_DIR:
+# This is the path to the top CRTM fix file directory. This is only used
+# if USE_CRTM is set to "TRUE".
+#
+#-----------------------------------------------------------------------
+#
+USE_CRTM="FALSE"
+CRTM_DIR=""
 #
 #-----------------------------------------------------------------------
 #

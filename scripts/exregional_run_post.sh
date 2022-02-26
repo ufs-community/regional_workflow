@@ -104,7 +104,7 @@ case "$MACHINE" in
     export MP_LABELIO=yes
     export OMP_NUM_THREADS=$threads
 
-    APRUN="aprun -j 1 -n${ntasks} -N${ptile} -d${threads} -cc depth"
+    RUN_CMD_POST="aprun -j 1 -n${ntasks} -N${ptile} -d${threads} -cc depth"
     ;;
 
   "WCOSS_DELL_P3")
@@ -117,53 +117,25 @@ case "$MACHINE" in
     export MP_LABELIO=yes
     export OMP_NUM_THREADS=$threads
 
-    APRUN="mpirun"
-    ;;
-
-  "HERA")
-    APRUN="srun"
-    ;;
-
-  "ORION")
-    ulimit -s unlimited
-    ulimit -a
-    APRUN="srun"
-    ;;
-
-  "JET")
-    APRUN="srun"
-    ;;
-
-  "ODIN")
-    APRUN="srun -n 1"
-    ;;
-
-  "CHEYENNE")
-    module list
-    nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
-    APRUN="mpirun -np $nprocs"
-    ;;
-
-  "STAMPEDE")
-    nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
-    APRUN="ibrun -n $nprocs"
-    ;;
-
-  "MACOS")
-    APRUN=$RUN_CMD_POST
-    ;;
-
-  "LINUX")
-    APRUN=$RUN_CMD_POST
+    RUN_CMD_POST="mpirun"
     ;;
 
   *)
-    print_err_msg_exit "\
-Run command has not been specified for this machine:
-  MACHINE = \"$MACHINE\""
+    source ${MACHINE_FILE}
     ;;
 
 esac
+
+nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
+if [ -z ${RUN_CMD_POST:-} ] ; then
+  print_err_msg_exit "\
+  Run command was not set in machine file. \
+  Please set RUN_CMD_POST for your platform"
+else
+  RUN_CMD_POST=$(eval echo ${RUN_CMD_POST})
+  print_info_msg "$VERBOSE" "
+  All executables will be submitted with command \'${RUN_CMD_POST}\'."
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -199,6 +171,24 @@ temporary work directory (tmp_dir):
 fi
 cp_vrfy ${post_config_fp} ./postxconfig-NT.txt
 cp_vrfy ${UPP_DIR}/parm/params_grib2_tbl_new .
+if [ ${USE_CRTM} = "TRUE" ]; then
+  cp_vrfy ${CRTM_DIR}/fix/EmisCoeff/IR_Water/Big_Endian/Nalli.IRwater.EmisCoeff.bin ./
+  cp_vrfy ${CRTM_DIR}/fix/EmisCoeff/MW_Water/Big_Endian/FAST*.bin ./
+  cp_vrfy ${CRTM_DIR}/fix/EmisCoeff/IR_Land/SEcategory/Big_Endian/NPOESS.IRland.EmisCoeff.bin ./
+  cp_vrfy ${CRTM_DIR}/fix/EmisCoeff/IR_Snow/SEcategory/Big_Endian/NPOESS.IRsnow.EmisCoeff.bin ./
+  cp_vrfy ${CRTM_DIR}/fix/EmisCoeff/IR_Ice/SEcategory/Big_Endian/NPOESS.IRice.EmisCoeff.bin ./
+  cp_vrfy ${CRTM_DIR}/fix/AerosolCoeff/Big_Endian/AerosolCoeff.bin ./
+  cp_vrfy ${CRTM_DIR}/fix/CloudCoeff/Big_Endian/CloudCoeff.bin ./
+  cp_vrfy ${CRTM_DIR}/fix/SpcCoeff/Big_Endian/*.bin ./
+  cp_vrfy ${CRTM_DIR}/fix/TauCoeff/ODPS/Big_Endian/*.bin ./
+  print_info_msg "
+====================================================================
+Copying the external CRTM fix files from CRTM_DIR to the temporary
+work directory (tmp_dir):
+  CRTM_DIR = \"${CRTM_DIR}\"
+  tmp_dir = \"${tmp_dir}\"
+===================================================================="
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -224,7 +214,7 @@ tmmark="tm00"
 #
 #-----------------------------------------------------------------------
 #
-# Create a text file (itag) containing arguments to pass to the post-
+# Create the namelist file (itag) containing arguments to pass to the post-
 # processor's executable.
 #
 #-----------------------------------------------------------------------
@@ -264,7 +254,7 @@ post_dd=${post_time:6:2}
 post_hh=${post_time:8:2}
 post_mn=${post_time:10:2}
 #
-# Create the input text file to the post-processor executable.
+# Create the input namelist file to the post-processor executable.
 #
 if [ ${FCST_MODEL} = "fv3gfs_aqm" ]; then
   post_itag_add="aqfcmaq_on=.true.,"
@@ -272,12 +262,13 @@ else
   post_itag_add=""
 fi
 cat > itag <<EOF
-${dyn_file}
-netcdf
-grib2
-${post_yyyy}-${post_mm}-${post_dd}_${post_hh}:${post_mn}:00
-FV3R
-${phy_file}
+&model_inputs
+fileName='${dyn_file}'
+IOFORM='netcdf'
+grib='grib2'
+DateStr='${post_yyyy}-${post_mm}-${post_dd}_${post_hh}:${post_mn}:00'
+MODELNAME='FV3R'
+fileNameFlux='${phy_file}'
 
  &NAMPGB
  KPO=47,PO=1000.,975.,950.,925.,900.,875.,850.,825.,800.,775.,750.,725.,700.,675.,650.,625.,600.,575.,550.,525.,500.,475.,450.,425.,400.,375.,350.,325.,300.,275.,250.,225.,200.,175.,150.,125.,100.,70.,50.,30.,20.,10.,7.,5.,3.,2.,1.,${post_itag_add}
@@ -294,7 +285,7 @@ EOF
 print_info_msg "$VERBOSE" "
 Starting post-processing for fhr = $fhr hr..."
 
-${APRUN} ${EXECDIR}/upp.x < itag || print_err_msg_exit "\
+${RUN_CMD_POST} ${EXECDIR}/upp.x < itag || print_err_msg_exit "\
 Call to executable to run post for forecast hour $fhr returned with non-
 zero exit code."
 #
