@@ -206,7 +206,7 @@ check_var_valid_value "DO_SPP" "valid_vals_DO_SPP"
 DO_SPP=$(boolify $DO_SPP)
 
 check_var_valid_value "DO_LSM_SPP" "valid_vals_DO_LSM_SPP"
-DO_LSM_SPP=$(boolify $DO_SPP)
+DO_LSM_SPP=$(boolify $DO_LSM_SPP)
 #
 #-----------------------------------------------------------------------
 #
