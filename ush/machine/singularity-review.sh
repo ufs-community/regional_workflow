@@ -55,9 +55,9 @@ SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/contrib/global/glopara/fix/fix_sfc_
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
 
 RUN_CMD_SERIAL="time"
-RUN_CMD_UTILS="mpi"
+RUN_CMD_UTILS='mpirun -np $nprocs --oversubscribe'
 RUN_CMD_FCST='mpirun -n ${PE_MEMBER01} --oversubscribe'
-RUN_CMD_POST="mpi"
+RUN_CMD_POST='mpirun -np $nprocs --oversubscribe'
 
 # Test Data Locations
 TEST_EXTRN_MDL_SOURCE_BASEDIR=/contrib/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files
