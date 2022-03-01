@@ -14,7 +14,7 @@ function file_location() {
   case ${external_model} in
 
     "FV3GFS")
-      location='/scratch1/NCEPDEV/rstprod/com/gfs/prod/gfs.${yyyymmdd}/${hh}/atmos'
+      location='/contrib/GST/model_data/FV3GFS/${yyyymmdd}${hh}'
       ;;
     *)
       print_info_msg"\
@@ -36,6 +36,9 @@ EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
 
 # System Installations
 MODULE_INIT_PATH=${MODULE_INIT_PATH:-/apps/lmod/lmod/init/sh}
+
+# Commands to run at the start of each workflow task.
+PRE_TASK_CMDS='{ ulimit -s unlimited; ulimit -a; }'
 
 # Architecture information
 WORKFLOW_MANAGER="rocoto"
@@ -71,5 +74,3 @@ RUN_CMD_POST='mpirun -np $nprocs'
 #TEST_ALT_EXTRN_MDL_SYSBASEDIR_LBCS=/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir
 
 
-ulimit -s unlimited
-ulimit -a

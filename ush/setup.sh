@@ -401,7 +401,7 @@ SORCDIR="$HOMErrfs/sorc"
 SRC_DIR="${SR_WX_APP_TOP_DIR}/src"
 PARMDIR="$HOMErrfs/parm"
 MODULES_DIR="$HOMErrfs/modulefiles"
-EXECDIR="${SR_WX_APP_TOP_DIR}/bin"
+EXECDIR="${SR_WX_APP_TOP_DIR}/${EXEC_SUBDIR}"
 TEMPLATE_DIR="$USHDIR/templates"
 VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
 METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
@@ -427,7 +427,7 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #
 RELATIVE_LINK_FLAG="--relative"
 MACHINE_FILE=${MACHINE_FILE:-${USHDIR}/machine/$(echo_lowercase $MACHINE).sh}
-source ${MACHINE_FILE}
+source $USHDIR/source_machine_file.sh
 
 if [ -z "${NCORES_PER_NODE:-}" ]; then
   print_err_msg_exit "\
@@ -749,6 +749,22 @@ if [ ${USE_CUSTOM_POST_CONFIG_FILE} = "TRUE" ]; then
 The custom post configuration specified by CUSTOM_POST_CONFIG_FP does not 
 exist:
   CUSTOM_POST_CONFIG_FP = \"${CUSTOM_POST_CONFIG_FP}\""
+  fi
+fi
+#
+#-----------------------------------------------------------------------
+#
+# If using external CRTM fix files to allow post-processing of synthetic
+# satellite products from the UPP, then make sure the fix file directory
+# exists.
+#
+#-----------------------------------------------------------------------
+#
+if [ ${USE_CRTM} = "TRUE" ]; then
+  if [ ! -d "${CRTM_DIR}" ]; then
+    print_err_msg_exit "
+The external CRTM fix file directory specified by CRTM_DIR does not exist:
+  CRTM_DIR = \"${CRTM_DIR}\""
   fi
 fi
 #
@@ -1326,7 +1342,7 @@ WFLOW_LAUNCH_SCRIPT_FP="$USHDIR/${WFLOW_LAUNCH_SCRIPT_FN}"
 WFLOW_LAUNCH_LOG_FP="$EXPTDIR/${WFLOW_LAUNCH_LOG_FN}"
 if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ]; then
   CRONTAB_LINE="*/${CRON_RELAUNCH_INTVL_MNTS} * * * * cd $EXPTDIR && \
-./${WFLOW_LAUNCH_SCRIPT_FN} >> ./${WFLOW_LAUNCH_LOG_FN} 2>&1"
+./${WFLOW_LAUNCH_SCRIPT_FN} called_from_cron=\"TRUE\" >> ./${WFLOW_LAUNCH_LOG_FN} 2>&1"
 else
   CRONTAB_LINE=""
 fi
