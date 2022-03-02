@@ -32,6 +32,15 @@ EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
   ${EXTRN_MDL_NAME_LBCS} \
   ${FV3GFS_FILE_FMT_ICS})}
 
+# System scripts to source to initialize various commands within workflow
+# scripts (e.g. "module").
+if [ -z ${ENV_INIT_SCRIPTS_FPS:-""} ]; then
+  ENV_INIT_SCRIPTS_FPS=( "/etc/profile" )
+fi
+
+# Commands to run at the start of each workflow task.
+PRE_TASK_CMDS='{ ulimit -s unlimited; ulimit -a; }'
+
 # System Installations
 MODULE_INIT_PATH=${MODULE_INIT_PATH:-/usr/share/lmod/6.6/init/profile}
 
@@ -39,11 +48,11 @@ MODULE_INIT_PATH=${MODULE_INIT_PATH:-/usr/share/lmod/6.6/init/profile}
 WORKFLOW_MANAGER="rocoto"
 NCORES_PER_NODE=${NCORES_PER_NODE:-40}
 SCHED=${SCHED:-"slurm"}
-PARTITION_DEFAULT=${PARTITION_DEFAULT:-}
+PARTITION_DEFAULT=${PARTITION_DEFAULT:-""}
 QUEUE_DEFAULT=${QUEUE_DEFAULT:-"batch"}
 PARTITION_HPSS=${PARTITION_HPSS:-"service"}
 QUEUE_HPSS=${QUEUE_HPSS:-"batch"}
-PARTITION_FCST=${PARTITION_FCST:-}
+PARTITION_FCST=${PARTITION_FCST:-""}
 QUEUE_FCST=${QUEUE_FCST:-"batch"}
 
 # UFS SRW App specific paths
@@ -61,6 +70,3 @@ RUN_CMD_POST='mpirun -np $nprocs --oversubscribe'
 
 # Test Data Locations
 TEST_EXTRN_MDL_SOURCE_BASEDIR=/contrib/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files
-
-ulimit -s unlimited
-ulimit -a
