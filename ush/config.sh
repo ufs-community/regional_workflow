@@ -5,9 +5,9 @@
 # subdirectory.
 #
 MACHINE="NOAACLOUD"
-COMPILER="gnu"
+COMPILER="intel"
 ACCOUNT="none"
-EXPT_SUBDIR="GST_lowres"
+EXPT_SUBDIR="GST_lowres.intel"
 EXPT_BASEDIR="/lustre/$USER/expt_dirs"
 
 VERBOSE="TRUE"
