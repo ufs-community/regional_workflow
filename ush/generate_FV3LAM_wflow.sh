@@ -506,7 +506,14 @@ Copying contents of user cron table to backup file:
   get_crontab_contents called_from_cron=${called_from_cron} \
                        outvarname_crontab_cmd="crontab_cmd" \
                        outvarname_crontab_contents="crontab_contents"
-  echo "${crontab_contents}" > "${crontab_backup_fp}"
+  # To create the backup crontab file and add a new line to the user's 
+  # existing cron table, use the "printf" command, not "echo", to print 
+  # out variables.  This is because "echo" will add a newline at the end 
+  # of its output even if its input argument is a null string, resulting
+  # in extranous blank lines in the backup crontab file and/or the cron 
+  # table itself.  Using "printf" prevents the appearance of these blank
+  # lines.
+  printf "%s" "${crontab_contents}" > "${crontab_backup_fp}"
 #
 # Below, we use "grep" to determine whether the crontab line that the
 # variable CRONTAB_LINE contains is already present in the cron table.
@@ -532,7 +539,7 @@ Copying contents of user cron table to backup file:
   if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
     grep_output=$( grep "^${crontab_line_esc_astr}$" "/u/$USER/cron/mycrontab" )
   else
-    grep_output=$( echo "${crontab_contents}" | grep "^${crontab_line_esc_astr}$" )
+    grep_output=$( printf "%s" "${crontab_contents}" | grep "^${crontab_line_esc_astr}$" )
   fi
   exit_status=$?
 
@@ -551,9 +558,13 @@ resubmit SRW workflow:
   CRONTAB_LINE = \"${CRONTAB_LINE}\""
 
     if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
-      echo "${CRONTAB_LINE}" >> "/u/$USER/cron/mycrontab"      
+      printf "%s" "${CRONTAB_LINE}" >> "/u/$USER/cron/mycrontab"      
     else
-      ( echo "${crontab_contents}"; echo "${CRONTAB_LINE}" ) | ${crontab_cmd}
+      # Add a newline to the end of crontab_contents only if it is not empty.
+      # This is needed so that when CRONTAB_LINE is printed out, it appears on
+      # a separate line.
+      crontab_contents=${crontab_contents:+"${crontab_contents}"$'\n'}
+      ( printf "%s" "${crontab_contents}"; printf "%s" "${CRONTAB_LINE}" ) | ${crontab_cmd}
     fi
 
   fi
