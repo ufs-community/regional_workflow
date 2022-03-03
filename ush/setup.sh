@@ -297,14 +297,13 @@ fi
 #
 if [ "${DO_LSM_SPP}" = "TRUE" ]; then
   if [ "${#LSM_SPP_MAG_LIST[@]}" != "${N_VAR_LNDP}" ] || \
-     [ "${#LSM_SPP_VAR_LIST[@]}" != "${N_VAR_LNDP}" ] || \
      [ "${#LSM_SPP_LSCALE[@]}" != "${N_VAR_LNDP}" ] || \
      [ "${#LSM_SPP_TSCALE[@]}" != "${N_VAR_LNDP}" ]; then
   print_err_msg_exit "\
 All Noah or RUC-LSM SPP-related namelist variables (except ISEED_LSM_SPP) 
 set in config.sh must be equal in number of entries to what is found in 
 SPP_VAR_LIST:
-  Number of entries in SPP_VAR_LIST = \"${#SPP_VAR_LIST[@]}\""
+  Number of entries in SPP_VAR_LIST = \"${#LSM_SPP_VAR_LIST[@]}\""
   fi
 fi
 #
