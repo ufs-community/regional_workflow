@@ -141,10 +141,6 @@
     debug = .false.
     do_mynnedmf = .true.
     do_mynnsfclay = .false.
-    do_shum = .false.
-    do_skeb = .false.
-    do_spp = .false.
-    do_sppt = .false.
     dspheat = .true.
     effr_in = .true.
     fhcyc = 0.0
