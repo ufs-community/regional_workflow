@@ -18,11 +18,6 @@ function file_location() {
     "FV3GFS")
       location='/scratch/ywang/test_runs/FV3_regional/gfs/${yyyymmdd}'
       ;;
-    "*")
-      print_info_msg "\
-External model \"${external_model}\" does not have a default location on 
-machine \"$MACHINE\".  Setting file location to a null string."
-      ;;
 
   esac
   echo ${location:-}

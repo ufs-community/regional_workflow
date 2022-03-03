@@ -15,11 +15,6 @@ function file_location() {
     "FV3GFS")
       location='/glade/p/ral/jntp/UFS_CAM/COMGFS/gfs.${yyyymmdd}/${hh}'
       ;;
-    "*")
-      print_info_msg "\
-External model \"${external_model}\" does not have a default location on 
-machine \"$MACHINE\".  Setting file location to a null string."
-      ;;
 
   esac
   echo ${location:-}

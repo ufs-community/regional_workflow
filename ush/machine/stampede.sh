@@ -17,11 +17,6 @@ function file_location() {
     "FV3GFS")
       location='/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001'
       ;;
-    "*")
-      print_err_msg_exit "\
-External model \"${external_model}\" does not have a default location on 
-machine \"$MACHINE\".  Please set a user-defined file location."
-      ;;
 
   esac
   echo ${location:-}

@@ -31,11 +31,6 @@ function file_location() {
     "HRRR")
       location='/public/data/grids/hrrr/conus/wrfprs/grib2'
       ;;
-    "*")
-      print_info_msg "\
-External model \"${external_model}\" does not have a default location on 
-machine \"$MACHINE\".  Setting file location to a null string."
-      ;;
 
   esac
   echo ${location:-}

@@ -24,11 +24,6 @@ function file_location() {
     "NAM")
       location='/gpfs/dell1/nco/ops/com/nam/prod'
       ;;
-    "*")
-      print_err_msg_exit "\
-External model \"${external_model}\" does not have a default location on 
-machine \"$MACHINE\".  Please set a user-defined file location."
-      ;;
 
   esac
   echo ${location:-}
