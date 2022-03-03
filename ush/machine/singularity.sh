@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 function file_location() {
 
   # Return the default location of external model files on disk
@@ -35,14 +33,11 @@ EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
 # System scripts to source to initialize various commands within workflow
 # scripts (e.g. "module").
 if [ -z ${ENV_INIT_SCRIPTS_FPS:-""} ]; then
-  ENV_INIT_SCRIPTS_FPS=( "/etc/profile" )
+  ENV_INIT_SCRIPTS_FPS=( "/usr/share/lmod/6.6/init/profile" )
 fi
 
 # Commands to run at the start of each workflow task.
 PRE_TASK_CMDS='{ ulimit -s unlimited; ulimit -a; }'
-
-# System Installations
-MODULE_INIT_PATH=${MODULE_INIT_PATH:-/usr/share/lmod/6.6/init/profile}
 
 # Architecture information
 WORKFLOW_MANAGER="rocoto"
@@ -68,5 +63,17 @@ RUN_CMD_UTILS='mpirun -np $nprocs --oversubscribe'
 RUN_CMD_FCST='mpirun -n ${PE_MEMBER01} --oversubscribe'
 RUN_CMD_POST='mpirun -np $nprocs --oversubscribe'
 
+# MET Installation Locations
+MET_INSTALL_DIR=""
+METPLUS_PATH=""
+CCPA_OBS_DIR=""
+MRMS_OBS_DIR=""
+NDAS_OBS_DIR=""
+MET_BIN_EXEC=""
+
 # Test Data Locations
-TEST_EXTRN_MDL_SOURCE_BASEDIR=/contrib/gsd-fv3-dev/gsketefia/UFS/staged_extrn_mdl_files
+TEST_PREGEN_BASEDIR=""
+TEST_COMINgfs=""
+TEST_EXTRN_MDL_SOURCE_BASEDIR=""
+TEST_ALT_EXTRN_MDL_SYSBASEDIR_ICS=""
+TEST_ALT_EXTRN_MDL_SYSBASEDIR_LBCS=""
