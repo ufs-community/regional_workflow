@@ -230,8 +230,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If running with SPP, count the number of entries in SPP_VAR_LIST to
-# correctly set N_VAR_SPP, otherwise set it to zero. 
+# If running with SPP in MYNN PBL, MYNN SFC, GSL GWD, Thompson MP, or 
+# RRTMG, count the number of entries in SPP_VAR_LIST to correctly set 
+# N_VAR_SPP, otherwise set it to zero. 
 #
 #-----------------------------------------------------------------------
 #
@@ -242,11 +243,11 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If running with LSM SPP, count the number of entries in LSM_SPP_VAR_LIST
-# to correctly set N_VAR_LNDP, otherwise set it to zero.  Also set 
-# LNDP_TYPE to 2 for LSM SPP, otherwise set it to zero.  Finally, initialize
-# an "FHCYC_LSM_SPP" variable to 0 and set it to 999 if LSM SPP is turned
-# on.  This requirement is necessary since LSM SPP cannot run with 
+# If running with Noah or RUC-LSM SPP, count the number of entries in 
+# LSM_SPP_VAR_LIST to correctly set N_VAR_LNDP, otherwise set it to zero.
+# Also set LNDP_TYPE to 2 for LSM SPP, otherwise set it to zero.  Finally,
+# initialize an "FHCYC_LSM_SPP" variable to 0 and set it to 999 if LSM SPP
+# is turned on.  This requirement is necessary since LSM SPP cannot run with 
 # FHCYC=0 at the moment, but FHCYC cannot be set to anything less than the
 # length of the forecast either.  A bug fix will be issued ufs-weather-model 
 # soon, at which point, this requirement can be removed from regional_workflow. 
@@ -279,8 +280,9 @@ if [ "${DO_SPP}" = "TRUE" ]; then
      [ "${#SPP_STDDEV_CUTOFF[@]}" != "${N_VAR_SPP}" ] || \
      [ "${#ISEED_SPP[@]}" != "${N_VAR_SPP}" ]; then
   print_err_msg_exit "\
-All SPP-related namelist variables set in config.sh must be equal in number
-of entries to what is found in SPP_VAR_LIST:
+All MYNN PBL, MYNN SFC, GSL GWD, Thompson MP, or RRTMG SPP-related namelist 
+variables set in config.sh must be equal in number of entries to what is 
+found in SPP_VAR_LIST:
   Number of entries in SPP_VAR_LIST = \"${#SPP_VAR_LIST[@]}\""
   fi
 fi
@@ -296,12 +298,12 @@ fi
 if [ "${DO_LSM_SPP}" = "TRUE" ]; then
   if [ "${#LSM_SPP_MAG_LIST[@]}" != "${N_VAR_LNDP}" ] || \
      [ "${#LSM_SPP_LSCALE[@]}" != "${N_VAR_LNDP}" ] || \
-     [ "${#LSM_SPP_TSCALE[@]}" != "${N_VAR_LNDP}" ] || \
-     [ "${#ISEED_LSM_SPP[@]}" != "${N_VAR_LNDP}" ]; then
+     [ "${#LSM_SPP_TSCALE[@]}" != "${N_VAR_LNDP}" ]; then
   print_err_msg_exit "\
-All SPP-related namelist variables set in config.sh must be equal in number
-of entries to what is found in SPP_VAR_LIST:
-  Number of entries in SPP_VAR_LIST = \"${#SPP_VAR_LIST[@]}\""
+All Noah or RUC-LSM SPP-related namelist variables (except ISEED_LSM_SPP) 
+set in config.sh must be equal in number of entries to what is found in 
+SPP_VAR_LIST:
+  Number of entries in SPP_VAR_LIST = \"${#LSM_SPP_VAR_LIST[@]}\""
   fi
 fi
 #
