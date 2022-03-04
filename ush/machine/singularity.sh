@@ -62,18 +62,3 @@ RUN_CMD_SERIAL="time"
 RUN_CMD_UTILS='mpirun -np $nprocs --oversubscribe'
 RUN_CMD_FCST='mpirun -n ${PE_MEMBER01} --oversubscribe'
 RUN_CMD_POST='mpirun -np $nprocs --oversubscribe'
-
-# MET Installation Locations
-MET_INSTALL_DIR=""
-METPLUS_PATH=""
-CCPA_OBS_DIR=""
-MRMS_OBS_DIR=""
-NDAS_OBS_DIR=""
-MET_BIN_EXEC=""
-
-# Test Data Locations
-TEST_PREGEN_BASEDIR=""
-TEST_COMINgfs=""
-TEST_EXTRN_MDL_SOURCE_BASEDIR=""
-TEST_ALT_EXTRN_MDL_SYSBASEDIR_ICS=""
-TEST_ALT_EXTRN_MDL_SYSBASEDIR_LBCS=""
