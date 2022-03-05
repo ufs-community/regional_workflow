@@ -193,7 +193,7 @@ To build the FV3SAR pre-processing utilities on theia:
    % cd ${BASEDIR}/regional_workflow/regional
    % ./build_regional theia >& out.build_regional
 
-Other supported build platforms are ``"cheyenne``, ``wcoss_cray``, or ``odin``.
+Other supported build platforms are ``"cheyenne``, or ``odin``.
 When the build completes, there should be 9 executables under ``${BASEDIR}/regional_workflow/exec``:
 
 .. code-block:: console
@@ -214,7 +214,7 @@ Note the following:
 
 * The second argument to the ``compile.sh`` script is ``theia.intel``, not just ``theia``. 
     Other build targets are: 
-    ``cheyenne.gnu, cheyenne.intel, cheyenne.pgi, odin, theia.gnu, theia.intel, theia.pgi`` or ``wcoss_cray``.
+    ``cheyenne.gnu, cheyenne.intel, cheyenne.pgi, odin, theia.gnu, theia.intel`` or ``theia.pgi``.
 
 * This is a production build, not a debug build.  We don't do the debug build because it is very slow
   to run, and you'll time out in the queue.
@@ -258,7 +258,6 @@ cleaning step, which will speed up repeating compilation, which is useful for de
 Currently all the fixed fields necessary to run a uniform global case without a nest are in subdirectories
 on each supported machine:
 
-*  ``/gpfs/hps3/emc/global/noscrub/emc.glopara/git/fv3gfs/fix/fix_fv3`` on the cray
 *  ``/scratch4/NCEPDEV/global/save/glopara/git/fv3gfs/fix/fix_fv3`` on theia
 *  ``/glade/p/ral/jntp/GMTB/FV3GFS_V1_RELEASE/fix/fix_am/`` on Cheyenne
 
