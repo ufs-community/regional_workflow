@@ -58,25 +58,14 @@ SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/contrib/EPIC/fix/fix_sfc_climo"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch2/BMC/det/FV3LAM_pregen"}
 
 RUN_CMD_SERIAL="time"
+#Run Commands currently differ for GNU/openmpi
 #RUN_CMD_UTILS='mpirun --mca btl tcp,vader,self -np $nprocs'
 #RUN_CMD_FCST='mpirun --mca btl tcp,vader,self -np ${PE_MEMBER01}'
+#RUN_CMD_POST='mpirun --mca btl tcp,vader,self -np $nprocs'
 RUN_CMD_UTILS='srun --mpi=pmi2 -n $nprocs'
 RUN_CMD_FCST='srun --mpi=pmi2 -n ${PE_MEMBER01}'
 RUN_CMD_POST='srun --mpi=pmi2 -n $nprocs'
 
 # MET Installation Locations
-#MET_INSTALL_DIR="/contrib/met/10.0.0"
-#METPLUS_PATH="/contrib/METplus/METplus-4.0.0"
-#CCPA_OBS_DIR="/scratch2/BMC/det/UFS_SRW_app/develop/obs_data/ccpa/proc"
-#MRMS_OBS_DIR="/scratch2/BMC/det/UFS_SRW_app/develop/obs_data/mrms/proc"
-#NDAS_OBS_DIR="/scratch2/BMC/det/UFS_SRW_app/develop/obs_data/ndas/proc"
-#MET_BIN_EXEC="bin"
-
-# Test Data Locations
-#TEST_PREGEN_BASEDIR=/scratch2/BMC/det/FV3LAM_pregen
-#TEST_COMINgfs=/scratch2/NCEPDEV/fv3-cam/noscrub/UFS_SRW_App/COMGFS
-#TEST_EXTRN_MDL_SOURCE_BASEDIR=/scratch2/BMC/det/Gerard.Ketefian/UFS_CAM/staged_extrn_mdl_files
-#TEST_ALT_EXTRN_MDL_SYSBASEDIR_ICS=/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir
-#TEST_ALT_EXTRN_MDL_SYSBASEDIR_LBCS=/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir
-
+# MET Plus is not yet supported on noaacloud
 
