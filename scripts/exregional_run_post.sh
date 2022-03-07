@@ -92,42 +92,11 @@ export OMP_STACKSIZE=${OMP_STACKSIZE_RUN_POST}
 #
 #-----------------------------------------------------------------------
 #
-case "$MACHINE" in
-
-  "WCOSS_CRAY")
-
-# Specify computational resources.
-    export NODES=2
-    export ntasks=48
-    export ptile=24
-    export threads=1
-    export MP_LABELIO=yes
-    export OMP_NUM_THREADS=$threads
-
-    RUN_CMD_POST="aprun -j 1 -n${ntasks} -N${ptile} -d${threads} -cc depth"
-    ;;
-
-  "WCOSS_DELL_P3")
-
-# Specify computational resources.
-    export NODES=2
-    export ntasks=48
-    export ptile=24
-    export threads=1
-    export MP_LABELIO=yes
-    export OMP_NUM_THREADS=$threads
-
-    RUN_CMD_POST="mpirun"
-    ;;
-
-  *)
-    source ${MACHINE_FILE}
-    ;;
-
-esac
+source $USHDIR/source_machine_file.sh
+eval ${PRE_TASK_CMDS}
 
 nprocs=$(( NNODES_RUN_POST*PPN_RUN_POST ))
-if [ -z ${RUN_CMD_POST:-} ] ; then
+if [ -z "${RUN_CMD_POST:-}" ] ; then
   print_err_msg_exit "\
   Run command was not set in machine file. \
   Please set RUN_CMD_POST for your platform"
@@ -269,6 +238,7 @@ grib='grib2'
 DateStr='${post_yyyy}-${post_mm}-${post_dd}_${post_hh}:${post_mn}:00'
 MODELNAME='FV3R'
 fileNameFlux='${phy_file}'
+/
 
  &NAMPGB
  KPO=47,PO=1000.,975.,950.,925.,900.,875.,850.,825.,800.,775.,750.,725.,700.,675.,650.,625.,600.,575.,550.,525.,500.,475.,450.,425.,400.,375.,350.,325.,300.,275.,250.,225.,200.,175.,150.,125.,100.,70.,50.,30.,20.,10.,7.,5.,3.,2.,1.,${post_itag_add}

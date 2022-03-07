@@ -59,6 +59,7 @@ ushdir="${scrfunc_dir}"
 #-----------------------------------------------------------------------
 #
 . $ushdir/source_util_funcs.sh
+. $ushdir/get_crontab_contents.sh
 . $ushdir/set_FV3nml_sfc_climo_filenames.sh
 #
 #-----------------------------------------------------------------------
@@ -500,37 +501,45 @@ if [ "${USE_CRON_TO_RELAUNCH}" = "TRUE" ]; then
   print_info_msg "$VERBOSE" "
 Copying contents of user cron table to backup file:
   crontab_backup_fp = \"${crontab_backup_fp}\""
-  if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
-    cp_vrfy "/u/$USER/cron/mycrontab" "${crontab_backup_fp}"
-  else
-    crontab -l > ${crontab_backup_fp}
-  fi
-#
-# Below, we use "grep" to determine whether the crontab line that the
-# variable CRONTAB_LINE contains is already present in the cron table.
-# For that purpose, we need to escape the asterisks in the string in
-# CRONTAB_LINE with backslashes.  Do this next.
-#
+
+  called_from_cron=${called_from_cron:-"FALSE"}
+  get_crontab_contents called_from_cron=${called_from_cron} \
+                       outvarname_crontab_cmd="crontab_cmd" \
+                       outvarname_crontab_contents="crontab_contents"
+  # To create the backup crontab file and add a new job to the user's 
+  # existing cron table, use the "printf" command, not "echo", to print 
+  # out variables.  This is because "echo" will add a newline at the end 
+  # of its output even if its input argument is a null string, resulting
+  # in extranous blank lines in the backup crontab file and/or the cron 
+  # table itself.  Using "printf" prevents the appearance of these blank
+  # lines.
+  printf "%s" "${crontab_contents}" > "${crontab_backup_fp}"
+  #
+  # Below, we use "grep" to determine whether the crontab line that the
+  # variable CRONTAB_LINE contains is already present in the cron table.
+  # For that purpose, we need to escape the asterisks in the string in
+  # CRONTAB_LINE with backslashes.  Do this next.
+  #
   crontab_line_esc_astr=$( printf "%s" "${CRONTAB_LINE}" | \
                            $SED -r -e "s%[*]%\\\\*%g" )
-#
-# In the grep command below, the "^" at the beginning of the string be-
-# ing passed to grep is a start-of-line anchor while the "$" at the end
-# of the string is an end-of-line anchor.  Thus, in order for grep to
-# find a match on any given line of the output of "crontab -l", that
-# line must contain exactly the string in the variable crontab_line_-
-# esc_astr without any leading or trailing characters.  This is to eli-
-# minate situations in which a line in the output of "crontab -l" con-
-# tains the string in crontab_line_esc_astr but is precedeeded, for ex-
-# ample, by the comment character "#" (in which case cron ignores that
-# line) and/or is followed by further commands that are not part of the
-# string in crontab_line_esc_astr (in which case it does something more
-# than the command portion of the string in crontab_line_esc_astr does).
-#
-  if [ "$MACHINE" = "WCOSS_DELL_P3" ];then
+  #
+  # In the grep command below, the "^" at the beginning of the string 
+  # passed to grep is a start-of-line anchor, and the "$" at the end is
+  # an end-of-line anchor.  Thus, in order for grep to find a match on 
+  # any given line of the cron table's contents, that line must contain 
+  # exactly the string in the variable crontab_line_esc_astr without any 
+  # leading or trailing characters.  This is to eliminate situations in 
+  # which a line in the cron table contains the string in crontab_line_esc_astr 
+  # but is precedeeded, for example, by the comment character "#" (in which
+  # case cron ignores that line) and/or is followed by further commands 
+  # that are not part of the string in crontab_line_esc_astr (in which 
+  # case it does something more than the command portion of the string in 
+  # crontab_line_esc_astr does).
+  #
+  if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
     grep_output=$( grep "^${crontab_line_esc_astr}$" "/u/$USER/cron/mycrontab" )
   else
-    grep_output=$( crontab -l | grep "^${crontab_line_esc_astr}$" )
+    grep_output=$( printf "%s" "${crontab_contents}" | grep "^${crontab_line_esc_astr}$" )
   fi
   exit_status=$?
 
@@ -548,10 +557,17 @@ Adding the following line to the user's cron table in order to automatically
 resubmit SRW workflow:
   CRONTAB_LINE = \"${CRONTAB_LINE}\""
 
-    if [ "$MACHINE" = "WCOSS_DELL_P3" ];then
-      echo "${CRONTAB_LINE}" >> "/u/$USER/cron/mycrontab"      
+    if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
+      printf "%s" "${CRONTAB_LINE}" >> "/u/$USER/cron/mycrontab"      
     else
-      ( crontab -l; echo "${CRONTAB_LINE}" ) | crontab -
+      # Add a newline to the end of crontab_contents only if it is not empty.
+      # This is needed so that when CRONTAB_LINE is printed out, it appears on
+      # a separate line.
+      crontab_contents=${crontab_contents:+"${crontab_contents}"$'\n'}
+      # When printing CRONTAB_LINE, add a newline at the end.  This is necessary
+      # on certain machines (e.g. Cheyenne) while on others, it doesn't make
+      # a difference.
+      ( printf "%s" "${crontab_contents}"; printf "%s\n" "${CRONTAB_LINE}" ) | ${crontab_cmd}
     fi
 
   fi
@@ -912,8 +928,8 @@ cp_vrfy $USHDIR/${EXPT_CONFIG_FN} $EXPTDIR
 #
 # For convenience, print out the commands that need to be issued on the
 # command line in order to launch the workflow and to check its status.
-# Also, print out the command that should be placed in the user's cron-
-# tab in order for the workflow to be continually resubmitted.
+# Also, print out the line that should be placed in the user's cron table
+# in order for the workflow to be continually resubmitted.
 #
 #-----------------------------------------------------------------------
 #
@@ -978,14 +994,14 @@ Note that:
    task(s) to the queue.
 
 2) In order for the output of the rocotostat command to be up-to-date,
-   the rocotorun command must be issued immediately before the rocoto-
-   stat command.
+   the rocotorun command must be issued immediately before issuing the 
+   rocotostat command.
 
 For automatic resubmission of the workflow (say every 3 minutes), the
 following line can be added to the user's crontab (use \"crontab -e\" to
 edit the cron table):
 
-*/3 * * * * cd $EXPTDIR && ./launch_FV3LAM_wflow.sh
+*/3 * * * * cd $EXPTDIR && ./launch_FV3LAM_wflow.sh called_from_cron=\"TRUE\"
 "
 
 fi
