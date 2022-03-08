@@ -10,15 +10,6 @@ function file_location() {
   external_file_fmt=${2}
 
   location=""
-  case ${external_model} in
-
-    "*")
-      print_info_msg"\
-        External model \'${external_model}\' does not have a default
-      location. Please set a user-defined file location."
-      ;;
-
-  esac
   echo ${location:-}
 
 }
