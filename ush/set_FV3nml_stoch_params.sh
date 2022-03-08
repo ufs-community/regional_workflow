@@ -101,29 +101,45 @@ function set_FV3nml_stoch_params() {
   iseed_shum=$(( cdate*1000 + ensmem_num*10 + 2 ))
   iseed_skeb=$(( cdate*1000 + ensmem_num*10 + 3 ))
   iseed_sppt=$(( cdate*1000 + ensmem_num*10 + 1 ))
+  iseed_lsm_spp=$(( cdate*1000 + ensmem_num*10 + 9))
 
   num_iseed_spp=${#ISEED_SPP[@]}
   for (( i=0; i<${num_iseed_spp}; i++ )); do
     iseed_spp[$i]=$(( cdate*1000 + ensmem_num*10 + ${ISEED_SPP[$i]} ))
   done
 
-  num_iseed_lsm_spp=${#ISEED_LSM_SPP[@]}
-  for (( i=0; i<${num_iseed_lsm_spp}; i++ )); do
-    iseed_lsm_spp[$i]=$(( cdate*1000 + ensmem_num*10 + ${ISEED_LSM_SPP[$i]} ))
-  done
+  settings=""
 
-  settings="\
+  if [ ${DO_SPPT} = TRUE ] || [ ${DO_SHUM} = TRUE ] || [ ${DO_SKEB} = TRUE ]; then
+
+    settings=$settings"\
 'nam_stochy': {
   'iseed_shum': ${iseed_shum},
   'iseed_skeb': ${iseed_skeb},
   'iseed_sppt': ${iseed_sppt},
   }
+"
+  fi
+
+  if [ ${DO_SPP} = TRUE ]; then
+
+    settings=$settings"\
 'nam_sppperts': {
   'iseed_spp': [ $( printf "%s, " "${iseed_spp[@]}" ) ]
   }
+"
+  fi
+
+  if [ ${DO_LSM_SPP} = TRUE ]; then
+ 
+    settings=$settings"\
 'nam_sfcperts': {
   'iseed_lndp': [ $( printf "%s, " "${iseed_lsm_spp[@]}" ) ]
-  }"
+  }
+"
+  fi
+
+  if [ -n "$settings" ]; then
 
   $USHDIR/set_namelist.py -q \
                           -n ${FV3_NML_FP} \
@@ -140,6 +156,14 @@ failed.  Parameters passed to this script are:
   Namelist settings specified on command line (these have highest precedence):
     settings =
 $settings"
+
+  else
+
+  print_info_msg "\
+The variable \"settings\" is empty, so not setting any namelist values."
+
+  fi
+
 #
 #-----------------------------------------------------------------------
 #

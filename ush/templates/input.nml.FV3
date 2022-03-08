@@ -202,27 +202,6 @@
 /
 
 &nam_stochy
-    iseed_shum = 2
-    iseed_skeb = 3
-    iseed_sppt = 1
-    new_lscale = .true.
-    shum = 0.006
-    shum_lscale = 150.E3
-    shum_tau = 21600
-    shumint = 3600
-    skeb = 0.5
-    skeb_lscale = 150.E3
-    skeb_tau = 21600.0
-    skeb_vdof = 10
-    skebint = 3600
-    skebnorm = 1
-    sppt = 1.0
-    sppt_logit = .true.
-    sppt_lscale = 150.E3
-    sppt_sfclimit = .true.
-    sppt_tau = 2.16E4
-    spptint = 3600
-    use_zmtnblck = .false.
 /
 
 &namsfc
