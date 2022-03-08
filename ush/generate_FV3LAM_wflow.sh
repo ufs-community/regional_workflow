@@ -868,7 +868,7 @@ settings="$settings
 settings="$settings
 'nam_sppperts': {"
 if [ "${DO_SPP}" = "TRUE" ]; then 
-settings="$settings
+    settings="$settings
     'iseed_spp': [ $( printf "%s, " "${ISEED_SPP[@]}" ) ],
     'spp_lscale': [ $( printf "%s, " "${SPP_LSCALE[@]}" ) ],
     'spp_prt_list': [ $( printf "%s, " "${SPP_MAG_LIST[@]}" ) ],
@@ -887,7 +887,7 @@ settings="$settings
 settings="$settings
 'nam_sfcperts': {"
 if [ "${DO_LSM_SPP}" = "TRUE" ]; then 
-settings="$settings
+    settings="$settings
     'lndp_type': ${LNDP_TYPE},
     'lndp_tau': [ $( printf "%s, " "${LSM_SPP_TSCALE[@]}" ) ],
     'lndp_lscale': [ $( printf "%s, " "${LSM_SPP_LSCALE[@]}" ) ],
