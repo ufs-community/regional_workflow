@@ -17,7 +17,7 @@ def check_darwin(cmd):
             Aborting.''')
     return True
 
-def define_macro_utilities():
+def define_macos_utilities():
     """ Set some environment variables for Darwin systems differently
     The variables are: READLINK, SED, DATE_UTIL and LN_UTIL
     """

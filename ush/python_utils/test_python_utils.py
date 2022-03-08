@@ -59,7 +59,7 @@ class Testing(unittest.TestCase):
         TARGET = f'{self.PATH}/test_python_utils.py'
         SYMLINK = f'{self.PATH}/test_data/test_python_utils.py'
         create_symlink_to_file(TARGET,SYMLINK)
-    def test_define_macro_utilities(self):
+    def test_define_macos_utilities(self):
         set_env_var('MYVAR','MYVAL')
         val = os.getenv('MYVAR')
         self.assertEqual(val,'MYVAL')
@@ -105,7 +105,7 @@ class Testing(unittest.TestCase):
         """ setUp is where we do preparation for running the unittests.
         If you need to download files for running test cases, prepare common stuff
         for all test cases etc, this is the best place to do it """
-        define_macro_utilities();
+        define_macos_utilities();
         set_env_var('DEBUG','FALSE')
         self.PATH = os.path.dirname(__file__)
         
