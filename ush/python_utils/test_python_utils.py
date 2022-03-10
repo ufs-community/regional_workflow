@@ -50,11 +50,11 @@ class Testing(unittest.TestCase):
                 'regional_workflow',
                 'repo_url'))
     def test_interpol_to_arbit_CRES(self):
-        RES = 50
-        RES_array = [ 5, 25, 40, 60, 80, 100 ]
-        prop_array = [ 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+        RES = 800
+        RES_array = [ 5, 25, 40, 60, 80, 100, 400, 700, 1000, 1500, 2800, 3000 ]
+        prop_array = [ 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.65, 0.7, 1.0, 1.1, 1.2, 1.3 ]
         prop = interpol_to_arbit_CRES(RES, RES_array, prop_array)
-        self.assertAlmostEqual(prop, 0.35)
+        self.assertAlmostEqual(prop, 0.8)
     def test_create_symlink_to_file(self):
         TARGET = f'{self.PATH}/test_python_utils.py'
         SYMLINK = f'{self.PATH}/test_data/test_python_utils.py'
