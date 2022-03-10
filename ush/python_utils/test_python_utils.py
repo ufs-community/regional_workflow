@@ -46,7 +46,7 @@ class Testing(unittest.TestCase):
         self.assertIn( \
             'regional_workflow',
             get_manage_externals_config_property( \
-                f'{self.PATH}/../../../Externals.cfg',
+                f'{self.PATH}/test_data/Externals.cfg',
                 'regional_workflow',
                 'repo_url'))
     def test_interpol_to_arbit_CRES(self):
