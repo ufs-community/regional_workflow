@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
 
+"""
+Unit tests for python utilities.
+
+To run them, issue the following command from the ush directory:
+    python3 -m unittest -b python_utils/test_python_utils.py
+
+All modules needed to build and run the regional_workflow need to be
+loaded first before executing unit tests.
+
+"""
+
 import unittest
 import glob
 import os

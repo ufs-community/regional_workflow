@@ -213,7 +213,7 @@ def import_vars(dictionary=None, target_dict=None, env_vars=None):
         target_dict[k] = str_to_list(v) 
 
 def export_vars(dictionary=None, source_dict=None, env_vars=None):
-    """ Export all (or select few) global variables of the caller module
+    """ Export all (or select few) global variables of the caller module's
     to either the environement/dictionary. Call this function at the end of
     a function that updates environment variables.
 

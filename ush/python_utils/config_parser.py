@@ -23,7 +23,7 @@ def load_shell_config(config_file):
     # Save env vars before and after sourcing the scipt and then
     # do a diff to get variables specifically defined/updated in the script
     # Method sounds brittle but seems to work ok so far
-    code = dedent(f'''
+    code = dedent(f'''      #!/bin/bash
       (set -o posix; set) > /tmp/t1
       {{ . {config_file}; set +x; }} &>/dev/null
       (set -o posix; set) > /tmp/t2
