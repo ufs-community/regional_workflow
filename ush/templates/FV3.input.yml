@@ -13,24 +13,30 @@
 
 
 FV3_RRFS_v1alpha:
-  gfs_physics_nml:
-    <<: *gsd_sar_phys
+  gfs_physics_nml: &RRFS_v1alpha_phys
     do_deep: False
     do_mynnsfclay: False
     imfdeepcnv: -1
     imfshalcnv: -1
+    iopt_alb: 2
+    iopt_btr: 1
+    iopt_crs: 1
+    iopt_dveg: 2
+    iopt_frz: 1
+    iopt_inf: 1
+    iopt_rad: 1
+    iopt_run: 1
+    iopt_sfc: 1
+    iopt_snf: 4
+    iopt_stc: 1
+    iopt_tbot: 2
     lsm: 2
     lsoil_lsm: 4
 
 FV3_RRFS_v1beta:
   gfs_physics_nml:
-    <<: *gsd_sar_phys
-    do_deep: False
+    <<: *RRFS_v1alpha_phys
     do_mynnsfclay: True
-    imfdeepcnv: -1
-    imfshalcnv: -1
-    lsm: 2
-    lsoil_lsm: 4
 
 FV3_HRRR:
   fv_core_nml:
@@ -45,7 +51,7 @@ FV3_HRRR:
     nord_tr: 2
     nrows_blend: 10
   gfs_physics_nml:
-    <<: *gsd_sar_phys
+    <<: *RRFS_v1alpha_phys
     cdmbgwd: [3.5, 1.0]
     do_mynnsfclay: True
     do_sfcperts: !!python/none
@@ -55,9 +61,9 @@ FV3_HRRR:
     do_gsl_drag_ls_bl: True 
     iaer: 5111
     icliq_sw: 2
-    imfdeepcnv: -1
-    imfshalcnv: -1
     iovr: 3
+    lsm: 3
+    lsoil_lsm: 9
 
 FV3_GFS_2017_gfdlmp:
   atmos_model_nml:

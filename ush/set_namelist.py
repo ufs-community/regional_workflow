@@ -171,7 +171,7 @@ def parse_args():
                         )
     parser.add_argument('-n', '--basenml',
                         dest='nml',
-                        help='Full path the input Fortran namelist. Optional.',
+                        help='Full path to the input Fortran namelist. Optional.',
                         type=file_exists,
                         )
     parser.add_argument('-t', '--type',
