@@ -13,6 +13,7 @@ from python_utils import print_info_msg, print_err_msg_exit, import_vars, cp_vrf
 
 from setup import setup
 from set_FV3nml_sfc_climo_filenames import set_FV3nml_sfc_climo_filenames
+from get_crontab_contents import get_crontab_contents
 
 def python_error_handler():
     """ Error handler for missing packages """
@@ -451,36 +452,42 @@ def generate_FV3LAM_wflow():
       print_info_msg(f'''
         Copying contents of user cron table to backup file:
           crontab_backup_fp = \"{crontab_backup_fp}\"''',verbose=VERBOSE)
-      if MACHINE == "WCOSS_DELL_P3":
-        cp_vrfy(f"/u/{USER}/cron/mycrontab", f"{crontab_backup_fp}")
-      else:
-        run_command(f"crontab -l > {crontab_backup_fp}")
-    #
-    # Below, we use "grep" to determine whether the crontab line that the
-    # variable CRONTAB_LINE contains is already present in the cron table.
-    # For that purpose, we need to escape the asterisks in the string in
-    # CRONTAB_LINE with backslashes.  Do this next.
-    #
+      global called_from_cron
+      called_from_cron = False #called_from_cron or False
+      crontab_cmd,crontab_contents = get_crontab_contents(called_from_cron=called_from_cron)
+      # To create the backup crontab file and add a new job to the user's 
+      # existing cron table, use the "printf" command, not "echo", to print 
+      # out variables.  This is because "echo" will add a newline at the end 
+      # of its output even if its input argument is a null string, resulting
+      # in extranous blank lines in the backup crontab file and/or the cron 
+      # table itself.  Using "printf" prevents the appearance of these blank
+      # lines.
+      run_command(f'''printf "%s" "{crontab_contents}" > "{crontab_backup_fp}"''')
+      #
+      # Below, we use "grep" to determine whether the crontab line that the
+      # variable CRONTAB_LINE contains is already present in the cron table.
+      # For that purpose, we need to escape the asterisks in the string in
+      # CRONTAB_LINE with backslashes.  Do this next.
+      #
       (_,crontab_line_esc_astr,_) = run_command(f'''printf "%s" "{CRONTAB_LINE}" | \
                                {SED} -r -e "s%[*]%\\\\*%g"''')
-    #
-    # In the grep command below, the "^" at the beginning of the string be-
-    # ing passed to grep is a start-of-line anchor while the "$" at the end
-    # of the string is an end-of-line anchor.  Thus, in order for grep to
-    # find a match on any given line of the output of "crontab -l", that
-    # line must contain exactly the string in the variable crontab_line_-
-    # esc_astr without any leading or trailing characters.  This is to eli-
-    # minate situations in which a line in the output of "crontab -l" con-
-    # tains the string in crontab_line_esc_astr but is precedeeded, for ex-
-    # ample, by the comment character "#" (in which case cron ignores that
-    # line) and/or is followed by further commands that are not part of the
-    # string in crontab_line_esc_astr (in which case it does something more
-    # than the command portion of the string in crontab_line_esc_astr does).
-    #
+      # In the grep command below, the "^" at the beginning of the string 
+      # passed to grep is a start-of-line anchor, and the "$" at the end is
+      # an end-of-line anchor.  Thus, in order for grep to find a match on 
+      # any given line of the cron table's contents, that line must contain 
+      # exactly the string in the variable crontab_line_esc_astr without any 
+      # leading or trailing characters.  This is to eliminate situations in 
+      # which a line in the cron table contains the string in crontab_line_esc_astr 
+      # but is precedeeded, for example, by the comment character "#" (in which
+      # case cron ignores that line) and/or is followed by further commands 
+      # that are not part of the string in crontab_line_esc_astr (in which 
+      # case it does something more than the command portion of the string in 
+      # crontab_line_esc_astr does).
+      #
       if MACHINE == "WCOSS_DELL_P3":
         (exit_status,grep_output,_)=run_command(f'''grep "^{crontab_line_esc_astr}$" "/u/{USER}/cron/mycrontab"''')
       else:
-        (exit_status,grep_output,_)=run_command(f'''crontab -l | grep "^{crontab_line_esc_astr}$"''')
+        (exit_status,grep_output,_)=run_command(f'''printf "%s" "{crontab_contents}" | grep "^{crontab_line_esc_astr}$"''')
     
       if exit_status == 0:
     
@@ -497,9 +504,14 @@ def generate_FV3LAM_wflow():
               CRONTAB_LINE = \"{CRONTAB_LINE}\"''',verbose=VERBOSE)
     
         if MACHINE == "WCOSS_DELL_P3":
-          run_command(f'''echo "{CRONTAB_LINE}" >> f"/u/{USER}/cron/mycrontab"''')
+          run_command(f'''printf "%s" "{CRONTAB_LINE}" >> f"/u/{USER}/cron/mycrontab"''')
         else:
-          run_command(f'''( crontab -l; echo "{CRONTAB_LINE}" ) | crontab -''')
+          # Add a newline to the end of crontab_contents only if it is not empty.
+          # This is needed so that when CRONTAB_LINE is printed out, it appears on
+          # a separate line.
+          if crontab_contents:
+            crontab_contents += "\n"
+          run_command(f'''( printf "%s" "{crontab_contents}"; printf "%s\n" "{CRONTAB_LINE}" ) | {crontab_cmd}''')
     #
     #-----------------------------------------------------------------------
     #
@@ -710,6 +722,12 @@ def generate_FV3LAM_wflow():
         'do_shum': {DO_SHUM},
         'do_sppt': {DO_SPPT},
         'do_skeb': {DO_SKEB},
+        'do_spp': {DO_SPP},
+        'n_var_spp': {N_VAR_SPP},
+        'n_var_lndp': {N_VAR_LNDP},
+        'lndp_type': {LNDP_TYPE},
+        'lndp_each_step': {LSM_SPP_EACH_STEP},
+        'fhcyc': {FHCYC_LSM_SPP_OR_NOT}, 
       }}
     'nam_stochy': {{
         'shum': {SHUM_MAG},
@@ -774,6 +792,44 @@ def generate_FV3LAM_wflow():
     #
     # Add the closing curly bracket to "settings".
     #
+    settings+='''
+      }'''
+    #
+    # Add the relevant SPP namelist variables to "settings" when running with 
+    # SPP turned on.  Otherwise only include an empty "nam_sppperts" stanza.
+    #
+    settings+='''
+    'nam_sppperts': {'''
+
+    if DO_SPP == True:
+        settings+=f'''
+        'iseed_spp': {ISEED_SPP},
+        'spp_lscale': {SPP_LSCALE},
+        'spp_prt_list': {SPP_MAG_LIST},
+        'spp_sigtop1': {SPP_SIGTOP1},
+        'spp_sigtop2': {SPP_SIGTOP2},
+        'spp_stddev_cutoff': {SPP_STDDEV_CUTOFF},
+        'spp_tau': {SPP_TSCALE},
+        'spp_var_list': {SPP_VAR_LIST},'''
+
+    settings+='''
+      }'''
+    #
+    # Add the relevant LSM SPP namelist variables to "settings" when running with 
+    # LSM SPP turned on.
+    #
+    settings+='''
+    'nam_sfcperts': {'''
+
+    if DO_LSM_SPP == True:
+        settings += f'''
+        'lndp_type': {LNDP_TYPE},
+        'lndp_tau': {LSM_SPP_TSCALE},
+        'lndp_lscale': {LSM_SPP_LSCALE},
+        'iseed_lndp': {ISEED_LSM_SPP},
+        'lndp_var_list': {LSM_SPP_VAR_LIST},
+        'lndp_prt_list': {LSM_SPP_MAG_LIST},'''
+
     settings+='''
       }'''
     
@@ -846,8 +902,8 @@ def generate_FV3LAM_wflow():
     #
     # For convenience, print out the commands that need to be issued on the
     # command line in order to launch the workflow and to check its status.
-    # Also, print out the command that should be placed in the user's cron-
-    # tab in order for the workflow to be continually resubmitted.
+    # Also, print out the line that should be placed in the user's cron table
+    # in order for the workflow to be continually resubmitted.
     #
     #-----------------------------------------------------------------------
     #
@@ -911,14 +967,14 @@ def generate_FV3LAM_wflow():
            task(s) to the queue.
         
         2) In order for the output of the rocotostat command to be up-to-date,
-           the rocotorun command must be issued immediately before the rocoto-
-           stat command.
+           the rocotorun command must be issued immediately before issuing the
+           rocotostat command.
         
         For automatic resubmission of the workflow (say every 3 minutes), the
         following line can be added to the user's crontab (use \"crontab -e\" to
         edit the cron table):
         
-        */3 * * * * cd {EXPTDIR} && ./launch_FV3LAM_wflow.sh
+        */3 * * * * cd {EXPTDIR} && ./launch_FV3LAM_wflow.sh called_from_cron=\"TRUE\"
         ''')
     #
     # If necessary, run the NOMADS script to source external model data.

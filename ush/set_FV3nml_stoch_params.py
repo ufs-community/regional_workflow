@@ -53,33 +53,59 @@ def set_FV3nml_stoch_params(**kwargs):
     iseed_shum=cdate_i*1000 + ensmem_num*10 + 2
     iseed_skeb=cdate_i*1000 + ensmem_num*10 + 3
     iseed_sppt=cdate_i*1000 + ensmem_num*10 + 1
-    iseed_spp=cdate_i*1000 + ensmem_num*10 + 4
+    iseed_lsm_spp=cdate_i*1000 + ensmem_num*10 + 9
     
-    settings=f"""
+    num_iseed_spp=len(ISEED_SPP)
+    iseed_spp = [None]*num_iseed_spp
+    for i in range(num_iseed_spp):
+      iseed_spp[i]=cdate_i*1000 + ensmem_num*10 + ISEED_SPP[i]
+
+    settings = ""
+
+    if DO_SPPT == True or DO_SHUM == True or DO_SKEB == True:
+
+        settings+=f"""
             'nam_stochy': {{
               'iseed_shum': {iseed_shum},
               'iseed_skeb': {iseed_skeb},
               'iseed_sppt': {iseed_sppt},
               }}
+            """
+
+    if DO_SPP == True:
+
+        settings+=f"""
             'nam_spperts': {{
               'iseed_spp': {iseed_spp},
               }}
             """
-    
-    (err,_,oute) = run_command(f'''{USHDIR}/set_namelist.py -q -n {FV3_NML_FP} -u "{settings}" -o {fv3_nml_ensmem_fp}''')
-    print_info_msg(oute)
-    if err != 0:
-        print_err_msg_exit(dedent(f'''
-            Call to python script set_namelist.py to set the variables in the FV3
-            namelist file that specify the paths to the surface climatology files
-            failed.  Parameters passed to this script are:
-              Full path to base namelist file:
-                FV3_NML_FP = \"{FV3_NML_FP}\"
-              Full path to output namelist file:
-                fv3_nml_ensmem_fp = \"{fv3_nml_ensmem_fp}\"
-              Namelist settings specified on command line (these have highest precedence):
-                settings =
-            {settings}'''))
+
+    if DO_LSM_SPP == True:
+
+        settings+=f"""
+            'nam_sppperts': {{
+              'iseed_lndp': [{iseed_lsm_spp}]
+              }}
+            """
+
+    if settings:
+       (err,_,oute) = run_command(f'''{USHDIR}/set_namelist.py -q -n {FV3_NML_FP} -u "{settings}" -o {fv3_nml_ensmem_fp}''')
+       print_info_msg(oute)
+       if err != 0:
+           print_err_msg_exit(dedent(f'''
+               Call to python script set_namelist.py to set the variables in the FV3
+               namelist file that specify the paths to the surface climatology files
+               failed.  Parameters passed to this script are:
+                 Full path to base namelist file:
+                   FV3_NML_FP = \"{FV3_NML_FP}\"
+                 Full path to output namelist file:
+                   fv3_nml_ensmem_fp = \"{fv3_nml_ensmem_fp}\"
+                 Namelist settings specified on command line (these have highest precedence):
+                   settings =
+               {settings}'''))
+    else:
+        print_info_msg(f'''
+            The variable \"settings\" is empty, so not setting any namelist values.''')
 
 class Testing(unittest.TestCase):
     def test_set_FV3nml_stoch_params(self):
@@ -98,4 +124,9 @@ class Testing(unittest.TestCase):
         set_env_var("ENSMEM_INDX",0)
         set_env_var("FV3_NML_FN","input.nml")
         set_env_var("FV3_NML_FP",EXPTDIR + "/input.nml")
+        set_env_var("DO_SPPT",True)
+        set_env_var("DO_SPP",True)
+        set_env_var("DO_LSM_SPP",True)
+        ISEED_SPP = [ 4, 4, 4, 4, 4]
+        set_env_var("ISEED_SPP",ISEED_SPP)
 

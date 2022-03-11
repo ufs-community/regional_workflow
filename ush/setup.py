@@ -140,15 +140,79 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # If running with SPP, count the number of entries in SPP_VAR_LIST to
-    # correctly set N_VAR_SPP, otherwise set it to zero. 
+    # If running with SPP in MYNN PBL, MYNN SFC, GSL GWD, Thompson MP, or 
+    # RRTMG, count the number of entries in SPP_VAR_LIST to correctly set 
+    # N_VAR_SPP, otherwise set it to zero. 
     #
     #-----------------------------------------------------------------------
     #
+    global N_VAR_SPP
     N_VAR_SPP=0
     if DO_SPP == True:
       N_VAR_SPP = len(SPP_VAR_LIST)
-
+    #
+    #-----------------------------------------------------------------------
+    #
+    # If running with Noah or RUC-LSM SPP, count the number of entries in 
+    # LSM_SPP_VAR_LIST to correctly set N_VAR_LNDP, otherwise set it to zero.
+    # Also set LNDP_TYPE to 2 for LSM SPP, otherwise set it to zero.  Finally,
+    # initialize an "FHCYC_LSM_SPP" variable to 0 and set it to 999 if LSM SPP
+    # is turned on.  This requirement is necessary since LSM SPP cannot run with 
+    # FHCYC=0 at the moment, but FHCYC cannot be set to anything less than the
+    # length of the forecast either.  A bug fix will be submitted to 
+    # ufs-weather-model soon, at which point, this requirement can be removed
+    # from regional_workflow. 
+    #
+    #-----------------------------------------------------------------------
+    #
+    global N_VAR_LNDP, LNDP_TYPE, FHCYC_LSM_SPP_OR_NOT
+    N_VAR_LNDP=0
+    LNDP_TYPE=0
+    FHCYC_LSM_SPP_OR_NOT=0
+    if DO_LSM_SPP == True:
+      N_VAR_LNDP=len(LSM_SPP_VAR_LIST)
+      LNDP_TYPE=2
+      FHCYC_LSM_SPP_OR_NOT=999
+    #
+    #-----------------------------------------------------------------------
+    #
+    # If running with SPP, confirm that each SPP-related namelist value 
+    # contains the same number of entries as N_VAR_SPP (set above to be equal
+    # to the number of entries in SPP_VAR_LIST).
+    #
+    #-----------------------------------------------------------------------
+    #
+    if DO_SPP == True:
+      if ( len(SPP_MAG_LIST) != N_VAR_SPP ) or \
+         ( len(SPP_LSCALE) != N_VAR_SPP) or \
+         ( len(SPP_TSCALE) != N_VAR_SPP) or \
+         ( len(SPP_SIGTOP1) != N_VAR_SPP) or \
+         ( len(SPP_SIGTOP2) != N_VAR_SPP) or \
+         ( len(SPP_STDDEV_CUTOFF) != N_VAR_SPP) or \
+         ( len(ISEED_SPP) != N_VAR_SPP):
+        print_err_msg_exit(f'''
+            All MYNN PBL, MYNN SFC, GSL GWD, Thompson MP, or RRTMG SPP-related namelist 
+            variables set in {CONFIG_FN} must be equal in number of entries to what is 
+            found in SPP_VAR_LIST:
+              Number of entries in SPP_VAR_LIST = \"{len(SPP_VAR_LIST)}\"''')
+    #
+    #-----------------------------------------------------------------------
+    #
+    # If running with LSM SPP, confirm that each LSM SPP-related namelist
+    # value contains the same number of entries as N_VAR_LNDP (set above to
+    # be equal to the number of entries in LSM_SPP_VAR_LIST).
+    #
+    #-----------------------------------------------------------------------
+    #
+    if DO_LSM_SPP == True:
+      if ( len(LSM_SPP_MAG_LIST) != N_VAR_LNDP) or \
+         ( len(LSM_SPP_LSCALE) != N_VAR_LNDP) or \
+         ( len(LSM_SPP_TSCALE) != N_VAR_LNDP):
+        print_err_msg_exit(f'''
+            All Noah or RUC-LSM SPP-related namelist variables (except ISEED_LSM_SPP) 
+            set in {CONFIG_FN} must be equal in number of entries to what is found in 
+            SPP_VAR_LIST:
+              Number of entries in SPP_VAR_LIST = \"{len(LSM_SPP_VAR_LIST)}\"''')
     #
     # The current script should be located in the ush subdirectory of the 
     # workflow directory.  Thus, the workflow directory is the one above the
@@ -281,7 +345,7 @@ def setup():
     
     if not NCORES_PER_NODE:
       print_err_msg_exit(f"""
-        NCORES_PER_NODE has not been specified in the file ${MACHINE_FILE}
+        NCORES_PER_NODE has not been specified in the file {MACHINE_FILE}
         Please ensure this value has been set for your desired platform. """)
     
     if not (FIXgsm and FIXaer and FIXlut and TOPO_DIR and SFC_CLIMO_INPUT_DIR):
@@ -423,7 +487,7 @@ def setup():
         print_err_msg_exit(f'''
             Each element of CYCL_HRS must be an integer between \"00\" and \"23\", in-
             clusive (including a leading \"0\", if necessary), specifying an hour-of-
-            day.  Element #$i of CYCL_HRS (where the index of the first element is 0) 
+            day.  Element #{i} of CYCL_HRS (where the index of the first element is 0) 
             does not have this form:
               CYCL_HRS = {CYCL_HRS}
               CYCL_HRS[{i}] = \"{CYCL_HRS[i]}\"''')
@@ -492,6 +556,20 @@ def setup():
             The custom post configuration specified by CUSTOM_POST_CONFIG_FP does not 
             exist:
               CUSTOM_POST_CONFIG_FP = \"{CUSTOM_POST_CONFIG_FP}\"''')
+    #
+    #-----------------------------------------------------------------------
+    #
+    # If using external CRTM fix files to allow post-processing of synthetic
+    # satellite products from the UPP, then make sure the fix file directory
+    # exists.
+    #
+    #-----------------------------------------------------------------------
+    #
+    if USE_CRTM == True:
+      if not os.path.exists(CRTM_DIR):
+        print_err_msg_exit(f'''
+            The external CRTM fix file directory specified by CRTM_DIR does not exist:
+                CRTM_DIR = \"{CRTM_DIR}\"''')
     #
     #-----------------------------------------------------------------------
     #
@@ -990,7 +1068,7 @@ def setup():
     WFLOW_LAUNCH_SCRIPT_FP=f"{USHDIR}/{WFLOW_LAUNCH_SCRIPT_FN}"
     WFLOW_LAUNCH_LOG_FP=f"{EXPTDIR}/{WFLOW_LAUNCH_LOG_FN}"
     if USE_CRON_TO_RELAUNCH == True:
-      CRONTAB_LINE=f'''*/{CRON_RELAUNCH_INTVL_MNTS} * * * * cd {EXPTDIR} && ./{WFLOW_LAUNCH_SCRIPT_FN} >> ./{WFLOW_LAUNCH_LOG_FN} 2>&1'''
+      CRONTAB_LINE=f'''*/{CRON_RELAUNCH_INTVL_MNTS} * * * * cd {EXPTDIR} && ./{WFLOW_LAUNCH_SCRIPT_FN} called_from_cron="TRUE" >> ./{WFLOW_LAUNCH_LOG_FN} 2>&1'''
     else:
       CRONTAB_LINE=""
     #
@@ -1906,7 +1984,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # Flag in the \"${MODEL_CONFIG_FN}\" file for coupling the ocean model to 
+        # Flag in the \"{MODEL_CONFIG_FN}\" file for coupling the ocean model to 
         # the weather model.
         #
         #-----------------------------------------------------------------------
@@ -2001,13 +2079,20 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # IF DO_SPP is set to \"TRUE\", N_VAR_SPP specifies the number of physics 
-        # parameterizations that are perturbed with SPP.  Otherwise, N_VAR_SPP 
-        # is set 0.
+        # IF DO_SPP is set to "TRUE", N_VAR_SPP specifies the number of physics 
+        # parameterizations that are perturbed with SPP.  If DO_LSM_SPP is set to
+        # "TRUE", N_VAR_LNDP specifies the number of LSM parameters that are 
+        # perturbed.  LNDP_TYPE determines the way LSM perturbations are employed
+        # and FHCYC_LSM_SPP_OR_NOT sets FHCYC based on whether LSM perturbations
+        # are turned on or not.
         #
         #-----------------------------------------------------------------------
         #
-        N_VAR_SPP='{N_VAR_SPP}'"""
+        N_VAR_SPP='{N_VAR_SPP}'
+        N_VAR_LNDP='{N_VAR_LNDP}'
+        LNDP_TYPE='{LNDP_TYPE}'
+        FHCYC_LSM_SPP_OR_NOT='{FHCYC_LSM_SPP_OR_NOT}'
+        """
 
     with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
       f.write(dedent(msg))
