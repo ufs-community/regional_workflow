@@ -342,6 +342,7 @@ $separator
 # launch log file and place the result in the status report file.
 #
   msg=$msg"
+${wflow_status}
 
 The last ${num_tail_lines} lines of this experiment's workflow launch log file 
 (\"${launch_wflow_log_fn}\") are:
