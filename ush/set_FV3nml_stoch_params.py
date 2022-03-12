@@ -9,6 +9,8 @@ from python_utils import process_args, print_input_args, print_info_msg, print_e
                          rm_vrfy,import_vars,set_env_var,list_to_str,str_to_list,\
                          lowercase, define_macos_utilities
 
+from set_namelist import set_namelist
+
 def set_FV3nml_stoch_params(**kwargs):
     """
     This function, for an ensemble-enabled experiment 
@@ -89,9 +91,9 @@ def set_FV3nml_stoch_params(**kwargs):
             """
 
     if settings:
-       (err,_,oute) = run_command(f'''{USHDIR}/set_namelist.py -q -n {FV3_NML_FP} -u "{settings}" -o {fv3_nml_ensmem_fp}''')
-       print_info_msg(oute)
-       if err != 0:
+       try:
+           set_namelist(["-q", "-n", FV3_NML_FP, "-u", settings, "-o", fv3_nml_ensmem_fp])
+       except:
            print_err_msg_exit(dedent(f'''
                Call to python script set_namelist.py to set the variables in the FV3
                namelist file that specify the paths to the surface climatology files

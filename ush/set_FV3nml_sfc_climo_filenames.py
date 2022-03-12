@@ -9,6 +9,8 @@ from python_utils import process_args, print_input_args, print_info_msg, print_e
                          rm_vrfy,import_vars,set_env_var,list_to_str,str_to_list,\
                          lowercase, define_macos_utilities
 
+from set_namelist import set_namelist
+
 def set_FV3nml_sfc_climo_filenames():
     """
     This function sets the values of the variables in
@@ -74,9 +76,9 @@ def set_FV3nml_sfc_climo_filenames():
     fv3_nml_base_fp = f'{FV3_NML_FP}.base' 
     mv_vrfy(f'{FV3_NML_FP} {fv3_nml_base_fp}')
 
-    (ext,_,err) = run_command(f'''{USHDIR}/set_namelist.py -q -n {fv3_nml_base_fp} -u "{settings}" -o {FV3_NML_FP}''')
-
-    if ext != 0:
+    try:
+        set_namelist(["-q", "-n", fv3_nml_base_fp, "-u", settings, "-o", FV3_NML_FP])
+    except:
         print_err_msg_exit(f'''
             Call to python script set_namelist.py to set the variables in the FV3
             namelist file that specify the paths to the surface climatology files

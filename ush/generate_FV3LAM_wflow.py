@@ -14,6 +14,8 @@ from python_utils import print_info_msg, print_err_msg_exit, import_vars, cp_vrf
 from setup import setup
 from set_FV3nml_sfc_climo_filenames import set_FV3nml_sfc_climo_filenames
 from get_crontab_contents import get_crontab_contents
+from fill_jinja_template import fill_jinja_template
+from set_namelist import set_namelist
 
 def python_error_handler():
     """ Error handler for missing packages """
@@ -401,11 +403,9 @@ def generate_FV3LAM_wflow():
         # Call the python script to generate the experiment's actual XML file 
         # from the jinja template file.
         #
-        (err,out,out_err) = run_command(f'''{USHDIR}/fill_jinja_template.py -q \
-                                         -u "{settings}" \
-                                         -t {template_xml_fp} \
-                                         -o {WFLOW_XML_FP}''')
-        if err != 0:
+        try:
+            fill_jinja_template(["-q", "-u", settings, "-t", template_xml_fp, "-o", WFLOW_XML_FP])
+        except:
             print_err_msg_exit(f'''
                 Call to python script fill_jinja_template.py to create a rocoto workflow
                 XML file from a template file failed.  Parameters passed to this script
@@ -852,12 +852,10 @@ def generate_FV3LAM_wflow():
     #
     #-----------------------------------------------------------------------
     #
-    (err,_,_) = run_command(f'''{USHDIR}/set_namelist.py -q \
-                            -n {FV3_NML_BASE_SUITE_FP} \
-                            -c {FV3_NML_YAML_CONFIG_FP} {CCPP_PHYS_SUITE} \
-                            -u "{settings}" \
-                            -o {FV3_NML_FP}''')
-    if err != 0:
+    try:
+        set_namelist(["-q", "-n", FV3_NML_BASE_SUITE_FP, "-c", FV3_NML_YAML_CONFIG_FP, 
+                            CCPP_PHYS_SUITE, "-u", settings, "-o", FV3_NML_FP])
+    except:
         print_err_msg_exit(f'''
             Call to python script set_namelist.py to generate an FV3 namelist file
             failed.  Parameters passed to this script are:

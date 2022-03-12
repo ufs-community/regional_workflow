@@ -7,6 +7,8 @@ from textwrap import dedent
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
                          run_command, print_info_msg, print_err_msg_exit, type_to_str
 
+from fill_jinja_template import fill_jinja_template
+
 def create_diag_table_file(**kwargs):
     """ Creates a diagnostic table file for each cycle to be run
 
@@ -49,9 +51,9 @@ def create_diag_table_file(**kwargs):
             cres: {CRES}''')
 
     #call fill jinja
-    (err,_,_) = run_command( f'''{USHDIR}/fill_jinja_template.py -q -u "{settings}" -t {DIAG_TABLE_TMPL_FP} -o {diag_table_fp}''')
-
-    if err != 0:
+    try:
+        fill_jinja_template(["-q", "-u", settings, "-t", DIAG_TABLE_TMPL_FP, "-o", diag_table_fp])
+    except:
         print_err_msg_exit(f'''
             !!!!!!!!!!!!!!!!!
             

@@ -2079,9 +2079,9 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # IF DO_SPP is set to "TRUE", N_VAR_SPP specifies the number of physics 
+        # IF DO_SPP is set to \"TRUE\", N_VAR_SPP specifies the number of physics 
         # parameterizations that are perturbed with SPP.  If DO_LSM_SPP is set to
-        # "TRUE", N_VAR_LNDP specifies the number of LSM parameters that are 
+        # \"TRUE\", N_VAR_LNDP specifies the number of LSM parameters that are 
         # perturbed.  LNDP_TYPE determines the way LSM perturbations are employed
         # and FHCYC_LSM_SPP_OR_NOT sets FHCYC based on whether LSM perturbations
         # are turned on or not.

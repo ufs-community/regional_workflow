@@ -7,6 +7,8 @@ from datetime import datetime
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
                          run_command, print_info_msg, print_err_msg_exit, lowercase
 
+from fill_jinja_template import fill_jinja_template
+
 def create_model_configure_file(**kwargs):
     """ Creates a model configuration file in the specified
     run directory
@@ -178,9 +180,10 @@ def create_model_configure_file(**kwargs):
     #-----------------------------------------------------------------------
     #
     model_config_fp=f"{run_dir}/{MODEL_CONFIG_FN}"
-    (err,_,_) = run_command(f'''{USHDIR}/fill_jinja_template.py -q -u "{settings}" -t {MODEL_CONFIG_TMPL_FP} -o {model_config_fp}''')
 
-    if err != 0:
+    try:
+        fill_jinja_template(["-q", "-u", settings, "-t", MODEL_CONFIG_TMPL_FP, "-o", model_config_fp])
+    except:
         print_err_msg_exit(f'''
             Call to python script fill_jinja_template.py to create a \"{MODEL_CONFIG_FN}\"
             file from a jinja2 template failed.  Parameters passed to this script are:
