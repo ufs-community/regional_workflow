@@ -1,4 +1,4 @@
-from .change_case import uppercase, lowercase
+from .misc import uppercase, lowercase, find_pattern_in_str, find_pattern_in_file
 from .check_for_preexist_dir_file import check_for_preexist_dir_file
 from .check_var_valid_value import check_var_valid_value
 from .count_files import count_files

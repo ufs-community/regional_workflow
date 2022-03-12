@@ -7,7 +7,7 @@ from textwrap import dedent
 from python_utils import process_args, print_input_args, print_info_msg, print_err_msg_exit,\
                          check_var_valid_value, run_command, mv_vrfy,mkdir_vrfy,cmd_vrfy,cp_vrfy,\
                          rm_vrfy,import_vars,set_env_var,list_to_str,str_to_list,\
-                         lowercase, define_macos_utilities
+                         lowercase, define_macos_utilities,find_pattern_in_str
 
 from set_namelist import set_namelist
 
@@ -47,11 +47,10 @@ def set_FV3nml_sfc_climo_filenames():
     if DO_ENSEMBLE == "TRUE":
         dummy_run_dir += "/any_ensmem"
 
-    for i,mapping in enumerate(FV3_NML_VARNAME_TO_SFC_CLIMO_FIELD_MAPPING):
-        (_,nml_var_name,_) = run_command( f''' printf "%s\n" "{mapping}" | 
-                  {SED} -n -r -e "s/{regex_search}/\\1/p" ''')
-        (_,sfc_climo_field_name,_) = run_command(f''' printf "%s\n" "{mapping}" | 
-                          {SED} -n -r -e "s/{regex_search}/\\2/p" ''')
+    for mapping in FV3_NML_VARNAME_TO_SFC_CLIMO_FIELD_MAPPING:
+        tup = find_pattern_in_str(regex_search, mapping)
+        nml_var_name = tup[0]
+        sfc_climo_field_name = tup[1]
 
         check_var_valid_value(sfc_climo_field_name, SFC_CLIMO_FIELDS)
 

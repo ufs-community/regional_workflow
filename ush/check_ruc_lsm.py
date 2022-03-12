@@ -4,7 +4,8 @@ import os
 import unittest
 
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
-                         run_command, print_err_msg_exit, define_macos_utilities
+                         run_command, print_err_msg_exit, define_macos_utilities, \
+                         find_pattern_in_file
 
 def check_ruc_lsm(**kwargs):
     """ This file defines a function that checks whether the RUC land surface
@@ -24,13 +25,11 @@ def check_ruc_lsm(**kwargs):
     ruc_lsm_name = "lsm_ruc"     
     regex_search = f'^[ ]*<scheme>({ruc_lsm_name})<\/scheme>[ ]*$'
 
-    SED=os.environ['SED']
-    (_,ruc_lsm_name_or_null,_) = \
-        run_command( f'{SED} -r -n -e "s/{regex_search}/\\1/p" "{ccpp_phys_suite_fp}"' )
-
-    if ruc_lsm_name_or_null == '':
+    ruc_lsm_name_or_null = find_pattern_in_file(regex_search, ccpp_phys_suite_fp)
+            
+    if ruc_lsm_name_or_null is None:
         return False
-    elif ruc_lsm_name_or_null == ruc_lsm_name:
+    elif ruc_lsm_name_or_null[0] == ruc_lsm_name:
         return True
     else:
         print_err_msg_exit(f'''

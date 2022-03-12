@@ -18,9 +18,19 @@ import os
 from python_utils import *
 
 class Testing(unittest.TestCase):
-    def test_change_case(self):
+    def test_misc(self):
         self.assertEqual( uppercase('upper'), 'UPPER' )
         self.assertEqual( lowercase('LOWER'), 'lower' )
+        # regex in file
+        pattern = f'^[ ]*<scheme>(lsm_ruc)<\/scheme>[ ]*$'
+        FILE=f"{self.PATH}/../test_data/suite_FV3_GSD_SAR.xml" 
+        match = find_pattern_in_file(pattern, FILE)
+        self.assertEqual( ("lsm_ruc",), match)
+        # regex in string
+        with open(FILE) as f:
+            content = f.read()
+            find_pattern_in_str(pattern, content)
+            self.assertEqual( ("lsm_ruc",), match)
     def test_check_for_preexist_dir_file(self):
         cmd_vrfy('mkdir -p test_data/dir')
         self.assertTrue( os.path.exists('test_data/dir') )
@@ -38,8 +48,8 @@ class Testing(unittest.TestCase):
         dPATH=f'{self.PATH}/test_data/dir'
         mkdir_vrfy(dPATH)
         self.assertTrue( os.path.exists(dPATH) )
-        cp_vrfy(f'{self.PATH}/change_case.py', f'{dPATH}/change_cases.py')
-        self.assertTrue( os.path.exists(f'{dPATH}/change_cases.py') )
+        cp_vrfy(f'{self.PATH}/misc.py', f'{dPATH}/miscs.py')
+        self.assertTrue( os.path.exists(f'{dPATH}/miscs.py') )
         cmd_vrfy(f'rm -rf {dPATH}')
         self.assertFalse( os.path.exists('tt.py') )
     def test_get_charvar_from_netcdf(self):

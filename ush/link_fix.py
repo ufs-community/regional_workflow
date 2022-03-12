@@ -7,7 +7,7 @@ import glob
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
                          print_info_msg, print_err_msg_exit, create_symlink_to_file, \
                          define_macos_utilities, check_var_valid_value, run_command, \
-                         cd_vrfy, mkdir_vrfy
+                         cd_vrfy, mkdir_vrfy, find_pattern_in_str
 
 def link_fix(**kwargs):
     """ This file defines a function that ...
@@ -211,8 +211,9 @@ def link_fix(**kwargs):
     
         fn = os.path.basename(fp)
       
-        (_,res,_) = run_command(f'printf "%s" {fn} | {SED} -n -r -e "s/^C([0-9]*).*/\\1/p"')
-        if not res:
+        regex_search = "^C([0-9]*).*"
+        res = find_pattern_in_str(regex_search, fn)
+        if res is None:
           print_err_msg_exit(f'''
                 The resolution could not be extracted from the current file's name.  The
                 full path to the file (fp) is:
@@ -220,6 +221,8 @@ def link_fix(**kwargs):
                 This may be because fp contains the * globbing character, which would
                 imply that no files were found that match the globbing pattern specified
                 in fp.''')
+        else:
+          res = res[0]
     
         if ( i > 0 ) and ( res != res_prev ):
           print_err_msg_exit(f'''

@@ -767,10 +767,9 @@ def generate_FV3LAM_wflow():
     for i in range(num_nml_vars):
     
       mapping=f"{FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[i]}"
-      (_,nml_var_name,_)=run_command(f'''printf "%s\n" "{mapping}" | \
-                      {SED} -n -r -e "s/{regex_search}/\\1/p"''')
-      (_,FIXam_fn,_)=run_command(f'''printf "%s\n" "{mapping}" |
-                  {SED} -n -r -e "s/{regex_search}/\\2/p"''')
+      tup = find_pattern_in_str(regex_search, mapping)
+      nml_var_name = tup[0]
+      FIXam_fn = tup[1]
     
       fp="\"\""
       if FIXam_fn:

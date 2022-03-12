@@ -6,7 +6,7 @@ from textwrap import dedent
 
 from python_utils import process_args,import_vars,export_vars,set_env_var,list_to_str,\
                          print_input_args, print_info_msg, print_err_msg_exit, run_command,\
-                         define_macos_utilities
+                         define_macos_utilities, find_pattern_in_file, find_pattern_in_str
 
 def set_ozone_param(**kwargs):
     """ Function that does the following:
@@ -76,8 +76,10 @@ def set_ozone_param(**kwargs):
     #-----------------------------------------------------------------------
     #
     regex_search="^[ ]*<scheme>(ozphys.*)<\/scheme>[ ]*$"
-    (_,ozone_param,_)=run_command(f'{SED} -r -n -e "s/{regex_search}/\\1/p" "{ccpp_phys_suite_fp}"')
-    
+    ozone_param = find_pattern_in_file(regex_search, ccpp_phys_suite_fp)
+    if ozone_param is not None:
+      ozone_param = ozone_param[0]
+
     if ozone_param == "ozphys_2015":
       fixgsm_ozone_fn="ozprdlos_2015_new_sbuvO3_tclm15_nuchem.f77"
     elif ozone_param == "ozphys":
@@ -119,12 +121,12 @@ def set_ozone_param(**kwargs):
     
     for i in range(num_symlinks):
       mapping=CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING[i]
-      (_,symlink,_)=run_command(f'''printf "%s\n" "{mapping}" | \
-                 {SED} -n -r -e "s/{regex_search}/\\1/p"''')
+      symlink = find_pattern_in_str(regex_search, mapping)
+      if symlink is not None:
+        symlink = symlink[0]
       if symlink == ozone_symlink:
         regex_search="^[ ]*([^| ]+[ ]*)[|][ ]*([^| ]*)[ ]*$"
-        (_,mapping_ozone,_)=run_command(f'''printf "%s\n" "{mapping}" | \
-                         {SED} -n -r -e "s/{regex_search}/\\1/p"''')
+        mapping_ozone = find_pattern_in_str(regex_search, mapping)[0]
         mapping_ozone=f"{mapping_ozone}| {fixgsm_ozone_fn}"
         CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING[i]=f"{mapping_ozone}"
         fixgsm_ozone_fn_is_set=True
