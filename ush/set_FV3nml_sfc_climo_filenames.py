@@ -7,7 +7,7 @@ from textwrap import dedent
 from python_utils import process_args, print_input_args, print_info_msg, print_err_msg_exit,\
                          check_var_valid_value, run_command, mv_vrfy,mkdir_vrfy,cmd_vrfy,cp_vrfy,\
                          rm_vrfy,import_vars,set_env_var,list_to_str,str_to_list,\
-                         lowercase, define_macos_utilities,find_pattern_in_str
+                         lowercase, define_macos_utilities,find_pattern_in_str,cfg_to_yaml_str
 
 from set_namelist import set_namelist
 
@@ -40,13 +40,13 @@ def set_FV3nml_sfc_climo_filenames():
     suffix = "tileX.nc"
 
     # create yaml-complaint string
-    settings = '''
-            'namsfc': {'''
+    settings = {}
 
     dummy_run_dir = EXPTDIR + "/any_cyc"
     if DO_ENSEMBLE == "TRUE":
         dummy_run_dir += "/any_ensmem"
 
+    namsfc_dict = {}
     for mapping in FV3_NML_VARNAME_TO_SFC_CLIMO_FIELD_MAPPING:
         tup = find_pattern_in_str(regex_search, mapping)
         nml_var_name = tup[0]
@@ -56,28 +56,27 @@ def set_FV3nml_sfc_climo_filenames():
 
         fp = f'{FIXLAM}/{CRES}.{sfc_climo_field_name}.{suffix}'
         if RUN_ENVIR != "nco":
-            fp = os.path.realpath(fp)
-            fp = os.path.relpath(fp, start=dummy_run_dir)
+            fp = os.path.relpath(os.path.realpath(fp), start=dummy_run_dir)
 
-        settings += f'''
-                "{nml_var_name}": {fp},'''
+        namsfc_dict[nml_var_name] = fp
+     
+    settings['namsfc_dict'] = namsfc_dict
+    settings_str = cfg_to_yaml_str(settings)
 
-    settings += '''
-            }'''
 
     print_info_msg(f'''
         The variable \"settings\" specifying values of the namelist variables
         has been set as follows:
         
         settings =
-        {settings}''', verbose=DEBUG)
+        {settings_str}''', verbose=DEBUG)
 
     # Rename the FV3 namelist and call set_namelist
     fv3_nml_base_fp = f'{FV3_NML_FP}.base' 
     mv_vrfy(f'{FV3_NML_FP} {fv3_nml_base_fp}')
 
     try:
-        set_namelist(["-q", "-n", fv3_nml_base_fp, "-u", settings, "-o", FV3_NML_FP])
+        set_namelist(["-q", "-n", fv3_nml_base_fp, "-u", settings_str, "-o", FV3_NML_FP])
     except:
         print_err_msg_exit(f'''
             Call to python script set_namelist.py to set the variables in the FV3
@@ -89,7 +88,7 @@ def set_FV3nml_sfc_climo_filenames():
                 FV3_NML_FP = \"{FV3_NML_FP}\"
               Namelist settings specified on command line (these have highest precedence):
                 settings =
-            {settings}''')
+            {settings_str}''')
 
     rm_vrfy(f'{fv3_nml_base_fp}')
 

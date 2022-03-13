@@ -7,7 +7,7 @@ from textwrap import dedent
 from python_utils import process_args, print_input_args, print_info_msg, print_err_msg_exit,\
                          check_var_valid_value, run_command, mv_vrfy,mkdir_vrfy,cmd_vrfy,cp_vrfy,\
                          rm_vrfy,import_vars,set_env_var,list_to_str,str_to_list,\
-                         lowercase, define_macos_utilities
+                         lowercase, define_macos_utilities, cfg_to_yaml_str
 
 from set_namelist import set_namelist
 
@@ -62,37 +62,28 @@ def set_FV3nml_stoch_params(**kwargs):
     for i in range(num_iseed_spp):
       iseed_spp[i]=cdate_i*1000 + ensmem_num*10 + ISEED_SPP[i]
 
-    settings = ""
-
+    settings = {}
     if DO_SPPT == True or DO_SHUM == True or DO_SKEB == True:
-
-        settings+=f"""
-            'nam_stochy': {{
-              'iseed_shum': {iseed_shum},
-              'iseed_skeb': {iseed_skeb},
-              'iseed_sppt': {iseed_sppt},
-              }}
-            """
+        settings['nam_stochy'] = {
+              'iseed_shum': iseed_shum,
+              'iseed_skeb': iseed_skeb,
+              'iseed_sppt': iseed_sppt
+        }
 
     if DO_SPP == True:
-
-        settings+=f"""
-            'nam_spperts': {{
-              'iseed_spp': {iseed_spp},
-              }}
-            """
+        settings['nam_spperts'] = {
+              'iseed_spp': iseed_spp
+        }
 
     if DO_LSM_SPP == True:
-
-        settings+=f"""
-            'nam_sppperts': {{
-              'iseed_lndp': [{iseed_lsm_spp}]
-              }}
-            """
+        settings['nam_sppperts'] = {
+              'iseed_lndp': [iseed_lsm_spp]
+        }
 
     if settings:
+       settings_str = cfg_to_yaml_str(settings)
        try:
-           set_namelist(["-q", "-n", FV3_NML_FP, "-u", settings, "-o", fv3_nml_ensmem_fp])
+           set_namelist(["-q", "-n", FV3_NML_FP, "-u", settings_str, "-o", fv3_nml_ensmem_fp])
        except:
            print_err_msg_exit(dedent(f'''
                Call to python script set_namelist.py to set the variables in the FV3
@@ -104,7 +95,7 @@ def set_FV3nml_stoch_params(**kwargs):
                    fv3_nml_ensmem_fp = \"{fv3_nml_ensmem_fp}\"
                  Namelist settings specified on command line (these have highest precedence):
                    settings =
-               {settings}'''))
+               {settings_str}'''))
     else:
         print_info_msg(f'''
             The variable \"settings\" is empty, so not setting any namelist values.''')

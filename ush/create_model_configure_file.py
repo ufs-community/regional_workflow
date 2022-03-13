@@ -3,9 +3,11 @@
 import os
 import unittest
 from datetime import datetime
+from textwrap import dedent
 
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
-                         run_command, print_info_msg, print_err_msg_exit, lowercase
+                         run_command, print_info_msg, print_err_msg_exit, lowercase, \
+                         cfg_to_yaml_str
 
 from fill_jinja_template import fill_jinja_template
 
@@ -66,65 +68,64 @@ def create_model_configure_file(**kwargs):
     #
     #-----------------------------------------------------------------------
     #
-    settings=f'''
-      'PE_MEMBER01': {PE_MEMBER01}
-      'print_esmf': {dot_print_esmf_dot}
-      'start_year': {yyyy}
-      'start_month': {mm}
-      'start_day': {dd}
-      'start_hour': {hh}
-      'nhours_fcst': {FCST_LEN_HRS}
-      'dt_atmos': {DT_ATMOS}
-      'cpl': {dot_cpl_dot}
-      'atmos_nthreads': {OMP_NUM_THREADS_RUN_FCST}
-      'restart_interval': {RESTART_INTERVAL}
-      'write_dopost': {dot_write_dopost}
-      'quilting': {dot_quilting_dot}
-      'output_grid': {WRTCMP_output_grid}'''
-    #  'output_grid': \'${WRTCMP_output_grid}\'"
+    settings = {
+      'PE_MEMBER01': PE_MEMBER01,
+      'print_esmf': dot_print_esmf_dot,
+      'start_year': yyyy,
+      'start_month': mm,
+      'start_day': dd,
+      'start_hour': hh,
+      'nhours_fcst': FCST_LEN_HRS,
+      'dt_atmos': DT_ATMOS,
+      'cpl': dot_cpl_dot,
+      'atmos_nthreads': OMP_NUM_THREADS_RUN_FCST,
+      'restart_interval': RESTART_INTERVAL,
+      'write_dopost': dot_write_dopost,
+      'quilting': dot_quilting_dot,
+      'output_grid': WRTCMP_output_grid
+    }
     #
     # If the write-component is to be used, then specify a set of computational
     # parameters and a set of grid parameters.  The latter depends on the type
     # (coordinate system) of the grid that the write-component will be using.
     #
     if QUILTING == True:
-    
-        settings+=f'''
-      'write_groups': {WRTCMP_write_groups}
-      'write_tasks_per_group': {WRTCMP_write_tasks_per_group}
-      'cen_lon': {WRTCMP_cen_lon}
-      'cen_lat': {WRTCMP_cen_lat}
-      'lon1': {WRTCMP_lon_lwr_left}
-      'lat1': {WRTCMP_lat_lwr_left}'''
+        settings.update({
+          'write_groups': WRTCMP_write_groups,
+          'write_tasks_per_group': WRTCMP_write_tasks_per_group,
+          'cen_lon': WRTCMP_cen_lon,
+          'cen_lat': WRTCMP_cen_lat,
+          'lon1': WRTCMP_lon_lwr_left,
+          'lat1': WRTCMP_lat_lwr_left
+        })
     
         if WRTCMP_output_grid == "lambert_conformal":
-    
-          settings+=f'''
-      'stdlat1': {WRTCMP_stdlat1}
-      'stdlat2': {WRTCMP_stdlat2}
-      'nx': {WRTCMP_nx}
-      'ny': {WRTCMP_ny}
-      'dx': {WRTCMP_dx}
-      'dy': {WRTCMP_dy}
-      'lon2': \"\"
-      'lat2': \"\"
-      'dlon': \"\"
-      'dlat': \"\"'''
-    
+          settings.update({
+            'stdlat1': WRTCMP_stdlat1,
+            'stdlat2': WRTCMP_stdlat2,
+            'nx': WRTCMP_nx,
+            'ny': WRTCMP_ny,
+            'dx': WRTCMP_dx,
+            'dy': WRTCMP_dy,
+            'lon2': "",
+            'lat2': "",
+            'dlon': "",
+            'dlat': "",
+          })
         elif WRTCMP_output_grid == "regional_latlon" or \
              WRTCMP_output_grid == "rotated_latlon":
-    
-          settings+=f'''
-      'lon2': {WRTCMP_lon_upr_rght}
-      'lat2': {WRTCMP_lat_upr_rght}
-      'dlon': {WRTCMP_dlon}
-      'dlat': {WRTCMP_dlat}
-      'stdlat1': \"\"
-      'stdlat2': \"\"
-      'nx': \"\"
-      'ny': \"\"
-      'dx': \"\"
-      'dy': \"\"'''
+          settings.update({
+            'lon2': WRTCMP_lon_upr_rght,
+            'lat2': WRTCMP_lat_upr_rght,
+            'dlon': WRTCMP_dlon,
+            'dlat': WRTCMP_dlat,
+            'stdlat1': "",
+            'stdlat2': "",
+            'nx': "",
+            'ny': "",
+            'dx': "",
+            'dy': ""
+          })
     #
     # If sub_hourly_post is set to "TRUE", then the forecast model must be 
     # directed to generate output files on a sub-hourly interval.  Do this 
@@ -161,16 +162,18 @@ def create_model_configure_file(**kwargs):
         output_fh=1
         nsout=-1
 
-    settings+=f'''
-      'output_fh': {output_fh}
-      'nsout': {nsout}'''
+    settings.update({
+      'output_fh': output_fh,
+      'nsout': nsout
+    })
+
+    settings_str = cfg_to_yaml_str(settings)
     
-    print_info_msg(f'''
+    print_info_msg(dedent(f'''
         The variable \"settings\" specifying values to be used in the \"{MODEL_CONFIG_FN}\"
         file has been set as follows:
         #-----------------------------------------------------------------------
-        settings =
-        {settings}''',verbose=VERBOSE)
+        settings =\n''') + settings_str,verbose=VERBOSE)
     #
     #-----------------------------------------------------------------------
     #
@@ -182,7 +185,7 @@ def create_model_configure_file(**kwargs):
     model_config_fp=f"{run_dir}/{MODEL_CONFIG_FN}"
 
     try:
-        fill_jinja_template(["-q", "-u", settings, "-t", MODEL_CONFIG_TMPL_FP, "-o", model_config_fp])
+        fill_jinja_template(["-q", "-u", settings_str, "-t", MODEL_CONFIG_TMPL_FP, "-o", model_config_fp])
     except:
         print_err_msg_exit(f'''
             Call to python script fill_jinja_template.py to create a \"{MODEL_CONFIG_FN}\"
@@ -193,7 +196,7 @@ def create_model_configure_file(**kwargs):
                 model_config_fp = \"{model_config_fp}\"
               Namelist settings specified on command line:
                 settings =
-            {settings}''')
+            {settings_str}''')
         return False
 
     return True

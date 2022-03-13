@@ -5,7 +5,8 @@ import unittest
 from textwrap import dedent
 
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
-                         run_command, print_info_msg, print_err_msg_exit, type_to_str
+                         run_command, print_info_msg, print_err_msg_exit, type_to_str, \
+                         cfg_to_yaml_str
 
 from fill_jinja_template import fill_jinja_template
 
@@ -46,13 +47,15 @@ def create_diag_table_file(**kwargs):
         
             diag_table_fp = \"{diag_table_fp}\"''', verbose=VERBOSE)
 
-    settings = dedent(f'''
-            starttime: !datetime {type_to_str(CDATE)}
-            cres: {CRES}''')
+    settings = {
+       'starttime': CDATE,
+       'cres': CRES
+    }
+    settings_str = cfg_to_yaml_str(settings)
 
     #call fill jinja
     try:
-        fill_jinja_template(["-q", "-u", settings, "-t", DIAG_TABLE_TMPL_FP, "-o", diag_table_fp])
+        fill_jinja_template(["-q", "-u", settings_str, "-t", DIAG_TABLE_TMPL_FP, "-o", diag_table_fp])
     except:
         print_err_msg_exit(f'''
             !!!!!!!!!!!!!!!!!
