@@ -6,7 +6,7 @@ import platform
 import subprocess
 from multiprocessing import Process
 from textwrap import dedent
-from datetime import timedelta
+from datetime import datetime,timedelta
 
 from python_utils import print_info_msg, print_err_msg_exit, import_vars, cp_vrfy, cd_vrfy,\
                          rm_vrfy, ln_vrfy, mkdir_vrfy, mv_vrfy, run_command, date_to_str, \
@@ -129,8 +129,8 @@ def generate_FV3LAM_wflow():
             slash_ensmem_subdir = f"/mem#{ensmem_indx_name}#"
 
         #get time string
-        (_,time_str,_) = \
-            run_command(f'{DATE_UTIL} -d "{date_to_str(DATE_FIRST_CYCL,True)} +{DT_ATMOS} seconds" +%M:%S')
+        d = DATE_FIRST_CYCL + timedelta(seconds=DT_ATMOS)
+        time_str = d.strftime("%M:%S")
 
         cycl_hrs_str = [ f"{c:02d}" for c in CYCL_HRS ]
         cdate_first_cycl = DATE_FIRST_CYCL + timedelta(hours=CYCL_HRS[0])
@@ -451,7 +451,7 @@ def generate_FV3LAM_wflow():
     #
     # Make a backup copy of the user's crontab file and save it in a file.
     #
-      (_,time_stamp,_) = run_command(f'{DATE_UTIL} "+%F_%T"')
+      time_stamp = datetime.now().strftime("%F_%T")
       crontab_backup_fp=f"{EXPTDIR}/crontab.bak.{time_stamp}"
       print_info_msg(f'''
         Copying contents of user cron table to backup file:
@@ -535,7 +535,10 @@ def generate_FV3LAM_wflow():
     # Resolve the target directory that the FIXam symlink points to and check 
     # that it exists.
     #
-      (_,path_resolved,_)=run_command(f'''{READLINK} -m "{FIXam}"''')
+      try:
+        path_resolved = os.readlink(FIXam)
+      except:
+        path_resolved = FIXam
       if not os.path.exists(path_resolved):
         print_err_msg_exit(f'''
             In order to be able to generate a forecast experiment in NCO mode (i.e.

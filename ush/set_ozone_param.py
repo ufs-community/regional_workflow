@@ -5,8 +5,8 @@ import unittest
 from textwrap import dedent
 
 from python_utils import process_args,import_vars,export_vars,set_env_var,list_to_str,\
-                         print_input_args, print_info_msg, print_err_msg_exit, run_command,\
-                         define_macos_utilities, load_xml_file, has_tag_with_value, find_pattern_in_str
+                         print_input_args, print_info_msg, print_err_msg_exit,\
+                         define_macos_utilities,load_xml_file,has_tag_with_value,find_pattern_in_str
 
 def set_ozone_param(**kwargs):
     """ Function that does the following:

@@ -6,8 +6,7 @@ from datetime import datetime
 from textwrap import dedent
 
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
-                         run_command, print_info_msg, print_err_msg_exit, lowercase, \
-                         cfg_to_yaml_str
+                         print_info_msg, print_err_msg_exit, lowercase, cfg_to_yaml_str
 
 from fill_jinja_template import fill_jinja_template
 

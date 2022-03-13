@@ -6,11 +6,11 @@ import datetime
 from textwrap import dedent
 
 from python_utils import cd_vrfy, mkdir_vrfy, rm_vrfy, check_var_valid_value,\
-                         uppercase,lowercase,check_for_preexist_dir_file,\
+                         lowercase,check_for_preexist_dir_file,\
                          get_manage_externals_config_property, list_to_str, type_to_str, \
                          import_vars, export_vars, get_env_var, print_info_msg,\
-                         print_err_msg_exit, load_config_file, cfg_to_yaml_str, cfg_to_shell_str,\
-                         run_command, load_shell_config
+                         print_err_msg_exit, load_config_file, cfg_to_shell_str,\
+                         load_shell_config
 
 from set_cycle_dates import set_cycle_dates
 from set_predef_grid_params import set_predef_grid_params
@@ -234,7 +234,11 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    (_,mng_extrns_cfg_fn,_)=run_command(f'{READLINK} -f "{SR_WX_APP_TOP_DIR}/Externals.cfg"' )
+    mng_extrns_cfg_fn = f"{SR_WX_APP_TOP_DIR}/Externals.cfg"
+    try:
+      mng_extrns_cfg_fn = os.readlink(mng_extrns_cfg_fn)
+    except:
+      pass
     property_name="local_path"
     #
     # Get the path to the workflow scripts
@@ -736,7 +740,12 @@ def setup():
     global EXPT_BASEDIR
     if EXPT_BASEDIR[0] != "/":
       EXPT_BASEDIR=f"{SR_WX_APP_TOP_DIR}/../expt_dirs/{EXPT_BASEDIR}"
-    (_,EXPT_BASEDIR,_)=run_command(f"{READLINK} -m {EXPT_BASEDIR}")
+    try:
+      EXPT_BASEDIR = os.readlink(EXPT_BASEDIR)
+    except:
+      pass
+    EXPT_BASEDIR = os.path.abspath(EXPT_BASEDIR)
+    
     mkdir_vrfy(f' -p "{EXPT_BASEDIR}"')
     #
     #-----------------------------------------------------------------------

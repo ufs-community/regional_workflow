@@ -5,9 +5,9 @@ import os
 from textwrap import dedent
 
 from python_utils import process_args, print_input_args, print_info_msg, print_err_msg_exit,\
-                         check_var_valid_value, run_command, mv_vrfy,mkdir_vrfy,cmd_vrfy,cp_vrfy,\
-                         rm_vrfy,import_vars,set_env_var,list_to_str,str_to_list,\
-                         lowercase, define_macos_utilities, cfg_to_yaml_str
+                         check_var_valid_value,mkdir_vrfy,cp_vrfy,\
+                         import_vars,set_env_var,\
+                         define_macos_utilities, cfg_to_yaml_str
 
 from set_namelist import set_namelist
 

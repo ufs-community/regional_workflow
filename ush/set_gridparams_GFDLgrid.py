@@ -1,12 +1,24 @@
 #!/usr/bin/env python3
 
 import unittest
-from datetime import datetime,timedelta
 
 from constants import radius_Earth,degs_per_radian
 
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
-                         run_command, print_info_msg, print_err_msg_exit
+                         print_info_msg, print_err_msg_exit
+
+def prime_factors(n):
+    i = 2
+    factors = []
+    while i * i <= n:
+        if n % i:
+            i += 1
+        else:
+            n //= i
+            factors.append(i)
+    if n > 1:
+        factors.append(n)
+    return factors
 
 def set_gridparams_GFDLgrid(**kwargs):
     """ Sets the parameters for a grid that is to be generated using the "GFDLgrid" 
@@ -329,8 +341,8 @@ def set_gridparams_GFDLgrid(**kwargs):
     nx_of_t6_on_t6sg = 2*nx_of_t6_on_t6g
     ny_of_t6_on_t6sg = 2*ny_of_t6_on_t6g
     
-    (_,prime_factors_nx_of_t7_on_t7g,_) = run_command(f"factor {nx_of_t7_on_t7g} | {SED} -r -e 's/^[0-9]+: (.*)/\\1/'")
-    (_,prime_factors_ny_of_t7_on_t7g,_) = run_command(f"factor {ny_of_t7_on_t7g} | {SED} -r -e 's/^[0-9]+: (.*)/\\1/'")
+    prime_factors_nx_of_t7_on_t7g = prime_factors(nx_of_t7_on_t7g)
+    prime_factors_ny_of_t7_on_t7g = prime_factors(ny_of_t7_on_t7g)
     
     print_info_msg(f'''
         The number of cells in the two horizontal directions (x and y) on the 

@@ -6,7 +6,7 @@ import glob
 
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
                          print_info_msg, print_err_msg_exit, create_symlink_to_file, \
-                         define_macos_utilities, check_var_valid_value, run_command, \
+                         define_macos_utilities, check_var_valid_value, \
                          cd_vrfy, mkdir_vrfy, find_pattern_in_str
 
 def link_fix(**kwargs):

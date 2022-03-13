@@ -3,7 +3,7 @@
 import unittest
 
 from python_utils import import_vars, export_vars, set_env_var, get_env_var, \
-                         print_err_msg_exit, run_command
+                         print_err_msg_exit
 
 def set_extrn_mdl_params():
     """ Sets parameters associated with the external model used for initial 
@@ -30,8 +30,8 @@ def set_extrn_mdl_params():
       EXTRN_MDL_SYSBASEDIR_ICS=EXTRN_MDL_SYSBASEDIR_ICS or COMINgfs
       EXTRN_MDL_SYSBASEDIR_LBCS=EXTRN_MDL_SYSBASEDIR_LBCS or COMINgfs
     else:
-      (_,ics_dir,err) = run_command(f'''set_known_sys_dir {EXTRN_MDL_NAME_ICS}''')
-      (_,lbcs_dir,_) = run_command(f'''set_known_sys_dir {EXTRN_MDL_NAME_LBCS}''')
+      ics_dir=EXTRN_MDL_NAME_ICS
+      lbcs_dir=EXTRN_MDL_NAME_LBCS
       EXTRN_MDL_SYSBASEDIR_ICS=EXTRN_MDL_SYSBASEDIR_ICS or ics_dir
       EXTRN_MDL_SYSBASEDIR_LBCS=EXTRN_MDL_SYSBASEDIR_LBCS or lbcs_dir
     
