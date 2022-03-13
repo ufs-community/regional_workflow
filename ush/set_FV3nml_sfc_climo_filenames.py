@@ -56,7 +56,8 @@ def set_FV3nml_sfc_climo_filenames():
 
         fp = f'{FIXLAM}/{CRES}.{sfc_climo_field_name}.{suffix}'
         if RUN_ENVIR != "nco":
-            (_,fp,_) = run_command( f'realpath --canonicalize-missing --relative-to="{dummy_run_dir}" "{fp}"' )
+            fp = os.path.realpath(fp)
+            fp = os.path.relpath(fp, start=dummy_run_dir)
 
         settings += f'''
                 "{nml_var_name}": {fp},'''

@@ -780,7 +780,8 @@ def generate_FV3LAM_wflow():
     # the experiment directory).
     #
         if RUN_ENVIR != "nco":
-          (_,fp,_)=run_command(f'''realpath --canonicalize-missing --relative-to="{dummy_run_dir}" "{fp}"''')
+          fp = os.path.realpath(fp)
+          fp = os.path.relpath(fp, start=dummy_run_dir)
     #
     # Add a line to the variable "settings" that specifies (in a yaml-compliant
     # format) the name of the current namelist variable and the value it should
