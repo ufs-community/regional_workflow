@@ -17,4 +17,4 @@ from .process_args import process_args
 from .run_command import run_command
 from .config_parser import cfg_to_shell_str, cfg_to_yaml_str, yaml_safe_load, \
                             load_shell_config, load_config_file
-
+from .xml_parser import load_xml_file, has_tag_with_value

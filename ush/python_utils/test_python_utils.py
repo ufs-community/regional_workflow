@@ -31,6 +31,10 @@ class Testing(unittest.TestCase):
             content = f.read()
             find_pattern_in_str(pattern, content)
             self.assertEqual( ("lsm_ruc",), match)
+    def test_xml_parser(self):
+        FILE=f"{self.PATH}/../test_data/suite_FV3_GSD_SAR.xml" 
+        tree = load_xml_file(FILE)
+        self.assertTrue(has_tag_with_value(tree,"scheme","lsm_ruc"))
     def test_check_for_preexist_dir_file(self):
         cmd_vrfy('mkdir -p test_data/dir')
         self.assertTrue( os.path.exists('test_data/dir') )

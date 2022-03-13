@@ -5,7 +5,7 @@ import unittest
 
 from python_utils import process_args, import_vars, set_env_var, print_input_args, \
                          run_command, print_err_msg_exit, define_macos_utilities, \
-                         find_pattern_in_file
+                         load_xml_file, has_tag_with_value
 
 def check_ruc_lsm(**kwargs):
     """ This file defines a function that checks whether the RUC land surface
@@ -22,21 +22,9 @@ def check_ruc_lsm(**kwargs):
     print_input_args(dictionary)
     import_vars(dictionary=dictionary)
 
-    ruc_lsm_name = "lsm_ruc"     
-    regex_search = f'^[ ]*<scheme>({ruc_lsm_name})<\/scheme>[ ]*$'
-
-    ruc_lsm_name_or_null = find_pattern_in_file(regex_search, ccpp_phys_suite_fp)
-            
-    if ruc_lsm_name_or_null is None:
-        return False
-    elif ruc_lsm_name_or_null[0] == ruc_lsm_name:
-        return True
-    else:
-        print_err_msg_exit(f'''
-            Unexpected value returned for ruc_lsm_name_or_null:
-              ruc_lsm_name_or_null = \"{ruc_lsm_name_or_null}\"
-            This variable should be set to either \"{ruc_lsm_name}\" or an empty
-            string.''')
+    tree = load_xml_file(ccpp_phys_suite_fp)
+    has_ruc = has_tag_with_value(tree, "scheme", "lsm_ruc")
+    return has_ruc
 
 class Testing(unittest.TestCase):
     def test_check_ruc_lsm(self):

@@ -6,7 +6,7 @@ from textwrap import dedent
 
 from python_utils import process_args,import_vars,export_vars,set_env_var,list_to_str,\
                          print_input_args, print_info_msg, print_err_msg_exit, run_command,\
-                         define_macos_utilities, find_pattern_in_file, find_pattern_in_str
+                         define_macos_utilities, load_xml_file, has_tag_with_value, find_pattern_in_str
 
 def set_ozone_param(**kwargs):
     """ Function that does the following:
@@ -75,18 +75,17 @@ def set_ozone_param(**kwargs):
     #
     #-----------------------------------------------------------------------
     #
-    regex_search="^[ ]*<scheme>(ozphys.*)<\/scheme>[ ]*$"
-    ozone_param = find_pattern_in_file(regex_search, ccpp_phys_suite_fp)
-    if ozone_param is not None:
-      ozone_param = ozone_param[0]
-
-    if ozone_param == "ozphys_2015":
+    tree = load_xml_file(ccpp_phys_suite_fp)
+    ozone_param = ""
+    if has_tag_with_value(tree, "scheme", "ozphys_2015"):
       fixgsm_ozone_fn="ozprdlos_2015_new_sbuvO3_tclm15_nuchem.f77"
-    elif ozone_param == "ozphys":
+      ozone_param = "ozphys_2015"
+    elif has_tag_with_value(tree, "scheme", "ozphys"):
       fixgsm_ozone_fn="global_o3prdlos.f77"
+      ozone_param = "ozphys"
     else:
       print_err_msg_exit(f'''
-        Unknown ozone parameterization (ozone_param) or no ozone parameterization 
+        Unknown or no ozone parameterization
         specified in the CCPP physics suite file (ccpp_phys_suite_fp):
           ccpp_phys_suite_fp = \"{ccpp_phys_suite_fp}\"
           ozone_param = \"{ozone_param}\"''')

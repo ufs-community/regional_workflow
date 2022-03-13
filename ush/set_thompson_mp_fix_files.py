@@ -6,7 +6,7 @@ from textwrap import dedent
 
 from python_utils import process_args,import_vars,export_vars,set_env_var,list_to_str,\
                          print_input_args, run_command, print_info_msg, print_err_msg_exit,\
-                         define_macos_utilities, find_pattern_in_file
+                         define_macos_utilities, load_xml_file, has_tag_with_value
 
 def set_thompson_mp_fix_files(**kwargs):
     """ Function that first checks whether the Thompson
@@ -42,21 +42,8 @@ def set_thompson_mp_fix_files(**kwargs):
     #
     #-----------------------------------------------------------------------
     #
-    thompson_mp_name="mp_thompson"
-    regex_search=f"^[ ]*<scheme>({thompson_mp_name})<\/scheme>[ ]*$"
-    
-    thompson_mp_name_or_null=find_pattern_in_file(regex_search, ccpp_phys_suite_fp)
-    
-    if thompson_mp_name_or_null is None:
-      sdf_uses_thompson_mp=False
-    elif thompson_mp_name_or_null[0] == thompson_mp_name:
-      sdf_uses_thompson_mp=True
-    else:
-      print_err_msg_exit(f'''
-        Unexpected value returned for thompson_mp_name_or_null:
-          thompson_mp_name_or_null = \"{thompson_mp_name_or_null}\"
-        This variable should be set to either \"{thompson_mp_name}\" or an empty 
-        string.''')
+    tree = load_xml_file(ccpp_phys_suite_fp)
+    sdf_uses_thompson_mp = has_tag_with_value(tree, "scheme", "mp_thompson")
     #
     #-----------------------------------------------------------------------
     #
