@@ -8,7 +8,7 @@ from python_utils import process_args,import_vars,export_vars,set_env_var,list_t
                          print_input_args, print_info_msg, print_err_msg_exit,\
                          define_macos_utilities,load_xml_file,has_tag_with_value,find_pattern_in_str
 
-def set_ozone_param(**kwargs):
+def set_ozone_param(ccpp_phys_suite_fp):
     """ Function that does the following:
     (1) Determines the ozone parameterization being used by checking in the
         CCPP physics suite XML.
@@ -36,10 +36,7 @@ def set_ozone_param(**kwargs):
         ozone_param: a string
     """
 
-    valid_args = ['ccpp_phys_suite_fp']
-    dictionary = process_args(valid_args, **kwargs)
-    print_input_args(dictionary)
-    import_vars(dictionary=dictionary)
+    print_input_args(locals())
 
     # import all environment variables
     import_vars()

@@ -9,7 +9,7 @@ from python_utils import process_args, import_vars, set_env_var, print_input_arg
 
 from fill_jinja_template import fill_jinja_template
 
-def create_diag_table_file(**kwargs):
+def create_diag_table_file(run_dir):
     """ Creates a diagnostic table file for each cycle to be run
 
     Args:
@@ -18,11 +18,7 @@ def create_diag_table_file(**kwargs):
         Boolean
     """
 
-    #process input arguments
-    valid_args = [ "run_dir" ]
-    dictionary = process_args(valid_args, **kwargs)
-    print_input_args(dictionary)
-    import_vars(dictionary=dictionary)
+    print_input_args(locals())
 
     #import all environment variables
     import_vars()

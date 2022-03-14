@@ -8,7 +8,7 @@ from python_utils import process_args, import_vars, set_env_var, print_input_arg
                          run_command, define_macos_utilities, check_var_valid_value
 from constants import valid_vals_BOOLEAN
 
-def get_crontab_contents(**kwargs):
+def get_crontab_contents(called_from_cron):
     """
     #-----------------------------------------------------------------------
     #
@@ -35,10 +35,7 @@ def get_crontab_contents(**kwargs):
     #-----------------------------------------------------------------------
     """
   
-    valid_args=["called_from_cron"]
-    dictionary = process_args(valid_args, **kwargs)
-    print_input_args(dictionary)
-    import_vars(dictionary=dictionary)
+    print_input_args(locals())
   
     #import all env vars
     IMPORTS = ["MACHINE"]

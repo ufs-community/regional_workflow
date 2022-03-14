@@ -3,10 +3,10 @@
 import os
 import unittest
 
-from python_utils import process_args, import_vars, print_input_args, \
+from python_utils import process_args, set_env_var, import_vars, print_input_args, \
                          load_xml_file, has_tag_with_value
 
-def check_ruc_lsm(**kwargs):
+def check_ruc_lsm(ccpp_phys_suite_fp):
     """ This file defines a function that checks whether the RUC land surface
     model (LSM) parameterization is being called by the selected physics suite.
 
@@ -16,10 +16,7 @@ def check_ruc_lsm(**kwargs):
         Boolean
     """
 
-    valid_args = ['ccpp_phys_suite_fp']
-    dictionary = process_args(valid_args, **kwargs)
-    print_input_args(dictionary)
-    import_vars(dictionary=dictionary)
+    print_input_args(locals())
 
     tree = load_xml_file(ccpp_phys_suite_fp)
     has_ruc = has_tag_with_value(tree, "scheme", "lsm_ruc")
@@ -28,4 +25,6 @@ def check_ruc_lsm(**kwargs):
 class Testing(unittest.TestCase):
     def test_check_ruc_lsm(self):
         self.assertTrue( check_ruc_lsm(ccpp_phys_suite_fp="test_data/suite_FV3_GSD_SAR.xml") )
+    def setUp(self):
+        set_env_var('DEBUG',True)
 

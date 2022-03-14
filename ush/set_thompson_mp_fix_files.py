@@ -8,7 +8,7 @@ from python_utils import process_args,import_vars,export_vars,set_env_var,list_t
                          print_input_args,print_info_msg, print_err_msg_exit,\
                          define_macos_utilities,load_xml_file,has_tag_with_value
 
-def set_thompson_mp_fix_files(**kwargs):
+def set_thompson_mp_fix_files(ccpp_phys_suite_fp, thompson_mp_climo_fn):
     """ Function that first checks whether the Thompson
     microphysics parameterization is being called by the selected physics
     suite.  If not, it sets the output variable whose name is specified by
@@ -26,10 +26,7 @@ def set_thompson_mp_fix_files(**kwargs):
         boolean: sdf_uses_thompson_mp
     """
 
-    valid_args = ['ccpp_phys_suite_fp', 'thompson_mp_climo_fn']
-    dictionary = process_args(valid_args, **kwargs)
-    print_input_args(dictionary)
-    import_vars(dictionary=dictionary)
+    print_input_args(locals())
 
     # import all environment variables
     import_vars()
