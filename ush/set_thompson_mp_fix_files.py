@@ -75,9 +75,8 @@ def set_thompson_mp_fix_files(ccpp_phys_suite_fp, thompson_mp_climo_fn):
     
         FIXgsm_FILES_TO_COPY_TO_FIXam.extend(thompson_mp_fix_files)
     
-        num_files=len(thompson_mp_fix_files)
-        for i in range(num_files):
-          mapping=f"{thompson_mp_fix_files[i]} | {thompson_mp_fix_files[i]}"
+        for fix_file in thompson_mp_fix_files:
+          mapping=f"{fix_file} | {fix_file}"
           CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING.append(mapping)
     
         msg=dedent(f'''

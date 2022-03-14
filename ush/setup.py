@@ -7,10 +7,10 @@ from textwrap import dedent
 
 from python_utils import cd_vrfy, mkdir_vrfy, rm_vrfy, check_var_valid_value,\
                          lowercase,check_for_preexist_dir_file,\
-                         get_manage_externals_config_property, list_to_str, type_to_str, \
+                         list_to_str, type_to_str, \
                          import_vars, export_vars, get_env_var, print_info_msg,\
                          print_err_msg_exit, load_config_file, cfg_to_shell_str,\
-                         load_shell_config
+                         load_shell_config, load_ini_config, get_ini_value
 
 from set_cycle_dates import set_cycle_dates
 from set_predef_grid_params import set_predef_grid_params
@@ -240,28 +240,27 @@ def setup():
     except:
       pass
     property_name="local_path"
+    cfg = load_ini_config(mng_extrns_cfg_fn)
     #
     # Get the path to the workflow scripts
     #
     external_name="regional_workflow"
-    HOMErrfs = get_manage_externals_config_property( \
-        mng_extrns_cfg_fn, external_name, property_name)
+    HOMErrfs = get_ini_value(cfg, external_name, property_name)
 
     if not HOMErrfs:
         print_err_msg_exit(f'''
-            Call to function get_manage_externals_config_property failed.''')
+            Externals.cfg does not contain "{external_name}".''')
 
     HOMErrfs=f"{SR_WX_APP_TOP_DIR}/{HOMErrfs}"
     #
     # Get the base directory of the FV3 forecast model code.
     #
     external_name=FCST_MODEL
-    UFS_WTHR_MDL_DIR = get_manage_externals_config_property( \
-        mng_extrns_cfg_fn, external_name,property_name)
+    UFS_WTHR_MDL_DIR = get_ini_value(cfg, external_name,property_name)
 
     if not UFS_WTHR_MDL_DIR:
         print_err_msg_exit(f'''
-            Call to function get_manage_externals_config_property failed."''')
+            Externals.cfg does not contain "{external_name}".''')
 
     UFS_WTHR_MDL_DIR=f"{SR_WX_APP_TOP_DIR}/{UFS_WTHR_MDL_DIR}"
     if not os.path.exists(UFS_WTHR_MDL_DIR):
@@ -275,12 +274,11 @@ def setup():
     # Get the base directory of the UFS_UTILS codes.
     #
     external_name="ufs_utils"
-    UFS_UTILS_DIR=get_manage_externals_config_property( \
-        mng_extrns_cfg_fn, external_name, property_name)
+    UFS_UTILS_DIR=get_ini_value(cfg, external_name, property_name)
 
     if not UFS_UTILS_DIR:
         print_err_msg_exit(f'''
-            Call to function get_manage_externals_config_property failed.''')
+            Externals.cfg does not contain "{external_name}".''')
     
     UFS_UTILS_DIR=f"{SR_WX_APP_TOP_DIR}/{UFS_UTILS_DIR}"
     if not os.path.exists(UFS_UTILS_DIR):
@@ -294,11 +292,10 @@ def setup():
     # Get the base directory of the UPP code.
     #
     external_name="UPP"
-    UPP_DIR=get_manage_externals_config_property( \
-        mng_extrns_cfg_fn,external_name,property_name )
+    UPP_DIR=get_ini_value(cfg,external_name,property_name )
     if not UPP_DIR:
         print_err_msg_exit(f'''
-            Call to function get_manage_externals_config_property failed.''')
+            Externals.cfg does not contain "{external_name}".''')
     
     UPP_DIR=f"{SR_WX_APP_TOP_DIR}/{UPP_DIR}"
     if not os.path.exists(UPP_DIR):

@@ -67,13 +67,6 @@ class Testing(unittest.TestCase):
         self.assertEqual( get_elem_inds(arr, 'egg', 'first' ) , 0 )
         self.assertEqual( get_elem_inds(arr, 'egg', 'last' ) , 4 )
         self.assertEqual( get_elem_inds(arr, 'egg', 'all' ) , [0, 2, 4] )
-    def test_get_manage_externals_config_property(self):
-        self.assertIn( \
-            'regional_workflow',
-            get_manage_externals_config_property( \
-                f'{self.PATH}/test_data/Externals.cfg',
-                'regional_workflow',
-                'repo_url'))
     def test_interpol_to_arbit_CRES(self):
         RES = 800
         RES_array = [ 5, 25, 40, 60, 80, 100, 400, 700, 1000, 1500, 2800, 3000 ]
@@ -124,6 +117,14 @@ class Testing(unittest.TestCase):
         cfg = { "HRS": [ "1", "2" ] }
         shell_str = cfg_to_shell_str(cfg)
         self.assertEqual( shell_str, 'HRS=( "1" "2" )\n')
+        # ini file
+        cfg = load_ini_config(f'{self.PATH}/test_data/Externals.cfg')
+        self.assertIn( \
+            'regional_workflow',
+            get_ini_value( \
+                cfg,
+                'regional_workflow',
+                'repo_url'))
     def test_print_msg(self):
         self.assertEqual( print_info_msg("Hello World!", verbose=False), False)
     def setUp(self):
