@@ -123,11 +123,6 @@ Setting parameter \"$param\" in file \"$file\" to \"$value\" ..."
     regex_replace="\1 $value"
     ;;
 #
-  "${FV3_NML_FN}")
-    regex_search="^(\s*$param\s*=)(.*)"
-    regex_replace="\1 $value"
-    ;;
-#
   "${DIAG_TABLE_FN}")
     regex_search="(.*)(<$param>)(.*)"
     regex_replace="\1$value\3"

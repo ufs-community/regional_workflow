@@ -1324,16 +1324,13 @@ set_ozone_param \
 #
 #-----------------------------------------------------------------------
 #
-DATA_TABLE_FP="${EXPTDIR}/${DATA_TABLE_FN}"
-FIELD_TABLE_FP="${EXPTDIR}/${FIELD_TABLE_FN}"
-FV3_NML_FN="${FV3_NML_BASE_SUITE_FN%.*}"
-FV3_NML_FP="${EXPTDIR}/${FV3_NML_FN}"
-NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
-
+DATA_TABLE_FP="${EXPTDIR}/data_table"
+FIELD_TABLE_FP="${EXPTDIR}/field_table"
+FV3_NML_FP="${EXPTDIR}/input.nml"
+NEMS_CONFIG_FP="${EXPTDIR}/nems.configure"
 
 check_var_valid_value "USE_USER_STAGED_EXTRN_FILES" "valid_vals_USE_USER_STAGED_EXTRN_FILES"
 USE_USER_STAGED_EXTRN_FILES=$(boolify $USE_USER_STAGED_EXTRN_FILES)
-
 #
 #-----------------------------------------------------------------------
 #
@@ -1387,7 +1384,7 @@ if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
   for (( i=0; i<${NUM_ENS_MEMBERS}; i++ )); do
     ip1=$( printf "$fmt" $((i+1)) )
     ENSMEM_NAMES[$i]="mem${ip1}"
-    FV3_NML_ENSMEM_FPS[$i]="$EXPTDIR/${FV3_NML_FN}_${ENSMEM_NAMES[$i]}"
+    FV3_NML_ENSMEM_FPS[$i]="$EXPTDIR/input.nml_${ENSMEM_NAMES[$i]}"
   done
 fi
 #
@@ -2454,7 +2451,6 @@ FIELD_DICT_FP='${FIELD_DICT_FP}'
 
 DATA_TABLE_FP='${DATA_TABLE_FP}'
 FIELD_TABLE_FP='${FIELD_TABLE_FP}'
-FV3_NML_FN='${FV3_NML_FN}'
 FV3_NML_FP='${FV3_NML_FP}'
 NEMS_CONFIG_FP='${NEMS_CONFIG_FP}'
 

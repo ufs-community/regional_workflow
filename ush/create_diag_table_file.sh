@@ -81,7 +81,7 @@ run directory...
 
   run_dir = \"${run_dir}\""
 
-  diag_table_fp="${run_dir}/${DIAG_TABLE_FN}"
+  diag_table_fp="${run_dir}/diag_table"
   print_info_msg "$VERBOSE" "
 
 Using the template diagnostics table file:
