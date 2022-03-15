@@ -3,15 +3,16 @@
 import unittest
 import os
 from textwrap import dedent
+from datetime import datetime
 
-from python_utils import process_args, print_input_args, print_info_msg, print_err_msg_exit,\
-                         check_var_valid_value,mkdir_vrfy,cp_vrfy,\
+from python_utils import print_input_args, print_info_msg, print_err_msg_exit,\
+                         mkdir_vrfy,cp_vrfy,\
                          import_vars,set_env_var,\
                          define_macos_utilities, cfg_to_yaml_str
 
 from set_namelist import set_namelist
 
-def set_FV3nml_stoch_params(**kwargs):
+def set_FV3nml_stoch_params(cdate):
     """
     This function, for an ensemble-enabled experiment 
     (i.e. for an experiment for which the workflow configuration variable 
@@ -29,10 +30,7 @@ def set_FV3nml_stoch_params(**kwargs):
         None
     """
 
-    valid_args = ['cdate']
-    dictionary = process_args(valid_args, **kwargs)
-    print_input_args(dictionary)
-    import_vars(dictionary=dictionary)
+    print_input_args(locals())
 
     # import all environment variables
     import_vars()
@@ -111,7 +109,7 @@ class Testing(unittest.TestCase):
         EXPTDIR = os.path.join(USHDIR,"test_data","expt");
         cp_vrfy(os.path.join(USHDIR,f'templates{os.sep}input.nml.FV3'), \
                 os.path.join(EXPTDIR,'input.nml'))
-        self.cdate='20210101'
+        self.cdate=datetime(2021, 1, 1)
         mkdir_vrfy("-p", os.path.join(EXPTDIR,f'{self.cdate}{os.sep}mem0'))
         set_env_var("USHDIR",USHDIR)
         set_env_var("CYCLE_BASEDIR",EXPTDIR)

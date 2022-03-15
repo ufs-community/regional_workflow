@@ -4,7 +4,7 @@ import unittest
 
 from constants import radius_Earth,degs_per_radian
 
-from python_utils import process_args, import_vars, set_env_var, print_input_args, \
+from python_utils import import_vars, set_env_var, print_input_args, \
                          print_info_msg, print_err_msg_exit
 
 def prime_factors(n):
@@ -20,29 +20,31 @@ def prime_factors(n):
         factors.append(n)
     return factors
 
-def set_gridparams_GFDLgrid(**kwargs):
+def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_factor,
+                            refine_ratio_t6g_to_t7g, 
+                            istart_of_t7_on_t6g, iend_of_t7_on_t6g,
+                            jstart_of_t7_on_t6g, jend_of_t7_on_t6g):
     """ Sets the parameters for a grid that is to be generated using the "GFDLgrid" 
     grid generation method (i.e. GRID_GEN_METHOD set to "ESGgrid").
 
     Args:
-        **kwargs: keyword arguments
+         lon_of_t6_ctr
+         lat_of_t6_ctr
+         res_of_t6g
+         stretch_factor
+         refine_ratio_t6g_to_t7g 
+         istart_of_t7_on_t6g
+         iend_of_t7_on_t6g
+         jstart_of_t7_on_t6g
+         jend_of_t7_on_t6g):
     Returns:
         Tuple of inputs and outputs (see return statement)
     """
 
-    valid_args = ['lon_of_t6_ctr', 'lat_of_t6_ctr',
-                  'res_of_t6g', 'stretch_factor',
-                  'refine_ratio_t6g_to_t7g',
-                  'istart_of_t7_on_t6g',
-                  'iend_of_t7_on_t6g',
-                  'jstart_of_t7_on_t6g',
-                  'jend_of_t7_on_t6g']
-    dictionary = process_args(valid_args, **kwargs)
-    print_input_args(dictionary)
-    import_vars(dictionary=dictionary)
+    print_input_args(locals())
 
     # get needed environment variables
-    IMPORTS = [ 'SED', 'VERBOSE', 'RUN_ENVIR', 'NH4' ]
+    IMPORTS = ['VERBOSE', 'RUN_ENVIR', 'NH4']
     import_vars(env_vars=IMPORTS)
 
     #

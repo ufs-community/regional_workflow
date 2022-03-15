@@ -5,12 +5,12 @@ import unittest
 from datetime import datetime
 from textwrap import dedent
 
-from python_utils import process_args, import_vars, set_env_var, print_input_args, \
+from python_utils import import_vars, set_env_var, print_input_args, \
                          print_info_msg, print_err_msg_exit, lowercase, cfg_to_yaml_str
 
 from fill_jinja_template import fill_jinja_template
 
-def create_model_configure_file(**kwargs):
+def create_model_configure_file(cdate,run_dir,sub_hourly_post,dt_subhourly_post_mnts,dt_atmos):
     """ Creates a model configuration file in the specified
     run directory
 
@@ -24,11 +24,7 @@ def create_model_configure_file(**kwargs):
         Boolean
     """
 
-    #process input arguments
-    valid_args = [ "cdate", "run_dir", "sub_hourly_post", "dt_subhourly_post_mnts", "dt_atmos" ]
-    dictionary = process_args(valid_args, **kwargs)
-    print_input_args(dictionary)
-    import_vars(dictionary=dictionary)
+    print_input_args(locals())
 
     #import all environment variables
     import_vars()
@@ -206,7 +202,7 @@ class Testing(unittest.TestCase):
         self.assertTrue(\
                 create_model_configure_file( \
                       run_dir=path,
-                      cdate='20210101',
+                      cdate=datetime(2021,1,1),
                       sub_hourly_post=True,
                       dt_subhourly_post_mnts=4,
                       dt_atmos=1) )

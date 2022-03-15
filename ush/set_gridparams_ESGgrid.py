@@ -4,22 +4,26 @@ import unittest
 from datetime import datetime,timedelta
 
 from constants import radius_Earth,degs_per_radian
-from python_utils import process_args, import_vars, set_env_var, print_input_args
+from python_utils import import_vars, set_env_var, print_input_args
 
-def set_gridparams_ESGgrid(**kwargs):
+def set_gridparams_ESGgrid(lon_ctr,lat_ctr,nx,ny,halo_width,delx,dely,pazi):
     """ Sets the parameters for a grid that is to be generated using the "ESGgrid" 
     grid generation method (i.e. GRID_GEN_METHOD set to "ESGgrid").
 
     Args:
-        **kwargs: keyword arguments
+        lon_ctr
+        lat_ctr
+        nx
+        ny
+        halo_width
+        delx
+        dely
+        pazi
     Returns:
         Tuple of inputs, and 4 outputs (see return statement)
     """
 
-    valid_args = ['lon_ctr', 'lat_ctr', 'nx', 'ny', 'halo_width', 'delx', 'dely', 'pazi']
-    dictionary = process_args(valid_args, **kwargs)
-    print_input_args(dictionary)
-    import_vars(dictionary=dictionary)
+    print_input_args(locals())
     #
     #-----------------------------------------------------------------------
     #
@@ -78,14 +82,14 @@ class Testing(unittest.TestCase):
          DEL_ANGLE_Y_SG,
          NEG_NX_OF_DOM_WITH_WIDE_HALO,
          NEG_NY_OF_DOM_WITH_WIDE_HALO) = set_gridparams_ESGgrid( \
-            lon_ctr="-97.5",
-            lat_ctr="38.5",
-            nx="1748",
-            ny="1038",
-            pazi="0.0",
-            halo_width="6",
-            delx="3000.0",
-            dely="3000.0")
+            lon_ctr=-97.5,
+            lat_ctr=38.5,
+            nx=1748,
+            ny=1038,
+            pazi=0.0,
+            halo_width=6,
+            delx=3000.0,
+            dely=3000.0)
 
         self.assertEqual(\
          (LON_CTR,LAT_CTR,NX,NY,PAZI,NHW,STRETCH_FAC,

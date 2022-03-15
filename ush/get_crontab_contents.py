@@ -4,7 +4,7 @@ import os
 import unittest
 from datetime import datetime
 
-from python_utils import process_args, import_vars, set_env_var, print_input_args, \
+from python_utils import import_vars, set_env_var, print_input_args, \
                          run_command, define_macos_utilities, check_var_valid_value
 from constants import valid_vals_BOOLEAN
 

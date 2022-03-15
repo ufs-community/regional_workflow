@@ -3,7 +3,7 @@
 import os
 import unittest
 
-from python_utils import process_args, set_env_var, import_vars, print_input_args, \
+from python_utils import set_env_var, print_input_args, \
                          load_xml_file, has_tag_with_value
 
 def check_ruc_lsm(ccpp_phys_suite_fp):

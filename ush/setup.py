@@ -34,7 +34,9 @@ def setup():
     scripts called by the tasks in the workflow.
 
     Args:
+      None
     Returns:
+      None
     """
 
     ushdir=os.path.dirname(os.path.abspath(__file__))
@@ -81,7 +83,7 @@ def setup():
     # configuration file are also assigned default values in the default 
     # configuration file.
     #
-      cfg_u = load_config_file(f"{ushdir}/{EXPT_CONFIG_FN}")
+      cfg_u = load_config_file(os.path.join(ushdir,EXPT_CONFIG_FN))
       cfg_d.update(cfg_u)
       if cfg_u.items() > cfg_d.items():
         print_err_msg_exit(f'''

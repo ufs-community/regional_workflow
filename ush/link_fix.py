@@ -4,12 +4,12 @@ import unittest
 import os
 import glob
 
-from python_utils import process_args, import_vars, set_env_var, print_input_args, \
+from python_utils import import_vars, set_env_var, print_input_args, \
                          print_info_msg, print_err_msg_exit, create_symlink_to_file, \
                          define_macos_utilities, check_var_valid_value, \
                          cd_vrfy, mkdir_vrfy, find_pattern_in_str
 
-def link_fix(**kwargs):
+def link_fix(verbose, file_group):
     """ This file defines a function that ...
     Args:
         verbose: True or False
@@ -18,10 +18,7 @@ def link_fix(**kwargs):
         a string: resolution
     """
 
-    valid_args = ['verbose', 'file_group']
-    dictionary = process_args(valid_args, **kwargs)
-    print_input_args(dictionary)
-    import_vars(dictionary=dictionary)
+    print_input_args(locals())
 
     valid_vals_file_group=["grid", "orog", "sfc_climo"]
     check_var_valid_value(file_group, valid_vals_file_group)
@@ -371,7 +368,7 @@ def link_fix(**kwargs):
    
 class Testing(unittest.TestCase):
     def test_link_fix(self):
-        res = link_fix(verbose="TRUE", file_group="grid")
+        res = link_fix(verbose=True, file_group="grid")
         self.assertTrue( res == "3357")
     def setUp(self):
         define_macos_utilities()

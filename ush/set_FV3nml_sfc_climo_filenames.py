@@ -4,10 +4,10 @@ import unittest
 import os
 from textwrap import dedent
 
-from python_utils import process_args, print_input_args, print_info_msg, print_err_msg_exit,\
+from python_utils import print_input_args, print_info_msg, print_err_msg_exit,\
                          check_var_valid_value,mv_vrfy,mkdir_vrfy,cp_vrfy,\
                          rm_vrfy,import_vars,set_env_var,\
-                         lowercase,define_macos_utilities,find_pattern_in_str,cfg_to_yaml_str
+                         define_macos_utilities,find_pattern_in_str,cfg_to_yaml_str
 
 from set_namelist import set_namelist
 

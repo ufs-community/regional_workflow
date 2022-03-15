@@ -4,7 +4,7 @@ import os
 import unittest
 from textwrap import dedent
 
-from python_utils import process_args, import_vars, set_env_var, print_input_args, \
+from python_utils import import_vars, set_env_var, print_input_args, \
                          print_info_msg, print_err_msg_exit, cfg_to_yaml_str
 
 from fill_jinja_template import fill_jinja_template
