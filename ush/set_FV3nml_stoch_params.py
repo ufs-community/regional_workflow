@@ -48,7 +48,7 @@ def set_FV3nml_stoch_params(**kwargs):
     ensmem_name=f"mem{ENSMEM_INDX}"
     
     cdate_i = int(cdate.strftime('%Y%m%d')) 
-    fv3_nml_ensmem_fp=f"{CYCLE_BASEDIR}/{cdate_i}/{ensmem_name}/{FV3_NML_FN}"
+    fv3_nml_ensmem_fp=os.path.join(CYCLE_BASEDIR, f"{cdate_i}{os.sep}{ensmem_name}{os.sep}{FV3_NML_FN}")
     
     ensmem_num=ENSMEM_INDX
     
@@ -108,15 +108,16 @@ class Testing(unittest.TestCase):
         set_env_var('DEBUG',True)
         set_env_var('VERBOSE',True)
         USHDIR = os.path.dirname(os.path.abspath(__file__))
-        EXPTDIR = USHDIR + "/test_data/expt";
-        cp_vrfy(f'{USHDIR}/templates/input.nml.FV3', f'{EXPTDIR}/input.nml')
+        EXPTDIR = os.path.join(USHDIR,"test_data","expt");
+        cp_vrfy(os.path.join(USHDIR,f'templates{os.sep}input.nml.FV3'), \
+                os.path.join(EXPTDIR,'input.nml'))
         self.cdate='20210101'
-        mkdir_vrfy("-p", f'{EXPTDIR}/{self.cdate}/mem0')
+        mkdir_vrfy("-p", os.path.join(EXPTDIR,f'{self.cdate}{os.sep}mem0'))
         set_env_var("USHDIR",USHDIR)
         set_env_var("CYCLE_BASEDIR",EXPTDIR)
         set_env_var("ENSMEM_INDX",0)
         set_env_var("FV3_NML_FN","input.nml")
-        set_env_var("FV3_NML_FP",EXPTDIR + "/input.nml")
+        set_env_var("FV3_NML_FP",os.path.join(EXPTDIR,"input.nml"))
         set_env_var("DO_SPPT",True)
         set_env_var("DO_SPP",True)
         set_env_var("DO_LSM_SPP",True)

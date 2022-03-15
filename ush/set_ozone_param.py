@@ -168,7 +168,7 @@ def set_ozone_param(ccpp_phys_suite_fp):
 class Testing(unittest.TestCase):
     def test_set_ozone_param(self):
         self.assertEqual( "ozphys_2015",
-            set_ozone_param(ccpp_phys_suite_fp="test_data/suite_FV3_GSD_SAR.xml") )
+            set_ozone_param(ccpp_phys_suite_fp=f"test_data{os.sep}suite_FV3_GSD_SAR.xml") )
     def setUp(self):
         define_macos_utilities();
         set_env_var('DEBUG',True)

@@ -161,7 +161,7 @@ def link_fix(**kwargs):
         f"C*{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NH3}.nc",
         f"C*{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NH4}.nc"
             ]
-        fps=[ f"{GRID_DIR}/{itm}" for itm in fns]
+        fps=[ os.path.join(GRID_DIR,itm) for itm in fns]
         run_task=f"{RUN_TASK_MAKE_GRID}"
     #
     elif file_group == "orog":
@@ -174,7 +174,7 @@ def link_fix(**kwargs):
           f"C*{DOT_OR_USCORE}oro_data_ss.tile{TILE_RGNL}.halo{NH0}.nc",
           f"C*{DOT_OR_USCORE}oro_data_ls.tile{TILE_RGNL}.halo{NH0}.nc",
                ]
-        fps=[ f"{OROG_DIR}/{itm}" for itm in fns]
+        fps=[ os.path.join(OROG_DIR,itm) for itm in fns]
         run_task=f"{RUN_TASK_MAKE_OROG}"
     #
     # The following list of symlinks (which have the same names as their
@@ -188,7 +188,7 @@ def link_fix(**kwargs):
           ii=2*i
           fns[ii]=f"C*.{SFC_CLIMO_FIELDS[i]}.tile{TILE_RGNL}.halo{NH0}.nc"
           fns[ii+1]=f"C*.{SFC_CLIMO_FIELDS[i]}.tile{TILE_RGNL}.halo{NH4}.nc"
-        fps=[ f"{SFC_CLIMO_DIR}/{itm}" for itm in fns]
+        fps=[ os.path.join(SFC_CLIMO_DIR,itm) for itm in fns]
         run_task=f"{RUN_TASK_MAKE_SFC_CLIMO}"
     #
 
@@ -375,8 +375,8 @@ class Testing(unittest.TestCase):
         self.assertTrue( res == "3357")
     def setUp(self):
         define_macos_utilities()
-        TEST_DIR = os.path.dirname(os.path.abspath(__file__)) + "/test_data";
-        FIXLAM = TEST_DIR + "/expt/fix_lam"
+        TEST_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_data");
+        FIXLAM = os.path.join(TEST_DIR, "expt", "fix_lam")
         mkdir_vrfy("-p",FIXLAM)
         set_env_var("FIXLAM",FIXLAM)
         set_env_var("DOT_OR_USCORE","_")
@@ -385,10 +385,10 @@ class Testing(unittest.TestCase):
         set_env_var("NHW",6)
         set_env_var("NH4",4)
         set_env_var("NH3",3)
-        set_env_var("GRID_DIR",TEST_DIR + "/RRFS_CONUS_3km")
+        set_env_var("GRID_DIR",TEST_DIR + os.sep + "RRFS_CONUS_3km")
         set_env_var("RUN_TASK_MAKE_GRID","FALSE")
-        set_env_var("OROG_DIR",TEST_DIR + "/RRFS_CONUS_3km")
+        set_env_var("OROG_DIR",TEST_DIR + os.sep + "RRFS_CONUS_3km")
         set_env_var("RUN_TASK_MAKE_OROG","FALSE")
-        set_env_var("SFC_CLIMO_DIR",TEST_DIR + "/RRFS_CONUS_3km")
+        set_env_var("SFC_CLIMO_DIR",TEST_DIR + os.sep + "RRFS_CONUS_3km")
         set_env_var("RUN_TASK_MAKE_SFC_CLIMO","FALSE")
         set_env_var("CCPP_PHYS_SUITE","FV3_GSD_SAR")

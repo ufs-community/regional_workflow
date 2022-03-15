@@ -181,7 +181,7 @@ def create_model_configure_file(**kwargs):
     #
     #-----------------------------------------------------------------------
     #
-    model_config_fp=f"{run_dir}/{MODEL_CONFIG_FN}"
+    model_config_fp=os.path.join(run_dir, MODEL_CONFIG_FN)
 
     try:
         fill_jinja_template(["-q", "-u", settings_str, "-t", MODEL_CONFIG_TMPL_FP, "-o", model_config_fp])
@@ -202,9 +202,10 @@ def create_model_configure_file(**kwargs):
 
 class Testing(unittest.TestCase):
     def test_create_model_configure_file(self):
+        path = os.path.join(os.getenv('USHDIR'), "test_data")
         self.assertTrue(\
                 create_model_configure_file( \
-                      run_dir=f"{os.getenv('USHDIR')}/test_data",
+                      run_dir=path,
                       cdate='20210101',
                       sub_hourly_post=True,
                       dt_subhourly_post_mnts=4,
@@ -212,7 +213,7 @@ class Testing(unittest.TestCase):
     def setUp(self):
         USHDIR = os.path.dirname(os.path.abspath(__file__))
         MODEL_CONFIG_FN='model_configure'
-        MODEL_CONFIG_TMPL_FP = f'{USHDIR}/templates/{MODEL_CONFIG_FN}'
+        MODEL_CONFIG_TMPL_FP = os.path.join(USHDIR, "templates", MODEL_CONFIG_FN)
 
         set_env_var('DEBUG',True)
         set_env_var('VERBOSE',True)

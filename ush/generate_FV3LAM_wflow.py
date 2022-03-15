@@ -97,7 +97,7 @@ def generate_FV3LAM_wflow():
     #
     #-----------------------------------------------------------------------
     #
-    WFLOW_XML_FP = f'{EXPTDIR}/{WFLOW_XML_FN}'
+    WFLOW_XML_FP = os.path.join(EXPTDIR, WFLOW_XML_FN)
 
     #
     #-----------------------------------------------------------------------
@@ -112,7 +112,7 @@ def generate_FV3LAM_wflow():
     #
     if WORKFLOW_MANAGER == "rocoto":
 
-        template_xml_fp = f'{TEMPLATE_DIR}/{WFLOW_XML_FN}'
+        template_xml_fp = os.path.join(TEMPLATE_DIR, WFLOW_XML_FN)
 
         print_info_msg(f''' 
             Creating rocoto workflow XML file (WFLOW_XML_FP) from jinja template XML
@@ -436,7 +436,7 @@ def generate_FV3LAM_wflow():
           WFLOW_LAUNCH_SCRIPT_FP = \"{WFLOW_LAUNCH_SCRIPT_FP}\"''',verbose=VERBOSE)
 
     create_symlink_to_file(WFLOW_LAUNCH_SCRIPT_FP,
-                           f"{EXPTDIR}/{WFLOW_LAUNCH_SCRIPT_FN}",
+                           os.path.join(EXPTDIR,WFLOW_LAUNCH_SCRIPT_FN),
                            False)
     #
     #-----------------------------------------------------------------------
@@ -452,7 +452,7 @@ def generate_FV3LAM_wflow():
     # Make a backup copy of the user's crontab file and save it in a file.
     #
       time_stamp = datetime.now().strftime("%F_%T")
-      crontab_backup_fp=f"{EXPTDIR}/crontab.bak.{time_stamp}"
+      crontab_backup_fp=os.path.join(EXPTDIR,f"crontab.bak.{time_stamp}")
       print_info_msg(f'''
         Copying contents of user cron table to backup file:
           crontab_backup_fp = \"{crontab_backup_fp}\"''',verbose=VERBOSE)
@@ -562,13 +562,13 @@ def generate_FV3LAM_wflow():
           FIXam = \"{FIXam}\"''',verbose=VERBOSE)
     
       check_for_preexist_dir_file(FIXam,"delete")
-      mkdir_vrfy(f' -p "{FIXam}"')
-      mkdir_vrfy(f' -p "{FIXam}/fix_co2_proj"')
+      mkdir_vrfy("-p",FIXam)
+      mkdir_vrfy("-p",os.path.join(FIXam,"fix_co2_proj"))
     
       num_files=len(FIXgsm_FILES_TO_COPY_TO_FIXam)
       for i in range(num_files):
         fn=f"{FIXgsm_FILES_TO_COPY_TO_FIXam[i]}"
-        cp_vrfy(f"{FIXgsm}/{fn}",f"{FIXam}/{fn}")
+        cp_vrfy(os.path.join(FIXgsm,fn), os.path.join(FIXam,fn))
     #
     #-----------------------------------------------------------------------
     #
@@ -585,10 +585,10 @@ def generate_FV3LAM_wflow():
               FIXclim = \"{FIXclim}\"''',verbose=VERBOSE)
         
         check_for_preexist_dir_file(FIXclim,"delete")
-        mkdir_vrfy(f' -p "{FIXclim}"')
+        mkdir_vrfy("-p", FIXclim)
         
-        cp_vrfy(f' "{FIXaer}/merra2.aerclim"*".nc" "{FIXclim}/"')
-        cp_vrfy(f' "{FIXlut}/optics"*".dat" "{FIXclim}/"')
+        cp_vrfy(os.path.join(FIXaer,"merra2.aerclim*.nc"), FIXclim)
+        cp_vrfy(os.path.join(FIXlut,"optics*.dat"), FIXclim)
     #
     #-----------------------------------------------------------------------
     #
@@ -762,9 +762,9 @@ def generate_FV3LAM_wflow():
     # in the FIXam directory.  Here, we loop through this array and process
     # each element to construct each line of "settings".
     #
-    dummy_run_dir=f"{EXPTDIR}/any_cyc"
+    dummy_run_dir=os.path.join(EXPTDIR,"any_cyc")
     if DO_ENSEMBLE == True:
-      dummy_run_dir=f"{dummy_run_dir}/any_ensmem"
+      dummy_run_dir=os.path.join(dummy_run_dir,"any_ensmem")
     
     regex_search="^[ ]*([^| ]+)[ ]*[|][ ]*([^| ]+)[ ]*$"
     num_nml_vars=len(FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING)
@@ -778,7 +778,7 @@ def generate_FV3LAM_wflow():
     
       fp="\"\""
       if FIXam_fn:
-        fp=f"{FIXam}/{FIXam_fn}"
+        fp=os.path.join(FIXam,FIXam_fn)
     #
     # If not in NCO mode, for portability and brevity, change fp so that it
     # is a relative path (relative to any cycle directory immediately under
@@ -891,7 +891,7 @@ def generate_FV3LAM_wflow():
     #
     #-----------------------------------------------------------------------
     #
-    cp_vrfy(f"{USHDIR}/{EXPT_CONFIG_FN} {EXPTDIR}")
+    cp_vrfy(os.path.join(USHDIR,EXPT_CONFIG_FN), EXPTDIR)
     #
     #-----------------------------------------------------------------------
     #
@@ -978,7 +978,8 @@ def generate_FV3LAM_wflow():
       print("Getting NOMADS online data")
       print(f"NOMADS_file_type= {NOMADS_file_type}")
       cd_vrfy(EXPTDIR)
-      run_command(f'''{USHDIR}/NOMADS_get_extrn_mdl_files.sh {date_to_str(DATE_FIRST_CYCL,True)} \
+      NOMADS_script = os.path.join(USHDIR, "NOMADS_get_extrn_mdl_files.h")
+      run_command(f'''{NOMADS_script} {date_to_str(DATE_FIRST_CYCL,True)} \
                       {CYCL_HRS} {NOMADS_file_type} {FCST_LEN_HRS} {LBC_SPEC_INTVL_HRS}''')
 
 
@@ -1005,14 +1006,14 @@ if __name__ == "__main__":
     # file is explained below.
     #
     tmp_fn="tmp"
-    tmp_fp=f"{ushdir}/{tmp_fn}"
+    tmp_fp=os.path.join(ushdir, tmp_fn)
     rm_vrfy("-f",tmp_fp)
     #
     # Set the name of and full path to the log file in which the output from
     # the experiment/workflow generation function will be saved.
     #
     log_fn="log.generate_FV3LAM_wflow"
-    log_fp=f"{ushdir}/{log_fn}"
+    log_fp=os.path.join(ushdir, log_fn)
     rm_vrfy("-f",log_fp)
     #
     # Call the generate_FV3LAM_wflow function defined above to generate the

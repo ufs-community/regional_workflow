@@ -107,7 +107,7 @@ def set_thompson_mp_fix_files(ccpp_phys_suite_fp, thompson_mp_climo_fn):
 class Testing(unittest.TestCase):
     def test_set_thompson_mp_fix_files(self):
         self.assertEqual( True,
-            set_thompson_mp_fix_files(ccpp_phys_suite_fp="test_data/suite_FV3_GSD_SAR.xml",
+            set_thompson_mp_fix_files(ccpp_phys_suite_fp=f"test_data{os.sep}suite_FV3_GSD_SAR.xml",
                 thompson_mp_climo_fn="Thompson_MP_MONTHLY_CLIMO.nc") )
     def setUp(self):
         define_macos_utilities();

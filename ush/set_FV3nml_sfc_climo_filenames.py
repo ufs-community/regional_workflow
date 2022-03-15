@@ -42,9 +42,9 @@ def set_FV3nml_sfc_climo_filenames():
     # create yaml-complaint string
     settings = {}
 
-    dummy_run_dir = EXPTDIR + "/any_cyc"
+    dummy_run_dir = os.path.join(EXPTDIR, "any_cyc")
     if DO_ENSEMBLE == "TRUE":
-        dummy_run_dir += "/any_ensmem"
+        dummy_run_dir += os.sep + "any_ensmem"
 
     namsfc_dict = {}
     for mapping in FV3_NML_VARNAME_TO_SFC_CLIMO_FIELD_MAPPING:
@@ -54,7 +54,7 @@ def set_FV3nml_sfc_climo_filenames():
 
         check_var_valid_value(sfc_climo_field_name, SFC_CLIMO_FIELDS)
 
-        fp = f'{FIXLAM}/{CRES}.{sfc_climo_field_name}.{suffix}'
+        fp = os.path.join(FIXLAM, f'{CRES}.{sfc_climo_field_name}.{suffix}')
         if RUN_ENVIR != "nco":
             fp = os.path.relpath(os.path.realpath(fp), start=dummy_run_dir)
 
@@ -100,17 +100,18 @@ class Testing(unittest.TestCase):
         set_env_var('DEBUG',True)
         set_env_var('VERBOSE',True)
         USHDIR = os.path.dirname(os.path.abspath(__file__))
-        EXPTDIR = USHDIR + "/test_data/expt";
-        FIXLAM = EXPTDIR + "/fix_lam"
+        EXPTDIR = os.path.join(USHDIR, "test_data", "expt");
+        FIXLAM = os.path.join(EXPTDIR, "fix_lam")
         mkdir_vrfy("-p",FIXLAM)
-        cp_vrfy(f'{USHDIR}/templates/input.nml.FV3', f'{EXPTDIR}/input.nml')
+        cp_vrfy(os.path.join(USHDIR,f'templates{os.sep}input.nml.FV3'), \
+                os.path.join(EXPTDIR,'input.nml'))
         set_env_var("USHDIR",USHDIR)
         set_env_var("EXPTDIR",EXPTDIR)
         set_env_var("FIXLAM",FIXLAM)
         set_env_var("DO_ENSEMBLE",False)
         set_env_var("CRES","C3357")
         set_env_var("RUN_ENVIR","nco")
-        set_env_var("FV3_NML_FP",EXPTDIR + "/input.nml")
+        set_env_var("FV3_NML_FP",os.path.join(EXPTDIR,"input.nml"))
 
         FV3_NML_VARNAME_TO_SFC_CLIMO_FIELD_MAPPING=[
             "FNALBC  | snowfree_albedo",

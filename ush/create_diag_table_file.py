@@ -30,7 +30,7 @@ def create_diag_table_file(run_dir):
         
           run_dir = \"{run_dir}\"''', verbose=VERBOSE)
 
-    diag_table_fp = f'{run_dir}/{DIAG_TABLE_FN}'
+    diag_table_fp = os.path.join(run_dir, DIAG_TABLE_FN)
 
     print_info_msg(f'''
         
@@ -63,13 +63,12 @@ def create_diag_table_file(run_dir):
 
 class Testing(unittest.TestCase):
     def test_create_diag_table_file(self):
-        self.assertTrue(\
-                create_diag_table_file( \
-                      run_dir=f"{os.getenv('USHDIR')}/test_data"))
+        path = os.path.join(os.getenv('USHDIR'), "test_data")
+        self.assertTrue(create_diag_table_file(run_dir=path))
     def setUp(self):
         USHDIR = os.path.dirname(os.path.abspath(__file__))
         DIAG_TABLE_FN="diag_table"
-        DIAG_TABLE_TMPL_FP = f'{USHDIR}/templates/{DIAG_TABLE_FN}.FV3_GFS_v15p2'
+        DIAG_TABLE_TMPL_FP = os.path.join(USHDIR,"templates",f"{DIAG_TABLE_FN}.FV3_GFS_v15p2")
         set_env_var('DEBUG',True)
         set_env_var('VERBOSE',True)
         set_env_var("USHDIR",USHDIR)

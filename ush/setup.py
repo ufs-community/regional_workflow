@@ -234,7 +234,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    mng_extrns_cfg_fn = f"{SR_WX_APP_TOP_DIR}/Externals.cfg"
+    mng_extrns_cfg_fn = os.path.join(SR_WX_APP_TOP_DIR, "Externals.cfg")
     try:
       mng_extrns_cfg_fn = os.readlink(mng_extrns_cfg_fn)
     except:
@@ -251,7 +251,7 @@ def setup():
         print_err_msg_exit(f'''
             Externals.cfg does not contain "{external_name}".''')
 
-    HOMErrfs=f"{SR_WX_APP_TOP_DIR}/{HOMErrfs}"
+    HOMErrfs = os.path.join(SR_WX_APP_TOP_DIR, HOMErrfs)
     #
     # Get the base directory of the FV3 forecast model code.
     #
@@ -262,7 +262,7 @@ def setup():
         print_err_msg_exit(f'''
             Externals.cfg does not contain "{external_name}".''')
 
-    UFS_WTHR_MDL_DIR=f"{SR_WX_APP_TOP_DIR}/{UFS_WTHR_MDL_DIR}"
+    UFS_WTHR_MDL_DIR=os.path.join(SR_WX_APP_TOP_DIR, UFS_WTHR_MDL_DIR)
     if not os.path.exists(UFS_WTHR_MDL_DIR):
         print_err_msg_exit(f'''
             The base directory in which the FV3 source code should be located
@@ -280,7 +280,7 @@ def setup():
         print_err_msg_exit(f'''
             Externals.cfg does not contain "{external_name}".''')
     
-    UFS_UTILS_DIR=f"{SR_WX_APP_TOP_DIR}/{UFS_UTILS_DIR}"
+    UFS_UTILS_DIR=os.path.join(SR_WX_APP_TOP_DIR, UFS_UTILS_DIR)
     if not os.path.exists(UFS_UTILS_DIR):
         print_err_msg_exit(f'''
             The base directory in which the UFS utilities source codes should be lo-
@@ -297,7 +297,7 @@ def setup():
         print_err_msg_exit(f'''
             Externals.cfg does not contain "{external_name}".''')
     
-    UPP_DIR=f"{SR_WX_APP_TOP_DIR}/{UPP_DIR}"
+    UPP_DIR=os.path.join(SR_WX_APP_TOP_DIR, UPP_DIR)
     if not os.path.exists(UPP_DIR):
         print_err_msg_exit(f'''
             The base directory in which the UPP source code should be located
@@ -312,18 +312,18 @@ def setup():
     global USHDIR, SCRIPTSDIR, JOBSDIR,SORCDIR, SRC_DIR, PARMDIR, MODULES_DIR, EXECDIR, TEMPLATE_DIR, \
            VX_CONFIG_DIR, METPLUS_CONF, MET_CONFIG
 
-    USHDIR=f"{HOMErrfs}/ush"
-    SCRIPTSDIR=f"{HOMErrfs}/scripts"
-    JOBSDIR=f"{HOMErrfs}/jobs"
-    SORCDIR=f"{HOMErrfs}/sorc"
-    SRC_DIR=f"{SR_WX_APP_TOP_DIR}/src"
-    PARMDIR=f"{HOMErrfs}/parm"
-    MODULES_DIR=f"{HOMErrfs}/modulefiles"
-    EXECDIR=f"{SR_WX_APP_TOP_DIR}/bin"
-    TEMPLATE_DIR=f"{USHDIR}/templates"
-    VX_CONFIG_DIR=f"{TEMPLATE_DIR}/parm"
-    METPLUS_CONF=f"{TEMPLATE_DIR}/parm/metplus"
-    MET_CONFIG=f"{TEMPLATE_DIR}/parm/met"
+    USHDIR = os.path.join(HOMErrfs,"ush")
+    SCRIPTSDIR = os.path.join(HOMErrfs,"scripts")
+    JOBSDIR = os.path.join(HOMErrfs,"jobs")
+    SORCDIR = os.path.join(HOMErrfs,"sorc")
+    SRC_DIR = os.path.join(SR_WX_APP_TOP_DIR,"src")
+    PARMDIR = os.path.join(HOMErrfs,"parm")
+    MODULES_DIR = os.path.join(HOMErrfs,"modulefiles")
+    EXECDIR = os.path.join(SR_WX_APP_TOP_DIR,"bin")
+    TEMPLATE_DIR = os.path.join(USHDIR,"templates")
+    VX_CONFIG_DIR = os.path.join(TEMPLATE_DIR,"parm")
+    METPLUS_CONF = os.path.join(TEMPLATE_DIR,"parm","metplus")
+    MET_CONFIG = os.path.join(TEMPLATE_DIR,"parm","met")
     
     #
     #-----------------------------------------------------------------------
@@ -340,7 +340,7 @@ def setup():
            PARTITION_DEFAULT, PARTITION_HPSS, PARTITION_FCST
 
     RELATIVE_LINK_FLAG="--relative"
-    MACHINE_FILE=MACHINE_FILE or f"{USHDIR}/machine/{lowercase(MACHINE)}.sh"
+    MACHINE_FILE=MACHINE_FILE or os.path.join(USHDIR,"machine",f"{lowercase(MACHINE)}.sh")
     machine_cfg = load_shell_config(MACHINE_FILE)
     import_vars(dictionary=machine_cfg)
     
@@ -353,12 +353,12 @@ def setup():
       print_err_msg_exit(f'''
         One or more fix file directories have not been specified for this machine:
           MACHINE = \"{MACHINE}\"
-          FIXgsm = \"{FIXgsm:-\"\"}
-          FIXaer = \"{FIXaer:-\"\"}
-          FIXlut = \"{FIXlut:-\"\"}
-          TOPO_DIR = \"{TOPO_DIR:-\"\"}
-          SFC_CLIMO_INPUT_DIR = \"{SFC_CLIMO_INPUT_DIR:-\"\"}
-          FIXLAM_NCO_BASEDIR = \"{FIXLAM_NCO_BASEDIR:-\"\"}
+          FIXgsm = \"{FIXgsm or ""}
+          FIXaer = \"{FIXaer or ""}
+          FIXlut = \"{FIXlut or ""}
+          TOPO_DIR = \"{TOPO_DIR or ""}
+          SFC_CLIMO_INPUT_DIR = \"{SFC_CLIMO_INPUT_DIR or ""}
+          FIXLAM_NCO_BASEDIR = \"{FIXLAM_NCO_BASEDIR or ""}
         You can specify the missing location(s) in config.sh''')
 
     #
@@ -736,7 +736,7 @@ def setup():
     #
     global EXPT_BASEDIR
     if EXPT_BASEDIR[0] != "/":
-      EXPT_BASEDIR=f"{SR_WX_APP_TOP_DIR}/../expt_dirs/{EXPT_BASEDIR}"
+      EXPT_BASEDIR = os.path.join(SR_WX_APP_TOP_DIR,"..","expt_dirs",EXPT_BASEDIR)
     try:
       EXPT_BASEDIR = os.readlink(EXPT_BASEDIR)
     except:
@@ -765,7 +765,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     global EXPTDIR
-    EXPTDIR=f"{EXPT_BASEDIR}/{EXPT_SUBDIR}"
+    EXPTDIR = os.path.join(EXPT_BASEDIR, EXPT_SUBDIR)
     check_for_preexist_dir_file(EXPTDIR,PREEXISTING_DIR_METHOD)
     #
     #-----------------------------------------------------------------------
@@ -820,23 +820,23 @@ def setup():
     global LOGDIR, FIXam, FIXclim, FIXLAM, CYCLE_BASEDIR, \
            COMROOT, COMOUT_BASEDIR
 
-    LOGDIR=f"{EXPTDIR}/log"
+    LOGDIR = os.path.join(EXPTDIR, "log")
     
-    FIXam=f"{EXPTDIR}/fix_am"
-    FIXclim=f"{EXPTDIR}/fix_clim"
-    FIXLAM=f"{EXPTDIR}/fix_lam"
+    FIXam = os.path.join(EXPTDIR, "fix_am")
+    FIXclim = os.path.join(EXPTDIR, "fix_clim")
+    FIXLAM = os.path.join(EXPTDIR, "fix_lam")
     
     if RUN_ENVIR == "nco":
     
-      CYCLE_BASEDIR=f"{STMP}/tmpnwprd/{RUN}"
+      CYCLE_BASEDIR = os.path.join(STMP, "tmpnwprd", RUN)
       check_for_preexist_dir_file(CYCLE_BASEDIR,PREEXISTING_DIR_METHOD)
-      COMROOT=f"{PTMP}/com"
-      COMOUT_BASEDIR=f"{COMROOT}/{NET}/{envir}"
+      COMROOT = os.path.join(PTMP, "com")
+      COMOUT_BASEDIR = os.pah.join(COMROOT, NET, envir)
       check_for_preexist_dir_file(COMOUT_BASEDIR,PREEXISTING_DIR_METHOD)
     
     else:
     
-      CYCLE_BASEDIR=f"{EXPTDIR}"
+      CYCLE_BASEDIR=EXPTDIR
       COMROOT=""
       COMOUT_BASEDIR=""
     #
@@ -888,20 +888,20 @@ def setup():
 
     dot_ccpp_phys_suite_or_null=f".{CCPP_PHYS_SUITE}"
     
-    DATA_TABLE_TMPL_FN=f"{DATA_TABLE_FN}"
-    DIAG_TABLE_TMPL_FN=f"{DIAG_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
-    FIELD_TABLE_TMPL_FN=f"{FIELD_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
-    MODEL_CONFIG_TMPL_FN=f"{MODEL_CONFIG_FN}"
-    NEMS_CONFIG_TMPL_FN=f"{NEMS_CONFIG_FN}"
+    DATA_TABLE_TMPL_FN = DATA_TABLE_FN
+    DIAG_TABLE_TMPL_FN = f"{DIAG_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
+    FIELD_TABLE_TMPL_FN = f"{FIELD_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
+    MODEL_CONFIG_TMPL_FN = MODEL_CONFIG_FN
+    NEMS_CONFIG_TMPL_FN = NEMS_CONFIG_FN
     
-    DATA_TABLE_TMPL_FP=f"{TEMPLATE_DIR}/{DATA_TABLE_TMPL_FN}"
-    DIAG_TABLE_TMPL_FP=f"{TEMPLATE_DIR}/{DIAG_TABLE_TMPL_FN}"
-    FIELD_TABLE_TMPL_FP=f"{TEMPLATE_DIR}/{FIELD_TABLE_TMPL_FN}"
-    FV3_NML_BASE_SUITE_FP=f"{TEMPLATE_DIR}/{FV3_NML_BASE_SUITE_FN}"
-    FV3_NML_YAML_CONFIG_FP=f"{TEMPLATE_DIR}/{FV3_NML_YAML_CONFIG_FN}"
-    FV3_NML_BASE_ENS_FP=f"{EXPTDIR}/{FV3_NML_BASE_ENS_FN}"
-    MODEL_CONFIG_TMPL_FP=f"{TEMPLATE_DIR}/{MODEL_CONFIG_TMPL_FN}"
-    NEMS_CONFIG_TMPL_FP=f"{TEMPLATE_DIR}/{NEMS_CONFIG_TMPL_FN}"
+    DATA_TABLE_TMPL_FP = os.path.join(TEMPLATE_DIR,DATA_TABLE_TMPL_FN)
+    DIAG_TABLE_TMPL_FP = os.path.join(TEMPLATE_DIR,DIAG_TABLE_TMPL_FN)
+    FIELD_TABLE_TMPL_FP = os.path.join(TEMPLATE_DIR,FIELD_TABLE_TMPL_FN)
+    FV3_NML_BASE_SUITE_FP = os.path.join(TEMPLATE_DIR,FV3_NML_BASE_SUITE_FN)
+    FV3_NML_YAML_CONFIG_FP = os.path.join(TEMPLATE_DIR,FV3_NML_YAML_CONFIG_FN)
+    FV3_NML_BASE_ENS_FP = os.path.join(EXPTDIR,FV3_NML_BASE_ENS_FN)
+    MODEL_CONFIG_TMPL_FP = os.path.join(TEMPLATE_DIR,MODEL_CONFIG_TMPL_FN)
+    NEMS_CONFIG_TMPL_FP = os.path.join(TEMPLATE_DIR,NEMS_CONFIG_TMPL_FN)
     #
     #-----------------------------------------------------------------------
     #
@@ -923,8 +923,8 @@ def setup():
     #
     global CCPP_PHYS_SUITE_FN, CCPP_PHYS_SUITE_IN_CCPP_FP, CCPP_PHYS_SUITE_FP
     CCPP_PHYS_SUITE_FN=f"suite_{CCPP_PHYS_SUITE}.xml"
-    CCPP_PHYS_SUITE_IN_CCPP_FP=f"{UFS_WTHR_MDL_DIR}/FV3/ccpp/suites/{CCPP_PHYS_SUITE_FN}"
-    CCPP_PHYS_SUITE_FP=f"{EXPTDIR}/{CCPP_PHYS_SUITE_FN}"
+    CCPP_PHYS_SUITE_IN_CCPP_FP=os.path.join(UFS_WTHR_MDL_DIR, "FV3","ccpp","suites",CCPP_PHYS_SUITE_FN)
+    CCPP_PHYS_SUITE_FP=os.path.join(EXPTDIR, CCPP_PHYS_SUITE_FN)
     if not os.path.exists(CCPP_PHYS_SUITE_IN_CCPP_FP):
       print_err_msg_exit(f'''
         The CCPP suite definition file (CCPP_PHYS_SUITE_IN_CCPP_FP) does not exist
@@ -945,9 +945,9 @@ def setup():
     #-----------------------------------------------------------------------
     #
     global FIELD_DICT_FN, FIELD_DICT_IN_UWM_FP, FIELD_DICT_FP
-    FIELD_DICT_FN="fd_nems.yaml"
-    FIELD_DICT_IN_UWM_FP=f"{UFS_WTHR_MDL_DIR}/tests/parm/{FIELD_DICT_FN}"
-    FIELD_DICT_FP=f"{EXPTDIR}/{FIELD_DICT_FN}"
+    FIELD_DICT_FN = "fd_nems.yaml"
+    FIELD_DICT_IN_UWM_FP = os.path.join(UFS_WTHR_MDL_DIR, "tests", "parm", FIELD_DICT_FN)
+    FIELD_DICT_FP = os.path.join(EXPTDIR, FIELD_DICT_FN)
     if not os.path.exists(FIELD_DICT_IN_UWM_FP):
       print_err_msg_exit(f'''
         The field dictionary file (FIELD_DICT_IN_UWM_FP) does not exist
@@ -1003,11 +1003,11 @@ def setup():
     #-----------------------------------------------------------------------
     #
     global DATA_TABLE_FP, FIELD_TABLE_FP, FV3_NML_FN, FV3_NML_FP, NEMS_CONFIG_FP
-    DATA_TABLE_FP=f"{EXPTDIR}/{DATA_TABLE_FN}"
-    FIELD_TABLE_FP=f"{EXPTDIR}/{FIELD_TABLE_FN}"
-    FV3_NML_FN=os.path.splitext(FV3_NML_BASE_SUITE_FN)[0]
-    FV3_NML_FP=f"{EXPTDIR}/{FV3_NML_FN}"
-    NEMS_CONFIG_FP=f"{EXPTDIR}/{NEMS_CONFIG_FN}"
+    DATA_TABLE_FP = os.path.join(EXPTDIR, DATA_TABLE_FN)
+    FIELD_TABLE_FP = os.path.join(EXPTDIR, FIELD_TABLE_FN)
+    FV3_NML_FN = os.path.splitext(FV3_NML_BASE_SUITE_FN)[0]
+    FV3_NML_FP = os.path.join(EXPTDIR, FV3_NML_FN)
+    NEMS_CONFIG_FP = os.path.join(EXPTDIR, NEMS_CONFIG_FN)
     #
     #-----------------------------------------------------------------------
     #
@@ -1049,7 +1049,7 @@ def setup():
       fmt=f"0{NDIGITS_ENSMEM_NAMES}d"
       for i in range(NUM_ENS_MEMBERS):
         ENSMEM_NAMES.append(f"mem{fmt}".format(i+1))
-        FV3_NML_ENSMEM_FPS.append(f"{EXPTDIR}/{FV3_NML_FN}_{ENSMEM_NAMES[i]}")
+        FV3_NML_ENSMEM_FPS.append(os.path.join(EXPTDIR, f"{FV3_NML_FN}_{ENSMEM_NAMES[i]}"))
     #
     #-----------------------------------------------------------------------
     #
@@ -1058,7 +1058,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     global FV3_EXEC_FP
-    FV3_EXEC_FP=f"{EXECDIR}/{FV3_EXEC_FN}"
+    FV3_EXEC_FP = os.path.join(EXECDIR, FV3_EXEC_FN)
     #
     #-----------------------------------------------------------------------
     #
@@ -1071,8 +1071,8 @@ def setup():
     #-----------------------------------------------------------------------
     #
     global WFLOW_LAUNCH_SCRIPT_FP, WFLOW_LAUNCH_LOG_FP, CRONTAB_LINE
-    WFLOW_LAUNCH_SCRIPT_FP=f"{USHDIR}/{WFLOW_LAUNCH_SCRIPT_FN}"
-    WFLOW_LAUNCH_LOG_FP=f"{EXPTDIR}/{WFLOW_LAUNCH_LOG_FN}"
+    WFLOW_LAUNCH_SCRIPT_FP = os.path.join(USHDIR, WFLOW_LAUNCH_SCRIPT_FN)
+    WFLOW_LAUNCH_LOG_FP = os.path.join(EXPTDIR, WFLOW_LAUNCH_LOG_FN)
     if USE_CRON_TO_RELAUNCH == True:
       CRONTAB_LINE=f'''*/{CRON_RELAUNCH_INTVL_MNTS} * * * * cd {EXPTDIR} && ./{WFLOW_LAUNCH_SCRIPT_FN} called_from_cron="TRUE" >> ./{WFLOW_LAUNCH_LOG_FN} 2>&1'''
     else:
@@ -1086,7 +1086,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     global LOAD_MODULES_RUN_TASK_FP
-    LOAD_MODULES_RUN_TASK_FP=f"{USHDIR}/load_modules_run_task.sh"
+    LOAD_MODULES_RUN_TASK_FP = os.path.join(USHDIR, "load_modules_run_task.sh")
     #
     #-----------------------------------------------------------------------
     #
@@ -1117,7 +1117,7 @@ def setup():
 
     if RUN_ENVIR == "nco":
     
-      nco_fix_dir=f"{FIXLAM_NCO_BASEDIR}/{PREDEF_GRID_NAME}"
+      nco_fix_dir = os.path.join(FIXLAM_NCO_BASEDIR, PREDEF_GRID_NAME)
       if not os.path.exists(nco_fix_dir):
         print_err_msg_exit(f'''
             The directory (nco_fix_dir) that should contain the pregenerated grid,
@@ -1298,12 +1298,12 @@ def setup():
     #-----------------------------------------------------------------------
     #
     else:
-    #
-    # If RUN_TASK_MAKE_GRID is set to False, the workflow will look for 
-    # the pregenerated grid files in GRID_DIR.  In this case, make sure that 
-    # GRID_DIR exists.  Otherwise, set it to a predefined location under the 
-    # experiment directory (EXPTDIR).
-    #
+      #
+      # If RUN_TASK_MAKE_GRID is set to False, the workflow will look for 
+      # the pregenerated grid files in GRID_DIR.  In this case, make sure that 
+      # GRID_DIR exists.  Otherwise, set it to a predefined location under the 
+      # experiment directory (EXPTDIR).
+      #
       if RUN_TASK_MAKE_GRID == False:
         if not os.path.exists(GRID_DIR):
           print_err_msg_exit(f'''
@@ -1311,13 +1311,13 @@ def setup():
             does not exist:
               GRID_DIR = \"{GRID_DIR}\"''')
       else:
-        GRID_DIR=f"{EXPTDIR}/grid"
-    #
-    # If RUN_TASK_MAKE_OROG is set to False, the workflow will look for 
-    # the pregenerated orography files in OROG_DIR.  In this case, make sure 
-    # that OROG_DIR exists.  Otherwise, set it to a predefined location under 
-    # the experiment directory (EXPTDIR).
-    #
+        GRID_DIR=os.path.join(EXPTDIR,"grid")
+      #
+      # If RUN_TASK_MAKE_OROG is set to False, the workflow will look for 
+      # the pregenerated orography files in OROG_DIR.  In this case, make sure 
+      # that OROG_DIR exists.  Otherwise, set it to a predefined location under 
+      # the experiment directory (EXPTDIR).
+      #
       if RUN_TASK_MAKE_OROG == False:
         if not os.path.exists(OROG_DIR):
           print_err_msg_exit(f'''
@@ -1325,13 +1325,13 @@ def setup():
             files does not exist:
               OROG_DIR = \"{OROG_DIR}\"''')
       else:
-        OROG_DIR=f"{EXPTDIR}/orog"
-    #
-    # If RUN_TASK_MAKE_SFC_CLIMO is set to False, the workflow will look 
-    # for the pregenerated surface climatology files in SFC_CLIMO_DIR.  In
-    # this case, make sure that SFC_CLIMO_DIR exists.  Otherwise, set it to
-    # a predefined location under the experiment directory (EXPTDIR).
-    #
+        OROG_DIR=os.path.join(EXPTDIR,"orog")
+      #
+      # If RUN_TASK_MAKE_SFC_CLIMO is set to False, the workflow will look 
+      # for the pregenerated surface climatology files in SFC_CLIMO_DIR.  In
+      # this case, make sure that SFC_CLIMO_DIR exists.  Otherwise, set it to
+      # a predefined location under the experiment directory (EXPTDIR).
+      #
       if RUN_TASK_MAKE_SFC_CLIMO == False:
         if not os.path.exists(SFC_CLIMO_DIR):
           print_err_msg_exit(f'''
@@ -1339,7 +1339,8 @@ def setup():
             climatology files does not exist:
               SFC_CLIMO_DIR = \"{SFC_CLIMO_DIR}\"''')
       else:
-        SFC_CLIMO_DIR=f"{EXPTDIR}/sfc_climo"
+        SFC_CLIMO_DIR=os.path.join(EXPTDIR,"sfc_climo")
+
     #-----------------------------------------------------------------------
     #
     # Set cycle-independent parameters associated with the external models
@@ -1658,7 +1659,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     THOMPSON_MP_CLIMO_FN="Thompson_MP_MONTHLY_CLIMO.nc"
-    THOMPSON_MP_CLIMO_FP=f"{FIXam}/{THOMPSON_MP_CLIMO_FN}"
+    THOMPSON_MP_CLIMO_FP=os.path.join(FIXam,THOMPSON_MP_CLIMO_FN)
     #
     #-----------------------------------------------------------------------
     #
@@ -1715,7 +1716,7 @@ def setup():
 
     # write the updated default dictionary
     global GLOBAL_VAR_DEFNS_FP
-    GLOBAL_VAR_DEFNS_FP=f"{EXPTDIR}/{GLOBAL_VAR_DEFNS_FN}"
+    GLOBAL_VAR_DEFNS_FP=os.path.join(EXPTDIR,GLOBAL_VAR_DEFNS_FN)
     all_lines=cfg_to_shell_str(cfg_d)
     with open(GLOBAL_VAR_DEFNS_FP,'w') as f:
         msg = f"""            #
