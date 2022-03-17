@@ -444,8 +444,8 @@ if [ ${WRITE_DOPOST} = "TRUE" ]; then
   cp_vrfy ${UPP_DIR}/parm/params_grib2_tbl_new .
 fi
 
-if [ "${DO_ENSEMBLE}" = TRUE ] && [ "${DO_SPP}" = TRUE ] || [ "${DO_SPPT}" = TRUE ] || [ "${DO_SHUM}" = TRUE ] \
-   [ "${DO_SKEB}" = TRUE ] || [ "${DO_LSM_SPP}" =  TRUE ]; then
+if [ "${DO_ENSEMBLE}" = TRUE ] && ([ "${DO_SPP}" = TRUE ] || [ "${DO_SPPT}" = TRUE ] || [ "${DO_SHUM}" = TRUE ] \
+   [ "${DO_SKEB}" = TRUE ] || [ "${DO_LSM_SPP}" =  TRUE ]); then
   set_FV3nml_ens_stoch_seeds cdate="$cdate" || print_err_msg_exit "\
 Call to function to create the ensemble-based namelist for the current
 cycle's (cdate) run directory (run_dir) failed:
