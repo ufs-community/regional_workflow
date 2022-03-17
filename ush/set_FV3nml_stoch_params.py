@@ -6,7 +6,7 @@ from textwrap import dedent
 from datetime import datetime
 
 from python_utils import print_input_args, print_info_msg, print_err_msg_exit,\
-                         mkdir_vrfy,cp_vrfy,\
+                         date_to_str, mkdir_vrfy,cp_vrfy,\
                          import_vars,set_env_var,\
                          define_macos_utilities, cfg_to_yaml_str
 
@@ -45,11 +45,12 @@ def set_FV3nml_stoch_params(cdate):
     #
     ensmem_name=f"mem{ENSMEM_INDX}"
     
-    cdate_i = int(cdate.strftime('%Y%m%d')) 
-    fv3_nml_ensmem_fp=os.path.join(CYCLE_BASEDIR, f"{cdate_i}{os.sep}{ensmem_name}{os.sep}{FV3_NML_FN}")
+    fv3_nml_ensmem_fp=os.path.join(CYCLE_BASEDIR, f"{date_to_str(cdate,True)}{os.sep}{ensmem_name}{os.sep}{FV3_NML_FN}")
+    print(fv3_nml_ensmem_fp)
     
     ensmem_num=ENSMEM_INDX
     
+    cdate_i = int(cdate.strftime('%Y%m%d')) 
     iseed_shum=cdate_i*1000 + ensmem_num*10 + 2
     iseed_skeb=cdate_i*1000 + ensmem_num*10 + 3
     iseed_sppt=cdate_i*1000 + ensmem_num*10 + 1
@@ -110,7 +111,8 @@ class Testing(unittest.TestCase):
         cp_vrfy(os.path.join(USHDIR,f'templates{os.sep}input.nml.FV3'), \
                 os.path.join(EXPTDIR,'input.nml'))
         self.cdate=datetime(2021, 1, 1)
-        mkdir_vrfy("-p", os.path.join(EXPTDIR,f'{self.cdate}{os.sep}mem0'))
+        
+        mkdir_vrfy("-p", os.path.join(EXPTDIR,f'{date_to_str(self.cdate,True)}{os.sep}mem0'))
         set_env_var("USHDIR",USHDIR)
         set_env_var("CYCLE_BASEDIR",EXPTDIR)
         set_env_var("ENSMEM_INDX",0)

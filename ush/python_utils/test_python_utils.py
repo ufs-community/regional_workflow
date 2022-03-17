@@ -102,7 +102,7 @@ class Testing(unittest.TestCase):
         set_env_var("MYVAR","MYVAL")
         env_vars = ["PWD", "MYVAR"]
         import_vars(env_vars=env_vars)
-        self.assertEqual( PWD, os.getcwd() )
+        self.assertEqual( os.path.realpath(PWD), os.path.realpath(os.getcwd()) )
         self.assertEqual(MYVAR,"MYVAL")
         #test export
         MYVAR="MYNEWVAL"
