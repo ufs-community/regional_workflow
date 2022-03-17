@@ -1504,6 +1504,7 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "global_hyblev.l65.txt" \
 "global_zorclim.1x1.grb" \
 "global_sfc_emissivity_idx.txt" \
+"global_tg3clim.2.6x1.5.grb" \
 "global_solarconstant_noaa_an.txt" \
 "global_albedo4.1x1.grb" \
 "geo_em.d01.lat-lon.2.5m.HGT_M.nc" \
@@ -1558,6 +1559,7 @@ CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING=( \
 "global_h2oprdlos.f77       | global_h2o_pltc.f77" \
 "global_albedo4.1x1.grb     | global_albedo4.1x1.grb" \
 "global_zorclim.1x1.grb     | global_zorclim.1x1.grb" \
+"global_tg3clim.2.6x1.5.grb | global_tg3clim.2.6x1.5.grb" \
 "sfc_emissivity_idx.txt     | global_sfc_emissivity_idx.txt" \
 "solarconstant_noaa_an.txt  | global_solarconstant_noaa_an.txt" \
 "global_o3prdlos.f77        | " \
