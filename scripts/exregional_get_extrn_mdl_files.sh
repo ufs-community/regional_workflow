@@ -107,6 +107,16 @@ elif [ "${ICS_OR_LBCS}" = "LBCS" ]; then
   input_file_path=${EXTRN_MDL_SOURCE_BASEDIR_LBCS:-$EXTRN_MDL_SYSBASEDIR_LBCS}
 fi
 
+
+yyyymmddhh=${extrn_mdl_cdate:0:10}
+yyyy=${yyyymmddhh:0:4}
+yyyymm=${yyyymmddhh:0:6}
+yyyymmdd=${yyyymmddhh:0:8}
+mm=${yyyymmddhh:4:2}
+dd=${yyyymmddhh:6:2}
+hh=${yyyymmddhh:8:2}
+
+
 input_file_path=$(eval echo ${input_file_path})
 #
 #-----------------------------------------------------------------------
