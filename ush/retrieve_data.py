@@ -525,6 +525,10 @@ def main(cla):
         if data_store == 'disk':
             file_templates = cla.file_templates if cla.file_templates else \
                 known_data_info.get('hpss', {}).get('file_names')
+            if isinstance(file_templates, dict):
+                if cla.file_type is not None:
+                    file_templates = file_templates[cla.file_type]
+                file_templates = file_templates[cla.anl_or_fcst]
             logging.debug(f'User supplied file names are: {file_templates}')
             if not file_templates:
                 msg = ('No file naming convention found. They must be provided \
