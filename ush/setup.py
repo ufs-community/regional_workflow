@@ -833,7 +833,7 @@ def setup():
       CYCLE_BASEDIR = os.path.join(STMP, "tmpnwprd", RUN)
       check_for_preexist_dir_file(CYCLE_BASEDIR,PREEXISTING_DIR_METHOD)
       COMROOT = os.path.join(PTMP, "com")
-      COMOUT_BASEDIR = os.pah.join(COMROOT, NET, envir)
+      COMOUT_BASEDIR = os.path.join(COMROOT, NET, envir)
       check_for_preexist_dir_file(COMOUT_BASEDIR,PREEXISTING_DIR_METHOD)
     
     else:
