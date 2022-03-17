@@ -686,9 +686,18 @@ EXTRN_MDL_SYSBASEDIR_LBCS=''
 # set to "FALSE".
 # 
 # EXTRN_MDL_FILES_ICS:
-# Array containing templates of the names of the files to search for in the
-# directory specified by EXTRN_MDL_SOURCE_BASEDIR_ICS.  This variable is not
-# used if USE_USER_STAGED_EXTRN_FILES is set to "FALSE".
+# Array containing templates of the names of the files to search for in
+# the directory specified by EXTRN_MDL_SOURCE_BASEDIR_ICS.  This
+# variable is not used if USE_USER_STAGED_EXTRN_FILES is set to "FALSE".
+# A single template should be used for each model file type that is
+# meant to be used. You may use any of the Python-style templates
+# allowed in the ush/retrieve_data.py script. To see the full list of
+# supported templates, run that script with a -h option. Here is an example of
+# setting FV3GFS nemsio input files:
+#   EXTRN_MDL_FILES_ICS=( gfs.t{hh}z.atmf{fcst_hr:03d}.nemsio \
+#   gfs.t{hh}z.sfcf{fcst_hr:03d}.nemsio )
+# Or for FV3GFS grib files:
+#   EXTRN_MDL_FILES_ICS=( gfs.t{hh}z.pgrb2.0p25.f{fcst_hr:03d} )
 #
 # EXTRN_MDL_SOURCE_BASEDIR_LBCS:
 # Analogous to EXTRN_MDL_SOURCE_BASEDIR_ICS but for LBCs instead of ICs.
