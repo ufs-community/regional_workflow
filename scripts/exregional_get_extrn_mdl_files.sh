@@ -107,6 +107,7 @@ elif [ "${ICS_OR_LBCS}" = "LBCS" ]; then
   input_file_path=${EXTRN_MDL_SOURCE_BASEDIR_LBCS:-$EXTRN_MDL_SYSBASEDIR_LBCS}
 fi
 
+input_file_path=$(eval echo ${input_file_path})
 #
 #-----------------------------------------------------------------------
 #
