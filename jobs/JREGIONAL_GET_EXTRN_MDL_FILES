@@ -126,7 +126,7 @@ extrn_mdl_cdate=$( $DATE_UTIL --utc --date "${yyyymmdd} ${hh} UTC - ${time_offse
 #-----------------------------------------------------------------------
 #
 
-function data_unavailble() {
+function data_unavailable() {
 
   local name cdate end_date min_max
 
@@ -167,7 +167,7 @@ case ${extrn_mdl_name} in
   cdate_max="2019061206"
   if [ "$extrn_mdl_cdate" -gt "$cdate_max" ]; then
     print_err_msg_exit "\
-      $(data_unavailble $extrn_mdl_name $extrn_mdl_cdate $cdate_max max)"
+      $(data_unavailable $extrn_mdl_name $extrn_mdl_cdate $cdate_max max)"
   fi
   ;;
 
@@ -180,7 +180,7 @@ case ${extrn_mdl_name} in
   CDATE_min="2018121500"
   if [ "$extrn_mdl_cdate" -lt "$CDATE_min" ]; then
     print_err_msg_exit "\
-      $(data_unavailble $extrn_mdl_name $extrn_mdl_cdate $cdate_min min)"
+      $(data_unavailable $extrn_mdl_name $extrn_mdl_cdate $cdate_min min)"
   fi
   ;;
 
@@ -190,7 +190,7 @@ case ${extrn_mdl_name} in
   CDATE_min="2015070100"
   if [ "$extrn_mdl_cdate" -lt "$CDATE_min" ]; then
     print_err_msg_exit "\
-      $(data_unavailble $extrn_mdl_name $extrn_mdl_cdate $cdate_min min)"
+      $(data_unavailable $extrn_mdl_name $extrn_mdl_cdate $cdate_min min)"
   fi
   ;;
 
@@ -201,7 +201,7 @@ case ${extrn_mdl_name} in
   CDATE_min="2014103000"
   if [ "$extrn_mdl_cdate" -lt "$CDATE_min" ]; then
     print_err_msg_exit "\
-      $(data_unavailble $extrn_mdl_name $extrn_mdl_cdate $cdate_min min)"
+      $(data_unavailable $extrn_mdl_name $extrn_mdl_cdate $cdate_min min)"
   fi
   ;;
 
