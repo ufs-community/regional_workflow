@@ -184,7 +184,7 @@ NAM:
     archive_path:
       - /NCEPPROD/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
     archive_file_names:
-      - com_nam_prod_nam.{yyyymmddhh}.bgrid.tar
+      - com2_nam_prod_nam.{yyyymmddhh}.bgrid.tar
     file_names:
       anl:
         - nam.t{hh}z.bgrdsf{fcst_hr:03d}.tm00

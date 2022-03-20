@@ -377,7 +377,7 @@ and analysis or forecast (anl_or_fcst):
         ;;
 
       "NAM")
-        fn_tmpl="nam.t${hh}z.bgrdsfFHR3"
+        fn_tmpl="nam.t${hh}z.bgrdsfFHR2.tm00"
         ;;
 
       *)
@@ -601,9 +601,9 @@ bination of external model (extrn_mdl_name) and analysis or forecast
   "NAM")
     arcv_dir="/NCEPPROD/hpssprod/runhistory/rh${yyyy}/${yyyy}${mm}/${yyyymmdd}"
     arcv_fmt="tar"
-    arcv_fns="com_nam_prod_nam.${yyyy}${mm}${dd}${hh}.bgrid.${arcv_fmt}"
+    arcv_fns="com2_nam_prod_nam.${yyyy}${mm}${dd}${hh}.bgrid.${arcv_fmt}"
     arcv_fps="${arcv_dir}/${arcv_fns}"
-    arcvrel_dir=""
+    arcvrel_dir="."
     ;;
 
   *)
