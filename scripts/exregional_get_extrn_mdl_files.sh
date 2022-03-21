@@ -42,9 +42,10 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the ex-script for the task that copies/fetches to a local directory 
-either from disk or HPSS) the external model files from which initial or 
-boundary condition files for the FV3 will be generated.
+This is the ex-script for the task that copies or fetches external model
+input data from disk, HPSS, or a URL, and stages them to the
+workflow-specified location so that they may be used to generate initial
+or lateral boundary conditions for the FV3.
 ========================================================================"
 #
 #-----------------------------------------------------------------------

@@ -147,22 +147,6 @@ RAP:
     file_names:
       <<: *rap_file_names
 
-RAPx:
-  hpss:
-    protocol: htar
-    archive_format: zip
-    archive_path:
-      - /BMC/fdr/Permanent/{yyyy}/{mm}/{dd}/data/fsl/rap/full/wrfnat
-    archive_file_names:
-      # RAPx bins two cycles togehter, and named by the lower even value
-      # of the cycle hour.
-      - '{yyyymmdd}{hh_even}00.zip'
-    file_names:
-      anl:
-        - '{yy}{jjj}{hh}00{fcst_hr:02d}00'
-      fcst:
-        - '{yy}{jjj}{hh}00{fcst_hr:02d}00'
-
 HRRR:
   hpss:
     protocol: htar
@@ -184,20 +168,6 @@ HRRR:
     url: https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.{yyyymmdd}/conus/
     file_names:
       <<: *hrrr_file_names
-
-HRRRx:
-  hpss:
-    protocol: htar
-    archive_format: zip
-    archive_path:
-      - /BMC/fdr/Permanent/{yyyy}/{mm}/{dd}/data/fsl/hrrr/conus/wrfnat
-    archive_file_names:
-      - '{yyyymmddhh}00.zip'
-    file_names:
-      anl:
-        - '{yy}{jjj}{hh}00{fcst_hr:02d}00'
-      fcst:
-        - '{yy}{jjj}{hh}00{fcst_hr:02d}00'
 
 NAM:
   hpss:

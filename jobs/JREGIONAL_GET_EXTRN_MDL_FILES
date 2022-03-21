@@ -63,9 +63,9 @@ print_info_msg "
 Entering script:  \"${scrfunc_fn}\"
 In directory:     \"${scrfunc_dir}\"
 
-This is the J-job script for the task that copies/fetches to a local
-directory (either from disk, HPSS, or URL) the external model files from
-which initial or boundary condition files for the FV3 will be generated.
+This is the J-job script for the task that copies or fetches external
+model files from disk, HPSS, or URL, and stages them for downstream use
+to generate initial or lateral boundary conditions for the FV3 model.
 ========================================================================"
 
 
@@ -92,11 +92,7 @@ check_var_valid_value "ICS_OR_LBCS" "valid_vals_ICS_OR_LBCS"
 #-----------------------------------------------------------------------
 #
 if [ "${ICS_OR_LBCS}" = "ICS" ]; then
-  if [ ${EXTRN_MDL_ICS_OFFSET_HRS} -eq 0 ] ; then
-    time_offset_hrs=0
-  else
-    time_offset_hrs=${EXTRN_MDL_ICS_OFFSET_HRS:-0}
-  fi
+  time_offset_hrs=${EXTRN_MDL_ICS_OFFSET_HRS:-0}
   extrn_mdl_name=${EXTRN_MDL_NAME_ICS}
 
 elif [ "${ICS_OR_LBCS}" = "LBCS" ]; then
@@ -141,7 +137,7 @@ Output from the specified external model (extrn_mdl_name) is not availa-
 ble for the specified cycle date and time (extrn_mdl_cdate) because the latter is
 later than the last forecast date and time (cdate_max) with this model:
   extrn_mdl_name = \"${name}\"
-  cdate_max = \"${end_date}\"
+  CDATE_max = \"${end_date}\"
   extrn_mdl_cdate = \"${cdate}\""
 
   elif [ ${min_max} = min ]; then
