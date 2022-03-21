@@ -138,7 +138,11 @@ if [ -n "${file_names:-}" ] ; then
   --file_templates ${file_names[@]}"
 fi
 
-set +x
+if [ -n "${input_file_path:-}" ] ; then
+  additional_flags="$additional_flags \
+  --input_file_path ${input_file_path}"
+fi
+
 #
 #-----------------------------------------------------------------------
 #
@@ -156,7 +160,6 @@ python3 -u ${USHDIR}/retrieve_data.py \
   --external_model ${extrn_mdl_name} \
   --fcst_hrs ${fcst_hrs[@]} \
   --output_path ${extrn_mdl_staging_dir} \
-  --input_file_path ${input_file_path} \
   --summary_file ${EXTRN_MDL_VAR_DEFNS_FN} \
   $additional_flags"
 
