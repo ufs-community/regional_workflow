@@ -54,3 +54,6 @@ RUN_CMD_SERIAL="time"
 RUN_CMD_UTILS='mpirun -np $nprocs --oversubscribe'
 RUN_CMD_FCST='mpirun -n ${PE_MEMBER01} --oversubscribe'
 RUN_CMD_POST='mpirun -np $nprocs --oversubscribe'
+
+# Test Data Locations
+TEST_EXTRN_MDL_SOURCE_BASEDIR=/contrib/Edward.Snyder/WE2E
