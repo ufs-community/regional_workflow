@@ -48,7 +48,7 @@ FIXaer=${FIXaer:-"/work/noaa/global/glopara/fix/fix_aer"}
 FIXlut=${FIXlut:-"/work/noaa/global/glopara/fix/fix_lut"}
 TOPO_DIR=${TOPO_DIR:-"/work/noaa/global/glopara/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/noaa/global/glopara/fix/fix_sfc_climo"}
-FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/work/noaa/fv3-cam/UFS_SRW_app/FV3LAM_pregen"}
+FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/work/noaa/fv3-cam/UFS_SRW_App/FV3LAM_pregen"}
 
 # Run commands for executables
 RUN_CMD_SERIAL="time"
@@ -59,13 +59,13 @@ RUN_CMD_POST="srun"
 # MET/METplus-Related Paths
 MET_INSTALL_DIR=${MET_INSTALL_DIR:-"/contrib/MET/10.1.0"}
 METPLUS_PATH=${METPLUS_PATH:-"/apps/contrib/MET/METplus/METplus-4.0.0"}
-CCPA_OBS_DIR=${CCPA_OBS_DIR:-"/work/noaa/fv3-cam/UFS_SRW_app/develop/obs_data/ccpa/proc"}
-MRMS_OBS_DIR=${MRMS_OBS_DIR:-"/work/noaa/fv3-cam/UFS_SRW_app/develop/obs_data/mrms/proc"}
-NDAS_OBS_DIR=${NDAS_OBS_DIR:-"/work/noaa/fv3-cam/UFS_SRW_app/develop/obs_data/ndas/proc"}
+CCPA_OBS_DIR=${CCPA_OBS_DIR:-"/work/noaa/fv3-cam/UFS_SRW_App/develop/obs_data/ccpa/proc"}
+MRMS_OBS_DIR=${MRMS_OBS_DIR:-"/work/noaa/fv3-cam/UFS_SRW_App/develop/obs_data/mrms/proc"}
+NDAS_OBS_DIR=${NDAS_OBS_DIR:-"/work/noaa/fv3-cam/UFS_SRW_App/develop/obs_data/ndas/proc"}
 MET_BIN_EXEC=${MET_BIN_EXEC:-"bin"}
 
 # Test Data Locations
-TEST_PREGEN_BASEDIR="/work/noaa/fv3-cam/UFS_SRW_app/FV3LAM_pregen"
-TEST_COMINgfs="/work/noaa/fv3-cam/UFS_SRW_app/COMGFS"
-TEST_EXTRN_MDL_SOURCE_BASEDIR="/work/noaa/fv3-cam/UFS_SRW_app/develop/model_data"
+TEST_PREGEN_BASEDIR="/work/noaa/fv3-cam/UFS_SRW_App/FV3LAM_pregen"
+TEST_COMINgfs="/work/noaa/fv3-cam/UFS_SRW_App/COMGFS"
+TEST_EXTRN_MDL_SOURCE_BASEDIR="/work/noaa/fv3-cam/UFS_SRW_App/develop/model_data"
 
