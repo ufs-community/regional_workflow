@@ -862,14 +862,50 @@ done
 settings="$settings
   }"
 #
-# Use netCDF4 when running the North American 3-km domain due to file size.
+# Add the relevant tendency-based stochastic physics namelist variables to
+# "settings" when running with SPPT, SHUM, or SKEB turned on. Otherwise 
+# only include an empty "nam_stochy" stanza.
 #
-if [ "${PREDEF_GRID_NAME}" = "RRFS_NA_3km" ]; then
 settings="$settings
-'fms2_io_nml': {
-    'netcdf_default_format': netcdf4,
-  }"
+'nam_stochy': {"
+if [ "${DO_SPPT}" = "TRUE" ]; then
+    settings="$settings
+    'iseed_sppt': ${ISEED_SPPT},
+    'new_lscale': ${NEW_LSCALE},
+    'sppt': ${SPPT_MAG},
+    'sppt_logit': ${SPPT_LOGIT},
+    'sppt_lscale': ${SPPT_LSCALE},
+    'sppt_sfclimit': ${SPPT_SFCLIMIT},
+    'sppt_tau': ${SPPT_TSCALE},
+    'spptint': ${SPPT_INT},
+    'use_zmtnblck': ${USE_ZMTNBLCK},"
 fi
+
+if [ "${DO_SHUM}" = "TRUE" ]; then
+    settings="$settings
+    'iseed_shum': ${ISEED_SHUM},
+    'new_lscale': ${NEW_LSCALE},
+    'shum': ${SHUM_MAG},
+    'shum_lscale': ${SHUM_LSCALE},
+    'shum_tau': ${SHUM_TSCALE},
+    'shumint': ${SHUM_INT},
+    'use_zmtnblck': ${USE_ZMTNBLCK},"
+fi
+
+if [ "${DO_SKEB}" = "TRUE" ]; then
+    settings="$settings
+    'iseed_skeb': ${ISEED_SKEB},
+    'new_lscale': ${NEW_LSCALE},
+    'skeb': ${SKEB_MAG},
+    'skeb_lscale': ${SKEB_LSCALE},
+    'skebnorm': ${SKEBNORM},
+    'skeb_tau': ${SKEB_TSCALE},
+    'skebint': ${SKEB_INT},
+    'skeb_vdof': ${SKEB_VDOF},
+    'use_zmtnblck': ${USE_ZMTNBLCK},"
+fi
+settings="$settings
+  }"
 #
 # Add the relevant SPP namelist variables to "settings" when running with 
 # SPP turned on.  Otherwise only include an empty "nam_sppperts" stanza.
@@ -1075,9 +1111,6 @@ fi
 { restore_shell_opts; } > /dev/null 2>&1
 
 }
-
-
-
 
 #
 #-----------------------------------------------------------------------
