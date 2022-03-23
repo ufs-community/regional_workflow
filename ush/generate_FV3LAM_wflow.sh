@@ -790,22 +790,6 @@ settings="\
     'lndp_type': ${LNDP_TYPE},
     'lndp_each_step': ${LSM_SPP_EACH_STEP},
     'fhcyc': ${FHCYC_LSM_SPP_OR_NOT}, 
-  }
-'nam_stochy': {
-    'shum': ${SHUM_MAG},
-    'shum_lscale': ${SHUM_LSCALE},
-    'shum_tau': ${SHUM_TSCALE},
-    'shumint': ${SHUM_INT},
-    'sppt': ${SPPT_MAG},
-    'sppt_lscale': ${SPPT_LSCALE},
-    'sppt_tau': ${SPPT_TSCALE},
-    'spptint': ${SPPT_INT},
-    'skeb': ${SKEB_MAG},
-    'skeb_lscale': ${SKEB_LSCALE},
-    'skeb_tau': ${SKEB_TSCALE},
-    'skebint': ${SKEB_INT},
-    'skeb_vdof': ${SKEB_VDOF},
-    'use_zmtnblck': ${USE_ZMTNBLCK},
   }"
 #
 # Add to "settings" the values of those namelist variables that specify
@@ -861,6 +845,15 @@ done
 #
 settings="$settings
   }"
+#
+# Use netCDF4 when running the North American 3-km domain due to file size.
+#
+if [ "${PREDEF_GRID_NAME}" = "RRFS_NA_3km" ]; then
+settings="$settings
+'fms2_io_nml': {
+    'netcdf_default_format': netcdf4,
+  }"
+fi
 #
 # Add the relevant tendency-based stochastic physics namelist variables to
 # "settings" when running with SPPT, SHUM, or SKEB turned on. Otherwise 
