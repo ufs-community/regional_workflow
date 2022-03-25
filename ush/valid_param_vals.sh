@@ -4,7 +4,7 @@
 valid_vals_RUN_ENVIR=("nco" "community")
 valid_vals_VERBOSE=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_DEBUG=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
-valid_vals_MACHINE=("WCOSS_CRAY" "WCOSS_DELL_P3" "HERA" "ORION" "JET" "ODIN" "CHEYENNE" "STAMPEDE" "LINUX" "MACOS")
+valid_vals_MACHINE=("WCOSS_DELL_P3" "HERA" "ORION" "JET" "ODIN" "CHEYENNE" "STAMPEDE" "LINUX" "MACOS" "NOAACLOUD" "SINGULARITY")
 valid_vals_SCHED=("slurm" "pbspro" "lsf" "lsfcray" "none")
 valid_vals_FCST_MODEL=("ufs-weather-model" "fv3gfs_aqm")
 valid_vals_WORKFLOW_MANAGER=("rocoto" "none")
@@ -29,11 +29,8 @@ valid_vals_PREDEF_GRID_NAME=( \
 "RRFS_NA_3km" \
 )
 valid_vals_CCPP_PHYS_SUITE=( \
-"FV3_CPT_v0" \
 "FV3_GFS_2017_gfdlmp" \
 "FV3_GFS_2017_gfdlmp_regional" \
-"FV3_GSD_SAR" \
-"FV3_GSD_v0" \
 "FV3_GFS_v15p2" \
 "FV3_GFS_v15_thompson_mynn_lam3km" \
 "FV3_GFS_v16" \
@@ -68,9 +65,11 @@ valid_vals_NOMADS=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_NOMADS_file_type=("GRIB2" "grib2" "NEMSIO" "nemsio")
 valid_vals_DO_ENSEMBLE=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_USE_CUSTOM_POST_CONFIG_FILE=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
+valid_vals_USE_CRTM=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_DO_SHUM=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_DO_SPPT=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_DO_SPP=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
+valid_vals_DO_LSM_SPP=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_DO_SKEB=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_USE_ZMTNBLCK=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_USE_FVCOM=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")

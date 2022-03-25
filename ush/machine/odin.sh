@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 function file_location() {
 
   # Return the default location of external model files on disk
@@ -11,6 +9,7 @@ function file_location() {
   external_model=${1}
   external_file_fmt=${2}
 
+  location=""
   case ${external_model} in
 
     "GSMGFS")
@@ -19,11 +18,7 @@ function file_location() {
     "FV3GFS")
       location='/scratch/ywang/test_runs/FV3_regional/gfs/${yyyymmdd}'
       ;;
-    "*")
-      print_info_msg"\
-        External model \'${external_model}\' does not have a default
-      location on Odin Please set a user-defined file location."
-      ;;
+
   esac
   echo ${location:-}
 
@@ -34,7 +29,16 @@ EXTRN_MDL_SYSBASEDIR_ICS=${EXTRN_MDL_SYSBASEDIR_ICS:-$(file_location \
   ${FV3GFS_FILE_FMT_ICS})}
 EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
   ${EXTRN_MDL_NAME_LBCS} \
-  ${FV3GFS_FILE_FMT_ICS})}
+  ${FV3GFS_FILE_FMT_LBCS})}
+
+# System scripts to source to initialize various commands within workflow
+# scripts (e.g. "module").
+if [ -z ${ENV_INIT_SCRIPTS_FPS:-""} ]; then
+  ENV_INIT_SCRIPTS_FPS=()
+fi
+
+# Commands to run at the start of each workflow task.
+PRE_TASK_CMDS='{ ulimit -s unlimited; ulimit -a; }'
 
 # Architecture information
 WORKFLOW_MANAGER="rocoto"
@@ -55,10 +59,8 @@ TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
 FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
 
+# Run commands for executables
 RUN_CMD_SERIAL="srun -n 1"
 RUN_CMD_UTILS='srun -n $nprocs'
 RUN_CMD_FCST='srun -n ${PE_MEMBER01}'
 RUN_CMD_POST="srun -n 1"
-
-ulimit -s unlimited
-ulimit -a
