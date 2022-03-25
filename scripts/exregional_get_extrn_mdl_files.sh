@@ -108,6 +108,7 @@ elif [ "${ICS_OR_LBCS}" = "LBCS" ]; then
   input_file_path=${EXTRN_MDL_SOURCE_BASEDIR_LBCS:-$EXTRN_MDL_SYSBASEDIR_LBCS}
 fi
 
+data_stores="hpss aws"
 
 yyyymmddhh=${extrn_mdl_cdate:0:10}
 yyyy=${yyyymmddhh:0:4}
@@ -140,6 +141,7 @@ if [ -n "${file_names:-}" ] ; then
 fi
 
 if [ -n "${input_file_path:-}" ] ; then
+  data_stores="disk hpss aws"
   additional_flags="$additional_flags \
   --input_file_path ${input_file_path}"
 fi
@@ -157,7 +159,7 @@ python3 -u ${USHDIR}/retrieve_data.py \
   --anl_or_fcst ${anl_or_fcst} \
   --config ${USHDIR}/templates/data_locations.yml \
   --cycle_date ${extrn_mdl_cdate} \
-  --data_stores disk hpss aws \
+  --data_stores ${data_stores} \
   --external_model ${extrn_mdl_name} \
   --fcst_hrs ${fcst_hrs[@]} \
   --output_path ${extrn_mdl_staging_dir} \
