@@ -59,7 +59,7 @@ def get_crontab_contents(called_from_cron):
       # call the system version of crontab at /usr/bin/crontab.
       #
       if MACHINE == "CHEYENNE":
-        if called_from_cron == True:
+        if called_from_cron:
           __crontab_cmd__="/usr/bin/crontab"
       (_,__crontab_contents__,_)=run_command(f'''{__crontab_cmd__} -l''')
     #

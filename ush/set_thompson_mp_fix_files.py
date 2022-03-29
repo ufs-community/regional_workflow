@@ -48,7 +48,7 @@ def set_thompson_mp_fix_files(ccpp_phys_suite_fp, thompson_mp_climo_fn):
     #
     #-----------------------------------------------------------------------
     #
-    if sdf_uses_thompson_mp == True:
+    if sdf_uses_thompson_mp:
     #
     #-----------------------------------------------------------------------
     #

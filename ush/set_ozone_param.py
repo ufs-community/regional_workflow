@@ -137,7 +137,7 @@ def set_ozone_param(ccpp_phys_suite_fp):
     #
     #-----------------------------------------------------------------------
     #
-    if fixgsm_ozone_fn_is_set == True:
+    if fixgsm_ozone_fn_is_set:
     
       msg=dedent(f'''
         After setting the file name of the ozone production/loss file in the

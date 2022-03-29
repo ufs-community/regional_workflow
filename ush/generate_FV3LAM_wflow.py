@@ -123,7 +123,7 @@ def generate_FV3LAM_wflow():
         ensmem_indx_name = ""
         uscore_ensmem_name = ""
         slash_ensmem_subdir = ""
-        if DO_ENSEMBLE == True:
+        if DO_ENSEMBLE:
             ensmem_indx_name = "mem"
             uscore_ensmem_name = f"_mem#{ensmem_indx_name}#"
             slash_ensmem_subdir = f"/mem#{ensmem_indx_name}#"
@@ -447,7 +447,7 @@ def generate_FV3LAM_wflow():
     #
     #-----------------------------------------------------------------------
     #
-    if USE_CRON_TO_RELAUNCH == True:
+    if USE_CRON_TO_RELAUNCH:
     #
     # Make a backup copy of the user's crontab file and save it in a file.
     #
@@ -576,7 +576,7 @@ def generate_FV3LAM_wflow():
     #
     #-----------------------------------------------------------------------
     #
-    if USE_MERRA_CLIMO == True:
+    if USE_MERRA_CLIMO:
         print_info_msg(f'''
             Copying MERRA2 aerosol climatology data files from system directory
             (FIXaer/FIXlut) to a subdirectory (FIXclim) in the experiment directory:
@@ -661,7 +661,7 @@ def generate_FV3LAM_wflow():
     # May want to remove kice from FV3.input.yml (and maybe input.nml.FV3).
     #
     kice=None
-    if SDF_USES_RUC_LSM == True:
+    if SDF_USES_RUC_LSM:
       kice=9
     #
     # Set lsoil, which is the number of input soil levels provided in the 
@@ -680,7 +680,7 @@ def generate_FV3LAM_wflow():
     lsoil=4
     if ( EXTRN_MDL_NAME_ICS == "HRRR" or \
          EXTRN_MDL_NAME_ICS == "RAP" ) and \
-       ( SDF_USES_RUC_LSM == True ):
+       ( SDF_USES_RUC_LSM ):
       lsoil=9
     #
     # Create a multiline variable that consists of a yaml-compliant string
@@ -763,7 +763,7 @@ def generate_FV3LAM_wflow():
     # each element to construct each line of "settings".
     #
     dummy_run_dir=os.path.join(EXPTDIR,"any_cyc")
-    if DO_ENSEMBLE == True:
+    if DO_ENSEMBLE:
       dummy_run_dir=os.path.join(dummy_run_dir,"any_ensmem")
     
     regex_search="^[ ]*([^| ]+)[ ]*[|][ ]*([^| ]+)[ ]*$"
@@ -801,7 +801,7 @@ def generate_FV3LAM_wflow():
     # SPP turned on.  Otherwise only include an empty "nam_sppperts" stanza.
     #
     nam_sppperts_dict = {}
-    if DO_SPP == True:
+    if DO_SPP:
       nam_sppperts_dict = {
         'iseed_spp': ISEED_SPP,
         'spp_lscale': SPP_LSCALE,
@@ -819,7 +819,7 @@ def generate_FV3LAM_wflow():
     # LSM SPP turned on.
     #
     nam_sfcperts_dict = {}
-    if DO_LSM_SPP == True:
+    if DO_LSM_SPP:
       nam_sfcperts_dict = {
         'lndp_type': LNDP_TYPE,
         'lndp_tau': LSM_SPP_TSCALE,
@@ -879,7 +879,7 @@ def generate_FV3LAM_wflow():
     # the C-resolution of the grid), and this parameter is in most workflow
     # configurations is not known until the grid is created.
     #
-    if RUN_TASK_MAKE_GRID == False:
+    if not RUN_TASK_MAKE_GRID:
     
       set_FV3nml_sfc_climo_filenames()
     #
@@ -974,7 +974,7 @@ def generate_FV3LAM_wflow():
     #
     # If necessary, run the NOMADS script to source external model data.
     #
-    if NOMADS == True:
+    if NOMADS:
       print("Getting NOMADS online data")
       print(f"NOMADS_file_type= {NOMADS_file_type}")
       cd_vrfy(EXPTDIR)

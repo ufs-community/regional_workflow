@@ -116,7 +116,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     global VERBOSE
-    if DEBUG == True and VERBOSE == False:
+    if DEBUG and not VERBOSE:
         print_info_msg('''
             Resetting VERBOSE to \"TRUE\" because DEBUG has been set to \"TRUE\"...''')
         VERBOSE=False
@@ -133,11 +133,11 @@ def setup():
     #-----------------------------------------------------------------------
     #
     global SHUM_MAG, SKEB_MAG, SPPT_MAG
-    if DO_SHUM == False:
+    if not DO_SHUM:
         SHUM_MAG=-999.0
-    if DO_SKEB == False:
+    if not DO_SKEB:
         SKEB_MAG=-999.0
-    if DO_SPPT == False:
+    if not DO_SPPT:
         SPPT_MAG=-999.0
     #
     #-----------------------------------------------------------------------
@@ -150,7 +150,7 @@ def setup():
     #
     global N_VAR_SPP
     N_VAR_SPP=0
-    if DO_SPP == True:
+    if DO_SPP:
       N_VAR_SPP = len(SPP_VAR_LIST)
     #
     #-----------------------------------------------------------------------
@@ -171,7 +171,7 @@ def setup():
     N_VAR_LNDP=0
     LNDP_TYPE=0
     FHCYC_LSM_SPP_OR_NOT=0
-    if DO_LSM_SPP == True:
+    if DO_LSM_SPP:
       N_VAR_LNDP=len(LSM_SPP_VAR_LIST)
       LNDP_TYPE=2
       FHCYC_LSM_SPP_OR_NOT=999
@@ -184,7 +184,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    if DO_SPP == True:
+    if DO_SPP:
       if ( len(SPP_MAG_LIST) != N_VAR_SPP ) or \
          ( len(SPP_LSCALE) != N_VAR_SPP) or \
          ( len(SPP_TSCALE) != N_VAR_SPP) or \
@@ -206,7 +206,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    if DO_LSM_SPP == True:
+    if DO_LSM_SPP:
       if ( len(LSM_SPP_MAG_LIST) != N_VAR_LNDP) or \
          ( len(LSM_SPP_LSCALE) != N_VAR_LNDP) or \
          ( len(LSM_SPP_TSCALE) != N_VAR_LNDP):
@@ -553,7 +553,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    if USE_CUSTOM_POST_CONFIG_FILE == True:
+    if USE_CUSTOM_POST_CONFIG_FILE:
       if not os.path.exists(CUSTOM_POST_CONFIG_FP):
         print_err_msg_exit(f'''
             The custom post configuration specified by CUSTOM_POST_CONFIG_FP does not 
@@ -568,7 +568,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    if USE_CRTM == True:
+    if USE_CRTM:
       if not os.path.exists(CRTM_DIR):
         print_err_msg_exit(f'''
             The external CRTM fix file directory specified by CRTM_DIR does not exist:
@@ -675,7 +675,7 @@ def setup():
     #
     global SUB_HOURLY_POST
 
-    if SUB_HOURLY_POST == True:
+    if SUB_HOURLY_POST:
     #
     # Check that DT_SUBHOURLY_POST_MNTS is between 0 and 59, inclusive.
     #
@@ -1019,7 +1019,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    if USE_USER_STAGED_EXTRN_FILES == True:
+    if USE_USER_STAGED_EXTRN_FILES:
     
       if not os.path.exists(EXTRN_MDL_SOURCE_BASEDIR_ICS):
         print_err_msg_exit(f'''
@@ -1046,7 +1046,7 @@ def setup():
     NDIGITS_ENSMEM_NAMES=0
     ENSMEM_NAMES=[]
     FV3_NML_ENSMEM_FPS=[]
-    if DO_ENSEMBLE == True:
+    if DO_ENSEMBLE:
       NDIGITS_ENSMEM_NAMES=len(str(NUM_ENS_MEMBERS))
       fmt=f"0{NDIGITS_ENSMEM_NAMES}d"
       for i in range(NUM_ENS_MEMBERS):
@@ -1075,7 +1075,7 @@ def setup():
     global WFLOW_LAUNCH_SCRIPT_FP, WFLOW_LAUNCH_LOG_FP, CRONTAB_LINE
     WFLOW_LAUNCH_SCRIPT_FP = os.path.join(USHDIR, WFLOW_LAUNCH_SCRIPT_FN)
     WFLOW_LAUNCH_LOG_FP = os.path.join(EXPTDIR, WFLOW_LAUNCH_LOG_FN)
-    if USE_CRON_TO_RELAUNCH == True:
+    if USE_CRON_TO_RELAUNCH:
       CRONTAB_LINE=f'''*/{CRON_RELAUNCH_INTVL_MNTS} * * * * cd {EXPTDIR} && ./{WFLOW_LAUNCH_SCRIPT_FN} called_from_cron="TRUE" >> ./{WFLOW_LAUNCH_LOG_FN} 2>&1'''
     else:
       CRONTAB_LINE=""
@@ -1126,8 +1126,8 @@ def setup():
             orography, and surface climatology files does not exist:
               nco_fix_dir = \"{nco_fix_dir}\"''')
     
-      if RUN_TASK_MAKE_GRID == True or \
-         ( RUN_TASK_MAKE_GRID == False and \
+      if RUN_TASK_MAKE_GRID or \
+         ( not RUN_TASK_MAKE_GRID and \
            GRID_DIR != nco_fix_dir ):
     
         msg=f'''
@@ -1164,8 +1164,8 @@ def setup():
         print_info_msg(msg)
     
     
-      if RUN_TASK_MAKE_OROG == True or \
-         ( RUN_TASK_MAKE_OROG == False and \
+      if RUN_TASK_MAKE_OROG or \
+         ( not RUN_TASK_MAKE_OROG and \
            OROG_DIR != nco_fix_dir ):
     
         msg=f'''
@@ -1201,8 +1201,8 @@ def setup():
         print_info_msg(msg)
     
     
-      if RUN_TASK_MAKE_SFC_CLIMO == True or \
-         ( RUN_TASK_MAKE_SFC_CLIMO == False and \
+      if RUN_TASK_MAKE_SFC_CLIMO or \
+         ( not RUN_TASK_MAKE_SFC_CLIMO and \
            SFC_CLIMO_DIR != nco_fix_dir ):
     
         msg=f'''
@@ -1238,8 +1238,7 @@ def setup():
     
         print_info_msg(msg)
     
-      if RUN_TASK_VX_GRIDSTAT == True or \
-         RUN_TASK_VX_GRIDSTAT == False:
+      if RUN_TASK_VX_GRIDSTAT:
     
         msg=f'''
             When RUN_ENVIR is set to \"nco\", it is assumed that the verification
@@ -1256,8 +1255,7 @@ def setup():
     
         print_info_msg(msg)
     
-      if RUN_TASK_VX_POINTSTAT == True or \
-         RUN_TASK_VX_POINTSTAT == False:
+      if RUN_TASK_VX_POINTSTAT:
     
         msg=f'''
             When RUN_ENVIR is set to \"nco\", it is assumed that the verification
@@ -1274,8 +1272,7 @@ def setup():
     
         print_info_msg(msg)
     
-      if RUN_TASK_VX_ENSGRID == True or \
-         RUN_TASK_VX_ENSGRID == False:
+      if RUN_TASK_VX_ENSGRID:
     
         msg=f'''
             When RUN_ENVIR is set to \"nco\", it is assumed that the verification
@@ -1306,7 +1303,7 @@ def setup():
       # GRID_DIR exists.  Otherwise, set it to a predefined location under the 
       # experiment directory (EXPTDIR).
       #
-      if RUN_TASK_MAKE_GRID == False:
+      if not RUN_TASK_MAKE_GRID:
         if not os.path.exists(GRID_DIR):
           print_err_msg_exit(f'''
             The directory (GRID_DIR) that should contain the pregenerated grid files 
@@ -1320,7 +1317,7 @@ def setup():
       # that OROG_DIR exists.  Otherwise, set it to a predefined location under 
       # the experiment directory (EXPTDIR).
       #
-      if RUN_TASK_MAKE_OROG == False:
+      if not RUN_TASK_MAKE_OROG:
         if not os.path.exists(OROG_DIR):
           print_err_msg_exit(f'''
             The directory (OROG_DIR) that should contain the pregenerated orography
@@ -1334,7 +1331,7 @@ def setup():
       # this case, make sure that SFC_CLIMO_DIR exists.  Otherwise, set it to
       # a predefined location under the experiment directory (EXPTDIR).
       #
-      if RUN_TASK_MAKE_SFC_CLIMO == False:
+      if not RUN_TASK_MAKE_SFC_CLIMO:
         if not os.path.exists(SFC_CLIMO_DIR):
           print_err_msg_exit(f'''
             The directory (SFC_CLIMO_DIR) that should contain the pregenerated surface
@@ -1505,7 +1502,7 @@ def setup():
 
     # link fix files
     res_in_grid_fns=""
-    if RUN_TASK_MAKE_GRID == False:
+    if not RUN_TASK_MAKE_GRID:
     
       res_in_grid_fns = link_fix( \
         verbose=VERBOSE, \
@@ -1522,7 +1519,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     res_in_orog_fns=""
-    if RUN_TASK_MAKE_OROG == False:
+    if not RUN_TASK_MAKE_OROG:
     
       res_in_orog_fns = link_fix( \
         verbose=VERBOSE, \
@@ -1549,7 +1546,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     res_in_sfc_climo_fns=""
-    if RUN_TASK_MAKE_SFC_CLIMO == False:
+    if not RUN_TASK_MAKE_SFC_CLIMO:
     
       res_in_sfc_climo_fns = link_fix( \
         verbose=VERBOSE, \
@@ -1576,7 +1573,7 @@ def setup():
     #
     global CRES
     CRES=""
-    if RUN_TASK_MAKE_GRID == False:
+    if not RUN_TASK_MAKE_GRID:
       CRES=f"C{RES_IN_FIXLAM_FILENAMES}"
     #
     #-----------------------------------------------------------------------
@@ -1585,12 +1582,12 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    if WRITE_DOPOST == True:
+    if WRITE_DOPOST:
       # Turn off run_post
       RUN_TASK_RUN_POST=False
     
       # Check if SUB_HOURLY_POST is on
-      if SUB_HOURLY_POST == True:
+      if SUB_HOURLY_POST:
         print_err_msg_exit(f'''
             SUB_HOURLY_POST is NOT available with Inline Post yet.''')
     #
@@ -1604,7 +1601,7 @@ def setup():
     #
     global PE_MEMBER01
     PE_MEMBER01=LAYOUT_X*LAYOUT_Y
-    if QUILTING == True:
+    if QUILTING:
       PE_MEMBER01 = PE_MEMBER01 + WRTCMP_write_groups*WRTCMP_write_tasks_per_group
     
     print_info_msg(f'''

@@ -272,7 +272,7 @@ def link_fix(verbose, file_group):
     # directory.  Thus, in this case, there isn't really an advantage to using 
     # relative symlinks, so we use symlinks with absolute paths.
     #
-    if run_task == True:
+    if run_task:
       relative_link_flag=True
     else:
       relative_link_flag=False
@@ -315,9 +315,9 @@ def link_fix(verbose, file_group):
     # then create a link whose name uses the GFDLgrid_RES that points to the 
     # link whose name uses the equivalent global uniform resolution.
     #
-        if RUN_TASK_MAKE_SFC_CLIMO == True and \
+        if RUN_TASK_MAKE_SFC_CLIMO and \
            GRID_GEN_METHOD == "GFDLgrid" and \
-           GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES == False:
+           not GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES:
           target=f"{cres}{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NH4}.nc"
           symlink=f"C{GFDLgrid_RES}{DOT_OR_USCORE}grid.tile{TILE_RGNL}.nc"
           create_symlink_to_file(target,symlink,relative)

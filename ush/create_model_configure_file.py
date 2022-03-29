@@ -84,7 +84,7 @@ def create_model_configure_file(cdate,run_dir,sub_hourly_post,dt_subhourly_post_
     # parameters and a set of grid parameters.  The latter depends on the type
     # (coordinate system) of the grid that the write-component will be using.
     #
-    if QUILTING == True:
+    if QUILTING:
         settings.update({
           'write_groups': WRTCMP_write_groups,
           'write_tasks_per_group': WRTCMP_write_tasks_per_group,
@@ -150,7 +150,7 @@ def create_model_configure_file(cdate,run_dir,sub_hourly_post,dt_subhourly_post_
     # regardless of whether that output time interval is larger than, equal 
     # to, or smaller than one hour.
     #
-    if sub_hourly_post == True:
+    if sub_hourly_post:
         nsout=dt_subhourly_post_mnts*60 / dt_atmos
         output_fh=0
     else:

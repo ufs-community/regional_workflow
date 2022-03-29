@@ -62,19 +62,19 @@ def set_FV3nml_stoch_params(cdate):
       iseed_spp[i]=cdate_i*1000 + ensmem_num*10 + ISEED_SPP[i]
 
     settings = {}
-    if DO_SPPT == True or DO_SHUM == True or DO_SKEB == True:
+    if DO_SPPT or DO_SHUM or DO_SKEB:
         settings['nam_stochy'] = {
               'iseed_shum': iseed_shum,
               'iseed_skeb': iseed_skeb,
               'iseed_sppt': iseed_sppt
         }
 
-    if DO_SPP == True:
+    if DO_SPP:
         settings['nam_spperts'] = {
               'iseed_spp': iseed_spp
         }
 
-    if DO_LSM_SPP == True:
+    if DO_LSM_SPP:
         settings['nam_sppperts'] = {
               'iseed_lndp': [iseed_lsm_spp]
         }
