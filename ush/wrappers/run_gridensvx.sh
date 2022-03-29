@@ -8,7 +8,7 @@ export CDATE=${DATE_FIRST_CYCL}${CYCL_HRS}
 export CYCLE_DIR=${EXPTDIR}/${CDATE}
 export cyc=${CYCL_HRS}
 export PDY=${DATE_FIRST_CYCL}
-export OBS_DIR=${MRMS_OBS_DIR}
+export OBS_DIR=${MRMS_OBS_DIR} # CCPA_OBS_DIR MRMS_OBS_DIR
 export VAR="REFC" # APCP REFC RETOP
 export ACCUM="" # 01 03 06 24
 

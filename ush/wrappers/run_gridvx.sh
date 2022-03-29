@@ -10,7 +10,7 @@ export cyc=${CYCL_HRS}
 export PDY=${DATE_FIRST_CYCL}
 export SLASH_ENSMEM_SUBDIR=""
 export ENSMEM_INDX=""
-export OBS_DIR=${CCPA_OBS_DIR}
+export OBS_DIR=${CCPA_OBS_DIR} # CCPA_OBS_DIR MRMS_OBS_DIR
 export VAR="APCP" # APCP REFC RETOP
 export ACCUM="06" # 01 03 06 24
 
