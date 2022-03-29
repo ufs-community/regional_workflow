@@ -38,7 +38,7 @@ FV3_RRFS_v1beta:
     <<: *RRFS_v1alpha_phys
     do_mynnsfclay: True
 
-FV3_RRFS_v1nssl:
+FV3_WoFS_v0:
   gfs_physics_nml:
     do_deep: False
     imfdeepcnv: 0
@@ -58,7 +58,7 @@ FV3_RRFS_v1nssl:
     do_mynnsfclay: True
     imfdeepcnv: -1
     imfshalcnv: -1
-    lsm: 2
+    lsm: 1
     lsoil_lsm: 4
     imp_physics: 17
     nssl_cccn: 0.6e+9
