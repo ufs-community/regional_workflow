@@ -48,7 +48,7 @@ FIXaer=${FIXaer:-"/work/noaa/global/glopara/fix/fix_aer"}
 FIXlut=${FIXlut:-"/work/noaa/global/glopara/fix/fix_lut"}
 TOPO_DIR=${TOPO_DIR:-"/work/noaa/global/glopara/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/noaa/global/glopara/fix/fix_sfc_climo"}
-FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/work/noaa/fv3-cam/UFS_SRW_App/FV3LAM_pregen"}
+FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/work/noaa/fv3-cam/UFS_SRW_App/FIXLAM_NCO_BASE"}
 
 # Run commands for executables
 RUN_CMD_SERIAL="time"
