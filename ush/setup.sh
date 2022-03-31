@@ -1393,6 +1393,21 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Make sure that DO_ENSEMBLE is set to TRUE when running ensemble vx.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${DO_ENSEMBLE}" = "FALSE" ] && [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" -o \
+   "${RUN_TASK_VX_ENSPOINT}" = "TRUE" ]; then
+  print_err_msg_exit "\
+Ensemble verification can not be run unless running in ensemble mode:
+   DO_ENSEMBLE = \"${DO_ENSEMBLE}\"
+   RUN_TASK_VX_ENSGRID = \"${RUN_TASK_VX_ENSGRID}\"
+   RUN_TASK_VX_ENSPOINT = \"${RUN_TASK_VX_ENSPOINT}\""
+fi
+#
+#-----------------------------------------------------------------------
+#
 # Set the full path to the forecast model executable.
 #
 #-----------------------------------------------------------------------
@@ -1576,8 +1591,7 @@ one above.  Reset values are:
 
   fi
 
-  if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
-     [ "${RUN_TASK_VX_GRIDSTAT}" = "FALSE" ]; then
+  if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ]; then
 
     msg="
 When RUN_ENVIR is set to \"nco\", it is assumed that the verification
@@ -1596,8 +1610,7 @@ Reset value is:"
 
   fi
 
-  if [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ] || \
-     [ "${RUN_TASK_VX_POINTSTAT}" = "FALSE" ]; then
+  if [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ]; then
 
     msg="
 When RUN_ENVIR is set to \"nco\", it is assumed that the verification
@@ -1616,8 +1629,7 @@ Reset value is:"
 
   fi
 
-  if [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" ] || \
-     [ "${RUN_TASK_VX_ENSGRID}" = "FALSE" ]; then
+  if [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" ]; then
 
     msg="
 When RUN_ENVIR is set to \"nco\", it is assumed that the verification
@@ -2010,7 +2022,6 @@ if [ "$WRITE_DOPOST" = "TRUE" ] ; then
 SUB_HOURLY_POST is NOT available with Inline Post yet."
   fi
 fi
-
 
 check_var_valid_value "QUILTING" "valid_vals_QUILTING"
 QUILTING=$(boolify $QUILTING)
