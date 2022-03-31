@@ -941,8 +941,7 @@ machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
     EXTRN_MDL_SOURCE_BASEDIR_ICS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_ICS}"
-    if [[ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" &&
-      ( "$MACHINE" = "HERA" || "$MACHINE" = "WCOSS_DELL_P3" || "$MACHINE" = "ORION" ) ]]; then
+    if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ]; then
       EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/${FV3GFS_FILE_FMT_ICS}"
     fi
     if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
