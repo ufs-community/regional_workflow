@@ -280,7 +280,8 @@ case ${PREDEF_GRID_NAME} in
 #-----------------------------------------------------------------------
 #
 # A subconus domain over Indianapolis, Indiana with ~3km cells.  This is
-# mostly for testing on a 3km grid with a small number of cells.
+# mostly for testing on a 3km grid with a much small number of cells than
+# on the full CONUS.
 #
 #-----------------------------------------------------------------------
 #
