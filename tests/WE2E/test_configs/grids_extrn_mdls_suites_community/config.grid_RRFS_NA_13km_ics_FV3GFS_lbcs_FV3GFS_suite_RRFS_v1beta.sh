@@ -3,7 +3,7 @@
 # ------------------------
 #
 # This test is to ensure that the workflow running in community mode 
-# completes successfully on the RRFS_NA_3km grid using the RRFS_v1alpha
+# completes successfully on the RRFS_NA_13km grid using the RRFS_v1beta
 # physics suite with ICs and LBCs derived from the FV3GFS.
 #
 # Note that this test also sets various resource parameters for several
