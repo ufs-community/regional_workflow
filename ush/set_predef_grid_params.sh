@@ -109,6 +109,52 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_DELX="25000.0"
   ESGgrid_DELY="25000.0"
 
+  ESGgrid_NX="211"
+  ESGgrid_NY="122"
+
+  ESGgrid_PAZI="0.0"
+
+  ESGgrid_WIDE_HALO_WIDTH="6"
+
+  DT_ATMOS="${DT_ATMOS:-40}"
+
+  LAYOUT_X="${LAYOUT_X:-5}"
+  LAYOUT_Y="${LAYOUT_Y:-2}"
+  BLOCKSIZE="${BLOCKSIZE:-40}"
+
+  if [ "$QUILTING" = "TRUE" ]; then
+    WRTCMP_write_groups="1"
+    WRTCMP_write_tasks_per_group="2"
+    WRTCMP_output_grid="lambert_conformal"
+    WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
+    WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
+    WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
+    WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
+    WRTCMP_nx="205"
+    WRTCMP_ny="116"
+    WRTCMP_lon_lwr_left="-122.719258"
+    WRTCMP_lat_lwr_left="21.138123"
+    WRTCMP_dx="${ESGgrid_DELX}"
+    WRTCMP_dy="${ESGgrid_DELY}"
+  fi
+  ;;
+#
+#-----------------------------------------------------------------------
+#
+# The RRFS CONUS domain with ~25km cells that can be initialized from the HRRR.
+#
+#-----------------------------------------------------------------------
+#
+"RRFS_CONUS_25km_HRRRIC")
+
+  GRID_GEN_METHOD="ESGgrid"
+
+  ESGgrid_LON_CTR="-97.5"
+  ESGgrid_LAT_CTR="38.5"
+
+  ESGgrid_DELX="25000.0"
+  ESGgrid_DELY="25000.0"
+
   ESGgrid_NX="202"
   ESGgrid_NY="116"
 
@@ -146,6 +192,52 @@ case ${PREDEF_GRID_NAME} in
 #-----------------------------------------------------------------------
 #
 "RRFS_CONUS_13km")
+
+  GRID_GEN_METHOD="ESGgrid"
+
+  ESGgrid_LON_CTR="-97.5"
+  ESGgrid_LAT_CTR="38.5"
+
+  ESGgrid_DELX="13000.0"
+  ESGgrid_DELY="13000.0"
+
+  ESGgrid_NX="413"
+  ESGgrid_NY="244"
+
+  ESGgrid_PAZI="0.0"
+
+  ESGgrid_WIDE_HALO_WIDTH="6"
+
+  DT_ATMOS="${DT_ATMOS:-45}"
+
+  LAYOUT_X="${LAYOUT_X:-16}"
+  LAYOUT_Y="${LAYOUT_Y:-10}"
+  BLOCKSIZE="${BLOCKSIZE:-32}"
+
+  if [ "$QUILTING" = "TRUE" ]; then
+    WRTCMP_write_groups="1"
+    WRTCMP_write_tasks_per_group=$(( 1*LAYOUT_Y ))
+    WRTCMP_output_grid="lambert_conformal"
+    WRTCMP_cen_lon="${ESGgrid_LON_CTR}"
+    WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
+    WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
+    WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
+    WRTCMP_nx="405"
+    WRTCMP_ny="235"
+    WRTCMP_lon_lwr_left="-122.719258"
+    WRTCMP_lat_lwr_left="21.138123"
+    WRTCMP_dx="${ESGgrid_DELX}"
+    WRTCMP_dy="${ESGgrid_DELY}"
+  fi
+  ;;
+#
+#-----------------------------------------------------------------------
+#
+# The RRFS CONUS domain with ~13km cells that can be initialized from the HRRR.
+#
+#-----------------------------------------------------------------------
+#
+"RRFS_CONUS_13km_HRRRIC")
 
   GRID_GEN_METHOD="ESGgrid"
 
