@@ -10,7 +10,7 @@ export cyc=${CYCL_HRS}
 export PDY=${DATE_FIRST_CYCL}
 export OBS_DIR=${MRMS_OBS_DIR} # CCPA_OBS_DIR MRMS_OBS_DIR
 export VAR="REFC" # APCP REFC RETOP
-export ACCUM="" # 01 03 06 24
+export ACCUM="" # 01 03 06 24 --> leave empty for REFC and RETOP
 
 export FHR=`echo $(seq 0 ${ACCUM} ${FCST_LEN_HRS}) | cut -d" " -f2-`
 
