@@ -343,27 +343,33 @@ DOT_OR_USCORE="_"
 # from which the namelist files for each of the enesemble members are
 # generated.
 #
-# DIAG_TABLE_FN:
-# Name of file that specifies the fields that the forecast model will 
-# output.
-#
-# FIELD_TABLE_FN:
-# Name of file that specifies the tracers that the forecast model will
-# read in from the IC/LBC files.
-#
-# DATA_TABLE_FN:
-# Name of file that specifies ???
-#
-# MODEL_CONFIG_FN:
-# Name of file that specifies ???
-#
-# NEMS_CONFIG_FN:
-# Name of file that specifies ???
-#
 # FV3_EXEC_FN:
 # Name to use for the forecast model executable when it is copied from
 # the directory in which it is created in the build step to the executables
 # directory (EXECDIR; this is set during experiment generation).
+#
+# DIAG_TABLE_TMPL_FN:
+# Name of a template file that specifies the output fields of the forecast 
+# model (ufs-weather-model: diag_table) followed by [dot_ccpp_phys_suite]. 
+# Its default value is the name of the file that the ufs weather model 
+# expects to read in.
+#
+# FIELD_TABLE_TMPL_FN:
+# Name of a template file that specifies the tracers in IC/LBC files of the 
+# forecast model (ufs-weather-mode: field_table) followed by [dot_ccpp_phys_suite]. 
+# Its default value is the name of the file that the ufs weather model expects 
+# to read in.
+#
+# MODEL_CONFIG_TMPL_FN:
+# Name of a template file that contains settings and configurations for the 
+# NUOPC/ESMF main component (ufs-weather-model: model_config). Its default 
+# value is the name of the file that the ufs weather model expects to read in.
+#
+# NEMS_CONFIG_TMPL_FN:
+# Name of a template file that contains information about the various NEMS 
+# components and their run sequence (ufs-weather-model: nems.configure). 
+# Its default value is the name of the file that the ufs weather model expects 
+# to read in.
 #
 # FCST_MODEL:
 # Name of forecast model (default=ufs-weather-model)
@@ -409,18 +415,18 @@ EXPT_CONFIG_FN="config.sh"
 
 RGNL_GRID_NML_FN="regional_grid.nml"
 
-DATA_TABLE_FN="data_table"
-DIAG_TABLE_FN="diag_table"
-FIELD_TABLE_FN="field_table"
 FV3_NML_BASE_SUITE_FN="input.nml.FV3"
 FV3_NML_YAML_CONFIG_FN="FV3.input.yml"
 FV3_NML_BASE_ENS_FN="input.nml.base_ens"
-MODEL_CONFIG_FN="model_configure"
-NEMS_CONFIG_FN="nems.configure"
 FV3_EXEC_FN="ufs_model"
 
-FCST_MODEL="ufs-weather-model"
+DATA_TABLE_TMPL_FN=""
+DIAG_TABLE_TMPL_FN=""
+FIELD_TABLE_TMPL_FN=""
+MODEL_CONFIG_TMPL_FN=""
+NEMS_CONFIG_TMPL_FN=""
 
+FCST_MODEL="ufs-weather-model"
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
 EXTRN_MDL_ICS_VAR_DEFNS_FN="extrn_mdl_ics_var_defns.sh"
@@ -1514,6 +1520,7 @@ FIXgsm_FILES_TO_COPY_TO_FIXam=( \
 "global_hyblev.l65.txt" \
 "global_zorclim.1x1.grb" \
 "global_sfc_emissivity_idx.txt" \
+"global_tg3clim.2.6x1.5.grb" \
 "global_solarconstant_noaa_an.txt" \
 "global_albedo4.1x1.grb" \
 "geo_em.d01.lat-lon.2.5m.HGT_M.nc" \
@@ -1568,6 +1575,7 @@ CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING=( \
 "global_h2oprdlos.f77       | global_h2o_pltc.f77" \
 "global_albedo4.1x1.grb     | global_albedo4.1x1.grb" \
 "global_zorclim.1x1.grb     | global_zorclim.1x1.grb" \
+"global_tg3clim.2.6x1.5.grb | global_tg3clim.2.6x1.5.grb" \
 "sfc_emissivity_idx.txt     | global_sfc_emissivity_idx.txt" \
 "solarconstant_noaa_an.txt  | global_solarconstant_noaa_an.txt" \
 "global_o3prdlos.f77        | " \
@@ -1654,9 +1662,9 @@ WTIME_VX_ENSPOINT_PROB="01:00:00"
 #
 # Maximum number of attempts.
 #
-MAXTRIES_MAKE_GRID="1"
-MAXTRIES_MAKE_OROG="1"
-MAXTRIES_MAKE_SFC_CLIMO="1"
+MAXTRIES_MAKE_GRID="2"
+MAXTRIES_MAKE_OROG="2"
+MAXTRIES_MAKE_SFC_CLIMO="2"
 MAXTRIES_GET_EXTRN_ICS="1"
 MAXTRIES_GET_EXTRN_LBCS="1"
 MAXTRIES_MAKE_ICS="1"
@@ -1803,18 +1811,25 @@ NUM_ENS_MEMBERS="1"
 DO_SHUM="FALSE"
 DO_SPPT="FALSE"
 DO_SKEB="FALSE"
+ISEED_SPPT="1"
+ISEED_SHUM="2"
+ISEED_SKEB="3"
+NEW_LSCALE="TRUE"
 SHUM_MAG="0.006" #Variable "shum" in input.nml
 SHUM_LSCALE="150000"
 SHUM_TSCALE="21600" #Variable "shum_tau" in input.nml
 SHUM_INT="3600" #Variable "shumint" in input.nml
 SPPT_MAG="0.7" #Variable "sppt" in input.nml
+SPPT_LOGIT="TRUE"
 SPPT_LSCALE="150000"
 SPPT_TSCALE="21600" #Variable "sppt_tau" in input.nml
 SPPT_INT="3600" #Variable "spptint" in input.nml
+SPPT_SFCLIMIT="TRUE"
 SKEB_MAG="0.5" #Variable "skeb" in input.nml
 SKEB_LSCALE="150000"
 SKEB_TSCALE="21600" #Variable "skeb_tau" in input.nml
 SKEB_INT="3600" #Variable "skebint" in input.nml
+SKEBNORM="1"
 SKEB_VDOF="10"
 USE_ZMTNBLCK="FALSE"
 #
