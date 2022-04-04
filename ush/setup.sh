@@ -1216,12 +1216,16 @@ fi
 #
 dot_ccpp_phys_suite_or_null=".${CCPP_PHYS_SUITE}"
 
-# Designated name as the input files of the forecast model (ufs-weather-model)
+# Names of input files that the forecast model (ufs-weather-model) expects 
+# to read in.  These should only be changed if the input file names in the 
+# forecast model code are changed.
+#----------------------------------
 DATA_TABLE_FN="data_table"
 DIAG_TABLE_FN="diag_table"
 FIELD_TABLE_FN="field_table"
 MODEL_CONFIG_FN="model_configure"
 NEMS_CONFIG_FN="nems.configure"
+#----------------------------------
 
 DATA_TABLE_TMPL_FN="${DATA_TABLE_TMPL_FN:-${DATA_TABLE_FN}}"
 DIAG_TABLE_TMPL_FN="${DIAG_TABLE_TMPL_FN:-${DIAG_TABLE_FN}}${dot_ccpp_phys_suite_or_null}"

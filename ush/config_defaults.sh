@@ -349,24 +349,27 @@ DOT_OR_USCORE="_"
 # directory (EXECDIR; this is set during experiment generation).
 #
 # DIAG_TABLE_TMPL_FN:
-# Name of a template fille that specifies the output fields of the forecast model
-# (ufs-weather-model: diag_table) followed by [dot_ccpp_phys_suite]. Its default
-# value is the same as the designated file name.
+# Name of a template file that specifies the output fields of the forecast 
+# model (ufs-weather-model: diag_table) followed by [dot_ccpp_phys_suite]. 
+# Its default value is the name of the file that the ufs weather model 
+# expects to read in.
 #
 # FIELD_TABLE_TMPL_FN:
-# Name of a template file that specifies the tracers in IC/LBC files of the forecast
-# model (ufs-weather-mode: field_table) followed by [dot_ccpp_phys_suite]. Its
-# default value is the same as the designated file name.
+# Name of a template file that specifies the tracers in IC/LBC files of the 
+# forecast model (ufs-weather-mode: field_table) followed by [dot_ccpp_phys_suite]. 
+# Its default value is the name of the file that the ufs weather model expects 
+# to read in.
 #
 # MODEL_CONFIG_TMPL_FN:
 # Name of a template file that contains settings and configurations for the 
-# NUOPC/ESMF main component (ufs-weather-model: model_config). Its default value
-# is the same as the designated file name.
+# NUOPC/ESMF main component (ufs-weather-model: model_config). Its default 
+# value is the name of the file that the ufs weather model expects to read in.
 #
 # NEMS_CONFIG_TMPL_FN:
 # Name of a template file that contains information about the various NEMS 
-# components and their run sequence (ufs-weather-model: nems.configure). Its 
-# default value is the same as the designated file name.
+# components and their run sequence (ufs-weather-model: nems.configure). 
+# Its default value is the name of the file that the ufs weather model expects 
+# to read in.
 #
 # FCST_MODEL:
 # Name of forecast model (default=ufs-weather-model)
