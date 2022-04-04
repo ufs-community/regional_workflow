@@ -137,13 +137,29 @@ export MODEL
 export NET
 export NUM_ENS_MEMBERS
 
-${METPLUS_PATH}/ush/run_metplus.py \
-  -c ${METPLUS_CONF}/common.conf \
-  -c ${METPLUS_CONF}/EnsembleStat_conus_sfc.conf
+if [ "${RUN_GEN_ENS_PROD}" = "TRUE" ]; then
 
-${METPLUS_PATH}/ush/run_metplus.py \
-  -c ${METPLUS_CONF}/common.conf \
-  -c ${METPLUS_CONF}/EnsembleStat_upper_air.conf
+  ${METPLUS_PATH}/ush/run_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/GenEnsProd_conus_sfc.conf
+
+  ${METPLUS_PATH}/ush/run_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/GenEnsProd_upper_air.conf
+
+fi
+
+if [ "${RUN_ENSEMBLE_STAT}" = "TRUE" ]; then
+
+  ${METPLUS_PATH}/ush/run_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/EnsembleStat_conus_sfc.conf
+
+  ${METPLUS_PATH}/ush/run_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/EnsembleStat_upper_air.conf
+
+fi
 
 #
 #-----------------------------------------------------------------------

@@ -1330,13 +1330,20 @@ VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
 #
 # RUN_TASK_VX_ENSGRID:
 # Flag that determines whether the ensemble-stat verification for gridded
-# data task is to be run. 
+# data task is to be run.
 #
 # RUN_TASK_VX_ENSPOINT:
 # Flag that determines whether the ensemble point verification task is
 # to be run. If this flag is set, both ensemble-stat point verification
 # and point verification of ensemble-stat output is computed.
 #
+# RUN_GEN_ENS_PROD:
+# Flag that determines whether the gen-ens-prod verification subtask is
+# to be run in the VX_ENSGRID and VX_ENSPOINT tasks.
+#
+# RUN_ENSEMBLE_STAT:
+# Flag that determines whether the ensemble-stat verification subtask is
+# to be run in the VX_ENSGRID and VX_ENSPOINT tasks.
 #-----------------------------------------------------------------------
 #
 RUN_TASK_MAKE_GRID="TRUE"
@@ -1362,6 +1369,9 @@ RUN_TASK_VX_GRIDSTAT="FALSE"
 RUN_TASK_VX_POINTSTAT="FALSE"
 RUN_TASK_VX_ENSGRID="FALSE"
 RUN_TASK_VX_ENSPOINT="FALSE"
+
+RUN_GEN_ENS_PROD="FALSE"
+RUN_ENSEMBLE_STAT="FALSE"
 #
 #-----------------------------------------------------------------------
 #

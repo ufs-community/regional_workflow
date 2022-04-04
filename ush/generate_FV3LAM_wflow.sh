@@ -375,6 +375,8 @@ file (template_xml_fp):
   'run_task_vx_pointstat': ${RUN_TASK_VX_POINTSTAT}
   'run_task_vx_ensgrid': ${RUN_TASK_VX_ENSGRID}
   'run_task_vx_enspoint': ${RUN_TASK_VX_ENSPOINT}
+  'run_gen_ens_prod': ${RUN_GEN_ENS_PROD}
+  'run_ensemble_stat': ${RUN_ENSEMBLE_STAT}
 #
 # Number of physical cores per node for the current machine.
 #

@@ -144,15 +144,35 @@ export LOG_SUFFIX
 #
 #-----------------------------------------------------------------------
 #
-if [ ${VAR} == "APCP" ]; then
-  acc="${ACCUM}h" # for stats output prefix in EnsembleStatConfig
-  ${METPLUS_PATH}/ush/run_metplus.py \
-    -c ${METPLUS_CONF}/common.conf \
-    -c ${METPLUS_CONF}/EnsembleStat_${VAR}${acc}.conf
-else
-  ${METPLUS_PATH}/ush/run_metplus.py \
-    -c ${METPLUS_CONF}/common.conf \
-    -c ${METPLUS_CONF}/EnsembleStat_${VAR}.conf
+
+if [ "${RUN_GEN_ENS_PROD}" = "TRUE" ]; then
+
+  if [ ${VAR} == "APCP" ]; then
+    acc="${ACCUM}h"
+    ${METPLUS_PATH}/ush/run_metplus.py \
+      -c ${METPLUS_CONF}/common.conf \
+      -c ${METPLUS_CONF}/GenEnsProd_${VAR}${acc}.conf
+  else
+    ${METPLUS_PATH}/ush/run_metplus.py \
+      -c ${METPLUS_CONF}/common.conf \
+      -c ${METPLUS_CONF}/GenEnsProd_${VAR}.conf
+  fi
+
+fi
+
+if [ "${RUN_ENSEMBLE_STAT}" = "TRUE" ]; then
+
+  if [ ${VAR} == "APCP" ]; then
+    acc="${ACCUM}h" # for stats output prefix in EnsembleStatConfig
+    ${METPLUS_PATH}/ush/run_metplus.py \
+      -c ${METPLUS_CONF}/common.conf \
+      -c ${METPLUS_CONF}/EnsembleStat_${VAR}${acc}.conf
+  else
+    ${METPLUS_PATH}/ush/run_metplus.py \
+      -c ${METPLUS_CONF}/common.conf \
+      -c ${METPLUS_CONF}/EnsembleStat_${VAR}.conf
+  fi
+
 fi
 
 #
