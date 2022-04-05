@@ -112,9 +112,9 @@ NUM_PAD=${NDIGITS_ENSMEM_NAMES}
 #
 
 if [ ${VAR} == "APCP" ]; then
-  LOG_SUFFIX=ensgrid_${CDATE}_${VAR}_${ACCUM}h
+  LOG_SUFFIX=${CDATE}_${VAR}_${ACCUM}h
 else
-  LOG_SUFFIX=ensgrid_${CDATE}_${VAR}
+  LOG_SUFFIX=${CDATE}_${VAR}
 fi
 
 #
