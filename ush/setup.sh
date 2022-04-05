@@ -515,7 +515,7 @@ One or more fix file directories have not been specified for this machine:
   FIXlut = \"${FIXlut:-\"\"}
   TOPO_DIR = \"${TOPO_DIR:-\"\"}
   SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR:-\"\"}
+  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR:-\"\"}
 You can specify the missing location(s) in ${machine_file}"
 fi
 
@@ -1474,7 +1474,7 @@ LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task.sh"
 #
 if [ "${RUN_ENVIR}" = "nco" ]; then
 
-  nco_fix_dir="${FIXLAM_NCO_BASEDIR}/${PREDEF_GRID_NAME}"
+  nco_fix_dir="${DOMAIN_PREGEN_BASEDIR}/${PREDEF_GRID_NAME}"
   if [ ! -d "${nco_fix_dir}" ]; then
     print_err_msg_exit "\
 The directory (nco_fix_dir) that should contain the pregenerated grid,
@@ -1490,11 +1490,11 @@ orography, and surface climatology files does not exist:
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 grid files already exist in the directory 
 
-  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
+  \${DOMAIN_PREGEN_BASEDIR}/\${PREDEF_GRID_NAME}
 
 where
 
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
+  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
 
 Thus, the MAKE_GRID_TN task must not be run (i.e. RUN_TASK_MAKE_GRID must 
@@ -1528,11 +1528,11 @@ Reset values are:
     msg="
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 orography files already exist in the directory 
-  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
+  \${DOMAIN_PREGEN_BASEDIR}/\${PREDEF_GRID_NAME}
 
 where
 
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
+  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
 
 Thus, the MAKE_OROG_TN task must not be run (i.e. RUN_TASK_MAKE_OROG must 
@@ -1567,11 +1567,11 @@ Reset values are:
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 surface climatology files already exist in the directory 
 
-  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
+  \${DOMAIN_PREGEN_BASEDIR}/\${PREDEF_GRID_NAME}
 
 where
 
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
+  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
 
 Thus, the MAKE_SFC_CLIMO_TN task must not be run (i.e. RUN_TASK_MAKE_SFC_CLIMO 

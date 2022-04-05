@@ -56,7 +56,7 @@ FIXaer=${FIXaer:-"/work/00315/tg455890/stampede2/regional_fv3/fix_aer"}
 FIXlut=${FIXlut:-"/work/00315/tg455890/stampede2/regional_fv3/fix_lut"}
 TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
-FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
+DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"/needs/to/be/specified"}
 
 # Run commands for executables
 RUN_CMD_SERIAL="time"

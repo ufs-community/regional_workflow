@@ -55,7 +55,7 @@ FIXaer=${FIXaer:-"/contrib/EPIC/fix/fix_aer"}
 FIXlut=${FIXlut:-"/contrib/EPIC/fix/fix_lut"}
 TOPO_DIR=${TOPO_DIR:-"/contrib/EPIC/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/contrib/EPIC/fix/fix_sfc_climo"}
-FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/scratch2/BMC/det/FV3LAM_pregen"}
+DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"/scratch2/BMC/det/FV3LAM_pregen"}
 
 RUN_CMD_SERIAL="time"
 #Run Commands currently differ for GNU/openmpi

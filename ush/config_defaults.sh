@@ -238,12 +238,12 @@ EXEC_SUBDIR="bin"
 # need in order to create initial and boundary condition files for a given 
 # cycle on the native FV3-LAM grid.
 #
-# FIXLAM_NCO_BASEDIR:
+# DOMAIN_PREGEN_BASEDIR:
 # The base directory containing pregenerated grid, orography, and surface 
 # climatology files.  For the pregenerated grid specified by PREDEF_GRID_NAME, 
 # these "fixed" files are located in:
 #
-#   ${FIXLAM_NCO_BASEDIR}/${PREDEF_GRID_NAME}
+#   ${DOMAIN_PREGEN_BASEDIR}/${PREDEF_GRID_NAME}
 #
 # The workflow scripts will create a symlink in the experiment directory
 # that will point to a subdirectory (having the name of the grid being
@@ -292,7 +292,8 @@ EXEC_SUBDIR="bin"
 #-----------------------------------------------------------------------
 #
 COMIN="/path/of/directory/containing/data/files/for/IC/LBCS"
-FIXLAM_NCO_BASEDIR=""
+DOMAIN_PREGEN_BASEDIR=""
+STMP="/base/path/of/directory/containing/model/input/and/raw/output/files"
 envir="para"
 NET="rrfs"
 model_ver="v1.0.0"

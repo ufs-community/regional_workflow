@@ -57,7 +57,7 @@ FIXaer=${FIXaer:-"/scratch/ywang/fix/theia_fix/fix_aer"}
 FIXlut=${FIXlut:-"/scratch/ywang/fix/theia_fix/fix_lut"}
 TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
-FIXLAM_NCO_BASEDIR=${FIXLAM_NCO_BASEDIR:-"/needs/to/be/specified"}
+DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"/needs/to/be/specified"}
 
 # Run commands for executables
 RUN_CMD_SERIAL="srun -n 1"
