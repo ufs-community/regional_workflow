@@ -10,11 +10,11 @@ valid_vals_FCST_MODEL=("ufs-weather-model" "fv3gfs_aqm")
 valid_vals_WORKFLOW_MANAGER=("rocoto" "none")
 valid_vals_PREDEF_GRID_NAME=( \
 "RRFS_CONUS_25km" \
-"RRFS_CONUS_25km_HRRRIC" \
 "RRFS_CONUS_13km" \
-"RRFS_CONUS_13km_HRRRIC" \
 "RRFS_CONUS_3km" \
-"RRFS_CONUS_3km_HRRRIC" \
+"RRFS_CONUScompact_25km" \
+"RRFS_CONUScompact_13km" \
+"RRFS_CONUScompact_3km" \
 "RRFS_SUBCONUS_3km" \
 "RRFS_AK_13km" \
 "RRFS_AK_3km" \

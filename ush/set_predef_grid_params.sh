@@ -145,7 +145,7 @@ case ${PREDEF_GRID_NAME} in
 #
 #-----------------------------------------------------------------------
 #
-"RRFS_CONUS_25km_HRRRIC")
+"RRFS_CONUScompact_25km")
 
   GRID_GEN_METHOD="ESGgrid"
 
@@ -237,7 +237,7 @@ case ${PREDEF_GRID_NAME} in
 #
 #-----------------------------------------------------------------------
 #
-"RRFS_CONUS_13km_HRRRIC")
+"RRFS_CONUScompact_13km")
 
   GRID_GEN_METHOD="ESGgrid"
 
@@ -329,7 +329,7 @@ case ${PREDEF_GRID_NAME} in
 #
 #-----------------------------------------------------------------------
 #
-"RRFS_CONUS_3km_HRRRIC")
+"RRFS_CONUScompact_3km")
 
   GRID_GEN_METHOD="ESGgrid"
 
