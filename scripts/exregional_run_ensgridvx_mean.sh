@@ -107,7 +107,7 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
+INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/gen_ens_prod
 
 if [ ${VAR} == "APCP" ]; then
   LOG_SUFFIX=ensgrid_mean_${CDATE}_${VAR}_${ACCUM}h

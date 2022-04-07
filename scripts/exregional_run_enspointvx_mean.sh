@@ -105,7 +105,7 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
+INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/gen_ens_prod
 LOG_SUFFIX=enspoint_mean_${CDATE}
 
 #
