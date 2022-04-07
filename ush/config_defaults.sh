@@ -1236,7 +1236,7 @@ DEBUG="FALSE"
 #
 #-----------------------------------------------------------------------
 #
-EXTRA_SLURM_CMD="-v"
+EXTRA_SLURM_CMD=""
 MAKE_GRID_TN="make_grid"
 MAKE_OROG_TN="make_orog"
 MAKE_SFC_CLIMO_TN="make_sfc_climo"
