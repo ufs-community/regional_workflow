@@ -1516,13 +1516,13 @@ FIXgsm_FILES_TO_COPY_TO_FIXam: [
 # a local one since it is used in only one script.
 #
 FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING: [
-!join ["FNGLAC | ",*FNGLAC],
-!join ["FNMXIC | ",*FNMXIC],
-!join ["FNTSFC | ",*FNTSFC],
-!join ["FNSNOC | ",*FNSNOC],
-!join ["FNAISC | ",*FNAISC],
-!join ["FNSMCC | ",*FNSMCC],
-!join ["FNMSKH | ",*FNMSKH]
+!join_str ["FNGLAC | ",*FNGLAC],
+!join_str ["FNMXIC | ",*FNMXIC],
+!join_str ["FNTSFC | ",*FNTSFC],
+!join_str ["FNSNOC | ",*FNSNOC],
+!join_str ["FNAISC | ",*FNAISC],
+!join_str ["FNSMCC | ",*FNSMCC],
+!join_str ["FNMSKH | ",*FNMSKH]
 ]
 #"FNZORC | $FNZORC",
 

@@ -44,12 +44,12 @@ def cfg_to_yaml_str(cfg):
 
     return yaml.dump(cfg, sort_keys=False, default_flow_style=False)
 
-def join(loader, node):
+def join_str(loader, node):
     """ Custom tag hangler to join strings """
     seq = loader.construct_sequence(node)
     return ''.join([str(i) for i in seq])
 
-yaml.add_constructor('!join', join, Loader=yaml.SafeLoader)
+yaml.add_constructor('!join_str', join_str, Loader=yaml.SafeLoader)
 
 ##########
 # JSON
