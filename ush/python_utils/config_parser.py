@@ -87,10 +87,11 @@ def load_shell_config(config_file):
     # do a diff to get variables specifically defined/updated in the script
     # Method sounds brittle but seems to work ok so far
     code = dedent(f'''      #!/bin/bash
-      (set -o posix; set) > /tmp/t1
+      (set -o posix; set) > ./_t1
       {{ . {config_file}; set +x; }} &>/dev/null
-      (set -o posix; set) > /tmp/t2
-      diff /tmp/t1 /tmp/t2 | grep "> " | cut -c 3-
+      (set -o posix; set) > ./_t2
+      diff ./_t1 ./_t2 | grep "> " | cut -c 3-
+      rm -rf ./_t1 ./_t2
     ''')
     (_,config_str,_) = run_command(code)
     lines = config_str.splitlines()
