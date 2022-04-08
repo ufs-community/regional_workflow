@@ -536,7 +536,7 @@ def generate_FV3LAM_wflow():
     # that it exists.
     #
       try:
-        path_resolved = os.readlink(FIXam)
+        path_resolved = os.path.realpath(FIXam)
       except:
         path_resolved = FIXam
       if not os.path.exists(path_resolved):

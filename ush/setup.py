@@ -740,7 +740,7 @@ def setup():
     if EXPT_BASEDIR[0] != "/":
       EXPT_BASEDIR = os.path.join(SR_WX_APP_TOP_DIR,"..","expt_dirs",EXPT_BASEDIR)
     try:
-      EXPT_BASEDIR = os.readlink(EXPT_BASEDIR)
+      EXPT_BASEDIR = os.path.realpath(EXPT_BASEDIR)
     except:
       pass
     EXPT_BASEDIR = os.path.abspath(EXPT_BASEDIR)
