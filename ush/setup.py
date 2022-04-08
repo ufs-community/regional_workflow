@@ -890,11 +890,27 @@ def setup():
 
     dot_ccpp_phys_suite_or_null=f".{CCPP_PHYS_SUITE}"
     
-    DATA_TABLE_TMPL_FN = DATA_TABLE_FN
-    DIAG_TABLE_TMPL_FN = f"{DIAG_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
-    FIELD_TABLE_TMPL_FN = f"{FIELD_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
-    MODEL_CONFIG_TMPL_FN = MODEL_CONFIG_FN
-    NEMS_CONFIG_TMPL_FN = NEMS_CONFIG_FN
+    # Names of input files that the forecast model (ufs-weather-model) expects 
+    # to read in.  These should only be changed if the input file names in the 
+    # forecast model code are changed.
+    #----------------------------------
+    DATA_TABLE_FN = "data_table"
+    DIAG_TABLE_FN = "diag_table"
+    FIELD_TABLE_FN = "field_table"
+    MODEL_CONFIG_FN = "model_configure"
+    NEMS_CONFIG_FN = "nems.configure"
+    #----------------------------------
+
+    try: DATA_TABLE_TMPL_FN
+    except:  DATA_TABLE_TMPL_FN = DATA_TABLE_FN
+    try: DIAG_TABLE_TMPL_FN
+    except: DIAG_TABLE_TMPL_FN = f"{DIAG_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
+    try: FIELD_TABLE_TMPL_FN
+    except: FIELD_TABLE_TMPL_FN = f"{FIELD_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
+    try: MODEL_CONFIG_TMPL_FN
+    except: MODEL_CONFIG_TMPL_FN = MODEL_CONFIG_FN
+    try: NEMS_CONFIG_TMPL_FN
+    except: NEMS_CONFIG_TMPL_FN = NEMS_CONFIG_FN
     
     DATA_TABLE_TMPL_FP = os.path.join(TEMPLATE_DIR,DATA_TABLE_TMPL_FN)
     DIAG_TABLE_TMPL_FP = os.path.join(TEMPLATE_DIR,DIAG_TABLE_TMPL_FN)
@@ -1116,6 +1132,20 @@ def setup():
     global RUN_TASK_MAKE_GRID, RUN_TASK_MAKE_OROG, RUN_TASK_MAKE_SFC_CLIMO
     global GRID_DIR, OROG_DIR, SFC_CLIMO_DIR
     global RUN_TASK_VX_GRIDSTAT, RUN_TASK_VX_POINTSTAT, RUN_TASK_VX_ENSGRID
+
+    #
+    #-----------------------------------------------------------------------
+    #
+    # Make sure that DO_ENSEMBLE is set to TRUE when running ensemble vx.
+    #
+    #-----------------------------------------------------------------------
+    #
+    if (not DO_ENSEMBLE) and (RUN_TASK_VX_ENSGRID or RUN_TASK_VX_ENSPOINT):
+      print_err_msg_exit(f'''
+        Ensemble verification can not be run unless running in ensemble mode:
+           DO_ENSEMBLE = \"{DO_ENSEMBLE}\"
+           RUN_TASK_VX_ENSGRID = \"{RUN_TASK_VX_ENSGRID}\"
+           RUN_TASK_VX_ENSPOINT = \"{RUN_TASK_VX_ENSPOINT}\"''')
 
     if RUN_ENVIR == "nco":
     
@@ -1844,6 +1874,12 @@ def setup():
         #
         GLOBAL_VAR_DEFNS_FP='{GLOBAL_VAR_DEFNS_FP}'
         
+        DATA_TABLE_FN='{DATA_TABLE_FN}'
+        DIAG_TABLE_FN='{DIAG_TABLE_FN}'
+        FIELD_TABLE_FN='{FIELD_TABLE_FN}'
+        MODEL_CONFIG_FN='{MODEL_CONFIG_FN}'
+        NEMS_CONFIG_FN='{NEMS_CONFIG_FN}'
+
         DATA_TABLE_TMPL_FN='{DATA_TABLE_TMPL_FN}'
         DIAG_TABLE_TMPL_FN='{DIAG_TABLE_TMPL_FN}'
         FIELD_TABLE_TMPL_FN='{FIELD_TABLE_TMPL_FN}'
@@ -2085,9 +2121,9 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # IF DO_SPP is set to \"TRUE\", N_VAR_SPP specifies the number of physics 
+        # IF DO_SPP is set to "TRUE", N_VAR_SPP specifies the number of physics 
         # parameterizations that are perturbed with SPP.  If DO_LSM_SPP is set to
-        # \"TRUE\", N_VAR_LNDP specifies the number of LSM parameters that are 
+        # "TRUE", N_VAR_LNDP specifies the number of LSM parameters that are 
         # perturbed.  LNDP_TYPE determines the way LSM perturbations are employed
         # and FHCYC_LSM_SPP_OR_NOT sets FHCYC based on whether LSM perturbations
         # are turned on or not.

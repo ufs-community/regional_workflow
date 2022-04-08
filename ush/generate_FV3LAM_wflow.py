@@ -456,8 +456,11 @@ def generate_FV3LAM_wflow():
       print_info_msg(f'''
         Copying contents of user cron table to backup file:
           crontab_backup_fp = \"{crontab_backup_fp}\"''',verbose=VERBOSE)
+
       global called_from_cron
-      called_from_cron = False #called_from_cron or False
+      try: called_from_cron
+      except: called_from_cron = False
+
       crontab_cmd,crontab_contents = get_crontab_contents(called_from_cron=called_from_cron)
       # To create the backup crontab file and add a new job to the user's 
       # existing cron table, use the "printf" command, not "echo", to print 
@@ -736,22 +739,6 @@ def generate_FV3LAM_wflow():
         'lndp_each_step': LSM_SPP_EACH_STEP,
         'fhcyc': FHCYC_LSM_SPP_OR_NOT
     }
-    settings['nam_stochy'] = {
-        'shum': SHUM_MAG,
-        'shum_lscale': SHUM_LSCALE,
-        'shum_tau': SHUM_TSCALE,
-        'shumint': SHUM_INT,
-        'sppt': SPPT_MAG,
-        'sppt_lscale': SPPT_LSCALE,
-        'sppt_tau': SPPT_TSCALE,
-        'spptint': SPPT_INT,
-        'skeb': SKEB_MAG,
-        'skeb_lscale': SKEB_LSCALE,
-        'skeb_tau': SKEB_TSCALE,
-        'skebint': SKEB_INT,
-        'skeb_vdof': SKEB_VDOF,
-        'use_zmtnblck': USE_ZMTNBLCK
-    }
     #
     # Add to "settings" the values of those namelist variables that specify
     # the paths to fixed files in the FIXam directory.  As above, these namelist
@@ -796,6 +783,61 @@ def generate_FV3LAM_wflow():
     # Add namsfc_dict to settings
     #
     settings['namsfc'] = namsfc_dict
+    #
+    # Use netCDF4 when running the North American 3-km domain due to file size.
+    #
+    if PREDEF_GRID_NAME == "RRFS_NA_3km":
+       settings['fms2_io_nml'] = {
+        'netcdf_default_format': 'netcdf4'
+       }
+    #
+    # Add the relevant tendency-based stochastic physics namelist variables to
+    # "settings" when running with SPPT, SHUM, or SKEB turned on. If running 
+    # with SPP or LSM SPP, set the "new_lscale" variable.  Otherwise only 
+    # include an empty "nam_stochy" stanza.
+    #
+    nam_stochy_dict = {}
+    if DO_SPPT:
+        nam_stochy_dict.update({
+          'iseed_sppt': ISEED_SPPT,
+          'new_lscale': NEW_LSCALE,
+          'sppt': SPPT_MAG,
+          'sppt_logit': SPPT_LOGIT,
+          'sppt_lscale': SPPT_LSCALE,
+          'sppt_sfclimit': SPPT_SFCLIMIT,
+          'sppt_tau': SPPT_TSCALE,
+          'spptint': SPPT_INT,
+          'use_zmtnblck': USE_ZMTNBLCK
+        })
+    
+    if DO_SHUM:
+        nam_stochy_dict.update({
+          'iseed_shum': ISEED_SHUM,
+          'new_lscale': NEW_LSCALE,
+          'shum': SHUM_MAG,
+          'shum_lscale': SHUM_LSCALE,
+          'shum_tau': SHUM_TSCALE,
+          'shumint': SHUM_INT
+        })
+    
+    if DO_SKEB:
+        nam_stochy_dict.update({
+          'iseed_skeb': ISEED_SKEB,
+          'new_lscale': NEW_LSCALE,
+          'skeb': SKEB_MAG,
+          'skeb_lscale': SKEB_LSCALE,
+          'skebnorm': SKEBNORM,
+          'skeb_tau': SKEB_TSCALE,
+          'skebint': SKEB_INT,
+          'skeb_vdof': SKEB_VDOF
+        })
+    
+    if DO_SPP or DO_LSM_SPP:
+        nam_stochy_dict.update({
+           'new_lscale': NEW_LSCALE
+        })
+
+    settings['nam_stochy'] = nam_stochy_dict
     #
     # Add the relevant SPP namelist variables to "settings" when running with 
     # SPP turned on.  Otherwise only include an empty "nam_sppperts" stanza.
