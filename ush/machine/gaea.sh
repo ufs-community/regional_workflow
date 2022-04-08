@@ -46,11 +46,13 @@ PRE_TASK_CMDS='{ ulimit -s unlimited; ulimit -a; }'
 
 # Architecture information
 WORKFLOW_MANAGER="rocoto"
-NCORES_PER_NODE=${NCORES_PER_NODE:-36}
+EXTRA_SLURM_CMD="-M c3"
+NCORES_PER_NODE=${NCORES_PER_NODE:-32}
 SCHED=${SCHED:-"slurm"}
 QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
 QUEUE_HPSS=${QUEUE_DEFAULT:-"normal"}
 QUEUE_FCST=${QUEUE_DEFAULT:-"normal"}
+WTIME_MAKE_LBCS="00:60:00"
 
 # UFS SRW App specific paths
 FIXgsm=${FIXgsm:-"//lustre/f2/dev/Mark.Potts/EPIC/fix/fix_am"}
