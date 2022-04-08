@@ -46,7 +46,6 @@ def set_FV3nml_stoch_params(cdate):
     ensmem_name=f"mem{ENSMEM_INDX}"
     
     fv3_nml_ensmem_fp=os.path.join(CYCLE_BASEDIR, f"{date_to_str(cdate,True)}{os.sep}{ensmem_name}{os.sep}{FV3_NML_FN}")
-    print(fv3_nml_ensmem_fp)
     
     ensmem_num=ENSMEM_INDX
     

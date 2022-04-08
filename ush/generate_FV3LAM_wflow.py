@@ -829,6 +829,8 @@ def generate_FV3LAM_wflow():
         'lndp_prt_list': LSM_SPP_MAG_LIST
       }
 
+    settings['nam_sfcperts'] = nam_sfcperts_dict
+
     settings_str = cfg_to_yaml_str(settings)
     
     print_info_msg(dedent(f'''
