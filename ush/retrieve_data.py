@@ -354,9 +354,9 @@ def hpss_requested_files(cla, file_names, store_specs):
             f' {list(zip(archive_paths, archive_file_names))}')
 
     existing_archive, which_archive = find_archive_files(archive_paths,
-                                                         archive_file_names,
-                                                         cla.cycle_date,
-                                                         )
+                                           archive_file_names,
+                                           cla.cycle_date,
+                                           )
 
     if not existing_archive:
         logging.warning('No archive files were found!')
@@ -365,53 +365,59 @@ def hpss_requested_files(cla, file_names, store_specs):
 
     logging.info(f'Files in archive are named: {file_names}')
 
-    logging.debug(f'Grabbing archive number {which_archive} in list.')
-    archive_internal_dir = store_specs.get('archive_internal_dir', [''])
-    if isinstance(archive_internal_dir, dict):
-        archive_internal_dir = archive_internal_dir.get(cla.anl_or_fcst, [''])
+    archive_internal_dirs = store_specs.get('archive_internal_dir', [''])
+    if isinstance(archive_internal_dirs, dict):
+        archive_internal_dirs = archive_internal_dirs.get(cla.anl_or_fcst, [''])
 
-    archive_internal_dir = archive_internal_dir[which_archive]
-    archive_internal_dir = fill_template(archive_internal_dir,
-                                         cla.cycle_date)
+    # which_archive matters for choosing the correct file names within,
+    # but we can safely just try all options for the
+    # archive_internal_dir
+    logging.debug(f'Checking archive number {which_archive} in list.')
 
-    output_path = fill_template(cla.output_path, cla.cycle_date)
-    logging.info(f'Will place files in {os.path.abspath(output_path)}')
-    orig_path = os.getcwd()
-    os.chdir(output_path)
-    logging.debug(f'CWD: {os.getcwd()}')
+    for archive_internal_dir_tmpl in archive_internal_dirs:
+        archive_internal_dir = fill_template(archive_internal_dir_tmpl,
+                                             cla.cycle_date)
 
-    source_paths = []
-    for fcst_hr in cla.fcst_hrs:
-        for file_name in file_names:
-            source_paths.append(fill_template(
-                os.path.join(archive_internal_dir, file_name),
-                cla.cycle_date,
-                fcst_hr,
-                ))
+        output_path = fill_template(cla.output_path, cla.cycle_date)
+        logging.info(f'Will place files in {os.path.abspath(output_path)}')
+        orig_path = os.getcwd()
+        os.chdir(output_path)
+        logging.debug(f'CWD: {os.getcwd()}')
 
-    if store_specs.get('archive_format', 'tar') == 'zip':
-        # Get the entire file from HPSS
-        existing_archive = hsi_single_file(existing_archive, mode='get')
+        source_paths = []
+        for fcst_hr in cla.fcst_hrs:
+            for file_name in file_names:
+                source_paths.append(fill_template(
+                    os.path.join(archive_internal_dir, file_name),
+                    cla.cycle_date,
+                    fcst_hr,
+                    ))
 
-        # Grab only the necessary files from the archive
-        cmd = f'unzip -o {os.path.basename(existing_archive)} {" ".join(source_paths)}'
+        if store_specs.get('archive_format', 'tar') == 'zip':
+            # Get the entire file from HPSS
+            existing_archive = hsi_single_file(existing_archive, mode='get')
 
-    else:
-        cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
+            # Grab only the necessary files from the archive
+            cmd = f'unzip -o {os.path.basename(existing_archive)} {" ".join(source_paths)}'
 
-    logging.info(f'Running command \n {cmd}')
-    subprocess.run(cmd,
-                   check=True,
-                   shell=True,
-                   )
+        else:
+            cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
 
-    # Check that files exist and Remove any data transfer artifacts.
-    unavailable = clean_up_output_dir(
-        expected_subdir=archive_internal_dir,
-        local_archive=os.path.basename(existing_archive),
-        output_path=output_path,
-        source_paths=source_paths,
-        )
+        logging.info(f'Running command \n {cmd}')
+        subprocess.run(cmd,
+                       check=True,
+                       shell=True,
+                       )
+
+        # Check that files exist and Remove any data transfer artifacts.
+        unavailable = clean_up_output_dir(
+            expected_subdir=archive_internal_dir,
+            local_archive=os.path.basename(existing_archive),
+            output_path=output_path,
+            source_paths=source_paths,
+            )
+        if not unavailable:
+            return unavailable
 
     os.chdir(orig_path)
 
