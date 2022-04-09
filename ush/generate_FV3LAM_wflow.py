@@ -469,14 +469,14 @@ def generate_FV3LAM_wflow():
       # in extranous blank lines in the backup crontab file and/or the cron 
       # table itself.  Using "printf" prevents the appearance of these blank
       # lines.
-      run_command(f'''printf "%s" "{crontab_contents}" > "{crontab_backup_fp}"''')
+      run_command(f'''printf "%s" '{crontab_contents}' > "{crontab_backup_fp}"''')
       #
       # Below, we use "grep" to determine whether the crontab line that the
       # variable CRONTAB_LINE contains is already present in the cron table.
       # For that purpose, we need to escape the asterisks in the string in
       # CRONTAB_LINE with backslashes.  Do this next.
       #
-      (_,crontab_line_esc_astr,_) = run_command(f'''printf "%s" "{CRONTAB_LINE}" | \
+      (_,crontab_line_esc_astr,_) = run_command(f'''printf "%s" '{CRONTAB_LINE}' | \
                                {SED} -r -e "s%[*]%\\\\*%g"''')
       # In the grep command below, the "^" at the beginning of the string 
       # passed to grep is a start-of-line anchor, and the "$" at the end is
@@ -492,9 +492,9 @@ def generate_FV3LAM_wflow():
       # crontab_line_esc_astr does).
       #
       if MACHINE == "WCOSS_DELL_P3":
-        (exit_status,grep_output,_)=run_command(f'''grep "^{crontab_line_esc_astr}$" "/u/{USER}/cron/mycrontab"''')
+        (exit_status,grep_output,_)=run_command(f'''grep '^{crontab_line_esc_astr}$' "/u/{USER}/cron/mycrontab"''')
       else:
-        (exit_status,grep_output,_)=run_command(f'''printf "%s" "{crontab_contents}" | grep "^{crontab_line_esc_astr}$"''')
+        (exit_status,grep_output,_)=run_command(f'''printf "%s" '{crontab_contents}' | grep "^{crontab_line_esc_astr}$"''')
     
       if exit_status == 0:
     
@@ -518,7 +518,7 @@ def generate_FV3LAM_wflow():
           # a separate line.
           if crontab_contents:
             crontab_contents += "\n"
-          run_command(f'''( printf "%s" "{crontab_contents}"; printf "%s\n" '{CRONTAB_LINE}' ) | {crontab_cmd}''')
+          run_command(f'''( printf "%s" '{crontab_contents}'; printf "%s\n" '{CRONTAB_LINE}' ) | {crontab_cmd}''')
     #
     #-----------------------------------------------------------------------
     #
