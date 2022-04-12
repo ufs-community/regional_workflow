@@ -449,14 +449,14 @@ case ${PREDEF_GRID_NAME} in
 #
 #-----------------------------------------------------------------------
 #
-# The WoFS  domain with ~3km cells.
+# The WoFS domain with ~3km cells.
 #
 # Note:
-# The WoFS grid will generate a 301 x 301 output grid (WRITE COMPONENT) and
-# it should be movable (ESGgrid_LON_CTR/ESGgrid_LAT_CTR). A python script
+# The WoFS domain will generate a 301 x 301 output grid (WRITE COMPONENT) and
+# will eventually be movable (ESGgrid_LON_CTR/ESGgrid_LAT_CTR). A python script
 # python_utils/fv3write_parms.py will be useful to determine
-# WRTCMP_lon_lwr_left and WRTCMP_lat_lwr_left for quilting output
-# when the domain loation is moved. Later, it should be integrated into
+# WRTCMP_lon_lwr_left and WRTCMP_lat_lwr_left locations for quilting output
+# when the domain location is moved. Later, it should be integrated into
 # the workflow.
 #
 #-----------------------------------------------------------------------
