@@ -109,8 +109,8 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_DELX="25000.0"
   ESGgrid_DELY="25000.0"
 
-  ESGgrid_NX="211"
-  ESGgrid_NY="122"
+  ESGgrid_NX="219"
+  ESGgrid_NY="131"
 
   ESGgrid_PAZI="0.0"
 
@@ -130,8 +130,8 @@ case ${PREDEF_GRID_NAME} in
     WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
     WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
     WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-    WRTCMP_nx="205"
-    WRTCMP_ny="116"
+    WRTCMP_nx="217"
+    WRTCMP_ny="128"
     WRTCMP_lon_lwr_left="-122.719258"
     WRTCMP_lat_lwr_left="21.138123"
     WRTCMP_dx="${ESGgrid_DELX}"
@@ -201,8 +201,8 @@ case ${PREDEF_GRID_NAME} in
   ESGgrid_DELX="13000.0"
   ESGgrid_DELY="13000.0"
 
-  ESGgrid_NX="413"
-  ESGgrid_NY="244"
+  ESGgrid_NX="420"
+  ESGgrid_NY="252"
 
   ESGgrid_PAZI="0.0"
 
@@ -222,8 +222,8 @@ case ${PREDEF_GRID_NAME} in
     WRTCMP_cen_lat="${ESGgrid_LAT_CTR}"
     WRTCMP_stdlat1="${ESGgrid_LAT_CTR}"
     WRTCMP_stdlat2="${ESGgrid_LAT_CTR}"
-    WRTCMP_nx="405"
-    WRTCMP_ny="235"
+    WRTCMP_nx="416"
+    WRTCMP_ny="245"
     WRTCMP_lon_lwr_left="-122.719258"
     WRTCMP_lat_lwr_left="21.138123"
     WRTCMP_dx="${ESGgrid_DELX}"
