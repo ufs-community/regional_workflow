@@ -7,8 +7,10 @@
 # the WE2E tests available in the WE2E testing system.  This information
 # consists of the test names, the category subdirectories in which the 
 # test configuration files are located (relative to a base directory), 
-# the test IDs, and the test descriptions.  These are described in more 
-# detail below.
+# the test IDs, and the test descriptions.  This function optionally 
+# also creates a CSV (Comma-Separated Value) file containing various
+# pieces of information about each of the workflow end-to-end (WE2E)
+# tests.  These are described in more detail below.  
 #
 # The function takes as inputs the following arguments:
 #
@@ -65,7 +67,7 @@
 # in the local array category_subdirs.  We refer to these as "category" 
 # subdirectories because they are used for clarity to group the tests 
 # into categories (instead of putting them all directly under the base
-# directory).  For example, one category of tests might be  those that 
+# directory).  For example, one category of tests might be those that 
 # test workflow capabilities such as running multiple cycles and ensemble
 # forecasts, another might be those that run various combinations of 
 # grids, physics suites, and external models for ICs/LBCs, etc.  Note 
@@ -208,7 +210,10 @@
 # the file will be placed in the main WE2E testing system directory 
 # specified by the input argument WE2Edir.  The CSV file can be read 
 # into a spreadsheet in Google Sheets (or another similar tool) to get
-# an overview of all the available WE2E tests.  
+# an overview of all the available WE2E tests.  The rows of the CSV file 
+# correspond to the primary WE2E tests, and the columns correspond to 
+# the test name, description, and values of various SRW App experiment
+# variables for that test.
 #
 # A CSV file will be generated in the directory specified by WE2Edir if 
 # one or more of the following conditions hold:
@@ -228,7 +233,8 @@
 # "FALSE" in the call to this function (regardless of whether or not a 
 # CSV file already exists).  If a CSV file is generated, it is placed in 
 # the directory specified by the input argment WE2Edir, and it overwrites 
-# any existing copies of the file in that directory.
+# any existing copies of the file in that directory.  The contents of
+# each column of the CSV file are described below.
 #
 #-----------------------------------------------------------------------
 #
@@ -286,7 +292,10 @@ function get_WE2Etest_names_subdirs_descs() {
         alt_test_prim_test_names \
         alt_test_subdir \
         alt_test_subdirs \
+        array_names_vars_to_extract \
+        array_names_vars_to_extract_orig \
         category_subdirs \
+        cmd \
         column_titles \
         config_fn \
         crnt_item \
@@ -299,6 +308,7 @@ function get_WE2Etest_names_subdirs_descs() {
         ii \
         j \
         jp1 \
+        k \
         line \
         mod_time_csv \
         mod_time_subdir \
@@ -308,6 +318,8 @@ function get_WE2Etest_names_subdirs_descs() {
         num_occurrences \
         num_prim_tests \
         num_tests \
+        num_vars_to_extract \
+        prim_array_names_vars_to_extract \
         prim_test_descs \
         prim_test_ids \
         prim_test_name_subdir \
@@ -349,7 +361,10 @@ function get_WE2Etest_names_subdirs_descs() {
         test_subdirs_orig \
         test_subdirs_str \
         test_type \
-        valid_vals_generate_csv_file
+        val \
+        valid_vals_generate_csv_file \
+        var_name \
+        vars_to_extract
 #
 #-----------------------------------------------------------------------
 #
@@ -839,10 +854,42 @@ they correspond to unique test names and rerun."
 #-----------------------------------------------------------------------
 #
   if [ "${get_test_descs}" = "TRUE" ]; then
+#
+# Specify in "vars_to_extract" the list of experiment variables to extract 
+# from each test configuration file (and later to place in the CSV file).  
+# Recall that the rows of the CSV file correspond to the various WE2E 
+# tests, and the columns correspond to the test name, description, and 
+# experiment variable values.  The elements of "vars_to_extract" should 
+# be the names of SRW App experiment variables that are (or can be) 
+# specified in the App's configuration file.  Note that if a variable is 
+# not specified in the test configuration file, its value is set to an 
+# empty string (and recorded as such in the CSV file).
+#
+    vars_to_extract=( "PREDEF_GRID_NAME" \
+                      "EXTRN_MDL_NAME_ICS" \
+                      "EXTRN_MDL_NAME_LBCS" \
+                      "DATE_FIRST_CYCL" \
+                    )
+    num_vars_to_extract="${#vars_to_extract[@]}"
+#
+# Create names of local arrays that will hold the value of the corresponding
+# variable for each test.  Then use these names to define them as empty 
+# arrays.  [The arrays named "prim_..." are to hold values for only the
+# primary tests, while other arrays are to hold values for all (primary
+# plus alternate) tests.]
+#
+    prim_array_names_vars_to_extract=( $( printf "prim_test_%s_vals " "${vars_to_extract[@]}" ) )
+    array_names_vars_to_extract=( $( printf "%s_vals " "${vars_to_extract[@]}" ) )
+    for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
+      cmd="${prim_array_names_vars_to_extract[$k]}=()"
+      eval $cmd
+      cmd="${array_names_vars_to_extract[$k]}=()"
+      eval $cmd
+    done
 
     print_info_msg "
-Gathering test descriptions from the configuration files of the primary 
-WE2E tests..."
+Gathering test descriptions and experiment variable values from the 
+configuration files of the primary WE2E tests..."
 
     prim_test_descs=()
     for (( i=0; i<=$((num_prim_tests-1)); i++ )); do
@@ -931,16 +978,43 @@ ${test_desc}${stripped_line} "
 #
 # First remove leading whitespace.
 #
-    test_desc="${test_desc#"${test_desc%%[![:space:]]*}"}"
+      test_desc="${test_desc#"${test_desc%%[![:space:]]*}"}"
 #
 # Now remove trailing whitespace.
 #
-    test_desc="${test_desc%"${test_desc##*[![:space:]]}"}"
+      test_desc="${test_desc%"${test_desc##*[![:space:]]}"}"
 #
 # Finally, save the description of the current test as the next element
 # of the array prim_test_descs.
 #
       prim_test_descs+=("${test_desc}")
+#
+# Get from the current test's configuration file the values of the 
+# variables specified in "vars_to_extract".  Then save the value in the
+# arrays specified by "prim_array_names_vars_to_extract".
+#
+      for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
+
+        var_name="${vars_to_extract[$k]}"
+        cmd="unset ${var_name}"
+        eval $cmd
+        cmd=$( grep "${var_name}" "${config_fn}" )
+        eval $cmd
+
+        if [ -z "${!var_name+x}" ]; then
+          print_info_msg "\
+The variable \"${var_name}\" is not defined in the current test's
+configuration file (config_fn):
+  config_fn = \"${config_fn}\"
+Setting the element in the array \"${prim_array_names_vars_to_extract[$k]}\"
+corresponding to this test to an empty string."
+          cmd="${prim_array_names_vars_to_extract[$k]}+=(\"\")"
+        else
+          cmd="${prim_array_names_vars_to_extract[$k]}+=(\"${!var_name}\")"
+        fi
+        eval $cmd
+
+      done
 
     done
 
@@ -950,13 +1024,19 @@ ${test_desc}${stripped_line} "
 #
 # Create the arrays test_ids and test_descs that initially contain the 
 # test IDs and descriptions corresponding to the primary test names
-# (those of the alternate test names will be appended below).
+# (those of the alternate test names will be appended below).  Then, in
+# the for-loop, do same for the arrays containing the experiment variable 
+# values for each test.
 #
 #-----------------------------------------------------------------------
 #
   test_ids=("${prim_test_ids[@]}")
   if [ "${get_test_descs}" = "TRUE" ]; then
     test_descs=("${prim_test_descs[@]}")
+    for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
+      cmd="${array_names_vars_to_extract[$k]}=(\"\${${prim_array_names_vars_to_extract[$k]}[@]}\")"
+      eval $cmd
+    done
   fi
 #
 #-----------------------------------------------------------------------
@@ -964,7 +1044,8 @@ ${test_desc}${stripped_line} "
 # Append to the arrays test_ids and test_descs the test IDs and descriptions
 # of the alternate test names.  We set the test ID and description of 
 # each alternate test name to those of the corresponding primary test
-# name.
+# name.  Then, in the inner for-loop, do the same for the arrays containing
+# the experiment variable values.
 #
 #-----------------------------------------------------------------------
 #
@@ -980,6 +1061,10 @@ ${test_desc}${stripped_line} "
         test_ids+=("${prim_test_ids[$j]}")
         if [ "${get_test_descs}" = "TRUE" ]; then
           test_descs+=("${prim_test_descs[$j]}")
+          for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
+            cmd="${array_names_vars_to_extract[$k]}+=(\"\${${prim_array_names_vars_to_extract[$k]}[$j]}\")"
+            eval $cmd
+          done
         fi
         num_occurrences=$((num_occurrences+1))
       fi
@@ -1003,7 +1088,9 @@ Please correct and rerun."
 #-----------------------------------------------------------------------
 #
 # Sort in order of increasing test ID the arrays containing the names, 
-# IDs, category subdirectories, and descriptions of the WE2E tests.
+# IDs, category subdirectories, and descriptions of the WE2E tests as
+# well as the arrays containing the experiment variable values for each
+# test.
 #
 # For this purpose, we first create an array (test_ids_and_inds) each
 # of whose elements consist of the test ID, the test type, and the index 
@@ -1029,8 +1116,8 @@ Please correct and rerun."
 # and the test type, which we no longer need), which is the original 
 # array index before sorting, and save the results in the array sort_inds.  
 # This array will contain the original indices in sorted order that we 
-# then use to sort the arrays containing the names, IDs, subdirectories, 
-# and descriptions of the WE2E tests.
+# then use to sort the arrays containing the WE2E test names, IDs, 
+# subdirectories, descriptions, and experiment variable values.
 #
 #-----------------------------------------------------------------------
 #
@@ -1064,11 +1151,22 @@ Please correct and rerun."
   done
 
   if [ "${get_test_descs}" = "TRUE" ]; then
+
     test_descs_orig=( "${test_descs[@]}" )
+    for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
+      cmd="${array_names_vars_to_extract[$k]}_orig=(\"\${${array_names_vars_to_extract[$k]}[@]}\")"
+      eval $cmd
+    done
+
     for (( i=0; i<=$((num_tests-1)); i++ )); do
       ii="${sort_inds[$i]}"
       test_descs[$i]="${test_descs_orig[$ii]}"
+      for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
+        cmd="${array_names_vars_to_extract[$k]}[$i]=\"\${${array_names_vars_to_extract[$k]}_orig[$ii]}\""
+        eval $cmd
+      done
     done
+
   fi
 #
 #-----------------------------------------------------------------------
@@ -1094,18 +1192,26 @@ Please correct and rerun."
 #
     csv_delimiter="|"
 #
-# Set the titles of the three columns that will be in the file.  Then
-# write them to the file.  The contents of the columns are described in
-# more detail further below.
+# Set the titles of the columns that will be in the file.  Then write 
+# them to the file.  The contents of the columns are described in more 
+# detail further below.
 #
     column_titles="\
 \"Test Name (Subdirectory)\" ${csv_delimiter} \
 \"Alternate Test Names (Subdirectories)\" ${csv_delimiter} \
 \"Test Purpose/Description\""
+    for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
+      column_titles="\
+${column_titles} ${csv_delimiter} \
+\"${vars_to_extract[$k]}\""
+    done
     printf "%s\n" "${column_titles}" >> "${csv_fp}"
 #
 # Loop through the arrays containing the WE2E test information.  Extract 
 # the necessary information and record it to the CSV file row-by-row.
+# Note that each row corresponds to a primary test.  When an alternate
+# test is encountered, its information is stored in the row of the 
+# corresponding primary test (i.e. a new row is not created).
 #
     j=0
     jp1=$((j+1))
@@ -1168,10 +1274,23 @@ ${test_names[$jp1]} (${test_subdirs[$jp1]})"
 # Column 3:
 # The test description.
 #
+# Columns 4...:
+# The values of the experiment variables specified in vars_to_extract.
+#
       row_content="\
 \"${prim_test_name_subdir}\" ${csv_delimiter} \
 \"${alt_test_names_subdirs}\" ${csv_delimiter} \
 \"${test_desc}\""
+
+      for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
+        unset "val"
+        cmd="val=\"\${${array_names_vars_to_extract[$k]}[$j]}\""
+        eval $cmd
+        row_content="\
+${row_content} ${csv_delimiter} \
+\"${val}\""
+      done
+
       printf "%s\n" "${row_content}" >> "${csv_fp}"
 #
 # Update loop indices.
