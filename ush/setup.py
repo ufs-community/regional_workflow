@@ -6,7 +6,7 @@ import datetime
 from textwrap import dedent
 
 from python_utils import cd_vrfy, mkdir_vrfy, rm_vrfy, check_var_valid_value,\
-                         lowercase,check_for_preexist_dir_file,\
+                         lowercase,uppercase,check_for_preexist_dir_file,\
                          list_to_str, type_to_str, \
                          import_vars, export_vars, get_env_var, print_info_msg,\
                          print_err_msg_exit, load_config_file, cfg_to_shell_str,\
@@ -335,12 +335,14 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
+    global MACHINE
     global MACHINE_FILE
     global FIXgsm, FIXaer, FIXlut, TOPO_DIR, SFC_CLIMO_INPUT_DIR, FIXLAM_NCO_BASEDIR, \
            RELATIVE_LINK_FLAG, WORKFLOW_MANAGER, NCORES_PER_NODE, SCHED, \
            QUEUE_DEFAULT, QUEUE_HPSS, QUEUE_FCST, \
            PARTITION_DEFAULT, PARTITION_HPSS, PARTITION_FCST
 
+    MACHINE = uppercase(MACHINE)
     RELATIVE_LINK_FLAG="--relative"
     MACHINE_FILE=MACHINE_FILE or os.path.join(USHDIR,"machine",f"{lowercase(MACHINE)}.sh")
     machine_cfg = load_shell_config(MACHINE_FILE)
@@ -737,7 +739,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     global EXPT_BASEDIR
-    if EXPT_BASEDIR[0] != "/":
+    if (not EXPT_BASEDIR) or (EXPT_BASEDIR[0] != "/"):
       EXPT_BASEDIR = os.path.join(SR_WX_APP_TOP_DIR,"..","expt_dirs",EXPT_BASEDIR)
     try:
       EXPT_BASEDIR = os.path.realpath(EXPT_BASEDIR)
