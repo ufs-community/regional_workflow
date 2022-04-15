@@ -903,16 +903,16 @@ def setup():
     NEMS_CONFIG_FN = "nems.configure"
     #----------------------------------
 
-    try: DATA_TABLE_TMPL_FN
-    except:  DATA_TABLE_TMPL_FN = DATA_TABLE_FN
-    try: DIAG_TABLE_TMPL_FN
-    except: DIAG_TABLE_TMPL_FN = f"{DIAG_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
-    try: FIELD_TABLE_TMPL_FN
-    except: FIELD_TABLE_TMPL_FN = f"{FIELD_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
-    try: MODEL_CONFIG_TMPL_FN
-    except: MODEL_CONFIG_TMPL_FN = MODEL_CONFIG_FN
-    try: NEMS_CONFIG_TMPL_FN
-    except: NEMS_CONFIG_TMPL_FN = NEMS_CONFIG_FN
+    if DATA_TABLE_TMPL_FN is None:
+       DATA_TABLE_TMPL_FN = DATA_TABLE_FN
+    if DIAG_TABLE_TMPL_FN is None:
+       DIAG_TABLE_TMPL_FN = f"{DIAG_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
+    if FIELD_TABLE_TMPL_FN is None:
+       FIELD_TABLE_TMPL_FN = f"{FIELD_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
+    if MODEL_CONFIG_TMPL_FN is None:
+       MODEL_CONFIG_TMPL_FN = MODEL_CONFIG_FN
+    if NEMS_CONFIG_TMPL_FN is None:
+       NEMS_CONFIG_TMPL_FN = NEMS_CONFIG_FN
     
     DATA_TABLE_TMPL_FP = os.path.join(TEMPLATE_DIR,DATA_TABLE_TMPL_FN)
     DIAG_TABLE_TMPL_FP = os.path.join(TEMPLATE_DIR,DIAG_TABLE_TMPL_FN)
@@ -1614,6 +1614,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
+    global RUN_TASK_RUN_POST
     if WRITE_DOPOST:
       # Turn off run_post
       RUN_TASK_RUN_POST=False
