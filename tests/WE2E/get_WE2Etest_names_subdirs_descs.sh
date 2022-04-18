@@ -216,8 +216,9 @@
 # into a spreadsheet in Google Sheets (or another similar tool) to get
 # an overview of all the available WE2E tests.  The rows of the CSV file 
 # correspond to the primary WE2E tests, and the columns correspond to 
-# the test name, description, and values of various SRW App experiment
-# variables for that test.
+# the (primary) test name, alternate test names (if any), test description, 
+# number of times the test calls the forecast model, and values of various 
+# SRW App experiment variables for that test.
 #
 # A CSV file will be generated in the directory specified by WE2Edir if 
 # one or more of the following conditions hold:
@@ -1068,6 +1069,7 @@ ${test_desc}${stripped_line} "
             default_val=""
             msg=$msg" an empty string."
             ;;
+
           esac
           cmd="${var_name}=\"${default_val}\""
           eval $cmd
