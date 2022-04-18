@@ -23,6 +23,10 @@
 # Flag that specifies whether or not a CSV (Comma-Separated Value) file
 # containing information about the WE2E tests should be generated.
 #
+# verbose:
+# Optional verbosity flag.  Should be set to "TRUE" or "FALSE".  Default
+# is "FALSE".
+#
 # output_varname_test_configs_basedir:
 # Name of output variable in which to return the base directory of the 
 # WE2E test configuration files.
@@ -261,6 +265,7 @@ function get_WE2Etest_names_subdirs_descs() {
   local valid_args=( \
     "WE2Edir" \
     "generate_csv_file" \
+    "verbose" \
     "output_varname_test_configs_basedir" \
     "output_varname_test_names" \
     "output_varname_test_subdirs" \
@@ -278,6 +283,17 @@ function get_WE2Etest_names_subdirs_descs() {
 #-----------------------------------------------------------------------
 #
   print_input_args "valid_args"
+#
+#-----------------------------------------------------------------------
+#
+# Make the default value of "verbose" "FALSE".  Then make sure "verbose" 
+# is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+  verbose=${verbose:-"FALSE"}
+  check_var_valid_value "verbose" "valid_vals_BOOLEAN"
+  verbose=$(boolify $verbose)
 #
 #-----------------------------------------------------------------------
 #
@@ -303,6 +319,7 @@ function get_WE2Etest_names_subdirs_descs() {
         csv_fn \
         csv_fp \
         cwd \
+        default_val \
         hash_or_null \
         i \
         ii \
@@ -312,8 +329,14 @@ function get_WE2Etest_names_subdirs_descs() {
         line \
         mod_time_csv \
         mod_time_subdir \
+        msg \
         num_alt_tests \
         num_category_subdirs \
+        num_cdates \
+        num_cycles_per_day \
+        num_days \
+        num_fcsts \
+        num_fcsts_orig \
         num_items \
         num_occurrences \
         num_prim_tests \
@@ -324,6 +347,7 @@ function get_WE2Etest_names_subdirs_descs() {
         prim_test_ids \
         prim_test_name_subdir \
         prim_test_names \
+        prim_test_num_fcsts \
         prim_test_subdirs \
         get_test_descs \
         regex_search \
@@ -364,6 +388,7 @@ function get_WE2Etest_names_subdirs_descs() {
         val \
         valid_vals_generate_csv_file \
         var_name \
+        var_name_at \
         vars_to_extract
 #
 #-----------------------------------------------------------------------
@@ -422,6 +447,13 @@ function get_WE2Etest_names_subdirs_descs() {
       mod_time_csv=$( stat --format=%Y "${csv_fp}" )
     fi
 
+  fi
+
+  if [ "${generate_csv_file}" = "TRUE" ]; then
+    print_info_msg "
+Will generate a CSV (Comma Separated Value) file (csv_fp) containing
+information on all WE2E tests:
+  csv_fp = \"${csv_fp}\""
   fi
 #
 #-----------------------------------------------------------------------
@@ -487,6 +519,7 @@ function get_WE2Etest_names_subdirs_descs() {
   prim_test_names=()
   prim_test_ids=()
   prim_test_subdirs=()
+  prim_test_num_fcsts=()
 
   alt_test_names=()
   alt_test_subdirs=()
@@ -862,13 +895,19 @@ they correspond to unique test names and rerun."
 # experiment variable values.  The elements of "vars_to_extract" should 
 # be the names of SRW App experiment variables that are (or can be) 
 # specified in the App's configuration file.  Note that if a variable is 
-# not specified in the test configuration file, its value is set to an 
-# empty string (and recorded as such in the CSV file).
+# not specified in the test configuration file, in most cases its value 
+# is set to an empty string (and recorded as such in the CSV file).  In
+# some cases, it is set to some other value (e.g. for the number of 
+# ensemble members NUM_ENS_MEMBERS, it is set to 1).
 #
     vars_to_extract=( "PREDEF_GRID_NAME" \
                       "EXTRN_MDL_NAME_ICS" \
                       "EXTRN_MDL_NAME_LBCS" \
                       "DATE_FIRST_CYCL" \
+                      "DATE_LAST_CYCL" \
+                      "CYCL_HRS" \
+                      "INCR_CYCL_FREQ" \
+                      "NUM_ENS_MEMBERS" \
                     )
     num_vars_to_extract="${#vars_to_extract[@]}"
 #
@@ -889,14 +928,17 @@ they correspond to unique test names and rerun."
 
     print_info_msg "
 Gathering test descriptions and experiment variable values from the 
-configuration files of the primary WE2E tests..."
+configuration files of the primary WE2E tests...
+"
 
     prim_test_descs=()
     for (( i=0; i<=$((num_prim_tests-1)); i++ )); do
 
       test_name="${prim_test_names[$i]}"
       print_info_msg "\
-  Reading in the test description for primary WE2E test:  \"${test_name}\""
+  Reading in the test description for primary WE2E test:  \"${test_name}\"
+  In category (subdirectory):  \"${subdir}\"
+"
       subdir=("${prim_test_subdirs[$i]}")
       cd_vrfy "${test_configs_basedir}/$subdir"
 #
@@ -996,24 +1038,101 @@ ${test_desc}${stripped_line} "
       for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
 
         var_name="${vars_to_extract[$k]}"
-        cmd="unset ${var_name}"
-        eval $cmd
-        cmd=$( grep "${var_name}" "${config_fn}" )
+        cmd=$( grep "^[ ]*${var_name}=" "${config_fn}" )
         eval $cmd
 
         if [ -z "${!var_name+x}" ]; then
-          print_info_msg "\
-The variable \"${var_name}\" is not defined in the current test's
-configuration file (config_fn):
-  config_fn = \"${config_fn}\"
-Setting the element in the array \"${prim_array_names_vars_to_extract[$k]}\"
-corresponding to this test to an empty string."
-          cmd="${prim_array_names_vars_to_extract[$k]}+=(\"\")"
+
+          msg="
+  The variable \"${var_name}\" is not defined in the current test's
+  configuration file (config_fn):
+    config_fn = \"${config_fn}\"
+  Setting the element in the array \"${prim_array_names_vars_to_extract[$k]}\"
+  corresponding to this test to"
+
+          case "${var_name}" in
+
+          "NUM_ENS_MEMBERS")
+            default_val="1"
+            msg=$msg":
+    ${var_name} = \"${default_val}\""
+            ;;
+
+          "INCR_CYCL_FREQ")
+            default_val="24"
+            msg=$msg":
+    ${var_name} = \"${default_val}\""
+            ;;
+
+          *)
+            default_val=""
+            msg=$msg" an empty string."
+            ;;
+          esac
+          cmd="${var_name}=\"${default_val}\""
+          eval $cmd
+
+          print_info_msg "$verbose" "$msg" 
+          cmd="${prim_array_names_vars_to_extract[$k]}+=(\"'${default_val}\")"
+
         else
-          cmd="${prim_array_names_vars_to_extract[$k]}+=(\"${!var_name}\")"
+#
+# The following are important notes regarding how the variable "cmd" 
+# containing the command that will append an element to the array 
+# specified by ${prim_array_names_vars_to_extract[$k]} is formulated: 
+#
+# 1) If all the experiment variables were scalars, then the more complex
+#    command below could be replaced with the following:
+#
+#    cmd="${prim_array_names_vars_to_extract[$k]}+=(\"${!var_name}\")"
+#
+#    But some variables are arrays, so we need the more complex approach
+#    to cover those cases.
+#
+# 2) The double quotes (which need to be escaped here, i.e. \") are needed
+#    so that for any experiment variables that are arrays, all the elements 
+#    of the array are combined together and treated as a single element.  
+#    If the experiment variable is CYCL_HRS (cycle hours) and is set to
+#    the array ("00" "12"), we want the value saved in the local array
+#    here to be a single element consisting of "00 12".  Otherwise, "00" 
+#    and "12" will be treated as separate elements, and more than one 
+#    element would be added to the array (which would be incorrect here).
+#
+# 3) The single quote (which needs to be escaped here, i.e. \') is needed
+#    so that any numbers (e.g. a set of cycle hours such as "00 12") are 
+#    treated as strings when the CSV file is opened in Google Sheets.  
+#    If this is not done, Google Sheets will remove leading zeros.
+#
+          var_name_at="${var_name}[@]"
+          cmd="${prim_array_names_vars_to_extract[$k]}+=(\'\"${!var_name_at}\")"
         fi
         eval $cmd
 
+      done
+#
+# Calculate the number of forecasts that will be launched by the current
+# test.  The "10#" forces bash to treat the following number as a decimal
+# (not hexadecimal, etc).
+#
+      num_cycles_per_day=${#CYCL_HRS[@]}
+      num_days=$(( (${DATE_LAST_CYCL} - ${DATE_FIRST_CYCL} + 1)*24/10#${INCR_CYCL_FREQ} ))
+      num_cdates=$(( ${num_cycles_per_day}*${num_days} ))
+      nf=$(( ${num_cdates}*10#${NUM_ENS_MEMBERS} ))
+#
+# In the following, the single quote at the beginning forces Google Sheets 
+# to interpret this quantity as a string.  This prevents any automatic 
+# number fomatting from being applied when the CSV file is imported into
+# Google Sheets.
+#
+      prim_test_num_fcsts+=( "'$nf" )
+#
+# Unset the experiment variables defined for the current test so that 
+# they are not accidentally used for the next one.
+#
+      for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
+        var_name="${vars_to_extract[$k]}"
+        cmd="unset ${var_name}"
+        eval $cmd
       done
 
     done
@@ -1033,6 +1152,7 @@ corresponding to this test to an empty string."
   test_ids=("${prim_test_ids[@]}")
   if [ "${get_test_descs}" = "TRUE" ]; then
     test_descs=("${prim_test_descs[@]}")
+    num_fcsts=("${prim_test_num_fcsts[@]}")
     for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
       cmd="${array_names_vars_to_extract[$k]}=(\"\${${prim_array_names_vars_to_extract[$k]}[@]}\")"
       eval $cmd
@@ -1061,6 +1181,7 @@ corresponding to this test to an empty string."
         test_ids+=("${prim_test_ids[$j]}")
         if [ "${get_test_descs}" = "TRUE" ]; then
           test_descs+=("${prim_test_descs[$j]}")
+          num_fcsts+=("${prim_test_num_fcsts[$j]}")
           for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
             cmd="${array_names_vars_to_extract[$k]}+=(\"\${${prim_array_names_vars_to_extract[$k]}[$j]}\")"
             eval $cmd
@@ -1153,6 +1274,7 @@ Please correct and rerun."
   if [ "${get_test_descs}" = "TRUE" ]; then
 
     test_descs_orig=( "${test_descs[@]}" )
+    num_fcsts_orig=( "${num_fcsts[@]}" )
     for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
       cmd="${array_names_vars_to_extract[$k]}_orig=(\"\${${array_names_vars_to_extract[$k]}[@]}\")"
       eval $cmd
@@ -1161,6 +1283,7 @@ Please correct and rerun."
     for (( i=0; i<=$((num_tests-1)); i++ )); do
       ii="${sort_inds[$i]}"
       test_descs[$i]="${test_descs_orig[$ii]}"
+      num_fcsts[$i]="${num_fcsts_orig[$ii]}"
       for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
         cmd="${array_names_vars_to_extract[$k]}[$i]=\"\${${array_names_vars_to_extract[$k]}_orig[$ii]}\""
         eval $cmd
@@ -1199,7 +1322,8 @@ Please correct and rerun."
     column_titles="\
 \"Test Name (Subdirectory)\" ${csv_delimiter} \
 \"Alternate Test Names (Subdirectories)\" ${csv_delimiter} \
-\"Test Purpose/Description\""
+\"Test Purpose/Description\" ${csv_delimiter} \
+\"Number of Forecast Model Runs\""
     for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
       column_titles="\
 ${column_titles} ${csv_delimiter} \
@@ -1235,6 +1359,11 @@ ${column_titles} ${csv_delimiter} \
 # a CSV file that is read in by Google Sheets.
 #
       test_desc=$( printf "%s" "${test_desc}" | sed -r -e "s/\"/\"\"/g" )
+#
+# Get the number of forecasts (number of times the forcast model is run,
+# due to a unique starting date, an ensemble member, etc).
+#
+      nf="${num_fcsts[$j]}"
 #
 # In the following inner while-loop, we step through all alternate test 
 # names (if any) that follow the current primary name and construct a 
@@ -1274,13 +1403,17 @@ ${test_names[$jp1]} (${test_subdirs[$jp1]})"
 # Column 3:
 # The test description.
 #
-# Columns 4...:
+# Columns 4:
+# The number of times the forecast model will be run by the test.
+#
+# Columns 5...:
 # The values of the experiment variables specified in vars_to_extract.
 #
       row_content="\
 \"${prim_test_name_subdir}\" ${csv_delimiter} \
 \"${alt_test_names_subdirs}\" ${csv_delimiter} \
-\"${test_desc}\""
+\"${test_desc}\" ${csv_delimiter} \
+\"${nf}\""
 
       for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
         unset "val"
@@ -1300,6 +1433,11 @@ ${row_content} ${csv_delimiter} \
 
     done
 
+    print_info_msg "\
+Successfully generated a CSV (Comma Separated Value) file (csv_fp) 
+containing information on all WE2E tests:
+  csv_fp = \"${csv_fp}\""
+    
   fi
 #
 #-----------------------------------------------------------------------
