@@ -343,27 +343,33 @@ DOT_OR_USCORE="_"
 # from which the namelist files for each of the enesemble members are
 # generated.
 #
-# DIAG_TABLE_FN:
-# Name of file that specifies the fields that the forecast model will 
-# output.
-#
-# FIELD_TABLE_FN:
-# Name of file that specifies the tracers that the forecast model will
-# read in from the IC/LBC files.
-#
-# DATA_TABLE_FN:
-# Name of file that specifies ???
-#
-# MODEL_CONFIG_FN:
-# Name of file that specifies ???
-#
-# NEMS_CONFIG_FN:
-# Name of file that specifies ???
-#
 # FV3_EXEC_FN:
 # Name to use for the forecast model executable when it is copied from
 # the directory in which it is created in the build step to the executables
 # directory (EXECDIR; this is set during experiment generation).
+#
+# DIAG_TABLE_TMPL_FN:
+# Name of a template file that specifies the output fields of the forecast 
+# model (ufs-weather-model: diag_table) followed by [dot_ccpp_phys_suite]. 
+# Its default value is the name of the file that the ufs weather model 
+# expects to read in.
+#
+# FIELD_TABLE_TMPL_FN:
+# Name of a template file that specifies the tracers in IC/LBC files of the 
+# forecast model (ufs-weather-mode: field_table) followed by [dot_ccpp_phys_suite]. 
+# Its default value is the name of the file that the ufs weather model expects 
+# to read in.
+#
+# MODEL_CONFIG_TMPL_FN:
+# Name of a template file that contains settings and configurations for the 
+# NUOPC/ESMF main component (ufs-weather-model: model_config). Its default 
+# value is the name of the file that the ufs weather model expects to read in.
+#
+# NEMS_CONFIG_TMPL_FN:
+# Name of a template file that contains information about the various NEMS 
+# components and their run sequence (ufs-weather-model: nems.configure). 
+# Its default value is the name of the file that the ufs weather model expects 
+# to read in.
 #
 # FCST_MODEL:
 # Name of forecast model (default=ufs-weather-model)
@@ -381,19 +387,12 @@ DOT_OR_USCORE="_"
 # to each workflow task) in order to make all the experiment variables 
 # available in those scripts.
 #
-# EXTRN_MDL_ICS_VAR_DEFNS_FN:
-# Name of file (a shell script) containing the defintions of variables 
-# associated with the external model from which ICs are generated.  This 
-# file is created by the GET_EXTRN_ICS_TN task because the values of the
-# variables it contains are not known before this task runs.  The file is
-# then sourced by the MAKE_ICS_TN task.
-#
-# EXTRN_MDL_LBCS_VAR_DEFNS_FN:
-# Name of file (a shell script) containing the defintions of variables 
-# associated with the external model from which LBCs are generated.  This 
-# file is created by the GET_EXTRN_LBCS_TN task because the values of the
-# variables it contains are not known before this task runs.  The file is
-# then sourced by the MAKE_ICS_TN task.
+# EXTRN_MDL_VAR_DEFNS_FN:
+# Name of file (a shell script) containing the defintions of variables
+# associated with the external model from which ICs or LBCs are generated.  This
+# file is created by the GET_EXTRN_*_TN task because the values of the variables
+# it contains are not known before this task runs.  The file is then sourced by
+# the MAKE_ICS_TN and MAKE_LBCS_TN tasks.
 #
 # WFLOW_LAUNCH_SCRIPT_FN:
 # Name of the script that can be used to (re)launch the experiment's rocoto
@@ -409,22 +408,21 @@ EXPT_CONFIG_FN="config.sh"
 
 RGNL_GRID_NML_FN="regional_grid.nml"
 
-DATA_TABLE_FN="data_table"
-DIAG_TABLE_FN="diag_table"
-FIELD_TABLE_FN="field_table"
 FV3_NML_BASE_SUITE_FN="input.nml.FV3"
 FV3_NML_YAML_CONFIG_FN="FV3.input.yml"
 FV3_NML_BASE_ENS_FN="input.nml.base_ens"
-MODEL_CONFIG_FN="model_configure"
-NEMS_CONFIG_FN="nems.configure"
 FV3_EXEC_FN="ufs_model"
 
-FCST_MODEL="ufs-weather-model"
+DATA_TABLE_TMPL_FN=""
+DIAG_TABLE_TMPL_FN=""
+FIELD_TABLE_TMPL_FN=""
+MODEL_CONFIG_TMPL_FN=""
+NEMS_CONFIG_TMPL_FN=""
 
+FCST_MODEL="ufs-weather-model"
 WFLOW_XML_FN="FV3LAM_wflow.xml"
 GLOBAL_VAR_DEFNS_FN="var_defns.sh"
-EXTRN_MDL_ICS_VAR_DEFNS_FN="extrn_mdl_ics_var_defns.sh"
-EXTRN_MDL_LBCS_VAR_DEFNS_FN="extrn_mdl_lbcs_var_defns.sh"
+EXTRN_MDL_VAR_DEFNS_FN="extrn_mdl_var_defns.sh"
 WFLOW_LAUNCH_SCRIPT_FN="launch_FV3LAM_wflow.sh"
 WFLOW_LAUNCH_LOG_FN="log.launch_FV3LAM_wflow"
 #
@@ -698,9 +696,18 @@ EXTRN_MDL_SYSBASEDIR_LBCS=''
 # set to "FALSE".
 # 
 # EXTRN_MDL_FILES_ICS:
-# Array containing the names of the files to search for in the directory
-# specified by EXTRN_MDL_SOURCE_BASEDIR_ICS.  This variable is not used
-# if USE_USER_STAGED_EXTRN_FILES is set to "FALSE".
+# Array containing templates of the names of the files to search for in
+# the directory specified by EXTRN_MDL_SOURCE_BASEDIR_ICS.  This
+# variable is not used if USE_USER_STAGED_EXTRN_FILES is set to "FALSE".
+# A single template should be used for each model file type that is
+# meant to be used. You may use any of the Python-style templates
+# allowed in the ush/retrieve_data.py script. To see the full list of
+# supported templates, run that script with a -h option. Here is an example of
+# setting FV3GFS nemsio input files:
+#   EXTRN_MDL_FILES_ICS=( gfs.t{hh}z.atmf{fcst_hr:03d}.nemsio \
+#   gfs.t{hh}z.sfcf{fcst_hr:03d}.nemsio )
+# Or for FV3GFS grib files:
+#   EXTRN_MDL_FILES_ICS=( gfs.t{hh}z.pgrb2.0p25.f{fcst_hr:03d} )
 #
 # EXTRN_MDL_SOURCE_BASEDIR_LBCS:
 # Analogous to EXTRN_MDL_SOURCE_BASEDIR_ICS but for LBCs instead of ICs.
@@ -711,10 +718,10 @@ EXTRN_MDL_SYSBASEDIR_LBCS=''
 #-----------------------------------------------------------------------
 #
 USE_USER_STAGED_EXTRN_FILES="FALSE"
-EXTRN_MDL_SOURCE_BASEDIR_ICS="/base/dir/containing/user/staged/extrn/mdl/files/for/ICs"
-EXTRN_MDL_FILES_ICS=( "ICS_file1" "ICS_file2" "..." )
-EXTRN_MDL_SOURCE_BASEDIR_LBCS="/base/dir/containing/user/staged/extrn/mdl/files/for/LBCs"
-EXTRN_MDL_FILES_LBCS=( "LBCS_file1" "LBCS_file2" "..." )
+EXTRN_MDL_SOURCE_BASEDIR_ICS=""
+EXTRN_MDL_FILES_ICS=""
+EXTRN_MDL_SOURCE_BASEDIR_LBCS=""
+EXTRN_MDL_FILES_LBCS=""
 #
 #-----------------------------------------------------------------------
 #
@@ -1646,9 +1653,9 @@ WTIME_VX_ENSPOINT_PROB="01:00:00"
 #
 # Maximum number of attempts.
 #
-MAXTRIES_MAKE_GRID="1"
-MAXTRIES_MAKE_OROG="1"
-MAXTRIES_MAKE_SFC_CLIMO="1"
+MAXTRIES_MAKE_GRID="2"
+MAXTRIES_MAKE_OROG="2"
+MAXTRIES_MAKE_SFC_CLIMO="2"
 MAXTRIES_GET_EXTRN_ICS="1"
 MAXTRIES_GET_EXTRN_LBCS="1"
 MAXTRIES_MAKE_ICS="1"
