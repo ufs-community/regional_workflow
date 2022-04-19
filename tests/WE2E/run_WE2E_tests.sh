@@ -898,7 +898,6 @@ for this machine (MACHINE):
 #
 COMIN=\"${COMIN}\""
 
-    fi
 #
 # Set STMP and PTMP.
 #
