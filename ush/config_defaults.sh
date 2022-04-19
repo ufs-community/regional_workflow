@@ -712,6 +712,13 @@ EXTRN_MDL_SYSBASEDIR_LBCS=''
 # EXTRN_MDL_FILES_LBCS:
 # Analogous to EXTRN_MDL_FILES_ICS but for LBCs instead of ICs.
 #
+# EXTRN_MDL_DATA_STORES:
+# A list of data stores where the scripts should look for external model
+# data. The list is in priority order. If disk information is provided
+# via USE_USER_STAGED_EXTRN_FILES or a known location on the platform,
+# the disk location will be highest priority. Options are disk, hpss,
+# aws, and nomads.
+#
 #-----------------------------------------------------------------------
 #
 USE_USER_STAGED_EXTRN_FILES="FALSE"
@@ -719,6 +726,7 @@ EXTRN_MDL_SOURCE_BASEDIR_ICS=""
 EXTRN_MDL_FILES_ICS=""
 EXTRN_MDL_SOURCE_BASEDIR_LBCS=""
 EXTRN_MDL_FILES_LBCS=""
+EXTRN_MDL_DATA_STORES=""
 #
 #-----------------------------------------------------------------------
 #
