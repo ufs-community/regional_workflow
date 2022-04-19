@@ -875,33 +875,26 @@ SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
 #   \$PTMP/com/\$NET/\we2e/\$RUN.\$yyyymmdd/\$hh
 #
 RUN=\"\${EXPT_SUBDIR}\"
-model_ver="we2e"
+model_ver="we2e""
 
 #
-# Set COMIN if using the FV3GFS or the GSMGFS as the external model 
-# for ICs or LBCs.
-#
-    if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
-       [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ] || \
-       [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
-       [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then
+# Set COMIN.
 
-      COMIN=${TEST_COMIN:-}
+    COMIN=${TEST_COMIN:-}
 
-      if [ ! -d "${COMIN:-}" ] ; then
-        print_err_msg_exit "\
+    if [ ! -d "${COMIN:-}" ] ; then
+      print_err_msg_exit "\
 The directory (COMIN) that needs to be specified when running the
 workflow in NCO mode (RUN_ENVIR set to \"nco\") AND using the FV3GFS or
 the GSMGFS as the external model for ICs and/or LBCs has not been specified
 for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
-      fi
+    fi
 
-      expt_config_str=${expt_config_str}"
+    expt_config_str=${expt_config_str}"
 #
 # Directory that needs to be specified when running the workflow in NCO
-# mode (RUN_ENVIR set to \"nco\") AND using the FV3GFS or the GSMGFS as
-# the external model for ICs and/or LBCs.
+# mode (RUN_ENVIR set to \"nco\").
 #
 COMIN=\"${COMIN}\""
 
