@@ -1352,14 +1352,15 @@ USE_USER_STAGED_EXTRN_FILES=$(boolify $USE_USER_STAGED_EXTRN_FILES)
 #
 if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
 
-  if [ ! -d "${EXTRN_MDL_SOURCE_BASEDIR_ICS}" ]; then
+  # Check for the base directory up to the first templated field.
+  if [ ! -d "$(dirname ${EXTRN_MDL_SOURCE_BASEDIR_ICS%%\$*})" ]; then
     print_err_msg_exit "\
 The directory (EXTRN_MDL_SOURCE_BASEDIR_ICS) in which the user-staged 
 external model files for generating ICs should be located does not exist:
   EXTRN_MDL_SOURCE_BASEDIR_ICS = \"${EXTRN_MDL_SOURCE_BASEDIR_ICS}\""
   fi
 
-  if [ ! -d "${EXTRN_MDL_SOURCE_BASEDIR_LBCS}" ]; then
+  if [ ! -d "$(dirname ${EXTRN_MDL_SOURCE_BASEDIR_LBCS%%\$*})" ]; then
     print_err_msg_exit "\
 The directory (EXTRN_MDL_SOURCE_BASEDIR_LBCS) in which the user-staged 
 external model files for generating LBCs should be located does not exist:
