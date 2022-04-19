@@ -4,7 +4,7 @@
 #
 # This test is to ensure that the workflow running in community mode 
 # completes successfully on the SUBCONUS_Ind_3km grid using the RRFS_v1beta
-# physics suite with ICs derived from HRRR and LBCs derived from RAP.
+# physics suite with ICs derived from HRRR and LBCs derived from the RAP.
 #
 
 RUN_ENVIR="community"
