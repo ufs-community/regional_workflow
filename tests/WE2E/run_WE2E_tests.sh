@@ -218,7 +218,7 @@ specified, it must also be specified with the \"compiler\" option.
 
 
 Usage Examples:
---------------
+---------------
 Here, we give several common usage examples.  In the following, assume 
 my_tests.txt is a text file in the same directory as this script containing 
 a list of test names that we want to run, e.g.
