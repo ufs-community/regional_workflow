@@ -92,7 +92,9 @@ Usage:
     [verbose=\"...\"] \\
     [machine_file=\"...\"] \\
     [stmp=\"...\"] \\
-    [ptmp=\"...\"]
+    [ptmp=\"...\"] \\
+    [compiler=\"...\"] \\
+    [build_env_fn=\"...\"]
 
 The arguments in brackets are optional.  The arguments are defined as 
 follows:
@@ -204,6 +206,16 @@ argument is not used for any tests that are not in NCO mode.
 ptmp:
 Same as the argument \"stmp\" described above but for setting the 
 experiment variable PTMP for all tests that will run in NCO mode.
+
+compiler:
+Type of compiler to use for the workflow. Options are \"intel\" 
+and \"gnu\". Default is \"intel\",
+
+build_env_fn:
+Specify the build environment (see ufs-srweather-app/envs) to 
+use for the workflow. (e.g. build_cheyenne_gnu.env). If a 
+\"gnu\" compiler is specified, it must also be specified with 
+the \"compiler\" option.
 "
 #
 #-----------------------------------------------------------------------
@@ -240,6 +252,8 @@ valid_args=( \
   "machine_file" \
   "stmp" \
   "ptmp" \
+  "compiler" \
+  "build_env_fn" \
   )
 process_args valid_args "$@"
 #
@@ -670,7 +684,8 @@ Please correct and rerun."
 #
   MACHINE="${machine^^}"
   ACCOUNT="${account}"
-
+  COMPILER=${compiler:-"intel"}
+  BUILD_ENV_FN=${build_env_fn:-"build_${machine}_${COMPILER}.env"}
   EXPT_BASEDIR="${expt_basedir}"
   EXPT_SUBDIR="${test_name}"
   USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch:-"TRUE"}
@@ -692,7 +707,10 @@ Please correct and rerun."
 # subdirectory.
 #
 MACHINE=\"${MACHINE}\"
-ACCOUNT=\"${ACCOUNT}\""
+ACCOUNT=\"${ACCOUNT}\"
+
+COMPILER=\"${COMPILER}\"
+BUILD_ENV_FN=\"${BUILD_ENV_FN}\""
 
   if [ -n "${exec_subdir}" ]; then
     expt_config_str=${expt_config_str}"
@@ -923,26 +941,21 @@ machine (MACHINE):
   MACHINE= \"${MACHINE}\""
     fi
     EXTRN_MDL_SOURCE_BASEDIR_ICS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_ICS}"
-    if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] && [ "$MACHINE" = "HERA" ]; then
-      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/${FV3GFS_FILE_FMT_ICS}"
-    fi
-    if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
-       [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ]; then
-      if [ "${FV3GFS_FILE_FMT_ICS}" = "nemsio" ]; then
-        EXTRN_MDL_FILES_ICS=( "gfs.atmanl.nemsio" "gfs.sfcanl.nemsio" )
-      elif [ "${FV3GFS_FILE_FMT_ICS}" = "grib2" ]; then
-        EXTRN_MDL_FILES_ICS=( "gfs.pgrb2.0p25.f000" )
-      fi
-    elif [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" ] || \
-         [ "${EXTRN_MDL_NAME_ICS}" = "RAP" ]; then
-      EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
-    elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ]; then
-      EXTRN_MDL_FILES_ICS=( "${EXTRN_MDL_NAME_ICS,,}.out.for_f000" )
+    if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] ; then
+      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/${FV3GFS_FILE_FMT_ICS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
+    elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] ; then
+      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}/for_ICS"
+    else
+      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
     fi
 
     EXTRN_MDL_SOURCE_BASEDIR_LBCS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_LBCS}"
-    if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] && [ "$MACHINE" = "HERA" ]; then
-      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/${FV3GFS_FILE_FMT_LBCS}"
+    if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] ; then
+      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/${FV3GFS_FILE_FMT_LBCS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
+    elif [  "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ] ; then
+      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
+    else
+      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}/for_LBCS"
     fi
 #
 # Make sure that the forecast length is evenly divisible by the interval
@@ -958,32 +971,15 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
   LBC_SPEC_INTVL_HRS = ${LBC_SPEC_INTVL_HRS}
   rem = FCST_LEN_HRS%%LBC_SPEC_INTVL_HRS = $rem"
     fi
-    lbc_spec_times_hrs=( $( seq "${LBC_SPEC_INTVL_HRS}" "${LBC_SPEC_INTVL_HRS}" "${FCST_LEN_HRS}" ) )
-    EXTRN_MDL_FILES_LBCS=( $( printf "%03d " "${lbc_spec_times_hrs[@]}" ) ) 
-    if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
-       [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then
-      if [ "${FV3GFS_FILE_FMT_LBCS}" = "nemsio" ]; then
-        EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/gfs.atmf}" )
-        EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/%/.nemsio}" )
-      elif [ "${FV3GFS_FILE_FMT_LBCS}" = "grib2" ]; then
-        EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/gfs.pgrb2.0p25.f}" )
-      fi
-    elif [ "${EXTRN_MDL_NAME_LBCS}" = "HRRR" ] || \
-         [ "${EXTRN_MDL_NAME_LBCS}" = "RAP" ]; then
-      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
-    elif [ "${EXTRN_MDL_NAME_LBCS}" = "NAM" ]; then
-      EXTRN_MDL_FILES_LBCS=( "${EXTRN_MDL_FILES_LBCS[@]/#/${EXTRN_MDL_NAME_LBCS,,}.out.for_f}" )
-    fi
-
-    expt_config_str=${expt_config_str}"
+    expt_config_str="${expt_config_str}
 #
 # Locations and names of user-staged external model files for generating
 # ICs and LBCs.
 #
-EXTRN_MDL_SOURCE_BASEDIR_ICS=\"${EXTRN_MDL_SOURCE_BASEDIR_ICS}\"
-EXTRN_MDL_FILES_ICS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_ICS[@]}" ))
-EXTRN_MDL_SOURCE_BASEDIR_LBCS=\"${EXTRN_MDL_SOURCE_BASEDIR_LBCS}\"
-EXTRN_MDL_FILES_LBCS=( $( printf "\"%s\" " "${EXTRN_MDL_FILES_LBCS[@]}" ))"
+EXTRN_MDL_SOURCE_BASEDIR_ICS=${EXTRN_MDL_SOURCE_BASEDIR_ICS}
+EXTRN_MDL_FILES_ICS=( ${EXTRN_MDL_FILES_ICS[@]} )
+EXTRN_MDL_SOURCE_BASEDIR_LBCS=${EXTRN_MDL_SOURCE_BASEDIR_LBCS}
+EXTRN_MDL_FILES_LBCS=( ${EXTRN_MDL_FILES_LBCS[@]} )"
 
   fi
 #
