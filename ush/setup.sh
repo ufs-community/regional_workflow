@@ -94,6 +94,47 @@ EXPT_DEFAULT_CONFIG_FN="config_defaults.sh"
 #
 #-----------------------------------------------------------------------
 #
+# Convert machine name to upper case if necessary.  Then make sure that
+# MACHINE is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+MACHINE=$( printf "%s" "$MACHINE" | $SED -e 's/\(.*\)/\U\1/' )
+check_var_valid_value "MACHINE" "valid_vals_MACHINE"
+#
+#-----------------------------------------------------------------------
+#
+# Source the machine config file containing architechture information,
+# queue names, and supported input file paths.
+#
+#-----------------------------------------------------------------------
+#
+RELATIVE_LINK_FLAG="--relative"
+MACHINE_FILE=${MACHINE_FILE:-${USHDIR}/machine/$(echo_lowercase $MACHINE).sh}
+source $USHDIR/source_machine_file.sh
+
+if [ -z "${NCORES_PER_NODE:-}" ]; then
+  print_err_msg_exit "\
+    NCORES_PER_NODE has not been specified in the file ${MACHINE_FILE}
+    Please ensure this value has been set for your desired platform. "
+fi
+
+if [ -z "$FIXgsm" -o -z "$FIXaer" -o -z "$FIXlut" -o -z "$TOPO_DIR" -o -z "$SFC_CLIMO_INPUT_DIR" ]; then
+      print_err_msg_exit "\
+One or more fix file directories have not been specified for this machine:
+  MACHINE = \"$MACHINE\"
+  FIXgsm = \"${FIXgsm:-\"\"}
+  FIXaer = \"${FIXaer:-\"\"}
+  FIXlut = \"${FIXlut:-\"\"}
+  TOPO_DIR = \"${TOPO_DIR:-\"\"}
+  SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
+  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR:-\"\"}
+You can specify the missing location(s) in ${machine_file}"
+fi
+
+#
+#-----------------------------------------------------------------------
+#
 # If a user-specified configuration file exists, source it.  This file
 # contains user-specified values for a subset of the experiment/workflow 
 # variables that override their default values.  Note that the user-
@@ -477,48 +518,6 @@ TEMPLATE_DIR="$USHDIR/templates"
 VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
 METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
 MET_CONFIG="$TEMPLATE_DIR/parm/met"
-
-#
-#-----------------------------------------------------------------------
-#
-# Convert machine name to upper case if necessary.  Then make sure that
-# MACHINE is set to a valid value.
-#
-#-----------------------------------------------------------------------
-#
-MACHINE=$( printf "%s" "$MACHINE" | $SED -e 's/\(.*\)/\U\1/' )
-check_var_valid_value "MACHINE" "valid_vals_MACHINE"
-#
-#-----------------------------------------------------------------------
-#
-# Source the machine config file containing architechture information,
-# queue names, and supported input file paths.
-#
-#-----------------------------------------------------------------------
-#
-RELATIVE_LINK_FLAG="--relative"
-MACHINE_FILE=${MACHINE_FILE:-${USHDIR}/machine/$(echo_lowercase $MACHINE).sh}
-source $USHDIR/source_machine_file.sh
-
-if [ -z "${NCORES_PER_NODE:-}" ]; then
-  print_err_msg_exit "\
-    NCORES_PER_NODE has not been specified in the file ${MACHINE_FILE}
-    Please ensure this value has been set for your desired platform. "
-fi
-
-if [ -z "$FIXgsm" -o -z "$FIXaer" -o -z "$FIXlut" -o -z "$TOPO_DIR" -o -z "$SFC_CLIMO_INPUT_DIR" ]; then
-  print_err_msg_exit "\
-One or more fix file directories have not been specified for this machine:
-  MACHINE = \"$MACHINE\"
-  FIXgsm = \"${FIXgsm:-\"\"}
-  FIXaer = \"${FIXaer:-\"\"}
-  FIXlut = \"${FIXlut:-\"\"}
-  TOPO_DIR = \"${TOPO_DIR:-\"\"}
-  SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
-  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR:-\"\"}
-You can specify the missing location(s) in ${machine_file}"
-fi
-
 
 #
 #-----------------------------------------------------------------------
