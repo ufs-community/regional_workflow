@@ -52,16 +52,6 @@ if __name__ == "__main__":
     ctrlat = args.ctrlat
     ctrlon = args.ctrlon
 
-    #xsize1=(nx1-1)*dx1
-    #ysize1=(ny1-1)*dy1
-
-    #x1 = np.linspace(0.0,xsize1,num=nx1)
-    #y1 = np.linspace(0.0,ysize1,num=ny1)
-    #
-    #print(x1[0:3])
-    #print(y1[0:3])
-    #x1_2, y1_2 = np.meshgrid(x1,y1)
-
     xctr = (nx1-1)/2*dx1
     yctr = (ny1-1)/2*dy1
 
