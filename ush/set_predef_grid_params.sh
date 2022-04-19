@@ -640,10 +640,10 @@ case ${PREDEF_GRID_NAME} in
 # Note:
 # The WoFS domain will generate a 301 x 301 output grid (WRITE COMPONENT) and
 # will eventually be movable (ESGgrid_LON_CTR/ESGgrid_LAT_CTR). A python script
-# python_utils/fv3write_parms.py will be useful to determine
-# WRTCMP_lon_lwr_left and WRTCMP_lat_lwr_left locations for quilting output
-# when the domain location is moved. Later, it should be integrated into
-# the workflow.
+# python_utils/fv3write_parms_lambert will be useful to determine
+# WRTCMP_lon_lwr_left and WRTCMP_lat_lwr_left locations (only for Lambert map 
+# projection currently) of the quilting output when the domain location is 
+# moved. Later, it should be integrated into the workflow.
 #
 #-----------------------------------------------------------------------
 #
