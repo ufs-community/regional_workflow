@@ -924,6 +924,9 @@ PTMP=\"${PTMP}\""
 #
   if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
 
+    # Ensure we only check on disk for these files
+    data_stores=""
+
     extrn_mdl_source_basedir=${TEST_EXTRN_MDL_SOURCE_BASEDIR:-}
     if [ ! -d "${extrn_mdl_source_basedir:-}" ] ; then
       print_err_msg_exit "\
@@ -967,7 +970,8 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
 EXTRN_MDL_SOURCE_BASEDIR_ICS=${EXTRN_MDL_SOURCE_BASEDIR_ICS}
 EXTRN_MDL_FILES_ICS=( ${EXTRN_MDL_FILES_ICS[@]} )
 EXTRN_MDL_SOURCE_BASEDIR_LBCS=${EXTRN_MDL_SOURCE_BASEDIR_LBCS}
-EXTRN_MDL_FILES_LBCS=( ${EXTRN_MDL_FILES_LBCS[@]} )"
+EXTRN_MDL_FILES_LBCS=( ${EXTRN_MDL_FILES_LBCS[@]} )
+EXTRN_MDL_DATA_STORES=\"$data_stores\""
 
   fi
 #
