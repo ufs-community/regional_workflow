@@ -73,9 +73,5 @@ RUN_CMD_POST='srun --mpi=pmi2 -n $nprocs'
 # MET Installation Locations
 # MET Plus is not yet supported on noaacloud
 # Test Data Locations
-#TEST_PREGEN_BASEDIR="/scratch2/BMC/det/UFS_SRW_app/FV3LAM_pregen"
-#TEST_COMINgfs="/scratch2/NCEPDEV/fv3-cam/noscrub/UFS_SRW_App/COMGFS"
 TEST_EXTRN_MDL_SOURCE_BASEDIR="/lustre/f2/dev/Mark.Potts/EPIC/SRW/model_data"
-#TEST_ALT_EXTRN_MDL_SYSBASEDIR_ICS="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
-#TEST_ALT_EXTRN_MDL_SYSBASEDIR_LBCS="/scratch2/BMC/det/UFS_SRW_app/dummy_FV3GFS_sys_dir"
 
