@@ -263,7 +263,7 @@ EXEC_SUBDIR="bin"
 #   Model name (first level of com directory structure)
 #
 #   model_ver:
-#   Version number of package (second level of com directory structure)
+#   Version number of package in three digits (second level of com directory)
 #
 #   RUN:
 #   Name of model run (third level of com directory structure).
@@ -295,7 +295,7 @@ COMIN="/path/of/directory/containing/data/files/for/IC/LBCS"
 FIXLAM_NCO_BASEDIR=""
 envir="para"
 NET="rrfs"
-model_ver="v1.0"
+model_ver="v1.0.0"
 RUN="rrfs"
 STMP="/base/path/of/directory/containing/model/input/and/raw/output/files"
 PTMP="/base/path/of/directory/containing/postprocessed/output/files"
