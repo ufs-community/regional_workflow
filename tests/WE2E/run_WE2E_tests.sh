@@ -925,7 +925,7 @@ PTMP=\"${PTMP}\""
   if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
 
     # Ensure we only check on disk for these files
-    data_stores=""
+    data_stores="disk"
 
     extrn_mdl_source_basedir=${TEST_EXTRN_MDL_SOURCE_BASEDIR:-}
     if [ ! -d "${extrn_mdl_source_basedir:-}" ] ; then
@@ -937,16 +937,16 @@ machine (MACHINE):
     fi
     EXTRN_MDL_SOURCE_BASEDIR_ICS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_ICS}"
     if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] ; then
-      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/${FV3GFS_FILE_FMT_ICS}/\${yyyymmddhh}"
+      EXTRN_MDL_SOURCE_BASEDIR_ICS='${EXTRN_MDL_SOURCE_BASEDIR_ICS}/${FV3GFS_FILE_FMT_ICS}/\${yyyymmddhh}'
     else
-      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/\${yyyymmddhh}"
+      EXTRN_MDL_SOURCE_BASEDIR_ICS='${EXTRN_MDL_SOURCE_BASEDIR_ICS}/\${yyyymmddhh}'
     fi
 
     EXTRN_MDL_SOURCE_BASEDIR_LBCS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_LBCS}"
     if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] ; then
-      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/${FV3GFS_FILE_FMT_LBCS}/\${yyyymmddhh}"
+      EXTRN_MDL_SOURCE_BASEDIR_LBCS='${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/${FV3GFS_FILE_FMT_LBCS}/\${yyyymmddhh}'
     else
-      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/\${yyyymmddhh}"
+      EXTRN_MDL_SOURCE_BASEDIR_LBCS='${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/\${yyyymmddhh}'
     fi
 #
 # Make sure that the forecast length is evenly divisible by the interval
