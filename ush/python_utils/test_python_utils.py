@@ -113,6 +113,14 @@ class Testing(unittest.TestCase):
         dictionary = { "Hello": "World!" }
         import_vars(dictionary=dictionary)
         self.assertEqual( Hello, "World!" )
+        #test array
+        shell_str='("1" "2") \n'
+        v = str_to_list(shell_str)
+        self.assertTrue( isinstance(v,list) )
+        self.assertEqual(v, [1, 2])
+        shell_str = '( "1" "2" \n'
+        v = str_to_list(shell_str)
+        self.assertFalse( isinstance(v,list) )
     def test_config_parser(self):
         cfg = { "HRS": [ "1", "2" ] }
         shell_str = cfg_to_shell_str(cfg)
