@@ -740,6 +740,8 @@ def setup():
     #
     global EXPT_BASEDIR
     if (not EXPT_BASEDIR) or (EXPT_BASEDIR[0] != "/"):
+      if not EXPT_BASEDIR:
+        EXPT_BASEDIR = ""
       EXPT_BASEDIR = os.path.join(SR_WX_APP_TOP_DIR,"..","expt_dirs",EXPT_BASEDIR)
     try:
       EXPT_BASEDIR = os.path.realpath(EXPT_BASEDIR)
