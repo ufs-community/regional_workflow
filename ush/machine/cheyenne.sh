@@ -52,7 +52,7 @@ FIXaer=${FIXaer:-"${staged_data_dir}/fix/fix_aer"}
 FIXlut=${FIXlut:-"${staged_data_dir}/fix/fix_lut"}
 TOPO_DIR=${TOPO_DIR:-"${staged_data_dir}/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"${staged_data_dir}/fix/fix_sfc_climo"}
-DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"/needs/to/be/specified"}
+DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"${staged_data_dir}/FV3LAM_pregen"}
 
 # Run commands for executables
 RUN_CMD_SERIAL="time"
