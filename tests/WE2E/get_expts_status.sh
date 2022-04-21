@@ -70,42 +70,98 @@ ushdir="$homerrfs/ush"
 #
 #-----------------------------------------------------------------------
 #
-# Exactly one argument must be specified that consists of the full path
-# to the experiments base directory (i.e. the directory containing the 
-# experiment subdirectories).  Ensure that the number of arguments is 
-# one.
+# Set the usage message.
 #
 #-----------------------------------------------------------------------
 #
-num_args="$#"
-if [ "${num_args}" -eq 1 ]; then
-  expts_basedir="$1"
-else
-  print_err_msg_exit "
-The number of arguments to this script must be exacty one, and that 
-argument must specify the experiments base directory, i.e. the directory
-containing the experiment subdirectories.  The acutal number of arguments 
-is:
-  num_args = ${num_args}"  
+usage_str="\
+Usage:
+
+  ${scrfunc_fn} \\
+    expts_basedir=\"...\" \\
+    [verbose=\"...\"]
+
+The arguments in brackets are optional.  The arguments are defined as
+follows:
+
+expts_basedir:
+Full path to the experiments base directory, i.e. the directory containing 
+the experiment subdirectories.
+
+verbose:
+Optional verbosity flag.  Should be set to \"TRUE\" or \"FALSE\".  Default
+is \"FALSE\".
+"
+#
+#-----------------------------------------------------------------------
+#
+# Check to see if usage help for this script is being requested.  If so,
+# print it out and exit with a 0 exit code (success).
+#
+#-----------------------------------------------------------------------
+#
+help_flag="--help"
+if [ "$#" -eq 1 ] && [ "$1" = "${help_flag}" ]; then
+  print_info_msg "${usage_str}"
+  exit 0
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Specify the set of valid argument names for this script or function.
+# Then process the arguments provided to it on the command line (which
+# should consist of a set of name-value pairs of the form arg1="value1",
+# arg2="value2", etc).
+#
+#-----------------------------------------------------------------------
+#
+valid_args=( \
+  "expts_basedir" \
+  "verbose" \
+  )
+process_args valid_args "$@"
+#
+#-----------------------------------------------------------------------
+#
+# Make the default value of "verbose" "FALSE".  Then make sure "verbose"
+# is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+verbose=${verbose:-"FALSE"}
+check_var_valid_value "verbose" "valid_vals_BOOLEAN"
+verbose=$(boolify $verbose)
+#
+#-----------------------------------------------------------------------
+#
+# Verify that the required arguments to this script have been specified.
+# If not, print out an error message and exit.
+#
+#-----------------------------------------------------------------------
+#
+help_msg="\
+Use
+  ${scrfunc_fn} ${help_flag}
+to get help on how to use this script."
+
+if [ -z "${expts_basedir}" ]; then
+  print_err_msg_exit "\
+The argument \"expts_basedir\" specifying the base directory containing
+the experiment directories was not specified in the call to this script.  \
+${help_msg}"
 fi
 #
 #-----------------------------------------------------------------------
 #
 # Check that the specified experiments base directory exists and is 
 # actually a directory.  If not, print out an error message and exit.
-# If so, print out an informational message.
 #
 #-----------------------------------------------------------------------
 #
 if [ ! -d "${expts_basedir}" ]; then
   print_err_msg_exit "
-The experiments base directory (expts_basedir) does not exit or is not 
-actually a directory:
-  expts_basedir = \"${expts_basedir}\""
-else
-  print_info_msg "
-Checking the workflow status of all forecast experiments in the following
-specified experiments base directory: 
+The specified experiments base directory (expts_basedir) does not exit 
+or is not actually a directory:
   expts_basedir = \"${expts_basedir}\""
 fi
 #
@@ -116,7 +172,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-cd "${expts_basedir}"
+cd_vrfy "${expts_basedir}"
 #
 # Get a list of all subdirectories (but not files) in the experiment base 
 # directory.  Note that the ls command below will return a string containing
@@ -175,6 +231,12 @@ var_defns_fn="var_defns.sh"
 j="0"
 expt_subdirs=()
 
+print_info_msg "\
+Checking for active experiment directories in the specified experiments
+base directory (expts_basedir):
+  expts_basedir = \"${expts_basedir}\"
+..."
+
 num_subdirs="${#subdirs_list[@]}"
 for (( i=0; i<=$((num_subdirs-1)); i++ )); do
 
@@ -184,7 +246,7 @@ $separator
 Checking whether the subdirectory 
   \"${subdir}\"
 contains an active experiment..."
-  print_info_msg "$msg"
+  print_info_msg "$verbose" "$msg"
 
   cd_vrfy "${subdir}"
 #
@@ -193,7 +255,7 @@ contains an active experiment..."
 #
   if [ ! -f "${var_defns_fn}" ]; then
 
-    print_info_msg "
+    print_info_msg "$verbose" "
 The current subdirectory (subdir) under the experiments base directory
 (expts_basedir) does not contain an experiment variable defintions file
 (var_defns_fn):
@@ -219,7 +281,7 @@ must be checked."
 #
     if [ "${EXPT_SUBDIR}" = "$subdir" ]; then
 
-      print_info_msg "
+      print_info_msg "$verbose" "
 The current subdirectory (subdir) under the experiments base directory
 (expts_basedir) contains an active experiment:
   expts_basedir = \"${expts_basedir}\"
@@ -238,7 +300,7 @@ subdirectories whose workflow status must be checked."
 #
     else
 
-      print_info_msg "
+      print_info_msg "$verbose" "
 The current subdirectory (subdir) under the experiments base directory
 (expts_basedir) contains an experiment whose original name (EXPT_SUBDIR)
 does not match the name of the current subdirectory:
@@ -254,7 +316,7 @@ status must be checked."
 
   fi
 
-  print_info_msg "\
+  print_info_msg "$verbose" "\
 $separator
 "
 #
