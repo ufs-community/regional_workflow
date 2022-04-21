@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 function file_location() {
 
   # Return the default location of external model files on disk
@@ -15,11 +13,6 @@ function file_location() {
 
     "FV3GFS")
       location='/lustre/f2/dev/Mark.Potts/EPIC/SRW/model_data/FV3GFS/${yyyymmdd}${hh}'
-      ;;
-    *)
-      print_info_msg"\
-        External model \'${external_model}\' does not have a default
-      location on Hera. Will try to pull from HPSS"
       ;;
 
   esac
@@ -46,7 +39,7 @@ PRE_TASK_CMDS='{ ulimit -s unlimited; ulimit -a; }'
 
 # Architecture information
 WORKFLOW_MANAGER="rocoto"
-EXTRA_SLURM_CMD="-M c3"
+SLURM_NATIVE_CMD="-M c3"
 NCORES_PER_NODE=${NCORES_PER_NODE:-32}
 SCHED=${SCHED:-"slurm"}
 QUEUE_DEFAULT=${QUEUE_DEFAULT:-"normal"}
@@ -71,7 +64,7 @@ RUN_CMD_FCST='srun --mpi=pmi2 -n ${PE_MEMBER01}'
 RUN_CMD_POST='srun --mpi=pmi2 -n $nprocs'
 
 # MET Installation Locations
-# MET Plus is not yet supported on noaacloud
+# MET Plus is not yet supported on gaea
 # Test Data Locations
 TEST_EXTRN_MDL_SOURCE_BASEDIR="/lustre/f2/dev/Mark.Potts/EPIC/SRW/model_data"
 

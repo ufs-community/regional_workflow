@@ -193,7 +193,7 @@ file (template_xml_fp):
   'partition_fcst': ${PARTITION_FCST}
   'queue_fcst': ${QUEUE_FCST}
   'machine': ${MACHINE}
-  'extra_slurm_cmd': ${EXTRA_SLURM_CMD}
+  'slurm_native_cmd': ${SLURM_NATIVE_CMD}
 #
 # Workflow task names.
 #
