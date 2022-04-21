@@ -99,16 +99,16 @@ export fhr_list
 #-----------------------------------------------------------------------
 #
 if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
-  INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
-  OUTPUT_BASE=${EXPTDIR}/${CDATE}
+  INPUT_BASE=${MET_INPUT_BASE}/postprd
+  OUTPUT_BASE=${MET_OUTPUT_BASE}
   if [ ${VAR} == "APCP" ]; then
     LOG_SUFFIX=gridstat_${CDATE}_${VAR}_${ACCUM}h
   else
     LOG_SUFFIX=gridstat_${CDATE}_${VAR}
   fi
 elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
-  INPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}/postprd
-  OUTPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}
+  INPUT_BASE=${MET_INPUT_BASE}/${SLASH_ENSMEM_SUBDIR}/postprd
+  OUTPUT_BASE=${MET_OUTPUT_BASE}/${SLASH_ENSMEM_SUBDIR}
   ENSMEM=`echo ${SLASH_ENSMEM_SUBDIR} | cut -d"/" -f2`
   MODEL=${MODEL}_${ENSMEM}
   if [ ${VAR} == "APCP" ]; then

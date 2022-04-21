@@ -421,6 +421,8 @@ file (template_xml_fp):
   'vx_config_dir': ${VX_CONFIG_DIR}
   'metplus_conf': ${METPLUS_CONF}
   'met_config': ${MET_CONFIG}
+  'met_input_dir': ${MET_INPUT_DIR}
+  'met_output_dir': ${MET_OUTPUT_DIR}
   'ccpa_obs_dir': ${CCPA_OBS_DIR}
   'mrms_obs_dir': ${MRMS_OBS_DIR}
   'ndas_obs_dir': ${NDAS_OBS_DIR}
