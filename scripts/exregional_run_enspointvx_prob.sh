@@ -101,11 +101,12 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-# Create INPUT_BASE and LOG_SUFFIX to read into METplus conf files.
+# Create INPUT_BASE, OUTPUT_BASE, and LOG_SUFFIX to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
 #
-INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/gen_ens_prod
+INPUT_BASE=${MET_INPUT_BASE}
+OUTPUT_BASE=${MET_OUTPUT_BASE}
 LOG_SUFFIX=enspoint_prob_${CDATE}
 
 #
@@ -129,6 +130,7 @@ fi
 #
 export EXPTDIR
 export INPUT_BASE
+export OUTPUT_BASE
 export LOG_SUFFIX
 export MET_INSTALL_DIR
 export MET_BIN_EXEC

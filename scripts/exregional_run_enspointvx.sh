@@ -101,6 +101,16 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
+# Create INPUT_BASE to read into METplus conf files.
+#
+#-----------------------------------------------------------------------
+#
+INPUT_BASE=${MET_INPUT_BASE}
+OUTPUT_BASE=${MET_OUTPUT_BASE}
+
+#
+#-----------------------------------------------------------------------
+#
 # Create LOG_SUFFIX to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
@@ -127,6 +137,8 @@ fi
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
+export INPUT_BASE
+export OUTPUT_BASE
 export LOG_SUFFIX
 export MET_INSTALL_DIR
 export MET_BIN_EXEC

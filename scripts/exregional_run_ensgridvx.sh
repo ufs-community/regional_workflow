@@ -112,6 +112,7 @@ NUM_PAD=${NDIGITS_ENSMEM_NAMES}
 #
 INPUT_BASE=${MET_INPUT_BASE}
 OUTPUT_BASE=${MET_OUTPUT_BASE}
+echo ${OUTPUT_BASE}
 
 #
 #-----------------------------------------------------------------------
