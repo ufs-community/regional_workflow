@@ -13,12 +13,17 @@ function file_location() {
   case ${external_model} in
 
     "GSMGFS")
-      location='/scratch/ywang/EPIC/GDAS/2019053000_mem001'
+      location='/scratch/ywang/GFS'
       ;;
     "FV3GFS")
-      location='/scratch/ywang/test_runs/FV3_regional/gfs/${yyyymmdd}'
+      location='/scratch/ywang/GFS'
       ;;
-
+    "HRRR")
+      location='/scratch/ywang/HRRR'
+      ;;
+    "RAP")
+      location='/scratch/ywang/RAP'
+      ;;
   esac
   echo ${location:-}
 
@@ -52,15 +57,20 @@ PARTITION_FCST=${PARTITION_FCST:-"workq"}
 QUEUE_FCST=${QUEUE_FCST:-"workq"}
 
 # UFS SRW App specific paths
-FIXgsm=${FIXgsm:-"/scratch/ywang/fix/theia_fix/fix_am"}
-FIXaer=${FIXaer:-"/scratch/ywang/fix/theia_fix/fix_aer"}
-FIXlut=${FIXlut:-"/scratch/ywang/fix/theia_fix/fix_lut"}
-TOPO_DIR=${TOPO_DIR:-"/scratch/ywang/fix/theia_fix/fix_orog"}
-SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/scratch/ywang/fix/climo_fields_netcdf"}
-DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"/needs/to/be/specified"}
+staged_data_dir="/scratch/ywang/UFS_SRW_App/develop"
+FIXgsm=${FIXgsm:-"${staged_data_dir}/fix/fix_am"}
+FIXaer=${FIXaer:-"${staged_data_dir}/fix/fix_aer"}
+FIXlut=${FIXlut:-"${staged_data_dir}/fix/fix_lut"}
+TOPO_DIR=${TOPO_DIR:-"${staged_data_dir}/fix/fix_orog"}
+SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"${staged_data_dir}/fix/fix_sfc_climo"}
+DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"${staged_data_dir}/FV3LAM_pregen"}
 
 # Run commands for executables
 RUN_CMD_SERIAL="srun -n 1"
 RUN_CMD_UTILS='srun -n $nprocs'
 RUN_CMD_FCST='srun -n ${PE_MEMBER01}'
 RUN_CMD_POST="srun -n 1"
+
+# Test Data Locations
+TEST_PREGEN_BASEDIR="${staged_data_dir}/FV3LAM_pregen"
+TEST_EXTRN_MDL_SOURCE_BASEDIR="${staged_data_dir}/staged_extrn_mdl_files"

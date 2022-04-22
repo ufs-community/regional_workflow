@@ -15,7 +15,7 @@ function file_location() {
     "GSMGFS")
       ;& # Fall through. All files in same place
     "FV3GFS")
-      location='/scratch/00315/tg455890/GDAS/20190530/2019053000_mem001'
+      location='/scratch/00315/tg455890/GFS'
       ;;
 
   esac
@@ -51,15 +51,20 @@ PARTITION_FCST=${PARTITION_FCST:-"normal"}
 QUEUE_FCST=${QUEUE_FCST:-"normal"}
 
 # UFS SRW App specific paths
-FIXgsm=${FIXgsm:-"/work/00315/tg455890/stampede2/regional_fv3/fix_am"}
-FIXaer=${FIXaer:-"/work/00315/tg455890/stampede2/regional_fv3/fix_aer"}
-FIXlut=${FIXlut:-"/work/00315/tg455890/stampede2/regional_fv3/fix_lut"}
-TOPO_DIR=${TOPO_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/fix_orog"}
-SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/work/00315/tg455890/stampede2/regional_fv3/climo_fields_netcdf"}
-DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"/needs/to/be/specified"}
+staged_data_dir="/work2/00315/tg455890/stampede2/UFS_SRW_App/develop"
+FIXgsm=${FIXgsm:-"${staged_data_dir}/fix/fix_am"}
+FIXaer=${FIXaer:-"${staged_data_dir}/fix/fix_aer"}
+FIXlut=${FIXlut:-"${staged_data_dir}/fix/fix_lut"}
+TOPO_DIR=${TOPO_DIR:-"${staged_data_dir}/fix/fix_orog"}
+SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"${staged_data_dir}/fix/fix_sfc_climo"}
+DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"${staged_data_dir}/FV3LAM_pregen"}
 
 # Run commands for executables
 RUN_CMD_SERIAL="time"
 RUN_CMD_UTILS='ibrun -np $nprocs'
 RUN_CMD_FCST='ibrun -np $nprocs'
 RUN_CMD_POST='ibrun -np $nprocs'
+
+# Test Data Locations
+TEST_PREGEN_BASEDIR="${staged_data_dir}/FV3LAM_pregen"
+TEST_EXTRN_MDL_SOURCE_BASEDIR="${staged_data_dir}/staged_extrn_mdl_files"
