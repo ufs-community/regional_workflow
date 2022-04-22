@@ -902,12 +902,15 @@ they correspond to unique test names and rerun."
 # ensemble members NUM_ENS_MEMBERS, it is set to 1).
 #
     vars_to_extract=( "PREDEF_GRID_NAME" \
+                      "CCPP_PHYS_SUITE" \
                       "EXTRN_MDL_NAME_ICS" \
                       "EXTRN_MDL_NAME_LBCS" \
                       "DATE_FIRST_CYCL" \
                       "DATE_LAST_CYCL" \
                       "CYCL_HRS" \
                       "INCR_CYCL_FREQ" \
+                      "FCST_LEN_HRS" \
+                      "LBC_SPEC_INTVL_HRS" \
                       "NUM_ENS_MEMBERS" \
                     )
     num_vars_to_extract="${#vars_to_extract[@]}"
@@ -1405,8 +1408,10 @@ ${test_names[$jp1]} (${test_subdirs[$jp1]})"
 # Column 3:
 # The test description.
 #
-# Columns 4:
-# The number of times the forecast model will be run by the test.
+# Column 4:
+# The number of times the forecast model will be run by the test.  This
+# has been calculated above using the quantities that go in Columns 5, 
+# 6, ....
 #
 # Columns 5...:
 # The values of the experiment variables specified in vars_to_extract.
