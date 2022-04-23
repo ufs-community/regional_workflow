@@ -9,15 +9,26 @@ function file_location() {
   external_model=${1}
   external_file_fmt=${2}
 
+  staged_data_dir="/work2/00315/tg455890/stampede2/UFS_SRW_App/develop"
+
   location=""
   case ${external_model} in
 
     "GSMGFS")
-      ;& # Fall through. All files in same place
-    "FV3GFS")
-      location='/scratch/00315/tg455890/GFS'
+      location="${staged_data_dir}/input_model_data/GFS"
       ;;
-
+    "FV3GFS")
+      location="${staged_data_dir}/input_model_data/FV3GFS"
+      ;;
+    "HRRR")
+      location="${staged_data_dir}/input_model_data/HRRR"
+      ;;
+    "RAP")
+      location="${staged_data_dir}/input_model_data/RAP"
+      ;;
+    "NAM")
+      location="${staged_data_dir}/input_model_data/NAM"
+      ;;
   esac
   echo ${location:-}
 
@@ -67,4 +78,4 @@ RUN_CMD_POST='ibrun -np $nprocs'
 
 # Test Data Locations
 TEST_PREGEN_BASEDIR="${staged_data_dir}/FV3LAM_pregen"
-TEST_EXTRN_MDL_SOURCE_BASEDIR="${staged_data_dir}/staged_extrn_mdl_files"
+TEST_EXTRN_MDL_SOURCE_BASEDIR="${staged_data_dir}/input_model_data"

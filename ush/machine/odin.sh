@@ -9,20 +9,25 @@ function file_location() {
   external_model=${1}
   external_file_fmt=${2}
 
+  staged_data_dir="/scratch/ywang/UFS_SRW_App/develop"
+
   location=""
   case ${external_model} in
 
     "GSMGFS")
-      location='/scratch/ywang/GFS'
+      location="${staged_data_dir}/input_model_data/GFS"
       ;;
     "FV3GFS")
-      location='/scratch/ywang/GFS'
+      location="${staged_data_dir}/input_model_data/FV3GFS"
       ;;
     "HRRR")
-      location='/scratch/ywang/HRRR'
+      location="${staged_data_dir}/input_model_data/HRRR"
       ;;
     "RAP")
-      location='/scratch/ywang/RAP'
+      location="${staged_data_dir}/input_model_data/RAP"
+      ;;
+    "NAM")
+      location="${staged_data_dir}/input_model_data/NAM"
       ;;
   esac
   echo ${location:-}
@@ -57,7 +62,6 @@ PARTITION_FCST=${PARTITION_FCST:-"workq"}
 QUEUE_FCST=${QUEUE_FCST:-"workq"}
 
 # UFS SRW App specific paths
-staged_data_dir="/scratch/ywang/UFS_SRW_App/develop"
 FIXgsm=${FIXgsm:-"${staged_data_dir}/fix/fix_am"}
 FIXaer=${FIXaer:-"${staged_data_dir}/fix/fix_aer"}
 FIXlut=${FIXlut:-"${staged_data_dir}/fix/fix_lut"}
@@ -73,4 +77,4 @@ RUN_CMD_POST="srun -n 1"
 
 # Test Data Locations
 TEST_PREGEN_BASEDIR="${staged_data_dir}/FV3LAM_pregen"
-TEST_EXTRN_MDL_SOURCE_BASEDIR="${staged_data_dir}/staged_extrn_mdl_files"
+TEST_EXTRN_MDL_SOURCE_BASEDIR="${staged_data_dir}/input_model_data"
