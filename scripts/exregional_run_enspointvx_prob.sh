@@ -129,6 +129,7 @@ fi
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
+export LOGDIR
 export INPUT_BASE
 export OUTPUT_BASE
 export LOG_SUFFIX
@@ -156,7 +157,7 @@ ${METPLUS_PATH}/ush/run_metplus.py \
 #
 print_info_msg "
 ========================================================================
-METplus ensemble-stat completed successfully.
+METplus point-stat completed successfully.
 
 Exiting script:  \"${scrfunc_fn}\"
 In directory:    \"${scrfunc_dir}\"

@@ -106,13 +106,12 @@ NUM_PAD=${NDIGITS_ENSMEM_NAMES}
 #
 #-----------------------------------------------------------------------
 #
-# Create INPUT_BASE to read into METplus conf files.
+# Create INPUT_BASE and OUTPUT_BASE to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
 #
 INPUT_BASE=${MET_INPUT_BASE}
 OUTPUT_BASE=${MET_OUTPUT_BASE}
-echo ${OUTPUT_BASE}
 
 #
 #-----------------------------------------------------------------------
@@ -137,6 +136,7 @@ fi
 #
 export SCRIPTSDIR
 export EXPTDIR
+export LOGDIR
 export INPUT_BASE
 export OUTPUT_BASE
 export MET_INSTALL_DIR

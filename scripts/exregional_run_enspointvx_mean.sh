@@ -105,7 +105,7 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-INPUT_BASE=${MET_INPUT_BASE}
+#INPUT_BASE=${MET_INPUT_BASE}
 OUTPUT_BASE=${MET_OUTPUT_BASE}
 LOG_SUFFIX=enspoint_mean_${CDATE}
 
@@ -129,7 +129,8 @@ fi
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
-export INPUT_BASE
+export LOGDIR
+#export INPUT_BASE
 export OUTPUT_BASE
 export LOG_SUFFIX
 export MET_INSTALL_DIR
@@ -156,7 +157,7 @@ ${METPLUS_PATH}/ush/run_metplus.py \
 #
 print_info_msg "
 ========================================================================
-METplus ensemble-stat completed successfully.
+METplus point-stat completed successfully.
 
 Exiting script:  \"${scrfunc_fn}\"
 In directory:    \"${scrfunc_dir}\"

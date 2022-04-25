@@ -103,11 +103,14 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-# Create INPUT_BASE and LOG_SUFFIX to read into METplus conf files.
+# Create INPUT_BASE, OUTPUT_BASE LOG_SUFFIX to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
 #
-INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/gen_ens_prod
+#INPUT_BASE=${MET_INPUT_BASE}
+OUTPUT_BASE=${MET_OUTPUT_BASE}
+
+#INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/gen_ens_prod
 
 if [ ${VAR} == "APCP" ]; then
   LOG_SUFFIX=ensgrid_mean_${CDATE}_${VAR}_${ACCUM}h
@@ -135,6 +138,9 @@ fi
 #-----------------------------------------------------------------------
 #
 export SCRIPTSDIR
+export LOGDIR
+#export INPUT_BASE
+export OUTPUT_BASE
 export EXPTDIR
 export MET_INSTALL_DIR
 export MET_BIN_EXEC
@@ -143,7 +149,6 @@ export METPLUS_CONF
 export MET_CONFIG
 export MODEL
 export NET
-export INPUT_BASE
 export LOG_SUFFIX
 
 #

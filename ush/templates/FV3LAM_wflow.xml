@@ -791,8 +791,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -843,8 +843,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&MRMS_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -894,8 +894,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&MRMS_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -945,8 +945,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -982,8 +982,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1019,8 +1019,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1056,8 +1056,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&NDAS_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1110,8 +1110,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1144,8 +1144,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1178,8 +1178,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1212,8 +1212,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1245,8 +1245,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&MRMS_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1277,8 +1277,8 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&MRMS_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_INPUT_BASE</name><value><cyclestr>&MET_INPUT_DIR;</cyclestr></value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1308,8 +1308,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1341,8 +1340,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1374,8 +1372,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1407,8 +1404,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1441,8 +1437,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1474,8 +1469,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1508,8 +1502,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1541,8 +1534,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&CCPA_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1574,8 +1566,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&MRMS_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1606,8 +1597,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&MRMS_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1639,8 +1629,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&NDAS_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value><cyclestr>&MET_OUTPUT_DIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1669,8 +1658,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&NDAS_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>
@@ -1699,8 +1687,7 @@ the <task> tag to be identical to the ones above for other output times.
 
     <envar><name>GLOBAL_VAR_DEFNS_FP</name><value>&GLOBAL_VAR_DEFNS_FP;</value></envar>
     <envar><name>OBS_DIR</name><value>&NDAS_OBS_DIR;</value></envar>
-    <envar><name>MET_INPUT_DIR</name><value>&MET_INPUT_DIR;</value></envar>
-    <envar><name>MET_OUTPUT_DIR</name><value>&MET_OUTPUT_DIR;</value></envar>
+    <envar><name>MET_OUTPUT_BASE</name><value>&MET_OUTPUT_DIR;</value></envar>
     <envar><name>CYCLE_DIR</name><value><cyclestr>&CYCLE_BASEDIR;/@Y@m@d@H</cyclestr></value></envar>
     <envar><name>CDATE</name><value><cyclestr>@Y@m@d@H</cyclestr></value></envar>
     <envar><name>PDY</name><value><cyclestr>@Y@m@d</cyclestr></value></envar>

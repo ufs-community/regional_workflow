@@ -130,6 +130,7 @@ fi
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
+export LOGDIR
 export INPUT_BASE
 export OUTPUT_BASE
 export LOG_SUFFIX
