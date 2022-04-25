@@ -84,4 +84,4 @@ RUN_CMD_POST="srun"
 # Test Data Locations
 TEST_COMIN="${staged_data_dir}/COMGFS"
 TEST_PREGEN_BASEDIR="${staged_data_dir}/FV3LAM_pregen"
-TEST_EXTRN_MDL_SOURCE_BASEDIR="${staged_data_dir}/staged_extrn_mdl_files"
+TEST_EXTRN_MDL_SOURCE_BASEDIR="${staged_data_dir}/input_model_data"
