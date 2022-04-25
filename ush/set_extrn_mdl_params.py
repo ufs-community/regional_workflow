@@ -21,13 +21,13 @@ def set_extrn_mdl_params():
     #
     #-----------------------------------------------------------------------
     #
-    # Use known locations or COMINgfs as default, depending on RUN_ENVIR
+    # Use known locations or COMIN as default, depending on RUN_ENVIR
     #
     #-----------------------------------------------------------------------
     #
     if RUN_ENVIR == "nco":
-      EXTRN_MDL_SYSBASEDIR_ICS=EXTRN_MDL_SYSBASEDIR_ICS or COMINgfs
-      EXTRN_MDL_SYSBASEDIR_LBCS=EXTRN_MDL_SYSBASEDIR_LBCS or COMINgfs
+      EXTRN_MDL_SYSBASEDIR_ICS=EXTRN_MDL_SYSBASEDIR_ICS or COMIN
+      EXTRN_MDL_SYSBASEDIR_LBCS=EXTRN_MDL_SYSBASEDIR_LBCS or COMIN
     else:
       ics_dir=EXTRN_MDL_NAME_ICS
       lbcs_dir=EXTRN_MDL_NAME_LBCS
