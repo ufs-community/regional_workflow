@@ -65,8 +65,8 @@ class Testing(unittest.TestCase):
     def test_extrn_mdl_params(self):
         set_extrn_mdl_params()
         EXTRN_MDL_SYSBASEDIR_ICS = get_env_var("EXTRN_MDL_SYSBASEDIR_ICS")
-        COMINgfs = get_env_var("COMINgfs")
-        self.assertEqual(EXTRN_MDL_SYSBASEDIR_ICS,COMINgfs)
+        COMIN = get_env_var("COMIN")
+        self.assertEqual(EXTRN_MDL_SYSBASEDIR_ICS,COMIN)
 
     def setUp(self):
         set_env_var("MACHINE","HERA")
@@ -76,4 +76,4 @@ class Testing(unittest.TestCase):
         set_env_var("EXTRN_MDL_SYSBASEDIR_ICS",None)
         set_env_var("EXTRN_MDL_SYSBASEDIR_LBCS",None)
         set_env_var("EXTRN_MDL_LBCS_OFFSET_HRS",None)
-        set_env_var("COMINgfs","/base/path/of/directory/containing/gfs/input/files")
+        set_env_var("COMIN","/base/path/of/directory/containing/gfs/input/files")

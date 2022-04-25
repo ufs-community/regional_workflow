@@ -1,0 +1,32 @@
+name: Python unittests
+on: [push, pull_request]
+jobs:
+
+  python_unittests:
+    name: Python unittests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install python3 python3-pip netcdf-bin
+          sudo pip3 install pyyaml jinja2 f90nml
+
+      # Run python unittests
+      - name: Run python unittests
+        run: |
+          cd ush
+          python3 -m unittest -b python_utils/test_python_utils.py
+          python3 -m unittest -b check_ruc_lsm.py create_diag_table_file.py \
+                     create_model_configure_file.py link_fix.py set_cycle_dates.py \
+                     set_extrn_mdl_params.py set_FV3nml_sfc_climo_filenames.py \
+                     set_FV3nml_ens_stoch_seeds.py set_gridparams_ESGgrid.py \
+                     set_gridparams_GFDLgrid.py set_ozone_param.py \
+                     set_predef_grid_params.py set_thompson_mp_fix_files.py \
+                     get_crontab_contents.py
+
