@@ -40,7 +40,10 @@ def get_crontab_contents(called_from_cron):
     #import all env vars
     IMPORTS = ["MACHINE"]
     import_vars(env_vars=IMPORTS)
-  
+
+    # Get username on current machine
+    global USER
+    USER = os.getlogin()
     #
     # Make sure called_from_cron is set to a valid value.
     #
