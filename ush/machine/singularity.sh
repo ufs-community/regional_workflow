@@ -21,7 +21,7 @@ EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
   ${EXTRN_MDL_NAME_LBCS} \
   ${FV3GFS_FILE_FMT_LBCS})}
 
-EXTRN_MDL_DATA_STORES="aws nomads"
+EXTRN_MDL_DATA_STORES=${EXTRN_MDL_DATA_STORES:-"aws nomads"}
 
 # System scripts to source to initialize various commands within workflow
 # scripts (e.g. "module").
