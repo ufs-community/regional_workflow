@@ -33,7 +33,7 @@ def python_error_handler():
 try:
     import jinja2
     import yaml
-    #import f90yml
+    import f90nml
 except ImportError as error:
     print_info_msg(error.__class__.__name__ + ": " + str(error))
     python_error_handler()
