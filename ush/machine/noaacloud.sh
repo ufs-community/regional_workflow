@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/bin/bash -l
 
-set -x
 
 function file_location() {
 
@@ -16,16 +15,13 @@ function file_location() {
     "FV3GFS")
       location='/contrib/GST/model_data/FV3GFS/${yyyymmdd}${hh}'
       ;;
-    *)
-      print_info_msg"\
-        External model \'${external_model}\' does not have a default
-      location on Hera. Will try to pull from HPSS"
-      ;;
 
   esac
   echo ${location:-}
 }
 
+export OPT=/contrib/EPIC/hpc-modules
+export PATH=${PATH}:/contrib/GST/miniconda/envs/regional_workflow/bin
 
 EXTRN_MDL_SYSBASEDIR_ICS=${EXTRN_MDL_SYSBASEDIR_ICS:-$(file_location \
   ${EXTRN_MDL_NAME_ICS} \
@@ -52,12 +48,13 @@ NCORES_PER_NODE=${NCORES_PER_NODE:-36}
 SCHED=${SCHED:-"slurm"}
 
 # UFS SRW App specific paths
-FIXgsm=${FIXgsm:-"/contrib/EPIC/fix/fix_am"}
-FIXaer=${FIXaer:-"/contrib/EPIC/fix/fix_aer"}
-FIXlut=${FIXlut:-"/contrib/EPIC/fix/fix_lut"}
-TOPO_DIR=${TOPO_DIR:-"/contrib/EPIC/fix/fix_orog"}
-SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"/contrib/EPIC/fix/fix_sfc_climo"}
-DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"/scratch2/BMC/det/FV3LAM_pregen"}
+staged_data_dir="/contrib/EPIC/UFS_SRW_App/develop"
+FIXgsm=${FIXgsm:-"${staged_data_dir}/fix/fix_am"}
+FIXaer=${FIXaer:-"${staged_data_dir}/fix/fix_aer"}
+FIXlut=${FIXlut:-"${staged_data_dir}/fix/fix_lut"}
+TOPO_DIR=${TOPO_DIR:-"${staged_data_dir}/fix/fix_orog"}
+SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"${staged_data_dir}/fix/fix_sfc_climo"}
+TEST_EXTRN_MDL_SOURCE_BASEDIR="${staged_data_dir}/input_model_data"
 
 RUN_CMD_SERIAL="time"
 #Run Commands currently differ for GNU/openmpi
