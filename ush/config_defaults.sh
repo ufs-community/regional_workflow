@@ -503,6 +503,14 @@ WRITE_DOPOST="FALSE"
 # METPLUS_PATH:
 # Location to top-level directory of METplus installation.
 #
+# MET_INPUT_DIR:
+# Location to top-level directory of METplus input. This can be user
+# specified, and if not specified, it is set to EXPTDIR.
+#
+# MET_OUTPUT_DIR:
+# Location to top-level directory of METplus output. This can be user
+# specified, and if not specified, it is set to EXPTDIR.
+#
 # CCPA_OBS_DIR:
 # User-specified location of top-level directory where CCPA hourly
 # precipitation files used by METplus are located. This parameter needs
@@ -585,8 +593,8 @@ MODEL=""
 MET_INSTALL_DIR=""
 MET_BIN_EXEC="bin"
 METPLUS_PATH=""
-MET_INPUT_DIR=""
-MET_OUTPUT_DIR=""
+MET_INPUT_DIR="${EXPT_BASEDIR}/${EXPT_SUBDIR}"
+MET_OUTPUT_DIR="${EXPT_BASEDIR}/${EXPT_SUBDIR}"
 CCPA_OBS_DIR=""
 MRMS_OBS_DIR=""
 NDAS_OBS_DIR=""
