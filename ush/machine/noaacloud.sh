@@ -61,9 +61,9 @@ RUN_CMD_SERIAL="time"
 #RUN_CMD_UTILS='mpirun --mca btl tcp,vader,self -np $nprocs'
 #RUN_CMD_FCST='mpirun --mca btl tcp,vader,self -np ${PE_MEMBER01}'
 #RUN_CMD_POST='mpirun --mca btl tcp,vader,self -np $nprocs'
-RUN_CMD_UTILS='srun --mpi=pmi2 -n $nprocs'
-RUN_CMD_FCST='srun --mpi=pmi2 -n ${PE_MEMBER01}'
-RUN_CMD_POST='srun --mpi=pmi2 -n $nprocs'
+RUN_CMD_UTILS='mpiexec -np $nprocs'
+RUN_CMD_FCST='mpiexec -np ${PE_MEMBER01}'
+RUN_CMD_POST='mpiexec -np $nprocs'
 
 # MET Installation Locations
 # MET Plus is not yet supported on noaacloud
