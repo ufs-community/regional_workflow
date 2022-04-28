@@ -57,13 +57,13 @@ QUEUE_HPSS=${QUEUE_HPSS:-"dev_transfer"}
 QUEUE_FCST=${QUEUE_FCST:-"dev"}
 
 # UFS SRW App specific paths
-staged_data_dir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/develop/"
+staged_data_dir="/gpfs/dell2/emc/modeling/noscrub/UFS_SRW_App/develop"
 FIXgsm=${FIXgsm:-"${staged_data_dir}/fix/fix_am"}
 FIXaer=${FIXaer:-"${staged_data_dir}/fix/fix_aer"}
 FIXlut=${FIXlut:-"${staged_data_dir}/fix/fix_lut"}
 TOPO_DIR=${TOPO_DIR:-"${staged_data_dir}/fix/fix_orog"}
 SFC_CLIMO_INPUT_DIR=${SFC_CLIMO_INPUT_DIR:-"${staged_data_dir}/fix/fix_sfc_climo"}
-DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"${staged_data_dir}/FIXLAM_NCO_BASE"}
+DOMAIN_PREGEN_BASEDIR=${DOMAIN_PREGEN_BASEDIR:-"${staged_data_dir}/FV3LAM_pregen"}
 
 # Run commands for executables
 RUN_CMD_SERIAL="mpirun"
