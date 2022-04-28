@@ -38,12 +38,9 @@ def get_crontab_contents(called_from_cron):
     print_input_args(locals())
   
     #import all env vars
-    IMPORTS = ["MACHINE"]
+    IMPORTS = ["MACHINE", "USER"]
     import_vars(env_vars=IMPORTS)
 
-    # Get username on current machine
-    global USER
-    USER = os.getlogin()
     #
     # Make sure called_from_cron is set to a valid value.
     #
@@ -82,5 +79,5 @@ class Testing(unittest.TestCase):
         self.assertEqual(crontab_cmd, "crontab")
     def setUp(self):
         define_macos_utilities();
-        set_env_var('DEBUG','FALSE')
+        set_env_var('DEBUG',False)
         set_env_var('MACHINE', 'HERA')
