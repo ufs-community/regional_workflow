@@ -105,7 +105,6 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-INPUT_BASE=${MET_INPUT_BASE}
 OUTPUT_BASE=${MET_OUTPUT_BASE}
 LOG_SUFFIX=enspoint_prob_${CDATE}
 
@@ -130,7 +129,6 @@ fi
 #
 export EXPTDIR
 export LOGDIR
-export INPUT_BASE
 export OUTPUT_BASE
 export LOG_SUFFIX
 export MET_INSTALL_DIR
