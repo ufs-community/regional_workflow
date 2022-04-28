@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/bash 
 
 
 function file_location() {
@@ -67,4 +67,4 @@ RUN_CMD_POST='srun --mpi=pmi2 -n $nprocs'
 
 # MET Installation Locations
 # MET Plus is not yet supported on noaacloud
-
+. /contrib/EPIC/.bash_conda
