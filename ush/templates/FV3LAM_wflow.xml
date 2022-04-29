@@ -310,11 +310,11 @@ MODULES_RUN_TASK_FP script.
 
   </task>
 {%- endif %}
+{%- if do_ensemble %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{%- if do_ensemble %}
   <metatask name="run_ensemble">
 
     <var name="{{ ensmem_indx_name }}">
@@ -325,6 +325,10 @@ MODULES_RUN_TASK_FP script.
 {%- endif %}
 
 {%- if run_task_make_ics %}
+<!--
+************************************************************************
+************************************************************************
+-->
   <task name="&MAKE_ICS_TN;{{ uscore_ensmem_name }}" cycledefs="forecast" maxtries="{{ maxtries_make_ics }}">
 
     &RSRV_DEFAULT;
@@ -444,11 +448,11 @@ MODULES_RUN_TASK_FP script.
 
   </task>
 {%- endif %}
+{%- if run_task_run_post %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-{%- if run_task_run_post %}
   {%- if sub_hourly_post %}
 <!--
 Define the post-processing task for first model output time.  The forecast 
@@ -683,7 +687,6 @@ the <task> tag to be identical to the ones above for other output times.
   </metatask>
   {%- endif %}
 {%- endif %}
-
 {%- if run_task_get_obs_ccpa %}
 <!--
 ************************************************************************
@@ -713,7 +716,6 @@ the <task> tag to be identical to the ones above for other output times.
 
   </task>
 {%- endif %}
-
 {%- if run_task_get_obs_mrms %}
 <!--
 ************************************************************************
@@ -744,7 +746,6 @@ the <task> tag to be identical to the ones above for other output times.
  
   </task>
 {%- endif %}
-
 {%- if run_task_get_obs_ndas %}
 <!--
 ************************************************************************
@@ -773,7 +774,6 @@ the <task> tag to be identical to the ones above for other output times.
 
   </task>
 {%- endif %}
-
 {%- if run_task_vx_gridstat %}
 <!--
 ************************************************************************
@@ -805,27 +805,22 @@ the <task> tag to be identical to the ones above for other output times.
     {%- endif %}
 
     <dependency>
-      {%- if run_task_get_obs_ccpa %}
       <and>
+      {%- if run_task_get_obs_ccpa %}
         <taskdep task="&GET_OBS_CCPA_TN;"/>
+      {%- endif %}
+      {%- if run_task_run_fcst %}
         {%- if write_dopost %}
         <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
         {%- else %}
         <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
         {%- endif %}
-      </and>
-      {%- else %}
-        {%- if write_dopost %}
-      <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
-        {%- else %}
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
-        {%- endif %}
       {%- endif %}
+      </and>
     </dependency>
 
   </task>
 {%- endif %}
-
 {%- if run_task_vx_gridstat %}
 <!--
 ************************************************************************
@@ -856,27 +851,22 @@ the <task> tag to be identical to the ones above for other output times.
     {%- endif %}
 
     <dependency>
-      {%- if run_task_get_obs_mrms %}
       <and>
+      {%- if run_task_get_obs_mrms %}
         <taskdep task="&GET_OBS_MRMS_TN;"/>
+      {%- endif %}
+      {%- if run_task_run_fcst %}
         {%- if write_dopost %}
         <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
         {%- else %}
         <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
         {%- endif %}
-      </and>
-      {%- else %}
-        {%- if write_dopost %}
-      <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
-        {%- else %}
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
-        {%- endif %}
       {%- endif %}
+      </and>
     </dependency>
 
   </task>
 {%- endif %}
-
 {%- if run_task_vx_gridstat %}
 <!--
 ************************************************************************
@@ -907,27 +897,22 @@ the <task> tag to be identical to the ones above for other output times.
     {%- endif %}
 
     <dependency>
-      {%- if run_task_get_obs_mrms %}
       <and>
+      {%- if run_task_get_obs_mrms %}
         <taskdep task="&GET_OBS_MRMS_TN;"/>
+      {%- endif %}
+      {%- if run_task_run_fcst %}
         {%- if write_dopost %}
         <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
         {%- else %}
         <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
         {%- endif %}
-      </and>
-      {%- else %}
-        {%- if write_dopost %}
-      <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
-        {%- else %}
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
-        {%- endif %}
       {%- endif %}
+      </and>
     </dependency>
 
   </task>
 {%- endif %}
-
 {%- if run_task_vx_gridstat and fcst_len_hrs >= 3 %}
 <!--
 ************************************************************************
@@ -964,7 +949,6 @@ the <task> tag to be identical to the ones above for other output times.
 
   </task>
 {%- endif %}
-
 {%- if run_task_vx_gridstat and fcst_len_hrs >= 6 %}
 <!--
 ************************************************************************
@@ -1001,7 +985,6 @@ the <task> tag to be identical to the ones above for other output times.
 
   </task>
 {%- endif %}
-
 {%- if run_task_vx_gridstat and fcst_len_hrs >= 24 %}
 <!--
 ************************************************************************
@@ -1038,7 +1021,6 @@ the <task> tag to be identical to the ones above for other output times.
 
   </task>
 {%- endif %}
-
 {%- if run_task_vx_pointstat %}
 <!--
 ************************************************************************
@@ -1068,22 +1050,18 @@ the <task> tag to be identical to the ones above for other output times.
     {%- endif %}
 
     <dependency>
-      {%- if run_task_get_obs_ndas %}
       <and>
+      {%- if run_task_get_obs_ndas %}
         <taskdep task="&GET_OBS_NDAS_TN;"/>
+      {%- endif %}
+      {%- if run_task_run_fcst %}
         {%- if write_dopost %}
         <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
         {%- else %}
         <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
         {%- endif %}
-      </and>
-      {%- else %}
-        {%- if write_dopost %}
-      <taskdep task="&RUN_FCST_TN;{{ uscore_ensmem_name }}"/>
-        {%- else %}
-      <metataskdep metatask="&RUN_POST_TN;{{ uscore_ensmem_name }}"/>
-        {%- endif %}
       {%- endif %}
+      </and>
     </dependency>
 
   </task>
@@ -1092,7 +1070,6 @@ the <task> tag to be identical to the ones above for other output times.
 {%- if do_ensemble %}
   </metatask>
 {%- endif %}
-
 {%- if run_task_vx_ensgrid %}
 <!--
 ************************************************************************
@@ -1125,13 +1102,11 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
 {%- if fcst_len_hrs >= 3 %}
 <!--
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_03h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_03h }}">
 
     &RSRV_DEFAULT;
@@ -1165,7 +1140,6 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_06h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_06h }}">
 
     &RSRV_DEFAULT;
@@ -1199,7 +1173,6 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_24h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_24h }}">
 
     &RSRV_DEFAULT;
@@ -1232,8 +1205,7 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-
-<task name="&VX_ENSGRID_REFC_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_refc }}">
+  <task name="&VX_ENSGRID_REFC_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_refc }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
@@ -1259,13 +1231,11 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
 <!--
 ************************************************************************
 ************************************************************************
 -->
-
-<task name="&VX_ENSGRID_RETOP_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_retop }}">
+  <task name="&VX_ENSGRID_RETOP_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_retop }}">
 
     &RSRV_DEFAULT;
     <command>&LOAD_MODULES_RUN_TASK_FP; "&VX_TN;" "&JOBSDIR;/JREGIONAL_RUN_VX_ENSGRID"</command>
@@ -1291,7 +1261,6 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
 <!--
 ************************************************************************
 ************************************************************************
@@ -1322,12 +1291,10 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
 <!--
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_PROB_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_prob }}">
 
     &RSRV_DEFAULT;
@@ -1359,7 +1326,6 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_MEAN_03h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_mean_03h }}">
 
     &RSRV_DEFAULT;
@@ -1386,12 +1352,10 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
 <!--
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_PROB_03h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_prob_03h }}">
 
     &RSRV_DEFAULT;
@@ -1424,7 +1388,6 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_MEAN_06h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_mean_06h }}">
 
     &RSRV_DEFAULT;
@@ -1451,12 +1414,10 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
 <!--
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_PROB_06h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_prob_06h }}">
 
     &RSRV_DEFAULT;
@@ -1489,7 +1450,6 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_MEAN_24h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_mean_24h }}">
 
     &RSRV_DEFAULT;
@@ -1516,12 +1476,10 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
 <!--
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_PROB_24h_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_prob_24h }}">
 
     &RSRV_DEFAULT;
@@ -1553,7 +1511,6 @@ the <task> tag to be identical to the ones above for other output times.
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_PROB_REFC_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_prob_refc }}">
 
     &RSRV_DEFAULT;
@@ -1579,12 +1536,10 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
 <!--
 ************************************************************************
 ************************************************************************
 -->
-
   <task name="&VX_ENSGRID_PROB_RETOP_TN;" cycledefs="forecast" maxtries="{{ maxtries_vx_ensgrid_prob_retop }}">
 
     &RSRV_DEFAULT;
@@ -1611,7 +1566,6 @@ the <task> tag to be identical to the ones above for other output times.
 
   </task>
 {%- endif %}
-
 {%- if run_task_vx_enspoint %}
 <!--
 ************************************************************************
@@ -1641,7 +1595,6 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
 <!--
 ************************************************************************
 ************************************************************************
@@ -1670,7 +1623,6 @@ the <task> tag to be identical to the ones above for other output times.
     </dependency>
 
   </task>
-
 <!--
 ************************************************************************
 ************************************************************************
