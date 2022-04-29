@@ -1420,10 +1420,14 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-if [ "${DO_ENSEMBLE}" = "FALSE" ] && [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" -o \
-   "${RUN_TASK_VX_ENSPOINT}" = "TRUE" ]; then
+if [ "${DO_ENSEMBLE}" = "FALSE" ] && \
+   [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" -o \
+     "${RUN_TASK_VX_ENSPOINT}" = "TRUE" ]; then
   print_err_msg_exit "\
-Ensemble verification can not be run unless running in ensemble mode:
+Ensemble verification can not be run (i.e. RUN_TASK_VX_ENSGRID or 
+RUN_TASK_VX_ENSPOINT cannot be set to \"TRUE\") unless running in 
+ensemble mode (i.e. DO_ENSEMBLE is set to \"TRUE\").  Current values 
+are:
    DO_ENSEMBLE = \"${DO_ENSEMBLE}\"
    RUN_TASK_VX_ENSGRID = \"${RUN_TASK_VX_ENSGRID}\"
    RUN_TASK_VX_ENSPOINT = \"${RUN_TASK_VX_ENSPOINT}\""
