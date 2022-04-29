@@ -1130,14 +1130,6 @@ check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 # This is the directory that will contain the fixed files or symlinks to
 # the fixed files containing the grid, orography, and surface climatology
 # on the native FV3-LAM grid.
-
-# MET_INPUT_DIR:
-# This is the top-level directory of METplus input. This can be user
-# specified, and if not specified, it is set to EXPTDIR.
-#
-# MET_OUTPUT_DIR:
-# This is the top-level directory of METplus output. This can be user
-# specified, and if not specified, it is set to EXPTDIR.
 #
 # CYCLE_BASEDIR:
 # The base directory in which the directories for the various cycles will
@@ -1171,8 +1163,8 @@ FIXam="${EXPTDIR}/fix_am"
 FIXclim="${EXPTDIR}/fix_clim"
 FIXLAM="${EXPTDIR}/fix_lam"
 
-MET_INPUT_DIR="${EXPTDIR}"
-MET_OUTPUT_DIR="${EXPTDIR}"
+MET_INPUT_DIR="${MET_INPUT_DIR:-$EXPTDIR}"
+MET_OUTPUT_DIR="${MET_INPUT_DIR:-$EXPTDIR}"
 
 if [ "${RUN_ENVIR}" = "nco" ]; then
 
