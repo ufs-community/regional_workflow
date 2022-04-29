@@ -481,8 +481,12 @@ FCST_LEN_HRS="24"
 # with the prefix "YYYYMMDD.HHmmSS." in the RESTART directory
 #
 # WRITE_DOPOST:
-# Flag that determines whether or not to use the INLINE POST option
-# When TRUE, force to turn off run_post (RUN_TASK_RUN_POST=FALSE) in setup.sh
+# Flag that determines whether or not to use the INLINE POST option in 
+# the weather model, i.e. the weather model calls UPP directly to generate
+# the post-processed output files.  When this is set to "TRUE", the 
+# the run_post metatask in the Rocoto workflow (which runs UPP in stand-
+# alone mode to process raw output from the weather model on the write-
+# component grid) is turned off (i.e. RUN_TASK_RUN_POST is set to "FALSE").
 #
 #-----------------------------------------------------------------------
 #
