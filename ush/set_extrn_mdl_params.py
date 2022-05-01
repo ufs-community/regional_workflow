@@ -16,24 +16,8 @@ def set_extrn_mdl_params():
     #import all env variables
     import_vars()
 
-    global EXTRN_MDL_SYSBASEDIR_ICS, EXTRN_MDL_SYSBASEDIR_LBCS,  EXTRN_MDL_LBCS_OFFSET_HRS
+    global EXTRN_MDL_LBCS_OFFSET_HRS
 
-    #
-    #-----------------------------------------------------------------------
-    #
-    # Use known locations or COMIN as default, depending on RUN_ENVIR
-    #
-    #-----------------------------------------------------------------------
-    #
-    if RUN_ENVIR == "nco":
-      EXTRN_MDL_SYSBASEDIR_ICS=EXTRN_MDL_SYSBASEDIR_ICS or COMIN
-      EXTRN_MDL_SYSBASEDIR_LBCS=EXTRN_MDL_SYSBASEDIR_LBCS or COMIN
-    else:
-      ics_dir=EXTRN_MDL_NAME_ICS
-      lbcs_dir=EXTRN_MDL_NAME_LBCS
-      EXTRN_MDL_SYSBASEDIR_ICS=EXTRN_MDL_SYSBASEDIR_ICS or ics_dir
-      EXTRN_MDL_SYSBASEDIR_LBCS=EXTRN_MDL_SYSBASEDIR_LBCS or lbcs_dir
-    
     #
     #-----------------------------------------------------------------------
     #
@@ -49,7 +33,7 @@ def set_extrn_mdl_params():
         EXTRN_MDL_LBCS_OFFSET_HRS=EXTRN_MDL_LBCS_OFFSET_HRS or "0"
 
     # export values we set above
-    env_vars = ["EXTRN_MDL_SYSBASEDIR_ICS", "EXTRN_MDL_SYSBASEDIR_LBCS", "EXTRN_MDL_LBCS_OFFSET_HRS"]
+    env_vars = ["EXTRN_MDL_LBCS_OFFSET_HRS"]
     export_vars(env_vars=env_vars)
 #
 #-----------------------------------------------------------------------
