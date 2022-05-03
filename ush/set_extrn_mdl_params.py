@@ -48,16 +48,9 @@ if __name__ == "__main__":
 class Testing(unittest.TestCase):
     def test_extrn_mdl_params(self):
         set_extrn_mdl_params()
-        EXTRN_MDL_SYSBASEDIR_ICS = get_env_var("EXTRN_MDL_SYSBASEDIR_ICS")
-        COMIN = get_env_var("COMIN")
-        self.assertEqual(EXTRN_MDL_SYSBASEDIR_ICS,COMIN)
+        EXTRN_MDL_LBCS_OFFSET_HRS = get_env_var("EXTRN_MDL_LBCS_OFFSET_HRS")
+        self.assertEqual(EXTRN_MDL_LBCS_OFFSET_HRS,3)
 
     def setUp(self):
-        set_env_var("MACHINE","HERA")
-        set_env_var("RUN_ENVIR","nco")
-        set_env_var("EXTRN_MDL_NAME_ICS","FV3GFS")
-        set_env_var("EXTRN_MDL_NAME_LBCS","FV3GFS")
-        set_env_var("EXTRN_MDL_SYSBASEDIR_ICS",None)
-        set_env_var("EXTRN_MDL_SYSBASEDIR_LBCS",None)
+        set_env_var("EXTRN_MDL_NAME_LBCS","RAP")
         set_env_var("EXTRN_MDL_LBCS_OFFSET_HRS",None)
-        set_env_var("COMIN","/base/path/of/directory/containing/gfs/input/files")
