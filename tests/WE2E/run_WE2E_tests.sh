@@ -94,7 +94,7 @@ Usage:
     [stmp=\"...\"] \\
     [ptmp=\"...\"] \\
     [compiler=\"...\"] \\
-    [build_env_fn=\"...\"]
+    [build_mod_fn=\"...\"]
 
 The arguments in brackets are optional.  The arguments are defined as 
 follows:
@@ -133,9 +133,9 @@ tests under subdirectory testset1, another set of tests under testset2,
 etc.
 
 exec_subdir:
-Optional. Argument is used to set the EXEC_SUBDIR configuration
-variable. Please see the ush/default_configs.sh file for a full
-description.
+Optional.  Argument used to set the EXEC_SUBDIR experiment variable. 
+Please see the default experiment configuration file \"config_defaults.sh\" 
+for a full description of EXEC_SUBDIR.
 
 use_cron_to_relaunch:
 Argument used to explicitly set the experiment variable USE_CRON_TO_RELAUNCH
@@ -208,14 +208,85 @@ Same as the argument \"stmp\" described above but for setting the
 experiment variable PTMP for all tests that will run in NCO mode.
 
 compiler:
-Type of compiler to use for the workflow. Options are \"intel\" 
-and \"gnu\". Default is \"intel\",
+Type of compiler to use for the workflow. Options are \"intel\" and \"gnu\". 
+Default is \"intel\".
 
-build_env_fn:
-Specify the build environment (see ufs-srweather-app/envs) to 
-use for the workflow. (e.g. build_cheyenne_gnu.env). If a 
+build_mod_fn:
+Specify the build module files (see ufs-srweather-app/modulefiles) to 
+use for the workflow. (e.g. build_cheyenne_gnu). If a 
 \"gnu\" compiler is specified, it must also be specified with 
 the \"compiler\" option.
+
+
+Usage Examples:
+--------------
+Here, we give several common usage examples.  In the following, assume 
+my_tests.txt is a text file in the same directory as this script containing 
+a list of test names that we want to run, e.g.
+
+> more my_tests.txt
+new_ESGgrid
+specify_DT_ATMOS_LAYOUT_XY_BLOCKSIZE
+
+Then:
+
+1) To run the tests listed in my_tests.txt on Hera and charge the core-
+   hours used to the \"rtrr\" account, use:
+
+     > run_WE2E_tests.sh tests_file=\"my_tests.txt\" machine=\"hera\" account=\"rtrr\"
+
+   This will create the experiment subdirectories for the two tests in
+   the directory
+
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs
+
+   where SR_WX_APP_TOP_DIR is the directory in which the ufs-srweather-app 
+   repository is cloned.  Thus, the following two experiment directories
+   will be created:
+
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs/new_ESGgrid
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs/specify_DT_ATMOS_LAYOUT_XY_BLOCKSIZE
+
+   In addition, by default, cron jobs will be created in the user's cron
+   table to relaunch the workflows of these experiments every 2 minutes.
+
+2) To change the frequency with which the cron relaunch jobs are submitted
+   from the default of 2 minutes to 1 minute, use:
+
+     > run_WE2E_tests.sh tests_file=\"my_tests.txt\" machine=\"hera\" account=\"rtrr\" cron_relaunch_intvl_mnts=\"01\"
+
+3) To disable use of cron (which means the worfkow for each test will 
+   have to be relaunched manually from within each experiment directory),
+   use:
+
+     > run_WE2E_tests.sh tests_file=\"my_tests.txt\" machine=\"hera\" account=\"rtrr\" use_cron_to_relaunch=\"FALSE\"
+
+4) To place the experiment subdirectories in a subdirectory named \"test_set_01\"
+   under 
+
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs
+
+   (instead of immediately under the latter), use:
+
+     > run_WE2E_tests.sh tests_file=\"my_tests.txt\" machine=\"hera\" account=\"rtrr\" expt_basedir=\"test_set_01\"
+
+   In this case, the full paths to the experiment directories will be:
+
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs/test_set_01/new_ESGgrid
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs/test_set_01/specify_DT_ATMOS_LAYOUT_XY_BLOCKSIZE
+
+5) To use a list of tests that is located in
+
+     /path/to/custom/my_tests.txt
+
+   instead of in the same directory as this script, and to have the 
+   experiment directories be placed in an arbitrary location, say 
+
+     /path/to/custom/expt_dirs
+
+   use:
+
+     > run_WE2E_tests.sh tests_file=\"/path/to/custom/my_tests.txt\" machine=\"hera\" account=\"rtrr\" expt_basedir=\"/path/to/custom/expt_dirs\"
 "
 #
 #-----------------------------------------------------------------------
@@ -253,7 +324,7 @@ valid_args=( \
   "stmp" \
   "ptmp" \
   "compiler" \
-  "build_env_fn" \
+  "build_mod_fn" \
   )
 process_args valid_args "$@"
 #
@@ -685,7 +756,7 @@ Please correct and rerun."
   MACHINE="${machine^^}"
   ACCOUNT="${account}"
   COMPILER=${compiler:-"intel"}
-  BUILD_ENV_FN=${build_env_fn:-"build_${machine}_${COMPILER}.env"}
+  BUILD_MOD_FN=${build_mod_fn:-"build_${machine}_${COMPILER}"}
   EXPT_BASEDIR="${expt_basedir}"
   EXPT_SUBDIR="${test_name}"
   USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch:-"TRUE"}
@@ -710,7 +781,7 @@ MACHINE=\"${MACHINE}\"
 ACCOUNT=\"${ACCOUNT}\"
 
 COMPILER=\"${COMPILER}\"
-BUILD_ENV_FN=\"${BUILD_ENV_FN}\""
+BUILD_MOD_FN=\"${BUILD_MOD_FN}\""
 
   if [ -n "${exec_subdir}" ]; then
     expt_config_str=${expt_config_str}"
@@ -924,6 +995,9 @@ PTMP=\"${PTMP}\""
 #
   if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
 
+    # Ensure we only check on disk for these files
+    data_stores="disk"
+
     extrn_mdl_source_basedir=${TEST_EXTRN_MDL_SOURCE_BASEDIR:-}
     if [ ! -d "${extrn_mdl_source_basedir:-}" ] ; then
       print_err_msg_exit "\
@@ -934,20 +1008,16 @@ machine (MACHINE):
     fi
     EXTRN_MDL_SOURCE_BASEDIR_ICS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_ICS}"
     if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] ; then
-      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/${FV3GFS_FILE_FMT_ICS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
-    elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] ; then
-      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}/for_ICS"
+      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/${FV3GFS_FILE_FMT_ICS}/\${yyyymmddhh}"
     else
-      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
+      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/\${yyyymmddhh}"
     fi
 
     EXTRN_MDL_SOURCE_BASEDIR_LBCS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_LBCS}"
     if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] ; then
-      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/${FV3GFS_FILE_FMT_LBCS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
-    elif [  "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ] ; then
-      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
+      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/${FV3GFS_FILE_FMT_LBCS}/\${yyyymmddhh}"
     else
-      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}/for_LBCS"
+      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/\${yyyymmddhh}"
     fi
 #
 # Make sure that the forecast length is evenly divisible by the interval
@@ -968,10 +1038,11 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
 # Locations and names of user-staged external model files for generating
 # ICs and LBCs.
 #
-EXTRN_MDL_SOURCE_BASEDIR_ICS=${EXTRN_MDL_SOURCE_BASEDIR_ICS}
+EXTRN_MDL_SOURCE_BASEDIR_ICS='${EXTRN_MDL_SOURCE_BASEDIR_ICS}'
 EXTRN_MDL_FILES_ICS=( ${EXTRN_MDL_FILES_ICS[@]} )
-EXTRN_MDL_SOURCE_BASEDIR_LBCS=${EXTRN_MDL_SOURCE_BASEDIR_LBCS}
-EXTRN_MDL_FILES_LBCS=( ${EXTRN_MDL_FILES_LBCS[@]} )"
+EXTRN_MDL_SOURCE_BASEDIR_LBCS='${EXTRN_MDL_SOURCE_BASEDIR_LBCS}'
+EXTRN_MDL_FILES_LBCS=( ${EXTRN_MDL_FILES_LBCS[@]} )
+EXTRN_MDL_DATA_STORES=\"$data_stores\""
 
   fi
 #
