@@ -238,19 +238,6 @@ EXEC_SUBDIR="bin"
 # need in order to create initial and boundary condition files for a given 
 # cycle on the native FV3-LAM grid.
 #
-# DOMAIN_PREGEN_BASEDIR:
-# The base directory containing pregenerated grid, orography, and surface 
-# climatology files.  For the pregenerated grid specified by PREDEF_GRID_NAME, 
-# these "fixed" files are located in:
-#
-#   ${DOMAIN_PREGEN_BASEDIR}/${PREDEF_GRID_NAME}
-#
-# The workflow scripts will create a symlink in the experiment directory
-# that will point to a subdirectory (having the name of the grid being
-# used) under this directory.  This variable should be set to a null 
-# string in this file, but it can be specified in the user-specified 
-# workflow configuration file (EXPT_CONFIG_FN).
-#
 # envir, NET, model_ver, RUN:
 # Standard environment variables defined in the NCEP Central Operations WCOSS
 # Implementation Standards document as follows:
@@ -292,7 +279,6 @@ EXEC_SUBDIR="bin"
 #-----------------------------------------------------------------------
 #
 COMIN="/path/of/directory/containing/data/files/for/IC/LBCS"
-DOMAIN_PREGEN_BASEDIR=""
 STMP="/base/path/of/directory/containing/model/input/and/raw/output/files"
 envir="para"
 NET="rrfs"
@@ -1314,6 +1300,22 @@ VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
 # SFC_CLIMO_DIR:
 # Same as GRID_DIR but for the MAKE_SFC_CLIMO_TN task.
 #
+# DOMAIN_PREGEN_BASEDIR:
+# The base directory containing pregenerated grid, orography, and surface 
+# climatology files. This is an alternative for setting GRID_DIR,
+# OROG_DIR, and SFC_CLIMO_DIR individually
+# 
+# For the pregenerated grid specified by PREDEF_GRID_NAME, 
+# these "fixed" files are located in:
+#
+#   ${DOMAIN_PREGEN_BASEDIR}/${PREDEF_GRID_NAME}
+#
+# The workflow scripts will create a symlink in the experiment directory
+# that will point to a subdirectory (having the name of the grid being
+# used) under this directory.  This variable should be set to a null 
+# string in this file, but it can be specified in the user-specified 
+# workflow configuration file (EXPT_CONFIG_FN).
+#
 # RUN_TASK_GET_EXTRN_ICS:
 # Flag that determines whether the GET_EXTRN_ICS_TN task is to be run.
 #
@@ -1359,6 +1361,8 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
+
+DOMAIN_PREGEN_BASEDIR=""
 
 RUN_TASK_GET_EXTRN_ICS="TRUE"
 RUN_TASK_GET_EXTRN_LBCS="TRUE"
