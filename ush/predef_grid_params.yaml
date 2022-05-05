@@ -356,7 +356,7 @@
   WRTCMP_stdlat1: 39.77
   WRTCMP_stdlat2: 39.77
   WRTCMP_nx: 197
-  WRTCMP_ny: 195
+  WRTCMP_ny: 197
   WRTCMP_lon_lwr_left: -89.47120417
   WRTCMP_lat_lwr_left: 37.07809642
   WRTCMP_dx: 3000.0
