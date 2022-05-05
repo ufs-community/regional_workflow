@@ -137,6 +137,7 @@ export METPLUS_CONF
 export MET_CONFIG
 export MODEL
 export NET
+export FN_OUT_DOMAIN
 
 ${METPLUS_PATH}/ush/run_metplus.py \
   -c ${METPLUS_CONF}/common.conf \

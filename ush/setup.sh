@@ -1155,6 +1155,9 @@ check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 #
 # COMOUT_BASEDIR is not used by the workflow in community mode.
 #
+# FN_OUT_DOMAIN:
+# The PREDEF_GRID_NAME is set by default.
+#
 #-----------------------------------------------------------------------
 #
 LOGDIR="${EXPTDIR}/log"
@@ -1174,6 +1177,9 @@ else
   COMROOT=""
   COMOUT_BASEDIR=""
 fi
+
+FN_OUT_DOMAIN="${FN_OUT_DOMAIN:-${PREDEF_GRID_NAME}}"
+FN_OUT_DOMAIN=$(echo_lowercase ${FN_OUT_DOMAIN})
 #
 #-----------------------------------------------------------------------
 #
@@ -2446,6 +2452,7 @@ FV3_NML_ENSMEM_FPS=${fv3_nml_ensmem_fps_str}
 #-----------------------------------------------------------------------
 #
 GLOBAL_VAR_DEFNS_FP='${GLOBAL_VAR_DEFNS_FP}'
+FN_OUT_DOMAIN='${FN_OUT_DOMAIN}'
 
 DATA_TABLE_FN='${DATA_TABLE_FN}'
 DIAG_TABLE_FN='${DIAG_TABLE_FN}'
