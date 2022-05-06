@@ -850,6 +850,11 @@ def setup():
       COMOUT_BASEDIR=""
 
     if POST_OUTPUT_DOMAIN_NAME is None:
+      if PREDEF_GRID_NAME is None:
+        print_err_msg_exit(f'''
+            The domain name used in naming the output files of run_post is
+            not defined in the configuration file:
+            POST_OUTPUT_DOMAIN_NAME = \"{POST_OUTPUT_DOMAIN_NAME}\" ''')
       POST_OUTPUT_DOMAIN_NAME = PREDEF_GRID_NAME
 
     POST_OUTPUT_DOMAIN_NAME = lowercase(POST_OUTPUT_DOMAIN_NAME)

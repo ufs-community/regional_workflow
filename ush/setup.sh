@@ -1179,6 +1179,12 @@ else
 fi
 
 POST_OUTPUT_DOMAIN_NAME="${POST_OUTPUT_DOMAIN_NAME:-${PREDEF_GRID_NAME}}"
+if [ -z "${POST_OUTPUT_DOMAIN_NAME}" ] && [ -z "${PREDEF_GRID_NAME}" ]; then
+  print_err_msg_exit "\
+The domain name used in naming the output files of run_post is not defined 
+in the configuration file:
+  POST_OUTPUT_DOMAIN_NAME = \"${POST_OUTPUT_DOMAIN_NAME}\""  
+fi
 POST_OUTPUT_DOMAIN_NAME=$(echo_lowercase ${POST_OUTPUT_DOMAIN_NAME})
 #
 #-----------------------------------------------------------------------
