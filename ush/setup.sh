@@ -2505,14 +2505,6 @@ RELATIVE_LINK_FLAG='${RELATIVE_LINK_FLAG}'
 #
 #-----------------------------------------------------------------------
 #
-# Domain name used in naming the output files by UPP or inline post
-#
-#-----------------------------------------------------------------------
-#
-POST_OUTPUT_DOMAIN_NAME='${POST_OUTPUT_DOMAIN_NAME}'
-#
-#-----------------------------------------------------------------------
-#
 # Parameters that indicate whether or not various parameterizations are 
 # included in and called by the physics suite.
 #
