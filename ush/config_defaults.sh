@@ -256,10 +256,6 @@ EXEC_SUBDIR="bin"
 #   Name of model run (third level of com directory structure).
 #   In general, same as $NET
 #
-#   POST_OUTPUT_DOMAIN_NAME:
-#   Domain name used in naming the output files of run_post by UPP or inline post.
-#   Output file name: $NET.tHHz.[var_name].f###.$POST_OUTPUT_DOMAIN_NAME.grib2
-#
 # STMP:
 # The beginning portion of the directory that will contain cycle-dependent
 # model input files, symlinks to cycle-independent input files, and raw 
@@ -288,7 +284,6 @@ envir="para"
 NET="rrfs"
 model_ver="v1.0.0"
 RUN="rrfs"
-POST_OUTPUT_DOMAIN_NAME=""
 STMP="/base/path/of/directory/containing/model/input/and/raw/output/files"
 PTMP="/base/path/of/directory/containing/postprocessed/output/files"
 #
@@ -413,6 +408,18 @@ GLOBAL_VAR_DEFNS_FN="var_defns.sh"
 EXTRN_MDL_VAR_DEFNS_FN="extrn_mdl_var_defns.sh"
 WFLOW_LAUNCH_SCRIPT_FN="launch_FV3LAM_wflow.sh"
 WFLOW_LAUNCH_LOG_FN="log.launch_FV3LAM_wflow"
+#
+#-----------------------------------------------------------------------
+#
+# Set output file name. Definitions:
+#
+# POST_OUTPUT_DOMAIN_NAME:
+# Domain name used in naming the output files of run_post by UPP or inline post.
+# Output file name: $NET.tHHz.[var_name].f###.$POST_OUTPUT_DOMAIN_NAME.grib2
+#
+#-----------------------------------------------------------------------
+#
+POST_OUTPUT_DOMAIN_NAME=""
 #
 #-----------------------------------------------------------------------
 #
