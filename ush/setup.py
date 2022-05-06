@@ -821,10 +821,13 @@ def setup():
     #
     # COMOUT_BASEDIR is not used by the workflow in community mode.
     #
+    # POST_OUTPUT_DOMAIN_NAME:
+    # The PREDEF_GRID_NAME is set by default.
+    #
     #-----------------------------------------------------------------------
     #
     global LOGDIR, FIXam, FIXclim, FIXLAM, CYCLE_BASEDIR, \
-           COMROOT, COMOUT_BASEDIR
+           COMROOT, COMOUT_BASEDIR, POST_OUTPUT_DOMAIN_NAME
 
     LOGDIR = os.path.join(EXPTDIR, "log")
     
@@ -845,6 +848,11 @@ def setup():
       CYCLE_BASEDIR=EXPTDIR
       COMROOT=""
       COMOUT_BASEDIR=""
+
+    if POST_OUTPUT_DOMAIN_NAME is None:
+      POST_OUTPUT_DOMAIN_NAME = PREDEF_GRID_NAME
+
+    POST_OUTPUT_DOMAIN_NAME = lowercase(POST_OUTPUT_DOMAIN_NAME)
     #
     #-----------------------------------------------------------------------
     #
@@ -1928,6 +1936,14 @@ def setup():
         #-----------------------------------------------------------------------
         #
         RELATIVE_LINK_FLAG='{RELATIVE_LINK_FLAG}'
+        #
+        #-----------------------------------------------------------------------
+        #
+        # Domain name used in naming the output files by UPP or inline post
+        #
+        #-----------------------------------------------------------------------
+        #
+        POST_OUTPUT_DOMAIN_NAME='{POST_OUTPUT_DOMAIN_NAME}'
         #
         #-----------------------------------------------------------------------
         #

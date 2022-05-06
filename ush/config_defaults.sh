@@ -258,7 +258,7 @@ EXEC_SUBDIR="bin"
 #
 #   POST_OUTPUT_DOMAIN_NAME:
 #   Domain name used in naming the output files of run_post by UPP or inline post.
-#   Output file name: $NET.tHHz.prslev.f###.$POST_OUTPUT_DOMAIN_NAME.grib2
+#   Output file name: $NET.tHHz.[var_name].f###.$POST_OUTPUT_DOMAIN_NAME.grib2
 #
 # STMP:
 # The beginning portion of the directory that will contain cycle-dependent
