@@ -289,7 +289,7 @@ if [ "${post_mn}" != "00" ]; then
 fi
 
 post_fn_suffix="GrbF${post_fhr}${dot_post_mn_or_null}"
-post_renamed_fn_suffix="f${fhr}${post_mn_or_null}.${FN_OUT_DOMAIN}.grib2"
+post_renamed_fn_suffix="f${fhr}${post_mn_or_null}.${POST_OUTPUT_DOMAIN_NAME}.grib2"
 #
 # For convenience, change location to postprd_dir (where the final output
 # from UPP will be located).  Then loop through the two files that UPP

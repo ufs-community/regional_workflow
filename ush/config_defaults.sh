@@ -238,7 +238,7 @@ EXEC_SUBDIR="bin"
 # need in order to create initial and boundary condition files for a given 
 # cycle on the native FV3-LAM grid.
 #
-# envir, NET, model_ver, RUN, FN_OUT_DOMAIN:
+# envir, NET, model_ver, RUN, POST_OUTPUT_DOMAIN_NAME:
 # Standard environment variables defined in the NCEP Central Operations WCOSS
 # Implementation Standards document as follows:
 #
@@ -256,9 +256,9 @@ EXEC_SUBDIR="bin"
 #   Name of model run (third level of com directory structure).
 #   In general, same as $NET
 #
-#   FN_OUT_DOMAIN:
-#   Name of the domain component in the output file name
-#   Output file name: $NET.tHHz.prslev.f###.$FN_OUT_DOMAIN.grib2
+#   POST_OUTPUT_DOMAIN_NAME:
+#   Domain name used in naming the output files of run_post by UPP or inline post.
+#   Output file name: $NET.tHHz.prslev.f###.$POST_OUTPUT_DOMAIN_NAME.grib2
 #
 # STMP:
 # The beginning portion of the directory that will contain cycle-dependent
@@ -288,7 +288,7 @@ envir="para"
 NET="rrfs"
 model_ver="v1.0.0"
 RUN="rrfs"
-FN_OUT_DOMAIN=""
+POST_OUTPUT_DOMAIN_NAME=""
 STMP="/base/path/of/directory/containing/model/input/and/raw/output/files"
 PTMP="/base/path/of/directory/containing/postprocessed/output/files"
 #

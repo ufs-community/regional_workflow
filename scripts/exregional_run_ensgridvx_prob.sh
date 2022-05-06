@@ -144,7 +144,7 @@ export METPLUS_CONF
 export MET_CONFIG
 export MODEL
 export NET
-export FN_OUT_DOMAIN
+export POST_OUTPUT_DOMAIN_NAME
 export LOG_SUFFIX
 
 #
