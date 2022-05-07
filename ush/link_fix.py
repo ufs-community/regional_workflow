@@ -2,12 +2,14 @@
 
 import unittest
 import os
+import sys
+import argparse
 import glob
 
 from python_utils import import_vars, set_env_var, print_input_args, \
                          print_info_msg, print_err_msg_exit, create_symlink_to_file, \
                          define_macos_utilities, check_var_valid_value, \
-                         cd_vrfy, mkdir_vrfy, find_pattern_in_str
+                         cd_vrfy, mkdir_vrfy, find_pattern_in_str, load_shell_config
 
 def link_fix(verbose, file_group):
     """ This file defines a function that ...
@@ -320,7 +322,7 @@ def link_fix(verbose, file_group):
            not GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES:
           target=f"{cres}{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NH4}.nc"
           symlink=f"C{GFDLgrid_RES}{DOT_OR_USCORE}grid.tile{TILE_RGNL}.nc"
-          create_symlink_to_file(target,symlink,relative)
+          create_symlink_to_file(target,symlink,True)
     #
     #-----------------------------------------------------------------------
     #
@@ -366,6 +368,30 @@ def link_fix(verbose, file_group):
 
     return res
    
+def parse_args(argv):
+    """ Parse command line arguments"""
+    parser = argparse.ArgumentParser(
+        description='Creates symbolic links to FIX directories.'
+    )
+
+    parser.add_argument('-f', '--file-group',
+                        dest='file_group',
+                        required=True,
+                        help='File group, could be one of ["grid", "orog", "sfc_climo"].')
+
+    parser.add_argument('-p', '--path-to-defns',
+                        dest='path_to_defns',
+                        required=True,
+                        help='Path to var_defns file.')
+
+    return parser.parse_args(argv)
+
+if __name__ == '__main__':
+    args = parse_args(sys.argv[1:])
+    cfg = load_shell_config(args.path_to_defns)
+    import_vars(dictionary=cfg)
+    link_fix(VERBOSE, args.file_group)
+
 class Testing(unittest.TestCase):
     def test_link_fix(self):
         res = link_fix(verbose=True, file_group="grid")

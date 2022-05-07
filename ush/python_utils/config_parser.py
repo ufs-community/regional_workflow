@@ -14,7 +14,10 @@ returnded by load_config to make queries.
 """
 
 import argparse
-import yaml
+try:
+    import yaml
+except:
+    pass
 import json
 import sys
 import os
@@ -49,7 +52,10 @@ def join_str(loader, node):
     seq = loader.construct_sequence(node)
     return ''.join([str(i) for i in seq])
 
-yaml.add_constructor('!join_str', join_str, Loader=yaml.SafeLoader)
+try:
+    yaml.add_constructor('!join_str', join_str, Loader=yaml.SafeLoader)
+except:
+    pass
 
 ##########
 # JSON

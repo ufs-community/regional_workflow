@@ -12,14 +12,6 @@
 #
 #-----------------------------------------------------------------------
 #
-# Source other necessary files.
-#
-#-----------------------------------------------------------------------
-#
-. $USHDIR/link_fix.sh
-#
-#-----------------------------------------------------------------------
-#
 # Save current shell options (in a global array).  Then set new options
 # for this script/function.
 #
@@ -581,9 +573,9 @@ cd_vrfy -
 #
 #-----------------------------------------------------------------------
 #
-link_fix \
-  verbose="$VERBOSE" \
-  file_group="orog" || \
+python3 -S $USHDIR/link_fix.py \
+  --path-to-defns $EXPTDIR/var_defns.sh \
+  --file-group "orog" || \
 print_err_msg_exit "\
 Call to function to create links to orography files failed."
 #

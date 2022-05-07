@@ -16,10 +16,10 @@ try:
   from .run_command import run_command
   from .get_charvar_from_netcdf import get_charvar_from_netcdf
   from .xml_parser import load_xml_file, has_tag_with_value
-  from .config_parser import load_yaml_config, cfg_to_yaml_str, \
+  from .config_parser import load_shell_config, cfg_to_shell_str, \
                              load_json_config, cfg_to_json_str, \
-                             load_ini_config, cfg_to_ini_str, get_ini_value, \
-                             load_shell_config, cfg_to_shell_str, \
-                             load_config_file
+                             load_ini_config, cfg_to_ini_str, \
+                             get_ini_value, load_config_file, \
+                             load_yaml_config, cfg_to_yaml_str
 except:
   pass
