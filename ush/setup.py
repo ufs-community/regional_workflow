@@ -1053,7 +1053,7 @@ def setup():
       if not os.path.exists(EXTRN_MDL_SOURCE_BASEDIR_LBCS):
       idx = EXTRN_MDL_SOURCE_BASEDIR_LBCS.find("$")
       if not os.path.exists(EXTRN_MDL_SOURCE_BASEDIR_LBCS[:idx]): 
-       print_err_msg_exit(f'''
+        print_err_msg_exit(f'''
             The directory (EXTRN_MDL_SOURCE_BASEDIR_LBCS) in which the user-staged 
             external model files for generating LBCs should be located does not exist:
               EXTRN_MDL_SOURCE_BASEDIR_LBCS = \"{EXTRN_MDL_SOURCE_BASEDIR_LBCS}\"''')
