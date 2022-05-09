@@ -1042,13 +1042,18 @@ def setup():
     if USE_USER_STAGED_EXTRN_FILES:
     
       if not os.path.exists(EXTRN_MDL_SOURCE_BASEDIR_ICS):
+      # Check for the base directory up to the first templated field.
+      idx = EXTRN_MDL_SOURCE_BASEDIR_ICS.find("$")
+      if not os.path.exists(EXTRN_MDL_SOURCE_BASEDIR_ICS[:idx]):
         print_err_msg_exit(f'''
             The directory (EXTRN_MDL_SOURCE_BASEDIR_ICS) in which the user-staged 
             external model files for generating ICs should be located does not exist:
               EXTRN_MDL_SOURCE_BASEDIR_ICS = \"{EXTRN_MDL_SOURCE_BASEDIR_ICS}\"''')
     
       if not os.path.exists(EXTRN_MDL_SOURCE_BASEDIR_LBCS):
-        print_err_msg_exit(f'''
+      idx = EXTRN_MDL_SOURCE_BASEDIR_LBCS.find("$")
+      if not os.path.exists(EXTRN_MDL_SOURCE_BASEDIR_LBCS[:idx]): 
+       print_err_msg_exit(f'''
             The directory (EXTRN_MDL_SOURCE_BASEDIR_LBCS) in which the user-staged 
             external model files for generating LBCs should be located does not exist:
               EXTRN_MDL_SOURCE_BASEDIR_LBCS = \"{EXTRN_MDL_SOURCE_BASEDIR_LBCS}\"''')
