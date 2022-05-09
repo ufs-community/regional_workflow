@@ -1179,11 +1179,14 @@ else
 fi
 
 POST_OUTPUT_DOMAIN_NAME="${POST_OUTPUT_DOMAIN_NAME:-${PREDEF_GRID_NAME}}"
-if [ -z "${POST_OUTPUT_DOMAIN_NAME}" ] && [ -z "${PREDEF_GRID_NAME}" ]; then
+if [ -z "${POST_OUTPUT_DOMAIN_NAME}" ]; then
   print_err_msg_exit "\
-The domain name used in naming the output files of run_post is not defined 
-in the configuration file:
-  POST_OUTPUT_DOMAIN_NAME = \"${POST_OUTPUT_DOMAIN_NAME}\""  
+The domain name used in naming the run_post output files (POST_OUTPUT_DOMAIN_NAME)
+has not been set:
+  POST_OUTPUT_DOMAIN_NAME = \"${POST_OUTPUT_DOMAIN_NAME}\"
+If this experiment is not using a predefined grid (i.e. if PREDEF_GRID_NAME 
+is set to a null string), POST_OUTPUT_DOMAIN_NAME must be set in the SRW 
+App's configuration file (\"${EXPT_CONFIG_FN}\")."
 fi
 POST_OUTPUT_DOMAIN_NAME=$(echo_lowercase ${POST_OUTPUT_DOMAIN_NAME})
 #
