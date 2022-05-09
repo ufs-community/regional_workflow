@@ -1243,7 +1243,7 @@ def setup():
             When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
             surface climatology files already exist in the directory 
             
-              {DOMAIN_PREGEN_BASEDIR_BASEDIR}/{PREDEF_GRID_NAME}
+              {DOMAIN_PREGEN_BASEDIR}/{PREDEF_GRID_NAME}
             
             where
             
