@@ -238,7 +238,7 @@ EXEC_SUBDIR="bin"
 # need in order to create initial and boundary condition files for a given 
 # cycle on the native FV3-LAM grid.
 #
-# envir, NET, model_ver, RUN, POST_OUTPUT_DOMAIN_NAME:
+# envir, NET, model_ver, RUN:
 # Standard environment variables defined in the NCEP Central Operations WCOSS
 # Implementation Standards document as follows:
 #

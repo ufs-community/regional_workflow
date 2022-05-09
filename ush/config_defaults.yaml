@@ -251,7 +251,7 @@ EXEC_SUBDIR: "bin"
 # string in this file, but it can be specified in the user-specified 
 # workflow configuration file (EXPT_CONFIG_FN).
 #
-# envir, NET, model_ver, RUN, POST_OUTPUT_DOMAIN_NAME:
+# envir, NET, model_ver, RUN:
 # Standard environment variables defined in the NCEP Central Operations WCOSS
 # Implementation Standards document as follows:
 #
