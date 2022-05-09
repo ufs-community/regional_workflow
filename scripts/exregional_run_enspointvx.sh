@@ -101,12 +101,12 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-# Create INPUT_BASE to read into METplus conf files.
+# Create INPUT_BASE and OUTPUT_BASE to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
 #
-INPUT_BASE=${MET_INPUT_BASE}
-OUTPUT_BASE=${MET_OUTPUT_BASE}
+INPUT_BASE=${MET_INPUT_DIR}
+OUTPUT_BASE=${MET_OUTPUT_DIR}/${CDATE}
 
 #
 #-----------------------------------------------------------------------

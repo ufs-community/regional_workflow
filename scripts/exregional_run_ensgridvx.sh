@@ -110,8 +110,8 @@ NUM_PAD=${NDIGITS_ENSMEM_NAMES}
 #
 #-----------------------------------------------------------------------
 #
-INPUT_BASE=${MET_INPUT_BASE}
-OUTPUT_BASE=${MET_OUTPUT_BASE}
+INPUT_BASE=${MET_INPUT_DIR}
+OUTPUT_BASE=${MET_OUTPUT_DIR}/${CDATE}
 
 #
 #-----------------------------------------------------------------------

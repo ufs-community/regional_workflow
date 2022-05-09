@@ -101,11 +101,11 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-# Create INPUT_BASE, OUTPUT_BASE, and LOG_SUFFIX to read into METplus conf files.
+# Create OUTPUT_BASE and LOG_SUFFIX to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
 #
-OUTPUT_BASE=${MET_OUTPUT_BASE}
+OUTPUT_BASE=${MET_OUTPUT_DIR}/${CDATE}
 LOG_SUFFIX=enspoint_mean_${CDATE}
 
 #
