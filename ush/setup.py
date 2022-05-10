@@ -58,8 +58,8 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    EXPT_DEFAULT_CONFIG_FN="config_defaults.yaml"
-    cfg_d = load_config_file(EXPT_DEFAULT_CONFIG_FN)
+    EXPT_DEFAULT_CONFIG_FN="config_defaults.sh"
+    cfg_d = load_config_file(os.path.join(ushdir,EXPT_DEFAULT_CONFIG_FN))
     import_vars(dictionary=cfg_d)
     #
     #-----------------------------------------------------------------------
