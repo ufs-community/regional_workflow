@@ -1059,6 +1059,9 @@ def setup():
     if USE_USER_STAGED_EXTRN_FILES:
       # Check for the base directory up to the first templated field.
       idx = EXTRN_MDL_SOURCE_BASEDIR_ICS.find("$")
+      if idx == -1:
+        idx=len(EXTRN_MDL_SOURCE_BASEDIR_ICS)
+
       if not os.path.exists(EXTRN_MDL_SOURCE_BASEDIR_ICS[:idx]):
         print_err_msg_exit(f'''
             The directory (EXTRN_MDL_SOURCE_BASEDIR_ICS) in which the user-staged 
@@ -1066,6 +1069,9 @@ def setup():
               EXTRN_MDL_SOURCE_BASEDIR_ICS = \"{EXTRN_MDL_SOURCE_BASEDIR_ICS}\"''')
     
       idx = EXTRN_MDL_SOURCE_BASEDIR_LBCS.find("$")
+      if idx == -1:
+        idx=len(EXTRN_MDL_SOURCE_BASEDIR_LBCS)
+
       if not os.path.exists(EXTRN_MDL_SOURCE_BASEDIR_LBCS[:idx]):
         print_err_msg_exit(f'''
             The directory (EXTRN_MDL_SOURCE_BASEDIR_LBCS) in which the user-staged 
