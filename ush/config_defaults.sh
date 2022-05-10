@@ -73,12 +73,12 @@ RUN_ENVIR="nco"
 # Path to the LMOD sh file on your Linux system. Is set automatically
 # for supported machines.
 #
-# BUILD_MOD_FN:
-# Name of alternative build module file to use if using an
+# BUILD_ENV_FN:
+# Name of alternative build environment file to use if using an
 # unsupported platform. Is set automatically for supported machines.
 #
-# WFLOW_MOD_FN:
-# Name of alternative workflow module file to use if using an
+# WFLOW_ENV_FN:
+# Name of alternative workflow environment file to use if using an
 # unsupported platform. Is set automatically for supported machines.
 #
 # SCHED:
@@ -142,8 +142,8 @@ ACCOUNT="project_name"
 WORKFLOW_MANAGER="none"
 NCORES_PER_NODE=""
 LMOD_PATH=""
-BUILD_MOD_FN=""
-WFLOW_MOD_FN=""
+BUILD_ENV_FN=""
+WFLOW_ENV_FN=""
 SCHED=""
 PARTITION_DEFAULT=""
 QUEUE_DEFAULT=""
@@ -238,6 +238,19 @@ EXEC_SUBDIR="bin"
 # need in order to create initial and boundary condition files for a given 
 # cycle on the native FV3-LAM grid.
 #
+# FIXLAM_NCO_BASEDIR:
+# The base directory containing pregenerated grid, orography, and surface 
+# climatology files.  For the pregenerated grid specified by PREDEF_GRID_NAME, 
+# these "fixed" files are located in:
+#
+#   ${FIXLAM_NCO_BASEDIR}/${PREDEF_GRID_NAME}
+#
+# The workflow scripts will create a symlink in the experiment directory
+# that will point to a subdirectory (having the name of the grid being
+# used) under this directory.  This variable should be set to a null 
+# string in this file, but it can be specified in the user-specified 
+# workflow configuration file (EXPT_CONFIG_FN).
+#
 # envir, NET, model_ver, RUN:
 # Standard environment variables defined in the NCEP Central Operations WCOSS
 # Implementation Standards document as follows:
@@ -279,7 +292,7 @@ EXEC_SUBDIR="bin"
 #-----------------------------------------------------------------------
 #
 COMIN="/path/of/directory/containing/data/files/for/IC/LBCS"
-STMP="/base/path/of/directory/containing/model/input/and/raw/output/files"
+FIXLAM_NCO_BASEDIR=""
 envir="para"
 NET="rrfs"
 model_ver="v1.0.0"
@@ -408,18 +421,6 @@ GLOBAL_VAR_DEFNS_FN="var_defns.sh"
 EXTRN_MDL_VAR_DEFNS_FN="extrn_mdl_var_defns.sh"
 WFLOW_LAUNCH_SCRIPT_FN="launch_FV3LAM_wflow.sh"
 WFLOW_LAUNCH_LOG_FN="log.launch_FV3LAM_wflow"
-#
-#-----------------------------------------------------------------------
-#
-# Set output file name. Definitions:
-#
-# POST_OUTPUT_DOMAIN_NAME:
-# Domain name used in naming the output files of run_post by UPP or inline post.
-# Output file name: $NET.tHHz.[var_name].f###.$POST_OUTPUT_DOMAIN_NAME.grib2
-#
-#-----------------------------------------------------------------------
-#
-POST_OUTPUT_DOMAIN_NAME=""
 #
 #-----------------------------------------------------------------------
 #
@@ -710,13 +711,6 @@ EXTRN_MDL_SYSBASEDIR_LBCS=''
 # EXTRN_MDL_FILES_LBCS:
 # Analogous to EXTRN_MDL_FILES_ICS but for LBCs instead of ICs.
 #
-# EXTRN_MDL_DATA_STORES:
-# A list of data stores where the scripts should look for external model
-# data. The list is in priority order. If disk information is provided
-# via USE_USER_STAGED_EXTRN_FILES or a known location on the platform,
-# the disk location will be highest priority. Options are disk, hpss,
-# aws, and nomads.
-#
 #-----------------------------------------------------------------------
 #
 USE_USER_STAGED_EXTRN_FILES="FALSE"
@@ -724,7 +718,6 @@ EXTRN_MDL_SOURCE_BASEDIR_ICS=""
 EXTRN_MDL_FILES_ICS=""
 EXTRN_MDL_SOURCE_BASEDIR_LBCS=""
 EXTRN_MDL_FILES_LBCS=""
-EXTRN_MDL_DATA_STORES=""
 #
 #-----------------------------------------------------------------------
 #
@@ -1312,22 +1305,6 @@ VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
 # SFC_CLIMO_DIR:
 # Same as GRID_DIR but for the MAKE_SFC_CLIMO_TN task.
 #
-# DOMAIN_PREGEN_BASEDIR:
-# The base directory containing pregenerated grid, orography, and surface 
-# climatology files. This is an alternative for setting GRID_DIR,
-# OROG_DIR, and SFC_CLIMO_DIR individually
-# 
-# For the pregenerated grid specified by PREDEF_GRID_NAME, 
-# these "fixed" files are located in:
-#
-#   ${DOMAIN_PREGEN_BASEDIR}/${PREDEF_GRID_NAME}
-#
-# The workflow scripts will create a symlink in the experiment directory
-# that will point to a subdirectory (having the name of the grid being
-# used) under this directory.  This variable should be set to a null 
-# string in this file, but it can be specified in the user-specified 
-# workflow configuration file (EXPT_CONFIG_FN).
-#
 # RUN_TASK_GET_EXTRN_ICS:
 # Flag that determines whether the GET_EXTRN_ICS_TN task is to be run.
 #
@@ -1373,8 +1350,6 @@ OROG_DIR="/path/to/pregenerated/orog/files"
 
 RUN_TASK_MAKE_SFC_CLIMO="TRUE"
 SFC_CLIMO_DIR="/path/to/pregenerated/surface/climo/files"
-
-DOMAIN_PREGEN_BASEDIR=""
 
 RUN_TASK_GET_EXTRN_ICS="TRUE"
 RUN_TASK_GET_EXTRN_LBCS="TRUE"
@@ -1878,7 +1853,7 @@ SPP_TSCALE=( "21600.0" "21600.0" "21600.0" "21600.0" "21600.0" ) #Variable "spp_
 SPP_SIGTOP1=( "0.1" "0.1" "0.1" "0.1" "0.1")
 SPP_SIGTOP2=( "0.025" "0.025" "0.025" "0.025" "0.025" )
 SPP_STDDEV_CUTOFF=( "1.5" "1.5" "2.5" "1.5" "1.5" )
-ISEED_SPP=( "4" "5" "6" "7" "8" )
+ISEED_SPP=( "4" "4" "4" "4" "4" )
 #
 #-----------------------------------------------------------------------
 #

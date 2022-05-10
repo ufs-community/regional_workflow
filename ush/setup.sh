@@ -507,7 +507,7 @@ if [ -z "${NCORES_PER_NODE:-}" ]; then
 fi
 
 if [ -z "$FIXgsm" -o -z "$FIXaer" -o -z "$FIXlut" -o -z "$TOPO_DIR" -o -z "$SFC_CLIMO_INPUT_DIR" ]; then
-      print_err_msg_exit "\
+  print_err_msg_exit "\
 One or more fix file directories have not been specified for this machine:
   MACHINE = \"$MACHINE\"
   FIXgsm = \"${FIXgsm:-\"\"}
@@ -515,7 +515,7 @@ One or more fix file directories have not been specified for this machine:
   FIXlut = \"${FIXlut:-\"\"}
   TOPO_DIR = \"${TOPO_DIR:-\"\"}
   SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
-  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR:-\"\"}
+  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR:-\"\"}
 You can specify the missing location(s) in ${machine_file}"
 fi
 
@@ -523,7 +523,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Set the names of the build and workflow module files (if not 
+# Set the names of the build and workflow environment files (if not 
 # already specified by the user).  These are the files that need to be 
 # sourced before building the component SRW App codes and running various 
 # workflow scripts, respectively.
@@ -531,8 +531,8 @@ fi
 #-----------------------------------------------------------------------
 #
 machine=$(echo_lowercase ${MACHINE})
-WFLOW_MOD_FN=${WFLOW_MOD_FN:-"wflow_${machine}"}
-BUILD_MOD_FN=${BUILD_MOD_FN:-"build_${machine}_${COMPILER}"}
+WFLOW_ENV_FN=${WFLOW_ENV_FN:-"wflow_${machine}.env"}
+BUILD_ENV_FN=${BUILD_ENV_FN:-"build_${machine}_${COMPILER}.env"}
 #
 #-----------------------------------------------------------------------
 #
@@ -1155,9 +1155,6 @@ check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 #
 # COMOUT_BASEDIR is not used by the workflow in community mode.
 #
-# POST_OUTPUT_DOMAIN_NAME:
-# The PREDEF_GRID_NAME is set by default.
-#
 #-----------------------------------------------------------------------
 #
 LOGDIR="${EXPTDIR}/log"
@@ -1177,18 +1174,6 @@ else
   COMROOT=""
   COMOUT_BASEDIR=""
 fi
-
-POST_OUTPUT_DOMAIN_NAME="${POST_OUTPUT_DOMAIN_NAME:-${PREDEF_GRID_NAME}}"
-if [ -z "${POST_OUTPUT_DOMAIN_NAME}" ]; then
-  print_err_msg_exit "\
-The domain name used in naming the run_post output files (POST_OUTPUT_DOMAIN_NAME)
-has not been set:
-  POST_OUTPUT_DOMAIN_NAME = \"${POST_OUTPUT_DOMAIN_NAME}\"
-If this experiment is not using a predefined grid (i.e. if PREDEF_GRID_NAME 
-is set to a null string), POST_OUTPUT_DOMAIN_NAME must be set in the SRW 
-App's configuration file (\"${EXPT_CONFIG_FN}\")."
-fi
-POST_OUTPUT_DOMAIN_NAME=$(echo_lowercase ${POST_OUTPUT_DOMAIN_NAME})
 #
 #-----------------------------------------------------------------------
 #
@@ -1367,15 +1352,14 @@ USE_USER_STAGED_EXTRN_FILES=$(boolify $USE_USER_STAGED_EXTRN_FILES)
 #
 if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
 
-  # Check for the base directory up to the first templated field.
-  if [ ! -d "$(dirname ${EXTRN_MDL_SOURCE_BASEDIR_ICS%%\$*})" ]; then
+  if [ ! -d "${EXTRN_MDL_SOURCE_BASEDIR_ICS}" ]; then
     print_err_msg_exit "\
 The directory (EXTRN_MDL_SOURCE_BASEDIR_ICS) in which the user-staged 
 external model files for generating ICs should be located does not exist:
   EXTRN_MDL_SOURCE_BASEDIR_ICS = \"${EXTRN_MDL_SOURCE_BASEDIR_ICS}\""
   fi
 
-  if [ ! -d "$(dirname ${EXTRN_MDL_SOURCE_BASEDIR_LBCS%%\$*})" ]; then
+  if [ ! -d "${EXTRN_MDL_SOURCE_BASEDIR_LBCS}" ]; then
     print_err_msg_exit "\
 The directory (EXTRN_MDL_SOURCE_BASEDIR_LBCS) in which the user-staged 
 external model files for generating LBCs should be located does not exist:
@@ -1490,7 +1474,7 @@ LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task.sh"
 #
 if [ "${RUN_ENVIR}" = "nco" ]; then
 
-  nco_fix_dir="${DOMAIN_PREGEN_BASEDIR}/${PREDEF_GRID_NAME}"
+  nco_fix_dir="${FIXLAM_NCO_BASEDIR}/${PREDEF_GRID_NAME}"
   if [ ! -d "${nco_fix_dir}" ]; then
     print_err_msg_exit "\
 The directory (nco_fix_dir) that should contain the pregenerated grid,
@@ -1506,11 +1490,11 @@ orography, and surface climatology files does not exist:
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 grid files already exist in the directory 
 
-  \${DOMAIN_PREGEN_BASEDIR}/\${PREDEF_GRID_NAME}
+  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
 
 where
 
-  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR}\"
+  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
 
 Thus, the MAKE_GRID_TN task must not be run (i.e. RUN_TASK_MAKE_GRID must 
@@ -1544,11 +1528,11 @@ Reset values are:
     msg="
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 orography files already exist in the directory 
-  \${DOMAIN_PREGEN_BASEDIR}/\${PREDEF_GRID_NAME}
+  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
 
 where
 
-  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR}\"
+  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
 
 Thus, the MAKE_OROG_TN task must not be run (i.e. RUN_TASK_MAKE_OROG must 
@@ -1583,11 +1567,11 @@ Reset values are:
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 surface climatology files already exist in the directory 
 
-  \${DOMAIN_PREGEN_BASEDIR}/\${PREDEF_GRID_NAME}
+  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
 
 where
 
-  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR}\"
+  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
 
 Thus, the MAKE_SFC_CLIMO_TN task must not be run (i.e. RUN_TASK_MAKE_SFC_CLIMO 

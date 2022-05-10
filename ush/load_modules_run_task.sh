@@ -86,19 +86,18 @@ jjob_fp="$2"
 #
 #-----------------------------------------------------------------------
 #
-# Loading ufs-srweather-app build module files
+# Sourcing ufs-srweather-app build env file
 #
 #-----------------------------------------------------------------------
 #
 machine=$(echo_lowercase $MACHINE)
-
-source "${SR_WX_APP_TOP_DIR}/etc/lmod-setup.sh"
-module use "${SR_WX_APP_TOP_DIR}/modulefiles"
-module load "${BUILD_MOD_FN}" || print_err_msg_exit "\
-Sourcing platform- and compiler-specific module file (BUILD_MOD_FN) for the 
+env_fp="${SR_WX_APP_TOP_DIR}/env/${BUILD_ENV_FN}"
+module use "${SR_WX_APP_TOP_DIR}/env"
+source "${env_fp}" || print_err_msg_exit "\
+Sourcing platform- and compiler-specific environment file (env_fp) for the 
 workflow task specified by task_name failed:
   task_name = \"${task_name}\"
-  BUILD_MOD_FN = \"${BUILD_MOD_FN}\""
+  env_fp = \"${env_fp}\""
 #
 #-----------------------------------------------------------------------
 #
@@ -113,7 +112,7 @@ workflow task specified by task_name failed:
 #
 # The regional_workflow repository contains module files for the
 # workflow tasks in the template rocoto XML file for the FV3-LAM work-
-# flow that need modules not loaded in the BUILD_MOD_FN above.
+# flow that need modules not loaded in the env_fn above.
 #
 # The full path to a module file for a given task is
 #
