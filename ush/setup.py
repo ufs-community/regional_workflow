@@ -927,9 +927,11 @@ def setup():
     if DATA_TABLE_TMPL_FN is None:
        DATA_TABLE_TMPL_FN = DATA_TABLE_FN
     if DIAG_TABLE_TMPL_FN is None:
-       DIAG_TABLE_TMPL_FN = f"{DIAG_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
+       DIAG_TABLE_TMPL_FN = DIAG_TABLE_FN
+    DIAG_TABLE_TMPL_FN = f"{DIAG_TABLE_TMPL_FN}{dot_ccpp_phys_suite_or_null}"
     if FIELD_TABLE_TMPL_FN is None:
-       FIELD_TABLE_TMPL_FN = f"{FIELD_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
+       FIELD_TABLE_TMPL_FN = FIELD_TABLE_FN
+    FIELD_TABLE_TMPL_FN = f"{FIELD_TABLE_TMPL_FN}{dot_ccpp_phys_suite_or_null}"
     if MODEL_CONFIG_TMPL_FN is None:
        MODEL_CONFIG_TMPL_FN = MODEL_CONFIG_FN
     if NEMS_CONFIG_TMPL_FN is None:
