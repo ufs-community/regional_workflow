@@ -44,6 +44,8 @@ LAYOUT_X="8"
 LAYOUT_Y="12"
 BLOCKSIZE="13"
 
+POST_OUTPUT_DOMAIN_NAME="new_grid"
+
 QUILTING="TRUE"
 if [ "$QUILTING" = "TRUE" ]; then
   WRTCMP_write_groups="1"
