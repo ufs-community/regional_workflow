@@ -79,6 +79,7 @@ Usage:
 
   ${scrfunc_fn} \\
     expts_basedir=\"...\" \\
+    [num_log_lines=\"...\"] \\
     [verbose=\"...\"]
 
 The arguments in brackets are optional.  The arguments are defined as
