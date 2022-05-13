@@ -4,7 +4,7 @@
 valid_vals_RUN_ENVIR=("nco" "community")
 valid_vals_VERBOSE=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
 valid_vals_DEBUG=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
-valid_vals_MACHINE=("WCOSS_DELL_P3" "HERA" "ORION" "JET" "ODIN" "CHEYENNE" "STAMPEDE" "LINUX" "MACOS" "NOAACLOUD" "SINGULARITY")
+valid_vals_MACHINE=("WCOSS_DELL_P3" "HERA" "ORION" "JET" "ODIN" "CHEYENNE" "STAMPEDE" "LINUX" "MACOS" "NOAACLOUD" "SINGULARITY" "GAEA")
 valid_vals_SCHED=("slurm" "pbspro" "lsf" "lsfcray" "none")
 valid_vals_FCST_MODEL=("ufs-weather-model" "fv3gfs_aqm")
 valid_vals_WORKFLOW_MANAGER=("rocoto" "none")
@@ -12,6 +12,9 @@ valid_vals_PREDEF_GRID_NAME=( \
 "RRFS_CONUS_25km" \
 "RRFS_CONUS_13km" \
 "RRFS_CONUS_3km" \
+"RRFS_CONUScompact_25km" \
+"RRFS_CONUScompact_13km" \
+"RRFS_CONUScompact_3km" \
 "RRFS_SUBCONUS_3km" \
 "RRFS_AK_13km" \
 "RRFS_AK_3km" \
@@ -27,6 +30,8 @@ valid_vals_PREDEF_GRID_NAME=( \
 "GSD_HRRR_AK_50km" \
 "RRFS_NA_13km" \
 "RRFS_NA_3km" \
+"SUBCONUS_Ind_3km" \
+"WoFS_3km" \
 )
 valid_vals_CCPP_PHYS_SUITE=( \
 "FV3_GFS_2017_gfdlmp" \

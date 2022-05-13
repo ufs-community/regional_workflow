@@ -515,7 +515,7 @@ One or more fix file directories have not been specified for this machine:
   FIXlut = \"${FIXlut:-\"\"}
   TOPO_DIR = \"${TOPO_DIR:-\"\"}
   SFC_CLIMO_INPUT_DIR = \"${SFC_CLIMO_INPUT_DIR:-\"\"}
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR:-\"\"}
+  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR:-\"\"}
 You can specify the missing location(s) in ${machine_file}"
 fi
 
@@ -523,7 +523,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Set the names of the build and workflow environment files (if not 
+# Set the names of the build and workflow module files (if not 
 # already specified by the user).  These are the files that need to be 
 # sourced before building the component SRW App codes and running various 
 # workflow scripts, respectively.
@@ -531,8 +531,8 @@ fi
 #-----------------------------------------------------------------------
 #
 machine=$(echo_lowercase ${MACHINE})
-WFLOW_ENV_FN=${WFLOW_ENV_FN:-"wflow_${machine}.env"}
-BUILD_ENV_FN=${BUILD_ENV_FN:-"build_${machine}_${COMPILER}.env"}
+WFLOW_MOD_FN=${WFLOW_MOD_FN:-"wflow_${machine}"}
+BUILD_MOD_FN=${BUILD_MOD_FN:-"build_${machine}_${COMPILER}"}
 #
 #-----------------------------------------------------------------------
 #
@@ -1141,7 +1141,7 @@ check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 # is not placed directly under COMROOT but several directories further
 # down.  More specifically, for a cycle starting at yyyymmddhh, it is at
 #
-#   $COMROOT/$NET/$envir/$RUN.$yyyymmdd/$hh
+#   $COMROOT/$NET/$model_ver/$RUN.$yyyymmdd/$hh
 #
 # Below, we set COMROOT in terms of PTMP as COMROOT="$PTMP/com".  COMOROOT 
 # is not used by the workflow in community mode.
@@ -1151,9 +1151,12 @@ check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 # from the RUN_POST_TN task will be placed, i.e. it is the cycle-independent 
 # portion of the RUN_POST_TN task's output directory.  It is given by
 #
-#   $COMROOT/$NET/$envir
+#   $COMROOT/$NET/$model_ver
 #
 # COMOUT_BASEDIR is not used by the workflow in community mode.
+#
+# POST_OUTPUT_DOMAIN_NAME:
+# The PREDEF_GRID_NAME is set by default.
 #
 #-----------------------------------------------------------------------
 #
@@ -1164,20 +1167,28 @@ FIXclim="${EXPTDIR}/fix_clim"
 FIXLAM="${EXPTDIR}/fix_lam"
 
 if [ "${RUN_ENVIR}" = "nco" ]; then
-
-  CYCLE_BASEDIR="$STMP/tmpnwprd/$RUN"
+  CYCLE_BASEDIR="${STMP}/tmpnwprd/${RUN}"
   check_for_preexist_dir_file "${CYCLE_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
-  COMROOT="$PTMP/com"
-  COMOUT_BASEDIR="$COMROOT/$NET/$envir"
+  COMROOT="${PTMP}/com"
+  COMOUT_BASEDIR="${COMROOT}/${NET}/${model_ver}"
   check_for_preexist_dir_file "${COMOUT_BASEDIR}" "${PREEXISTING_DIR_METHOD}"
-
 else
-
   CYCLE_BASEDIR="$EXPTDIR"
   COMROOT=""
   COMOUT_BASEDIR=""
-
 fi
+
+POST_OUTPUT_DOMAIN_NAME="${POST_OUTPUT_DOMAIN_NAME:-${PREDEF_GRID_NAME}}"
+if [ -z "${POST_OUTPUT_DOMAIN_NAME}" ]; then
+  print_err_msg_exit "\
+The domain name used in naming the run_post output files (POST_OUTPUT_DOMAIN_NAME)
+has not been set:
+  POST_OUTPUT_DOMAIN_NAME = \"${POST_OUTPUT_DOMAIN_NAME}\"
+If this experiment is not using a predefined grid (i.e. if PREDEF_GRID_NAME 
+is set to a null string), POST_OUTPUT_DOMAIN_NAME must be set in the SRW 
+App's configuration file (\"${EXPT_CONFIG_FN}\")."
+fi
+POST_OUTPUT_DOMAIN_NAME=$(echo_lowercase ${POST_OUTPUT_DOMAIN_NAME})
 #
 #-----------------------------------------------------------------------
 #
@@ -1216,11 +1227,22 @@ fi
 #
 dot_ccpp_phys_suite_or_null=".${CCPP_PHYS_SUITE}"
 
-DATA_TABLE_TMPL_FN="${DATA_TABLE_FN}"
-DIAG_TABLE_TMPL_FN="${DIAG_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
-FIELD_TABLE_TMPL_FN="${FIELD_TABLE_FN}${dot_ccpp_phys_suite_or_null}"
-MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_FN}"
-NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_FN}"
+# Names of input files that the forecast model (ufs-weather-model) expects 
+# to read in.  These should only be changed if the input file names in the 
+# forecast model code are changed.
+#----------------------------------
+DATA_TABLE_FN="data_table"
+DIAG_TABLE_FN="diag_table"
+FIELD_TABLE_FN="field_table"
+MODEL_CONFIG_FN="model_configure"
+NEMS_CONFIG_FN="nems.configure"
+#----------------------------------
+
+DATA_TABLE_TMPL_FN="${DATA_TABLE_TMPL_FN:-${DATA_TABLE_FN}}"
+DIAG_TABLE_TMPL_FN="${DIAG_TABLE_TMPL_FN:-${DIAG_TABLE_FN}}${dot_ccpp_phys_suite_or_null}"
+FIELD_TABLE_TMPL_FN="${FIELD_TABLE_TMPL_FN:-${FIELD_TABLE_FN}}${dot_ccpp_phys_suite_or_null}"
+MODEL_CONFIG_TMPL_FN="${MODEL_CONFIG_TMPL_FN:-${MODEL_CONFIG_FN}}"
+NEMS_CONFIG_TMPL_FN="${NEMS_CONFIG_TMPL_FN:-${NEMS_CONFIG_FN}}"
 
 DATA_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DATA_TABLE_TMPL_FN}"
 DIAG_TABLE_TMPL_FP="${TEMPLATE_DIR}/${DIAG_TABLE_TMPL_FN}"
@@ -1345,14 +1367,15 @@ USE_USER_STAGED_EXTRN_FILES=$(boolify $USE_USER_STAGED_EXTRN_FILES)
 #
 if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
 
-  if [ ! -d "${EXTRN_MDL_SOURCE_BASEDIR_ICS}" ]; then
+  # Check for the base directory up to the first templated field.
+  if [ ! -d "$(dirname ${EXTRN_MDL_SOURCE_BASEDIR_ICS%%\$*})" ]; then
     print_err_msg_exit "\
 The directory (EXTRN_MDL_SOURCE_BASEDIR_ICS) in which the user-staged 
 external model files for generating ICs should be located does not exist:
   EXTRN_MDL_SOURCE_BASEDIR_ICS = \"${EXTRN_MDL_SOURCE_BASEDIR_ICS}\""
   fi
 
-  if [ ! -d "${EXTRN_MDL_SOURCE_BASEDIR_LBCS}" ]; then
+  if [ ! -d "$(dirname ${EXTRN_MDL_SOURCE_BASEDIR_LBCS%%\$*})" ]; then
     print_err_msg_exit "\
 The directory (EXTRN_MDL_SOURCE_BASEDIR_LBCS) in which the user-staged 
 external model files for generating LBCs should be located does not exist:
@@ -1389,6 +1412,21 @@ if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
     ENSMEM_NAMES[$i]="mem${ip1}"
     FV3_NML_ENSMEM_FPS[$i]="$EXPTDIR/${FV3_NML_FN}_${ENSMEM_NAMES[$i]}"
   done
+fi
+#
+#-----------------------------------------------------------------------
+#
+# Make sure that DO_ENSEMBLE is set to TRUE when running ensemble vx.
+#
+#-----------------------------------------------------------------------
+#
+if [ "${DO_ENSEMBLE}" = "FALSE" ] && [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" -o \
+   "${RUN_TASK_VX_ENSPOINT}" = "TRUE" ]; then
+  print_err_msg_exit "\
+Ensemble verification can not be run unless running in ensemble mode:
+   DO_ENSEMBLE = \"${DO_ENSEMBLE}\"
+   RUN_TASK_VX_ENSGRID = \"${RUN_TASK_VX_ENSGRID}\"
+   RUN_TASK_VX_ENSPOINT = \"${RUN_TASK_VX_ENSPOINT}\""
 fi
 #
 #-----------------------------------------------------------------------
@@ -1452,7 +1490,7 @@ LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task.sh"
 #
 if [ "${RUN_ENVIR}" = "nco" ]; then
 
-  nco_fix_dir="${FIXLAM_NCO_BASEDIR}/${PREDEF_GRID_NAME}"
+  nco_fix_dir="${DOMAIN_PREGEN_BASEDIR}/${PREDEF_GRID_NAME}"
   if [ ! -d "${nco_fix_dir}" ]; then
     print_err_msg_exit "\
 The directory (nco_fix_dir) that should contain the pregenerated grid,
@@ -1468,11 +1506,11 @@ orography, and surface climatology files does not exist:
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 grid files already exist in the directory 
 
-  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
+  \${DOMAIN_PREGEN_BASEDIR}/\${PREDEF_GRID_NAME}
 
 where
 
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
+  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
 
 Thus, the MAKE_GRID_TN task must not be run (i.e. RUN_TASK_MAKE_GRID must 
@@ -1506,11 +1544,11 @@ Reset values are:
     msg="
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 orography files already exist in the directory 
-  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
+  \${DOMAIN_PREGEN_BASEDIR}/\${PREDEF_GRID_NAME}
 
 where
 
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
+  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
 
 Thus, the MAKE_OROG_TN task must not be run (i.e. RUN_TASK_MAKE_OROG must 
@@ -1545,11 +1583,11 @@ Reset values are:
 When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
 surface climatology files already exist in the directory 
 
-  \${FIXLAM_NCO_BASEDIR}/\${PREDEF_GRID_NAME}
+  \${DOMAIN_PREGEN_BASEDIR}/\${PREDEF_GRID_NAME}
 
 where
 
-  FIXLAM_NCO_BASEDIR = \"${FIXLAM_NCO_BASEDIR}\"
+  DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR}\"
   PREDEF_GRID_NAME = \"${PREDEF_GRID_NAME}\"
 
 Thus, the MAKE_SFC_CLIMO_TN task must not be run (i.e. RUN_TASK_MAKE_SFC_CLIMO 
@@ -1576,8 +1614,7 @@ one above.  Reset values are:
 
   fi
 
-  if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ] || \
-     [ "${RUN_TASK_VX_GRIDSTAT}" = "FALSE" ]; then
+  if [ "${RUN_TASK_VX_GRIDSTAT}" = "TRUE" ]; then
 
     msg="
 When RUN_ENVIR is set to \"nco\", it is assumed that the verification
@@ -1596,8 +1633,7 @@ Reset value is:"
 
   fi
 
-  if [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ] || \
-     [ "${RUN_TASK_VX_POINTSTAT}" = "FALSE" ]; then
+  if [ "${RUN_TASK_VX_POINTSTAT}" = "TRUE" ]; then
 
     msg="
 When RUN_ENVIR is set to \"nco\", it is assumed that the verification
@@ -1616,8 +1652,7 @@ Reset value is:"
 
   fi
 
-  if [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" ] || \
-     [ "${RUN_TASK_VX_ENSGRID}" = "FALSE" ]; then
+  if [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" ]; then
 
     msg="
 When RUN_ENVIR is set to \"nco\", it is assumed that the verification
@@ -2011,7 +2046,6 @@ SUB_HOURLY_POST is NOT available with Inline Post yet."
   fi
 fi
 
-
 check_var_valid_value "QUILTING" "valid_vals_QUILTING"
 QUILTING=$(boolify $QUILTING)
 
@@ -2141,7 +2175,6 @@ GLOBAL_VAR_DEFNS_FP="$EXPTDIR/${GLOBAL_VAR_DEFNS_FN}"
 # variable definitions file.
 #
 #-----------------------------------------------------------------------
-
 #
 print_info_msg "
 Creating list of default experiment variable definitions..." 
@@ -2428,6 +2461,12 @@ FV3_NML_ENSMEM_FPS=${fv3_nml_ensmem_fps_str}
 #-----------------------------------------------------------------------
 #
 GLOBAL_VAR_DEFNS_FP='${GLOBAL_VAR_DEFNS_FP}'
+
+DATA_TABLE_FN='${DATA_TABLE_FN}'
+DIAG_TABLE_FN='${DIAG_TABLE_FN}'
+FIELD_TABLE_FN='${FIELD_TABLE_FN}'
+MODEL_CONFIG_FN='${MODEL_CONFIG_FN}'
+NEMS_CONFIG_FN='${NEMS_CONFIG_FN}'
 
 DATA_TABLE_TMPL_FN='${DATA_TABLE_TMPL_FN}'
 DIAG_TABLE_TMPL_FN='${DIAG_TABLE_TMPL_FN}'
