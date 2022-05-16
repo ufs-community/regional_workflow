@@ -33,12 +33,14 @@ WTIME_RUN_FCST="01:00:00"
 
 WRITE_DOPOST="TRUE"
 
+#
+# Output directory: {NET}/{model_ver}/{RUN}.YYYYMMDD/
+# Output file name: {NET}.tHHz.[var_name].f###.{POST_OUTPUT_DOMAIN_NAME}.grib2
+#
 POST_OUTPUT_DOMAIN_NAME="conus_25km"
-
 NET="rrfs"
 model_ver="v1.0"
 RUN="rrfs_test"
-
 #
 # The following must be modified for different platforms and users.
 #
