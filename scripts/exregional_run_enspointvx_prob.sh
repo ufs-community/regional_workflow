@@ -105,7 +105,7 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-OUTPUT_BASE=${MET_OUTPUT_DIR}/${CDATE}
+OUTPUT_BASE=${MET_OUTPUT_DIR}
 LOG_SUFFIX=enspoint_prob_${CDATE}
 
 #
