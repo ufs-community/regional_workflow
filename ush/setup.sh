@@ -1838,16 +1838,18 @@ if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
     iend_of_t7_on_t6g="${GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G}" \
     jstart_of_t7_on_t6g="${GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G}" \
     jend_of_t7_on_t6g="${GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G}" \
-    output_varname_lon_of_t7_ctr="LON_CTR" \
-    output_varname_lat_of_t7_ctr="LAT_CTR" \
-    output_varname_nx_of_t7_on_t7g="NX" \
-    output_varname_ny_of_t7_on_t7g="NY" \
-    output_varname_halo_width_on_t7g="NHW" \
-    output_varname_stretch_factor="STRETCH_FAC" \
-    output_varname_istart_of_t7_with_halo_on_t6sg="ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG" \
-    output_varname_iend_of_t7_with_halo_on_t6sg="IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG" \
-    output_varname_jstart_of_t7_with_halo_on_t6sg="JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG" \
-    output_varname_jend_of_t7_with_halo_on_t6sg="JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG"
+    run_envir="${RUN_ENVIR}" \
+    verbose="${VERBOSE}" \
+    outvarname_lon_of_t7_ctr="LON_CTR" \
+    outvarname_lat_of_t7_ctr="LAT_CTR" \
+    outvarname_nx_of_t7_on_t7g="NX" \
+    outvarname_ny_of_t7_on_t7g="NY" \
+    outvarname_halo_width_on_t7g="NHW" \
+    outvarname_stretch_factor="STRETCH_FAC" \
+    outvarname_istart_of_t7_with_halo_on_t6sg="ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG" \
+    outvarname_iend_of_t7_with_halo_on_t6sg="IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG" \
+    outvarname_jstart_of_t7_with_halo_on_t6sg="JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG" \
+    outvarname_jend_of_t7_with_halo_on_t6sg="JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG"
 #
 #-----------------------------------------------------------------------
 #
@@ -1866,17 +1868,17 @@ elif [ "${GRID_GEN_METHOD}" = "ESGgrid" ]; then
     halo_width="${ESGgrid_WIDE_HALO_WIDTH}" \
     delx="${ESGgrid_DELX}" \
     dely="${ESGgrid_DELY}" \
-    output_varname_lon_ctr="LON_CTR" \
-    output_varname_lat_ctr="LAT_CTR" \
-    output_varname_nx="NX" \
-    output_varname_ny="NY" \
-    output_varname_pazi="PAZI" \
-    output_varname_halo_width="NHW" \
-    output_varname_stretch_factor="STRETCH_FAC" \
-    output_varname_del_angle_x_sg="DEL_ANGLE_X_SG" \
-    output_varname_del_angle_y_sg="DEL_ANGLE_Y_SG" \
-    output_varname_neg_nx_of_dom_with_wide_halo="NEG_NX_OF_DOM_WITH_WIDE_HALO" \
-    output_varname_neg_ny_of_dom_with_wide_halo="NEG_NY_OF_DOM_WITH_WIDE_HALO"
+    outvarname_lon_ctr="LON_CTR" \
+    outvarname_lat_ctr="LAT_CTR" \
+    outvarname_nx="NX" \
+    outvarname_ny="NY" \
+    outvarname_pazi="PAZI" \
+    outvarname_halo_width="NHW" \
+    outvarname_stretch_factor="STRETCH_FAC" \
+    outvarname_del_angle_x_sg="DEL_ANGLE_X_SG" \
+    outvarname_del_angle_y_sg="DEL_ANGLE_Y_SG" \
+    outvarname_neg_nx_of_dom_with_wide_halo="NEG_NX_OF_DOM_WITH_WIDE_HALO" \
+    outvarname_neg_ny_of_dom_with_wide_halo="NEG_NY_OF_DOM_WITH_WIDE_HALO"
 
 fi
 #
@@ -2165,7 +2167,7 @@ print_info_msg "
 Creating list of default experiment variable definitions..." 
 
 get_bash_file_contents fp="$USHDIR/${EXPT_DEFAULT_CONFIG_FN}" \
-                       output_varname_contents="default_var_defns"
+                       outvarname_contents="default_var_defns"
 
 print_info_msg "$DEBUG" "
 The variable \"default_var_defns\" containing default values of primary 
@@ -2279,9 +2281,9 @@ var_name = \"${var_name}\""
       else
 
         var_value=""
-        printf -v "var_value" "${escbksl_nl_or_null}"
+        printf -v "var_value" "%s" "${escbksl_nl_or_null}"
         for (( i=0; i<${num_elems}; i++ )); do
-          printf -v "var_value" "${var_value}\"${array[$i]}\" ${escbksl_nl_or_null}"
+          printf -v "var_value" "%s" "${var_value}\"${array[$i]}\" ${escbksl_nl_or_null}"
         done
         rhs="( ${var_value})"
 
@@ -2308,7 +2310,7 @@ Setting its value in the variable definitions file to an empty string."
 # to the list of all variable definitions.
 #
     var_defn="${var_name}=$rhs"
-    printf -v "var_defns" "${var_defns}${var_defn}\n"
+    printf -v "var_defns" "%s" "${var_defns}${var_defn}\n"
 #
 # If var_name is empty, then a variable name was not found on the current 
 # line in default_var_defns.  In this case, print out a warning and move 

@@ -27,29 +27,29 @@
 # Optional verbosity flag.  Should be set to "TRUE" or "FALSE".  Default
 # is "FALSE".
 #
-# output_varname_test_configs_basedir:
+# outvarname_test_configs_basedir:
 # Name of output variable in which to return the base directory of the 
 # WE2E test configuration files.
 #
-# output_varname_test_names:
+# outvarname_test_names:
 # Name of output array variable in which to return the names of the WE2E 
 # tests.
 #
-# output_varname_test_subdirs:
+# outvarname_test_subdirs:
 # Name of output array variable in which to return the category subdirectories 
 # in which the WE2E tests are located. 
 #
-# output_varname_test_ids:
+# outvarname_test_ids:
 # Name of output array variable in which to return the IDs of the WE2E 
 # tests. 
 #
-# output_varname_test_descs:
+# outvarname_test_descs:
 # Name of output array variable in which to return the descriptions of
 # the WE2E tests.
 #
 # Note that any input argument that is not specified in the call to this
 # function gets set to a null string in the body of the function.  In
-# particular, if any of the arguments that start with "output_varname_"
+# particular, if any of the arguments that start with "outvarname_"
 # (indicating that they specify the name of an output variable) are not
 # set in the call, the values corresponding to those variables are not 
 # returned to the calling script or function.
@@ -61,10 +61,10 @@
 #
 #   test_configs_basedir="${WE2Edir}/test_configs"
 #
-# If the argument output_varname_test_configs_basedir is specified in 
-# the call to this function, then the value of test_configs_basedir will 
-# be returned to the calling script or function (in the variable specified 
-# by output_varname_test_configs_basedir).
+# If the argument outvarname_test_configs_basedir is specified in the 
+# call to this function, then the value of test_configs_basedir will be 
+# returned to the calling script or function (in the variable specified 
+# by outvarname_test_configs_basedir).
 #
 # The WE2E test configuration files are located in subdirectories under
 # the base directory.  This function sets the names of these subdirectories
@@ -170,8 +170,8 @@
 #    in which the test configuration files corresponding to each test 
 #    name are located.
 # 3) The IDs corresponding to each of the test names.
-# 4) The test descriptions (if output_varname_test_descs is specified in
-#    the call to this function or if generate_csv_file is or gets set to
+# 4) The test descriptions (if outvarname_test_descs is specified in the
+#    call to this function or if generate_csv_file is or gets set to
 #    "TRUE"; see below).
 #
 # These local arrays are sorted in order of increasing test ID.  Within
@@ -189,10 +189,10 @@
 # the arrays in which each of the quantities listed above should be 
 # returned (to the calling script or function):
 #
-#   output_varname_test_names
-#   output_varname_test_subdirs
-#   output_varname_test_ids
-#   output_varname_test_descs
+#   outvarname_test_names
+#   outvarname_test_subdirs
+#   outvarname_test_ids
+#   outvarname_test_descs
 #
 # If any of these is not specified in the call to this function, then 
 # the corresponding quantity will not be returned to the calling script
@@ -206,7 +206,7 @@
 # 1) The user explicitly asks for the descriptions to be returned by 
 #    specifying in the call to this function the name of the array in 
 #    which to return them (by setting a value for the argument 
-#    output_varname_test_descs).  
+#    outvarname_test_descs).  
 # 2) A CSV file summarizing the WE2E tests will be generated (see below)
 #
 # For convenience, this function can generate a CSV (comma-separated 
@@ -267,11 +267,11 @@ function get_WE2Etest_names_subdirs_descs() {
     "WE2Edir" \
     "generate_csv_file" \
     "verbose" \
-    "output_varname_test_configs_basedir" \
-    "output_varname_test_names" \
-    "output_varname_test_subdirs" \
-    "output_varname_test_ids" \
-    "output_varname_test_descs" \
+    "outvarname_test_configs_basedir" \
+    "outvarname_test_names" \
+    "outvarname_test_subdirs" \
+    "outvarname_test_ids" \
+    "outvarname_test_descs" \
     )
   process_args "valid_args" "$@"
 #
@@ -859,18 +859,18 @@ they correspond to unique test names and rerun."
 #
 #-----------------------------------------------------------------------
 #
-# If the input argument output_varname_test_descs is not set to a null 
-# string (meaning that the name of the array in which to return the WE2E 
-# test descriptions is specified in the call to this function), or if 
-# the flag generate_csv_file is set to "TRUE", we need to obtain the 
-# WE2E test descriptions from the test configuration files.  In these
-# cases, set the local variable get_test_descs to "TRUE".  Otherwise,
-# set it to "FALSE".
+# If the input argument outvarname_test_descs is not set to a null string
+# (meaning that the name of the array in which to return the WE2E test 
+# descriptions is specified in the call to this function), or if the flag 
+# generate_csv_file is set to "TRUE", we need to obtain the WE2E test 
+# descriptions from the test configuration files.  In these cases, set 
+# the local variable get_test_descs to "TRUE".  Otherwise, set it to 
+# "FALSE".
 #
 #-----------------------------------------------------------------------
 #
   get_test_descs="FALSE"
-  if [ ! -z "${output_varname_test_descs}" ] || \
+  if [ ! -z "${outvarname_test_descs}" ] || \
      [ "${generate_csv_file}" = "TRUE" ]; then
     get_test_descs="TRUE"
   fi
@@ -1455,41 +1455,40 @@ containing information on all WE2E tests:
 #
 #-----------------------------------------------------------------------
 #
-  if [ ! -z "${output_varname_test_configs_basedir}" ]; then
-    eval ${output_varname_test_configs_basedir}="${test_configs_basedir}"
+  if [ ! -z "${outvarname_test_configs_basedir}" ]; then
+    eval ${outvarname_test_configs_basedir}="${test_configs_basedir}"
   fi
 
-  if [ ! -z "${output_varname_test_names}" ]; then
+  if [ ! -z "${outvarname_test_names}" ]; then
     test_names_str="( "$( printf "\"%s\" " "${test_names[@]}" )")"
-    eval ${output_varname_test_names}="${test_names_str}"
+    eval ${outvarname_test_names}="${test_names_str}"
   fi
 
-  if [ ! -z "${output_varname_test_subdirs}" ]; then
+  if [ ! -z "${outvarname_test_subdirs}" ]; then
     test_subdirs_str="( "$( printf "\"%s\" " "${test_subdirs[@]}" )")"
-    eval ${output_varname_test_subdirs}="${test_subdirs_str}"
+    eval ${outvarname_test_subdirs}="${test_subdirs_str}"
   fi
 
-  if [ ! -z "${output_varname_test_ids}" ]; then
+  if [ ! -z "${outvarname_test_ids}" ]; then
     test_ids_str="( "$( printf "\"%s\" " "${test_ids[@]}" )")"
-    eval ${output_varname_test_ids}="${test_ids_str}"
+    eval ${outvarname_test_ids}="${test_ids_str}"
   fi
 
-  if [ ! -z "${output_varname_test_descs}" ]; then
+  if [ ! -z "${outvarname_test_descs}" ]; then
 #
 # We want to treat all characters in the test descriptions literally
-# when evaluating the array specified by output_varname_test_descs
-# below using the eval function because otherwise, characters such as
-# "$", "(", ")", etc will be interpreted as indicating the value of a
-# variable, the start of an array, the end of an array, etc, and lead to
-# errors.  Thus, below, when forming the array that will be passed to
-# eval, we will surround each element of the local array test_descs
-# in single quotes.  However, the test descriptions themselves may
-# include single quotes (e.g. when a description contains a phrase such
-# as "Please see the User's Guide for...").  In order to treat these
-# single quotes literally (as opposed to as delimiters indicating the
-# start or end of array elements), we have to pass them as separate
-# strings by replacing each single quote with the following series of
-# characters:
+# when evaluating the array specified by outvarname_test_descs below 
+# using the eval function because otherwise, characters such as "$", 
+# "(", ")", etc will be interpreted as indicating the value of a variable, 
+# the start of an array, the end of an array, etc, and lead to errors.  
+# Thus, below, when forming the array that will be passed to eval, we 
+# will surround each element of the local array test_descs in single 
+# quotes.  However, the test descriptions themselves may include single 
+# quotes (e.g. when a description contains a phrase such as "Please see 
+# the User's Guide for...").  In order to treat these single quotes 
+# literally (as opposed to as delimiters indicating the start or end of 
+# array elements), we have to pass them as separate strings by replacing 
+# each single quote with the following series of characters:
 #
 #   '"'"'
 #
@@ -1507,8 +1506,8 @@ containing information on all WE2E tests:
 #
 #   See description of ${DOT_OR_USCORE} in the configuration file.
 #
-# Then, if output_varname_test_descs is set to "some_array", the
-# exact string we want to pass to eval is:
+# Then, if outvarname_test_descs is set to "some_array", the exact string 
+# we want to pass to eval is:
 #
 #   some_array=('Please see the User'"'"'s Guide.' 'See description of ${DOT_OR_USCORE} in the configuration file.')
 #
@@ -1518,7 +1517,7 @@ containing information on all WE2E tests:
                                sed -r -e "s/'/'\"'\"'/g" )
     done
     test_descs_str="( "$( printf "'%s' " "${test_descs_esc_sq[@]}" )")"
-    eval ${output_varname_test_descs}="${test_descs_str}"
+    eval ${outvarname_test_descs}="${test_descs_str}"
   fi
 #
 #-----------------------------------------------------------------------

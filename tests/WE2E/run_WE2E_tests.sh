@@ -491,10 +491,10 @@ Getting information about all available WE2E tests..."
 
 get_WE2Etest_names_subdirs_descs \
   WE2Edir="${WE2Edir}" \
-  output_varname_test_configs_basedir="avail_WE2E_test_configs_basedir" \
-  output_varname_test_names="avail_WE2E_test_names" \
-  output_varname_test_subdirs="avail_WE2E_test_subdirs" \
-  output_varname_test_ids="avail_WE2E_test_ids"
+  outvarname_test_configs_basedir="avail_WE2E_test_configs_basedir" \
+  outvarname_test_names="avail_WE2E_test_names" \
+  outvarname_test_subdirs="avail_WE2E_test_subdirs" \
+  outvarname_test_ids="avail_WE2E_test_ids"
 #
 # Get the total number of available WE2E test names (including alternate
 # names).
