@@ -37,7 +37,7 @@ Information about the output summary.
 
  - When computing cost per job, it will also provide an underestimate for the
    reasons listed above.
- - Only one cost will be applied accros all jobs. Rocoto jobs do not store
+ - Only one cost will be applied across all jobs. Rocoto jobs do not store
    partition information in the job table, so was not included as an option here.
 
 '''
