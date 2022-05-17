@@ -129,15 +129,14 @@ def download_file(url):
 
     return True
 
-def fhr_list(args):
+def arg_list_to_range(args):
 
     '''
-    Given an argparse list argument, return the sequence of forecast hours to
-    process.
+    Given an argparse list argument, return the sequence to process.
 
-    The length of the list will determine what forecast hours are returned:
+    The length of the list will determine what sequence items are returned:
 
-      Length = 1:   A single fhr is to be processed
+      Length = 1:   A single item is to be processed
       Length = 2:   A sequence of start, stop with increment 1
       Length = 3:   A sequence of start, stop, increment
       Length > 3:   List as is
@@ -155,7 +154,8 @@ def fhr_list(args):
 
     return args
 
-def fill_template(template_str, cycle_date, fcst_hr=0,
+def fill_template(template_str, cycle_date, fcst_hr=0, mem=-1,
+        ens_group,
         templates_only=False):
 
     ''' Fill in the provided template string with date time information,
@@ -167,6 +167,7 @@ def fill_template(template_str, cycle_date, fcst_hr=0,
                       date and time information
       fcst_hr         an integer forecast hour. string formatting should
                       be included in the template_str
+      mem             a single ensemble member. should be a positive integer value
       templates_only  boolean value. When True, this function will only
                       return the templates available.
 
@@ -189,11 +190,13 @@ def fill_template(template_str, cycle_date, fcst_hr=0,
 
     format_values = dict(
         bin6=bin6,
+        ens_group=ens_group,
         fcst_hr=fcst_hr,
         dd=cycle_date.strftime('%d'),
         hh=cycle_hour,
         hh_even=hh_even,
         jjj=cycle_date.strftime('%j'),
+        mem=mem,
         mm=cycle_date.strftime('%m'),
         yy=cycle_date.strftime('%y'),
         yyyy=cycle_date.strftime('%Y'),
@@ -205,7 +208,7 @@ def fill_template(template_str, cycle_date, fcst_hr=0,
         return f'{",".join((format_values.keys()))}'
     return template_str.format(**format_values)
 
-def find_archive_files(paths, file_names, cycle_date):
+def find_archive_files(paths, file_names, cycle_date, ens_group):
 
     ''' Given an equal-length set of archive paths and archive file
     names, and a cycle date, check HPSS via hsi to make sure at least
@@ -224,7 +227,7 @@ def find_archive_files(paths, file_names, cycle_date):
         # Only test the first item in the list, it will tell us if this
         # set exists at this date.
         file_path = os.path.join(archive_path, archive_file_names[0])
-        file_path = fill_template(file_path, cycle_date)
+        file_path = fill_template(file_path, cycle_date, ens_group)
 
         existing_archive = hsi_single_file(file_path)
 
@@ -320,7 +323,8 @@ def hsi_single_file(file_path, mode='ls'):
 
     return file_path
 
-def hpss_requested_files(cla, file_names, store_specs):
+def hpss_requested_files(cla, file_names, store_specs, members=None,
+        ens_group=-1):
 
     ''' This function interacts with the "hpss" protocol in a
     provided data store specs file to download a set of files requested
@@ -356,6 +360,7 @@ def hpss_requested_files(cla, file_names, store_specs):
     existing_archive, which_archive = find_archive_files(archive_paths,
                                            archive_file_names,
                                            cla.cycle_date,
+                                           ens_group,
                                            )
 
     if not existing_archive:
@@ -569,7 +574,20 @@ def main(cla):
                                                   method='download',
                                                   )
             if store_specs.get('protocol') == 'htar':
-                unavailable = hpss_requested_files(cla, file_templates, store_specs)
+                ens_groups = get_ens_groups(cla.members)
+                if cla.members:
+                    for ens_group, members in ens_groups.items():
+                        unavailable = hpss_requested_files(cla,
+                                file_templates,
+                                store_specs,
+                                ens_group=ens_group,
+                                members=members,
+                                )
+                else:
+                    unavailable = hpss_requested_files(cla,
+                            file_templates,
+                            store_specs,
+                            )
 
         if not unavailable:
             # All files are found. Stop looking!
@@ -583,6 +601,21 @@ def main(cla):
     if unavailable:
         logging.error('Could not find any of the requested files.')
         sys.exit(1)
+
+def get_ens_groups(members):
+
+    ''' Given a list of ensemble members, return a dict with keys for
+    the ensemble group, and values are lists of ensemble members
+    requested in that group. '''
+
+    ens_groups = {}
+    for mem in members:
+        ens_group = mem // 10 + 1
+        if ens_groups.get(ens_group) is None:
+            ens_groups[ens_group] = [mem]
+        else:
+            ens_groups[ens_group].append(mem)
+    return ens_groups
 
 def parse_args():
 
@@ -682,6 +715,16 @@ def parse_args():
         taken from the --config file.',
         )
     parser.add_argument(
+        '--members',
+        help='A list describing ensemble members.  If one argument, \
+        one member will be processed.  If 2 or 3 arguments, a sequence \
+        of members [start, stop, [increment]] will be \
+        processed.  If more than 3 arguments, the list is processed \
+        as-is.',
+        nargs='*',
+        type=int,
+        )
+    parser.add_argument(
         '--summary_file',
         help='Name of the summary file to be written to the output \
         directory',
@@ -692,8 +735,10 @@ if __name__ == '__main__':
 
     CLA = parse_args()
     CLA.output_path = path_exists(CLA.output_path)
-    CLA.fcst_hrs = fhr_list(CLA.fcst_hrs)
+    CLA.fcst_hrs = arg_list_to_range(CLA.fcst_hrs)
 
+    if CLA.members:
+        CLA.members = arg_list_to_range(CLA.members)
 
     setup_logging(CLA.debug)
     print(f"Running script retrieve_data.py with args:\n",
