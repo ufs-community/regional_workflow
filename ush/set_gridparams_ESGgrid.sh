@@ -40,6 +40,23 @@ function set_gridparams_ESGgrid() {
 #
 #-----------------------------------------------------------------------
 #
+# Set directories.
+#
+#-----------------------------------------------------------------------
+#
+  local homerrfs=${scrfunc_dir%/*}
+  local ushdir="$homerrfs/ush"
+#
+#-----------------------------------------------------------------------
+#
+# Source the file containing various mathematical, physical, etc constants.
+#
+#-----------------------------------------------------------------------
+#
+  . $ushdir/constants.sh
+#
+#-----------------------------------------------------------------------
+#
 # Specify the set of valid argument names for this script/function.  
 # Then process the arguments provided to this script/function (which 
 # should consist of a set of name-value pairs of the form arg1="value1",
@@ -78,15 +95,7 @@ function set_gridparams_ESGgrid() {
 #
 #-----------------------------------------------------------------------
 #
-  print_input_args valid_args
-#
-#-----------------------------------------------------------------------
-#
-# Source the file containing various mathematical, physical, etc constants.
-#
-#-----------------------------------------------------------------------
-#
-  . ${USHDIR}/constants.sh
+#  print_input_args valid_args
 #
 #-----------------------------------------------------------------------
 #
