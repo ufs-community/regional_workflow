@@ -119,46 +119,46 @@ function set_predef_grid_params() {
 #
 #-----------------------------------------------------------------------
 #
-  local grid_gen_method="" \
-        esggrid_lon_ctr="" \
-        esggrid_lat_ctr="" \
-        esggrid_delx="" \
-        esggrid_dely="" \
-        esggrid_nx="" \
-        esggrid_ny="" \
-        esggrid_pazi="" \
-        esggrid_wide_halo_width="" \
-        gfdlgrid_lon_t6_ctr="" \
-        gfdlgrid_lat_t6_ctr="" \
-        gfdlgrid_stretch_fac="" \
-        gfdlgrid_res="" \
-        gfdlgrid_refine_ratio="" \
-        gfdlgrid_istart_of_rgnl_dom_on_t6g="" \
-        gfdlgrid_iend_of_rgnl_dom_on_t6g="" \
-        gfdlgrid_jstart_of_rgnl_dom_on_t6g="" \
-        gfdlgrid_jend_of_rgnl_dom_on_t6g="" \
-        gfdlgrid_use_gfdlgrid_res_in_filenames="" \
-        dt_atmos="" \
-        layout_x="" \
-        layout_y="" \
-        blocksize="" \
-        wrtcmp_write_groups="" \
-        wrtcmp_write_tasks_per_group="" \
-        wrtcmp_output_grid="" \
-        wrtcmp_cen_lon="" \
-        wrtcmp_cen_lat="" \
-        wrtcmp_stdlat1="" \
-        wrtcmp_stdlat2="" \
-        wrtcmp_nx="" \
-        wrtcmp_ny="" \
-        wrtcmp_lon_lwr_left="" \
-        wrtcmp_lat_lwr_left="" \
-        wrtcmp_lon_upr_rght="" \
-        wrtcmp_lat_upr_rght="" \
-        wrtcmp_dx="" \
-        wrtcmp_dy="" \
-        wrtcmp_dlon="" \
-        wrtcmp_dlat="" \
+  local __grid_gen_method__="" \
+        __esggrid_lon_ctr__="" \
+        __esggrid_lat_ctr__="" \
+        __esggrid_delx__="" \
+        __esggrid_dely__="" \
+        __esggrid_nx__="" \
+        __esggrid_ny__="" \
+        __esggrid_pazi__="" \
+        __esggrid_wide_halo_width__="" \
+        __gfdlgrid_lon_t6_ctr__="" \
+        __gfdlgrid_lat_t6_ctr__="" \
+        __gfdlgrid_stretch_fac__="" \
+        __gfdlgrid_res__="" \
+        __gfdlgrid_refine_ratio__="" \
+        __gfdlgrid_istart_of_rgnl_dom_on_t6g__="" \
+        __gfdlgrid_iend_of_rgnl_dom_on_t6g__="" \
+        __gfdlgrid_jstart_of_rgnl_dom_on_t6g__="" \
+        __gfdlgrid_jend_of_rgnl_dom_on_t6g__="" \
+        __gfdlgrid_use_gfdlgrid_res_in_filenames__="" \
+        __dt_atmos__="" \
+        __layout_x__="" \
+        __layout_y__="" \
+        __blocksize__="" \
+        __wrtcmp_write_groups__="" \
+        __wrtcmp_write_tasks_per_group__="" \
+        __wrtcmp_output_grid__="" \
+        __wrtcmp_cen_lon__="" \
+        __wrtcmp_cen_lat__="" \
+        __wrtcmp_stdlat1__="" \
+        __wrtcmp_stdlat2__="" \
+        __wrtcmp_nx__="" \
+        __wrtcmp_ny__="" \
+        __wrtcmp_lon_lwr_left__="" \
+        __wrtcmp_lat_lwr_left__="" \
+        __wrtcmp_lon_upr_rght__="" \
+        __wrtcmp_lat_upr_rght__="" \
+        __wrtcmp_dx__="" \
+        __wrtcmp_dy__="" \
+        __wrtcmp_dlon__="" \
+        __wrtcmp_dlat__="" \
         num_margin_cells_T6_left="" \
         num_margin_cells_T6_right="" \
         num_margin_cells_T6_bottom="" \
@@ -239,41 +239,41 @@ function set_predef_grid_params() {
 #
   "RRFS_CONUS_25km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-97.5"
-    esggrid_lat_ctr="38.5"
+    __esggrid_lon_ctr__="-97.5"
+    __esggrid_lat_ctr__="38.5"
 
-    esggrid_delx="25000.0"
-    esggrid_dely="25000.0"
+    __esggrid_delx__="25000.0"
+    __esggrid_dely__="25000.0"
 
-    esggrid_nx="219"
-    esggrid_ny="131"
+    __esggrid_nx__="219"
+    __esggrid_ny__="131"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-40}"
+    __dt_atmos__="${dt_atmos:-40}"
 
-    layout_x="${layout_x:-5}"
-    layout_y="${layout_y:-2}"
-    blocksize="${blocksize:-40}"
+    __layout_x__="${layout_x:-5}"
+    __layout_y__="${layout_y:-2}"
+    __blocksize__="${blocksize:-40}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group="2"
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
-      wrtcmp_nx="217"
-      wrtcmp_ny="128"
-      wrtcmp_lon_lwr_left="-122.719528"
-      wrtcmp_lat_lwr_left="21.138123"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__="2"
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
+      __wrtcmp_nx__="217"
+      __wrtcmp_ny__="128"
+      __wrtcmp_lon_lwr_left__="-122.719528"
+      __wrtcmp_lat_lwr_left__="21.138123"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -286,41 +286,41 @@ function set_predef_grid_params() {
 #
   "RRFS_CONUScompact_25km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-97.5"
-    esggrid_lat_ctr="38.5"
+    __esggrid_lon_ctr__="-97.5"
+    __esggrid_lat_ctr__="38.5"
 
-    esggrid_delx="25000.0"
-    esggrid_dely="25000.0"
+    __esggrid_delx__="25000.0"
+    __esggrid_dely__="25000.0"
 
-    esggrid_nx="202"
-    esggrid_ny="116"
+    __esggrid_nx__="202"
+    __esggrid_ny__="116"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-40}"
+    __dt_atmos__="${dt_atmos:-40}"
 
-    layout_x="${layout_x:-5}"
-    layout_y="${layout_y:-2}"
-    blocksize="${blocksize:-40}"
+    __layout_x__="${layout_x:-5}"
+    __layout_y__="${layout_y:-2}"
+    __blocksize__="${blocksize:-40}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group="2"
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
-      wrtcmp_nx="199"
-      wrtcmp_ny="111"
-      wrtcmp_lon_lwr_left="-121.23349066"
-      wrtcmp_lat_lwr_left="23.41731593"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__="2"
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
+      __wrtcmp_nx__="199"
+      __wrtcmp_ny__="111"
+      __wrtcmp_lon_lwr_left__="-121.23349066"
+      __wrtcmp_lat_lwr_left__="23.41731593"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -332,41 +332,41 @@ function set_predef_grid_params() {
 #
   "RRFS_CONUS_13km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-97.5"
-    esggrid_lat_ctr="38.5"
+    __esggrid_lon_ctr__="-97.5"
+    __esggrid_lat_ctr__="38.5"
 
-    esggrid_delx="13000.0"
-    esggrid_dely="13000.0"
+    __esggrid_delx__="13000.0"
+    __esggrid_dely__="13000.0"
 
-    esggrid_nx="420"
-    esggrid_ny="252"
+    __esggrid_nx__="420"
+    __esggrid_ny__="252"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-45}"
+    __dt_atmos__="${dt_atmos:-45}"
 
-    layout_x="${layout_x:-16}"
-    layout_y="${layout_y:-10}"
-    blocksize="${blocksize:-32}"
+    __layout_x__="${layout_x:-16}"
+    __layout_y__="${layout_y:-10}"
+    __blocksize__="${blocksize:-32}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
-      wrtcmp_nx="416"
-      wrtcmp_ny="245"
-      wrtcmp_lon_lwr_left="-122.719528"
-      wrtcmp_lat_lwr_left="21.138123"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
+      __wrtcmp_nx__="416"
+      __wrtcmp_ny__="245"
+      __wrtcmp_lon_lwr_left__="-122.719528"
+      __wrtcmp_lat_lwr_left__="21.138123"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -378,41 +378,41 @@ function set_predef_grid_params() {
 #
   "RRFS_CONUScompact_13km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-97.5"
-    esggrid_lat_ctr="38.5"
+    __esggrid_lon_ctr__="-97.5"
+    __esggrid_lat_ctr__="38.5"
 
-    esggrid_delx="13000.0"
-    esggrid_dely="13000.0"
+    __esggrid_delx__="13000.0"
+    __esggrid_dely__="13000.0"
 
-    esggrid_nx="396"
-    esggrid_ny="232"
+    __esggrid_nx__="396"
+    __esggrid_ny__="232"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-45}"
+    __dt_atmos__="${dt_atmos:-45}"
 
-    layout_x="${layout_x:-16}"
-    layout_y="${layout_y:-10}"
-    blocksize="${blocksize:-32}"
+    __layout_x__="${layout_x:-16}"
+    __layout_y__="${layout_y:-10}"
+    __blocksize__="${blocksize:-32}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
-      wrtcmp_nx="393"
-      wrtcmp_ny="225"
-      wrtcmp_lon_lwr_left="-121.70231097"
-      wrtcmp_lat_lwr_left="22.57417972"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
+      __wrtcmp_nx__="393"
+      __wrtcmp_ny__="225"
+      __wrtcmp_lon_lwr_left__="-121.70231097"
+      __wrtcmp_lat_lwr_left__="22.57417972"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -424,41 +424,41 @@ function set_predef_grid_params() {
 #
   "RRFS_CONUS_3km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-97.5"
-    esggrid_lat_ctr="38.5"
+    __esggrid_lon_ctr__="-97.5"
+    __esggrid_lat_ctr__="38.5"
 
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
-    esggrid_nx="1820"
-    esggrid_ny="1092"
+    __esggrid_nx__="1820"
+    __esggrid_ny__="1092"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-36}"
+    __dt_atmos__="${dt_atmos:-36}"
 
-    layout_x="${layout_x:-28}"
-    layout_y="${layout_y:-28}"
-    blocksize="${blocksize:-29}"
+    __layout_x__="${layout_x:-28}"
+    __layout_y__="${layout_y:-28}"
+    __blocksize__="${blocksize:-29}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
-      wrtcmp_nx="1799"
-      wrtcmp_ny="1059"
-      wrtcmp_lon_lwr_left="-122.719528"
-      wrtcmp_lat_lwr_left="21.138123"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
+      __wrtcmp_nx__="1799"
+      __wrtcmp_ny__="1059"
+      __wrtcmp_lon_lwr_left__="-122.719528"
+      __wrtcmp_lat_lwr_left__="21.138123"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -471,41 +471,41 @@ function set_predef_grid_params() {
 #
   "RRFS_CONUScompact_3km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-97.5"
-    esggrid_lat_ctr="38.5"
+    __esggrid_lon_ctr__="-97.5"
+    __esggrid_lat_ctr__="38.5"
 
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
-    esggrid_nx="1748"
-    esggrid_ny="1038"
+    __esggrid_nx__="1748"
+    __esggrid_ny__="1038"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-40}"
+    __dt_atmos__="${dt_atmos:-40}"
 
-    layout_x="${layout_x:-30}"
-    layout_y="${layout_y:-16}"
-    blocksize="${blocksize:-32}"
+    __layout_x__="${layout_x:-30}"
+    __layout_y__="${layout_y:-16}"
+    __blocksize__="${blocksize:-32}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
-      wrtcmp_nx="1746"
-      wrtcmp_ny="1014"
-      wrtcmp_lon_lwr_left="-122.17364391"
-      wrtcmp_lat_lwr_left="21.88588562"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
+      __wrtcmp_nx__="1746"
+      __wrtcmp_ny__="1014"
+      __wrtcmp_lon_lwr_left__="-122.17364391"
+      __wrtcmp_lat_lwr_left__="21.88588562"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -517,41 +517,41 @@ function set_predef_grid_params() {
 #
   "RRFS_SUBCONUS_3km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-97.5"
-    esggrid_lat_ctr="35.0"
+    __esggrid_lon_ctr__="-97.5"
+    __esggrid_lat_ctr__="35.0"
 
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
-    esggrid_nx="840"
-    esggrid_ny="600"
+    __esggrid_nx__="840"
+    __esggrid_ny__="600"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-40}"
+    __dt_atmos__="${dt_atmos:-40}"
 
-    layout_x="${layout_x:-30}"
-    layout_y="${layout_y:-24}"
-    blocksize="${blocksize:-35}"
+    __layout_x__="${layout_x:-30}"
+    __layout_y__="${layout_y:-24}"
+    __blocksize__="${blocksize:-35}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
-      wrtcmp_nx="837"
-      wrtcmp_ny="595"
-      wrtcmp_lon_lwr_left="-109.97410429"
-      wrtcmp_lat_lwr_left="26.31459843"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
+      __wrtcmp_nx__="837"
+      __wrtcmp_ny__="595"
+      __wrtcmp_lon_lwr_left__="-109.97410429"
+      __wrtcmp_lat_lwr_left__="26.31459843"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -565,41 +565,41 @@ function set_predef_grid_params() {
 #
   "SUBCONUS_Ind_3km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-86.16"
-    esggrid_lat_ctr="39.77"
+    __esggrid_lon_ctr__="-86.16"
+    __esggrid_lat_ctr__="39.77"
 
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
-    esggrid_nx="200"
-    esggrid_ny="200"
+    __esggrid_nx__="200"
+    __esggrid_ny__="200"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-40}"
+    __dt_atmos__="${dt_atmos:-40}"
 
-    layout_x="${layout_x:-5}"
-    layout_y="${layout_y:-5}"
-    blocksize="${blocksize:-40}"
+    __layout_x__="${layout_x:-5}"
+    __layout_y__="${layout_y:-5}"
+    __blocksize__="${blocksize:-40}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
-      wrtcmp_nx="197"
-      wrtcmp_ny="195"
-      wrtcmp_lon_lwr_left="-89.47120417"
-      wrtcmp_lat_lwr_left="37.07809642"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
+      __wrtcmp_nx__="197"
+      __wrtcmp_ny__="195"
+      __wrtcmp_lon_lwr_left__="-89.47120417"
+      __wrtcmp_lat_lwr_left__="37.07809642"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -614,67 +614,67 @@ function set_predef_grid_params() {
 #
   "RRFS_AK_13km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-161.5"
-    esggrid_lat_ctr="63.0"
+    __esggrid_lon_ctr__="-161.5"
+    __esggrid_lat_ctr__="63.0"
 
-    esggrid_delx="13000.0"
-    esggrid_dely="13000.0"
+    __esggrid_delx__="13000.0"
+    __esggrid_dely__="13000.0"
 
-    esggrid_nx="320"
-    esggrid_ny="240"
+    __esggrid_nx__="320"
+    __esggrid_ny__="240"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-#    dt_atmos="${dt_atmos:-50}"
-    dt_atmos="${dt_atmos:-10}"
+#    __dt_atmos__="${dt_atmos:-50}"
+    __dt_atmos__="${dt_atmos:-10}"
 
-    layout_x="${layout_x:-16}"
-    layout_y="${layout_y:-12}"
-    blocksize="${blocksize:-40}"
+    __layout_x__="${layout_x:-16}"
+    __layout_y__="${layout_y:-12}"
+    __blocksize__="${blocksize:-40}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
 
 # The following works.  The numbers were obtained using the NCL scripts
 # but only after manually modifying the longitutes of two of the four
 # corners of the domain to add 360.0 to them.  Need to automate that
 # procedure.
-      wrtcmp_nx="318"
-      wrtcmp_ny="234"
-#      wrtcmp_lon_lwr_left="-187.76660836"
-      wrtcmp_lon_lwr_left="172.23339164"
-      wrtcmp_lat_lwr_left="45.77691870"
+      __wrtcmp_nx__="318"
+      __wrtcmp_ny__="234"
+#      __wrtcmp_lon_lwr_left__="-187.76660836"
+      __wrtcmp_lon_lwr_left__="172.23339164"
+      __wrtcmp_lat_lwr_left__="45.77691870"
 
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
 
 # The following rotated_latlon coordinate system parameters were obtained
 # using the NCL code and work.
 #      if [ "$quilting" = "TRUE" ]; then
-#        wrtcmp_write_groups="1"
-#        wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-#        wrtcmp_output_grid="rotated_latlon"
-#        wrtcmp_cen_lon="${esggrid_lon_ctr}"
-#        wrtcmp_cen_lat="${esggrid_lat_ctr}"
-#        wrtcmp_lon_lwr_left="-18.47206579"
-#        wrtcmp_lat_lwr_left="-13.56176982"
-#        wrtcmp_lon_upr_rght="18.47206579"
-#        wrtcmp_lat_upr_rght="13.56176982"
-##        wrtcmp_dlon="0.11691181"
-##        wrtcmp_dlat="0.11691181"
-#        wrtcmp_dlon=$( printf "%.9f" $( bc -l <<< "(${esggrid_delx}/${radius_Earth})*${degs_per_radian}" ) )
-#        wrtcmp_dlat=$( printf "%.9f" $( bc -l <<< "(${esggrid_dely}/${radius_Earth})*${degs_per_radian}" ) )
+#        __wrtcmp_write_groups__="1"
+#        __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+#        __wrtcmp_output_grid__="rotated_latlon"
+#        __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+#        __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+#        __wrtcmp_lon_lwr_left__="-18.47206579"
+#        __wrtcmp_lat_lwr_left__="-13.56176982"
+#        __wrtcmp_lon_upr_rght__="18.47206579"
+#        __wrtcmp_lat_upr_rght__="13.56176982"
+##        __wrtcmp_dlon__="0.11691181"
+##        __wrtcmp_dlat__="0.11691181"
+#        __wrtcmp_dlon__=$( printf "%.9f" $( bc -l <<< "(${esggrid_delx}/${radius_Earth})*${degs_per_radian}" ) )
+#        __wrtcmp_dlat__=$( printf "%.9f" $( bc -l <<< "(${esggrid_dely}/${radius_Earth})*${degs_per_radian}" ) )
 #      fi
     ;;
 #
@@ -691,86 +691,86 @@ function set_predef_grid_params() {
 
 #    if [ "${grid_gen_method}" = "GFDLgrid" ]; then
 #
-#      gfdlgrid_lon_t6_ctr="-160.8"
-#      gfdlgrid_lat_t6_ctr="63.0"
-#      gfdlgrid_stretch_fac="1.161"
-#      gfdlgrid_res="768"
-#      gfdlgrid_refine_ratio="4"
+#      __gfdlgrid_lon_t6_ctr__="-160.8"
+#      __gfdlgrid_lat_t6_ctr__="63.0"
+#      __gfdlgrid_stretch_fac__="1.161"
+#      __gfdlgrid_res__="768"
+#      __gfdlgrid_refine_ratio__="4"
 #
 #      num_margin_cells_T6_left="204"
-#      gfdlgrid_istart_of_rgnl_dom_on_t6g=$(( num_margin_cells_T6_left + 1 ))
+#      __gfdlgrid_istart_of_rgnl_dom_on_t6g__=$(( num_margin_cells_T6_left + 1 ))
 #
 #      num_margin_cells_T6_right="204"
-#      gfdlgrid_iend_of_rgnl_dom_on_t6g=$(( gfdlgrid_res - num_margin_cells_T6_right ))
+#      __gfdlgrid_iend_of_rgnl_dom_on_t6g__=$(( __gfdlgrid_res__ - num_margin_cells_T6_right ))
 #
 #      num_margin_cells_T6_bottom="249"
-#      gfdlgrid_jstart_of_rgnl_dom_on_t6g=$(( num_margin_cells_T6_bottom + 1 ))
+#      __gfdlgrid_jstart_of_rgnl_dom_on_t6g__=$(( num_margin_cells_T6_bottom + 1 ))
 #
 #      num_margin_cells_T6_top="249"
-#      gfdlgrid_jend_of_rgnl_dom_on_t6g=$(( gfdlgrid_res - num_margin_cells_T6_top ))
+#      __gfdlgrid_jend_of_rgnl_dom_on_t6g__=$(( __gfdlgrid_res__ - num_margin_cells_T6_top ))
 #
-#      gfdlgrid_use_gfdlgrid_res_in_filenames="FALSE"
+#      __gfdlgrid_use_gfdlgrid_res_in_filenames__="FALSE"
 #
-#      dt_atmos="${dt_atmos:-18}"
+#      __dt_atmos__="${dt_atmos:-18}"
 #
-#      layout_x="${layout_x:-24}"
-#      layout_y="${layout_y:-24}"
-#      blocksize="${blocksize:-15}"
+#      __layout_x__="${layout_x:-24}"
+#      __layout_y__="${layout_y:-24}"
+#      __blocksize__="${blocksize:-15}"
 #
 #      if [ "$quilting" = "TRUE" ]; then
-#        wrtcmp_write_groups="1"
-#        wrtcmp_write_tasks_per_group="2"
-#        wrtcmp_output_grid="lambert_conformal"
-#        wrtcmp_cen_lon="${gfdlgrid_lon_t6_ctr}"
-#        wrtcmp_cen_lat="${gfdlgrid_lat_t6_ctr}"
-#        wrtcmp_stdlat1="${gfdlgrid_lat_t6_ctr}"
-#        wrtcmp_stdlat2="${gfdlgrid_lat_t6_ctr}"
-#        wrtcmp_nx="1320"
-#        wrtcmp_ny="950"
-#        wrtcmp_lon_lwr_left="173.734"
-#        wrtcmp_lat_lwr_left="46.740347"
-#        wrtcmp_dx="3000.0"
-#        wrtcmp_dy="3000.0"
+#        __wrtcmp_write_groups__="1"
+#        __wrtcmp_write_tasks_per_group__="2"
+#        __wrtcmp_output_grid__="lambert_conformal"
+#        __wrtcmp_cen_lon__="${__gfdlgrid_lon_t6_ctr__}"
+#        __wrtcmp_cen_lat__="${__gfdlgrid_lat_t6_ctr__}"
+#        __wrtcmp_stdlat1__="${__gfdlgrid_lat_t6_ctr__}"
+#        __wrtcmp_stdlat2__="${__gfdlgrid_lat_t6_ctr__}"
+#        __wrtcmp_nx__="1320"
+#        __wrtcmp_ny__="950"
+#        __wrtcmp_lon_lwr_left__="173.734"
+#        __wrtcmp_lat_lwr_left__="46.740347"
+#        __wrtcmp_dx__="3000.0"
+#        __wrtcmp_dy__="3000.0"
 #      fi
 #
 #    elif [ "${grid_gen_method}" = "ESGgrid" ]; then
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-161.5"
-    esggrid_lat_ctr="63.0"
+    __esggrid_lon_ctr__="-161.5"
+    __esggrid_lat_ctr__="63.0"
 
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
-    esggrid_nx="1380"
-    esggrid_ny="1020"
+    __esggrid_nx__="1380"
+    __esggrid_ny__="1020"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-#    dt_atmos="${dt_atmos:-50}"
-    dt_atmos="${dt_atmos:-10}"
+#    __dt_atmos__="${dt_atmos:-50}"
+    __dt_atmos__="${dt_atmos:-10}"
 
-    layout_x="${layout_x:-30}"
-    layout_y="${layout_y:-17}"
-    blocksize="${blocksize:-40}"
+    __layout_x__="${layout_x:-30}"
+    __layout_y__="${layout_y:-17}"
+    __blocksize__="${blocksize:-40}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
-      wrtcmp_nx="1379"
-      wrtcmp_ny="1003"
-      wrtcmp_lon_lwr_left="-187.89737923"
-      wrtcmp_lat_lwr_left="45.84576053"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
+      __wrtcmp_nx__="1379"
+      __wrtcmp_ny__="1003"
+      __wrtcmp_lon_lwr_left__="-187.89737923"
+      __wrtcmp_lat_lwr_left__="45.84576053"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -790,41 +790,41 @@ function set_predef_grid_params() {
 #
   "WoFS_3km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-97.5"
-    esggrid_lat_ctr="38.5"
+    __esggrid_lon_ctr__="-97.5"
+    __esggrid_lat_ctr__="38.5"
 
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
-    esggrid_nx="361"
-    esggrid_ny="361"
+    __esggrid_nx__="361"
+    __esggrid_ny__="361"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-20}"
+    __dt_atmos__="${dt_atmos:-20}"
 
-    layout_x="${layout_x:-18}"
-    layout_y="${layout_y:-12}"
-    blocksize="${blocksize:-30}"
+    __layout_x__="${layout_x:-18}"
+    __layout_y__="${layout_y:-12}"
+    __blocksize__="${blocksize:-30}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
-      wrtcmp_nx="301"
-      wrtcmp_ny="301"
-      wrtcmp_lon_lwr_left="-102.3802487"
-      wrtcmp_lat_lwr_left="34.3407918"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
+      __wrtcmp_nx__="301"
+      __wrtcmp_ny__="301"
+      __wrtcmp_lon_lwr_left__="-102.3802487"
+      __wrtcmp_lat_lwr_left__="34.3407918"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -840,46 +840,46 @@ function set_predef_grid_params() {
 #
   "CONUS_25km_GFDLgrid")
 
-    grid_gen_method="GFDLgrid"
+    __grid_gen_method__="GFDLgrid"
 
-    gfdlgrid_lon_t6_ctr="-97.5"
-    gfdlgrid_lat_t6_ctr="38.5"
-    gfdlgrid_stretch_fac="1.4"
-    gfdlgrid_res="96"
-    gfdlgrid_refine_ratio="3"
+    __gfdlgrid_lon_t6_ctr__="-97.5"
+    __gfdlgrid_lat_t6_ctr__="38.5"
+    __gfdlgrid_stretch_fac__="1.4"
+    __gfdlgrid_res__="96"
+    __gfdlgrid_refine_ratio__="3"
 
     num_margin_cells_T6_left="12"
-    gfdlgrid_istart_of_rgnl_dom_on_t6g=$(( num_margin_cells_T6_left + 1 ))
+    __gfdlgrid_istart_of_rgnl_dom_on_t6g__=$(( num_margin_cells_T6_left + 1 ))
 
     num_margin_cells_T6_right="12"
-    gfdlgrid_iend_of_rgnl_dom_on_t6g=$(( gfdlgrid_res - num_margin_cells_T6_right ))
+    __gfdlgrid_iend_of_rgnl_dom_on_t6g__=$(( __gfdlgrid_res__ - num_margin_cells_T6_right ))
 
     num_margin_cells_T6_bottom="16"
-    gfdlgrid_jstart_of_rgnl_dom_on_t6g=$(( num_margin_cells_T6_bottom + 1 ))
+    __gfdlgrid_jstart_of_rgnl_dom_on_t6g__=$(( num_margin_cells_T6_bottom + 1 ))
 
     num_margin_cells_T6_top="16"
-    gfdlgrid_jend_of_rgnl_dom_on_t6g=$(( gfdlgrid_res - num_margin_cells_T6_top ))
+    __gfdlgrid_jend_of_rgnl_dom_on_t6g__=$(( __gfdlgrid_res__ - num_margin_cells_T6_top ))
 
-    gfdlgrid_use_gfdlgrid_res_in_filenames="TRUE"
+    __gfdlgrid_use_gfdlgrid_res_in_filenames__="TRUE"
 
-    dt_atmos="${dt_atmos:-225}"
+    __dt_atmos__="${dt_atmos:-225}"
 
-    layout_x="${layout_x:-6}"
-    layout_y="${layout_y:-4}"
-    blocksize="${blocksize:-36}"
+    __layout_x__="${layout_x:-6}"
+    __layout_y__="${layout_y:-4}"
+    __blocksize__="${blocksize:-36}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-      wrtcmp_output_grid="rotated_latlon"
-      wrtcmp_cen_lon="${gfdlgrid_lon_t6_ctr}"
-      wrtcmp_cen_lat="${gfdlgrid_lat_t6_ctr}"
-      wrtcmp_lon_lwr_left="-24.40085141"
-      wrtcmp_lat_lwr_left="-19.65624142"
-      wrtcmp_lon_upr_rght="24.40085141"
-      wrtcmp_lat_upr_rght="19.65624142"
-      wrtcmp_dlon="0.22593381"
-      wrtcmp_dlat="0.22593381"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_output_grid__="rotated_latlon"
+      __wrtcmp_cen_lon__="${__gfdlgrid_lon_t6_ctr__}"
+      __wrtcmp_cen_lat__="${__gfdlgrid_lat_t6_ctr__}"
+      __wrtcmp_lon_lwr_left__="-24.40085141"
+      __wrtcmp_lat_lwr_left__="-19.65624142"
+      __wrtcmp_lon_upr_rght__="24.40085141"
+      __wrtcmp_lat_upr_rght__="19.65624142"
+      __wrtcmp_dlon__="0.22593381"
+      __wrtcmp_dlat__="0.22593381"
     fi
     ;;
 #
@@ -895,46 +895,46 @@ function set_predef_grid_params() {
 #
   "CONUS_3km_GFDLgrid")
 
-    grid_gen_method="GFDLgrid"
+    __grid_gen_method__="GFDLgrid"
 
-    gfdlgrid_lon_t6_ctr="-97.5"
-    gfdlgrid_lat_t6_ctr="38.5"
-    gfdlgrid_stretch_fac="1.5"
-    gfdlgrid_res="768"
-    gfdlgrid_refine_ratio="3"
+    __gfdlgrid_lon_t6_ctr__="-97.5"
+    __gfdlgrid_lat_t6_ctr__="38.5"
+    __gfdlgrid_stretch_fac__="1.5"
+    __gfdlgrid_res__="768"
+    __gfdlgrid_refine_ratio__="3"
 
     num_margin_cells_T6_left="69"
-    gfdlgrid_istart_of_rgnl_dom_on_t6g=$(( num_margin_cells_T6_left + 1 ))
+    __gfdlgrid_istart_of_rgnl_dom_on_t6g__=$(( num_margin_cells_T6_left + 1 ))
 
     num_margin_cells_T6_right="69"
-    gfdlgrid_iend_of_rgnl_dom_on_t6g=$(( gfdlgrid_res - num_margin_cells_T6_right ))
+    __gfdlgrid_iend_of_rgnl_dom_on_t6g__=$(( __gfdlgrid_res__ - num_margin_cells_T6_right ))
 
     num_margin_cells_T6_bottom="164"
-    gfdlgrid_jstart_of_rgnl_dom_on_t6g=$(( num_margin_cells_T6_bottom + 1 ))
+    __gfdlgrid_jstart_of_rgnl_dom_on_t6g__=$(( num_margin_cells_T6_bottom + 1 ))
 
     num_margin_cells_T6_top="164"
-    gfdlgrid_jend_of_rgnl_dom_on_t6g=$(( gfdlgrid_res - num_margin_cells_T6_top ))
+    __gfdlgrid_jend_of_rgnl_dom_on_t6g__=$(( __gfdlgrid_res__ - num_margin_cells_T6_top ))
 
-    gfdlgrid_use_gfdlgrid_res_in_filenames="TRUE"
+    __gfdlgrid_use_gfdlgrid_res_in_filenames__="TRUE"
 
-    dt_atmos="${dt_atmos:-18}"
+    __dt_atmos__="${dt_atmos:-18}"
 
-    layout_x="${layout_x:-30}"
-    layout_y="${layout_y:-22}"
-    blocksize="${blocksize:-35}"
+    __layout_x__="${layout_x:-30}"
+    __layout_y__="${layout_y:-22}"
+    __blocksize__="${blocksize:-35}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group=$(( 1*layout_y ))
-      wrtcmp_output_grid="rotated_latlon"
-      wrtcmp_cen_lon="${gfdlgrid_lon_t6_ctr}"
-      wrtcmp_cen_lat="${gfdlgrid_lat_t6_ctr}"
-      wrtcmp_lon_lwr_left="-25.23144805"
-      wrtcmp_lat_lwr_left="-15.82130419"
-      wrtcmp_lon_upr_rght="25.23144805"
-      wrtcmp_lat_upr_rght="15.82130419"
-      wrtcmp_dlon="0.02665763"
-      wrtcmp_dlat="0.02665763"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_output_grid__="rotated_latlon"
+      __wrtcmp_cen_lon__="${__gfdlgrid_lon_t6_ctr__}"
+      __wrtcmp_cen_lat__="${__gfdlgrid_lat_t6_ctr__}"
+      __wrtcmp_lon_lwr_left__="-25.23144805"
+      __wrtcmp_lat_lwr_left__="-15.82130419"
+      __wrtcmp_lon_upr_rght__="25.23144805"
+      __wrtcmp_lat_upr_rght__="15.82130419"
+      __wrtcmp_dlon__="0.02665763"
+      __wrtcmp_dlat__="0.02665763"
     fi
     ;;
 #
@@ -982,61 +982,61 @@ function set_predef_grid_params() {
 #dlon=0.03
 #dlat=0.03
 
-#      gfdlgrid_lon_t6_ctr="-153.0"
-#      gfdlgrid_lat_t6_ctr="61.0"
-#      gfdlgrid_stretch_fac="1.0"  # ???
-#      gfdlgrid_res="768"
-#      gfdlgrid_refine_ratio="3"   # ???
+#      __gfdlgrid_lon_t6_ctr__="-153.0"
+#      __gfdlgrid_lat_t6_ctr__="61.0"
+#      __gfdlgrid_stretch_fac__="1.0"  # ???
+#      __gfdlgrid_res__="768"
+#      __gfdlgrid_refine_ratio__="3"   # ???
 #
 #      num_margin_cells_T6_left="61"
-#      gfdlgrid_istart_of_rgnl_dom_on_t6g=$(( num_margin_cells_T6_left + 1 ))
+#      __gfdlgrid_istart_of_rgnl_dom_on_t6g__=$(( num_margin_cells_T6_left + 1 ))
 #
 #      num_margin_cells_T6_right="67"
-#      gfdlgrid_iend_of_rgnl_dom_on_t6g=$(( gfdlgrid_res - num_margin_cells_T6_right ))
+#      __gfdlgrid_iend_of_rgnl_dom_on_t6g__=$(( __gfdlgrid_res__ - num_margin_cells_T6_right ))
 #
 #      num_margin_cells_T6_bottom="165"
-#      gfdlgrid_jstart_of_rgnl_dom_on_t6g=$(( num_margin_cells_T6_bottom + 1 ))
+#      __gfdlgrid_jstart_of_rgnl_dom_on_t6g__=$(( num_margin_cells_T6_bottom + 1 ))
 #
 #      num_margin_cells_T6_top="171"
-#      gfdlgrid_jend_of_rgnl_dom_on_t6g=$(( gfdlgrid_res - num_margin_cells_T6_top ))
+#      __gfdlgrid_jend_of_rgnl_dom_on_t6g__=$(( __gfdlgrid_res__ - num_margin_cells_T6_top ))
 #
-#      gfdlgrid_use_gfdlgrid_res_in_filenames="TRUE"
+#      __gfdlgrid_use_gfdlgrid_res_in_filenames__="TRUE"
 #
-#      dt_atmos="${dt_atmos:-18}"
+#      __dt_atmos__="${dt_atmos:-18}"
 #
-#      layout_x="${layout_x:-16}"
-#      layout_y="${layout_y:-48}"
-#      wrtcmp_write_groups="2"
-#      wrtcmp_write_tasks_per_group="24"
-#      blocksize="${blocksize:-32}"
+#      __layout_x__="${layout_x:-16}"
+#      __layout_y__="${layout_y:-48}"
+#      __wrtcmp_write_groups__="2"
+#      __wrtcmp_write_tasks_per_group__="24"
+#      __blocksize__="${blocksize:-32}"
 #
 #    elif [ "${grid_gen_method}" = "ESGgrid" ]; then
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
 
 # Longitude and latitude for center of domain
-    esggrid_lon_ctr="-153.0"
-    esggrid_lat_ctr="61.0"
+    __esggrid_lon_ctr__="-153.0"
+    __esggrid_lat_ctr__="61.0"
 
 # Projected grid spacing in meters...in the static files (e.g. "C768_grid.tile7.nc"), the "dx" is actually the resolution
 # of the supergrid, which is HALF of this dx
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
 # Number of x and y points for your domain (halo not included);
 # Divide "supergrid" values from /scratch2/BMC/det/kavulich/fix/fix_sar/ak/C768_grid.tile7.halo4.nc by 2 and subtract 8 to eliminate halo
-    esggrid_nx="1344" # Supergrid value 2704
-    esggrid_ny="1152" # Supergrid value 2320
+    __esggrid_nx__="1344" # Supergrid value 2704
+    __esggrid_ny__="1152" # Supergrid value 2320
 
 # Rotation of the ESG grid in degrees.
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
 # Side note: FV3 is lagrangian and vertical coordinates are dynamically remapped during model integration
 # 'ksplit' is the factor that determines the timestep for this process (divided
@@ -1047,39 +1047,39 @@ function set_predef_grid_params() {
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
 
-    dt_atmos="${dt_atmos:-18}"
+    __dt_atmos__="${dt_atmos:-18}"
 
 #Factors for MPI decomposition. esggrid_nx must be divisible by layout_x, esggrid_ny must be divisible by layout_y
-    layout_x="${layout_x:-28}"
-    layout_y="${layout_y:-16}"
+    __layout_x__="${layout_x:-28}"
+    __layout_y__="${layout_y:-16}"
 
 #Take number of points on a tile (nx/lx*ny/ly), must divide by block size to get an integer.
 #This integer must be small enough to fit into a processor's cache, so it is machine-dependent magic
 # For Theia, must be ~40 or less
 # Check setup.sh for more details
-    blocksize="${blocksize:-24}"
+    __blocksize__="${blocksize:-24}"
 
 #This section is all for the write component, which you need for output during model integration
     if [ "$quilting" = "TRUE" ]; then
 #Write component reserves MPI tasks for writing output. The number of "groups" is usually 1, but if you have a case where group 1 is not done writing before the next write step, you need group 2, etc.
-      wrtcmp_write_groups="1"
+      __wrtcmp_write_groups__="1"
 #Number of tasks per write group. Ny must be divisible my this number. layout_y is usually a good value
-      wrtcmp_write_tasks_per_group="24"
+      __wrtcmp_write_tasks_per_group__="24"
 #lambert_conformal or rotated_latlon. lambert_conformal not well tested and probably doesn't work for our purposes
-      wrtcmp_output_grid="lambert_conformal"
+      __wrtcmp_output_grid__="lambert_conformal"
 #These should always be set the same as compute grid
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
 #Write component grid must always be <= compute grid (without haloes)
-      wrtcmp_nx="1344"
-      wrtcmp_ny="1152"
+      __wrtcmp_nx__="1344"
+      __wrtcmp_ny__="1152"
 #Lower left latlon (southwest corner)
-      wrtcmp_lon_lwr_left="-177.0"
-      wrtcmp_lat_lwr_left="42.5"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_lon_lwr_left__="-177.0"
+      __wrtcmp_lat_lwr_left__="42.5"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -1091,30 +1091,30 @@ function set_predef_grid_params() {
 #
   "EMC_HI")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/hi/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
 # Longitude and latitude for center of domain
-    esggrid_lon_ctr="-157.0"
-    esggrid_lat_ctr="20.0"
+    __esggrid_lon_ctr__="-157.0"
+    __esggrid_lat_ctr__="20.0"
 
 # Projected grid spacing in meters...in the static files (e.g. "C768_grid.tile7.nc"), the "dx" is actually the resolution
 # of the supergrid, which is HALF of this dx (plus or minus some grid stretch factor)
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
 # Number of x and y points for your domain (halo not included);
 # Divide "supergrid" values from /scratch2/BMC/det/kavulich/fix/fix_sar/hi/C768_grid.tile7.halo4.nc by 2 and subtract 8 to eliminate halo
-    esggrid_nx="432" # Supergrid value 880
-    esggrid_ny="360" # Supergrid value 736
+    __esggrid_nx__="432" # Supergrid value 880
+    __esggrid_ny__="360" # Supergrid value 736
 
 # Rotation of the ESG grid in degrees.
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
 # Side note: FV3 is lagrangian and vertical coordinates are dynamically remapped during model integration
 # 'ksplit' is the factor that determines the timestep for this process (divided
@@ -1125,39 +1125,39 @@ function set_predef_grid_params() {
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
 
-    dt_atmos="${dt_atmos:-18}"
+    __dt_atmos__="${dt_atmos:-18}"
 
 #Factors for MPI decomposition. esggrid_nx must be divisible by layout_x, esggrid_ny must be divisible by layout_y
-    layout_x="${layout_x:-8}"
-    layout_y="${layout_y:-8}"
+    __layout_x__="${layout_x:-8}"
+    __layout_y__="${layout_y:-8}"
 #Take number of points on a tile (nx/lx*ny/ly), must divide by block size to get an integer.
 #This integer must be small enough to fit into a processor's cache, so it is machine-dependent magic
 # For Theia, must be ~40 or less
 # Check setup.sh for more details
-    blocksize="${blocksize:-27}"
+    __blocksize__="${blocksize:-27}"
 
 #This section is all for the write component, which you need for output during model integration
     if [ "$quilting" = "TRUE" ]; then
 #Write component reserves MPI tasks for writing output. The number of "groups" is usually 1, but if you have a case where group 1 is not done writing before the next write step, you need group 2, etc.
-      wrtcmp_write_groups="1"
+      __wrtcmp_write_groups__="1"
 #Number of tasks per write group. Ny must be divisible my this number. layout_y is usually a good value
-      wrtcmp_write_tasks_per_group="8"
+      __wrtcmp_write_tasks_per_group__="8"
 #lambert_conformal or rotated_latlon. lambert_conformal not well tested and probably doesn't work for our purposes
-      wrtcmp_output_grid="lambert_conformal"
+      __wrtcmp_output_grid__="lambert_conformal"
 #These should usually be set the same as compute grid
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
 #Write component grid should be close to the ESGgrid values unless you are doing something weird
-      wrtcmp_nx="420"
-      wrtcmp_ny="348"
+      __wrtcmp_nx__="420"
+      __wrtcmp_ny__="348"
 
 #Lower left latlon (southwest corner)
-      wrtcmp_lon_lwr_left="-162.8"
-      wrtcmp_lat_lwr_left="15.2"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_lon_lwr_left__="-162.8"
+      __wrtcmp_lat_lwr_left__="15.2"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -1169,30 +1169,30 @@ function set_predef_grid_params() {
 #
   "EMC_PR")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/pr/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
 # Longitude and latitude for center of domain
-    esggrid_lon_ctr="-69.0"
-    esggrid_lat_ctr="18.0"
+    __esggrid_lon_ctr__="-69.0"
+    __esggrid_lat_ctr__="18.0"
 
 # Projected grid spacing in meters...in the static files (e.g. "C768_grid.tile7.nc"), the "dx" is actually the resolution
 # of the supergrid, which is HALF of this dx (plus or minus some grid stretch factor)
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
 # Number of x and y points for your domain (halo not included);
 # Divide "supergrid" values from /scratch2/BMC/det/kavulich/fix/fix_sar/pr/C768_grid.tile7.halo4.nc by 2 and subtract 8 to eliminate halo
-    esggrid_nx="576" # Supergrid value 1168
-    esggrid_ny="432" # Supergrid value 880
+    __esggrid_nx__="576" # Supergrid value 1168
+    __esggrid_ny__="432" # Supergrid value 880
 
 # Rotation of the ESG grid in degrees.
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
 # Side note: FV3 is lagrangian and vertical coordinates are dynamically remapped during model integration
 # 'ksplit' is the factor that determines the timestep for this process (divided
@@ -1203,39 +1203,39 @@ function set_predef_grid_params() {
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
 
-    dt_atmos="${dt_atmos:-18}"
+    __dt_atmos__="${dt_atmos:-18}"
 
 #Factors for MPI decomposition. esggrid_nx must be divisible by layout_x, esggrid_ny must be divisible by layout_y
-    layout_x="${layout_x:-16}"
-    layout_y="${layout_y:-8}"
+    __layout_x__="${layout_x:-16}"
+    __layout_y__="${layout_y:-8}"
 
 #Take number of points on a tile (nx/lx*ny/ly), must divide by block size to get an integer.
 #This integer must be small enough to fit into a processor's cache, so it is machine-dependent magic
 # For Theia, must be ~40 or less
 # Check setup.sh for more details
-    blocksize="${blocksize:-24}"
+    __blocksize__="${blocksize:-24}"
 
 #This section is all for the write component, which you need for output during model integration
     if [ "$quilting" = "TRUE" ]; then
 #Write component reserves MPI tasks for writing output. The number of "groups" is usually 1, but if you have a case where group 1 is not done writing before the next write step, you need group 2, etc.
-      wrtcmp_write_groups="1"
+      __wrtcmp_write_groups__="1"
 #Number of tasks per write group. Ny must be divisible my this number. layout_y is usually a good value
-      wrtcmp_write_tasks_per_group="24"
+      __wrtcmp_write_tasks_per_group__="24"
 #lambert_conformal or rotated_latlon. lambert_conformal not well tested and probably doesn't work for our purposes
-      wrtcmp_output_grid="lambert_conformal"
+      __wrtcmp_output_grid__="lambert_conformal"
 #These should always be set the same as compute grid
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
 #Write component grid must always be <= compute grid (without haloes)
-      wrtcmp_nx="576"
-      wrtcmp_ny="432"
+      __wrtcmp_nx__="576"
+      __wrtcmp_ny__="432"
 #Lower left latlon (southwest corner)
-      wrtcmp_lon_lwr_left="-77"
-      wrtcmp_lat_lwr_left="12"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_lon_lwr_left__="-77"
+      __wrtcmp_lat_lwr_left__="12"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -1247,30 +1247,30 @@ function set_predef_grid_params() {
 #
   "EMC_GU")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
 # Values taken from pre-generated files in /scratch4/NCEPDEV/fv3-cam/save/Benjamin.Blake/regional_workflow/fix/fix_sar/guam/C768_grid.tile7.nc
 # With move to Hera, those files were lost; a backup can be found here: /scratch2/BMC/det/kavulich/fix/fix_sar
 # Longitude and latitude for center of domain
-    esggrid_lon_ctr="146.0"
-    esggrid_lat_ctr="15.0"
+    __esggrid_lon_ctr__="146.0"
+    __esggrid_lat_ctr__="15.0"
 
 # Projected grid spacing in meters...in the static files (e.g. "C768_grid.tile7.nc"), the "dx" is actually the resolution
 # of the supergrid, which is HALF of this dx (plus or minus some grid stretch factor)
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
 # Number of x and y points for your domain (halo not included);
 # Divide "supergrid" values from /scratch2/BMC/det/kavulich/fix/fix_sar/guam/C768_grid.tile7.halo4.nc by 2 and subtract 8 to eliminate halo
-    esggrid_nx="432" # Supergrid value 880
-    esggrid_ny="360" # Supergrid value 736
+    __esggrid_nx__="432" # Supergrid value 880
+    __esggrid_ny__="360" # Supergrid value 736
 
 # Rotation of the ESG grid in degrees.
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
 # Number of halo points for a wide grid (before trimming)...this should almost always be 6 for now
 # Within the model we actually have a 4-point halo and a 3-point halo
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
 # Side note: FV3 is lagrangian and vertical coordinates are dynamically remapped during model integration
 # 'ksplit' is the factor that determines the timestep for this process (divided
@@ -1281,38 +1281,38 @@ function set_predef_grid_params() {
 #
 # Preliminary standard values: 18 for 3-km runs, 90 for 13-km runs per config_defaults.sh
 
-    dt_atmos="${dt_atmos:-18}"
+    __dt_atmos__="${dt_atmos:-18}"
 
 #Factors for MPI decomposition. esggrid_nx must be divisible by layout_x, esggrid_ny must be divisible by layout_y
-    layout_x="${layout_x:-16}"
-    layout_y="${layout_y:-12}"
+    __layout_x__="${layout_x:-16}"
+    __layout_y__="${layout_y:-12}"
 #Take number of points on a tile (nx/lx*ny/ly), must divide by block size to get an integer.
 #This integer must be small enough to fit into a processor's cache, so it is machine-dependent magic
 # For Theia, must be ~40 or less
 # Check setup.sh for more details
-    blocksize="${blocksize:-27}"
+    __blocksize__="${blocksize:-27}"
 
 #This section is all for the write component, which you need for output during model integration
     if [ "$quilting" = "TRUE" ]; then
 #Write component reserves MPI tasks for writing output. The number of "groups" is usually 1, but if you have a case where group 1 is not done writing before the next write step, you need group 2, etc.
-      wrtcmp_write_groups="1"
+      __wrtcmp_write_groups__="1"
 #Number of tasks per write group. Ny must be divisible my this number. layout_y is usually a good value
-      wrtcmp_write_tasks_per_group="24"
+      __wrtcmp_write_tasks_per_group__="24"
 #lambert_conformal or rotated_latlon. lambert_conformal not well tested and probably doesn't work for our purposes
-      wrtcmp_output_grid="lambert_conformal"
+      __wrtcmp_output_grid__="lambert_conformal"
 #These should always be set the same as compute grid
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
 #Write component grid must always be <= compute grid (without haloes)
-      wrtcmp_nx="420"
-      wrtcmp_ny="348"
+      __wrtcmp_nx__="420"
+      __wrtcmp_ny__="348"
 #Lower left latlon (southwest corner) Used /scratch2/NCEPDEV/fv3-cam/Dusan.Jovic/dbrowse/fv3grid utility to find best value
-      wrtcmp_lon_lwr_left="140"
-      wrtcmp_lat_lwr_left="10"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_lon_lwr_left__="140"
+      __wrtcmp_lat_lwr_left__="10"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -1324,39 +1324,39 @@ function set_predef_grid_params() {
 #
   "GSL_HAFSV0.A_25km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-62.0"
-    esggrid_lat_ctr="22.0"
+    __esggrid_lon_ctr__="-62.0"
+    __esggrid_lat_ctr__="22.0"
 
-    esggrid_delx="25000.0"
-    esggrid_dely="25000.0"
+    __esggrid_delx__="25000.0"
+    __esggrid_dely__="25000.0"
 
-    esggrid_nx="345"
-    esggrid_ny="230"
+    __esggrid_nx__="345"
+    __esggrid_ny__="230"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-300}"
+    __dt_atmos__="${dt_atmos:-300}"
 
-    layout_x="${layout_x:-5}"
-    layout_y="${layout_y:-5}"
-    blocksize="${blocksize:-6}"
+    __layout_x__="${layout_x:-5}"
+    __layout_y__="${layout_y:-5}"
+    __blocksize__="${blocksize:-6}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group="32"
-      wrtcmp_output_grid="regional_latlon"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="25.0"
-      wrtcmp_lon_lwr_left="-114.5"
-      wrtcmp_lat_lwr_left="-5.0"
-      wrtcmp_lon_upr_rght="-9.5"
-      wrtcmp_lat_upr_rght="55.0"
-      wrtcmp_dlon="0.25"
-      wrtcmp_dlat="0.25"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__="32"
+      __wrtcmp_output_grid__="regional_latlon"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="25.0"
+      __wrtcmp_lon_lwr_left__="-114.5"
+      __wrtcmp_lat_lwr_left__="-5.0"
+      __wrtcmp_lon_upr_rght__="-9.5"
+      __wrtcmp_lat_upr_rght__="55.0"
+      __wrtcmp_dlon__="0.25"
+      __wrtcmp_dlat__="0.25"
     fi
     ;;
 #
@@ -1368,39 +1368,39 @@ function set_predef_grid_params() {
 #
   "GSL_HAFSV0.A_13km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-62.0"
-    esggrid_lat_ctr="22.0"
+    __esggrid_lon_ctr__="-62.0"
+    __esggrid_lat_ctr__="22.0"
 
-    esggrid_delx="13000.0"
-    esggrid_dely="13000.0"
+    __esggrid_delx__="13000.0"
+    __esggrid_dely__="13000.0"
 
-    esggrid_nx="665"
-    esggrid_ny="444"
+    __esggrid_nx__="665"
+    __esggrid_ny__="444"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-180}"
+    __dt_atmos__="${dt_atmos:-180}"
 
-    layout_x="${layout_x:-19}"
-    layout_y="${layout_y:-12}"
-    blocksize="${blocksize:-35}"
+    __layout_x__="${layout_x:-19}"
+    __layout_y__="${layout_y:-12}"
+    __blocksize__="${blocksize:-35}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group="32"
-      wrtcmp_output_grid="regional_latlon"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="25.0"
-      wrtcmp_lon_lwr_left="-114.5"
-      wrtcmp_lat_lwr_left="-5.0"
-      wrtcmp_lon_upr_rght="-9.5"
-      wrtcmp_lat_upr_rght="55.0"
-      wrtcmp_dlon="0.13"
-      wrtcmp_dlat="0.13"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__="32"
+      __wrtcmp_output_grid__="regional_latlon"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="25.0"
+      __wrtcmp_lon_lwr_left__="-114.5"
+      __wrtcmp_lat_lwr_left__="-5.0"
+      __wrtcmp_lon_upr_rght__="-9.5"
+      __wrtcmp_lat_upr_rght__="55.0"
+      __wrtcmp_dlon__="0.13"
+      __wrtcmp_dlat__="0.13"
     fi
     ;;
 #
@@ -1412,39 +1412,39 @@ function set_predef_grid_params() {
 #
   "GSL_HAFSV0.A_3km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-62.0"
-    esggrid_lat_ctr="22.0"
+    __esggrid_lon_ctr__="-62.0"
+    __esggrid_lat_ctr__="22.0"
 
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
-    esggrid_nx="2880"
-    esggrid_ny="1920"
+    __esggrid_nx__="2880"
+    __esggrid_ny__="1920"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-40}"
+    __dt_atmos__="${dt_atmos:-40}"
 
-    layout_x="${layout_x:-32}"
-    layout_y="${layout_y:-24}"
-    blocksize="${blocksize:-32}"
+    __layout_x__="${layout_x:-32}"
+    __layout_y__="${layout_y:-24}"
+    __blocksize__="${blocksize:-32}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group="32"
-      wrtcmp_output_grid="regional_latlon"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="25.0"
-      wrtcmp_lon_lwr_left="-114.5"
-      wrtcmp_lat_lwr_left="-5.0"
-      wrtcmp_lon_upr_rght="-9.5"
-      wrtcmp_lat_upr_rght="55.0"
-      wrtcmp_dlon="0.03"
-      wrtcmp_dlat="0.03"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__="32"
+      __wrtcmp_output_grid__="regional_latlon"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="25.0"
+      __wrtcmp_lon_lwr_left__="-114.5"
+      __wrtcmp_lat_lwr_left__="-5.0"
+      __wrtcmp_lon_upr_rght__="-9.5"
+      __wrtcmp_lat_upr_rght__="55.0"
+      __wrtcmp_dlon__="0.03"
+      __wrtcmp_dlat__="0.03"
     fi
     ;;
 #
@@ -1456,41 +1456,41 @@ function set_predef_grid_params() {
 #
   "GSD_HRRR_AK_50km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-163.5"
-    esggrid_lat_ctr="62.8"
+    __esggrid_lon_ctr__="-163.5"
+    __esggrid_lat_ctr__="62.8"
 
-    esggrid_delx="50000.0"
-    esggrid_dely="50000.0"
+    __esggrid_delx__="50000.0"
+    __esggrid_dely__="50000.0"
 
-    esggrid_nx="74"
-    esggrid_ny="51"
+    __esggrid_nx__="74"
+    __esggrid_ny__="51"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-600}"
+    __dt_atmos__="${dt_atmos:-600}"
 
-    layout_x="${layout_x:-2}"
-    layout_y="${layout_y:-3}"
-    blocksize="${blocksize:-37}"
+    __layout_x__="${layout_x:-2}"
+    __layout_y__="${layout_y:-3}"
+    __blocksize__="${blocksize:-37}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group="1"
-      wrtcmp_output_grid="lambert_conformal"
-      wrtcmp_cen_lon="${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="${esggrid_lat_ctr}"
-      wrtcmp_stdlat1="${esggrid_lat_ctr}"
-      wrtcmp_stdlat2="${esggrid_lat_ctr}"
-      wrtcmp_nx="70"
-      wrtcmp_ny="45"
-      wrtcmp_lon_lwr_left="172.0"
-      wrtcmp_lat_lwr_left="49.0"
-      wrtcmp_dx="${esggrid_delx}"
-      wrtcmp_dy="${esggrid_dely}"
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__="1"
+      __wrtcmp_output_grid__="lambert_conformal"
+      __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
+      __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
+      __wrtcmp_nx__="70"
+      __wrtcmp_ny__="45"
+      __wrtcmp_lon_lwr_left__="172.0"
+      __wrtcmp_lat_lwr_left__="49.0"
+      __wrtcmp_dx__="${__esggrid_delx__}"
+      __wrtcmp_dy__="${__esggrid_dely__}"
     fi
     ;;
 #
@@ -1502,39 +1502,39 @@ function set_predef_grid_params() {
 #
   "RRFS_NA_13km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr="-112.5"
-    esggrid_lat_ctr="55.0"
+    __esggrid_lon_ctr__="-112.5"
+    __esggrid_lat_ctr__="55.0"
 
-    esggrid_delx="13000.0"
-    esggrid_dely="13000.0"
+    __esggrid_delx__="13000.0"
+    __esggrid_dely__="13000.0"
 
-    esggrid_nx="912"
-    esggrid_ny="623"
+    __esggrid_nx__="912"
+    __esggrid_ny__="623"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-50}"
+    __dt_atmos__="${dt_atmos:-50}"
 
-    layout_x="${layout_x:-16}"
-    layout_y="${layout_y:-16}"
-    blocksize="${blocksize:-30}"
+    __layout_x__="${layout_x:-16}"
+    __layout_y__="${layout_y:-16}"
+    __blocksize__="${blocksize:-30}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group="16"
-      wrtcmp_output_grid="rotated_latlon"
-      wrtcmp_cen_lon="-113.0" #"${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="55.0" #"${esggrid_lat_ctr}"
-      wrtcmp_lon_lwr_left="-61.0"
-      wrtcmp_lat_lwr_left="-37.0"
-      wrtcmp_lon_upr_rght="61.0"
-      wrtcmp_lat_upr_rght="37.0"
-      wrtcmp_dlon=$( printf "%.9f" $( bc -l <<< "(${esggrid_delx}/${radius_Earth})*${degs_per_radian}" ) )
-      wrtcmp_dlat=$( printf "%.9f" $( bc -l <<< "(${esggrid_dely}/${radius_Earth})*${degs_per_radian}" ) )
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__="16"
+      __wrtcmp_output_grid__="rotated_latlon"
+      __wrtcmp_cen_lon__="-113.0" #"${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="55.0" #"${__esggrid_lat_ctr__}"
+      __wrtcmp_lon_lwr_left__="-61.0"
+      __wrtcmp_lat_lwr_left__="-37.0"
+      __wrtcmp_lon_upr_rght__="61.0"
+      __wrtcmp_lat_upr_rght__="37.0"
+      __wrtcmp_dlon__=$( printf "%.9f" $( bc -l <<< "(${__esggrid_delx__}/${radius_Earth})*${degs_per_radian}" ) )
+      __wrtcmp_dlat__=$( printf "%.9f" $( bc -l <<< "(${__esggrid_dely__}/${radius_Earth})*${degs_per_radian}" ) )
     fi
     ;;
 #
@@ -1546,39 +1546,39 @@ function set_predef_grid_params() {
 #
   "RRFS_NA_3km")
 
-    grid_gen_method="ESGgrid"
+    __grid_gen_method__="ESGgrid"
 
-    esggrid_lon_ctr=-112.5
-    esggrid_lat_ctr=55.0
+    __esggrid_lon_ctr__=-112.5
+    __esggrid_lat_ctr__=55.0
 
-    esggrid_delx="3000.0"
-    esggrid_dely="3000.0"
+    __esggrid_delx__="3000.0"
+    __esggrid_dely__="3000.0"
 
-    esggrid_nx="3950"
-    esggrid_ny="2700"
+    __esggrid_nx__="3950"
+    __esggrid_ny__="2700"
 
-    esggrid_pazi="0.0"
+    __esggrid_pazi__="0.0"
 
-    esggrid_wide_halo_width="6"
+    __esggrid_wide_halo_width__="6"
 
-    dt_atmos="${dt_atmos:-36}"
+    __dt_atmos__="${dt_atmos:-36}"
 
-    layout_x="${layout_x:-20}"   # 40 - EMC operational configuration
-    layout_y="${layout_y:-35}"   # 45 - EMC operational configuration
-    blocksize="${blocksize:-28}"
+    __layout_x__="${layout_x:-20}"   # 40 - EMC operational configuration
+    __layout_y__="${layout_y:-35}"   # 45 - EMC operational configuration
+    __blocksize__="${blocksize:-28}"
 
     if [ "$quilting" = "TRUE" ]; then
-      wrtcmp_write_groups="1"
-      wrtcmp_write_tasks_per_group="144"
-      wrtcmp_output_grid="rotated_latlon"
-      wrtcmp_cen_lon="-113.0" #"${esggrid_lon_ctr}"
-      wrtcmp_cen_lat="55.0" #"${esggrid_lat_ctr}"
-      wrtcmp_lon_lwr_left="-61.0"
-      wrtcmp_lat_lwr_left="-37.0"
-      wrtcmp_lon_upr_rght="61.0"
-      wrtcmp_lat_upr_rght="37.0"
-      wrtcmp_dlon="0.025" #$( printf "%.9f" $( bc -l <<< "(${esggrid_delx}/${radius_Earth})*${degs_per_radian}" ) )
-      wrtcmp_dlat="0.025" #$( printf "%.9f" $( bc -l <<< "(${esggrid_dely}/${radius_Earth})*${degs_per_radian}" ) )
+      __wrtcmp_write_groups__="1"
+      __wrtcmp_write_tasks_per_group__="144"
+      __wrtcmp_output_grid__="rotated_latlon"
+      __wrtcmp_cen_lon__="-113.0" #"${__esggrid_lon_ctr__}"
+      __wrtcmp_cen_lat__="55.0" #"${__esggrid_lat_ctr__}"
+      __wrtcmp_lon_lwr_left__="-61.0"
+      __wrtcmp_lat_lwr_left__="-37.0"
+      __wrtcmp_lon_upr_rght__="61.0"
+      __wrtcmp_lat_upr_rght__="37.0"
+      __wrtcmp_dlon__="0.025" #$( printf "%.9f" $( bc -l <<< "(${__esggrid_delx__}/${radius_Earth})*${degs_per_radian}" ) )
+      __wrtcmp_dlat__="0.025" #$( printf "%.9f" $( bc -l <<< "(${__esggrid_dely__}/${radius_Earth})*${degs_per_radian}" ) )
     fi
     ;;
 
@@ -1594,163 +1594,163 @@ function set_predef_grid_params() {
 #-----------------------------------------------------------------------
 #
   if [ ! -z "${outvarname_grid_gen_method}" ]; then
-    printf -v ${outvarname_grid_gen_method} "%s" "${grid_gen_method}"
+    printf -v ${outvarname_grid_gen_method} "%s" "${__grid_gen_method__}"
   fi
 
   if [ ! -z "${outvarname_esggrid_lon_ctr}" ]; then
-    printf -v ${outvarname_esggrid_lon_ctr} "%s" "${esggrid_lon_ctr}"
+    printf -v ${outvarname_esggrid_lon_ctr} "%s" "${__esggrid_lon_ctr__}"
   fi
 
   if [ ! -z "${outvarname_esggrid_lat_ctr}" ]; then
-    printf -v ${outvarname_esggrid_lat_ctr} "%s" "${esggrid_lat_ctr}"
+    printf -v ${outvarname_esggrid_lat_ctr} "%s" "${__esggrid_lat_ctr__}"
   fi
 
   if [ ! -z "${outvarname_esggrid_delx}" ]; then
-    printf -v ${outvarname_esggrid_delx} "%s" "${esggrid_delx}"
+    printf -v ${outvarname_esggrid_delx} "%s" "${__esggrid_delx__}"
   fi
 
   if [ ! -z "${outvarname_esggrid_dely}" ]; then
-    printf -v ${outvarname_esggrid_dely} "%s" "${esggrid_dely}"
+    printf -v ${outvarname_esggrid_dely} "%s" "${__esggrid_dely__}"
   fi
 
   if [ ! -z "${outvarname_esggrid_nx}" ]; then
-    printf -v ${outvarname_esggrid_nx} "%s" "${esggrid_nx}"
+    printf -v ${outvarname_esggrid_nx} "%s" "${__esggrid_nx__}"
   fi
 
   if [ ! -z "${outvarname_esggrid_ny}" ]; then
-    printf -v ${outvarname_esggrid_ny} "%s" "${esggrid_ny}"
+    printf -v ${outvarname_esggrid_ny} "%s" "${__esggrid_ny__}"
   fi
 
   if [ ! -z "${outvarname_esggrid_pazi}" ]; then
-    printf -v ${outvarname_esggrid_pazi} "%s" "${esggrid_pazi}"
+    printf -v ${outvarname_esggrid_pazi} "%s" "${__esggrid_pazi__}"
   fi
 
   if [ ! -z "${outvarname_esggrid_wide_halo_width}" ]; then
-    printf -v ${outvarname_esggrid_wide_halo_width} "%s" "${esggrid_wide_halo_width}"
+    printf -v ${outvarname_esggrid_wide_halo_width} "%s" "${__esggrid_wide_halo_width__}"
   fi
 
   if [ ! -z "${outvarname_gfdlgrid_lon_t6_ctr}" ]; then
-    printf -v ${outvarname_gfdlgrid_lon_t6_ctr} "%s" "${gfdlgrid_lon_t6_ctr}"
+    printf -v ${outvarname_gfdlgrid_lon_t6_ctr} "%s" "${__gfdlgrid_lon_t6_ctr__}"
   fi
 
   if [ ! -z "${outvarname_gfdlgrid_lat_t6_ctr}" ]; then
-    printf -v ${outvarname_gfdlgrid_lat_t6_ctr} "%s" "${gfdlgrid_lat_t6_ctr}"
+    printf -v ${outvarname_gfdlgrid_lat_t6_ctr} "%s" "${__gfdlgrid_lat_t6_ctr__}"
   fi
 
   if [ ! -z "${outvarname_gfdlgrid_stretch_fac}" ]; then
-    printf -v ${outvarname_gfdlgrid_stretch_fac} "%s" "${gfdlgrid_stretch_fac}"
+    printf -v ${outvarname_gfdlgrid_stretch_fac} "%s" "${__gfdlgrid_stretch_fac__}"
   fi
 
   if [ ! -z "${outvarname_gfdlgrid_res}" ]; then
-    printf -v ${outvarname_gfdlgrid_res} "%s" "${gfdlgrid_res}"
+    printf -v ${outvarname_gfdlgrid_res} "%s" "${__gfdlgrid_res__}"
   fi
 
   if [ ! -z "${outvarname_gfdlgrid_refine_ratio}" ]; then
-    printf -v ${outvarname_gfdlgrid_refine_ratio} "%s" "${gfdlgrid_refine_ratio}"
+    printf -v ${outvarname_gfdlgrid_refine_ratio} "%s" "${__gfdlgrid_refine_ratio__}"
   fi
 
   if [ ! -z "${outvarname_gfdlgrid_istart_of_rgnl_dom_on_t6g}" ]; then
-    printf -v ${outvarname_gfdlgrid_istart_of_rgnl_dom_on_t6g} "%s" "${gfdlgrid_istart_of_rgnl_dom_on_t6g}"
+    printf -v ${outvarname_gfdlgrid_istart_of_rgnl_dom_on_t6g} "%s" "${__gfdlgrid_istart_of_rgnl_dom_on_t6g__}"
   fi
 
   if [ ! -z "${outvarname_gfdlgrid_iend_of_rgnl_dom_on_t6g}" ]; then
-    printf -v ${outvarname_gfdlgrid_iend_of_rgnl_dom_on_t6g} "%s" "${gfdlgrid_iend_of_rgnl_dom_on_t6g}"
+    printf -v ${outvarname_gfdlgrid_iend_of_rgnl_dom_on_t6g} "%s" "${__gfdlgrid_iend_of_rgnl_dom_on_t6g__}"
   fi
 
   if [ ! -z "${outvarname_gfdlgrid_jstart_of_rgnl_dom_on_t6g}" ]; then
-    printf -v ${outvarname_gfdlgrid_jstart_of_rgnl_dom_on_t6g} "%s" "${gfdlgrid_jstart_of_rgnl_dom_on_t6g}"
+    printf -v ${outvarname_gfdlgrid_jstart_of_rgnl_dom_on_t6g} "%s" "${__gfdlgrid_jstart_of_rgnl_dom_on_t6g__}"
   fi
 
   if [ ! -z "${outvarname_gfdlgrid_jend_of_rgnl_dom_on_t6g}" ]; then
-    printf -v ${outvarname_gfdlgrid_jend_of_rgnl_dom_on_t6g} "%s" "${gfdlgrid_jend_of_rgnl_dom_on_t6g}"
+    printf -v ${outvarname_gfdlgrid_jend_of_rgnl_dom_on_t6g} "%s" "${__gfdlgrid_jend_of_rgnl_dom_on_t6g__}"
   fi
 
   if [ ! -z "${outvarname_gfdlgrid_use_gfdlgrid_res_in_filenames}" ]; then
-    printf -v ${outvarname_gfdlgrid_use_gfdlgrid_res_in_filenames} "%s" "${gfdlgrid_use_gfdlgrid_res_in_filenames}"
+    printf -v ${outvarname_gfdlgrid_use_gfdlgrid_res_in_filenames} "%s" "${__gfdlgrid_use_gfdlgrid_res_in_filenames__}"
   fi
 
   if [ ! -z "${outvarname_dt_atmos}" ]; then
-    printf -v ${outvarname_dt_atmos} "%s" "${dt_atmos}"
+    printf -v ${outvarname_dt_atmos} "%s" "${__dt_atmos__}"
   fi
 
   if [ ! -z "${outvarname_layout_x}" ]; then
-    printf -v ${outvarname_layout_x} "%s" "${layout_x}"
+    printf -v ${outvarname_layout_x} "%s" "${__layout_x__}"
   fi
 
   if [ ! -z "${outvarname_layout_y}" ]; then
-    printf -v ${outvarname_layout_y} "%s" "${layout_y}"
+    printf -v ${outvarname_layout_y} "%s" "${__layout_y__}"
   fi
 
   if [ ! -z "${outvarname_blocksize}" ]; then
-    printf -v ${outvarname_blocksize} "%s" "${blocksize}"
+    printf -v ${outvarname_blocksize} "%s" "${__blocksize__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_write_groups}" ]; then
-    printf -v ${outvarname_wrtcmp_write_groups} "%s" "${wrtcmp_write_groups}"
+    printf -v ${outvarname_wrtcmp_write_groups} "%s" "${__wrtcmp_write_groups__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_write_tasks_per_group}" ]; then
-    printf -v ${outvarname_wrtcmp_write_tasks_per_group} "%s" "${wrtcmp_write_tasks_per_group}"
+    printf -v ${outvarname_wrtcmp_write_tasks_per_group} "%s" "${__wrtcmp_write_tasks_per_group__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_output_grid}" ]; then
-    printf -v ${outvarname_wrtcmp_output_grid} "%s" "${wrtcmp_output_grid}"
+    printf -v ${outvarname_wrtcmp_output_grid} "%s" "${__wrtcmp_output_grid__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_cen_lon}" ]; then
-    printf -v ${outvarname_wrtcmp_cen_lon} "%s" "${wrtcmp_cen_lon}"
+    printf -v ${outvarname_wrtcmp_cen_lon} "%s" "${__wrtcmp_cen_lon__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_cen_lat}" ]; then
-    printf -v ${outvarname_wrtcmp_cen_lat} "%s" "${wrtcmp_cen_lat}"
+    printf -v ${outvarname_wrtcmp_cen_lat} "%s" "${__wrtcmp_cen_lat__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_stdlat1}" ]; then
-    printf -v ${outvarname_wrtcmp_stdlat1} "%s" "${wrtcmp_stdlat1}"
+    printf -v ${outvarname_wrtcmp_stdlat1} "%s" "${__wrtcmp_stdlat1__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_stdlat2}" ]; then
-    printf -v ${outvarname_wrtcmp_stdlat2} "%s" "${wrtcmp_stdlat2}"
+    printf -v ${outvarname_wrtcmp_stdlat2} "%s" "${__wrtcmp_stdlat2__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_nx}" ]; then
-    printf -v ${outvarname_wrtcmp_nx} "%s" "${wrtcmp_nx}"
+    printf -v ${outvarname_wrtcmp_nx} "%s" "${__wrtcmp_nx__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_ny}" ]; then
-    printf -v ${outvarname_wrtcmp_ny} "%s" "${wrtcmp_ny}"
+    printf -v ${outvarname_wrtcmp_ny} "%s" "${__wrtcmp_ny__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_lon_lwr_left}" ]; then
-    printf -v ${outvarname_wrtcmp_lon_lwr_left} "%s" "${wrtcmp_lon_lwr_left}"
+    printf -v ${outvarname_wrtcmp_lon_lwr_left} "%s" "${__wrtcmp_lon_lwr_left__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_lat_lwr_left}" ]; then
-    printf -v ${outvarname_wrtcmp_lat_lwr_left} "%s" "${wrtcmp_lat_lwr_left}"
+    printf -v ${outvarname_wrtcmp_lat_lwr_left} "%s" "${__wrtcmp_lat_lwr_left__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_lon_upr_rght}" ]; then
-    printf -v ${outvarname_wrtcmp_lon_upr_rght} "%s" "${wrtcmp_lon_upr_rght}"
+    printf -v ${outvarname_wrtcmp_lon_upr_rght} "%s" "${__wrtcmp_lon_upr_rght__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_lat_upr_rght}" ]; then
-    printf -v ${outvarname_wrtcmp_lat_upr_rght} "%s" "${wrtcmp_lat_upr_rght}"
+    printf -v ${outvarname_wrtcmp_lat_upr_rght} "%s" "${__wrtcmp_lat_upr_rght__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_dx}" ]; then
-    printf -v ${outvarname_wrtcmp_dx} "%s" "${wrtcmp_dx}"
+    printf -v ${outvarname_wrtcmp_dx} "%s" "${__wrtcmp_dx__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_dy}" ]; then
-    printf -v ${outvarname_wrtcmp_dy} "%s" "${wrtcmp_dy}"
+    printf -v ${outvarname_wrtcmp_dy} "%s" "${__wrtcmp_dy__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_dlon}" ]; then
-    printf -v ${outvarname_wrtcmp_dlon} "%s" "${wrtcmp_dlon}"
+    printf -v ${outvarname_wrtcmp_dlon} "%s" "${__wrtcmp_dlon__}"
   fi
 
   if [ ! -z "${outvarname_wrtcmp_dlat}" ]; then
-    printf -v ${outvarname_wrtcmp_dlat} "%s" "${wrtcmp_dlat}"
+    printf -v ${outvarname_wrtcmp_dlat} "%s" "${__wrtcmp_dlat__}"
   fi
 #
 #-----------------------------------------------------------------------

@@ -66,6 +66,7 @@ Starting function ${func_name}() in \"${scrfunc_fn}\"...
 #
 . ./check_expt_config_vars.sh
 . ./set_cycle_dates.sh
+. ./set_predef_grid_params.sh
 . ./set_gridparams_GFDLgrid.sh
 . ./set_gridparams_ESGgrid.sh
 . ./link_fix.sh
@@ -889,13 +890,62 @@ LBC_SPEC_FCST_HRS=($( seq ${LBC_SPEC_INTVL_HRS} ${LBC_SPEC_INTVL_HRS} \
 #
 #-----------------------------------------------------------------------
 #
-# If PREDEF_GRID_NAME is set to a non-empty string, set or reset parameters
-# according to the predefined domain specified.
+# If PREDEF_GRID_NAME is set to a non-empty string, set or reset native
+# and write-component grid parameters according to the specified predefined 
+# domain.
 #
 #-----------------------------------------------------------------------
 #
 if [ ! -z "${PREDEF_GRID_NAME}" ]; then
-  . $USHDIR/set_predef_grid_params.sh
+
+  set_predef_grid_params \
+    predef_grid_name="${PREDEF_GRID_NAME}" \
+    dt_atmos="${DT_ATMOS}" \
+    layout_x="${LAYOUT_X}" \
+    layout_y="${LAYOUT_Y}" \
+    blocksize="${BLOCKSIZE}" \
+    quilting="${QUILTING}" \
+    outvarname_grid_gen_method="GRID_GEN_METHOD" \
+    outvarname_esggrid_lon_ctr="ESGgrid_LON_CTR" \
+    outvarname_esggrid_lat_ctr="ESGgrid_LAT_CTR" \
+    outvarname_esggrid_delx="ESGgrid_DELX" \
+    outvarname_esggrid_dely="ESGgrid_DELY" \
+    outvarname_esggrid_nx="ESGgrid_NX" \
+    outvarname_esggrid_ny="ESGgrid_NY" \
+    outvarname_esggrid_pazi="ESGgrid_PAZI" \
+    outvarname_esggrid_wide_halo_width="ESGgrid_WIDE_HALO_WIDTH" \
+    outvarname_gfdlgrid_lon_t6_ctr="GFDLgrid_LON_T6_CTR" \
+    outvarname_gfdlgrid_lat_t6_ctr="GFDLgrid_LAT_T6_CTR" \
+    outvarname_gfdlgrid_stretch_fac="GFDLgrid_STRETCH_FAC" \
+    outvarname_gfdlgrid_res="GFDLgrid_RES" \
+    outvarname_gfdlgrid_refine_ratio="GFDLgrid_REFINE_RATIO" \
+    outvarname_gfdlgrid_istart_of_rgnl_dom_on_t6g="GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G" \
+    outvarname_gfdlgrid_iend_of_rgnl_dom_on_t6g="GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G" \
+    outvarname_gfdlgrid_jstart_of_rgnl_dom_on_t6g="GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G" \
+    outvarname_gfdlgrid_jend_of_rgnl_dom_on_t6g="GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G" \
+    outvarname_gfdlgrid_use_gfdlgrid_res_in_filenames="GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES" \
+    outvarname_dt_atmos="DT_ATMOS" \
+    outvarname_layout_x="LAYOUT_X" \
+    outvarname_layout_y="LAYOUT_Y" \
+    outvarname_blocksize="BLOCKSIZE" \
+    outvarname_wrtcmp_write_groups="WRTCMP_write_groups" \
+    outvarname_wrtcmp_write_tasks_per_group="WRTCMP_write_tasks_per_group" \
+    outvarname_wrtcmp_output_grid="WRTCMP_output_grid" \
+    outvarname_wrtcmp_cen_lon="WRTCMP_cen_lon" \
+    outvarname_wrtcmp_cen_lat="WRTCMP_cen_lat" \
+    outvarname_wrtcmp_stdlat1="WRTCMP_stdlat1" \
+    outvarname_wrtcmp_stdlat2="WRTCMP_stdlat2" \
+    outvarname_wrtcmp_nx="WRTCMP_nx" \
+    outvarname_wrtcmp_ny="WRTCMP_ny" \
+    outvarname_wrtcmp_lon_lwr_left="WRTCMP_lon_lwr_left" \
+    outvarname_wrtcmp_lat_lwr_left="WRTCMP_lat_lwr_left" \
+    outvarname_wrtcmp_lon_upr_rght="WRTCMP_lon_upr_rght" \
+    outvarname_wrtcmp_lat_upr_rght="WRTCMP_lat_upr_rght" \
+    outvarname_wrtcmp_dx="WRTCMP_dx" \
+    outvarname_wrtcmp_dy="WRTCMP_dy" \
+    outvarname_wrtcmp_dlon="WRTCMP_dlon" \
+    outvarname_wrtcmp_dlat="WRTCMP_dlat"
+
 fi
 #
 #-----------------------------------------------------------------------
