@@ -307,6 +307,10 @@ DOT_OR_USCORE="_"
 # EXPT_CONFIG_FN:
 # Name of the user-specified configuration file for the forecast experiment.
 #
+# CONSTANTS_FN:
+# Name of the file containing definitions of various mathematical, physical, 
+# and SRW App contants.
+#
 # RGNL_GRID_NML_FN:
 # Name of file containing the namelist settings for the code that generates
 # a "ESGgrid" type of regional grid.
@@ -388,6 +392,7 @@ DOT_OR_USCORE="_"
 #-----------------------------------------------------------------------
 #
 EXPT_CONFIG_FN="config.sh"
+CONSTANTS_FN="constants.sh"
 
 RGNL_GRID_NML_FN="regional_grid.nml"
 

@@ -1781,45 +1781,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Any regional model must be supplied lateral boundary conditions (in
-# addition to initial conditions) to be able to perform a forecast.  In
-# the FV3-LAM model, these boundary conditions (BCs) are supplied using a
-# "halo" of grid cells around the regional domain that extend beyond the
-# boundary of the domain.  The model is formulated such that along with
-# files containing these BCs, it needs as input the following files (in
-# NetCDF format):
-#
-# 1) A grid file that includes a halo of 3 cells beyond the boundary of
-#    the domain.
-# 2) A grid file that includes a halo of 4 cells beyond the boundary of
-#    the domain.
-# 3) A (filtered) orography file without a halo, i.e. a halo of width
-#    0 cells.
-# 4) A (filtered) orography file that includes a halo of 4 cells beyond
-#    the boundary of the domain.
-#
-# Note that the regional grid is referred to as "tile 7" in the code.
-# We will let:
-#
-# * NH0 denote the width (in units of number of cells on tile 7) of
-#   the 0-cell-wide halo, i.e. NH0 = 0;
-#
-# * NH3 denote the width (in units of number of cells on tile 7) of
-#   the 3-cell-wide halo, i.e. NH3 = 3; and
-#
-# * NH4 denote the width (in units of number of cells on tile 7) of
-#   the 4-cell-wide halo, i.e. NH4 = 4.
-#
-# We define these variables next.
-#
-#-----------------------------------------------------------------------
-#
-NH0=0
-NH3=3
-NH4=4
-#
-#-----------------------------------------------------------------------
-#
 # Set parameters according to the type of horizontal grid generation 
 # method specified.  First consider GFDL's global-parent-grid based 
 # method.
@@ -2153,6 +2114,27 @@ GLOBAL_VAR_DEFNS_FP="$EXPTDIR/${GLOBAL_VAR_DEFNS_FN}"
 #
 #-----------------------------------------------------------------------
 #
+# Get the list of constants and their values.  The result is saved in
+# the variable "constant_defns".  This will be written to the experiment's
+# variable defintions file later below.
+#
+#-----------------------------------------------------------------------
+#
+print_info_msg "
+Creating list of constants..." 
+
+get_bash_file_contents fp="$USHDIR/${CONSTANTS_FN}" \
+                       outvarname_contents="constant_defns"
+
+print_info_msg "$DEBUG" "
+The variable \"constant_defns\" containing definitions of various 
+constants is set as follows:
+
+${constant_defns}
+"
+#
+#-----------------------------------------------------------------------
+#
 # Get the list of primary experiment variables and their default values 
 # from the default experiment configuration file (EXPT_DEFAULT_CONFIG_FN).  
 # By "primary", we mean those variables that are defined in the default 
@@ -2281,9 +2263,9 @@ var_name = \"${var_name}\""
       else
 
         var_value=""
-        printf -v "var_value" "%s" "${escbksl_nl_or_null}"
+        printf -v "var_value" "%s${escbksl_nl_or_null}" ""
         for (( i=0; i<${num_elems}; i++ )); do
-          printf -v "var_value" "%s" "${var_value}\"${array[$i]}\" ${escbksl_nl_or_null}"
+          printf -v "var_value" "%s${escbksl_nl_or_null}" "${var_value}\"${array[$i]}\" "
         done
         rhs="( ${var_value})"
 
@@ -2310,7 +2292,7 @@ Setting its value in the variable definitions file to an empty string."
 # to the list of all variable definitions.
 #
     var_defn="${var_name}=$rhs"
-    printf -v "var_defns" "%s" "${var_defns}${var_defn}\n"
+    printf -v "var_defns" "%s\n" "${var_defns}${var_defn}"
 #
 # If var_name is empty, then a variable name was not found on the current 
 # line in default_var_defns.  In this case, print out a warning and move 
@@ -2353,6 +2335,16 @@ var_defns_file_contents="\
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
 # Section 1:
+# This section contains definitions of the various constants defined in
+# the file ${CONSTANTS_FN}.
+#-----------------------------------------------------------------------
+#-----------------------------------------------------------------------
+#
+${constant_defns}
+#
+#-----------------------------------------------------------------------
+#-----------------------------------------------------------------------
+# Section 2:
 # This section contains (most of) the primary experiment variables, i.e. 
 # those variables that are defined in the default configuration file 
 # (${EXPT_DEFAULT_CONFIG_FN}) and that can be reset via the user-specified 
@@ -2375,7 +2367,7 @@ var_defns_file_contents=${var_defns_file_contents}"\
 #
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
-# Section 2:
+# Section 3:
 # This section defines variables that have been derived from the primary
 # set of experiment variables above (we refer to these as \"derived\" or
 # \"secondary\" variables).
@@ -2518,9 +2510,6 @@ SDF_USES_THOMPSON_MP='${SDF_USES_THOMPSON_MP}'
 #
 GTYPE='$GTYPE'
 TILE_RGNL='${TILE_RGNL}'
-NH0='${NH0}'
-NH3='${NH3}'
-NH4='${NH4}'
 
 LON_CTR='${LON_CTR}'
 LAT_CTR='${LAT_CTR}'
