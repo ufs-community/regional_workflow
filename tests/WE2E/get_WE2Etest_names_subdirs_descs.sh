@@ -302,7 +302,9 @@ function get_WE2Etest_names_subdirs_descs() {
 #
 #-----------------------------------------------------------------------
 #
-  local all_items \
+  local abs_cost_ref \
+        ac \
+        all_items \
         alt_test_name \
         alt_test_names \
         alt_test_names_subdirs \
@@ -321,6 +323,8 @@ function get_WE2Etest_names_subdirs_descs() {
         csv_fp \
         cwd \
         default_val \
+        fcst_len_hrs \
+        get_test_descs \
         hash_or_null \
         i \
         ii \
@@ -331,6 +335,7 @@ function get_WE2Etest_names_subdirs_descs() {
         mod_time_csv \
         mod_time_subdir \
         msg \
+        nf \
         num_alt_tests \
         num_category_subdirs \
         num_cdates \
@@ -338,10 +343,12 @@ function get_WE2Etest_names_subdirs_descs() {
         num_days \
         num_fcsts \
         num_fcsts_orig \
+        num_grid_pts \
         num_items \
         num_occurrences \
         num_prim_tests \
         num_tests \
+        num_time_steps \
         num_vars_to_extract \
         prim_array_names_vars_to_extract \
         prim_test_descs \
@@ -349,9 +356,11 @@ function get_WE2Etest_names_subdirs_descs() {
         prim_test_name_subdir \
         prim_test_names \
         prim_test_num_fcsts \
+        prim_test_rel_cost \
         prim_test_subdirs \
-        get_test_descs \
+        rc \
         regex_search \
+        rel_cost \
         row_content \
         sort_inds \
         stripped_line \
@@ -386,11 +395,48 @@ function get_WE2Etest_names_subdirs_descs() {
         test_subdirs_orig \
         test_subdirs_str \
         test_type \
+        ushdir \
         val \
         valid_vals_generate_csv_file \
         var_name \
         var_name_at \
         vars_to_extract
+
+  local grid_gen_method \
+        \
+        gfdlgrid_lon_t6_ctr \
+        gfdlgrid_lat_t6_ctr \
+        gfdlgrid_res \
+        gfdlgrid_stretch_fac \
+        gfdlgrid_refine_ratio \
+        gfdlgrid_istart_of_rgnl_dom_on_t6g \
+        gfdlgrid_iend_of_rgnl_dom_on_t6g \
+        gfdlgrid_jstart_of_rgnl_dom_on_t6g \
+        gfdlgrid_jend_of_rgnl_dom_on_t6g \
+        \
+        esggrid_lon_ctr \
+        esggrid_lat_ctr \
+        esggrid_nx \
+        esggrid_ny \
+        esggrid_pazi \
+        esggrid_wide_halo_width \
+        esggrid_delx \
+        esggrid_dely \
+        \
+        nx \
+        ny \
+        dt_atmos
+#
+#-----------------------------------------------------------------------
+#
+# Source files.
+#
+#-----------------------------------------------------------------------
+#
+  ushdir=$( readlink -f "$WE2Edir/../../ush" )
+  . $ushdir/set_predef_grid_params.sh
+  . $ushdir/set_gridparams_GFDLgrid.sh
+  . $ushdir/set_gridparams_ESGgrid.sh
 #
 #-----------------------------------------------------------------------
 #
@@ -521,6 +567,7 @@ information on all WE2E tests:
   prim_test_ids=()
   prim_test_subdirs=()
   prim_test_num_fcsts=()
+  prim_test_rel_cost=()
 
   alt_test_names=()
   alt_test_subdirs=()
@@ -924,9 +971,9 @@ they correspond to unique test names and rerun."
     prim_array_names_vars_to_extract=( $( printf "prim_test_%s_vals " "${vars_to_extract[@]}" ) )
     array_names_vars_to_extract=( $( printf "%s_vals " "${vars_to_extract[@]}" ) )
     for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
-      cmd="${prim_array_names_vars_to_extract[$k]}=()"
+      cmd="local ${prim_array_names_vars_to_extract[$k]}=()"
       eval $cmd
-      cmd="${array_names_vars_to_extract[$k]}=()"
+      cmd="local ${array_names_vars_to_extract[$k]}=()"
       eval $cmd
     done
 
@@ -1117,19 +1164,213 @@ ${test_desc}${stripped_line} "
 #
 # Calculate the number of forecasts that will be launched by the current
 # test.  The "10#" forces bash to treat the following number as a decimal
-# (not hexadecimal, etc).
+# (not hexadecimal, etc).  Note that INCR_CYCL_FREQ is in units of hours,
+# so the factor of 24 is needed to convert the number of days to hours.
 #
       num_cycles_per_day=${#CYCL_HRS[@]}
       num_days=$(( (${DATE_LAST_CYCL} - ${DATE_FIRST_CYCL} + 1)*24/10#${INCR_CYCL_FREQ} ))
       num_cdates=$(( ${num_cycles_per_day}*${num_days} ))
       nf=$(( ${num_cdates}*10#${NUM_ENS_MEMBERS} ))
 #
-# In the following, the single quote at the beginning forces Google Sheets 
-# to interpret this quantity as a string.  This prevents any automatic 
-# number fomatting from being applied when the CSV file is imported into
-# Google Sheets.
+# Save the number of forecasts launched by the current test in an 
+# appropriately named array.  In the following, the single quote at the 
+# beginning forces Google Sheets to interpret this quantity as a string.  
+# This prevents any automatic number fomatting from being applied when 
+# the CSV file is imported into Google Sheets.
 #
       prim_test_num_fcsts+=( "'$nf" )
+#
+#-----------------------------------------------------------------------
+#
+# Calculate the relative dynamics cost of the test, i.e. the relative 
+# cost of running only the dynamics portion of the forecast model.  Here, 
+# we define the absolute cost of running the dynamics as
+#
+#   abs_cost = nx*ny*num_time_steps*num_fcsts
+#
+# where nx and ny are the horizontal dimensions of the grid, num_time_steps
+# is the number of time steps that need to be taken to complete one 
+# forecast within the test, and num_fcsts are the number of forecasts
+# the test makes (e.g. if the test performs an ensemble forecast, the 
+# value of this parameter will be greater than 1).  
+#
+# The relative cost is obtained by dividing the absolute cost of a test 
+# by the absolute cost of a reference 6-hour forecast on the RRFS_CONUS_25km 
+# predefined grid using the default time step for that grid.  This is 
+# calculated later below and saved in the variable abs_cost_ref.  Thus,
+# the relative cost is given by
+#
+#   rel_cost = abs_cost/abs_cost_ref
+#
+# defined as abs_cost_ref. 
+#
+# Note that the (absolute or relative) cost defined here does not take 
+# into account the costs of running different physics suites, nor does 
+# it take into account the costs of workflow tasks other than the forecast 
+# task (e.g. generation of initial and boundary conditions, post processing, 
+# verification, etc; that is why it is referred to as the relative DYNAMICS 
+# cost).  Note also that if in the future the number of levels in the 
+# vertical becomes a user-specified parameter, that will also have to be 
+# added to the definition of the cost.
+#
+#-----------------------------------------------------------------------
+#
+
+#
+# To calculate the absolute cost as defined above, we need the number of 
+# points in the two horizontal directions, nx and ny.  Also, to calculate
+# the number of time steps, we need the size of the time step (dt_atmos).
+# These depend on the grid being used and must be extracted from the grid 
+# parameters.  The way the latter are obtained depends on whether or not
+# a predefined grid is being used.
+#
+# If using a predefined grid, call the set_predef_grid_params() function
+# to get the grid parameters.
+#
+      if [ ! -z "${PREDEF_GRID_NAME}" ]; then
+#
+# Note:
+# Can set "quilting" to "FALSE" in the following argument list because
+# the write-component parameters are not needed below; only those of the
+# native grid are needed.
+#
+        set_predef_grid_params \
+          predef_grid_name="${PREDEF_GRID_NAME}" \
+          quilting="FALSE" \
+          outvarname_grid_gen_method="grid_gen_method" \
+          outvarname_esggrid_lon_ctr="esggrid_lon_ctr" \
+          outvarname_esggrid_lat_ctr="esggrid_lat_ctr" \
+          outvarname_esggrid_delx="esggrid_delx" \
+          outvarname_esggrid_dely="esggrid_dely" \
+          outvarname_esggrid_nx="esggrid_nx" \
+          outvarname_esggrid_ny="esggrid_ny" \
+          outvarname_esggrid_pazi="esggrid_pazi" \
+          outvarname_esggrid_wide_halo_width="esggrid_wide_halo_width" \
+          outvarname_gfdlgrid_lon_t6_ctr="gfdlgrid_lon_t6_ctr" \
+          outvarname_gfdlgrid_lat_t6_ctr="gfdlgrid_lat_t6_ctr" \
+          outvarname_gfdlgrid_stretch_fac="gfdlgrid_stretch_fac" \
+          outvarname_gfdlgrid_res="gfdlgrid_res" \
+          outvarname_gfdlgrid_refine_ratio="gfdlgrid_refine_ratio" \
+          outvarname_gfdlgrid_istart_of_rgnl_dom_on_t6g="gfdlgrid_istart_of_rgnl_dom_on_t6g" \
+          outvarname_gfdlgrid_iend_of_rgnl_dom_on_t6g="gfdlgrid_iend_of_rgnl_dom_on_t6g" \
+          outvarname_gfdlgrid_jstart_of_rgnl_dom_on_t6g="gfdlgrid_jstart_of_rgnl_dom_on_t6g" \
+          outvarname_gfdlgrid_jend_of_rgnl_dom_on_t6g="gfdlgrid_jend_of_rgnl_dom_on_t6g" \
+          outvarname_dt_atmos="dt_atmos"
+#
+# If using a custom grid, the test's configuration file should contain 
+# the grid parameters.  Source this file and set the values of the grid
+# parameters it contains to local variables.
+#
+      else
+
+        . ./${config_fn}
+        grid_gen_method="${GRID_GEN_METHOD}"
+        if [ "${grid_gen_method}" = "GFDLgrid" ]; then
+          gfdlgrid_lon_t6_ctr="${GFDLgrid_LON_T6_CTR}"
+          gfdlgrid_lat_t6_ctr="${GFDLgrid_LAT_T6_CTR}"
+          gfdlgrid_res="${GFDLgrid_RES}"
+          gfdlgrid_stretch_fac="${GFDLgrid_STRETCH_FAC}"
+          gfdlgrid_refine_ratio="${GFDLgrid_REFINE_RATIO}"
+          gfdlgrid_istart_of_rgnl_dom_on_t6g="${GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G}"
+          gfdlgrid_iend_of_rgnl_dom_on_t6g="${GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G}"
+          gfdlgrid_jstart_of_rgnl_dom_on_t6g="${GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G}"
+          gfdlgrid_jend_of_rgnl_dom_on_t6g="${GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G}"
+        elif [ "${grid_gen_method}" = "ESGgrid" ]; then
+          esggrid_lon_ctr="${ESGgrid_LON_CTR}"
+          esggrid_lat_ctr="${ESGgrid_LAT_CTR}"
+          esggrid_delx="${ESGgrid_DELX}"
+          esggrid_dely="${ESGgrid_DELY}"
+          esggrid_nx="${ESGgrid_NX}"
+          esggrid_ny="${ESGgrid_NY}"
+          esggrid_pazi="${ESGgrid_PAZI}"
+          esggrid_wide_halo_width="${ESGgrid_WIDE_HALO_WIDTH}"
+        fi
+        dt_atmos="${DT_ATMOS}"
+
+      fi
+#
+# The way the number of grid points in the horizontal directions (nx and
+# ny) are calculated depends on the method used to generate the grid as 
+# well as the grid parameters for that method.
+#
+      if [ "${grid_gen_method}" = "GFDLgrid" ]; then
+#
+# Note:
+# The workflow generation mode (run_envir) can be set to "community" here
+# since this does not affect the values of nx and ny.
+#
+        set_gridparams_GFDLgrid \
+          lon_of_t6_ctr="${gfdlgrid_lon_t6_ctr}" \
+          lat_of_t6_ctr="${gfdlgrid_lat_t6_ctr}" \
+          res_of_t6g="${gfdlgrid_res}" \
+          stretch_factor="${gfdlgrid_stretch_fac}" \
+          refine_ratio_t6g_to_t7g="${gfdlgrid_refine_ratio}" \
+          istart_of_t7_on_t6g="${gfdlgrid_istart_of_rgnl_dom_on_t6g}" \
+          iend_of_t7_on_t6g="${gfdlgrid_iend_of_rgnl_dom_on_t6g}" \
+          jstart_of_t7_on_t6g="${gfdlgrid_jstart_of_rgnl_dom_on_t6g}" \
+          jend_of_t7_on_t6g="${gfdlgrid_jend_of_rgnl_dom_on_t6g}" \
+          verbose="$verbose" \
+          outvarname_nx_of_t7_on_t7g="nx" \
+          outvarname_ny_of_t7_on_t7g="ny"
+      
+      elif [ "${grid_gen_method}" = "ESGgrid" ]; then
+      
+        set_gridparams_ESGgrid \
+          lon_ctr="${esggrid_lon_ctr}" \
+          lat_ctr="${esggrid_lat_ctr}" \
+          nx="${esggrid_nx}" \
+          ny="${esggrid_ny}" \
+          pazi="${esggrid_pazi}" \
+          halo_width="${esggrid_wide_halo_width}" \
+          delx="${esggrid_delx}" \
+          dely="${esggrid_dely}" \
+          outvarname_nx="nx" \
+          outvarname_ny="ny"
+      
+      fi
+#
+# Calculate the total number of horizontal grid points.
+#
+      num_grid_pts=$(( nx*ny ))
+#
+# Calculate the number of time steps for the test.  Note that FCST_LEN_HRS 
+# is in units of hours while dt_atmos is in units of seconds.
+#
+      num_time_steps=$(( FCST_LEN_HRS*3600/dt_atmos + 1 ))
+#
+# Calculate the absolute cost of the test.
+#
+      ac=$(( num_grid_pts*num_time_steps*nf ))
+#
+# Unset all grid paramters so that they are not accidentally reused for
+# the next test.
+#
+      unset gfdlgrid_lon_t6_ctr \
+            gfdlgrid_lat_t6_ctr \
+            gfdlgrid_res \
+            gfdlgrid_stretch_fac \
+            gfdlgrid_refine_ratio \
+            gfdlgrid_istart_of_rgnl_dom_on_t6g \
+            gfdlgrid_iend_of_rgnl_dom_on_t6g \
+            gfdlgrid_jstart_of_rgnl_dom_on_t6g \
+            gfdlgrid_jend_of_rgnl_dom_on_t6g \
+            esggrid_lon_ctr \
+            esggrid_lat_ctr \
+            esggrid_nx \
+            esggrid_ny \
+            esggrid_pazi \
+            esggrid_wide_halo_width \
+            esggrid_delx \
+            esggrid_dely \
+            dt_atmos \
+            nx \
+            ny
+#
+# Save the absolute cost for this test in the array that will eventually
+# contain the relative cost.  The values in this array will be divided
+# by abs_cost_ref later below to obtain relative costs.
+#
+      prim_test_rel_cost+=( "$ac" )
 #
 # Unset the experiment variables defined for the current test so that 
 # they are not accidentally used for the next one.
@@ -1140,6 +1381,37 @@ ${test_desc}${stripped_line} "
         eval $cmd
       done
 
+    done # End loop over primary tests
+#
+#-----------------------------------------------------------------------
+#
+# Normalize the absolute costs calculated above for each test by the 
+# absolute cost of a reference 6-hour forecast on the RRFS_CONUS_25km 
+# predefined grid (using the default time step for that grid).
+#
+#-----------------------------------------------------------------------
+#
+    set_predef_grid_params \
+      predef_grid_name="RRFS_CONUS_25km" \
+      quilting="FALSE" \
+      outvarname_esggrid_nx="nx" \
+      outvarname_esggrid_ny="ny" \
+      outvarname_dt_atmos="dt_atmos"
+
+    num_grid_pts=$(( nx*ny ))
+    fcst_len_hrs="6"
+    num_time_steps=$(( fcst_len_hrs*3600/dt_atmos + 1 ))
+    abs_cost_ref=$(( num_grid_pts*num_time_steps ))
+
+    for (( i=0; i<=$((num_prim_tests-1)); i++ )); do
+#
+# In the following, the single quote at the beginning forces Google Sheets 
+# to interpret this quantity as a string.  This prevents any automatic 
+# number fomatting from being applied when the CSV file is imported into
+# Google Sheets.
+#
+      prim_test_rel_cost[$i]="'"$( printf "%g" \
+        $( bc -l <<< " ${prim_test_rel_cost[$i]}/${abs_cost_ref}" ) )
     done
 
   fi
@@ -1158,6 +1430,7 @@ ${test_desc}${stripped_line} "
   if [ "${get_test_descs}" = "TRUE" ]; then
     test_descs=("${prim_test_descs[@]}")
     num_fcsts=("${prim_test_num_fcsts[@]}")
+    rel_cost=("${prim_test_rel_cost[@]}")
     for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
       cmd="${array_names_vars_to_extract[$k]}=(\"\${${prim_array_names_vars_to_extract[$k]}[@]}\")"
       eval $cmd
@@ -1187,6 +1460,7 @@ ${test_desc}${stripped_line} "
         if [ "${get_test_descs}" = "TRUE" ]; then
           test_descs+=("${prim_test_descs[$j]}")
           num_fcsts+=("${prim_test_num_fcsts[$j]}")
+          rel_cost+=("${prim_test_rel_cost[$j]}")
           for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
             cmd="${array_names_vars_to_extract[$k]}+=(\"\${${prim_array_names_vars_to_extract[$k]}[$j]}\")"
             eval $cmd
@@ -1266,9 +1540,9 @@ Please correct and rerun."
                      sed -n -r -e "s/${regex_search}/\2/p" )
   done
 
-  test_names_orig=( "${test_names[@]}" )
-  test_subdirs_orig=( "${test_subdirs[@]}" )
-  test_ids_orig=( "${test_ids[@]}" )
+  local test_names_orig=( "${test_names[@]}" )
+  local test_subdirs_orig=( "${test_subdirs[@]}" )
+  local test_ids_orig=( "${test_ids[@]}" )
   for (( i=0; i<=$((num_tests-1)); i++ )); do
     ii="${sort_inds[$i]}"
     test_names[$i]="${test_names_orig[$ii]}"
@@ -1278,10 +1552,11 @@ Please correct and rerun."
 
   if [ "${get_test_descs}" = "TRUE" ]; then
 
-    test_descs_orig=( "${test_descs[@]}" )
-    num_fcsts_orig=( "${num_fcsts[@]}" )
+    local test_descs_orig=( "${test_descs[@]}" )
+    local num_fcsts_orig=( "${num_fcsts[@]}" )
+    local rel_cost_orig=( "${rel_cost[@]}" )
     for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
-      cmd="${array_names_vars_to_extract[$k]}_orig=(\"\${${array_names_vars_to_extract[$k]}[@]}\")"
+      cmd="local ${array_names_vars_to_extract[$k]}_orig=(\"\${${array_names_vars_to_extract[$k]}[@]}\")"
       eval $cmd
     done
 
@@ -1289,6 +1564,7 @@ Please correct and rerun."
       ii="${sort_inds[$i]}"
       test_descs[$i]="${test_descs_orig[$ii]}"
       num_fcsts[$i]="${num_fcsts_orig[$ii]}"
+      rel_cost[$i]="${rel_cost_orig[$ii]}"
       for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
         cmd="${array_names_vars_to_extract[$k]}[$i]=\"\${${array_names_vars_to_extract[$k]}_orig[$ii]}\""
         eval $cmd
@@ -1328,6 +1604,8 @@ Please correct and rerun."
 \"Test Name (Subdirectory)\" ${csv_delimiter} \
 \"Alternate Test Names (Subdirectories)\" ${csv_delimiter} \
 \"Test Purpose/Description\" ${csv_delimiter} \
+\"Relative Cost of Running Dynamics 
+(1 corresponds to running a 6-hour forecast on the RRFS_CONUS_25km predefined grid using the default time step)\" ${csv_delimiter} \
 \"Number of Forecast Model Runs\""
     for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
       column_titles="\
@@ -1365,8 +1643,11 @@ ${column_titles} ${csv_delimiter} \
 #
       test_desc=$( printf "%s" "${test_desc}" | sed -r -e "s/\"/\"\"/g" )
 #
-# Get the number of forecasts (number of times the forcast model is run,
-# due to a unique starting date, an ensemble member, etc).
+# Get the relative cost.
+#
+      rc="${rel_cost[$j]}"
+#
+# Get the number of forecasts (number of times the forcast model is run).
 #
       nf="${num_fcsts[$j]}"
 #
@@ -1382,15 +1663,15 @@ ${column_titles} ${csv_delimiter} \
       while [ "$jp1" -lt "${num_tests}" ]; do
         test_id_next="${test_ids[$jp1]}"
         if [ "${test_id_next}" -eq "${test_id}" ]; then
-          alt_test_names_subdirs="\
-${alt_test_names_subdirs}
-${test_names[$jp1]} (${test_subdirs[$jp1]})"
+          alt_test_names_subdirs="${alt_test_names_subdirs}${test_names[$jp1]} (${test_subdirs[$jp1]})"$'\n'
           j="$jp1"
           jp1=$((j+1))
         else
           break
         fi
       done
+# Remove trailing newline.
+      alt_test_names_subdirs="${alt_test_names_subdirs%$'\n'}"
 #
 # Write a line to the CSV file representing a single row of the spreadsheet.
 # This row contains the following columns:
@@ -1409,17 +1690,22 @@ ${test_names[$jp1]} (${test_subdirs[$jp1]})"
 # The test description.
 #
 # Column 4:
-# The number of times the forecast model will be run by the test.  This
-# has been calculated above using the quantities that go in Columns 5, 
-# 6, ....
+# The relative cost of running the dynamics in the test.  See above for
+# details.
 #
-# Columns 5...:
+# Column 5:
+# The number of times the forecast model will be run by the test.  This
+# has been calculated above using the quantities that go in Columns 6, 
+# 7, ....
+#
+# Columns 6...:
 # The values of the experiment variables specified in vars_to_extract.
 #
       row_content="\
 \"${prim_test_name_subdir}\" ${csv_delimiter} \
 \"${alt_test_names_subdirs}\" ${csv_delimiter} \
 \"${test_desc}\" ${csv_delimiter} \
+\"${rc}\" ${csv_delimiter} \
 \"${nf}\""
 
       for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
