@@ -106,15 +106,25 @@ NUM_PAD=${NDIGITS_ENSMEM_NAMES}
 #
 #-----------------------------------------------------------------------
 #
+# Create INPUT_BASE and OUTPUT_BASE to read into METplus conf files.
+#
+#-----------------------------------------------------------------------
+#
+INPUT_BASE=${MET_INPUT_DIR}
+OUTPUT_BASE=${MET_OUTPUT_DIR}/${CDATE}
+
+#
+#-----------------------------------------------------------------------
+#
 # Create LOG_SUFFIX to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
 #
 
 if [ ${VAR} == "APCP" ]; then
-  LOG_SUFFIX=ensgrid_${CDATE}_${VAR}_${ACCUM}h
+  LOG_SUFFIX=${CDATE}_${VAR}_${ACCUM}h
 else
-  LOG_SUFFIX=ensgrid_${CDATE}_${VAR}
+  LOG_SUFFIX=${CDATE}_${VAR}
 fi
 
 #
@@ -126,6 +136,9 @@ fi
 #
 export SCRIPTSDIR
 export EXPTDIR
+export LOGDIR
+export INPUT_BASE
+export OUTPUT_BASE
 export MET_INSTALL_DIR
 export MET_BIN_EXEC
 export METPLUS_PATH
@@ -144,15 +157,35 @@ export LOG_SUFFIX
 #
 #-----------------------------------------------------------------------
 #
-if [ ${VAR} == "APCP" ]; then
-  acc="${ACCUM}h" # for stats output prefix in EnsembleStatConfig
-  ${METPLUS_PATH}/ush/run_metplus.py \
-    -c ${METPLUS_CONF}/common.conf \
-    -c ${METPLUS_CONF}/EnsembleStat_${VAR}${acc}.conf
-else
-  ${METPLUS_PATH}/ush/run_metplus.py \
-    -c ${METPLUS_CONF}/common.conf \
-    -c ${METPLUS_CONF}/EnsembleStat_${VAR}.conf
+
+if [ "${RUN_GEN_ENS_PROD}" = "TRUE" ]; then
+
+  if [ ${VAR} == "APCP" ]; then
+    acc="${ACCUM}h"
+    ${METPLUS_PATH}/ush/run_metplus.py \
+      -c ${METPLUS_CONF}/common.conf \
+      -c ${METPLUS_CONF}/GenEnsProd_${VAR}${acc}.conf
+  else
+    ${METPLUS_PATH}/ush/run_metplus.py \
+      -c ${METPLUS_CONF}/common.conf \
+      -c ${METPLUS_CONF}/GenEnsProd_${VAR}.conf
+  fi
+
+fi
+
+if [ "${RUN_ENSEMBLE_STAT}" = "TRUE" ]; then
+
+  if [ ${VAR} == "APCP" ]; then
+    acc="${ACCUM}h" # for stats output prefix in EnsembleStatConfig
+    ${METPLUS_PATH}/ush/run_metplus.py \
+      -c ${METPLUS_CONF}/common.conf \
+      -c ${METPLUS_CONF}/EnsembleStat_${VAR}${acc}.conf
+  else
+    ${METPLUS_PATH}/ush/run_metplus.py \
+      -c ${METPLUS_CONF}/common.conf \
+      -c ${METPLUS_CONF}/EnsembleStat_${VAR}.conf
+  fi
+
 fi
 
 #

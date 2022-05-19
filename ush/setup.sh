@@ -1163,6 +1163,9 @@ FIXam="${EXPTDIR}/fix_am"
 FIXclim="${EXPTDIR}/fix_clim"
 FIXLAM="${EXPTDIR}/fix_lam"
 
+MET_INPUT_DIR="${MET_INPUT_DIR:-$EXPTDIR}"
+MET_OUTPUT_DIR="${MET_OUTPUT_DIR:-$EXPTDIR}"
+
 if [ "${RUN_ENVIR}" = "nco" ]; then
 
   CYCLE_BASEDIR="$STMP/tmpnwprd/$RUN"
@@ -1178,6 +1181,7 @@ else
   COMOUT_BASEDIR=""
 
 fi
+
 #
 #-----------------------------------------------------------------------
 #
@@ -1408,10 +1412,14 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-if [ "${DO_ENSEMBLE}" = "FALSE" ] && [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" -o \
-   "${RUN_TASK_VX_ENSPOINT}" = "TRUE" ]; then
+if [ "${DO_ENSEMBLE}" = "FALSE" ] && \
+   [ "${RUN_TASK_VX_ENSGRID}" = "TRUE" -o \
+     "${RUN_TASK_VX_ENSPOINT}" = "TRUE" ]; then
   print_err_msg_exit "\
-Ensemble verification can not be run unless running in ensemble mode:
+Ensemble verification can not be run (i.e. RUN_TASK_VX_ENSGRID or 
+RUN_TASK_VX_ENSPOINT cannot be set to \"TRUE\") unless running in 
+ensemble mode (i.e. DO_ENSEMBLE is set to \"TRUE\").  Current values 
+are:
    DO_ENSEMBLE = \"${DO_ENSEMBLE}\"
    RUN_TASK_VX_ENSGRID = \"${RUN_TASK_VX_ENSGRID}\"
    RUN_TASK_VX_ENSPOINT = \"${RUN_TASK_VX_ENSPOINT}\""
@@ -1608,8 +1616,7 @@ one above.  Reset values are:
 When RUN_ENVIR is set to \"nco\", it is assumed that the verification
 will not be run.
   RUN_TASK_VX_GRIDSTAT = \"${RUN_TASK_VX_GRIDSTAT}\"
-Resetting RUN_TASK_VX_GRIDSTAT to \"FALSE\"
-Reset value is:"
+Resetting RUN_TASK_VX_GRIDSTAT to \"FALSE\".  Reset value is:"
 
     RUN_TASK_VX_GRIDSTAT="FALSE"
 
@@ -2021,8 +2028,28 @@ check_var_valid_value "WRITE_DOPOST" "valid_vals_WRITE_DOPOST"
 # other valid values later on.
 #
 WRITE_DOPOST=$(boolify $WRITE_DOPOST)
-
-if [ "$WRITE_DOPOST" = "TRUE" ] ; then
+#
+# If RUN_TASK_RUN_FCST is set to "FALSE", it doesn't make sense to have
+# WRITE_DOPOST set to "TRUE", so set it to "FALSE" if necessary.
+#
+if [ "${RUN_TASK_RUN_FCST}" = "FALSE" ] && [ "${WRITE_DOPOST}" = "TRUE" ] ; then
+  msg="
+Since the forecast task has been disabled (i.e. RUN_TASK_RUN_FCST has 
+been set to \"FALSE\"), it does not make sense to enable inline post 
+(i.e. to have WRITE_DOPOST set to \"TRUE\").  Current values are:
+  RUN_TASK_RUN_FCST = \"${RUN_TASK_RUN_FCST}\"
+  WRITE_DOPOST = \"${WRITE_DOPOST}\"
+Resetting WRITE_DOPOST to \"FALSE\".  Reset value is:"
+  WRITE_DOPOST="FALSE"
+  msg="$msg""
+  WRITE_DOPOST = \"${WRITE_DOPOST}\"
+"
+  print_info_msg "$VERBOSE" "$msg"
+fi
+#
+# If using inline post, deactivate the run_post metatask in the workflow.
+#
+if [ "${WRITE_DOPOST}" = "TRUE" ] ; then
 
 # Turn off run_post
   RUN_TASK_RUN_POST="FALSE"
@@ -2032,6 +2059,7 @@ if [ "$WRITE_DOPOST" = "TRUE" ] ; then
     print_err_msg_exit "\
 SUB_HOURLY_POST is NOT available with Inline Post yet."
   fi
+
 fi
 
 check_var_valid_value "QUILTING" "valid_vals_QUILTING"

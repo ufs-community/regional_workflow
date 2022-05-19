@@ -481,8 +481,12 @@ FCST_LEN_HRS="24"
 # with the prefix "YYYYMMDD.HHmmSS." in the RESTART directory
 #
 # WRITE_DOPOST:
-# Flag that determines whether or not to use the INLINE POST option
-# When TRUE, force to turn off run_post (RUN_TASK_RUN_POST=FALSE) in setup.sh
+# Flag that determines whether or not to use the INLINE POST option in 
+# the weather model, i.e. the weather model calls UPP directly to generate
+# the post-processed output files.  When this is set to "TRUE", the 
+# the run_post metatask in the Rocoto workflow (which runs UPP in stand-
+# alone mode to process raw output from the weather model on the write-
+# component grid) is turned off (i.e. RUN_TASK_RUN_POST is set to "FALSE").
 #
 #-----------------------------------------------------------------------
 #
@@ -502,6 +506,14 @@ WRITE_DOPOST="FALSE"
 #
 # METPLUS_PATH:
 # Location to top-level directory of METplus installation.
+#
+# MET_INPUT_DIR:
+# Location to top-level directory of METplus input. This can be user
+# specified, and if not specified, it is set to EXPTDIR.
+#
+# MET_OUTPUT_DIR:
+# Location to top-level directory of METplus output. This can be user
+# specified, and if not specified, it is set to EXPTDIR.
 #
 # CCPA_OBS_DIR:
 # User-specified location of top-level directory where CCPA hourly
@@ -585,6 +597,8 @@ MODEL=""
 MET_INSTALL_DIR=""
 MET_BIN_EXEC="bin"
 METPLUS_PATH=""
+MET_INPUT_DIR=""
+MET_OUTPUT_DIR=""
 CCPA_OBS_DIR=""
 MRMS_OBS_DIR=""
 NDAS_OBS_DIR=""
@@ -1337,13 +1351,20 @@ VX_ENSPOINT_PROB_TN="run_enspointvx_prob"
 #
 # RUN_TASK_VX_ENSGRID:
 # Flag that determines whether the ensemble-stat verification for gridded
-# data task is to be run. 
+# data task is to be run.
 #
 # RUN_TASK_VX_ENSPOINT:
 # Flag that determines whether the ensemble point verification task is
 # to be run. If this flag is set, both ensemble-stat point verification
 # and point verification of ensemble-stat output is computed.
 #
+# RUN_GEN_ENS_PROD:
+# Flag that determines whether the gen-ens-prod verification subtask is
+# to be run in the VX_ENSGRID and VX_ENSPOINT tasks.
+#
+# RUN_ENSEMBLE_STAT:
+# Flag that determines whether the ensemble-stat verification subtask is
+# to be run in the VX_ENSGRID and VX_ENSPOINT tasks.
 #-----------------------------------------------------------------------
 #
 RUN_TASK_MAKE_GRID="TRUE"
@@ -1369,6 +1390,9 @@ RUN_TASK_VX_GRIDSTAT="FALSE"
 RUN_TASK_VX_POINTSTAT="FALSE"
 RUN_TASK_VX_ENSGRID="FALSE"
 RUN_TASK_VX_ENSPOINT="FALSE"
+
+RUN_GEN_ENS_PROD="FALSE"
+RUN_ENSEMBLE_STAT="FALSE"
 #
 #-----------------------------------------------------------------------
 #
@@ -1644,12 +1668,12 @@ WTIME_GET_OBS_MRMS="00:45:00"
 WTIME_GET_OBS_NDAS="02:00:00"
 WTIME_VX_GRIDSTAT="02:00:00"
 WTIME_VX_POINTSTAT="01:00:00"
-WTIME_VX_ENSGRID="01:00:00"
-WTIME_VX_ENSGRID_MEAN="01:00:00"
-WTIME_VX_ENSGRID_PROB="01:00:00"
-WTIME_VX_ENSPOINT="01:00:00"
-WTIME_VX_ENSPOINT_MEAN="01:00:00"
-WTIME_VX_ENSPOINT_PROB="01:00:00"
+WTIME_VX_ENSGRID="08:00:00"
+WTIME_VX_ENSGRID_MEAN="02:00:00"
+WTIME_VX_ENSGRID_PROB="02:00:00"
+WTIME_VX_ENSPOINT="04:00:00"
+WTIME_VX_ENSPOINT_MEAN="02:00:00"
+WTIME_VX_ENSPOINT_PROB="02:00:00"
 #
 # Maximum number of attempts.
 #

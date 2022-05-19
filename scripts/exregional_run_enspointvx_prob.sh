@@ -101,11 +101,11 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
-# Create INPUT_BASE and LOG_SUFFIX to read into METplus conf files.
+# Create OUTPUT_BASE and LOG_SUFFIX to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
 #
-INPUT_BASE=${EXPTDIR}/${CDATE}/metprd/ensemble_stat
+OUTPUT_BASE=${MET_OUTPUT_DIR}
 LOG_SUFFIX=enspoint_prob_${CDATE}
 
 #
@@ -128,7 +128,8 @@ fi
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
-export INPUT_BASE
+export LOGDIR
+export OUTPUT_BASE
 export LOG_SUFFIX
 export MET_INSTALL_DIR
 export MET_BIN_EXEC
@@ -154,7 +155,7 @@ ${METPLUS_PATH}/ush/run_metplus.py \
 #
 print_info_msg "
 ========================================================================
-METplus ensemble-stat completed successfully.
+METplus point-stat completed successfully.
 
 Exiting script:  \"${scrfunc_fn}\"
 In directory:    \"${scrfunc_dir}\"

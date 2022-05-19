@@ -99,12 +99,12 @@ export fhr_list
 #-----------------------------------------------------------------------
 #
 if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
-  INPUT_BASE=${EXPTDIR}/${CDATE}/postprd
-  OUTPUT_BASE=${EXPTDIR}/${CDATE}
+  INPUT_BASE=${MET_INPUT_DIR}/${CDATE}
+  OUTPUT_BASE=${MET_OUTPUT_DIR}/${CDATE}
   LOG_SUFFIX=pointstat_${CDATE}
 elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
-  INPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}/postprd
-  OUTPUT_BASE=${EXPTDIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}
+  INPUT_BASE=${MET_INPUT_DIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}/postprd
+  OUTPUT_BASE=${MET_OUTPUT_DIR}/${CDATE}/${SLASH_ENSMEM_SUBDIR}
   ENSMEM=`echo ${SLASH_ENSMEM_SUBDIR} | cut -d"/" -f2`
   MODEL=${MODEL}_${ENSMEM}
   LOG_SUFFIX=pointstat_${CDATE}_${ENSMEM}
@@ -130,6 +130,7 @@ fi
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
+export LOGDIR
 export INPUT_BASE
 export OUTPUT_BASE
 export LOG_SUFFIX

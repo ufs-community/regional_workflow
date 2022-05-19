@@ -375,6 +375,8 @@ file (template_xml_fp):
   'run_task_vx_pointstat': ${RUN_TASK_VX_POINTSTAT}
   'run_task_vx_ensgrid': ${RUN_TASK_VX_ENSGRID}
   'run_task_vx_enspoint': ${RUN_TASK_VX_ENSPOINT}
+  'run_gen_ens_prod': ${RUN_GEN_ENS_PROD}
+  'run_ensemble_stat': ${RUN_ENSEMBLE_STAT}
 #
 # Number of physical cores per node for the current machine.
 #
@@ -419,6 +421,8 @@ file (template_xml_fp):
   'vx_config_dir': ${VX_CONFIG_DIR}
   'metplus_conf': ${METPLUS_CONF}
   'met_config': ${MET_CONFIG}
+  'met_input_dir': ${MET_INPUT_DIR}
+  'met_output_dir': ${MET_OUTPUT_DIR}
   'ccpa_obs_dir': ${CCPA_OBS_DIR}
   'mrms_obs_dir': ${MRMS_OBS_DIR}
   'ndas_obs_dir': ${NDAS_OBS_DIR}

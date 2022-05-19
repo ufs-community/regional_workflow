@@ -101,11 +101,21 @@ export fhr_list
 #
 #-----------------------------------------------------------------------
 #
+# Create INPUT_BASE and OUTPUT_BASE to read into METplus conf files.
+#
+#-----------------------------------------------------------------------
+#
+INPUT_BASE=${MET_INPUT_DIR}
+OUTPUT_BASE=${MET_OUTPUT_DIR}/${CDATE}
+
+#
+#-----------------------------------------------------------------------
+#
 # Create LOG_SUFFIX to read into METplus conf files.
 #
 #-----------------------------------------------------------------------
 #
-LOG_SUFFIX=enspoint_${CDATE}
+LOG_SUFFIX=${CDATE}
 
 #
 #-----------------------------------------------------------------------
@@ -127,6 +137,9 @@ fi
 #-----------------------------------------------------------------------
 #
 export EXPTDIR
+export LOGDIR
+export INPUT_BASE
+export OUTPUT_BASE
 export LOG_SUFFIX
 export MET_INSTALL_DIR
 export MET_BIN_EXEC
@@ -137,13 +150,29 @@ export MODEL
 export NET
 export NUM_ENS_MEMBERS
 
-${METPLUS_PATH}/ush/run_metplus.py \
-  -c ${METPLUS_CONF}/common.conf \
-  -c ${METPLUS_CONF}/EnsembleStat_conus_sfc.conf
+if [ "${RUN_GEN_ENS_PROD}" = "TRUE" ]; then
 
-${METPLUS_PATH}/ush/run_metplus.py \
-  -c ${METPLUS_CONF}/common.conf \
-  -c ${METPLUS_CONF}/EnsembleStat_upper_air.conf
+  ${METPLUS_PATH}/ush/run_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/GenEnsProd_conus_sfc.conf
+
+  ${METPLUS_PATH}/ush/run_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/GenEnsProd_upper_air.conf
+
+fi
+
+if [ "${RUN_ENSEMBLE_STAT}" = "TRUE" ]; then
+
+  ${METPLUS_PATH}/ush/run_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/EnsembleStat_conus_sfc.conf
+
+  ${METPLUS_PATH}/ush/run_metplus.py \
+    -c ${METPLUS_CONF}/common.conf \
+    -c ${METPLUS_CONF}/EnsembleStat_upper_air.conf
+
+fi
 
 #
 #-----------------------------------------------------------------------
