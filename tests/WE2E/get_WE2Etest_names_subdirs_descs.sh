@@ -318,11 +318,13 @@ function get_WE2Etest_names_subdirs_descs() {
         column_titles \
         config_fn \
         crnt_item \
+        crnt_title \
         csv_delimiter \
         csv_fn \
         csv_fp \
         cwd \
         default_val \
+        dt_atmos \
         fcst_len_hrs \
         get_test_descs \
         hash_or_null \
@@ -352,6 +354,7 @@ function get_WE2Etest_names_subdirs_descs() {
         num_vars_to_extract \
         prim_array_names_vars_to_extract \
         prim_test_descs \
+        prim_test_dt_atmos \
         prim_test_ids \
         prim_test_name_subdir \
         prim_test_names \
@@ -395,6 +398,7 @@ function get_WE2Etest_names_subdirs_descs() {
         test_subdirs_orig \
         test_subdirs_str \
         test_type \
+        units \
         ushdir \
         val \
         valid_vals_generate_csv_file \
@@ -425,7 +429,7 @@ function get_WE2Etest_names_subdirs_descs() {
         \
         nx \
         ny \
-        dt_atmos
+        dta
 #
 #-----------------------------------------------------------------------
 #
@@ -567,6 +571,7 @@ information on all WE2E tests:
   prim_test_ids=()
   prim_test_subdirs=()
   prim_test_num_fcsts=()
+  prim_test_dt_atmos=()
   prim_test_rel_cost=()
 
   alt_test_names=()
@@ -1255,7 +1260,7 @@ ${test_desc}${stripped_line} "
           outvarname_gfdlgrid_iend_of_rgnl_dom_on_t6g="gfdlgrid_iend_of_rgnl_dom_on_t6g" \
           outvarname_gfdlgrid_jstart_of_rgnl_dom_on_t6g="gfdlgrid_jstart_of_rgnl_dom_on_t6g" \
           outvarname_gfdlgrid_jend_of_rgnl_dom_on_t6g="gfdlgrid_jend_of_rgnl_dom_on_t6g" \
-          outvarname_dt_atmos="dt_atmos"
+          outvarname_dt_atmos="dta"
 #
 # If using a custom grid, the test's configuration file should contain 
 # the grid parameters.  Source this file and set the values of the grid
@@ -1285,9 +1290,13 @@ ${test_desc}${stripped_line} "
           esggrid_pazi="${ESGgrid_PAZI}"
           esggrid_wide_halo_width="${ESGgrid_WIDE_HALO_WIDTH}"
         fi
-        dt_atmos="${DT_ATMOS}"
+        dta="${DT_ATMOS}"
 
       fi
+#
+# Save the value of dta (which is just dt_atmos) in an array.
+#
+      prim_test_dt_atmos+=( "${dta}" )
 #
 # The way the number of grid points in the horizontal directions (nx and
 # ny) are calculated depends on the method used to generate the grid as 
@@ -1334,9 +1343,9 @@ ${test_desc}${stripped_line} "
       num_grid_pts=$(( nx*ny ))
 #
 # Calculate the number of time steps for the test.  Note that FCST_LEN_HRS 
-# is in units of hours while dt_atmos is in units of seconds.
+# is in units of hours while dta is in units of seconds.
 #
-      num_time_steps=$(( FCST_LEN_HRS*3600/dt_atmos + 1 ))
+      num_time_steps=$(( FCST_LEN_HRS*3600/dta + 1 ))
 #
 # Calculate the absolute cost of the test.
 #
@@ -1362,7 +1371,7 @@ ${test_desc}${stripped_line} "
             esggrid_wide_halo_width \
             esggrid_delx \
             esggrid_dely \
-            dt_atmos \
+            dta \
             nx \
             ny
 #
@@ -1396,11 +1405,11 @@ ${test_desc}${stripped_line} "
       quilting="FALSE" \
       outvarname_esggrid_nx="nx" \
       outvarname_esggrid_ny="ny" \
-      outvarname_dt_atmos="dt_atmos"
+      outvarname_dt_atmos="dta"
 
     num_grid_pts=$(( nx*ny ))
     fcst_len_hrs="6"
-    num_time_steps=$(( fcst_len_hrs*3600/dt_atmos + 1 ))
+    num_time_steps=$(( fcst_len_hrs*3600/dta+ 1 ))
     abs_cost_ref=$(( num_grid_pts*num_time_steps ))
 
     for (( i=0; i<=$((num_prim_tests-1)); i++ )); do
@@ -1430,6 +1439,7 @@ ${test_desc}${stripped_line} "
   if [ "${get_test_descs}" = "TRUE" ]; then
     test_descs=("${prim_test_descs[@]}")
     num_fcsts=("${prim_test_num_fcsts[@]}")
+    dt_atmos=("${prim_test_dt_atmos[@]}")
     rel_cost=("${prim_test_rel_cost[@]}")
     for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
       cmd="${array_names_vars_to_extract[$k]}=(\"\${${prim_array_names_vars_to_extract[$k]}[@]}\")"
@@ -1460,6 +1470,7 @@ ${test_desc}${stripped_line} "
         if [ "${get_test_descs}" = "TRUE" ]; then
           test_descs+=("${prim_test_descs[$j]}")
           num_fcsts+=("${prim_test_num_fcsts[$j]}")
+          dt_atmos+=("${prim_test_dt_atmos[$j]}")
           rel_cost+=("${prim_test_rel_cost[$j]}")
           for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
             cmd="${array_names_vars_to_extract[$k]}+=(\"\${${prim_array_names_vars_to_extract[$k]}[$j]}\")"
@@ -1554,6 +1565,7 @@ Please correct and rerun."
 
     local test_descs_orig=( "${test_descs[@]}" )
     local num_fcsts_orig=( "${num_fcsts[@]}" )
+    local dt_atmos_orig=( "${dt_atmos[@]}" )
     local rel_cost_orig=( "${rel_cost[@]}" )
     for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
       cmd="local ${array_names_vars_to_extract[$k]}_orig=(\"\${${array_names_vars_to_extract[$k]}[@]}\")"
@@ -1564,6 +1576,7 @@ Please correct and rerun."
       ii="${sort_inds[$i]}"
       test_descs[$i]="${test_descs_orig[$ii]}"
       num_fcsts[$i]="${num_fcsts_orig[$ii]}"
+      dt_atmos[$i]="${dt_atmos_orig[$ii]}"
       rel_cost[$i]="${rel_cost_orig[$ii]}"
       for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
         cmd="${array_names_vars_to_extract[$k]}[$i]=\"\${${array_names_vars_to_extract[$k]}_orig[$ii]}\""
@@ -1608,9 +1621,35 @@ Please correct and rerun."
 (1 corresponds to running a 6-hour forecast on the RRFS_CONUS_25km predefined grid using the default time step)\" ${csv_delimiter} \
 \"Number of Forecast Model Runs\""
     for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
-      column_titles="\
-${column_titles} ${csv_delimiter} \
-\"${vars_to_extract[$k]}\""
+
+      crnt_title="${vars_to_extract[$k]}"
+      #
+      # Add units for select fields.
+      #
+      units=""
+      case "${vars_to_extract[$k]}" in
+      "INCR_CYCL_FREQ")
+        units="[hr]"
+        ;;
+      "FCST_LEN_HRS")
+        units="[hr]"
+        ;;
+      "LBC_SPEC_INTVL_HRS")
+        units="[hr]"
+        ;;
+      esac
+      crnt_title="${crnt_title}${units:+ $units}"
+
+      column_titles="${column_titles} ${csv_delimiter} \"${crnt_title}\""
+      #
+      # Insert a column for DT_ATMOS right after the one for FCST_LEN_HRS.
+      #
+      if [ "${vars_to_extract[$k]}" = "FCST_LEN_HRS" ]; then
+        units="[sec]"
+        crnt_title="DT_ATMOS${units:+ $units}"
+        column_titles="${column_titles} ${csv_delimiter} \"${crnt_title}\""
+      fi
+
     done
     printf "%s\n" "${column_titles}" >> "${csv_fp}"
 #
@@ -1642,6 +1681,10 @@ ${column_titles} ${csv_delimiter} \
 # a CSV file that is read in by Google Sheets.
 #
       test_desc=$( printf "%s" "${test_desc}" | sed -r -e "s/\"/\"\"/g" )
+#
+# Get the time step.
+#
+      dta="${dt_atmos[$j]}"
 #
 # Get the relative cost.
 #
@@ -1709,12 +1752,18 @@ ${column_titles} ${csv_delimiter} \
 \"${nf}\""
 
       for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
+
         unset "val"
         cmd="val=\"\${${array_names_vars_to_extract[$k]}[$j]}\""
         eval $cmd
-        row_content="\
-${row_content} ${csv_delimiter} \
-\"${val}\""
+        row_content="${row_content} ${csv_delimiter} \"${val}\""
+#
+# Insert value of DT_ATMOS right after value of FCST_LEN_HRS.
+#
+        if [ "${vars_to_extract[$k]}" = "FCST_LEN_HRS" ]; then
+          row_content="${row_content} ${csv_delimiter} \"${dta}\""
+        fi
+
       done
 
       printf "%s\n" "${row_content}" >> "${csv_fp}"
