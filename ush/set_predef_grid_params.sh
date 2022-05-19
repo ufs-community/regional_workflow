@@ -595,7 +595,7 @@ function set_predef_grid_params() {
       __wrtcmp_stdlat1__="${__esggrid_lat_ctr__}"
       __wrtcmp_stdlat2__="${__esggrid_lat_ctr__}"
       __wrtcmp_nx__="197"
-      __wrtcmp_ny__="195"
+      __wrtcmp_ny__="197"
       __wrtcmp_lon_lwr_left__="-89.47120417"
       __wrtcmp_lat_lwr_left__="37.07809642"
       __wrtcmp_dx__="${__esggrid_delx__}"
