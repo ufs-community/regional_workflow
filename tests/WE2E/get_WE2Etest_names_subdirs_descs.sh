@@ -1294,9 +1294,12 @@ ${test_desc}${stripped_line} "
 
       fi
 #
-# Save the value of dta (which is just dt_atmos) in an array.
+# Save the value of dta (which is just dt_atmos) in an array.  The single 
+# quote at the beginning forces Google Sheets to interpret this quantity 
+# as a string.  This prevents any automatic number fomatting from being 
+# applied when the CSV file is imported into Google Sheets.
 #
-      prim_test_dt_atmos+=( "${dta}" )
+      prim_test_dt_atmos+=( "'${dta}" )
 #
 # The way the number of grid points in the horizontal directions (nx and
 # ny) are calculated depends on the method used to generate the grid as 
