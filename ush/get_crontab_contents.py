@@ -59,14 +59,6 @@ def get_crontab_contents(called_from_cron):
         if called_from_cron:
           __crontab_cmd__="/usr/bin/crontab"
       (_,__crontab_contents__,_)=run_command(f'''{__crontab_cmd__} -l''')
-    #
-    # On Cheyenne, the output of the "crontab -l" command contains a 3-line
-    # header (comments) at the top that is not actually part of the user's
-    # cron table.  This needs to be removed to avoid adding an unnecessary
-    # copy of this header to the user's cron table.
-    #
-    if MACHINE == "CHEYENNE":
-      (_,__crontab_contents__,_)=run_command(f'''printf "%s" '{__crontab_contents__}' | tail -n +4 ''')
   
     return __crontab_cmd__, __crontab_contents__
 
