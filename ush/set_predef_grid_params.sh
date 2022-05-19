@@ -111,7 +111,7 @@ function set_predef_grid_params() {
     "outvarname_wrtcmp_dlon" \
     "outvarname_wrtcmp_dlat" \
     )
-  process_args valid_args "$@"
+  process_args "valid_args" "$@"
 #
 #-----------------------------------------------------------------------
 #
