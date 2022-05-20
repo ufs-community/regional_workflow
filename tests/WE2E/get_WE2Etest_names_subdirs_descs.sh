@@ -294,7 +294,7 @@ function get_WE2Etest_names_subdirs_descs() {
 #
   verbose=${verbose:-"FALSE"}
   check_var_valid_value "verbose" "valid_vals_BOOLEAN"
-  verbose=$(boolify $verbose)
+  verbose=$(boolify "$verbose")
 #
 #-----------------------------------------------------------------------
 #
