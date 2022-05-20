@@ -23,10 +23,9 @@ def set_predef_grid_params():
     params_dict = load_config_file(os.path.join(USHDIR,"predef_grid_params.yaml"))
     params_dict = params_dict[PREDEF_GRID_NAME]
 
-    # if QUILTING = False, skip variables that start with "WRTCMP_"
+    # if QUILTING = False, remove key
     if not QUILTING:
-        params_dict = {k: v for k,v in params_dict.items() \
-                            if not k.startswith("WRTCMP_") }
+        params_dict.pop('QUILTING')
 
     # take care of special vars
     special_vars = ['DT_ATMOS', 'LAYOUT_X', 'LAYOUT_Y', 'BLOCKSIZE']
