@@ -732,7 +732,7 @@ Please correct and rerun."
 #
 #-----------------------------------------------------------------------
 #
-  . ${ushdir}/config_defaults.sh
+  source_config ${ushdir}/config_defaults.yaml
   . ${test_config_fp}
 #
 #-----------------------------------------------------------------------
@@ -742,7 +742,7 @@ Please correct and rerun."
 # have.  Once this variable is constructed, we will write its contents
 # to the generic configuration file that the experiment generation script
 # reads in (specified by the variable EXPT_CONFIG_FN in the default 
-# configuration file config_defaults.sh sourced above) and then run that
+# configuration file config_defaults.yaml sourced above) and then run that
 # script to generate an experiment for the current WE2E test.
 #
 # We name the multiline variable that will contain the contents of the
@@ -760,7 +760,7 @@ Please correct and rerun."
 # that depend on the input arguments to this script (as opposed to 
 # variable settings in the test configuration file specified by 
 # test_config_fp).  Note that any values of these parameters specified 
-# in the default experiment configuration file (config_defaults.sh) 
+# in the default experiment configuration file (config_defaults.yaml) 
 # or in the test configuraiton file (test_config_fp) that were sourced 
 # above will be overwritten by the settings below.
 #
