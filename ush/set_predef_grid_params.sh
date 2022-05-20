@@ -181,7 +181,7 @@ function set_predef_grid_params() {
 #-----------------------------------------------------------------------
 #
   check_var_valid_value "quilting" "valid_vals_BOOLEAN"
-  quilting=$(boolify $quilting)
+  quilting=$(boolify "$quilting")
 #
 #-----------------------------------------------------------------------
 #

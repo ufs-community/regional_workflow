@@ -144,10 +144,10 @@ fi
 check_var_valid_value "RUN_ENVIR" "valid_vals_RUN_ENVIR"
 
 check_var_valid_value "VERBOSE" "valid_vals_VERBOSE"
-VERBOSE=$(boolify $VERBOSE)
+VERBOSE=$(boolify "$VERBOSE")
 
 check_var_valid_value "DEBUG" "valid_vals_DEBUG"
-DEBUG=$(boolify $DEBUG)
+DEBUG=$(boolify "$DEBUG")
 #
 #-----------------------------------------------------------------------
 #
@@ -163,51 +163,51 @@ Setting VERBOSE to \"TRUE\" because DEBUG has been set to \"TRUE\"..."
 fi
 
 check_var_valid_value "USE_CRON_TO_RELAUNCH" "valid_vals_USE_CRON_TO_RELAUNCH"
-USE_CRON_TO_RELAUNCH=$(boolify $USE_CRON_TO_RELAUNCH)
+USE_CRON_TO_RELAUNCH=$(boolify "${USE_CRON_TO_RELAUNCH}")
 
 check_var_valid_value "RUN_TASK_MAKE_GRID" "valid_vals_RUN_TASK_MAKE_GRID"
-RUN_TASK_MAKE_GRID=$(boolify $RUN_TASK_MAKE_GRID)
+RUN_TASK_MAKE_GRID=$(boolify "${RUN_TASK_MAKE_GRID}")
 
 check_var_valid_value "RUN_TASK_MAKE_OROG" "valid_vals_RUN_TASK_MAKE_OROG"
-RUN_TASK_MAKE_OROG=$(boolify $RUN_TASK_MAKE_OROG)
+RUN_TASK_MAKE_OROG=$(boolify "${RUN_TASK_MAKE_OROG}")
 
 check_var_valid_value \
   "RUN_TASK_MAKE_SFC_CLIMO" "valid_vals_RUN_TASK_MAKE_SFC_CLIMO"
-RUN_TASK_MAKE_SFC_CLIMO=$(boolify $RUN_TASK_MAKE_SFC_CLIMO)
+RUN_TASK_MAKE_SFC_CLIMO=$(boolify "${RUN_TASK_MAKE_SFC_CLIMO}")
 
 check_var_valid_value \
   "RUN_TASK_RUN_POST" "valid_vals_RUN_TASK_RUN_POST"
-RUN_TASK_RUN_POST=$(boolify $RUN_TASK_RUN_POST)
+RUN_TASK_RUN_POST=$(boolify "${RUN_TASK_RUN_POST}")
 
 check_var_valid_value "RUN_TASK_VX_GRIDSTAT" "valid_vals_RUN_TASK_VX_GRIDSTAT"
-RUN_TASK_VX_GRIDSTAT=$(boolify $RUN_TASK_VX_GRIDSTAT)
+RUN_TASK_VX_GRIDSTAT=$(boolify "${RUN_TASK_VX_GRIDSTAT}")
 
 check_var_valid_value "RUN_TASK_VX_POINTSTAT" "valid_vals_RUN_TASK_VX_POINTSTAT"
-RUN_TASK_VX_POINTSTAT=$(boolify $RUN_TASK_VX_POINTSTAT)
+RUN_TASK_VX_POINTSTAT=$(boolify "${RUN_TASK_VX_POINTSTAT}")
 
 check_var_valid_value "RUN_TASK_VX_ENSGRID" "valid_vals_RUN_TASK_VX_ENSGRID"
-RUN_TASK_VX_ENSGRID=$(boolify $RUN_TASK_VX_ENSGRID)
+RUN_TASK_VX_ENSGRID=$(boolify "${RUN_TASK_VX_ENSGRID}")
 
 check_var_valid_value "RUN_TASK_VX_ENSPOINT" "valid_vals_RUN_TASK_VX_ENSPOINT"
-RUN_TASK_VX_ENSPOINT=$(boolify $RUN_TASK_VX_ENSPOINT)
+RUN_TASK_VX_ENSPOINT=$(boolify "${RUN_TASK_VX_ENSPOINT}")
 
 check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
-USE_FVCOM=$(boolify $USE_FVCOM)
+USE_FVCOM=$(boolify "${USE_FVCOM}")
 
 check_var_valid_value "DO_SHUM" "valid_vals_DO_SHUM"
-DO_SHUM=$(boolify $DO_SHUM)
+DO_SHUM=$(boolify "${DO_SHUM}")
 
 check_var_valid_value "DO_SPPT" "valid_vals_DO_SPPT"
-DO_SPPT=$(boolify $DO_SPPT)
+DO_SPPT=$(boolify "${DO_SPPT}")
 
 check_var_valid_value "DO_SKEB" "valid_vals_DO_SKEB"
-DO_SKEB=$(boolify $DO_SKEB)
+DO_SKEB=$(boolify "${DO_SKEB}")
 
 check_var_valid_value "DO_SPP" "valid_vals_DO_SPP"
-DO_SPP=$(boolify $DO_SPP)
+DO_SPP=$(boolify "${DO_SPP}")
 
 check_var_valid_value "DO_LSM_SPP" "valid_vals_DO_LSM_SPP"
-DO_LSM_SPP=$(boolify $DO_LSM_SPP)
+DO_LSM_SPP=$(boolify "${DO_LSM_SPP}")
 #
 #-----------------------------------------------------------------------
 #
@@ -312,7 +312,7 @@ fi
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "SUB_HOURLY_POST" "valid_vals_SUB_HOURLY_POST"
-SUB_HOURLY_POST=$(boolify $SUB_HOURLY_POST)
+SUB_HOURLY_POST=$(boolify "${SUB_HOURLY_POST}")
 #
 #-----------------------------------------------------------------------
 #
@@ -332,7 +332,7 @@ check_var_valid_value "DOT_OR_USCORE" "valid_vals_DOT_OR_USCORE"
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
-USE_FVCOM=$(boolify $USE_FVCOM)
+USE_FVCOM=$(boolify "${USE_FVCOM}")
 check_var_valid_value "FVCOM_WCSTART" "valid_vals_FVCOM_WCSTART"
 FVCOM_WCSTART=$(echo_lowercase $FVCOM_WCSTART)
 #
@@ -640,7 +640,7 @@ check_var_valid_value "USE_MERRA_CLIMO" "valid_vals_USE_MERRA_CLIMO"
 # Set USE_MERRA_CLIMO to either "TRUE" or "FALSE" so we don't
 # have to consider other valid values later on.
 #
-USE_MERRA_CLIMO=$(boolify $USE_MERRA_CLIMO)
+USE_MERRA_CLIMO=$(boolify "${USE_MERRA_CLIMO}")
 # Force to "TRUE" in case of FV3_GFS_v15_thompson_mynn_lam3km:
 if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15_thompson_mynn_lam3km" ]; then
   USE_MERRA_CLIMO="TRUE"
@@ -1404,7 +1404,7 @@ NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
 
 
 check_var_valid_value "USE_USER_STAGED_EXTRN_FILES" "valid_vals_USE_USER_STAGED_EXTRN_FILES"
-USE_USER_STAGED_EXTRN_FILES=$(boolify $USE_USER_STAGED_EXTRN_FILES)
+USE_USER_STAGED_EXTRN_FILES=$(boolify "${USE_USER_STAGED_EXTRN_FILES}")
 
 #
 #-----------------------------------------------------------------------
@@ -1444,7 +1444,7 @@ fi
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "DO_ENSEMBLE" "valid_vals_DO_ENSEMBLE"
-DO_ENSEMBLE=$(boolify $DO_ENSEMBLE)
+DO_ENSEMBLE=$(boolify "${DO_ENSEMBLE}")
 
 NDIGITS_ENSMEM_NAMES="0"
 ENSMEM_NAMES=("")
@@ -2045,7 +2045,7 @@ check_var_valid_value "WRITE_DOPOST" "valid_vals_WRITE_DOPOST"
 # Set WRITE_DOPOST to either "TRUE" or "FALSE" so we don't have to consider
 # other valid values later on.
 #
-WRITE_DOPOST=$(boolify $WRITE_DOPOST)
+WRITE_DOPOST=$(boolify "${WRITE_DOPOST}")
 
 if [ "$WRITE_DOPOST" = "TRUE" ] ; then
 
@@ -2060,10 +2060,10 @@ SUB_HOURLY_POST is NOT available with Inline Post yet."
 fi
 
 check_var_valid_value "QUILTING" "valid_vals_QUILTING"
-QUILTING=$(boolify $QUILTING)
+QUILTING=$(boolify "$QUILTING")
 
 check_var_valid_value "PRINT_ESMF" "valid_vals_PRINT_ESMF"
-PRINT_ESMF=$(boolify $PRINT_ESMF)
+PRINT_ESMF=$(boolify "${PRINT_ESMF}")
 
 #
 #-----------------------------------------------------------------------

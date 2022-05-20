@@ -121,7 +121,7 @@ print_input_args "valid_args"
 #
 called_from_cron=${called_from_cron:-"FALSE"}
 check_var_valid_value "called_from_cron" "valid_vals_BOOLEAN"
-called_from_cron=$(boolify ${called_from_cron})
+called_from_cron=$(boolify "${called_from_cron}")
 #
 #-----------------------------------------------------------------------
 #
