@@ -524,10 +524,19 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Set the names of the build and workflow module files (if not 
-# already specified by the user).  These are the files that need to be 
-# sourced before building the component SRW App codes and running various 
-# workflow scripts, respectively.
+# Make sure COMPILER is set to a valid value.
+#
+#-----------------------------------------------------------------------
+#
+COMPILER=$(echo_lowercase $COMPILER)
+check_var_valid_value "COMPILER" "valid_vals_COMPILER"
+#
+#-----------------------------------------------------------------------
+#
+# Set the names of the build and workflow module files (if not already 
+# specified by the user).  These are the files that need to be loaded 
+# before building the component SRW App codes and running various workflow 
+# scripts, respectively.
 #
 #-----------------------------------------------------------------------
 #
@@ -548,7 +557,7 @@ PPN_RUN_FCST=${PPN_RUN_FCST:-${ppn_run_fcst_default}}
 #
 #-----------------------------------------------------------------------
 #
-# Make sure that the job scheduler set above is valid.
+# Make sure SCHED is set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
