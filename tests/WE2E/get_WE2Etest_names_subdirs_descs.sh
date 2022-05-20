@@ -401,7 +401,6 @@ function get_WE2Etest_names_subdirs_descs() {
         units \
         ushdir \
         val \
-        valid_vals_generate_csv_file \
         var_name \
         var_name_at \
         vars_to_extract
@@ -438,6 +437,7 @@ function get_WE2Etest_names_subdirs_descs() {
 #-----------------------------------------------------------------------
 #
   ushdir=$( readlink -f "$WE2Edir/../../ush" )
+  . $ushdir/constants.sh
   . $ushdir/set_predef_grid_params.sh
   . $ushdir/set_gridparams_GFDLgrid.sh
   . $ushdir/set_gridparams_ESGgrid.sh
@@ -460,17 +460,8 @@ function get_WE2Etest_names_subdirs_descs() {
 #
   if [ ! -z "${generate_csv_file}" ]; then
 
-    valid_vals_generate_csv_file=("TRUE" "true" "YES" "yes" "FALSE" "false" "NO" "no")
-    check_var_valid_value "generate_csv_file" "valid_vals_generate_csv_file"
-
-    generate_csv_file=${generate_csv_file^^}
-    if [ "${generate_csv_file}" = "TRUE" ] || \
-       [ "${generate_csv_file}" = "YES" ]; then
-      generate_csv_file="TRUE"
-    elif [ "${generate_csv_file}" = "FALSE" ] || \
-         [ "${generate_csv_file}" = "NO" ]; then
-      generate_csv_file="FALSE"
-    fi
+    check_var_valid_value "generate_csv_file" "valid_vals_BOOLEAN"
+    generate_csv_file=$(boolify "${generate_csv_file}")
 #
 # If generate_csv_file was not specified as an input argument in the 
 # call to this function, then it will have been set above to a null 
