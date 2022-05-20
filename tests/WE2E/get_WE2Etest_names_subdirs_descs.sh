@@ -1617,10 +1617,12 @@ Please correct and rerun."
 # detail further below.
 #
     column_titles="\
-\"Test Name (Subdirectory)\" ${csv_delimiter} \
-\"Alternate Test Names (Subdirectories)\" ${csv_delimiter} \
+\"Test Name
+(Subdirectory)\" ${csv_delimiter} \
+\"Alternate Test Names
+(Subdirectories)\" ${csv_delimiter} \
 \"Test Purpose/Description\" ${csv_delimiter} \
-\"Relative Cost of Running Dynamics 
+\"Relative Cost of Running Dynamics
 (1 corresponds to running a 6-hour forecast on the RRFS_CONUS_25km predefined grid using the default time step)\" ${csv_delimiter} \
 \"Number of Forecast Model Runs\""
     for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
@@ -1669,7 +1671,7 @@ Please correct and rerun."
 # Get the primary name of the test and the category subdirectory in which
 # it is located.
 #
-      prim_test_name_subdir="${test_names[$j]} (${test_subdirs[$j]})"
+      prim_test_name_subdir="${test_names[$j]}"$'\n'"(${test_subdirs[$j]})"
 #
 # Get the test ID.
 #
@@ -1709,7 +1711,7 @@ Please correct and rerun."
       while [ "$jp1" -lt "${num_tests}" ]; do
         test_id_next="${test_ids[$jp1]}"
         if [ "${test_id_next}" -eq "${test_id}" ]; then
-          alt_test_names_subdirs="${alt_test_names_subdirs}${test_names[$jp1]} (${test_subdirs[$jp1]})"$'\n'
+          alt_test_names_subdirs="${alt_test_names_subdirs}${test_names[$jp1]}"$'\n'"(${test_subdirs[$jp1]})"$'\n'
           j="$jp1"
           jp1=$((j+1))
         else
