@@ -11,6 +11,11 @@ Supported formats include:
 
 Typical usage involves first loading the config file, then using the dictionary
 returnded by load_config to make queries.
+
+To convert from one format to the other, execute this from USH directory:
+
+   python3 -W ignore -m python_utils.config_parser -c $PWD/config.sh -o yaml
+
 """
 
 import argparse
@@ -74,12 +79,12 @@ def load_json_config(config_file):
 def cfg_to_json_str(cfg):
     """ Get contents of config file as a json string """
 
-    return json.dumps(cfg,  sort_keys=False, indent=4)
+    return json.dumps(cfg,  sort_keys=False, indent=4) + "\n"
 
 ##########
 # SHELL
 ##########
-def load_shell_config(config_file):
+def load_shell_config(config_file, return_string=False):
     """ Loads old style shell config files.
     We source the config script in a subshell and gets the variables it sets
 
@@ -110,7 +115,7 @@ def load_shell_config(config_file):
     for l in lines:
         idx = l.find("=")
         k = l[:idx]
-        v = str_to_list(l[idx+1:])
+        v = str_to_list(l[idx+1:],return_string)
         cfg[k] = v
     return cfg
 
@@ -180,12 +185,12 @@ def cfg_to_ini_str(cfg):
 ##################
 # CONFIG loader
 ##################
-def load_config_file(file_name):
+def load_config_file(file_name,return_string=False):
     """ Load config file based on file name extension """
 
     ext = os.path.splitext(file_name)[1][1:]
     if ext == "sh":
-        return load_shell_config(file_name)
+        return load_shell_config(file_name,return_string)
     elif ext == "cfg":
         return load_ini_config(file_name)
     elif ext == "json":
@@ -202,14 +207,14 @@ if __name__ == "__main__":
                         help='output format: can be any of ["shell", "yaml", "ini", "json"]')
 
     args = parser.parse_args()
-    cfg = load_config_file(args.cfg)
+    cfg = load_config_file(args.cfg, True)
 
     if args.out_type == 'shell':
-        print( cfg_to_shell_str(cfg) )
+        print( cfg_to_shell_str(cfg), end='' )
     elif args.out_type == 'ini':
-        print( cfg_to_ini_str(cfg) )
+        print( cfg_to_ini_str(cfg), end='' )
     elif args.out_type == 'json':
-        print( cfg_to_json_str(cfg) )
+        print( cfg_to_json_str(cfg), end='' )
     else:
-        print( cfg_to_yaml_str(cfg) )
+        print( cfg_to_yaml_str(cfg), end='' )
 
