@@ -45,20 +45,20 @@ def date_to_str(d,short=False):
         v = d.strftime("%Y%m%d%H%M")
     return v
 
-def str_to_type(s, just_get_me_the_string = False):
+def str_to_type(s, return_string = False):
     """ Check if the string contains a float, int, boolean, or just regular string.
     This will be used to automatically convert environment variables to data types
     that are more convenient to work with. If you don't want this functionality,
-    pass just_get_me_the_string = True
+    pass return_string = True
 
     Args:
         s: a string
-        just_get_me_the_string: Set to True to return the string itself
+        return_string: Set to True to return the string itself
     Returns:
         a float, int, boolean, date, or the string itself when all else fails
     """
     s = s.strip('"\'')
-    if not just_get_me_the_string:
+    if not return_string:
         if s.lower() in ['true','yes','yeah']:
             return True
         elif s.lower() in ['false','no','nope']:
@@ -116,7 +116,7 @@ def list_to_str(v, oneline=False):
 
     return shell_str
 
-def str_to_list(v):
+def str_to_list(v, return_string=False):
     """ Given a string, construct a string or list of strings.
     Basically does the reverse operation of `list_to_string`.
 
@@ -143,10 +143,10 @@ def str_to_list(v):
             if "=" in itm:
                 idx = itm.find("=")
                 itm = itm[idx+1:]
-            lst.append(str_to_type(itm))
+            lst.append(str_to_type(itm, return_string))
         return lst
     else:
-        return str_to_type(v)
+        return str_to_type(v, return_string)
 
 def set_env_var(param,value):
     """ Set an environment variable
