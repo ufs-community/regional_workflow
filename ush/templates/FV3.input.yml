@@ -29,7 +29,6 @@ FV3_RRFS_v1alpha:
     iopt_sfc: 1
     iopt_snf: 4
     iopt_stc: 1
-    iopt_trs: 2
     iopt_tbot: 2
     lsm: 2
     lsoil_lsm: 4
@@ -182,7 +181,6 @@ FV3_GFS_2017_gfdlmp_regional:
     iopt_sfc: 1
     iopt_snf: 4
     iopt_stc: 1
-    iopt_trs: 2
     iopt_tbot: 2
     lgfdlmprad: True
     lheatstrg: False
@@ -257,7 +255,6 @@ FV3_GFS_v15p2:
     iopt_sfc: 1
     iopt_snf: 4
     iopt_stc: 1
-    iopt_trs: 2
     iopt_tbot: 2
     ldiag_ugwp: False
     lgfdlmprad: True
@@ -312,7 +309,6 @@ FV3_GFS_v15_thompson_mynn_lam3km:
     iopt_sfc: 1
     iopt_snf: 4
     iopt_stc: 1
-    iopt_trs: 2
     iopt_tbot: 2
     iovr: 3
     ldiag_ugwp: false
