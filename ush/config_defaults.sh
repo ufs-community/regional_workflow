@@ -74,12 +74,15 @@ RUN_ENVIR="nco"
 # for supported machines.
 #
 # BUILD_MOD_FN:
-# Name of alternative build module file to use if using an
-# unsupported platform. Is set automatically for supported machines.
+# Name of build module file to load before running a workflow task.  If 
+# this is not specified by the user in the experiment configuration file 
+# (EXPT_CONFIG_FN), it will be set automatically for supported machines.
 #
 # WFLOW_MOD_FN:
-# Name of alternative workflow module file to use if using an
-# unsupported platform. Is set automatically for supported machines.
+# Name of workflow module file to load before (re)launching the experiment's
+# ROCOTO workflow (using the "rocotorun" command).  If this is not specified 
+# by the user in the experiment configuration file (EXPT_CONFIG_FN), it 
+# will be set automatically for supported machines.
 #
 # SCHED:
 # The job scheduler to use (e.g. slurm).  Set this to an empty string in
