@@ -117,76 +117,79 @@ run.  (A description of ACCOUNT can be found in the default experiment
 configuration file.)  This is a required argument.
 
 expt_basedir:
-Argument used to explicitly set the experiment variable EXPT_BASEDIR in 
-the experiment configuration files of all the WE2E tests the user wants
-to run.  (A description of EXPT_BASEDIR can be found in the default 
-experiment configuration file.)  If expt_basedir is specified in the call 
-to this script, its value is used to set EXPT_BASEDIR in the configuration 
-files.  If it is not specified, EXPT_BASEDIR is not set in the configuration 
-files, in which case the workflow generation script sets it to a default 
-value.  Note that if expt_basedir is set to a relative path (e.g. 
-expt_basedir=\"testset1\" in the call to this script), then the workflow 
-generation script will set EXPT_BASEDIR for the experiment to a default 
-absolute path followed by \${expt_basedir}.  This feature can be used to 
-group the WE2E tests into subdirectories for convenience, e.g. a set of 
-tests under subdirectory testset1, another set of tests under testset2, 
-etc.
+Optional argument used to explicitly set the experiment variable 
+EXPT_BASEDIR in the experiment configuration files of all the WE2E tests 
+the user wants to run.  (A description of EXPT_BASEDIR can be found in 
+the default experiment configuration file.)  If expt_basedir is specified 
+in the call to this script, its value is used to set EXPT_BASEDIR in the 
+configuration files.  If it is not specified, EXPT_BASEDIR is not set in 
+the configuration files, in which case the workflow generation script 
+sets it to a default value.  Note that if expt_basedir is set to a 
+relative path (e.g. expt_basedir=\"testset1\" in the call to this script), 
+then the experiment generation script will set EXPT_BASEDIR for the 
+experiment to a default absolute path followed by \${expt_basedir}.  
+This feature can be used to group the WE2E tests into subdirectories for 
+convenience, e.g. a set of tests under subdirectory testset1, another 
+set of tests under testset2, etc.
 
 exec_subdir:
-Optional.  Argument used to set the EXEC_SUBDIR experiment variable. 
-Please see the default experiment configuration file \"config_defaults.sh\" 
-for a full description of EXEC_SUBDIR.
+Optional argument used to explicitly set the experiment variable 
+EXEC_SUBDIR in the experiment configuration files of all the WE2E tests 
+the user wants to run.  See the default experiment configuration file 
+\"config_defaults.sh\" for a full description of EXEC_SUBDIR.
 
 use_cron_to_relaunch:
-Argument used to explicitly set the experiment variable USE_CRON_TO_RELAUNCH
-in the experiment configuration files of all the WE2E tests the user wants 
-to run.  (A description of USE_CRON_TO_RELAUNCH can be found in the default 
-experiment configuration file.)  If use_cron_to_relaunch is specified in 
-the call to this script, its value is used to set USE_CRON_TO_RELAUNCH 
-in the configuration files.  If it is not specified, USE_CRON_TO_RELAUNCH 
-is set to \"TRUE\" in the configuration files, in which case cron jobs 
-are used to (re)launch the workflows for all tests (one cron job per test).  
-Thus, use_cron_to_relaunch needs to be specified only if the user wants 
-to turn off use of cron jobs for all tests (by specifying use_cron_to_relaunch=
-\"FALSE\" on the command line).  Note that it is not possible to specify 
-a different value for USE_CRON_TO_RELAUNCH for each test via this argument; 
-either all tests use cron jobs or none do.
+Optional argument used to explicitly set the experiment variable 
+USE_CRON_TO_RELAUNCH in the experiment configuration files of all the 
+WE2E tests the user wants to run.  (A description of USE_CRON_TO_RELAUNCH 
+can be found in the default experiment configuration file.)  If 
+use_cron_to_relaunch is specified in the call to this script, its value 
+is used to set USE_CRON_TO_RELAUNCH in the configuration files.  If it 
+is not specified, USE_CRON_TO_RELAUNCH is set to \"TRUE\" in the 
+configuration files, in which case cron jobs are used to (re)launch the 
+workflows for all tests (one cron job per test).  Thus, use_cron_to_relaunch 
+needs to be specified only if the user wants to turn off use of cron jobs 
+for all tests (by specifying use_cron_to_relaunch=\"FALSE\" on the command 
+line).  Note that it is not possible to specify a different value for 
+USE_CRON_TO_RELAUNCH for each test via this argument; either all tests 
+use cron jobs or none do.
 
 cron_relaunch_intvl_mnts:
-Argument used to explicitly set the experiment variable CRON_RELAUNCH_INTVL_MNTS
-in the experiment configuration files of all the WE2E tests the user wants 
-to run.  (A description of CRON_RELAUNCH_INTVL_MNTS can be found in the 
-default experiment configuration file.)  If cron_relaunch_intvl_mnts is 
-specified in the call to this script, its value is used to set 
-CRON_RELAUNCH_INTVL_MNTS in the configuration files.  If it is not 
-specified, CRON_RELAUNCH_INTVL_MNTS is set to \"02\" (i.e. two minutes) 
-in the configuration files.  Note that it is not possible to specify a 
-different value for CRON_RELAUNCH_INTVL_MNTS for each test via this 
-argument; all tests will use the same value for USE_CRON_TO_RELAUNCH 
-(either the value specified in the call to this script or the default 
-value of \"02\").  Note also that the value of this argument matters only 
-if the argument use_cron_to_relaunch is not explicitly set to \"FALSE\" 
-in the call to this script.
+Optional argument used to explicitly set the experiment variable 
+CRON_RELAUNCH_INTVL_MNTS in the experiment configuration files of 
+all the WE2E tests the user wants to run.  (A description of 
+CRON_RELAUNCH_INTVL_MNTS can be found in the default experiment 
+configuration file.)  If cron_relaunch_intvl_mnts is specified in the 
+call to this script, its value is used to set CRON_RELAUNCH_INTVL_MNTS 
+in the configuration files.  If it is not specified, CRON_RELAUNCH_INTVL_MNTS 
+is set to \"02\" (i.e. two minutes) in the configuration files.  Note 
+that it is not possible to specify a different value for 
+CRON_RELAUNCH_INTVL_MNTS for each test via this argument; all tests will 
+use the same value for USE_CRON_TO_RELAUNCH (either the value specified 
+in the call to this script or the default value of \"02\").  Note also 
+that the value of this argument matters only if the argument 
+use_cron_to_relaunch is not explicitly set to \"FALSE\" in the call to 
+this script.
 
 verbose:
-Argument used to explicitly set the experiment variable VERBOSE in the
-experiment configuration files of all the WE2E tests the user wants to
-run.  (A description of VERBOSE can be found in the default experiment 
-configuration file.)  If verbose is specified in the call to this script, 
-its value is used to set VERBOSE in the configuration files.  If it is 
-not specified, VERBOSE is set to \"TRUE\" in the configuration files.
-Note that it is not possible to specify a different value for VERBOSE 
-for each test via this argument; either all tests will have VERBOSE set 
-to \"TRUE\" or all will have it set to \"FALSE\".
+Optional argument used to explicitly set the experiment variable VERBOSE 
+in the experiment configuration files of all the WE2E tests the user 
+wants to run.  (A description of VERBOSE can be found in the default 
+experiment configuration file.)  If verbose is specified in the call to 
+this script, its value is used to set VERBOSE in the configuration files.  
+If it is not specified, VERBOSE is set to \"TRUE\" in the configuration 
+files.  Note that it is not possible to specify a different value for 
+VERBOSE for each test via this argument; either all tests will have 
+VERBOSE set to \"TRUE\" or all will have it set to \"FALSE\".
 
 machine_file:
-Optional argument to set the full path to a machine configuration file.
-If not set, a supported platform machine file may be used.
+Optional argument specifying the full path to a machine configuration 
+file.  If not set, a supported platform machine file may be used.
 
 stmp:
-Argument used to explicitly set the experiment variable STMP in the 
-experiment configuration files of all the WE2E tests the user wants to 
-run that are in NCO mode, i.e. they have test configuration files that
+Optional argument used to explicitly set the experiment variable STMP in 
+the experiment configuration files of all the WE2E tests the user wants 
+to run that are in NCO mode, i.e. they have test configuration files that
 set the experiment variable RUN_ENVIR to \"nco\".  (A description of 
 STMP can be found in the default experiment configuration file.)  If 
 stmp is specified in the call to this script, its value is used to set 
@@ -208,14 +211,23 @@ Same as the argument \"stmp\" described above but for setting the
 experiment variable PTMP for all tests that will run in NCO mode.
 
 compiler:
-Type of compiler to use for the workflow. Options are \"intel\" and \"gnu\". 
-Default is \"intel\".
+Optional argument used to explicitly set the experiment variable COMPILER 
+in the experiment configuration files of all the WE2E tests the user 
+wants to run.  (A description of COMPILER can be found in the default 
+experiment configuration file.)  If compiler is specified in the call to 
+this script, its value is used to set COMPILER in the configuration files.  
+If it is not specified, COMPILER is set to \"intel\" in the configuration 
+files.  Note that it is not possible to specify a different value for 
+COMPILER for each test via this argument; all tests will use the same 
+value for COMPILER (either the value specified in the call to this script 
+or the default value of \"intel\").
 
 build_mod_fn:
-Specify the build module files (see ufs-srweather-app/modulefiles) to 
-use for the workflow. (e.g. build_cheyenne_gnu). If a 
-\"gnu\" compiler is specified, it must also be specified with 
-the \"compiler\" option.
+Optional argument used to explicitly set the experiment variable 
+BUILD_MOD_FN in the experiment configuration files of all the WE2E tests 
+the user wants to run (e.g. \"build_cheyenne_gnu\").  If the string 
+\"gnu\" appears in this file name, the \"compiler\" option to this 
+function must also be specified with the value \"gnu\".
 
 
 Usage Examples:
@@ -483,7 +495,7 @@ done < "${user_spec_tests_fp}"
 #   avail_WE2E_test_subdirs[7]="dir1"
 #   avail_WE2E_test_subdirs[8]="dir2"
 #   avail_WE2E_test_subdirs[9]="dir3"
-#   
+#
 #-----------------------------------------------------------------------
 #
 print_info_msg "
