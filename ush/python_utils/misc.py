@@ -56,13 +56,13 @@ def find_pattern_in_file(pattern, file_name):
     return None
 
 def flatten_dict(dictionary,keys=None):
-    """ Faltten a recursive dictionary (e.g.yaml/json) to be one level deep
+    """ Flatten a recursive dictionary (e.g.yaml/json) to be one level deep
 
     Args:
-      dictionary: the source dictionary
-      keys: list of keys on top level whose contents to flatten, if None all of them
+        dictionary: the source dictionary
+        keys: list of keys on top level whose contents to flatten, if None all of them
     Returns:
-      A one-level deep dictionary for the selected set of keys
+        A one-level deep dictionary for the selected set of keys
     """
     flat_dict = {}
     for k,v in dictionary.items():
@@ -73,4 +73,23 @@ def flatten_dict(dictionary,keys=None):
             else:
                 flat_dict[k] = v
     return flat_dict
+
+def structure_dict(dict_o, dict_t):
+    """ Structure a dictionary based on a template dictionary
+
+    Args:
+        dict_o: dictionary to structure
+        dict_t: template dictionary used for structuring
+    Returns:
+        A dictionary with contents of dict_o following structure of dict_t
+    """
+    struct_dict = {}
+    for k,v in dict_t.items():
+        if isinstance(v,dict):
+            r = structure_dict(dict_o, v)
+            if r:
+                struct_dict[k] = r
+        elif k in dict_o.keys():
+            struct_dict[k] = dict_o[k]
+    return struct_dict
 

@@ -30,7 +30,7 @@ from textwrap import dedent
 import configparser
 
 from .environment import list_to_str, str_to_list
-from .misc import flatten_dict
+from .misc import flatten_dict, structure_dict
 from .print_msg import print_err_msg_exit
 from .run_command import run_command
 
@@ -208,9 +208,14 @@ if __name__ == "__main__":
                         help='output format: can be any of ["shell", "yaml", "ini", "json"]')
     parser.add_argument('--flatten','-f',dest='flatten',action='store_true',required=False,
                         help='flatten resulting dictionary')
+    parser.add_argument('--template','-t',dest='template',required=False,
+                        help='template config file')
 
     args = parser.parse_args()
     cfg = load_config_file(args.cfg, True)
+    if args.template:
+        cfg_t = load_config_file(args.template, True)
+        cfg = structure_dict(cfg, cfg_t)
     if args.flatten:
         cfg = flatten_dict(cfg)
 
