@@ -18,7 +18,8 @@ def set_predef_grid_params():
         None
     """
     # import all environement variables
-    import_vars()
+    IMPORTS = ['PREDEF_GRID_NAME', 'QUILTING', 'DT_ATMOS', 'LAYOUT_X', 'LAYOUT_Y', 'BLOCKSIZE']
+    import_vars(env_vars=IMPORTS)
 
     params_dict = load_config_file("predef_grid_params.yaml")
     params_dict = params_dict[PREDEF_GRID_NAME]
@@ -34,17 +35,14 @@ def set_predef_grid_params():
         if globals()[var] is not None:
             params_dict[var] = globals()[var]
 
-    #export variables to environment
+    # export variables to environment
     export_vars(source_dict=params_dict)
-#
-#-----------------------------------------------------------------------
-#
-# Call the function defined above.
-#
-#-----------------------------------------------------------------------
-#
+   
+    return params_dict
+
 if __name__ == "__main__":
-    set_predef_grid_params()
+    params_dict = set_predef_grid_params()
+    print( cfg_to_shell_str(params_dict), end='' )
 
 class Testing(unittest.TestCase):
     def test_set_predef_grid_params(self):
