@@ -90,6 +90,7 @@ Usage:
     [use_cron_to_relaunch=\"...\"] \\
     [cron_relaunch_intvl_mnts=\"...\"] \\
     [verbose=\"...\"] \\
+    [generate_csv_file=\"...\"] \\
     [machine_file=\"...\"] \\
     [stmp=\"...\"] \\
     [ptmp=\"...\"] \\
@@ -181,6 +182,11 @@ If it is not specified, VERBOSE is set to \"TRUE\" in the configuration
 files.  Note that it is not possible to specify a different value for 
 VERBOSE for each test via this argument; either all tests will have 
 VERBOSE set to \"TRUE\" or all will have it set to \"FALSE\".
+
+generate_csv_file:
+Optional argument that specifies whether or not to generate a CSV file
+containing summary information about all the tests available in the WE2E
+testing system.  Default value is \"TRUE\".
 
 machine_file:
 Optional argument specifying the full path to a machine configuration 
@@ -332,6 +338,7 @@ valid_args=( \
   "use_cron_to_relaunch" \
   "cron_relaunch_intvl_mnts" \
   "verbose" \
+  "generate_csv_file" \
   "machine_file" \
   "stmp" \
   "ptmp" \
@@ -503,6 +510,7 @@ Getting information about all available WE2E tests..."
 
 get_WE2Etest_names_subdirs_descs \
   WE2Edir="${WE2Edir}" \
+  generate_csv_file="${generate_csv_file}" \
   outvarname_test_configs_basedir="avail_WE2E_test_configs_basedir" \
   outvarname_test_names="avail_WE2E_test_names" \
   outvarname_test_subdirs="avail_WE2E_test_subdirs" \
