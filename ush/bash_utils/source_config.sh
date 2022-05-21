@@ -37,7 +37,7 @@ function source_config() {
   local ushdir=${scrfunc_dir%/*}
 
   cd $ushdir
-  source <( python3 -W ignore -m python_utils.config_parser -c $1 -o shell ) 
+  source <( python3 -W ignore -m python_utils.config_parser -c $1 -o shell -f ) 
   cd $scrfunc_dir
 
 #
