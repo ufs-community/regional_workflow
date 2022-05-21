@@ -5,7 +5,7 @@ import os
 
 from python_utils import process_args,import_vars,export_vars,set_env_var,get_env_var,\
                          print_input_args,define_macos_utilities, load_config_file, \
-                         cfg_to_yaml_str
+                         cfg_to_yaml_str, flatten_dict
 
 def set_predef_grid_params():
     """ Sets grid parameters for the specified predfined grid 
@@ -26,6 +26,8 @@ def set_predef_grid_params():
     # if QUILTING = False, remove key
     if not QUILTING:
         params_dict.pop('QUILTING')
+    else:
+        params_dict = flatten_dict(params_dict)
 
     # take care of special vars
     special_vars = ['DT_ATMOS', 'LAYOUT_X', 'LAYOUT_Y', 'BLOCKSIZE']
@@ -47,6 +49,9 @@ class Testing(unittest.TestCase):
         set_predef_grid_params()
         self.assertEqual(get_env_var('GRID_GEN_METHOD'),"ESGgrid")
         self.assertEqual(get_env_var('ESGgrid_LON_CTR'),-97.5)
+        set_env_var('QUILTING',True)
+        set_predef_grid_params()
+        self.assertEqual(get_env_var('WRTCMP_nx'),1799)
 
     def setUp(self):
         define_macos_utilities();
