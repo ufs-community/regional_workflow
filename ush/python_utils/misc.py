@@ -57,6 +57,7 @@ def find_pattern_in_file(pattern, file_name):
 
 def flatten_dict(dictionary,keys=None):
     """ Faltten a recursive dictionary (e.g.yaml/json) to be one level deep
+
     Args:
       dictionary: the source dictionary
       keys: list of keys on top level whose contents to flatten, if None all of them
