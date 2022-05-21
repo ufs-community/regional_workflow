@@ -779,6 +779,7 @@ Please correct and rerun."
   BUILD_MOD_FN=${build_mod_fn:-"build_${machine}_${COMPILER}"}
   EXPT_BASEDIR="${expt_basedir}"
   EXPT_SUBDIR="${test_name}"
+  EXEC_SUBDIR="${exec_subdir}"
   USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch:-"TRUE"}
   CRON_RELAUNCH_INTVL_MNTS=${cron_relaunch_intvl_mnts:-"02"}
   VERBOSE=${verbose:-"TRUE"}
@@ -803,9 +804,9 @@ ACCOUNT=\"${ACCOUNT}\"
 COMPILER=\"${COMPILER}\"
 BUILD_MOD_FN=\"${BUILD_MOD_FN}\""
 
-  if [ -n "${exec_subdir}" ]; then
+  if [ -n "${EXEC_SUBDIR}" ]; then
     expt_config_str=${expt_config_str}"
-EXEC_SUBDIR=\"${exec_subdir}\""
+EXEC_SUBDIR=\"${EXEC_SUBDIR}\""
   fi
 
   if [ -n "${EXPT_BASEDIR}" ]; then
