@@ -134,6 +134,10 @@ def cfg_to_shell_str(cfg):
         if isinstance(v,list):
             shell_str += f'{k}={v1}\n'
         else:
+            #replace some problematic chars
+            v1 = v1.replace("'",'"')
+            v1 = v1.replace("\n",' ')
+            #end problematic
             shell_str += f"{k}='{v1}'\n"
     return shell_str
 
