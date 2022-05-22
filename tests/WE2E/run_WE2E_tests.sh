@@ -846,7 +846,7 @@ VERBOSE=\"${VERBOSE}\""
 # The following section is a copy of this WE2E test's configuration file.
 #
 "
-  expt_config_str=${expt_config_str}$( config_to_str "${test_config_fp}" )
+  expt_config_str=${expt_config_str}$( config_to_shell_str "${test_config_fp}" )
   expt_config_str=${expt_config_str}"
 #
 # End of section from this test's configuration file.
@@ -1180,7 +1180,14 @@ MAXTRIES_RUN_POST=\"${MAXTRIES_RUN_POST}\""
 #-----------------------------------------------------------------------
 #
   expt_config_fp="$ushdir/${EXPT_CONFIG_FN}"
-  printf "%s" "${expt_config_str}" > "${expt_config_fp}"
+
+  if [ "${EXPT_CONFIG_FN: -2}" = "sh" ]; then
+    printf "%s" "${expt_config_str}" > "${expt_config_fp}"
+  else
+    printf "%s" "${expt_config_str}" > _config_temp_.sh
+    config_to_yaml_str $PWD/_config_temp_.sh >"${expt_config_fp}"
+    rm -rf _config_temp_.sh
+  fi
 #
 #-----------------------------------------------------------------------
 #

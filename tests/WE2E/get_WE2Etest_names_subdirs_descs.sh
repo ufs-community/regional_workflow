@@ -977,7 +977,7 @@ configuration files of the primary WE2E tests...
 #
       config_fn="config.${test_name}.yaml"
       config_fp="${test_configs_basedir}/$subdir/$config_fn"
-      test_desc="$(config_to_str $config_fp description)"
+      test_desc="$(config_to_shell_str $config_fp description)"
       test_desc="${test_desc:12}"
 #
 # Finally, save the description of the current test as the next element
@@ -989,7 +989,7 @@ configuration files of the primary WE2E tests...
 # variables specified in "vars_to_extract".  Then save the value in the
 # arrays specified by "prim_array_names_vars_to_extract".
 #
-      config_content=$(config_to_str $config_fp)
+      config_content=$(config_to_shell_str $config_fp)
       for (( k=0; k<=$((num_vars_to_extract-1)); k++ )); do
 
         var_name="${vars_to_extract[$k]}"
