@@ -6,7 +6,7 @@ import datetime
 from textwrap import dedent
 
 from python_utils import cd_vrfy, mkdir_vrfy, rm_vrfy, check_var_valid_value,\
-                         lowercase,uppercase,check_for_preexist_dir_file,\
+                         lowercase,uppercase,check_for_preexist_dir_file,flatten_dict,\
                          import_vars, export_vars, get_env_var, print_info_msg,\
                          print_err_msg_exit, load_config_file, cfg_to_shell_str,\
                          load_shell_config, load_ini_config, get_ini_value
@@ -84,6 +84,7 @@ def setup():
     # configuration file.
     #
       cfg_u = load_config_file(os.path.join(ushdir,EXPT_CONFIG_FN))
+      cfg_u = flatten_dict(cfg_u)
       cfg_d.update(cfg_u)
       if cfg_u.items() > cfg_d.items():
         print_err_msg_exit(f'''
