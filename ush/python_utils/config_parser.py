@@ -214,12 +214,16 @@ if __name__ == "__main__":
                         help='flatten resulting dictionary')
     parser.add_argument('--template','-t',dest='template',required=False,
                         help='template config file')
+    parser.add_argument('--keys','-k',dest='keys',nargs='+',required=False,
+                        help='selected keys of dictionary for processing')
 
     args = parser.parse_args()
     cfg = load_config_file(args.cfg, True)
     if args.template:
         cfg_t = load_config_file(args.template, True)
         cfg = structure_dict(cfg, cfg_t)
+    if args.keys:
+        cfg = { k: cfg[k] for k in cfg if k in args.keys }
     if args.flatten:
         cfg = flatten_dict(cfg)
 

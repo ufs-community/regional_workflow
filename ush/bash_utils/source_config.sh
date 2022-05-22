@@ -5,7 +5,7 @@
 #-----------------------------------------------------------------------
 #
 
-function source_config() {
+function config_to_str() {
 #
 #-----------------------------------------------------------------------
 #
@@ -37,7 +37,11 @@ function source_config() {
   local ushdir=${scrfunc_dir%/*}
 
   cd $ushdir
-  source <( python3 -W ignore -m python_utils.config_parser -c $1 -o shell -f ) 
+  if [ $# -eq 1 ]; then
+    python3 -W ignore -m python_utils.config_parser -c $1 -o shell -f
+  else
+    python3 -W ignore -m python_utils.config_parser -c $1 -o shell -f --keys "${@: 2}"
+  fi
   cd $scrfunc_dir
 
 #
@@ -49,6 +53,12 @@ function source_config() {
 #-----------------------------------------------------------------------
 #
   { restore_shell_opts; } > /dev/null 2>&1
+
+}
+
+function source_config() {
+
+  source <( config_to_str "$@" )
 
 }
 
