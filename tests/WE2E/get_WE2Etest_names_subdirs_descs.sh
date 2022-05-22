@@ -978,6 +978,7 @@ configuration files of the primary WE2E tests...
       config_fn="config.${test_name}.yaml"
       config_fp="${test_configs_basedir}/$subdir/$config_fn"
       test_desc="$(config_to_str $config_fp description)"
+      test_desc="${test_desc:12}"
 #
 # Finally, save the description of the current test as the next element
 # of the array prim_test_descs.
@@ -1598,50 +1599,9 @@ containing information on all WE2E tests:
     eval ${outvarname_test_ids}="${test_ids_str}"
   fi
 
-  if [ ! -z "${outvarname_test_descs}" ]; then
-#
-# We want to treat all characters in the test descriptions literally
-# when evaluating the array specified by outvarname_test_descs below 
-# using the eval function because otherwise, characters such as "$", 
-# "(", ")", etc will be interpreted as indicating the value of a variable, 
-# the start of an array, the end of an array, etc, and lead to errors.  
-# Thus, below, when forming the array that will be passed to eval, we 
-# will surround each element of the local array test_descs in single 
-# quotes.  However, the test descriptions themselves may include single 
-# quotes (e.g. when a description contains a phrase such as "Please see 
-# the User's Guide for...").  In order to treat these single quotes 
-# literally (as opposed to as delimiters indicating the start or end of 
-# array elements), we have to pass them as separate strings by replacing 
-# each single quote with the following series of characters:
-#
-#   '"'"'
-#
-# In this, the first single quote indicates the end of the previous
-# single-quoted string, the "'" indicates a string containing a literal
-# single quote, and the last single quote inidicates the start of the
-# next single-quoted string.
-#
-# For example, let's assume there are only two WE2E tests to consider.
-# Assume the description of the first is
-#
-#   Please see the User's Guide.
-#
-# and that of the second is:
-#
-#   See description of ${DOT_OR_USCORE} in the configuration file.
-#
-# Then, if outvarname_test_descs is set to "some_array", the exact string 
-# we want to pass to eval is:
-#
-#   some_array=('Please see the User'"'"'s Guide.' 'See description of ${DOT_OR_USCORE} in the configuration file.')
-#
-    test_descs_esc_sq=()
-    for (( i=0; i<=$((num_tests-1)); i++ )); do
-      test_descs_esc_sq[$i]=$( printf "%s" "${test_descs[$i]}" | \
-                               sed -r -e "s/'/'\"'\"'/g" )
-    done
-    test_descs_str="( "$( printf "'%s' " "${test_descs_esc_sq[@]}" )")"
-    eval ${outvarname_test_descs}="${test_descs_str}"
+  if [ ! -z "${output_varname_test_descs}" ]; then
+    test_descs_str="( "$( printf "'%s' " "${test_descs[@]}" )")"
+    eval ${output_varname_test_descs}="${test_descs_str}"
   fi
 #
 #-----------------------------------------------------------------------
