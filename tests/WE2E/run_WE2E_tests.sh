@@ -712,7 +712,7 @@ for (( i=0; i<=$((num_tests_to_run-1)); i++ )); do
 # Generate the full path to the current WE2E test's configuration file.
 # Then ensure that this file exists.
 #
-  test_config_fp="${avail_WE2E_test_configs_basedir}/${test_subdir}/config.${test_name}.sh"
+  test_config_fp="${avail_WE2E_test_configs_basedir}/${test_subdir}/config.${test_name}.yaml"
 
   if [ ! -f "${test_config_fp}" ]; then
     print_err_msg_exit "\
@@ -733,7 +733,7 @@ Please correct and rerun."
 #-----------------------------------------------------------------------
 #
   source_config ${ushdir}/config_defaults.yaml
-  . ${test_config_fp}
+  source_config ${test_config_fp}
 #
 #-----------------------------------------------------------------------
 #
@@ -846,7 +846,7 @@ VERBOSE=\"${VERBOSE}\""
 # The following section is a copy of this WE2E test's configuration file.
 #
 "
-  expt_config_str=${expt_config_str}$( cat "${test_config_fp}" )
+  expt_config_str=${expt_config_str}$( config_to_str "${test_config_fp}" )
   expt_config_str=${expt_config_str}"
 #
 # End of section from this test's configuration file.
