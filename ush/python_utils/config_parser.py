@@ -278,7 +278,7 @@ def cfg_main():
     parser.add_argument('--keys','-k',dest='keys',nargs='+',required=False,
                         help='selected keys of dictionary for processing')
     parser.add_argument('--validate-cfg','-v',dest='validate',required=False,
-                        help='validation config file to compare with a given config file')
+                        help='validation config file used to validate a given config file')
 
     args = parser.parse_args()
     cfg = load_config_file(args.cfg, True)
