@@ -30,7 +30,6 @@ from textwrap import dedent
 import configparser
 
 from .environment import list_to_str, str_to_list
-from .misc import flatten_dict, structure_dict
 from .print_msg import print_err_msg_exit
 from .run_command import run_command
 
@@ -188,6 +187,70 @@ def cfg_to_ini_str(cfg):
     return ini_str
 
 ##################
+# CONFIG utils
+##################
+
+def flatten_dict(dictionary,keys=None):
+    """ Flatten a recursive dictionary (e.g.yaml/json) to be one level deep
+
+    Args:
+        dictionary: the source dictionary
+        keys: list of keys on top level whose contents to flatten, if None all of them
+    Returns:
+        A one-level deep dictionary for the selected set of keys
+    """
+    flat_dict = {}
+    for k,v in dictionary.items():
+        if not keys or k in keys:
+            if isinstance(v,dict):
+                r = flatten_dict(v)
+                flat_dict.update(r)
+            else:
+                flat_dict[k] = v
+    return flat_dict
+
+def structure_dict(dict_o, dict_t):
+    """ Structure a dictionary based on a template dictionary
+
+    Args:
+        dict_o: dictionary to structure
+        dict_t: template dictionary used for structuring
+    Returns:
+        A dictionary with contents of dict_o following structure of dict_t
+    """
+    struct_dict = {}
+    for k,v in dict_t.items():
+        if isinstance(v,dict):
+            r = structure_dict(dict_o, v)
+            if r:
+                struct_dict[k] = r
+        elif k in dict_o.keys():
+            struct_dict[k] = dict_o[k]
+    return struct_dict
+
+def check_structure_dict(dict_o, dict_t):
+    """ Check if a dictinary's structure follows a template.
+    The invalid entries are printed to the screen.
+
+    Args:
+        dict_o: target dictionary
+        dict_t: template dictionary to compare structure to
+    Returns:
+        Boolean
+    """
+    for k,v in dict_o.items():
+        if k in dict_t.keys():
+            v1 = dict_t[k]
+            if isinstance(v,dict) and isinstance(v1,dict):
+                r = check_structure_dict(v, v1)
+                if not r:
+                    return False
+        else:
+            print(f'INVALID ENTRY: {k}={v}')
+            return False
+    return True
+
+##################
 # CONFIG loader
 ##################
 def load_config_file(file_name,return_string=False):
@@ -216,23 +279,34 @@ if __name__ == "__main__":
                         help='template config file')
     parser.add_argument('--keys','-k',dest='keys',nargs='+',required=False,
                         help='selected keys of dictionary for processing')
+    parser.add_argument('--validate','-v',dest='validate',required=False,
+                        help='validate structure of config file against this template config file')
 
     args = parser.parse_args()
     cfg = load_config_file(args.cfg, True)
-    if args.template:
-        cfg_t = load_config_file(args.template, True)
-        cfg = structure_dict(cfg, cfg_t)
-    if args.keys:
-        cfg = { k: cfg[k] for k in cfg if k in args.keys }
-    if args.flatten:
-        cfg = flatten_dict(cfg)
 
-    if args.out_type == 'shell':
-        print( cfg_to_shell_str(cfg), end='' )
-    elif args.out_type == 'ini':
-        print( cfg_to_ini_str(cfg), end='' )
-    elif args.out_type == 'json':
-        print( cfg_to_json_str(cfg), end='' )
+    if args.validate:
+        cfg_t = load_config_file(args.validate, True)
+        r = check_structure_dict(cfg, cfg_t)
+        if r:
+            print('SUCCESS')
+        else:
+            print('FAILURE')
     else:
-        print( cfg_to_yaml_str(cfg), end='' )
+        if args.template:
+            cfg_t = load_config_file(args.template, True)
+            cfg = structure_dict(cfg, cfg_t)
+        if args.keys:
+            cfg = { k: cfg[k] for k in cfg if k in args.keys }
+        if args.flatten:
+            cfg = flatten_dict(cfg)
+
+        if args.out_type == 'shell':
+            print( cfg_to_shell_str(cfg), end='' )
+        elif args.out_type == 'ini':
+            print( cfg_to_ini_str(cfg), end='' )
+        elif args.out_type == 'json':
+            print( cfg_to_json_str(cfg), end='' )
+        else:
+            print( cfg_to_yaml_str(cfg), end='' )
 
