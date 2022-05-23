@@ -137,17 +137,20 @@ fi
 # Make sure that user-defined variables are set to valid values
 #
 # Set binary switch variables to either "TRUE" or "FALSE" by calling
-# boolify so we don't have to consider other valid values later on
+# boolify so we don't have to consider other valid values later on.
 #
 #-----------------------------------------------------------------------
 #
 check_var_valid_value "RUN_ENVIR" "valid_vals_RUN_ENVIR"
 
-check_var_valid_value "VERBOSE" "valid_vals_VERBOSE"
+check_var_valid_value "VERBOSE" "valid_vals_BOOLEAN"
 VERBOSE=$(boolify "$VERBOSE")
 
-check_var_valid_value "DEBUG" "valid_vals_DEBUG"
+check_var_valid_value "DEBUG" "valid_vals_BOOLEAN"
 DEBUG=$(boolify "$DEBUG")
+
+check_var_valid_value "USE_CRON_TO_RELAUNCH" "valid_vals_BOOLEAN"
+USE_CRON_TO_RELAUNCH=$(boolify "${USE_CRON_TO_RELAUNCH}")
 #
 #-----------------------------------------------------------------------
 #
@@ -161,53 +164,78 @@ if [ "$DEBUG" = "TRUE" ]; then
 Setting VERBOSE to \"TRUE\" because DEBUG has been set to \"TRUE\"..."
   VERBOSE="TRUE"
 fi
-
-check_var_valid_value "USE_CRON_TO_RELAUNCH" "valid_vals_USE_CRON_TO_RELAUNCH"
-USE_CRON_TO_RELAUNCH=$(boolify "${USE_CRON_TO_RELAUNCH}")
-
-check_var_valid_value "RUN_TASK_MAKE_GRID" "valid_vals_RUN_TASK_MAKE_GRID"
+#
+#-----------------------------------------------------------------------
+#
+# Check flags that turn on/off various workflow tasks.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "RUN_TASK_MAKE_GRID" "valid_vals_BOOLEAN"
 RUN_TASK_MAKE_GRID=$(boolify "${RUN_TASK_MAKE_GRID}")
 
-check_var_valid_value "RUN_TASK_MAKE_OROG" "valid_vals_RUN_TASK_MAKE_OROG"
+check_var_valid_value "RUN_TASK_MAKE_OROG" "valid_vals_BOOLEAN"
 RUN_TASK_MAKE_OROG=$(boolify "${RUN_TASK_MAKE_OROG}")
 
-check_var_valid_value \
-  "RUN_TASK_MAKE_SFC_CLIMO" "valid_vals_RUN_TASK_MAKE_SFC_CLIMO"
+check_var_valid_value "RUN_TASK_MAKE_SFC_CLIMO" "valid_vals_BOOLEAN"
 RUN_TASK_MAKE_SFC_CLIMO=$(boolify "${RUN_TASK_MAKE_SFC_CLIMO}")
 
-check_var_valid_value \
-  "RUN_TASK_RUN_POST" "valid_vals_RUN_TASK_RUN_POST"
+check_var_valid_value "RUN_TASK_GET_EXTRN_ICS" "valid_vals_BOOLEAN"
+RUN_TASK_GET_EXTRN_ICS=$(boolify "${RUN_TASK_GET_EXTRN_ICS}")
+
+check_var_valid_value "RUN_TASK_GET_EXTRN_LBCS" "valid_vals_BOOLEAN"
+RUN_TASK_GET_EXTRN_LBCS=$(boolify "${RUN_TASK_GET_EXTRN_LBCS}")
+
+check_var_valid_value "RUN_TASK_RUN_FCST" "valid_vals_BOOLEAN"
+RUN_TASK_RUN_FCST=$(boolify "${RUN_TASK_RUN_FCST}")
+
+check_var_valid_value "RUN_TASK_RUN_POST" "valid_vals_BOOLEAN"
 RUN_TASK_RUN_POST=$(boolify "${RUN_TASK_RUN_POST}")
 
-check_var_valid_value "RUN_TASK_VX_GRIDSTAT" "valid_vals_RUN_TASK_VX_GRIDSTAT"
+check_var_valid_value "RUN_TASK_GET_OBS_CCPA" "valid_vals_BOOLEAN"
+RUN_TASK_GET_OBS_CCPA=$(boolify "${RUN_TASK_GET_OBS_CCPA}")
+
+check_var_valid_value "RUN_TASK_GET_OBS_MRMS" "valid_vals_BOOLEAN"
+RUN_TASK_GET_OBS_MRMS=$(boolify "${RUN_TASK_GET_OBS_MRMS}")
+
+check_var_valid_value "RUN_TASK_GET_OBS_NDAS" "valid_vals_BOOLEAN"
+RUN_TASK_GET_OBS_NDAS=$(boolify "${RUN_TASK_GET_OBS_NDAS}")
+
+check_var_valid_value "RUN_TASK_VX_GRIDSTAT" "valid_vals_BOOLEAN"
 RUN_TASK_VX_GRIDSTAT=$(boolify "${RUN_TASK_VX_GRIDSTAT}")
 
-check_var_valid_value "RUN_TASK_VX_POINTSTAT" "valid_vals_RUN_TASK_VX_POINTSTAT"
+check_var_valid_value "RUN_TASK_VX_POINTSTAT" "valid_vals_BOOLEAN"
 RUN_TASK_VX_POINTSTAT=$(boolify "${RUN_TASK_VX_POINTSTAT}")
 
-check_var_valid_value "RUN_TASK_VX_ENSGRID" "valid_vals_RUN_TASK_VX_ENSGRID"
+check_var_valid_value "RUN_TASK_VX_ENSGRID" "valid_vals_BOOLEAN"
 RUN_TASK_VX_ENSGRID=$(boolify "${RUN_TASK_VX_ENSGRID}")
 
-check_var_valid_value "RUN_TASK_VX_ENSPOINT" "valid_vals_RUN_TASK_VX_ENSPOINT"
+check_var_valid_value "RUN_TASK_VX_ENSPOINT" "valid_vals_BOOLEAN"
 RUN_TASK_VX_ENSPOINT=$(boolify "${RUN_TASK_VX_ENSPOINT}")
-
-check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
-USE_FVCOM=$(boolify "${USE_FVCOM}")
-
-check_var_valid_value "DO_SHUM" "valid_vals_DO_SHUM"
+#
+#-----------------------------------------------------------------------
+#
+# Check stochastic physcs flags.
+#
+#-----------------------------------------------------------------------
+#
+check_var_valid_value "DO_SHUM" "valid_vals_BOOLEAN"
 DO_SHUM=$(boolify "${DO_SHUM}")
 
-check_var_valid_value "DO_SPPT" "valid_vals_DO_SPPT"
+check_var_valid_value "DO_SPPT" "valid_vals_BOOLEAN"
 DO_SPPT=$(boolify "${DO_SPPT}")
 
-check_var_valid_value "DO_SKEB" "valid_vals_DO_SKEB"
+check_var_valid_value "DO_SKEB" "valid_vals_BOOLEAN"
 DO_SKEB=$(boolify "${DO_SKEB}")
 
-check_var_valid_value "DO_SPP" "valid_vals_DO_SPP"
+check_var_valid_value "DO_SPP" "valid_vals_BOOLEAN"
 DO_SPP=$(boolify "${DO_SPP}")
 
-check_var_valid_value "DO_LSM_SPP" "valid_vals_DO_LSM_SPP"
+check_var_valid_value "DO_LSM_SPP" "valid_vals_BOOLEAN"
 DO_LSM_SPP=$(boolify "${DO_LSM_SPP}")
+
+check_var_valid_value "USE_ZMTNBLCK" "valid_vals_BOOLEAN"
+USE_ZMTNBLCK=$(boolify "${USE_ZMTNBLCK}")
 #
 #-----------------------------------------------------------------------
 #
@@ -311,11 +339,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "SUB_HOURLY_POST" "valid_vals_SUB_HOURLY_POST"
-SUB_HOURLY_POST=$(boolify "${SUB_HOURLY_POST}")
-#
-#-----------------------------------------------------------------------
-#
 # Make sure that DOT_OR_USCORE is set to a valid value.
 #
 #-----------------------------------------------------------------------
@@ -331,8 +354,9 @@ check_var_valid_value "DOT_OR_USCORE" "valid_vals_DOT_OR_USCORE"
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "USE_FVCOM" "valid_vals_USE_FVCOM"
+check_var_valid_value "USE_FVCOM" "valid_vals_BOOLEAN"
 USE_FVCOM=$(boolify "${USE_FVCOM}")
+
 check_var_valid_value "FVCOM_WCSTART" "valid_vals_FVCOM_WCSTART"
 FVCOM_WCSTART=$(echo_lowercase $FVCOM_WCSTART)
 #
@@ -462,7 +486,6 @@ The base directory in which the UPP source code should be located
 Please clone the external repository containing the code in this directory,
 build the executable, and then rerun the workflow."
 fi
-
 #
 # Define some other useful paths
 #
@@ -478,7 +501,6 @@ TEMPLATE_DIR="$USHDIR/templates"
 VX_CONFIG_DIR="$TEMPLATE_DIR/parm"
 METPLUS_CONF="$TEMPLATE_DIR/parm/metplus"
 MET_CONFIG="$TEMPLATE_DIR/parm/met"
-
 #
 #-----------------------------------------------------------------------
 #
@@ -519,8 +541,6 @@ One or more fix file directories have not been specified for this machine:
   DOMAIN_PREGEN_BASEDIR = \"${DOMAIN_PREGEN_BASEDIR:-\"\"}
 You can specify the missing location(s) in ${machine_file}"
 fi
-
-
 #
 #-----------------------------------------------------------------------
 #
@@ -644,11 +664,7 @@ check_var_valid_value \
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "USE_MERRA_CLIMO" "valid_vals_USE_MERRA_CLIMO"
-#
-# Set USE_MERRA_CLIMO to either "TRUE" or "FALSE" so we don't
-# have to consider other valid values later on.
-#
+check_var_valid_value "USE_MERRA_CLIMO" "valid_vals_BOOLEAN"
 USE_MERRA_CLIMO=$(boolify "${USE_MERRA_CLIMO}")
 # Force to "TRUE" in case of FV3_GFS_v15_thompson_mynn_lam3km:
 if [ "${CCPP_PHYS_SUITE}" = "FV3_GFS_v15_thompson_mynn_lam3km" ]; then
@@ -824,6 +840,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+check_var_valid_value "USE_CUSTOM_POST_CONFIG_FILE" "valid_vals_BOOLEAN"
+USE_CUSTOM_POST_CONFIG_FILE=$(boolify "${USE_CUSTOM_POST_CONFIG_FILE}")
+
 if [ ${USE_CUSTOM_POST_CONFIG_FILE} = "TRUE" ]; then
   if [ ! -f "${CUSTOM_POST_CONFIG_FP}" ]; then
     print_err_msg_exit "
@@ -835,12 +854,16 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If using external CRTM fix files to allow post-processing of synthetic
-# satellite products from the UPP, then make sure the fix file directory
-# exists.
+# Ensure that USE_CRTM is set to a valid value.  Then, if it is set to 
+# "TRUE" (i.e. if using external CRTM fix files to allow post-processing 
+# of synthetic satellite products from the UPP, make sure that the fix 
+# file directory exists.
 #
 #-----------------------------------------------------------------------
 #
+check_var_valid_value "USE_CRTM" "valid_vals_BOOLEAN"
+USE_CRTM=$(boolify "${USE_CRTM}")
+
 if [ ${USE_CRTM} = "TRUE" ]; then
   if [ ! -d "${CRTM_DIR}" ]; then
     print_err_msg_exit "
@@ -1041,6 +1064,9 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+check_var_valid_value "SUB_HOURLY_POST" "valid_vals_BOOLEAN"
+SUB_HOURLY_POST=$(boolify "${SUB_HOURLY_POST}")
+
 if [ "${SUB_HOURLY_POST}" = "TRUE" ]; then
 #
 # Check that DT_SUBHOURLY_POST_MNTS is a string consisting of one or two
@@ -1410,11 +1436,6 @@ FIELD_TABLE_FP="${EXPTDIR}/${FIELD_TABLE_FN}"
 FV3_NML_FN="${FV3_NML_BASE_SUITE_FN%.*}"
 FV3_NML_FP="${EXPTDIR}/${FV3_NML_FN}"
 NEMS_CONFIG_FP="${EXPTDIR}/${NEMS_CONFIG_FN}"
-
-
-check_var_valid_value "USE_USER_STAGED_EXTRN_FILES" "valid_vals_USE_USER_STAGED_EXTRN_FILES"
-USE_USER_STAGED_EXTRN_FILES=$(boolify "${USE_USER_STAGED_EXTRN_FILES}")
-
 #
 #-----------------------------------------------------------------------
 #
@@ -1424,6 +1445,9 @@ USE_USER_STAGED_EXTRN_FILES=$(boolify "${USE_USER_STAGED_EXTRN_FILES}")
 #
 #-----------------------------------------------------------------------
 #
+check_var_valid_value "USE_USER_STAGED_EXTRN_FILES" "valid_vals_BOOLEAN"
+USE_USER_STAGED_EXTRN_FILES=$(boolify "${USE_USER_STAGED_EXTRN_FILES}")
+
 if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
 
   # Check for the base directory up to the first templated field.
@@ -1442,6 +1466,9 @@ external model files for generating LBCs should be located does not exist:
   fi
 
 fi
+
+check_var_valid_value "NOMADS" "valid_vals_BOOLEAN"
+NOMADS=$(boolify "${NOMADS}")
 #
 #-----------------------------------------------------------------------
 #
@@ -1452,7 +1479,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "DO_ENSEMBLE" "valid_vals_DO_ENSEMBLE"
+check_var_valid_value "DO_ENSEMBLE" "valid_vals_BOOLEAN"
 DO_ENSEMBLE=$(boolify "${DO_ENSEMBLE}")
 
 NDIGITS_ENSMEM_NAMES="0"
@@ -2049,11 +2076,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-check_var_valid_value "WRITE_DOPOST" "valid_vals_WRITE_DOPOST"
-#
-# Set WRITE_DOPOST to either "TRUE" or "FALSE" so we don't have to consider
-# other valid values later on.
-#
+check_var_valid_value "WRITE_DOPOST" "valid_vals_BOOLEAN"
 WRITE_DOPOST=$(boolify "${WRITE_DOPOST}")
 
 if [ "$WRITE_DOPOST" = "TRUE" ] ; then
@@ -2068,10 +2091,10 @@ SUB_HOURLY_POST is NOT available with Inline Post yet."
   fi
 fi
 
-check_var_valid_value "QUILTING" "valid_vals_QUILTING"
+check_var_valid_value "QUILTING" "valid_vals_BOOLEAN"
 QUILTING=$(boolify "$QUILTING")
 
-check_var_valid_value "PRINT_ESMF" "valid_vals_PRINT_ESMF"
+check_var_valid_value "PRINT_ESMF" "valid_vals_BOOLEAN"
 PRINT_ESMF=$(boolify "${PRINT_ESMF}")
 
 #
