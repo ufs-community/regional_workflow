@@ -355,7 +355,7 @@ function set_predef_grid_params() {
 
     if [ "$quilting" = "TRUE" ]; then
       __wrtcmp_write_groups__="1"
-      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
       __wrtcmp_output_grid__="lambert_conformal"
       __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
       __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
@@ -401,7 +401,7 @@ function set_predef_grid_params() {
 
     if [ "$quilting" = "TRUE" ]; then
       __wrtcmp_write_groups__="1"
-      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
       __wrtcmp_output_grid__="lambert_conformal"
       __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
       __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
@@ -447,7 +447,7 @@ function set_predef_grid_params() {
 
     if [ "$quilting" = "TRUE" ]; then
       __wrtcmp_write_groups__="1"
-      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
       __wrtcmp_output_grid__="lambert_conformal"
       __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
       __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
@@ -494,7 +494,7 @@ function set_predef_grid_params() {
 
     if [ "$quilting" = "TRUE" ]; then
       __wrtcmp_write_groups__="1"
-      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
       __wrtcmp_output_grid__="lambert_conformal"
       __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
       __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
@@ -540,7 +540,7 @@ function set_predef_grid_params() {
 
     if [ "$quilting" = "TRUE" ]; then
       __wrtcmp_write_groups__="1"
-      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
       __wrtcmp_output_grid__="lambert_conformal"
       __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
       __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
@@ -588,7 +588,7 @@ function set_predef_grid_params() {
 
     if [ "$quilting" = "TRUE" ]; then
       __wrtcmp_write_groups__="1"
-      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
       __wrtcmp_output_grid__="lambert_conformal"
       __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
       __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
@@ -638,7 +638,7 @@ function set_predef_grid_params() {
 
     if [ "$quilting" = "TRUE" ]; then
       __wrtcmp_write_groups__="1"
-      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
       __wrtcmp_output_grid__="lambert_conformal"
       __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
       __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
@@ -663,7 +663,7 @@ function set_predef_grid_params() {
 # using the NCL code and work.
 #      if [ "$quilting" = "TRUE" ]; then
 #        __wrtcmp_write_groups__="1"
-#        __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+#        __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
 #        __wrtcmp_output_grid__="rotated_latlon"
 #        __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
 #        __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
@@ -759,7 +759,7 @@ function set_predef_grid_params() {
 
     if [ "$quilting" = "TRUE" ]; then
       __wrtcmp_write_groups__="1"
-      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
       __wrtcmp_output_grid__="lambert_conformal"
       __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
       __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
@@ -813,7 +813,7 @@ function set_predef_grid_params() {
 
     if [ "$quilting" = "TRUE" ]; then
       __wrtcmp_write_groups__="1"
-      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
       __wrtcmp_output_grid__="lambert_conformal"
       __wrtcmp_cen_lon__="${__esggrid_lon_ctr__}"
       __wrtcmp_cen_lat__="${__esggrid_lat_ctr__}"
@@ -870,7 +870,7 @@ function set_predef_grid_params() {
 
     if [ "$quilting" = "TRUE" ]; then
       __wrtcmp_write_groups__="1"
-      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
       __wrtcmp_output_grid__="rotated_latlon"
       __wrtcmp_cen_lon__="${__gfdlgrid_lon_t6_ctr__}"
       __wrtcmp_cen_lat__="${__gfdlgrid_lat_t6_ctr__}"
@@ -925,7 +925,7 @@ function set_predef_grid_params() {
 
     if [ "$quilting" = "TRUE" ]; then
       __wrtcmp_write_groups__="1"
-      __wrtcmp_write_tasks_per_group__=$(( 1*layout_y ))
+      __wrtcmp_write_tasks_per_group__=$(( 1*__layout_y__ ))
       __wrtcmp_output_grid__="rotated_latlon"
       __wrtcmp_cen_lon__="${__gfdlgrid_lon_t6_ctr__}"
       __wrtcmp_cen_lat__="${__gfdlgrid_lat_t6_ctr__}"
