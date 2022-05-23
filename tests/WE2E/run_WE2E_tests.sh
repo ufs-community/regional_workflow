@@ -1172,22 +1172,12 @@ MAXTRIES_RUN_POST=\"${MAXTRIES_RUN_POST}\""
   fi
 #
 #-----------------------------------------------------------------------
-#
-# Set the full path to the configuration file that the experiment 
-# generation script reads in.  Then write the contents of expt_config_str 
-# to that file.
-#
+# Write content to a temporary config file
 #-----------------------------------------------------------------------
 #
-  expt_config_fp="$ushdir/${EXPT_CONFIG_FN}"
-
-  if [ "${EXPT_CONFIG_FN: -2}" = "sh" ]; then
-    printf "%s" "${expt_config_str}" > "${expt_config_fp}"
-  else
-    printf "%s" "${expt_config_str}" > _config_temp_.sh
-    config_to_yaml_str $PWD/_config_temp_.sh >"${expt_config_fp}"
-    rm -rf _config_temp_.sh
-  fi
+  temp_file="$PWD/_config_temp_.sh"
+  expt_config_fp="${temp_file}"
+  printf "%s" "${expt_config_str}" > "${expt_config_fp}"
 #
 #-----------------------------------------------------------------------
 #
@@ -1280,6 +1270,23 @@ exist or is not a directory:
 
 
   fi
+#
+#-----------------------------------------------------------------------
+#
+# Set the full path to the configuration file that the experiment 
+# generation script reads in.  Then write the contents of expt_config_str 
+# to that file.
+#
+#-----------------------------------------------------------------------
+#
+  expt_config_fp="$ushdir/${EXPT_CONFIG_FN}"
+
+  if [ "${EXPT_CONFIG_FN: -2}" = "sh" ]; then
+    cat "${temp_file}" > "${expt_config_fp}"
+  else
+    config_to_yaml_str "${temp_file}" >"${expt_config_fp}"
+  fi
+  rm -rf "${temp_file}"
 #
 #-----------------------------------------------------------------------
 #
