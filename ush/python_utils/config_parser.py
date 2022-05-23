@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 """
 This file provides utilities for processing different configuration file formats.
 Supported formats include:
@@ -11,10 +10,6 @@ Supported formats include:
 
 Typical usage involves first loading the config file, then using the dictionary
 returnded by load_config to make queries.
-
-To convert from one format to the other, execute this from USH directory:
-
-   python3 -W ignore -m python_utils.config_parser -c $PWD/config.sh -o yaml
 
 """
 
@@ -266,7 +261,10 @@ def load_config_file(file_name,return_string=False):
     else:
         return load_yaml_config(file_name)
 
-if __name__ == "__main__":
+##################
+# CONFIG main
+##################
+def cfg_main():
     parser = argparse.ArgumentParser(description=\
                         'Prints contents of config file.')
     parser.add_argument('--cfg','-c',dest='cfg',required=True,
@@ -275,12 +273,12 @@ if __name__ == "__main__":
                         help='output format: can be any of ["shell", "yaml", "ini", "json"]')
     parser.add_argument('--flatten','-f',dest='flatten',action='store_true',required=False,
                         help='flatten resulting dictionary')
-    parser.add_argument('--template','-t',dest='template',required=False,
-                        help='template config file')
+    parser.add_argument('--template-cfg','-t',dest='template',required=False,
+                        help='template config file used to structure a given config file')
     parser.add_argument('--keys','-k',dest='keys',nargs='+',required=False,
                         help='selected keys of dictionary for processing')
-    parser.add_argument('--validate','-v',dest='validate',required=False,
-                        help='validate structure of config file against this template config file')
+    parser.add_argument('--validate-cfg','-v',dest='validate',required=False,
+                        help='validation config file to compare with a given config file')
 
     args = parser.parse_args()
     cfg = load_config_file(args.cfg, True)

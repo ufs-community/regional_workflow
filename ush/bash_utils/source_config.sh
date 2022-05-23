@@ -31,18 +31,16 @@ function config_to_shell_str() {
 
 #
 #-----------------------------------------------------------------------
-# Source the config file
+# Get the contents of a config file as shell string
 #-----------------------------------------------------------------------
 #
   local ushdir=${scrfunc_dir%/*}
 
-  cd $ushdir
   if [ $# -eq 1 ]; then
-    python3 -W ignore -m python_utils.config_parser -c $1 -o shell -f
+    python3 $ushdir/config_utils.py -c $1 -o shell -f
   else
-    python3 -W ignore -m python_utils.config_parser -c $1 -o shell -f --keys "${@: 2}"
+    python3 $ushdir/config_utils.py -c $1 -o shell -f --keys "${@: 2}"
   fi
-  cd $scrfunc_dir
 
 #
 #-----------------------------------------------------------------------
@@ -53,12 +51,6 @@ function config_to_shell_str() {
 #-----------------------------------------------------------------------
 #
   { restore_shell_opts; } > /dev/null 2>&1
-
-}
-
-function source_config() {
-
-  source <( config_to_shell_str "$@" )
 
 }
 
@@ -88,18 +80,16 @@ function config_to_yaml_str() {
 
 #
 #-----------------------------------------------------------------------
-# Source the config file
+# Get the contents of a config file as yaml string
 #-----------------------------------------------------------------------
 #
   local ushdir=${scrfunc_dir%/*}
 
-  cd $ushdir
   if [ $# -eq 1 ]; then
-    python3 -W ignore -m python_utils.config_parser -c $1 -o yaml -t $ushdir/config_defaults.yaml
+    python3 $ushdir/config_utils.py -c $1 -o yaml -t $ushdir/config_defaults.yaml
   else
-    python3 -W ignore -m python_utils.config_parser -c $1 -o yaml -t $ushdir/config_defaults.yaml --keys "${@: 2}"
+    python3 $ushdir/config_utils.py -c $1 -o yaml -t $ushdir/config_defaults.yaml --keys "${@: 2}"
   fi
-  cd $scrfunc_dir
 
 #
 #-----------------------------------------------------------------------
@@ -110,5 +100,16 @@ function config_to_yaml_str() {
 #-----------------------------------------------------------------------
 #
   { restore_shell_opts; } > /dev/null 2>&1
+
+}
+
+#
+#-----------------------------------------------------------------------
+# Source contents of a config file to shell script
+#-----------------------------------------------------------------------
+#
+function source_config() {
+
+  source <( config_to_shell_str "$@" )
 
 }
