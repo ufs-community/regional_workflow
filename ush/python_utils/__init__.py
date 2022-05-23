@@ -1,5 +1,5 @@
 try:
-  from .misc import uppercase, lowercase, find_pattern_in_str, find_pattern_in_file, flatten_dict
+  from .misc import uppercase, lowercase, find_pattern_in_str, find_pattern_in_file
   from .check_for_preexist_dir_file import check_for_preexist_dir_file
   from .check_var_valid_value import check_var_valid_value
   from .count_files import count_files
@@ -16,10 +16,11 @@ try:
   from .run_command import run_command
   from .get_charvar_from_netcdf import get_charvar_from_netcdf
   from .xml_parser import load_xml_file, has_tag_with_value
-  from .config_parser import load_shell_config, cfg_to_shell_str, \
-                             load_json_config, cfg_to_json_str, \
+  from .config_parser import load_json_config, cfg_to_json_str, \
                              load_ini_config, cfg_to_ini_str, \
                              get_ini_value, load_config_file, \
-                             load_yaml_config, cfg_to_yaml_str
+                             load_shell_config, cfg_to_shell_str, \
+                             flatten_dict, structure_dict, check_structure_dict, \
+                             load_config_file, load_yaml_config, cfg_to_yaml_str
 except:
   pass
