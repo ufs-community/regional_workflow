@@ -1900,7 +1900,6 @@ if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
     iend_of_t7_on_t6g="${GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G}" \
     jstart_of_t7_on_t6g="${GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G}" \
     jend_of_t7_on_t6g="${GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G}" \
-    run_envir="${RUN_ENVIR}" \
     verbose="${VERBOSE}" \
     outvarname_lon_of_t7_ctr="LON_CTR" \
     outvarname_lat_of_t7_ctr="LAT_CTR" \
