@@ -67,6 +67,9 @@ function config_to_yaml_str() {
 function config_to_json_str() {
     config_to_str json "$@"
 }
+function config_to_xml_str() {
+    config_to_str xml "$@"
+}
 
 #
 #-----------------------------------------------------------------------

@@ -7,6 +7,7 @@ Supported formats include:
     b) JSON
     c) SHELL
     d) INI
+    e) XML
 
 Typical usage involves first loading the config file, then using the dictionary
 returnded by load_config to make queries.
@@ -23,6 +24,8 @@ import sys
 import os
 from textwrap import dedent
 import configparser
+import xml.etree.ElementTree as ET
+from xml.dom import minidom
 
 from .environment import list_to_str, str_to_list
 from .print_msg import print_err_msg_exit
@@ -189,6 +192,52 @@ def cfg_to_ini_str(cfg, kname=None):
             ini_str += f"{k}='{v1}'\n"
     return ini_str
 
+##########
+# XML
+##########
+def xml_to_dict(root):
+    """ Convert an xml tree to dictionary """
+
+    cfg = {}
+    for child in root:
+        if len(list(child)) > 0:
+            r = xml_to_dict(child)
+            cfg[child.tag] = r
+        else:
+            cfg[child.tag] = child.text
+    return cfg
+
+def dict_to_xml(d, tag):
+    """ Convert dictionary to an xml tree """
+
+    elem = ET.Element(tag)
+    for k,v in d.items():
+        if isinstance(v,dict):
+            r = dict_to_xml(v, k)
+            elem.append(r)
+        else:
+            child = ET.Element(k)
+            child.text = str(v)
+            elem.append(child)
+
+    return elem
+
+def load_xml_config(config_file):
+    """ Load xml config file """
+
+    tree = ET.parse(config_file)
+    root = tree.getroot()
+    cfg = xml_to_dict(root)
+    return cfg
+
+def cfg_to_xml_str(cfg):
+    """ Get contents of config file as a xml string """
+
+    root = dict_to_xml(cfg, 'root')
+    r = ET.tostring(root, encoding='unicode')
+    r = minidom.parseString(r)
+    return r.toprettyxml(indent="  ")
+
 ##################
 # CONFIG utils
 ##################
@@ -266,19 +315,21 @@ def load_config_file(file_name,return_string=False):
         return load_ini_config(file_name)
     elif ext == "json":
         return load_json_config(file_name)
-    else:
+    elif ext == "yaml" or ext == "yml":
         return load_yaml_config(file_name)
+    else:
+        return load_xml_config(file_name)
 
 ##################
 # CONFIG main
 ##################
 def cfg_main():
     parser = argparse.ArgumentParser(description=\
-                        'Prints contents of config file.')
+                        'Utility for managing different config formats.')
     parser.add_argument('--cfg','-c',dest='cfg',required=True,
                         help='config file to parse')
     parser.add_argument('--output-type','-o',dest='out_type',required=False,
-                        help='output format: can be any of ["shell", "yaml", "ini", "json"]')
+                        help='output format: can be any of ["shell", "yaml", "ini", "json", "xml"]')
     parser.add_argument('--flatten','-f',dest='flatten',action='store_true',required=False,
                         help='flatten resulting dictionary')
     parser.add_argument('--template-cfg','-t',dest='template',required=False,
@@ -308,12 +359,17 @@ def cfg_main():
         if args.flatten:
             cfg = flatten_dict(cfg)
 
-        if args.out_type == 'shell':
+        if args.out_type == 'shell' or args.out_type == 'sh':
             print( cfg_to_shell_str(cfg), end='' )
         elif args.out_type == 'ini':
             print( cfg_to_ini_str(cfg), end='' )
         elif args.out_type == 'json':
             print( cfg_to_json_str(cfg), end='' )
-        else:
+        elif args.out_type == 'yaml' or args.out_type == 'yml':
             print( cfg_to_yaml_str(cfg), end='' )
+        elif args.out_type == 'xml':
+            print( cfg_to_xml_str(cfg), end='' )
+        else:
+            parser.print_help()
+            parser.exit()
 

@@ -1280,12 +1280,8 @@ exist or is not a directory:
 #-----------------------------------------------------------------------
 #
   expt_config_fp="$ushdir/${EXPT_CONFIG_FN}"
-
-  if [ "${EXPT_CONFIG_FN: -2}" = "sh" ]; then
-    cat "${temp_file}" > "${expt_config_fp}"
-  else
-    config_to_yaml_str "${temp_file}" >"${expt_config_fp}"
-  fi
+  ext="${EXPT_CONFIG_FN##*.}"
+  config_to_str "${ext}" "${temp_file}" >"${expt_config_fp}"
   rm -rf "${temp_file}"
 #
 #-----------------------------------------------------------------------
