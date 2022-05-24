@@ -92,19 +92,26 @@ def setup():
 
     #
     #-----------------------------------------------------------------------
+    # Source constants.sh and save its contents to a variable for later
+    #-----------------------------------------------------------------------
+    #
+    cfg_c=load_config_file(os.path.join(ushdir,CONSTANTS_FN))
+    const_lines=cfg_to_shell_str(cfg_c)
+    import_vars(dictionary=cfg_c)
+    #
+    #-----------------------------------------------------------------------
     #
     # If PREDEF_GRID_NAME is set to a non-empty string, set or reset parameters
     # according to the predefined domain specified.
     #
     #-----------------------------------------------------------------------
     #
-
     # export env vars before calling another module 
     export_vars()
 
     if PREDEF_GRID_NAME:
       set_predef_grid_params()
-
+    
     import_vars()
 
     #
@@ -1420,50 +1427,6 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Any regional model must be supplied lateral boundary conditions (in
-    # addition to initial conditions) to be able to perform a forecast.  In
-    # the FV3-LAM model, these boundary conditions (BCs) are supplied using a
-    # "halo" of grid cells around the regional domain that extend beyond the
-    # boundary of the domain.  The model is formulated such that along with
-    # files containing these BCs, it needs as input the following files (in
-    # NetCDF format):
-    #
-    # 1) A grid file that includes a halo of 3 cells beyond the boundary of
-    #    the domain.
-    # 2) A grid file that includes a halo of 4 cells beyond the boundary of
-    #    the domain.
-    # 3) A (filtered) orography file without a halo, i.e. a halo of width
-    #    0 cells.
-    # 4) A (filtered) orography file that includes a halo of 4 cells beyond
-    #    the boundary of the domain.
-    #
-    # Note that the regional grid is referred to as "tile 7" in the code.
-    # We will let:
-    #
-    # * NH0 denote the width (in units of number of cells on tile 7) of
-    #   the 0-cell-wide halo, i.e. NH0 = 0;
-    #
-    # * NH3 denote the width (in units of number of cells on tile 7) of
-    #   the 3-cell-wide halo, i.e. NH3 = 3; and
-    #
-    # * NH4 denote the width (in units of number of cells on tile 7) of
-    #   the 4-cell-wide halo, i.e. NH4 = 4.
-    #
-    # We define these variables next.
-    #
-    #-----------------------------------------------------------------------
-    #
-    global NH0,NH3,NH4
-    NH0=0
-    NH3=3
-    NH4=4
-
-    # export env vars
-    EXPORTS = ["NH0","NH3","NH4"]
-    export_vars(env_vars = EXPORTS)
-    #
-    #-----------------------------------------------------------------------
-    #
     # Set parameters according to the type of horizontal grid generation 
     # method specified.  First consider GFDL's global-parent-grid based 
     # method.
@@ -1780,11 +1743,26 @@ def setup():
     global GLOBAL_VAR_DEFNS_FP
     GLOBAL_VAR_DEFNS_FP=os.path.join(EXPTDIR,GLOBAL_VAR_DEFNS_FN)
     all_lines=cfg_to_shell_str(cfg_d)
+
     with open(GLOBAL_VAR_DEFNS_FP,'w') as f:
         msg = f"""            #
+            #
             #-----------------------------------------------------------------------
             #-----------------------------------------------------------------------
             # Section 1:
+            # This section contains definitions of the various constants defined in
+            # the file {CONSTANTS_FN}.
+            #-----------------------------------------------------------------------
+            #-----------------------------------------------------------------------
+            #
+            """
+        f.write(dedent(msg))
+        f.write(const_lines)
+
+        msg = f"""            #
+            #-----------------------------------------------------------------------
+            #-----------------------------------------------------------------------
+            # Section 2:
             # This section contains (most of) the primary experiment variables, i.e. 
             # those variables that are defined in the default configuration file 
             # (config_defaults.sh) and that can be reset via the user-specified 
@@ -1980,9 +1958,6 @@ def setup():
         #
         'GTYPE': GTYPE,
         'TILE_RGNL': TILE_RGNL,
-        'NH0': NH0,
-        'NH3': NH3,
-        'NH4': NH4,
         
         'LON_CTR': LON_CTR,
         'LAT_CTR': LAT_CTR,

@@ -673,8 +673,8 @@ function set_predef_grid_params() {
 #        __wrtcmp_lat_upr_rght__="13.56176982"
 ##        __wrtcmp_dlon__="0.11691181"
 ##        __wrtcmp_dlat__="0.11691181"
-#        __wrtcmp_dlon__=$( printf "%.9f" $( bc -l <<< "(${esggrid_delx}/${radius_Earth})*${degs_per_radian}" ) )
-#        __wrtcmp_dlat__=$( printf "%.9f" $( bc -l <<< "(${esggrid_dely}/${radius_Earth})*${degs_per_radian}" ) )
+#        __wrtcmp_dlon__=$( printf "%.9f" $( bc -l <<< "(${esggrid_delx}/${RADIUS_EARTH})*${DEGS_PER_RADIAN}" ) )
+#        __wrtcmp_dlat__=$( printf "%.9f" $( bc -l <<< "(${esggrid_dely}/${RADIUS_EARTH})*${DEGS_PER_RADIAN}" ) )
 #      fi
     ;;
 #
@@ -1533,8 +1533,8 @@ function set_predef_grid_params() {
       __wrtcmp_lat_lwr_left__="-37.0"
       __wrtcmp_lon_upr_rght__="61.0"
       __wrtcmp_lat_upr_rght__="37.0"
-      __wrtcmp_dlon__=$( printf "%.9f" $( bc -l <<< "(${__esggrid_delx__}/${radius_Earth})*${degs_per_radian}" ) )
-      __wrtcmp_dlat__=$( printf "%.9f" $( bc -l <<< "(${__esggrid_dely__}/${radius_Earth})*${degs_per_radian}" ) )
+      __wrtcmp_dlon__=$( printf "%.9f" $( bc -l <<< "(${__esggrid_delx__}/${RADIUS_EARTH})*${DEGS_PER_RADIAN}" ) )
+      __wrtcmp_dlat__=$( printf "%.9f" $( bc -l <<< "(${__esggrid_dely__}/${RADIUS_EARTH})*${DEGS_PER_RADIAN}" ) )
     fi
     ;;
 #
@@ -1577,8 +1577,8 @@ function set_predef_grid_params() {
       __wrtcmp_lat_lwr_left__="-37.0"
       __wrtcmp_lon_upr_rght__="61.0"
       __wrtcmp_lat_upr_rght__="37.0"
-      __wrtcmp_dlon__="0.025" #$( printf "%.9f" $( bc -l <<< "(${__esggrid_delx__}/${radius_Earth})*${degs_per_radian}" ) )
-      __wrtcmp_dlat__="0.025" #$( printf "%.9f" $( bc -l <<< "(${__esggrid_dely__}/${radius_Earth})*${degs_per_radian}" ) )
+      __wrtcmp_dlon__="0.025" #$( printf "%.9f" $( bc -l <<< "(${__esggrid_delx__}/${RADIUS_EARTH})*${DEGS_PER_RADIAN}" ) )
+      __wrtcmp_dlat__="0.025" #$( printf "%.9f" $( bc -l <<< "(${__esggrid_dely__}/${RADIUS_EARTH})*${DEGS_PER_RADIAN}" ) )
     fi
     ;;
 
