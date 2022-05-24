@@ -114,14 +114,18 @@ def load_shell_config(config_file, return_string=False):
         cfg[k] = v
     return cfg
 
-def cfg_to_shell_str(cfg):
+def cfg_to_shell_str(cfg, kname=None):
     """ Get contents of config file as shell script string"""
 
     shell_str = ''
     for k,v in cfg.items():
         if isinstance(v,dict):
-            shell_str += f"# [{k}]\n"
-            shell_str += cfg_to_shell_str(v)
+            if kname:
+                n_kname = f"{kname}.{k}"
+            else:
+                n_kname = f"{k}"
+            shell_str += f"# [{n_kname}]\n"
+            shell_str += cfg_to_shell_str(v,n_kname)
             shell_str += "\n"
             continue
         v1 = list_to_str(v)
@@ -164,14 +168,18 @@ def get_ini_value(config, section, key):
 
     return None
 
-def cfg_to_ini_str(cfg):
+def cfg_to_ini_str(cfg, kname=None):
     """ Get contents of config file as ini string"""
 
     ini_str = ''
     for k,v in cfg.items():
         if isinstance(v,dict):
-            ini_str += f"[{k}]\n"
-            ini_str += cfg_to_ini_str(v)
+            if kname:
+                n_kname = f"{kname}.{k}"
+            else:
+                n_kname = f"{k}"
+            ini_str += f"[{n_kname}]\n"
+            ini_str += cfg_to_ini_str(v,n_kname)
             ini_str += "\n"
             continue
         v1 = list_to_str(v)
@@ -208,7 +216,7 @@ def structure_dict(dict_o, dict_t):
     """ Structure a dictionary based on a template dictionary
 
     Args:
-        dict_o: dictionary to structure
+        dict_o: dictionary to structure (flat one level structure)
         dict_t: template dictionary used for structuring
     Returns:
         A dictionary with contents of dict_o following structure of dict_t
@@ -292,6 +300,7 @@ def cfg_main():
             print('FAILURE')
     else:
         if args.template:
+            cfg = flatten_dict(cfg)
             cfg_t = load_config_file(args.template, True)
             cfg = structure_dict(cfg, cfg_t)
         if args.keys:
