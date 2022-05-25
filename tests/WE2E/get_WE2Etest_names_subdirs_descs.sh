@@ -1720,10 +1720,9 @@ Please correct and rerun."
 # located in (the latter in parentheses).
 #
 # Column 2:
-# The alternate test names (if any) followed by their subdirectories
-# (in parentheses).  Each alternate test name and subdirectory pair is
-# followed by a newline, but all lines will appear in a single cell of
-# the spreadsheet.
+# Any alternate test names followed by their category subdirectories (in
+# parentheses).  Each alternate test name and subdirectory pair is followed
+# by a newline, but all lines will appear in a single cell of the spreadsheet.
 #
 # Column 3:
 # The test description.
@@ -1734,11 +1733,20 @@ Please correct and rerun."
 #
 # Column 5:
 # The number of times the forecast model will be run by the test.  This
-# has been calculated above using the quantities that go in Columns 6, 
-# 7, ....
+# is calculated using quantities such as the number of cycle dates (i.e.
+# forecast model start dates) and the number of of ensemble members (which
+# is greater than 1 if running ensemble forecasts and 1 otherwise). The
+# latter are in turn obtained directly or indirectly from the quantities
+# in Columns 6, 7, ....
 #
-# Columns 6...:
-# The values of the experiment variables specified in vars_to_extract.
+# Columns 6, 7, ...:
+# The values of the experiment variables specified in vars_to_extract,
+# plus DT_ATMOS (included right after FCST_LEN_HRS).  Note that DT_ATMOS 
+# cannot be included in vars_to_extract because it is usually not in the 
+# WE2E test configuration file where this script looks for these variables 
+# (because most of the tests use predefined grids, and for those cases, 
+# DT_ATMOS is defined in the same file/script where the other grid 
+# parameters are defined).
 #
       row_content="\
 \"${prim_test_name_subdir}\" ${csv_delimiter} \
