@@ -1599,7 +1599,7 @@ containing information on all WE2E tests:
     eval ${outvarname_test_ids}="${test_ids_str}"
   fi
 
-  if [ ! -z "${output_varname_test_descs}" ]; then
+  if [ ! -z "${outvarname_test_descs}" ]; then
     test_descs_str="( "$( printf "'%s' " "${test_descs[@]}" )")"
     eval ${output_varname_test_descs}="${test_descs_str}"
   fi
