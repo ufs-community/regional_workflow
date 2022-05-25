@@ -47,5 +47,6 @@ task_run_make_grid:
   ESGgrid_NX: '216'
   ESGgrid_NY: '156'
   ESGgrid_WIDE_HALO_WIDTH: '6'
+  ESGgrid_PAZI: '0.0'
 task_run_make_ics:
   CCPP_PHYS_SUITE: FV3_GFS_2017_gfdlmp_regional
