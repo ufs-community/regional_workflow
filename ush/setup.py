@@ -1416,7 +1416,7 @@ def setup():
 
     set_extrn_mdl_params()
 
-    IMPORTS = ["EXTRN_MDL_SYSBASEDIR_ICS", "EXTRN_MDL_SYSBASEDIR_LBCS", "EXTRN_MDL_LBCS_OFFSET_HRS"]
+    IMPORTS = ["EXTRN_MDL_LBCS_OFFSET_HRS"]
     import_vars(env_vars=IMPORTS)
     #
     #-----------------------------------------------------------------------
