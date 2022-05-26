@@ -119,7 +119,7 @@ def setup():
     if DEBUG and not VERBOSE:
         print_info_msg('''
             Resetting VERBOSE to \"TRUE\" because DEBUG has been set to \"TRUE\"...''')
-        VERBOSE=False
+        VERBOSE=True
 
     #
     #-----------------------------------------------------------------------
