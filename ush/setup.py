@@ -1951,6 +1951,9 @@ def setup():
         #
         'GTYPE': GTYPE,
         'TILE_RGNL': TILE_RGNL,
+        'NH0': NH0,
+        'NH3': NH3,
+        'NH4': NH4,
         
         'LON_CTR': LON_CTR,
         'LAT_CTR': LAT_CTR,
