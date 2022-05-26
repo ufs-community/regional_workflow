@@ -1951,6 +1951,9 @@ def setup():
         #
         'GTYPE': GTYPE,
         'TILE_RGNL': TILE_RGNL,
+        'NH0': NH0,
+        'NH3': NH3,
+        'NH4': NH4,
         
         'LON_CTR': LON_CTR,
         'LAT_CTR': LAT_CTR,
@@ -2132,7 +2135,10 @@ def setup():
         'N_VAR_SPP': N_VAR_SPP,
         'N_VAR_LNDP': N_VAR_LNDP,
         'LNDP_TYPE': LNDP_TYPE,
+<<<<<<< HEAD
         'LNDP_MODEL_TYPE': LNDP_MODEL_TYPE,
+=======
+>>>>>>> Construct var_defns components from dictionary.
         'FHCYC_LSM_SPP_OR_NOT': FHCYC_LSM_SPP_OR_NOT
     })
 
