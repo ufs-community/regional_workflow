@@ -131,7 +131,7 @@ def load_ini_config(config_file):
     if not os.path.exists(config_file):
         print_err_msg_exit(f'''
             The specified configuration file does not exist:
-                  \"{file_name}\"''')
+                  \"{config_file}\"''')
     
     config = configparser.ConfigParser()
     config.read(config_file)
