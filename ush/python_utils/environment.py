@@ -4,6 +4,7 @@ import os
 import inspect
 import shlex
 from datetime import datetime, date
+from types import ModuleType
 
 def str_to_date(s):
     """ Get python datetime object from string.
@@ -240,7 +241,9 @@ def export_vars(dictionary=None, source_dict=None, env_vars=None):
         # skip functions and other unlikely variable names
         if callable(v):
             continue
-        if not k or k.islower() or k[0] == '_':
+        if isinstance(v,ModuleType):
+            continue
+        if not k or k[0] == '_':
             continue
         dictionary[k] = list_to_str(v)
 
