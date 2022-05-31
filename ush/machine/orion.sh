@@ -58,7 +58,7 @@ RUN_CMD_POST="srun"
 
 # MET/METplus-Related Paths
 MET_INSTALL_DIR=${MET_INSTALL_DIR:-"/apps/contrib/MET/10.1.0"}
-METPLUS_PATH=${METPLUS_PATH:-"/apps/contrib/MET/METplus/METplus-4.0.0"}
+METPLUS_PATH=${METPLUS_PATH:-"/apps/contrib/MET/METplus/METplus-4.1.0"}
 CCPA_OBS_DIR=${CCPA_OBS_DIR:-"/work/noaa/fv3-cam/UFS_SRW_App/develop/obs_data/ccpa/proc"}
 MRMS_OBS_DIR=${MRMS_OBS_DIR:-"/work/noaa/fv3-cam/UFS_SRW_App/develop/obs_data/mrms/proc"}
 NDAS_OBS_DIR=${NDAS_OBS_DIR:-"/work/noaa/fv3-cam/UFS_SRW_App/develop/obs_data/ndas/proc"}
