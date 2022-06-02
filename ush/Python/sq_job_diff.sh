@@ -52,7 +52,7 @@ SHAPE_FILES=/scratch2/BMC/det/UFS_SRW_app/v1p0/fix_files/NaturalEarth
 #Gaea: 
 #SHAPE_FILES=/lustre/f2/pdata/esrl/gsd/ufs/NaturalEarth
 
-export GLOBAL_VAR_DEFNS_FP="${EXPTDIR}/var_defns.sh"
+export GLOBAL_VAR_DEFNS_FP="${EXPTDIR1}/var_defns.sh"
 source ${GLOBAL_VAR_DEFNS_FP}
 export CDATE=${DATE_FIRST_CYCL}${CYCL_HRS}
 export FCST_START=6
