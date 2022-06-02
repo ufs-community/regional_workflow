@@ -28,7 +28,7 @@ ncar_pylib /glade/p/ral/jntp/UFS_SRW_app/ncar_pylib/python_graphics
 #Cheyenne:
 SHAPE_FILES=/glade/p/ral/jntp/UFS_SRW_app/tools/NaturalEarth
 
-export GLOBAL_VAR_DEFNS_FP="${EXPTDIR}/var_defns.sh"
+export GLOBAL_VAR_DEFNS_FP="${EXPTDIR1}/var_defns.sh"
 source ${GLOBAL_VAR_DEFNS_FP}
 export CDATE=${DATE_FIRST_CYCL}${CYCL_HRS}
 export FCST_START=3
