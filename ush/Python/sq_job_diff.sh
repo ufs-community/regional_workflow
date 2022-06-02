@@ -59,8 +59,8 @@ export FCST_START=6
 export FCST_END=${FCST_LEN_HRS}
 export FCST_INC=3
 
-# Usage statement:	Make sure all the necessary modules can be imported.
-#                       Seven command line arguments are needed:
+# Usage statement:      Make sure all the necessary modules can be imported.
+#                       The following command line arguments are needed:
 #                       1. Cycle date/time in YYYYMMDDHH format
 #                       2. Starting forecast hour
 #                       3. Ending forecast hour
@@ -74,5 +74,12 @@ export FCST_INC=3
 #                       7. CARTOPY_DIR:  Base directory of cartopy shapefiles
 #                          -File structure should be:
 #                            CARTOPY_DIR/shapefiles/natural_earth/cultural/*.shp
+#                       8. POST_OUTPUT_DOMAIN_NAME:  Name of native domain
+#                          used in forecasts and in constructing the names 
+#                          of the post output files.  This must be the same 
+#                          for both forecasts.
 
-python plot_allvars_diff.py ${CDATE} ${FCST_START} ${FCST_END} ${FCST_INC} ${EXPTDIR1} ${EXPTDIR2} ${SHAPE_FILES}
+python plot_allvars_diff.py ${CDATE} ${FCST_START} ${FCST_END} ${FCST_INC} \
+                            ${EXPTDIR1} ${EXPTDIR2} \
+                            ${SHAPE_FILES} \
+                            ${POST_OUTPUT_DOMAIN_NAME}
