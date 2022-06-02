@@ -42,7 +42,7 @@ function get_crontab_contents() {
   #
   source $USHDIR/constants.sh
   check_var_valid_value "called_from_cron" "valid_vals_BOOLEAN"
-  called_from_cron=$( boolify ${called_from_cron} )
+  called_from_cron=$(boolify "${called_from_cron}")
 
   if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
     __crontab_cmd__=""
@@ -62,15 +62,6 @@ function get_crontab_contents() {
       fi
     fi
     __crontab_contents__=$( ${__crontab_cmd__} -l )
-  fi
-  #
-  # On Cheyenne, the output of the "crontab -l" command contains a 3-line
-  # header (comments) at the top that is not actually part of the user's
-  # cron table.  This needs to be removed to avoid adding an unnecessary
-  # copy of this header to the user's cron table.
-  #
-  if [ "$MACHINE" = "CHEYENNE" ]; then
-    __crontab_contents__=$( printf "%s" "${__crontab_contents__}" | tail -n +4 )
   fi
   #
   # Set output variables.
