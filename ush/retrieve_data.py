@@ -37,7 +37,7 @@ from textwrap import dedent
 
 import yaml
 
-def clean_up_output_dir(expected_subdir, local_archive, output_path, source_paths):
+def clean_up_output_dir(expected_subdir, local_archive, output_path, source_paths, members=-1):
 
     ''' Remove expected sub-directories and existing_archive files on
     disk once all files have been extracted and put into the specified
@@ -154,8 +154,7 @@ def arg_list_to_range(args):
 
     return args
 
-def fill_template(template_str, cycle_date, fcst_hr=0, mem=-1,
-        ens_group,
+def fill_template(template_str, cycle_date, fcst_hr=0, mem=-1, ens_group=None,
         templates_only=False):
 
     ''' Fill in the provided template string with date time information,
@@ -208,6 +207,20 @@ def fill_template(template_str, cycle_date, fcst_hr=0, mem=-1,
         return f'{",".join((format_values.keys()))}'
     return template_str.format(**format_values)
 
+def create_target_path(target_path, mem=-1):
+    '''  
+    Append target path and create directory for ensemble members
+    '''
+   
+    member = str(mem)      
+    
+    target_path = os.path.join(target_path, member.zfill(3))
+    
+    if not os.path.exists(target_path):
+        os.makedirs(target_path)
+
+    return target_path 
+
 def find_archive_files(paths, file_names, cycle_date, ens_group):
 
     ''' Given an equal-length set of archive paths and archive file
@@ -227,7 +240,7 @@ def find_archive_files(paths, file_names, cycle_date, ens_group):
         # Only test the first item in the list, it will tell us if this
         # set exists at this date.
         file_path = os.path.join(archive_path, archive_file_names[0])
-        file_path = fill_template(file_path, cycle_date, ens_group)
+        file_path = fill_template(file_path, cycle_date, ens_group=ens_group)
 
         existing_archive = hsi_single_file(file_path)
 
@@ -237,7 +250,7 @@ def find_archive_files(paths, file_names, cycle_date, ens_group):
 
     return '', 0
 
-def get_requested_files(cla, file_templates, input_loc, method='disk'):
+def get_requested_files(cla, file_templates, input_loc, method='disk', members=-1):
 
     ''' This function copies files from disk locations
     or downloads files from a url, depending on the option specified for
@@ -259,6 +272,8 @@ def get_requested_files(cla, file_templates, input_loc, method='disk'):
     unavailable  a dict whose keys are "method" and whose values are a
                  list of files unretrievable
     '''
+    
+    members = [-1] if members == -1 else members   
 
     unavailable = {}
 
@@ -266,35 +281,59 @@ def get_requested_files(cla, file_templates, input_loc, method='disk'):
 
     file_templates = file_templates if isinstance(file_templates, list) else \
             [file_templates]
-    target_path = fill_template(cla.output_path,
-                                cla.cycle_date)
+       
 
-    logging.info(f'Retrieved files will be placed here: \n {target_path}')
     orig_path = os.getcwd()
-    os.chdir(target_path)
     unavailable = {}
-    for fcst_hr in cla.fcst_hrs:
-        for file_template in file_templates:
-            loc = os.path.join(input_loc, file_template)
-            logging.debug(f'Full file path: {loc}')
-            loc = fill_template(loc, cla.cycle_date, fcst_hr)
+    for mem in members: 
+        
+        target_path = fill_template(cla.output_path,
+                                    cla.cycle_date)
+        os.chdir(orig_path)
 
-            if method == 'disk':
-                retrieved = copy_file(loc, target_path)
+        if mem != -1:
+            os.chdir(target_path)
+            target_path = create_target_path(target_path, mem)
+            logging.info(f'Retrieved files will be placed here: \n {target_path}')
+        os.chdir(target_path)
+        
+        for fcst_hr in cla.fcst_hrs:
+            for file_template in file_templates:
+                if isinstance(file_template, list):
+                     for each_file_template in file_template:
+                         loc = os.path.join(input_loc, each_file_template)   
+                         
+                         logging.debug(f'Full file path: {loc}')
+                         loc = fill_template(loc, cla.cycle_date, fcst_hr, mem=mem)
+                         if method == 'disk':
+                             retrieved = copy_file(loc, target_path)
 
-            if method == 'download':
-                retrieved = download_file(loc)
+                         if method == 'download':
+                             retrieved = download_file(loc) 
+                else:
+                    print("file template", file_template, "input_loc", input_loc)
+                    loc = os.path.join(input_loc, file_template)
+                
+                logging.debug(f'Full file path: {loc}')
+                loc = fill_template(loc, cla.cycle_date, fcst_hr, mem=mem)
 
-            if not retrieved:
+                if method == 'disk':
+                    retrieved = copy_file(loc, target_path)
 
-                if unavailable.get(method) is None:
-                    unavailable[method] = []
-                unavailable[method].append(target_path)
-                os.chdir(orig_path)
-                # Returning here assumes that if the first file
-                # isn't found, none of the others will be. Don't
-                # waste time timing out on every requested file.
-                return unavailable
+                if method == 'download':
+                    retrieved = download_file(loc)
+
+                if not retrieved:
+
+                    if unavailable.get(method) is None:
+                        unavailable[method] = []
+                    unavailable[method].append(target_path)
+                    os.chdir(orig_path)
+                    # Returning here assumes that if the first file
+                    # isn't found, none of the others will be. Don't
+                    # waste time timing out on every requested file.
+                    return unavailable
+   
     os.chdir(orig_path)
     return unavailable
 
@@ -323,7 +362,7 @@ def hsi_single_file(file_path, mode='ls'):
 
     return file_path
 
-def hpss_requested_files(cla, file_names, store_specs, members=None,
+def hpss_requested_files(cla, file_names, store_specs, members=-1,
         ens_group=-1):
 
     ''' This function interacts with the "hpss" protocol in a
@@ -338,6 +377,7 @@ def hpss_requested_files(cla, file_names, store_specs, members=None,
     This function exepcts that the output directory exists and is
     writable.
     '''
+    members = [-1] if members == -1 else members
 
     archive_paths = store_specs['archive_path']
     archive_paths = archive_paths if isinstance(archive_paths, list) \
@@ -360,7 +400,7 @@ def hpss_requested_files(cla, file_names, store_specs, members=None,
     existing_archive, which_archive = find_archive_files(archive_paths,
                                            archive_file_names,
                                            cla.cycle_date,
-                                           ens_group,
+                                           ens_group=ens_group,
                                            )
 
     if not existing_archive:
@@ -374,6 +414,7 @@ def hpss_requested_files(cla, file_names, store_specs, members=None,
     if isinstance(archive_internal_dirs, dict):
         archive_internal_dirs = archive_internal_dirs.get(cla.anl_or_fcst, [''])
 
+
     # which_archive matters for choosing the correct file names within,
     # but we can safely just try all options for the
     # archive_internal_dir
@@ -382,45 +423,58 @@ def hpss_requested_files(cla, file_names, store_specs, members=None,
     for archive_internal_dir_tmpl in archive_internal_dirs:
         archive_internal_dir = fill_template(archive_internal_dir_tmpl,
                                              cla.cycle_date)
+                                              
+        for mem in members:
+            output_path = fill_template(cla.output_path, cla.cycle_date)
+            logging.info(f'Will place files in {os.path.abspath(output_path)}')
+            orig_path = os.getcwd()
+            logging.debug(f'CWD: {os.getcwd()}')
+            os.chdir(output_path)
+        
+            if mem != -1:
+                archive_internal_dir = fill_template(archive_internal_dir_tmpl,
+                                                     cla.cycle_date,
+                                                     mem=mem,
+                                                     )
+                output_path = create_target_path(output_path, mem)     
+                logging.info(f'Will place files in {os.path.abspath(output_path)}')
+                os.chdir(output_path)
+             
+            source_paths = []
+            for fcst_hr in cla.fcst_hrs:
+                for file_name in file_names:
+                    source_paths.append(fill_template(
+                        os.path.join(archive_internal_dir, file_name),
+                        cla.cycle_date,
+                        fcst_hr,
+                        mem=mem,
+                        ens_group=ens_group,
+                        ))
+       
+            if store_specs.get('archive_format', 'tar') == 'zip':
+                # Get the entire file from HPSS
+                existing_archive = hsi_single_file(existing_archive, mode='get')
 
-        output_path = fill_template(cla.output_path, cla.cycle_date)
-        logging.info(f'Will place files in {os.path.abspath(output_path)}')
-        orig_path = os.getcwd()
-        os.chdir(output_path)
-        logging.debug(f'CWD: {os.getcwd()}')
+                # Grab only the necessary files from the archive
+                cmd = f'unzip -o {os.path.basename(existing_archive)} {" ".join(source_paths)}'
 
-        source_paths = []
-        for fcst_hr in cla.fcst_hrs:
-            for file_name in file_names:
-                source_paths.append(fill_template(
-                    os.path.join(archive_internal_dir, file_name),
-                    cla.cycle_date,
-                    fcst_hr,
-                    ))
+            else:
+                cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
 
-        if store_specs.get('archive_format', 'tar') == 'zip':
-            # Get the entire file from HPSS
-            existing_archive = hsi_single_file(existing_archive, mode='get')
+            logging.info(f'Running command \n {cmd}')
+            subprocess.run(cmd,
+                           check=True,
+                           shell=True,
+                           )
 
-            # Grab only the necessary files from the archive
-            cmd = f'unzip -o {os.path.basename(existing_archive)} {" ".join(source_paths)}'
-
-        else:
-            cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
-
-        logging.info(f'Running command \n {cmd}')
-        subprocess.run(cmd,
-                       check=True,
-                       shell=True,
-                       )
-
-        # Check that files exist and Remove any data transfer artifacts.
-        unavailable = clean_up_output_dir(
-            expected_subdir=archive_internal_dir,
-            local_archive=os.path.basename(existing_archive),
-            output_path=output_path,
-            source_paths=source_paths,
-            )
+            # Check that files exist and Remove any data transfer artifacts.
+            unavailable = clean_up_output_dir(
+                   expected_subdir=archive_internal_dir,
+                   local_archive=os.path.basename(existing_archive),
+                   output_path=output_path,
+                   source_paths=source_paths,
+                   )
+ 
         if not unavailable:
             return unavailable
 
@@ -568,21 +622,44 @@ def main(cla):
                 raise argparse.ArgumentTypeError(msg)
 
             if store_specs.get('protocol') == 'download':
-                unavailable = get_requested_files(cla,
-                                                  file_templates=file_templates,
-                                                  input_loc=store_specs['url'],
-                                                  method='download',
-                                                  )
-            if store_specs.get('protocol') == 'htar':
-                ens_groups = get_ens_groups(cla.members)
                 if cla.members:
+                    ens_groups = get_ens_groups(cla.members)
                     for ens_group, members in ens_groups.items():
-                        unavailable = hpss_requested_files(cla,
-                                file_templates,
-                                store_specs,
-                                ens_group=ens_group,
-                                members=members,
-                                )
+                        urls = store_specs.get('urls')
+                        if urls is not None: 
+                             for url in urls:
+                                 if isinstance(url, list): 
+                                     for eachurl in url:
+                                        unavailable = get_requested_files(cla,
+                                                                     file_templates=file_templates,
+                                                                     input_loc=eachurl,
+                                                                     method='download',
+                                                                     members=members,
+                                                                     )                            
+                        else:
+                             unavailable = get_requested_files(cla,
+                                                               file_templates=file_templates,
+                                                               input_loc=store_specs['url'],
+                                                               method='download',
+                                                               members=members,
+                                                               ) 
+                else:
+                     unavailable = get_requested_files(cla,
+                                                       file_templates=file_templates,
+                                                       input_loc=store_specs['url'],
+                                                       method='download',
+                                                       )
+
+            if store_specs.get('protocol') == 'htar':
+                if cla.members:
+                  ens_groups = get_ens_groups(cla.members)
+                  for ens_group, members in ens_groups.items():
+                      unavailable = hpss_requested_files(cla,
+                              file_templates,
+                              store_specs,
+                              members=members,
+                              ens_group=ens_group,
+                              )
                 else:
                     unavailable = hpss_requested_files(cla,
                             file_templates,
@@ -666,7 +743,7 @@ def parse_args():
         )
     parser.add_argument(
         '--external_model',
-        choices=('FV3GFS', 'GSMGFS', 'HRRR', 'NAM', 'RAP', 'RAPx',
+        choices=('FV3GFS','GDAS', 'GEFS', 'GSMGFS', 'HRRR', 'NAM', 'RAP', 'RAPx',
         'HRRRx'),
         help='External model label. This input is case-sensitive',
         required=True,
@@ -766,5 +843,7 @@ if __name__ == '__main__':
             logging.error('You requested the hpss data store, but ' \
                     'the HPSS module isn\'t loaded. This data store ' \
                     'is only available on NOAA compute platforms.')
+
+
 
     main(CLA)
