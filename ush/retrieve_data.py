@@ -285,8 +285,7 @@ def get_requested_files(cla, file_templates, input_loc, method='disk', members=-
 
     orig_path = os.getcwd()
     unavailable = {}
-    for mem in members: 
-        
+    for i, mem in enumerate(members): 
         target_path = fill_template(cla.output_path,
                                     cla.cycle_date)
         os.chdir(orig_path)
@@ -299,40 +298,42 @@ def get_requested_files(cla, file_templates, input_loc, method='disk', members=-
         
         for fcst_hr in cla.fcst_hrs:
             for file_template in file_templates:
-                if isinstance(file_template, list):
-                     for each_file_template in file_template:
-                         loc = os.path.join(input_loc, each_file_template)   
-                         
-                         logging.debug(f'Full file path: {loc}')
-                         loc = fill_template(loc, cla.cycle_date, fcst_hr, mem=mem)
-                         if method == 'disk':
-                             retrieved = copy_file(loc, target_path)
+                 # Here we are accounting for the case of multiple urls
+                 if isinstance(input_loc, list):
+                     for (urls, file_names) in zip(input_loc, file_templates):
+                         for (each_url, each_file_name) in zip(urls, file_names): 
+                             loc = os.path.join(each_url, each_file_name)   
+                             logging.debug(f'Full file path: {loc}')
+                             loc = fill_template(loc, cla.cycle_date, fcst_hr, mem=mem)
+                     
+                             if method == 'disk':
+                                 retrieved = copy_file(loc, target_path)
 
-                         if method == 'download':
-                             retrieved = download_file(loc) 
-                else:
-                    print("file template", file_template, "input_loc", input_loc)
-                    loc = os.path.join(input_loc, file_template)
+                             if method == 'download':
+                                 retrieved = download_file(loc) 
+                 else:
+                     print("file template", file_template, "input_loc", input_loc)
+                     loc = os.path.join(input_loc, file_template)
                 
-                logging.debug(f'Full file path: {loc}')
-                loc = fill_template(loc, cla.cycle_date, fcst_hr, mem=mem)
+                 logging.debug(f'Full file path: {loc}')
+                 loc = fill_template(loc, cla.cycle_date, fcst_hr, mem=mem)
 
-                if method == 'disk':
-                    retrieved = copy_file(loc, target_path)
+                 if method == 'disk':
+                     retrieved = copy_file(loc, target_path)
 
-                if method == 'download':
-                    retrieved = download_file(loc)
+                 if method == 'download':
+                     retrieved = download_file(loc)
 
-                if not retrieved:
+                 if (i == len(members) -1) and not retrieved:
 
-                    if unavailable.get(method) is None:
-                        unavailable[method] = []
-                    unavailable[method].append(target_path)
-                    os.chdir(orig_path)
-                    # Returning here assumes that if the first file
-                    # isn't found, none of the others will be. Don't
-                    # waste time timing out on every requested file.
-                    return unavailable
+                     if unavailable.get(method) is None:
+                         unavailable[method] = []
+                     unavailable[method].append(target_path)
+                     os.chdir(orig_path)
+                     # Returning here assumes that if the first file
+                     # isn't found, none of the others will be. Don't
+                     # waste time timing out on every requested file.
+                     return unavailable
    
     os.chdir(orig_path)
     return unavailable
@@ -429,7 +430,7 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
             logging.info(f'Will place files in {os.path.abspath(output_path)}')
             orig_path = os.getcwd()
             logging.debug(f'CWD: {os.getcwd()}')
-            os.chdir(output_path)
+            os.chdir(orig_path)
         
             if mem != -1:
                 archive_internal_dir = fill_template(archive_internal_dir_tmpl,
@@ -438,7 +439,8 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
                                                      )
                 output_path = create_target_path(output_path, mem)     
                 logging.info(f'Will place files in {os.path.abspath(output_path)}')
-                os.chdir(output_path)
+            
+            os.chdir(output_path)
              
             source_paths = []
             for fcst_hr in cla.fcst_hrs:
@@ -625,24 +627,12 @@ def main(cla):
                 if cla.members:
                     ens_groups = get_ens_groups(cla.members)
                     for ens_group, members in ens_groups.items():
-                        urls = store_specs.get('urls')
-                        if urls is not None: 
-                             for url in urls:
-                                 if isinstance(url, list): 
-                                     for eachurl in url:
-                                        unavailable = get_requested_files(cla,
-                                                                     file_templates=file_templates,
-                                                                     input_loc=eachurl,
-                                                                     method='download',
-                                                                     members=members,
-                                                                     )                            
-                        else:
-                             unavailable = get_requested_files(cla,
-                                                               file_templates=file_templates,
-                                                               input_loc=store_specs['url'],
-                                                               method='download',
-                                                               members=members,
-                                                               ) 
+                        unavailable = get_requested_files(cla,
+                                                          file_templates=file_templates,
+                                                          input_loc=store_specs['url'],
+                                                          method='download',
+                                                          members=members,
+                                                          ) 
                 else:
                      unavailable = get_requested_files(cla,
                                                        file_templates=file_templates,
@@ -655,16 +645,13 @@ def main(cla):
                   ens_groups = get_ens_groups(cla.members)
                   for ens_group, members in ens_groups.items():
                       unavailable = hpss_requested_files(cla,
-                              file_templates,
-                              store_specs,
-                              members=members,
-                              ens_group=ens_group,
-                              )
+                             				 file_templates,
+                            				 store_specs,
+                             				 members=members,
+                             				 ens_group=ens_group,
+                              				 )
                 else:
-                    unavailable = hpss_requested_files(cla,
-                            file_templates,
-                            store_specs,
-                            )
+                    unavailable = hpss_requested_files(cla, file_templates, store_specs)
 
         if not unavailable:
             # All files are found. Stop looking!

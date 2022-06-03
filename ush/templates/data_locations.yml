@@ -161,13 +161,13 @@ GDAS:
 GEFS:
   aws:
     protocol: download 
-    urls:
+    url:
       - ['https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}', 'https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}'] 
       - ['https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}/atmos/pgrb2ap5', 'https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}/atmos/pgrb2bp5']
       - ['https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}/pgrb2a', 'https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}/pgrb2b'] 
     file_names:
-      - ['gep{mem:02d}.t{hh}z.pgrb2a.0p50.f{fcst_hr:03d}', 'gep{mem:02d}.t{hh}z.pgrb2b.0p50.f{fcst_hr:03d}']
       - ['gep{mem:02d}.t{hh}z.pgrb2af{fcst_hr:03d}', 'gep{mem:02d}.t{hh}z.pgrb2bf{fcst_hr:03d}' ]
+      - ['gep{mem:02d}.t{hh}z.pgrb2a.0p50.f{fcst_hr:03d}', 'gep{mem:02d}.t{hh}z.pgrb2b.0p50.f{fcst_hr:03d}']
       - ['gep{mem:02d}.t{hh}z.pgrb2af{fcst_hr:02d}', 'gep{mem:02d}.t{hh}z.pgrb2bf{fcst_hr:02d}']
 
 GSMGFS:
