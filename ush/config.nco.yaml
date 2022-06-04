@@ -16,7 +16,6 @@ workflow:
   RUN: rrfs_test
   STMP: /path/to/stmp/directory
   PTMP: /path/to/ptmp/directory
-  POST_OUTPUT_DOMAIN_NAME: conus_25km
   DATE_FIRST_CYCL: '20220407'
   DATE_LAST_CYCL: '20220407'
   CYCL_HRS:
@@ -39,3 +38,5 @@ task_run_get_extrn_lbcs:
   FV3GFS_FILE_FMT_LBCS: grib2
 task_run_make_ics:
   CCPP_PHYS_SUITE: FV3_GFS_v16
+task_run_post:
+  POST_OUTPUT_DOMAIN_NAME: conus_25km
