@@ -42,6 +42,7 @@ LBC_SPEC_INTVL_HRS="3"
 #
 # Define custom grid.
 #
+POST_OUTPUT_DOMAIN_NAME="custom_GFDLgrid"
 GRID_GEN_METHOD="GFDLgrid"
 
 GFDLgrid_LON_T6_CTR="-97.5"
@@ -75,8 +76,6 @@ DT_ATMOS="100"
 LAYOUT_X="6"
 LAYOUT_Y="6"
 BLOCKSIZE="26"
-
-POST_OUTPUT_DOMAIN_NAME="custom_GFDLgrid"
 
 QUILTING="TRUE"
 if [ "$QUILTING" = "TRUE" ]; then
