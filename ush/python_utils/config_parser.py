@@ -153,9 +153,13 @@ def load_ini_config(config_file):
             The specified configuration file does not exist:
                   \"{config_file}\"''')
     
-    config = configparser.ConfigParser()
+    config = configparser.RawConfigParser()
+    config.optionxform = str
     config.read(config_file)
     config_dict = {s:dict(config.items(s)) for s in config.sections()}
+    for ks,vs in config_dict.items():
+        for k,v in vs.items():
+            vs[k] = str_to_list(v)
     return config_dict
     
 def get_ini_value(config, section, key):
@@ -204,7 +208,7 @@ def xml_to_dict(root):
             r = xml_to_dict(child)
             cfg[child.tag] = r
         else:
-            cfg[child.tag] = child.text
+            cfg[child.tag] = str_to_list(child.text)
     return cfg
 
 def dict_to_xml(d, tag):
@@ -311,13 +315,13 @@ def load_config_file(file_name,return_string=False):
     ext = os.path.splitext(file_name)[1][1:]
     if ext == "sh":
         return load_shell_config(file_name,return_string)
-    elif ext == "cfg":
+    elif ext == "ini":
         return load_ini_config(file_name)
     elif ext == "json":
         return load_json_config(file_name)
     elif ext == "yaml" or ext == "yml":
         return load_yaml_config(file_name)
-    else:
+    elif ext == 'xml':
         return load_xml_config(file_name)
 
 ##################
@@ -362,6 +366,10 @@ def cfg_main():
         if args.out_type == 'shell' or args.out_type == 'sh':
             print( cfg_to_shell_str(cfg), end='' )
         elif args.out_type == 'ini':
+            # ini files need section for all entries
+            for k,v in cfg.items():
+                if not isinstance(v, dict):
+                    cfg[k] = {k: v}
             print( cfg_to_ini_str(cfg), end='' )
         elif args.out_type == 'json':
             print( cfg_to_json_str(cfg), end='' )

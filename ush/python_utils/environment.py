@@ -131,8 +131,9 @@ def str_to_list(v, return_string=False):
     v = v.strip()
     if not v:
         return None
-    if v[0] == '(' and v[-1] == ')':
+    if ( v[0] == '(' and v[-1] == ')' ) or ( v[0] == '[' and v[-1] == ']' ):
         v = v[1:-1]
+        v = v.replace(","," ")
         tokens = shlex.split(v)
         lst = []
         for itm in tokens:
