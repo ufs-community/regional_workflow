@@ -117,7 +117,7 @@ def load_shell_config(config_file, return_string=False):
         cfg[k] = v
     return cfg
 
-def cfg_to_shell_str(cfg, kname=None):
+def cfg_to_shell_str(cfg, kname=None, first=True):
     """ Get contents of config file as shell script string"""
 
     shell_str = ''
@@ -128,9 +128,13 @@ def cfg_to_shell_str(cfg, kname=None):
             else:
                 n_kname = f"{k}"
             shell_str += f"# [{n_kname}]\n"
-            shell_str += cfg_to_shell_str(v,n_kname)
+            shell_str += cfg_to_shell_str(v,n_kname,False)
             shell_str += "\n"
             continue
+        # first level special handling
+        if (not kname) and first:
+            shell_str += f"# [{k}]\n"
+        # others
         v1 = list_to_str(v)
         if isinstance(v,list):
             shell_str += f'{k}={v1}\n'
@@ -140,6 +144,8 @@ def cfg_to_shell_str(cfg, kname=None):
             v1 = v1.replace("\n",' ')
             #end problematic
             shell_str += f"{k}='{v1}'\n"
+        if (not kname) and first:
+            shell_str += "\n"
     return shell_str
 
 ##########
@@ -175,7 +181,7 @@ def get_ini_value(config, section, key):
 
     return None
 
-def cfg_to_ini_str(cfg, kname=None):
+def cfg_to_ini_str(cfg, kname=None, first=True):
     """ Get contents of config file as ini string"""
 
     ini_str = ''
@@ -186,14 +192,19 @@ def cfg_to_ini_str(cfg, kname=None):
             else:
                 n_kname = f"{k}"
             ini_str += f"[{n_kname}]\n"
-            ini_str += cfg_to_ini_str(v,n_kname)
+            ini_str += cfg_to_ini_str(v,n_kname,False)
             ini_str += "\n"
             continue
+        # first level special handling
+        if (not kname) and first:
+            ini_str += f"[{k}]\n"
         v1 = list_to_str(v)
         if isinstance(v,list):
             ini_str += f'{k}={v1}\n'
         else:
             ini_str += f"{k}='{v1}'\n"
+        if (not kname) and first:
+            ini_str += "\n"
     return ini_str
 
 ##########
@@ -284,6 +295,21 @@ def structure_dict(dict_o, dict_t):
             struct_dict[k] = dict_o[k]
     return struct_dict
 
+def update_dict(dict_o, dict_t):
+    """ Update a dictionary with another
+
+    Args:
+        dict_o: flat dictionary used as source
+        dict_t: target dictionary to update
+    Returns:
+        None
+    """
+    for k,v in dict_t.items():
+        if isinstance(v,dict):
+            update_dict(dict_o, v)
+        elif k in dict_o.keys():
+            dict_t[k] = dict_o[k]
+
 def check_structure_dict(dict_o, dict_t):
     """ Check if a dictinary's structure follows a template.
     The invalid entries are printed to the screen.
@@ -363,13 +389,10 @@ def cfg_main():
         if args.flatten:
             cfg = flatten_dict(cfg)
 
+        # convert to string and print
         if args.out_type == 'shell' or args.out_type == 'sh':
             print( cfg_to_shell_str(cfg), end='' )
         elif args.out_type == 'ini':
-            # ini files need section for all entries
-            for k,v in cfg.items():
-                if not isinstance(v, dict):
-                    cfg[k] = {k: v}
             print( cfg_to_ini_str(cfg), end='' )
         elif args.out_type == 'json':
             print( cfg_to_json_str(cfg), end='' )

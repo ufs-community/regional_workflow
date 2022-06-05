@@ -124,7 +124,7 @@ class Testing(unittest.TestCase):
     def test_config_parser(self):
         cfg = { "HRS": [ "1", "2" ] }
         shell_str = cfg_to_shell_str(cfg)
-        self.assertEqual( shell_str, 'HRS=( "1" "2" )\n')
+        self.assertIn( 'HRS=( "1" "2" )\n', shell_str)
         # ini file
         cfg = load_ini_config(f'{self.PATH}/test_data/Externals.cfg')
         self.assertIn( \
