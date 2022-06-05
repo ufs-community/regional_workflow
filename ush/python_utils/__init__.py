@@ -21,7 +21,8 @@ try:
                              get_ini_value, load_config_file, \
                              load_shell_config, cfg_to_shell_str, \
                              load_xml_config, cfg_to_xml_str, \
-                             flatten_dict, structure_dict, check_structure_dict, cfg_main, \
+                             flatten_dict, structure_dict, check_structure_dict, \
+                             update_dict, cfg_main, \
                              load_config_file, load_yaml_config, cfg_to_yaml_str
 except:
   pass

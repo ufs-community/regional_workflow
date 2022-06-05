@@ -7,9 +7,9 @@ from textwrap import dedent
 
 from python_utils import cd_vrfy, mkdir_vrfy, rm_vrfy, check_var_valid_value,\
                          lowercase,uppercase,check_for_preexist_dir_file,flatten_dict,\
-                         import_vars, export_vars, get_env_var, print_info_msg,\
+                         update_dict, import_vars, export_vars, get_env_var, print_info_msg,\
                          print_err_msg_exit, load_config_file, cfg_to_shell_str,\
-                         load_shell_config, load_ini_config, get_ini_value
+                         cfg_to_yaml_str, load_shell_config, load_ini_config, get_ini_value
 
 from set_cycle_dates import set_cycle_dates
 from set_predef_grid_params import set_predef_grid_params
@@ -59,8 +59,8 @@ def setup():
     #
     EXPT_DEFAULT_CONFIG_FN="config_defaults.yaml"
     cfg_d = load_config_file(os.path.join(ushdir,EXPT_DEFAULT_CONFIG_FN))
-    cfg_d = flatten_dict(cfg_d)
-    import_vars(dictionary=cfg_d)
+    import_vars(dictionary=flatten_dict(cfg_d))
+
     #
     #-----------------------------------------------------------------------
     #
@@ -85,12 +85,8 @@ def setup():
     #
       cfg_u = load_config_file(os.path.join(ushdir,EXPT_CONFIG_FN))
       cfg_u = flatten_dict(cfg_u)
-      cfg_d.update(cfg_u)
-      if cfg_u.items() > cfg_d.items():
-        print_err_msg_exit(f'''
-            User specified config file {EXPT_CONGIG_FN} has variables that are
-            not defined in the default configuration file {EXPT_DEFAULT_CONFIG_FN}''')
       import_vars(dictionary=cfg_u)
+      update_dict(cfg_u, cfg_d)
 
     #
     #-----------------------------------------------------------------------
@@ -98,7 +94,6 @@ def setup():
     #-----------------------------------------------------------------------
     #
     cfg_c=load_config_file(os.path.join(ushdir,CONSTANTS_FN))
-    const_lines=cfg_to_shell_str(cfg_c)
     import_vars(dictionary=cfg_c)
     #
     #-----------------------------------------------------------------------
@@ -1699,6 +1694,7 @@ def setup():
 
     IMPORTS = [ "CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING", "FIXgsm_FILES_TO_COPY_TO_FIXam" ]
     import_vars(env_vars=IMPORTS)
+
     #
     #-----------------------------------------------------------------------
     #
@@ -1730,68 +1726,16 @@ def setup():
     #-----------------------------------------------------------------------
     #
 
-    # update dictionary with globals() values
-    update_dict = {k: globals()[k] for k in cfg_d.keys() if k in globals() }
-    cfg_d.update(update_dict)
-
-    # write the updated default dictionary
+    # global variable definition file path
     global GLOBAL_VAR_DEFNS_FP
     GLOBAL_VAR_DEFNS_FP=os.path.join(EXPTDIR,GLOBAL_VAR_DEFNS_FN)
-    all_lines=cfg_to_shell_str(cfg_d)
 
-    with open(GLOBAL_VAR_DEFNS_FP,'w') as f:
-        msg = f"""            #
-            #
-            #-----------------------------------------------------------------------
-            #-----------------------------------------------------------------------
-            # Section 1:
-            # This section contains definitions of the various constants defined in
-            # the file {CONSTANTS_FN}.
-            #-----------------------------------------------------------------------
-            #-----------------------------------------------------------------------
-            #
-            """
-        f.write(dedent(msg))
-        f.write(const_lines)
+    # update dictionary with globals() values
+    update_dict(globals(), cfg_d)
 
-        msg = f"""            #
-            #-----------------------------------------------------------------------
-            #-----------------------------------------------------------------------
-            # Section 2:
-            # This section contains (most of) the primary experiment variables, i.e. 
-            # those variables that are defined in the default configuration file 
-            # (config_defaults.sh) and that can be reset via the user-specified 
-            # experiment configuration file (config.sh).
-            #-----------------------------------------------------------------------
-            #-----------------------------------------------------------------------
-            #
-            """
-        f.write(dedent(msg))
-        f.write(all_lines)
-    
-    # print info message
-    msg=dedent(f'''
-        Before updating default values of experiment variables to user-specified
-        values, the variable \"line_list\" contains:
+    # constants section
+    cfg_d['constants'] = cfg_c 
 
-        ''')
-
-    msg +=dedent(f'''
-        {all_lines}''')
-
-    print_info_msg(msg,verbose=DEBUG)
-    #
-    # print info message
-    #
-    print_info_msg(f'''
-        Generating the global experiment variable definitions file specified by
-        GLOBAL_VAR_DEFNS_FN:
-          GLOBAL_VAR_DEFNS_FN = \"{GLOBAL_VAR_DEFNS_FN}\"
-        Full path to this file is:
-          GLOBAL_VAR_DEFNS_FP = \"{GLOBAL_VAR_DEFNS_FP}\"
-        For more detailed information, set DEBUG to \"TRUE\" in the experiment
-        configuration file (\"{EXPT_CONFIG_FN}\").''')
-    
     #
     #-----------------------------------------------------------------------
     #
@@ -1802,21 +1746,6 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    msg = f"""
-        #
-        #-----------------------------------------------------------------------
-        #-----------------------------------------------------------------------
-        # Section 2:
-        # This section defines variables that have been derived from the primary
-        # set of experiment variables above (we refer to these as \"derived\" or
-        # \"secondary\" variables).
-        #-----------------------------------------------------------------------
-        #-----------------------------------------------------------------------
-        #
-        """
-    with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
-        f.write(dedent(msg))
-        
     settings = {
         #
         #-----------------------------------------------------------------------
@@ -2144,15 +2073,33 @@ def setup():
         'FHCYC_LSM_SPP_OR_NOT': FHCYC_LSM_SPP_OR_NOT
     })
 
+    # write derived settings
+    cfg_d['derived'] = settings
+
     #
     #-----------------------------------------------------------------------
     #
-    # Now write all settings we collacted so far to var_defns file
+    # Now write everything to var_defns.sh file
     #
     #-----------------------------------------------------------------------
     #
+
+    # print content of var_defns if DEBUG=True
+    all_lines=cfg_to_yaml_str(cfg_d)
+    print_info_msg(all_lines, verbose=DEBUG)
+
+    # print info message
+    print_info_msg(f'''
+        Generating the global experiment variable definitions file specified by
+        GLOBAL_VAR_DEFNS_FN:
+          GLOBAL_VAR_DEFNS_FN = \"{GLOBAL_VAR_DEFNS_FN}\"
+        Full path to this file is:
+          GLOBAL_VAR_DEFNS_FP = \"{GLOBAL_VAR_DEFNS_FP}\"
+        For more detailed information, set DEBUG to \"TRUE\" in the experiment
+        configuration file (\"{EXPT_CONFIG_FN}\").''')
+
     with open(GLOBAL_VAR_DEFNS_FP,'a') as f:
-        f.write(cfg_to_shell_str(settings))
+        f.write(cfg_to_shell_str(cfg_d))
 
     # export all global variables back to the environment
     export_vars()
@@ -2165,12 +2112,9 @@ def setup():
     #-----------------------------------------------------------------------
     #
 
-    # update dictionary with globals() values
-    update_dict = {k: globals()[k] for k in cfg_d.keys() if k in globals() }
-    cfg_d.update(update_dict)
-
     # loop through cfg_d and check validity of params
     cfg_v = load_config_file("valid_param_vals.yaml")
+    cfg_d = flatten_dict(cfg_d)
     for k,v in cfg_d.items():
         if v == None:
             continue
