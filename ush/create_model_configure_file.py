@@ -9,7 +9,7 @@ from textwrap import dedent
 
 from python_utils import import_vars, set_env_var, print_input_args, str_to_type, \
                          print_info_msg, print_err_msg_exit, lowercase, cfg_to_yaml_str, \
-                         load_shell_config
+                         load_shell_config, flatten_dict
 
 from fill_jinja_template import fill_jinja_template
 
@@ -240,6 +240,7 @@ def parse_args(argv):
 if __name__ == '__main__':
     args = parse_args(sys.argv[1:])
     cfg = load_shell_config(args.path_to_defns)
+    cfg = flatten_dict(cfg)
     import_vars(dictionary=cfg)
     create_model_configure_file( \
         run_dir = args.run_dir, \
