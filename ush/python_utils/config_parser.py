@@ -82,6 +82,24 @@ def cfg_to_json_str(cfg):
 ##########
 # SHELL
 ##########
+def load_shell_as_ini_config(file_name, return_string=True):
+    """ Load shell config file with embedded structure in comments """
+
+    # read contents and replace comments as sections
+    with open(file_name,"r") as file:
+        cfg = file.read()
+        cfg = cfg.replace("# [","[")
+        cfg = cfg.replace("\\\n"," ")
+
+    # write content to temp file and load it as ini
+    temp_file = os.path.join(os.getcwd(), "_temp_conf.ini")
+    with open(temp_file,"w") as file:
+        file.write(cfg)
+    cfg = load_ini_config(temp_file, return_string)
+    os.remove(temp_file)
+
+    return cfg
+
 def load_shell_config(config_file, return_string=False):
     """ Loads old style shell config files.
     We source the config script in a subshell and gets the variables it sets
@@ -91,6 +109,13 @@ def load_shell_config(config_file, return_string=False):
     Returns:
          dictionary that should be equivalent to one obtained from parsing a yaml file.
     """
+
+    # First try to load it as a structured shell config file
+    try:
+        cfg = load_shell_as_ini_config(config_file, return_string)
+        return cfg
+    except:
+        pass
 
     # Save env vars before and after sourcing the scipt and then
     # do a diff to get variables specifically defined/updated in the script
@@ -131,9 +156,6 @@ def cfg_to_shell_str(cfg, kname=None, first=True):
             shell_str += cfg_to_shell_str(v,n_kname,False)
             shell_str += "\n"
             continue
-        # first level special handling
-        if (not kname) and first:
-            shell_str += f"# [{k}]\n"
         # others
         v1 = list_to_str(v)
         if isinstance(v,list):
@@ -144,14 +166,12 @@ def cfg_to_shell_str(cfg, kname=None, first=True):
             v1 = v1.replace("\n",' ')
             #end problematic
             shell_str += f"{k}='{v1}'\n"
-        if (not kname) and first:
-            shell_str += "\n"
     return shell_str
 
 ##########
 # INI
 ##########
-def load_ini_config(config_file):
+def load_ini_config(config_file, return_string=False):
     """ Load a config file with a format similar to Microsoft's INI files"""
 
     if not os.path.exists(config_file):
@@ -165,7 +185,7 @@ def load_ini_config(config_file):
     config_dict = {s:dict(config.items(s)) for s in config.sections()}
     for ks,vs in config_dict.items():
         for k,v in vs.items():
-            vs[k] = str_to_list(v)
+            vs[k] = str_to_list(v, return_string)
     return config_dict
     
 def get_ini_value(config, section, key):
@@ -195,31 +215,26 @@ def cfg_to_ini_str(cfg, kname=None, first=True):
             ini_str += cfg_to_ini_str(v,n_kname,False)
             ini_str += "\n"
             continue
-        # first level special handling
-        if (not kname) and first:
-            ini_str += f"[{k}]\n"
-        v1 = list_to_str(v)
+        v1 = list_to_str(v,True)
         if isinstance(v,list):
             ini_str += f'{k}={v1}\n'
         else:
             ini_str += f"{k}='{v1}'\n"
-        if (not kname) and first:
-            ini_str += "\n"
     return ini_str
 
 ##########
 # XML
 ##########
-def xml_to_dict(root):
+def xml_to_dict(root,return_string):
     """ Convert an xml tree to dictionary """
 
     cfg = {}
     for child in root:
         if len(list(child)) > 0:
-            r = xml_to_dict(child)
+            r = xml_to_dict(child, return_string)
             cfg[child.tag] = r
         else:
-            cfg[child.tag] = str_to_list(child.text)
+            cfg[child.tag] = str_to_list(child.text,return_string)
     return cfg
 
 def dict_to_xml(d, tag):
@@ -237,12 +252,12 @@ def dict_to_xml(d, tag):
 
     return elem
 
-def load_xml_config(config_file):
+def load_xml_config(config_file, return_string=False):
     """ Load xml config file """
 
     tree = ET.parse(config_file)
     root = tree.getroot()
-    cfg = xml_to_dict(root)
+    cfg = xml_to_dict(root, return_string)
     return cfg
 
 def cfg_to_xml_str(cfg):
@@ -340,15 +355,15 @@ def load_config_file(file_name,return_string=False):
 
     ext = os.path.splitext(file_name)[1][1:]
     if ext == "sh":
-        return load_shell_config(file_name,return_string)
+        return load_shell_config(file_name, return_string)
     elif ext == "ini":
-        return load_ini_config(file_name)
+        return load_ini_config(file_name, return_string)
     elif ext == "json":
         return load_json_config(file_name)
     elif ext == "yaml" or ext == "yml":
         return load_yaml_config(file_name)
     elif ext == 'xml':
-        return load_xml_config(file_name)
+        return load_xml_config(file_name, return_string)
 
 ##################
 # CONFIG main

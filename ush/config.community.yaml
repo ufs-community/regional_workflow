@@ -1,5 +1,6 @@
-description: >-
-  Sample community config
+metadata:
+  description: >-
+    Sample community config
 user:
   RUN_ENVIR: community
   MACHINE: hera

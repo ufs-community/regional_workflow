@@ -1,6 +1,7 @@
-description: >-
-  This test is to ensure that the workflow successfully completes the
-  Graduate Student Test (GST) included in Release 1 of the UFS SRW App.
+metadata:
+  description: >-
+    This test is to ensure that the workflow successfully completes the
+    Graduate Student Test (GST) included in Release 1 of the UFS SRW App.
 user:
   RUN_ENVIR: community
 workflow:

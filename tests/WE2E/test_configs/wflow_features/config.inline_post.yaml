@@ -1,6 +1,7 @@
-description: >-
-  This test checks the capability of the workflow to use the inline
-  post option (WRITE_DOPOST) in model_configure.
+metadata:
+  description: >-
+    This test checks the capability of the workflow to use the inline
+    post option (WRITE_DOPOST) in model_configure.
 user:
   RUN_ENVIR: community
 workflow:
