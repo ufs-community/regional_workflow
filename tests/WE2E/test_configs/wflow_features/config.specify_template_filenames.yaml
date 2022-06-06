@@ -1,6 +1,7 @@
-description: >-
-  This test checks the capability of the workflow to use user-defined
-  template files.
+metadata:
+  description: >-
+    This test checks the capability of the workflow to use user-defined
+    template files.
 user:
   RUN_ENVIR: community
 workflow:

@@ -1,7 +1,8 @@
-description: >-
-  This test is to ensure that the workflow running in community mode
-  completes successfully on the RRFS_CONUScompact_3km grid using the HRRR
-  physics suite with ICs derived from the HRRR and LBCs derived from the RAP.
+metadata:
+  description: >-
+    This test is to ensure that the workflow running in community mode
+    completes successfully on the RRFS_CONUScompact_3km grid using the HRRR
+    physics suite with ICs derived from the HRRR and LBCs derived from the RAP.
 user:
   RUN_ENVIR: community
 workflow:

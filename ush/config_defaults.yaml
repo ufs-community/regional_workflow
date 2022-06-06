@@ -1,9 +1,11 @@
 #----------------------------
 # Test description
 #----------------------------
-description: >-
-  Default configuration for an experiment. The valid values each parameter
-  takes are specified in valid_param_vals.yaml
+metadata:
+  description: >-
+    Default configuration for an experiment. The valid values each parameter
+    takes are specified in valid_param_vals.yaml
+  version: '1.0'
 #----------------------------
 # USER config parameters
 #----------------------------

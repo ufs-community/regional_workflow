@@ -1,5 +1,6 @@
-description: >-
-  Sample nco config file
+metadata:
+  description: >-
+    Sample nco config file
 user:
   RUN_ENVIR: nco
   MACHINE: hera
