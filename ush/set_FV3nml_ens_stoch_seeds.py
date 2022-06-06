@@ -11,7 +11,7 @@ from python_utils import print_input_args, print_info_msg, print_err_msg_exit,\
                          date_to_str, mkdir_vrfy, cp_vrfy, str_to_type, \
                          import_vars,set_env_var, \
                          define_macos_utilities, cfg_to_yaml_str, \
-                         load_shell_config
+                         load_shell_config, flatten_dict
 
 from set_namelist import set_namelist
 
@@ -128,6 +128,7 @@ def parse_args(argv):
 if __name__ == '__main__':
     args = parse_args(sys.argv[1:])
     cfg = load_shell_config(args.path_to_defns)
+    cfg = flatten_dict(cfg)
     import_vars(dictionary=cfg)
     set_FV3nml_ens_stoch_seeds(str_to_type(args.cdate))
 
