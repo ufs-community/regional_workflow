@@ -367,6 +367,7 @@ def generate_FV3LAM_wflow():
             #
             # Directories and files.
             #
+            "ushdir": USHDIR,
             "jobsdir": JOBSDIR,
             "logdir": LOGDIR,
             "scriptsdir": SCRIPTSDIR,

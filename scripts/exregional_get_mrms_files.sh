@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. ${GLOBAL_VAR_DEFNS_FP}
+. $USHDIR/source_util_funcs.sh
+source_config_for_task "task_get_obs_mrms" ${GLOBAL_VAR_DEFNS_FP}
 
 # This script pulls MRMS data from the NOAA HPSS
 # Top-level MRMS directory
