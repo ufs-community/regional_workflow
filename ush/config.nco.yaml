@@ -1,6 +1,6 @@
 metadata:
   description: >-
-    Sample nco config file
+    Sample nco config
 user:
   RUN_ENVIR: nco
   MACHINE: hera
@@ -17,6 +17,7 @@ workflow:
   RUN: rrfs_test
   STMP: /path/to/stmp/directory
   PTMP: /path/to/ptmp/directory
+  CCPP_PHYS_SUITE: FV3_GFS_v16
   DATE_FIRST_CYCL: '20220407'
   DATE_LAST_CYCL: '20220407'
   CYCL_HRS:
@@ -30,14 +31,12 @@ task_run_fcst:
   WRITE_DOPOST: 'TRUE'
   QUILTING: 'TRUE'
   PREDEF_GRID_NAME: RRFS_CONUS_25km
-task_run_get_extrn_ics:
+task_get_extrn_ics:
   EXTRN_MDL_NAME_ICS: FV3GFS
   FV3GFS_FILE_FMT_ICS: grib2
-task_run_get_extrn_lbcs:
+task_get_extrn_lbcs:
   EXTRN_MDL_NAME_LBCS: FV3GFS
   LBC_SPEC_INTVL_HRS: '3'
   FV3GFS_FILE_FMT_LBCS: grib2
-task_run_make_ics:
-  CCPP_PHYS_SUITE: FV3_GFS_v16
 task_run_post:
   POST_OUTPUT_DOMAIN_NAME: conus_25km
