@@ -6,6 +6,7 @@ metadata:
 user:
   RUN_ENVIR: community
 workflow:
+  CCPP_PHYS_SUITE: FV3_GFS_v15p2
   DATE_FIRST_CYCL: '20190520'
   DATE_LAST_CYCL: '20190520'
   CYCL_HRS:
@@ -14,12 +15,10 @@ workflow:
   PREEXISTING_DIR_METHOD: rename
 task_run_fcst:
   PREDEF_GRID_NAME: RRFS_CONUS_25km
-task_run_get_extrn_ics:
+task_get_extrn_ics:
   EXTRN_MDL_NAME_ICS: GSMGFS
   USE_USER_STAGED_EXTRN_FILES: 'TRUE'
-task_run_get_extrn_lbcs:
+task_get_extrn_lbcs:
   EXTRN_MDL_NAME_LBCS: GSMGFS
   LBC_SPEC_INTVL_HRS: '6'
   USE_USER_STAGED_EXTRN_FILES: 'TRUE'
-task_run_make_ics:
-  CCPP_PHYS_SUITE: FV3_GFS_v15p2

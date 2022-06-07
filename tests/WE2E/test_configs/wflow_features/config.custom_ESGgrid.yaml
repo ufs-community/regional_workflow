@@ -6,6 +6,8 @@ metadata:
 user:
   RUN_ENVIR: community
 workflow:
+  CCPP_PHYS_SUITE: FV3_GFS_2017_gfdlmp_regional
+  GRID_GEN_METHOD: ESGgrid
   DATE_FIRST_CYCL: '20190701'
   DATE_LAST_CYCL: '20190701'
   CYCL_HRS:
@@ -31,15 +33,14 @@ task_run_fcst:
   WRTCMP_ny: '150'
   WRTCMP_dx: '25000.0'
   WRTCMP_dy: '25000.0'
-task_run_get_extrn_ics:
+task_get_extrn_ics:
   EXTRN_MDL_NAME_ICS: FV3GFS
   USE_USER_STAGED_EXTRN_FILES: 'TRUE'
-task_run_get_extrn_lbcs:
+task_get_extrn_lbcs:
   EXTRN_MDL_NAME_LBCS: FV3GFS
   LBC_SPEC_INTVL_HRS: '3'
   USE_USER_STAGED_EXTRN_FILES: 'TRUE'
-task_run_make_grid:
-  GRID_GEN_METHOD: ESGgrid
+task_make_grid:
   ESGgrid_LON_CTR: '-97.5'
   ESGgrid_LAT_CTR: '41.25'
   ESGgrid_DELX: '25000.0'
@@ -48,7 +49,5 @@ task_run_make_grid:
   ESGgrid_NY: '156'
   ESGgrid_WIDE_HALO_WIDTH: '6'
   ESGgrid_PAZI: '0.0'
-task_run_make_ics:
-  CCPP_PHYS_SUITE: FV3_GFS_2017_gfdlmp_regional
 task_run_post:
   POST_OUTPUT_DOMAIN_NAME: custom_ESGgrid

@@ -14,11 +14,12 @@ platform:
   NDAS_OBS_DIR: /path/to/processed/NDAS/data
 workflow:
   EXPT_SUBDIR: test_community
+  CCPP_PHYS_SUITE: FV3_GFS_v16
   DATE_FIRST_CYCL: '20190615'
   DATE_LAST_CYCL: '20190615'
   CYCL_HRS:
-  - '00'
-  FCST_LEN_HRS: '48'
+  - '18'
+  FCST_LEN_HRS: '12'
   PREEXISTING_DIR_METHOD: rename
   VERBOSE: 'TRUE'
   COMPILER: intel
@@ -34,18 +35,16 @@ workflow_switches:
   RUN_TASK_VX_ENSGRID: 'FALSE'
   RUN_TASK_VX_ENSPOINT: 'FALSE'
 task_run_fcst:
-  WTIME_RUN_FCST: 01:00:00
+  WTIME_RUN_FCST: 02:00:00
   QUILTING: 'TRUE'
   PREDEF_GRID_NAME: RRFS_CONUS_25km
-task_run_get_extrn_ics:
+task_get_extrn_ics:
   EXTRN_MDL_NAME_ICS: FV3GFS
   FV3GFS_FILE_FMT_ICS: grib2
-task_run_get_extrn_lbcs:
+task_get_extrn_lbcs:
   EXTRN_MDL_NAME_LBCS: FV3GFS
   LBC_SPEC_INTVL_HRS: '6'
   FV3GFS_FILE_FMT_LBCS: grib2
-task_run_make_ics:
-  CCPP_PHYS_SUITE: FV3_GFS_v16
 global:
   DO_ENSEMBLE: 'FALSE'
   NUM_ENS_MEMBERS: '2'
