@@ -2088,7 +2088,7 @@ task_vx_enspoint_mean:
 #----------------------------
 # VX_ENSPOINT_PROB config parameters
 #-----------------------------
-task_vx_enspoint_PROB:
+task_vx_enspoint_prob:
   VX_ENSPOINT_PROB_TN: "run_enspointvx_prob"
   NNODES_VX_ENSPOINT_PROB: "1"
   PPN_VX_ENSPOINT_PROB: "1"
