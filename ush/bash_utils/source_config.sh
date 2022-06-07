@@ -36,7 +36,7 @@ function config_to_str() {
 #
   local ushdir=${scrfunc_dir%/*}
 
-  $ushdir/config_utils.py -o $1 -c $2 -t $ushdir/config_defaults.yaml "${@: 3}"
+  $ushdir/config_utils.py -o $1 -c $2 "${@:3}"
 
 #
 #-----------------------------------------------------------------------
@@ -79,5 +79,16 @@ function config_to_xml_str() {
 function source_config() {
 
   source <( config_to_shell_str "$@" )
+
+}
+#
+#-----------------------------------------------------------------------
+# Source partial contents of a config file to shell script.
+#   Only those variables needed by the task are sourced
+#-----------------------------------------------------------------------
+#
+function source_config_for_task() {
+
+  source <( config_to_shell_str "${@:2}" -k "(^(?!task_)|$1).*" )
 
 }
