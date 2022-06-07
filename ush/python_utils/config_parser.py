@@ -22,6 +22,7 @@ except:
 import json
 import sys
 import os
+import re
 from textwrap import dedent
 import configparser
 import xml.etree.ElementTree as ET
@@ -372,17 +373,18 @@ def cfg_main():
     parser = argparse.ArgumentParser(description=\
                         'Utility for managing different config formats.')
     parser.add_argument('--cfg','-c',dest='cfg',required=True,
-                        help='config file to parse')
+                        help='Config file to parse')
     parser.add_argument('--output-type','-o',dest='out_type',required=False,
-                        help='output format: can be any of ["shell", "yaml", "ini", "json", "xml"]')
+                        help='Output format: can be any of ["shell", "yaml", "ini", "json", "xml"]')
     parser.add_argument('--flatten','-f',dest='flatten',action='store_true',required=False,
-                        help='flatten resulting dictionary')
+                        help='Flatten resulting dictionary')
     parser.add_argument('--template-cfg','-t',dest='template',required=False,
-                        help='template config file used to structure a given config file')
+                        help='Template config file used to structure a given config file')
     parser.add_argument('--keys','-k',dest='keys',nargs='+',required=False,
-                        help='selected keys of dictionary for processing')
+                        help='Include only these keys of dictionary for processing.\
+                              Keys can be python regex expression.')
     parser.add_argument('--validate-cfg','-v',dest='validate',required=False,
-                        help='validation config file used to validate a given config file')
+                        help='Validation config file used to validate a given config file')
 
     args = parser.parse_args()
     cfg = load_config_file(args.cfg, True)
@@ -399,8 +401,14 @@ def cfg_main():
             cfg = flatten_dict(cfg)
             cfg_t = load_config_file(args.template, True)
             cfg = structure_dict(cfg, cfg_t)
+
         if args.keys:
-            cfg = { k: cfg[k] for k in cfg if k in args.keys }
+            keys = []
+            for k in args.keys:
+                r = re.compile(k)
+                keys += list(filter(r.match, cfg.keys()))
+            cfg = { k: cfg[k] for k in keys }
+
         if args.flatten:
             cfg = flatten_dict(cfg)
 
