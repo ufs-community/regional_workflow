@@ -571,7 +571,11 @@ information on all WE2E tests:
 # statement will be false.
 #
     if [ -z "${generate_csv_file}" ]; then
-      mod_time_subdir=$( stat --format=%Y "${subdir_fp}" )
+      if [ -f "${subdir_fp}/*.yaml" ]; then
+        mod_time_subdir=$( stat --format=%Y "${subdir_fp}"/*.yaml | sort -n | tail -1 )
+      else
+        mod_time_subdir="0"
+      fi
       if [ "${mod_time_subdir}" -gt "${mod_time_csv}" ]; then
         generate_csv_file="TRUE"
         print_info_msg "
