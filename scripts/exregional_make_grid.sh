@@ -587,8 +587,8 @@ halo failed."
 #
 #-----------------------------------------------------------------------
 #
-python3  $USHDIR/link_fix.py \
-  --path-to-defns $EXPTDIR/var_defns.sh \
+python3 $USHDIR/link_fix.py \
+  --path-to-defns ${GLOBAL_VAR_DEFNS_FP} \
   --file-group "grid" || \
 print_err_msg_exit "\
 Call to function to create symlinks to the various grid and mosaic files
@@ -606,7 +606,7 @@ failed."
 #-----------------------------------------------------------------------
 #
 python3 $USHDIR/set_FV3nml_sfc_climo_filenames.py \
-  --path-to-defns $EXPTDIR/var_defns.sh \
+  --path-to-defns ${GLOBAL_VAR_DEFNS_FP} \
     || print_err_msg_exit "\
 Call to function to set surface climatology file names in the FV3 namelist
 file failed."
