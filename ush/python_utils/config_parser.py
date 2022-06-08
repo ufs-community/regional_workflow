@@ -92,12 +92,15 @@ def load_shell_config(config_file):
     # Save env vars before and after sourcing the scipt and then
     # do a diff to get variables specifically defined/updated in the script
     # Method sounds brittle but seems to work ok so far
+    pid = os.getpid()
     code = dedent(f'''      #!/bin/bash
-      (set -o posix; set) > ./_t1
+      t1="./t1.{pid}"
+      t2="./t2.{pid}"
+      (set -o posix; set) > $t1
       {{ . {config_file}; set +x; }} &>/dev/null
-      (set -o posix; set) > ./_t2
-      diff ./_t1 ./_t2 | grep "> " | cut -c 3-
-      rm -rf ./_t1 ./_t2
+      (set -o posix; set) > $t2
+      diff $t1 $t2 | grep "> " | cut -c 3-
+      rm -rf $t1 $t2
     ''')
     (_,config_str,_) = run_command(code)
     lines = config_str.splitlines()
