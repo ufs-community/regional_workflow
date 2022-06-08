@@ -93,11 +93,15 @@ def load_shell_as_ini_config(file_name, return_string=True):
         cfg = cfg.replace("\\\n"," ")
 
     # write content to temp file and load it as ini
-    temp_file = os.path.join(os.getcwd(), "_temp_conf.ini")
+    temp_file = os.path.join(os.getcwd(), "_temp." + str(os.getpid()) + ".ini")
     with open(temp_file,"w") as file:
         file.write(cfg)
-    cfg = load_ini_config(temp_file, return_string)
-    os.remove(temp_file)
+
+    # load it as a structured ini file
+    try:
+        cfg = load_ini_config(temp_file, return_string)
+    finally:
+        os.remove(temp_file)
 
     return cfg
 
