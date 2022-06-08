@@ -1281,7 +1281,7 @@ exist or is not a directory:
 #
   expt_config_fp="$ushdir/${EXPT_CONFIG_FN}"
   ext="${EXPT_CONFIG_FN##*.}"
-  config_to_str "${ext}" "${temp_file}" >"${expt_config_fp}"
+  config_to_str "${ext}" "${temp_file}" -t "$ushdir/config_defaults.yaml" >"${expt_config_fp}"
   rm -rf "${temp_file}"
 #
 #-----------------------------------------------------------------------
