@@ -252,7 +252,7 @@ def dict_to_xml(d, tag):
             elem.append(r)
         else:
             child = ET.Element(k)
-            child.text = str(v)
+            child.text = list_to_str(v,True)
             elem.append(child)
 
     return elem
@@ -271,7 +271,9 @@ def cfg_to_xml_str(cfg):
     root = dict_to_xml(cfg, 'root')
     r = ET.tostring(root, encoding='unicode')
     r = minidom.parseString(r)
-    return r.toprettyxml(indent="  ")
+    r = r.toprettyxml(indent="  ")
+    r = r.replace("&quot;",'"')
+    return r
 
 ##################
 # CONFIG utils
