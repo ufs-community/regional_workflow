@@ -36,6 +36,8 @@ ESGgrid_DELY="25000.0"
 ESGgrid_NX="216"
 ESGgrid_NY="156"
 
+ESGgrid_PAZI="0.0"
+
 ESGgrid_WIDE_HALO_WIDTH="6"
 
 DT_ATMOS="40"
@@ -43,6 +45,8 @@ DT_ATMOS="40"
 LAYOUT_X="8"
 LAYOUT_Y="12"
 BLOCKSIZE="13"
+
+POST_OUTPUT_DOMAIN_NAME="custom_ESGgrid"
 
 QUILTING="TRUE"
 if [ "$QUILTING" = "TRUE" ]; then

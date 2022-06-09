@@ -99,7 +99,7 @@ export fhr_list
 #-----------------------------------------------------------------------
 #
 if [[ ${DO_ENSEMBLE} == "FALSE" ]]; then
-  INPUT_BASE=${MET_INPUT_DIR}/${CDATE}
+  INPUT_BASE=${MET_INPUT_DIR}/${CDATE}/postprd
   OUTPUT_BASE=${MET_OUTPUT_DIR}/${CDATE}
   LOG_SUFFIX=pointstat_${CDATE}
 elif [[ ${DO_ENSEMBLE} == "TRUE" ]]; then
@@ -141,6 +141,7 @@ export METPLUS_CONF
 export MET_CONFIG
 export MODEL
 export NET
+export POST_OUTPUT_DOMAIN_NAME
 
 ${METPLUS_PATH}/ush/run_metplus.py \
   -c ${METPLUS_CONF}/common.conf \

@@ -90,11 +90,12 @@ Usage:
     [use_cron_to_relaunch=\"...\"] \\
     [cron_relaunch_intvl_mnts=\"...\"] \\
     [verbose=\"...\"] \\
+    [generate_csv_file=\"...\"] \\
     [machine_file=\"...\"] \\
     [stmp=\"...\"] \\
     [ptmp=\"...\"] \\
     [compiler=\"...\"] \\
-    [build_env_fn=\"...\"]
+    [build_mod_fn=\"...\"]
 
 The arguments in brackets are optional.  The arguments are defined as 
 follows:
@@ -117,76 +118,84 @@ run.  (A description of ACCOUNT can be found in the default experiment
 configuration file.)  This is a required argument.
 
 expt_basedir:
-Argument used to explicitly set the experiment variable EXPT_BASEDIR in 
-the experiment configuration files of all the WE2E tests the user wants
-to run.  (A description of EXPT_BASEDIR can be found in the default 
-experiment configuration file.)  If expt_basedir is specified in the call 
-to this script, its value is used to set EXPT_BASEDIR in the configuration 
-files.  If it is not specified, EXPT_BASEDIR is not set in the configuration 
-files, in which case the workflow generation script sets it to a default 
-value.  Note that if expt_basedir is set to a relative path (e.g. 
-expt_basedir=\"testset1\" in the call to this script), then the workflow 
-generation script will set EXPT_BASEDIR for the experiment to a default 
-absolute path followed by \${expt_basedir}.  This feature can be used to 
-group the WE2E tests into subdirectories for convenience, e.g. a set of 
-tests under subdirectory testset1, another set of tests under testset2, 
-etc.
+Optional argument used to explicitly set the experiment variable 
+EXPT_BASEDIR in the experiment configuration files of all the WE2E tests 
+the user wants to run.  (A description of EXPT_BASEDIR can be found in 
+the default experiment configuration file.)  If expt_basedir is specified 
+in the call to this script, its value is used to set EXPT_BASEDIR in the 
+configuration files.  If it is not specified, EXPT_BASEDIR is not set in 
+the configuration files, in which case the workflow generation script 
+sets it to a default value.  Note that if expt_basedir is set to a 
+relative path (e.g. expt_basedir=\"testset1\" in the call to this script), 
+then the experiment generation script will set EXPT_BASEDIR for the 
+experiment to a default absolute path followed by \${expt_basedir}.  
+This feature can be used to group the WE2E tests into subdirectories for 
+convenience, e.g. a set of tests under subdirectory testset1, another 
+set of tests under testset2, etc.
 
 exec_subdir:
-Optional. Argument is used to set the EXEC_SUBDIR configuration
-variable. Please see the ush/default_configs.sh file for a full
-description.
+Optional argument used to explicitly set the experiment variable 
+EXEC_SUBDIR in the experiment configuration files of all the WE2E tests 
+the user wants to run.  See the default experiment configuration file 
+\"config_defaults.sh\" for a full description of EXEC_SUBDIR.
 
 use_cron_to_relaunch:
-Argument used to explicitly set the experiment variable USE_CRON_TO_RELAUNCH
-in the experiment configuration files of all the WE2E tests the user wants 
-to run.  (A description of USE_CRON_TO_RELAUNCH can be found in the default 
-experiment configuration file.)  If use_cron_to_relaunch is specified in 
-the call to this script, its value is used to set USE_CRON_TO_RELAUNCH 
-in the configuration files.  If it is not specified, USE_CRON_TO_RELAUNCH 
-is set to \"TRUE\" in the configuration files, in which case cron jobs 
-are used to (re)launch the workflows for all tests (one cron job per test).  
-Thus, use_cron_to_relaunch needs to be specified only if the user wants 
-to turn off use of cron jobs for all tests (by specifying use_cron_to_relaunch=
-\"FALSE\" on the command line).  Note that it is not possible to specify 
-a different value for USE_CRON_TO_RELAUNCH for each test via this argument; 
-either all tests use cron jobs or none do.
+Optional argument used to explicitly set the experiment variable 
+USE_CRON_TO_RELAUNCH in the experiment configuration files of all the 
+WE2E tests the user wants to run.  (A description of USE_CRON_TO_RELAUNCH 
+can be found in the default experiment configuration file.)  If 
+use_cron_to_relaunch is specified in the call to this script, its value 
+is used to set USE_CRON_TO_RELAUNCH in the configuration files.  If it 
+is not specified, USE_CRON_TO_RELAUNCH is set to \"TRUE\" in the 
+configuration files, in which case cron jobs are used to (re)launch the 
+workflows for all tests (one cron job per test).  Thus, use_cron_to_relaunch 
+needs to be specified only if the user wants to turn off use of cron jobs 
+for all tests (by specifying use_cron_to_relaunch=\"FALSE\" on the command 
+line).  Note that it is not possible to specify a different value for 
+USE_CRON_TO_RELAUNCH for each test via this argument; either all tests 
+use cron jobs or none do.
 
 cron_relaunch_intvl_mnts:
-Argument used to explicitly set the experiment variable CRON_RELAUNCH_INTVL_MNTS
-in the experiment configuration files of all the WE2E tests the user wants 
-to run.  (A description of CRON_RELAUNCH_INTVL_MNTS can be found in the 
-default experiment configuration file.)  If cron_relaunch_intvl_mnts is 
-specified in the call to this script, its value is used to set 
-CRON_RELAUNCH_INTVL_MNTS in the configuration files.  If it is not 
-specified, CRON_RELAUNCH_INTVL_MNTS is set to \"02\" (i.e. two minutes) 
-in the configuration files.  Note that it is not possible to specify a 
-different value for CRON_RELAUNCH_INTVL_MNTS for each test via this 
-argument; all tests will use the same value for USE_CRON_TO_RELAUNCH 
-(either the value specified in the call to this script or the default 
-value of \"02\").  Note also that the value of this argument matters only 
-if the argument use_cron_to_relaunch is not explicitly set to \"FALSE\" 
-in the call to this script.
+Optional argument used to explicitly set the experiment variable 
+CRON_RELAUNCH_INTVL_MNTS in the experiment configuration files of 
+all the WE2E tests the user wants to run.  (A description of 
+CRON_RELAUNCH_INTVL_MNTS can be found in the default experiment 
+configuration file.)  If cron_relaunch_intvl_mnts is specified in the 
+call to this script, its value is used to set CRON_RELAUNCH_INTVL_MNTS 
+in the configuration files.  If it is not specified, CRON_RELAUNCH_INTVL_MNTS 
+is set to \"02\" (i.e. two minutes) in the configuration files.  Note 
+that it is not possible to specify a different value for 
+CRON_RELAUNCH_INTVL_MNTS for each test via this argument; all tests will 
+use the same value for USE_CRON_TO_RELAUNCH (either the value specified 
+in the call to this script or the default value of \"02\").  Note also 
+that the value of this argument matters only if the argument 
+use_cron_to_relaunch is not explicitly set to \"FALSE\" in the call to 
+this script.
 
 verbose:
-Argument used to explicitly set the experiment variable VERBOSE in the
-experiment configuration files of all the WE2E tests the user wants to
-run.  (A description of VERBOSE can be found in the default experiment 
-configuration file.)  If verbose is specified in the call to this script, 
-its value is used to set VERBOSE in the configuration files.  If it is 
-not specified, VERBOSE is set to \"TRUE\" in the configuration files.
-Note that it is not possible to specify a different value for VERBOSE 
-for each test via this argument; either all tests will have VERBOSE set 
-to \"TRUE\" or all will have it set to \"FALSE\".
+Optional argument used to explicitly set the experiment variable VERBOSE 
+in the experiment configuration files of all the WE2E tests the user 
+wants to run.  (A description of VERBOSE can be found in the default 
+experiment configuration file.)  If verbose is specified in the call to 
+this script, its value is used to set VERBOSE in the configuration files.  
+If it is not specified, VERBOSE is set to \"TRUE\" in the configuration 
+files.  Note that it is not possible to specify a different value for 
+VERBOSE for each test via this argument; either all tests will have 
+VERBOSE set to \"TRUE\" or all will have it set to \"FALSE\".
+
+generate_csv_file:
+Optional argument that specifies whether or not to generate a CSV file
+containing summary information about all the tests available in the WE2E
+testing system.  Default value is \"TRUE\".
 
 machine_file:
-Optional argument to set the full path to a machine configuration file.
-If not set, a supported platform machine file may be used.
+Optional argument specifying the full path to a machine configuration 
+file.  If not set, a supported platform machine file may be used.
 
 stmp:
-Argument used to explicitly set the experiment variable STMP in the 
-experiment configuration files of all the WE2E tests the user wants to 
-run that are in NCO mode, i.e. they have test configuration files that
+Optional argument used to explicitly set the experiment variable STMP in 
+the experiment configuration files of all the WE2E tests the user wants 
+to run that are in NCO mode, i.e. they have test configuration files that
 set the experiment variable RUN_ENVIR to \"nco\".  (A description of 
 STMP can be found in the default experiment configuration file.)  If 
 stmp is specified in the call to this script, its value is used to set 
@@ -208,14 +217,94 @@ Same as the argument \"stmp\" described above but for setting the
 experiment variable PTMP for all tests that will run in NCO mode.
 
 compiler:
-Type of compiler to use for the workflow. Options are \"intel\" 
-and \"gnu\". Default is \"intel\",
+Optional argument used to explicitly set the experiment variable COMPILER 
+in the experiment configuration files of all the WE2E tests the user 
+wants to run.  (A description of COMPILER can be found in the default 
+experiment configuration file.)  If compiler is specified in the call to 
+this script, its value is used to set COMPILER in the configuration files.  
+If it is not specified, COMPILER is set to \"intel\" in the configuration 
+files.  Note that it is not possible to specify a different value for 
+COMPILER for each test via this argument; all tests will use the same 
+value for COMPILER (either the value specified in the call to this script 
+or the default value of \"intel\").
 
-build_env_fn:
-Specify the build environment (see ufs-srweather-app/envs) to 
-use for the workflow. (e.g. build_cheyenne_gnu.env). If a 
-\"gnu\" compiler is specified, it must also be specified with 
-the \"compiler\" option.
+build_mod_fn:
+Optional argument used to explicitly set the experiment variable 
+BUILD_MOD_FN in the experiment configuration files of all the WE2E tests 
+the user wants to run (e.g. \"build_cheyenne_gnu\").  If the string 
+\"gnu\" appears in this file name, the \"compiler\" option to this 
+function must also be specified with the value \"gnu\".
+
+
+Usage Examples:
+--------------
+Here, we give several common usage examples.  In the following, assume 
+my_tests.txt is a text file in the same directory as this script containing 
+a list of test names that we want to run, e.g.
+
+> more my_tests.txt
+new_ESGgrid
+specify_DT_ATMOS_LAYOUT_XY_BLOCKSIZE
+
+Then:
+
+1) To run the tests listed in my_tests.txt on Hera and charge the core-
+   hours used to the \"rtrr\" account, use:
+
+     > run_WE2E_tests.sh tests_file=\"my_tests.txt\" machine=\"hera\" account=\"rtrr\"
+
+   This will create the experiment subdirectories for the two tests in
+   the directory
+
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs
+
+   where SR_WX_APP_TOP_DIR is the directory in which the ufs-srweather-app 
+   repository is cloned.  Thus, the following two experiment directories
+   will be created:
+
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs/new_ESGgrid
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs/specify_DT_ATMOS_LAYOUT_XY_BLOCKSIZE
+
+   In addition, by default, cron jobs will be created in the user's cron
+   table to relaunch the workflows of these experiments every 2 minutes.
+
+2) To change the frequency with which the cron relaunch jobs are submitted
+   from the default of 2 minutes to 1 minute, use:
+
+     > run_WE2E_tests.sh tests_file=\"my_tests.txt\" machine=\"hera\" account=\"rtrr\" cron_relaunch_intvl_mnts=\"01\"
+
+3) To disable use of cron (which means the worfkow for each test will 
+   have to be relaunched manually from within each experiment directory),
+   use:
+
+     > run_WE2E_tests.sh tests_file=\"my_tests.txt\" machine=\"hera\" account=\"rtrr\" use_cron_to_relaunch=\"FALSE\"
+
+4) To place the experiment subdirectories in a subdirectory named \"test_set_01\"
+   under 
+
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs
+
+   (instead of immediately under the latter), use:
+
+     > run_WE2E_tests.sh tests_file=\"my_tests.txt\" machine=\"hera\" account=\"rtrr\" expt_basedir=\"test_set_01\"
+
+   In this case, the full paths to the experiment directories will be:
+
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs/test_set_01/new_ESGgrid
+     \${SR_WX_APP_TOP_DIR}/../expt_dirs/test_set_01/specify_DT_ATMOS_LAYOUT_XY_BLOCKSIZE
+
+5) To use a list of tests that is located in
+
+     /path/to/custom/my_tests.txt
+
+   instead of in the same directory as this script, and to have the 
+   experiment directories be placed in an arbitrary location, say 
+
+     /path/to/custom/expt_dirs
+
+   use:
+
+     > run_WE2E_tests.sh tests_file=\"/path/to/custom/my_tests.txt\" machine=\"hera\" account=\"rtrr\" expt_basedir=\"/path/to/custom/expt_dirs\"
 "
 #
 #-----------------------------------------------------------------------
@@ -249,11 +338,12 @@ valid_args=( \
   "use_cron_to_relaunch" \
   "cron_relaunch_intvl_mnts" \
   "verbose" \
+  "generate_csv_file" \
   "machine_file" \
   "stmp" \
   "ptmp" \
   "compiler" \
-  "build_env_fn" \
+  "build_mod_fn" \
   )
 process_args valid_args "$@"
 #
@@ -412,7 +502,7 @@ done < "${user_spec_tests_fp}"
 #   avail_WE2E_test_subdirs[7]="dir1"
 #   avail_WE2E_test_subdirs[8]="dir2"
 #   avail_WE2E_test_subdirs[9]="dir3"
-#   
+#
 #-----------------------------------------------------------------------
 #
 print_info_msg "
@@ -420,10 +510,11 @@ Getting information about all available WE2E tests..."
 
 get_WE2Etest_names_subdirs_descs \
   WE2Edir="${WE2Edir}" \
-  output_varname_test_configs_basedir="avail_WE2E_test_configs_basedir" \
-  output_varname_test_names="avail_WE2E_test_names" \
-  output_varname_test_subdirs="avail_WE2E_test_subdirs" \
-  output_varname_test_ids="avail_WE2E_test_ids"
+  generate_csv_file="${generate_csv_file}" \
+  outvarname_test_configs_basedir="avail_WE2E_test_configs_basedir" \
+  outvarname_test_names="avail_WE2E_test_names" \
+  outvarname_test_subdirs="avail_WE2E_test_subdirs" \
+  outvarname_test_ids="avail_WE2E_test_ids"
 #
 # Get the total number of available WE2E test names (including alternate
 # names).
@@ -685,9 +776,10 @@ Please correct and rerun."
   MACHINE="${machine^^}"
   ACCOUNT="${account}"
   COMPILER=${compiler:-"intel"}
-  BUILD_ENV_FN=${build_env_fn:-"build_${machine}_${COMPILER}.env"}
+  BUILD_MOD_FN=${build_mod_fn:-"build_${machine}_${COMPILER}"}
   EXPT_BASEDIR="${expt_basedir}"
   EXPT_SUBDIR="${test_name}"
+  EXEC_SUBDIR="${exec_subdir}"
   USE_CRON_TO_RELAUNCH=${use_cron_to_relaunch:-"TRUE"}
   CRON_RELAUNCH_INTVL_MNTS=${cron_relaunch_intvl_mnts:-"02"}
   VERBOSE=${verbose:-"TRUE"}
@@ -710,11 +802,11 @@ MACHINE=\"${MACHINE}\"
 ACCOUNT=\"${ACCOUNT}\"
 
 COMPILER=\"${COMPILER}\"
-BUILD_ENV_FN=\"${BUILD_ENV_FN}\""
+BUILD_MOD_FN=\"${BUILD_MOD_FN}\""
 
-  if [ -n "${exec_subdir}" ]; then
+  if [ -n "${EXEC_SUBDIR}" ]; then
     expt_config_str=${expt_config_str}"
-EXEC_SUBDIR=\"${exec_subdir}\""
+EXEC_SUBDIR=\"${EXEC_SUBDIR}\""
   fi
 
   if [ -n "${EXPT_BASEDIR}" ]; then
@@ -854,7 +946,7 @@ SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
 # 2) The directory in which the output files from the post-processor (UPP)
 #    for a given cycle are stored.  The path to this directory is
 #
-#      \$PTMP/com/\$NET/\$envir/\$RUN.\$yyyymmdd/\$hh
+#      \$PTMP/com/\$NET/\$model_ver/\$RUN.\$yyyymmdd/\$hh
 #
 # Here, we make the first directory listed above unique to a WE2E test
 # by setting RUN to the name of the current test.  This will also make
@@ -872,40 +964,32 @@ SFC_CLIMO_DIR=\"${SFC_CLIMO_DIR}\""
 # envir to the same value as RUN (which is just EXPT_SUBDIR).  Then, for
 # this test, the UPP output will be located in the directory
 #
-#   \$PTMP/com/\$NET/\$RUN/\$RUN.\$yyyymmdd/\$hh
+#   \$PTMP/com/\$NET/\we2e/\$RUN.\$yyyymmdd/\$hh
 #
 RUN=\"\${EXPT_SUBDIR}\"
-envir=\"\${EXPT_SUBDIR}\""
+model_ver="we2e""
 
 #
-# Set COMINgfs if using the FV3GFS or the GSMGFS as the external model 
-# for ICs or LBCs.
-#
-    if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] || \
-       [ "${EXTRN_MDL_NAME_ICS}" = "GSMGFS" ] || \
-       [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] || \
-       [ "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ]; then
+# Set COMIN.
 
-      COMINgfs=${TEST_COMINgfs:-}
+    COMIN=${TEST_COMIN:-}
 
-      if [ ! -d "${COMINgfs:-}" ] ; then
-        print_err_msg_exit "\
-The directory (COMINgfs) that needs to be specified when running the
+    if [ ! -d "${COMIN:-}" ] ; then
+      print_err_msg_exit "\
+The directory (COMIN) that needs to be specified when running the
 workflow in NCO mode (RUN_ENVIR set to \"nco\") AND using the FV3GFS or
 the GSMGFS as the external model for ICs and/or LBCs has not been specified
 for this machine (MACHINE):
   MACHINE= \"${MACHINE}\""
-      fi
+    fi
 
-      expt_config_str=${expt_config_str}"
+    expt_config_str=${expt_config_str}"
 #
 # Directory that needs to be specified when running the workflow in NCO
-# mode (RUN_ENVIR set to \"nco\") AND using the FV3GFS or the GSMGFS as
-# the external model for ICs and/or LBCs.
+# mode (RUN_ENVIR set to \"nco\").
 #
-COMINgfs=\"${COMINgfs}\""
+COMIN=\"${COMIN}\""
 
-    fi
 #
 # Set STMP and PTMP.
 #
@@ -932,6 +1016,9 @@ PTMP=\"${PTMP}\""
 #
   if [ "${USE_USER_STAGED_EXTRN_FILES}" = "TRUE" ]; then
 
+    # Ensure we only check on disk for these files
+    data_stores="disk"
+
     extrn_mdl_source_basedir=${TEST_EXTRN_MDL_SOURCE_BASEDIR:-}
     if [ ! -d "${extrn_mdl_source_basedir:-}" ] ; then
       print_err_msg_exit "\
@@ -942,20 +1029,16 @@ machine (MACHINE):
     fi
     EXTRN_MDL_SOURCE_BASEDIR_ICS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_ICS}"
     if [ "${EXTRN_MDL_NAME_ICS}" = "FV3GFS" ] ; then
-      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/${FV3GFS_FILE_FMT_ICS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
-    elif [ "${EXTRN_MDL_NAME_ICS}" = "NAM" ] ; then
-      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}/for_ICS"
+      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/${FV3GFS_FILE_FMT_ICS}/\${yyyymmddhh}"
     else
-      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
+      EXTRN_MDL_SOURCE_BASEDIR_ICS="${EXTRN_MDL_SOURCE_BASEDIR_ICS}/\${yyyymmddhh}"
     fi
 
     EXTRN_MDL_SOURCE_BASEDIR_LBCS="${extrn_mdl_source_basedir}/${EXTRN_MDL_NAME_LBCS}"
     if [ "${EXTRN_MDL_NAME_LBCS}" = "FV3GFS" ] ; then
-      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/${FV3GFS_FILE_FMT_LBCS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
-    elif [  "${EXTRN_MDL_NAME_LBCS}" = "GSMGFS" ] ; then
-      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}"
+      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/${FV3GFS_FILE_FMT_LBCS}/\${yyyymmddhh}"
     else
-      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/\${DATE_FIRST_CYCL}\${CYCL_HRS[0]}/for_LBCS"
+      EXTRN_MDL_SOURCE_BASEDIR_LBCS="${EXTRN_MDL_SOURCE_BASEDIR_LBCS}/\${yyyymmddhh}"
     fi
 #
 # Make sure that the forecast length is evenly divisible by the interval
@@ -976,10 +1059,11 @@ boundary conditions specification interval (LBC_SPEC_INTVL_HRS):
 # Locations and names of user-staged external model files for generating
 # ICs and LBCs.
 #
-EXTRN_MDL_SOURCE_BASEDIR_ICS=${EXTRN_MDL_SOURCE_BASEDIR_ICS}
+EXTRN_MDL_SOURCE_BASEDIR_ICS='${EXTRN_MDL_SOURCE_BASEDIR_ICS}'
 EXTRN_MDL_FILES_ICS=( ${EXTRN_MDL_FILES_ICS[@]} )
-EXTRN_MDL_SOURCE_BASEDIR_LBCS=${EXTRN_MDL_SOURCE_BASEDIR_LBCS}
-EXTRN_MDL_FILES_LBCS=( ${EXTRN_MDL_FILES_LBCS[@]} )"
+EXTRN_MDL_SOURCE_BASEDIR_LBCS='${EXTRN_MDL_SOURCE_BASEDIR_LBCS}'
+EXTRN_MDL_FILES_LBCS=( ${EXTRN_MDL_FILES_LBCS[@]} )
+EXTRN_MDL_DATA_STORES=\"$data_stores\""
 
   fi
 #

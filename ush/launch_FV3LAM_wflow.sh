@@ -121,7 +121,7 @@ print_input_args "valid_args"
 #
 called_from_cron=${called_from_cron:-"FALSE"}
 check_var_valid_value "called_from_cron" "valid_vals_BOOLEAN"
-called_from_cron=$(boolify ${called_from_cron})
+called_from_cron=$(boolify "${called_from_cron}")
 #
 #-----------------------------------------------------------------------
 #
@@ -149,11 +149,11 @@ expt_name="${EXPT_SUBDIR}"
 #
 #-----------------------------------------------------------------------
 #
-env_fp="${SR_WX_APP_TOP_DIR}/env/${WFLOW_ENV_FN}"
-source "${env_fp}" || print_err_msg_exit "\
-Sourcing platform-specific environment file (env_fp) for the workflow 
+module use "${SR_WX_APP_TOP_DIR}/modulefiles"
+module load "${WFLOW_MOD_FN}" > /dev/null 2>&1 || print_err_msg_exit "\
+Loading of platform-specific module file (WFLOW_MOD_FN) for the workflow 
 task failed:
-  env_fp = \"${env_fp}\""
+  WFLOW_MOD_FN = \"${WFLOW_MOD_FN}\""
 #
 #-----------------------------------------------------------------------
 #
