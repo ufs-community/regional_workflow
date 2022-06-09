@@ -1914,6 +1914,7 @@ LSM_SPP_LSCALE=( "150000" "150000" "150000" "150000" "150000" "150000" "150000" 
 ISEED_LSM_SPP=( "9" )
 LSM_SPP_VAR_LIST=( "smc" "vgf" "alb" "sal" "emi" "zol" "stc" )
 LSM_SPP_MAG_LIST=( "0.017" "0.001" "0.001" "0.001" "0.001" "0.001" "0.2" )
+LSM_SPP_EACH_STEP="true" #Sets lndp_each_step=.true.
 #
 #-----------------------------------------------------------------------
 # 
