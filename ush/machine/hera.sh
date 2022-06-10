@@ -13,7 +13,9 @@ function file_location() {
   case ${external_model} in
 
     "FV3GFS")
-      location='/scratch1/NCEPDEV/rstprod/com/gfs/prod/gfs.${yyyymmdd}/${hh}/atmos'
+# use this location if you have access to rstprod
+#     location='/scratch1/NCEPDEV/rstprod/com/gfs/prod/gfs.${yyyymmdd}/${hh}/atmos'
+      location='/scratch2/BMC/det/UFS_SRW_app/develop/model_data/FV3GFS/grib2/${yyyymmdd}'
       ;;
 
   esac
