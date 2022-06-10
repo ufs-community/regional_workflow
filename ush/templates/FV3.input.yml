@@ -1,11 +1,11 @@
-# This configuration file maintains the modifications that need to be 
-# made to the base FV3 namelist specified in 
+# This configuration file maintains the modifications that need to be
+# made to the base FV3 namelist specified in
 #
 #   ush/templates/input.nml.FV3
 #
-# to obtain the namelist for each physics suite that the SRW App can 
-# run with.  To build a namelist for one of these configurations, use 
-# the Python helper script 
+# to obtain the namelist for each physics suite that the SRW App can
+# run with.  To build a namelist for one of these configurations, use
+# the Python helper script
 #
 #   ush/set_namelist.py
 #
@@ -38,6 +38,37 @@ FV3_RRFS_v1beta:
     <<: *RRFS_v1alpha_phys
     do_mynnsfclay: True
 
+FV3_WoFS_v0:
+  gfs_physics_nml:
+    do_deep: False
+    imfdeepcnv: 0
+    imfshalcnv: 0
+    iopt_alb: 2
+    iopt_btr: 1
+    iopt_crs: 1
+    iopt_dveg: 2
+    iopt_frz: 1
+    iopt_inf: 1
+    iopt_rad: 1
+    iopt_run: 1
+    iopt_sfc: 1
+    iopt_snf: 4
+    iopt_stc: 1
+    iopt_tbot: 2
+    do_mynnsfclay: True
+    imfdeepcnv: -1
+    imfshalcnv: -1
+    lsm: 1
+    lsoil_lsm: 4
+    imp_physics: 17
+    nssl_cccn: 0.6e+9
+    nssl_hail_on: True
+    nssl_ccn_on: True
+  fv_core_nml:
+    nwat: 7
+  fv_diagnostics_nml:
+    do_hailcast: True
+
 FV3_HRRR:
   fv_core_nml:
     hord_dp: -5
@@ -58,7 +89,7 @@ FV3_HRRR:
     gwd_opt: 3
     do_gsl_drag_ss: True
     do_gsl_drag_tofd: True
-    do_gsl_drag_ls_bl: True 
+    do_gsl_drag_ls_bl: True
     iaer: 5111
     icliq_sw: 2
     iovr: 3
@@ -225,7 +256,7 @@ FV3_GFS_v15p2:
     bl_mynn_edmf_mom: !!python/none
     bl_mynn_tkeadvect: !!python/none
     cnvcld: True
-    cnvgwd: True    
+    cnvgwd: True
     cplflx: !!python/none
     do_myjpbl: False
     do_myjsfc: False
@@ -315,7 +346,7 @@ FV3_GFS_v15_thompson_mynn_lam3km:
     lgfdlmprad: false
     lsm: 1
     lsoil_lsm: !!python/none
-    ltaerosol: false    
+    ltaerosol: false
     xkzminv: 0.3
     xkzm_m: 1.0
     xkzm_h: 1.0
