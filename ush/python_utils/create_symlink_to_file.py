@@ -2,10 +2,8 @@
 
 import os
 
-from .process_args import process_args
 from .print_input_args import print_input_args
 from .print_msg import print_err_msg_exit
-from .check_var_valid_value import check_var_valid_value
 from .filesys_cmds_vrfy import ln_vrfy
 
 def create_symlink_to_file(target,symlink,relative=True):
@@ -38,7 +36,7 @@ def create_symlink_to_file(target,symlink,relative=True):
             Cannot create symlink to specified target file because the latter does
             not exist or is not a file:
                 target = \"{target}\"''')
-    
+
     relative_flag=""
     if relative:
         RELATIVE_LINK_FLAG = os.getenv('RELATIVE_LINK_FLAG')

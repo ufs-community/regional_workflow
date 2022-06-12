@@ -25,7 +25,7 @@ def calculate_cost(config_fn):
         cfg_u = load_config_file(config_fn)
         cfg_u = flatten_dict(cfg_u)
         import_vars(dictionary=cfg_u)
-      
+
     #number of gridpoints (nx*ny) depends on grid generation method
     if GRID_GEN_METHOD == "GFDLgrid":
       (\
@@ -72,7 +72,7 @@ def calculate_cost(config_fn):
     set_predef_grid_params()
     import_vars()
     cost.extend([DT_ATMOS, ESGgrid_NX*ESGgrid_NY])
-    
+
     return cost
 
 #interface

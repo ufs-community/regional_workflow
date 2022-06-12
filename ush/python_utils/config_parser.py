@@ -20,7 +20,6 @@ try:
 except:
     pass
 import json
-import sys
 import os
 import re
 from textwrap import dedent
@@ -70,11 +69,11 @@ def load_json_config(config_file):
     try:
         with open(config_file,'r') as f:
             cfg = json.load(f)
-    except:
+    except json.JSONDecodeError as e:
         print_err_msg_exit(e)
 
     return cfg
-    
+
 def cfg_to_json_str(cfg):
     """ Get contents of config file as a json string """
 
@@ -137,7 +136,7 @@ def load_shell_config(config_file, return_string=False):
     ''')
     (_,config_str,_) = run_command(code)
     lines = config_str.splitlines()
-    
+
     #build the dictionary
     cfg = {}
     for l in lines:
@@ -147,7 +146,7 @@ def load_shell_config(config_file, return_string=False):
         cfg[k] = v
     return cfg
 
-def cfg_to_shell_str(cfg, kname=None, first=True):
+def cfg_to_shell_str(cfg, kname=None):
     """ Get contents of config file as shell script string"""
 
     shell_str = ''
@@ -158,7 +157,7 @@ def cfg_to_shell_str(cfg, kname=None, first=True):
             else:
                 n_kname = f"{k}"
             shell_str += f"# [{n_kname}]\n"
-            shell_str += cfg_to_shell_str(v,n_kname,False)
+            shell_str += cfg_to_shell_str(v,n_kname)
             shell_str += "\n"
             continue
         # others
@@ -183,22 +182,22 @@ def load_ini_config(config_file, return_string=False):
         print_err_msg_exit(f'''
             The specified configuration file does not exist:
                   \"{config_file}\"''')
-    
+
     config = configparser.RawConfigParser()
     config.optionxform = str
     config.read(config_file)
     config_dict = {s:dict(config.items(s)) for s in config.sections()}
-    for ks,vs in config_dict.items():
+    for _,vs in config_dict.items():
         for k,v in vs.items():
             vs[k] = str_to_list(v, return_string)
     return config_dict
-    
+
 def get_ini_value(config, section, key):
     """ Finds the value of a property in a given section"""
 
     if not section in config:
         print_err_msg_exit(f'''
-            Section not found: 
+            Section not found:
               section = \"{section}\"
               valid sections = \"{config.keys()}\"''')
     else:
@@ -206,7 +205,7 @@ def get_ini_value(config, section, key):
 
     return None
 
-def cfg_to_ini_str(cfg, kname=None, first=True):
+def cfg_to_ini_str(cfg, kname=None):
     """ Get contents of config file as ini string"""
 
     ini_str = ''
@@ -217,7 +216,7 @@ def cfg_to_ini_str(cfg, kname=None, first=True):
             else:
                 n_kname = f"{k}"
             ini_str += f"[{n_kname}]\n"
-            ini_str += cfg_to_ini_str(v,n_kname,False)
+            ini_str += cfg_to_ini_str(v,n_kname)
             ini_str += "\n"
             continue
         v1 = list_to_str(v,True)
@@ -363,19 +362,22 @@ def load_config_file(file_name,return_string=False):
     ext = os.path.splitext(file_name)[1][1:]
     if ext == "sh":
         return load_shell_config(file_name, return_string)
-    elif ext == "ini":
+    if ext == "ini":
         return load_ini_config(file_name, return_string)
-    elif ext == "json":
+    if ext == "json":
         return load_json_config(file_name)
-    elif ext == "yaml" or ext == "yml":
+    if ext in [ "yaml", "yml" ]:
         return load_yaml_config(file_name)
-    elif ext == 'xml':
+    if ext == 'xml':
         return load_xml_config(file_name, return_string)
+    return None
 
 ##################
 # CONFIG main
 ##################
 def cfg_main():
+    """ Main function for converting and formatting between different config file formats """
+
     parser = argparse.ArgumentParser(description=\
                         'Utility for managing different config formats.')
     parser.add_argument('--cfg','-c',dest='cfg',required=True,
@@ -419,13 +421,13 @@ def cfg_main():
             cfg = flatten_dict(cfg)
 
         # convert to string and print
-        if args.out_type == 'shell' or args.out_type == 'sh':
+        if args.out_type in ['shell', 'sh']:
             print( cfg_to_shell_str(cfg), end='' )
         elif args.out_type == 'ini':
             print( cfg_to_ini_str(cfg), end='' )
         elif args.out_type == 'json':
             print( cfg_to_json_str(cfg), end='' )
-        elif args.out_type == 'yaml' or args.out_type == 'yml':
+        elif args.out_type in ['yaml', 'yml']:
             print( cfg_to_yaml_str(cfg), end='' )
         elif args.out_type == 'xml':
             print( cfg_to_xml_str(cfg), end='' )

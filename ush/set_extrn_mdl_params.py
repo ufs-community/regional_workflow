@@ -5,7 +5,7 @@ import unittest
 from python_utils import import_vars, export_vars, set_env_var, get_env_var
 
 def set_extrn_mdl_params():
-    """ Sets parameters associated with the external model used for initial 
+    """ Sets parameters associated with the external model used for initial
     conditions (ICs) and lateral boundary conditions (LBCs).
     Args:
         None
@@ -21,8 +21,8 @@ def set_extrn_mdl_params():
     #
     #-----------------------------------------------------------------------
     #
-    # Set EXTRN_MDL_LBCS_OFFSET_HRS, which is the number of hours to shift 
-    # the starting time of the external model that provides lateral boundary 
+    # Set EXTRN_MDL_LBCS_OFFSET_HRS, which is the number of hours to shift
+    # the starting time of the external model that provides lateral boundary
     # conditions.
     #
     #-----------------------------------------------------------------------
@@ -44,7 +44,7 @@ def set_extrn_mdl_params():
 #
 if __name__ == "__main__":
     set_extrn_mdl_params()
-   
+
 class Testing(unittest.TestCase):
     def test_extrn_mdl_params(self):
         set_extrn_mdl_params()

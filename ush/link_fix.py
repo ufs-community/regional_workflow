@@ -35,7 +35,7 @@ def link_fix(verbose, file_group):
     # These symlinks are needed by the make_orog, make_sfc_climo, make_ic,
     # make_lbc, and/or run_fcst tasks.
     #
-    # Note that we check that each target file exists before attempting to 
+    # Note that we check that each target file exists before attempting to
     # create symlinks.  This is because the "ln" command will create sym-
     # links to non-existent targets without returning with a nonzero exit
     # code.
@@ -57,7 +57,7 @@ def link_fix(verbose, file_group):
     #
     # 1) "C*.mosaic.halo${NHW}.nc"
     #    This mosaic file for the wide-halo grid (i.e. the grid with a ${NHW}-
-    #    cell-wide halo) is needed as an input to the orography filtering 
+    #    cell-wide halo) is needed as an input to the orography filtering
     #    executable in the orography generation task.  The filtering code
     #    extracts from this mosaic file the name of the file containing the
     #    grid on which it will generate filtered topography.  Note that the
@@ -71,28 +71,28 @@ def link_fix(verbose, file_group):
     #
     #    a) C*.mosaic.halo${NHW}.nc
     #       The script for the make_orog task extracts the name of the grid
-    #       file from this mosaic file; this name should be 
+    #       file from this mosaic file; this name should be
     #       "C*.grid.tile${TILE_RGNL}.halo${NHW}.nc".
     #
     #    b) C*.grid.tile${TILE_RGNL}.halo${NHW}.nc
-    #       This is the 
-    #       The script for the make_orog task passes the name of the grid 
-    #       file (extracted above from the mosaic file) to the orography 
+    #       This is the
+    #       The script for the make_orog task passes the name of the grid
+    #       file (extracted above from the mosaic file) to the orography
     #       generation executable.  The executable then
     #       reads in this grid file and generates a raw orography
     #       file on the grid.  The raw orography file is initially renamed "out.oro.nc",
     #       but for clarity, it is then renamed "C*.raw_orog.tile${TILE_RGNL}.halo${NHW}.nc".
     #
-    #    c) The fixed files thirty.second.antarctic.new.bin, landcover30.fixed, 
+    #    c) The fixed files thirty.second.antarctic.new.bin, landcover30.fixed,
     #       and gmted2010.30sec.int.
     #
-    #    The orography filtering step in the make_orog task requires the 
+    #    The orography filtering step in the make_orog task requires the
     #    following symlinks/files:
     #
     #    a) C*.mosaic.halo${NHW}.nc
     #       This is the mosaic file for the wide-halo grid.  The orography
     #       filtering executable extracts from this file the name of the grid
-    #       file containing the wide-halo grid (which should be 
+    #       file containing the wide-halo grid (which should be
     #       "${CRES}.grid.tile${TILE_RGNL}.halo${NHW}.nc").  The executable then
     #       looks for this grid file IN THE DIRECTORY IN WHICH IT IS RUNNING.
     #       Thus, before running the executable, the script creates a symlink in this run directory that
@@ -100,7 +100,7 @@ def link_fix(verbose, file_group):
     #
     #    b) C*.raw_orog.tile${TILE_RGNL}.halo${NHW}.nc
     #       This is the raw orography file on the wide-halo grid.  The script
-    #       for the make_orog task copies this file to a new file named 
+    #       for the make_orog task copies this file to a new file named
     #       "C*.filtered_orog.tile${TILE_RGNL}.halo${NHW}.nc" that will be
     #       used as input to the orography filtering executable.  The executable
     #       will then overwrite the contents of this file with the filtered orography.
@@ -126,7 +126,7 @@ def link_fix(verbose, file_group):
     #
     # 2) "C*.mosaic.halo${NH4}.nc"
     #    This mosaic file for the grid with a 4-cell-wide halo is needed as
-    #    an input to the surface climatology generation executable.  The 
+    #    an input to the surface climatology generation executable.  The
     #    surface climatology generation code reads from this file the number
     #    of tiles (which should be 1 for a regional grid) and the tile names.
     #    More importantly, using the ESMF function ESMF_GridCreateMosaic(),
@@ -145,7 +145,7 @@ def link_fix(verbose, file_group):
     #    b) "C*.grid.tile${TILE_RGNL}.halo${NH4}.nc"
     #    c) "C*.oro_data.tile${TILE_RGNL}.halo${NH4}.nc"
     #
-    # 3) 
+    # 3)
     #
     #
     #-----------------------------------------------------------------------
@@ -203,13 +203,13 @@ def link_fix(verbose, file_group):
     res_prev=""
     res=""
     fp_prev=""
-    
+
     for pattern in fps:
       files = glob.glob(pattern)
       for fp in files:
-    
+
         fn = os.path.basename(fp)
-      
+
         regex_search = "^C([0-9]*).*"
         res = find_pattern_in_str(regex_search, fn)
         if res is None:
@@ -222,22 +222,22 @@ def link_fix(verbose, file_group):
                 in fp.''')
         else:
           res = res[0]
-    
+
         if ( i > 0 ) and ( res != res_prev ):
           print_err_msg_exit(f'''
-                The resolutions (as obtained from the file names) of the previous and 
+                The resolutions (as obtained from the file names) of the previous and
                 current file (fp_prev and fp, respectively) are different:
                   fp_prev = \"{fp_prev}\"
                   fp      = \"{fp}\"
                 Please ensure that all files have the same resolution.''')
-    
+
         i=i+1
         fp_prev=f"{fp}"
         res_prev=res
     #
     #-----------------------------------------------------------------------
     #
-    # Replace the * globbing character in the set of globbing patterns with 
+    # Replace the * globbing character in the set of globbing patterns with
     # the resolution.  This will result in a set of (full paths to) specific
     # files.
     #
@@ -247,7 +247,7 @@ def link_fix(verbose, file_group):
     #
     #-----------------------------------------------------------------------
     #
-    # In creating the various symlinks below, it is convenient to work in 
+    # In creating the various symlinks below, it is convenient to work in
     # the FIXLAM directory.  We will change directory back to the original
     # later below.
     #
@@ -258,7 +258,7 @@ def link_fix(verbose, file_group):
     #
     #-----------------------------------------------------------------------
     #
-    # Use the set of full file paths generated above as the link targets to 
+    # Use the set of full file paths generated above as the link targets to
     # create symlinks to these files in the FIXLAM directory.
     #
     #-----------------------------------------------------------------------
@@ -269,16 +269,16 @@ def link_fix(verbose, file_group):
     # this case, we use relative symlinks in order the experiment directory
     # more portable and the symlinks more readable.  However, if the task
     # was not run, then pregenerated grid, orography, or surface climatology
-    # files will be used, and those will be located in an arbitrary directory 
-    # (specified by the user) that is somwehere outside the experiment 
-    # directory.  Thus, in this case, there isn't really an advantage to using 
+    # files will be used, and those will be located in an arbitrary directory
+    # (specified by the user) that is somwehere outside the experiment
+    # directory.  Thus, in this case, there isn't really an advantage to using
     # relative symlinks, so we use symlinks with absolute paths.
     #
     if run_task:
       relative_link_flag=True
     else:
       relative_link_flag=False
-    
+
     for fp in fps:
       fn=os.path.basename(fp)
       create_symlink_to_file(fp,fn,relative_link_flag)
@@ -308,18 +308,18 @@ def link_fix(verbose, file_group):
     #
     #-----------------------------------------------------------------------
     #
-    # If considering surface climatology files, create symlinks to the surface 
-    # climatology files that do not contain the halo size in their names.  
+    # If considering surface climatology files, create symlinks to the surface
+    # climatology files that do not contain the halo size in their names.
     # These are needed by the task that generates the initial condition files.
     #
     #-----------------------------------------------------------------------
     #
     if file_group == "sfc_climo":
-    
+
         tmp=[ f"{cres}.{itm}" for itm in SFC_CLIMO_FIELDS]
         fns_sfc_climo_with_halo_in_fn=[ f"{itm}.tile{TILE_RGNL}.halo{NH4}.nc" for itm in tmp]
         fns_sfc_climo_no_halo_in_fn=[ f"{itm}.tile{TILE_RGNL}.nc" for itm in tmp]
-    
+
         for i in range(num_fields):
           target=f"{fns_sfc_climo_with_halo_in_fn[i]}"
           symlink=f"{fns_sfc_climo_no_halo_in_fn[i]}"
@@ -334,7 +334,7 @@ def link_fix(verbose, file_group):
         tmp=[ f"{cres}.{itm}" for itm in SFC_CLIMO_FIELDS ]
         fns_sfc_climo_tile7_halo0_in_fn=[ f"{itm}.tile{TILE_RGNL}.halo{NH0}.nc" for itm in tmp ]
         fns_sfc_climo_tile1_no_halo_in_fn=[ f"{itm}.tile1.nc" for itm in tmp ]
-    
+
         for i in range(num_fields):
           target=f"{fns_sfc_climo_tile7_halo0_in_fn[i]}"
           symlink=f"{fns_sfc_climo_tile1_no_halo_in_fn[i]}"
@@ -349,7 +349,7 @@ def link_fix(verbose, file_group):
     cd_vrfy(SAVE_DIR)
 
     return res
-   
+
 def parse_args(argv):
     """ Parse command line arguments"""
     parser = argparse.ArgumentParser(

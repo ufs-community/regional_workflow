@@ -12,21 +12,21 @@ def set_ozone_param(ccpp_phys_suite_fp):
     """ Function that does the following:
     (1) Determines the ozone parameterization being used by checking in the
         CCPP physics suite XML.
-   
+
     (2) Sets the name of the global ozone production/loss file in the FIXgsm
         FIXgsm system directory to copy to the experiment's FIXam directory.
-   
+
     (3) Resets the last element of the workflow array variable
         FIXgsm_FILES_TO_COPY_TO_FIXam that contains the files to copy from
-        FIXgsm to FIXam (this last element is initially set to a dummy 
+        FIXgsm to FIXam (this last element is initially set to a dummy
         value) to the name of the ozone production/loss file set in the
         previous step.
-   
-    (4) Resets the element of the workflow array variable 
-        CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING (this array contains the 
+
+    (4) Resets the element of the workflow array variable
+        CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING (this array contains the
         mapping between the symlinks to create in any cycle directory and
-        the files in the FIXam directory that are their targets) that 
-        specifies the mapping for the ozone symlink/file such that the 
+        the files in the FIXam directory that are their targets) that
+        specifies the mapping for the ozone symlink/file such that the
         target FIXam file name is set to the name of the ozone production/
         loss file set above.
 
@@ -45,7 +45,7 @@ def set_ozone_param(ccpp_phys_suite_fp):
     #-----------------------------------------------------------------------
     #
     # Get the name of the ozone parameterization being used.  There are two
-    # possible ozone parameterizations:  
+    # possible ozone parameterizations:
     #
     # (1) A parameterization developed/published in 2015.  Here, we refer to
     #     this as the 2015 parameterization.  If this is being used, then we
@@ -53,10 +53,10 @@ def set_ozone_param(ccpp_phys_suite_fp):
     #
     # (2) A parameterization developed/published sometime after 2015.  Here,
     #     we refer to this as the after-2015 parameterization.  If this is
-    #     being used, then we set the variable ozone_param to the string 
+    #     being used, then we set the variable ozone_param to the string
     #     "ozphys".
     #
-    # We check the CCPP physics suite definition file (SDF) to determine the 
+    # We check the CCPP physics suite definition file (SDF) to determine the
     # parameterization being used.  If this file contains the line
     #
     #   <scheme>ozphys_2015</scheme>
@@ -67,8 +67,8 @@ def set_ozone_param(ccpp_phys_suite_fp):
     #   <scheme>ozphys</scheme>
     #
     # then the after-2015 parameterization is being used.  (The SDF should
-    # contain exactly one of these lines; not both nor neither; we check for 
-    # this.)  
+    # contain exactly one of these lines; not both nor neither; we check for
+    # this.)
     #
     #-----------------------------------------------------------------------
     #
@@ -102,9 +102,9 @@ def set_ozone_param(ccpp_phys_suite_fp):
     #
     # Set the element in the array CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING that
     # specifies the mapping between the symlink for the ozone production/loss
-    # file that must be created in each cycle directory and its target in the 
+    # file that must be created in each cycle directory and its target in the
     # FIXam directory.  The name of the symlink is alrady in the array, but
-    # the target is not because it depends on the ozone parameterization that 
+    # the target is not because it depends on the ozone parameterization that
     # the physics suite uses.  Since we determined the ozone parameterization
     # above, we now set the target of the symlink accordingly.
     #
@@ -114,7 +114,7 @@ def set_ozone_param(ccpp_phys_suite_fp):
     fixgsm_ozone_fn_is_set=False
     regex_search="^[ ]*([^| ]*)[ ]*[|][ ]*([^| ]*)[ ]*$"
     num_symlinks=len(CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING)
-    
+
     for i in range(num_symlinks):
       mapping=CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING[i]
       symlink = find_pattern_in_str(regex_search, mapping)
@@ -138,22 +138,22 @@ def set_ozone_param(ccpp_phys_suite_fp):
     #-----------------------------------------------------------------------
     #
     if fixgsm_ozone_fn_is_set:
-    
+
       msg=dedent(f'''
         After setting the file name of the ozone production/loss file in the
         FIXgsm directory (based on the ozone parameterization specified in the
         CCPP suite definition file), the array specifying the mapping between
         the symlinks that need to be created in the cycle directories and the
         files in the FIXam directory is:
-        
+
         ''')
       msg+=dedent(f'''
           CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING = {list_to_str(CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING)}
         ''')
       print_info_msg(msg,verbose=VERBOSE)
-    
+
     else:
-    
+
       print_err_msg_exit(f'''
         Unable to set name of the ozone production/loss file in the FIXgsm directory
         in the array that specifies the mapping between the symlinks that need to

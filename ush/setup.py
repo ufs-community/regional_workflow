@@ -23,13 +23,13 @@ from set_thompson_mp_fix_files import set_thompson_mp_fix_files
 
 def setup():
     """ Function that sets a secondary set
-    of parameters needed by the various scripts that are called by the 
-    FV3-LAM rocoto community workflow.  This secondary set of parameters is 
+    of parameters needed by the various scripts that are called by the
+    FV3-LAM rocoto community workflow.  This secondary set of parameters is
     calculated using the primary set of user-defined parameters in the de-
     fault and custom experiment/workflow configuration scripts (whose file
     names are defined below).  This script then saves both sets of parame-
-    ters in a global variable definitions file (really a bash script) in 
-    the experiment directory.  This file then gets sourced by the various 
+    ters in a global variable definitions file (really a bash script) in
+    the experiment directory.  This file then gets sourced by the various
     scripts called by the tasks in the workflow.
 
     Args:
@@ -65,7 +65,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     # If a user-specified configuration file exists, source it.  This file
-    # contains user-specified values for a subset of the experiment/workflow 
+    # contains user-specified values for a subset of the experiment/workflow
     # variables that override their default values.  Note that the user-
     # specified configuration file is not tracked by the repository, whereas
     # the default configuration file is tracked.
@@ -76,11 +76,11 @@ def setup():
     #
     # We require that the variables being set in the user-specified configu-
     # ration file have counterparts in the default configuration file.  This
-    # is so that we do not introduce new variables in the user-specified 
+    # is so that we do not introduce new variables in the user-specified
     # configuration file without also officially introducing them in the de-
-    # fault configuration file.  Thus, before sourcing the user-specified 
+    # fault configuration file.  Thus, before sourcing the user-specified
     # configuration file, we check that all variables in the user-specified
-    # configuration file are also assigned default values in the default 
+    # configuration file are also assigned default values in the default
     # configuration file.
     #
       cfg_u = load_config_file(os.path.join(ushdir,EXPT_CONFIG_FN))
@@ -103,12 +103,12 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # export env vars before calling another module 
+    # export env vars before calling another module
     export_vars()
 
     if PREDEF_GRID_NAME:
       set_predef_grid_params()
-    
+
     import_vars()
 
     #
@@ -131,7 +131,7 @@ def setup():
     # being used. This is required at the moment, since "do_shum/sppt/skeb"
     # does not override the use of the scheme unless the magnitude is also
     # specifically set to -999.0.  If all "do_shum/sppt/skeb" are set to
-    # "false," then none will run, regardless of the magnitude values. 
+    # "false," then none will run, regardless of the magnitude values.
     #
     #-----------------------------------------------------------------------
     #
@@ -145,9 +145,9 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # If running with SPP in MYNN PBL, MYNN SFC, GSL GWD, Thompson MP, or 
-    # RRTMG, count the number of entries in SPP_VAR_LIST to correctly set 
-    # N_VAR_SPP, otherwise set it to zero. 
+    # If running with SPP in MYNN PBL, MYNN SFC, GSL GWD, Thompson MP, or
+    # RRTMG, count the number of entries in SPP_VAR_LIST to correctly set
+    # N_VAR_SPP, otherwise set it to zero.
     #
     #-----------------------------------------------------------------------
     #
@@ -158,15 +158,15 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # If running with Noah or RUC-LSM SPP, count the number of entries in 
+    # If running with Noah or RUC-LSM SPP, count the number of entries in
     # LSM_SPP_VAR_LIST to correctly set N_VAR_LNDP, otherwise set it to zero.
     # Also set LNDP_TYPE to 2 for LSM SPP, otherwise set it to zero.  Finally,
     # initialize an "FHCYC_LSM_SPP" variable to 0 and set it to 999 if LSM SPP
-    # is turned on.  This requirement is necessary since LSM SPP cannot run with 
+    # is turned on.  This requirement is necessary since LSM SPP cannot run with
     # FHCYC=0 at the moment, but FHCYC cannot be set to anything less than the
-    # length of the forecast either.  A bug fix will be submitted to 
+    # length of the forecast either.  A bug fix will be submitted to
     # ufs-weather-model soon, at which point, this requirement can be removed
-    # from regional_workflow. 
+    # from regional_workflow.
     #
     #-----------------------------------------------------------------------
     #
@@ -183,7 +183,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # If running with SPP, confirm that each SPP-related namelist value 
+    # If running with SPP, confirm that each SPP-related namelist value
     # contains the same number of entries as N_VAR_SPP (set above to be equal
     # to the number of entries in SPP_VAR_LIST).
     #
@@ -198,8 +198,8 @@ def setup():
          ( len(SPP_STDDEV_CUTOFF) != N_VAR_SPP) or \
          ( len(ISEED_SPP) != N_VAR_SPP):
         print_err_msg_exit(f'''
-            All MYNN PBL, MYNN SFC, GSL GWD, Thompson MP, or RRTMG SPP-related namelist 
-            variables set in {CONFIG_FN} must be equal in number of entries to what is 
+            All MYNN PBL, MYNN SFC, GSL GWD, Thompson MP, or RRTMG SPP-related namelist
+            variables set in {CONFIG_FN} must be equal in number of entries to what is
             found in SPP_VAR_LIST:
               Number of entries in SPP_VAR_LIST = \"{len(SPP_VAR_LIST)}\"''')
     #
@@ -216,18 +216,18 @@ def setup():
          ( len(LSM_SPP_LSCALE) != N_VAR_LNDP) or \
          ( len(LSM_SPP_TSCALE) != N_VAR_LNDP):
         print_err_msg_exit(f'''
-            All Noah or RUC-LSM SPP-related namelist variables (except ISEED_LSM_SPP) 
-            set in {CONFIG_FN} must be equal in number of entries to what is found in 
+            All Noah or RUC-LSM SPP-related namelist variables (except ISEED_LSM_SPP)
+            set in {CONFIG_FN} must be equal in number of entries to what is found in
             SPP_VAR_LIST:
               Number of entries in SPP_VAR_LIST = \"{len(LSM_SPP_VAR_LIST)}\"''')
     #
-    # The current script should be located in the ush subdirectory of the 
+    # The current script should be located in the ush subdirectory of the
     # workflow directory.  Thus, the workflow directory is the one above the
     # directory of the current script.
     #
     SR_WX_APP_TOP_DIR=os.path.abspath( os.path.dirname(__file__) + \
                       os.sep + os.pardir + os.sep + os.pardir)
-    
+
     #
     #-----------------------------------------------------------------------
     #
@@ -286,7 +286,7 @@ def setup():
     if not UFS_UTILS_DIR:
         print_err_msg_exit(f'''
             Externals.cfg does not contain "{external_name}".''')
-    
+
     UFS_UTILS_DIR=os.path.join(SR_WX_APP_TOP_DIR, UFS_UTILS_DIR)
     if not os.path.exists(UFS_UTILS_DIR):
         print_err_msg_exit(f'''
@@ -303,7 +303,7 @@ def setup():
     if not UPP_DIR:
         print_err_msg_exit(f'''
             Externals.cfg does not contain "{external_name}".''')
-    
+
     UPP_DIR=os.path.join(SR_WX_APP_TOP_DIR, UPP_DIR)
     if not os.path.exists(UPP_DIR):
         print_err_msg_exit(f'''
@@ -331,7 +331,7 @@ def setup():
     VX_CONFIG_DIR = os.path.join(TEMPLATE_DIR,"parm")
     METPLUS_CONF = os.path.join(TEMPLATE_DIR,"parm","metplus")
     MET_CONFIG = os.path.join(TEMPLATE_DIR,"parm","met")
-    
+
     #
     #-----------------------------------------------------------------------
     #
@@ -352,12 +352,12 @@ def setup():
     MACHINE_FILE=MACHINE_FILE or os.path.join(USHDIR,"machine",f"{lowercase(MACHINE)}.sh")
     machine_cfg = load_shell_config(MACHINE_FILE)
     import_vars(dictionary=machine_cfg)
-    
+
     if not NCORES_PER_NODE:
       print_err_msg_exit(f"""
         NCORES_PER_NODE has not been specified in the file {MACHINE_FILE}
         Please ensure this value has been set for your desired platform. """)
-    
+
     if not (FIXgsm and FIXaer and FIXlut and TOPO_DIR and SFC_CLIMO_INPUT_DIR):
       print_err_msg_exit(f'''
         One or more fix file directories have not been specified for this machine:
@@ -373,9 +373,9 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Set the names of the build and workflow module files (if not 
-    # already specified by the user).  These are the files that need to be 
-    # sourced before building the component SRW App codes and running various 
+    # Set the names of the build and workflow module files (if not
+    # already specified by the user).  These are the files that need to be
+    # sourced before building the component SRW App codes and running various
     # workflow scripts, respectively.
     #
     #-----------------------------------------------------------------------
@@ -388,7 +388,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     # Calculate a default value for the number of processes per node for the
-    # RUN_FCST_TN task.  Then set PPN_RUN_FCST to this default value if 
+    # RUN_FCST_TN task.  Then set PPN_RUN_FCST to this default value if
     # PPN_RUN_FCST is not already specified by the user.
     #
     #-----------------------------------------------------------------------
@@ -465,22 +465,22 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Check that DATE_FIRST_CYCL and DATE_LAST_CYCL are strings consisting 
+    # Check that DATE_FIRST_CYCL and DATE_LAST_CYCL are strings consisting
     # of exactly 8 digits.
     #
     #-----------------------------------------------------------------------
     #
     if not isinstance(DATE_FIRST_CYCL,datetime.date):
       print_err_msg_exit(f'''
-        DATE_FIRST_CYCL must be a string consisting of exactly 8 digits of the 
-        form \"YYYYMMDD\", where YYYY is the 4-digit year, MM is the 2-digit 
+        DATE_FIRST_CYCL must be a string consisting of exactly 8 digits of the
+        form \"YYYYMMDD\", where YYYY is the 4-digit year, MM is the 2-digit
         month, and DD is the 2-digit day-of-month.
           DATE_FIRST_CYCL = \"{DATE_FIRST_CYCL}\"''')
-    
+
     if not isinstance(DATE_LAST_CYCL,datetime.date):
       print_err_msg_exit(f'''
-        DATE_LAST_CYCL must be a string consisting of exactly 8 digits of the 
-        form \"YYYYMMDD\", where YYYY is the 4-digit year, MM is the 2-digit 
+        DATE_LAST_CYCL must be a string consisting of exactly 8 digits of the
+        form \"YYYYMMDD\", where YYYY is the 4-digit year, MM is the 2-digit
         month, and DD is the 2-digit day-of-month.
           DATE_LAST_CYCL = \"{DATE_LAST_CYCL}\"''')
     #
@@ -497,11 +497,11 @@ def setup():
         print_err_msg_exit(f'''
             Each element of CYCL_HRS must be an integer between \"00\" and \"23\", in-
             clusive (including a leading \"0\", if necessary), specifying an hour-of-
-            day.  Element #{i} of CYCL_HRS (where the index of the first element is 0) 
+            day.  Element #{i} of CYCL_HRS (where the index of the first element is 0)
             does not have this form:
               CYCL_HRS = {CYCL_HRS}
               CYCL_HRS[{i}] = \"{CYCL_HRS[i]}\"''')
-    
+
       i=i+1
     #
     #-----------------------------------------------------------------------
@@ -517,7 +517,7 @@ def setup():
               INCR_CYCL_FREQ = {INCR_CYCL_FREQ}
               cycle interval by the number of CYCL_HRS = {cycl_intv}
               CYCL_HRS = {CYCL_HRS} ''')
-    
+
       for itmp in range(1,i):
         itm1=itmp-1
         cycl_next_itmp=CYCL_HRS[itm1] + INCR_CYCL_FREQ
@@ -531,9 +531,9 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Call a function to generate the array ALL_CDATES containing the cycle 
+    # Call a function to generate the array ALL_CDATES containing the cycle
     # dates/hours for which to run forecasts.  The elements of this array
-    # will have the form YYYYMMDDHH.  They are the starting dates/times of 
+    # will have the form YYYYMMDDHH.  They are the starting dates/times of
     # the forecasts that will be run in the experiment.  Then set NUM_CYCLES
     # to the number of elements in this array.
     #
@@ -545,9 +545,9 @@ def setup():
       date_end=DATE_LAST_CYCL,
       cycle_hrs=CYCL_HRS,
       incr_cycl_freq=INCR_CYCL_FREQ)
-    
+
     NUM_CYCLES=len(ALL_CDATES)
-    
+
     if NUM_CYCLES > 90:
       ALL_CDATES=None
       print_info_msg(f'''
@@ -563,7 +563,7 @@ def setup():
     if USE_CUSTOM_POST_CONFIG_FILE:
       if not os.path.exists(CUSTOM_POST_CONFIG_FP):
         print_err_msg_exit(f'''
-            The custom post configuration specified by CUSTOM_POST_CONFIG_FP does not 
+            The custom post configuration specified by CUSTOM_POST_CONFIG_FP does not
             exist:
               CUSTOM_POST_CONFIG_FP = \"{CUSTOM_POST_CONFIG_FP}\"''')
     #
@@ -607,7 +607,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     rem=FCST_LEN_HRS%LBC_SPEC_INTVL_HRS
-    
+
     if rem != 0:
       print_err_msg_exit(f'''
         The forecast length (FCST_LEN_HRS) is not evenly divisible by the lateral
@@ -618,7 +618,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Set the array containing the forecast hours at which the lateral 
+    # Set the array containing the forecast hours at which the lateral
     # boundary conditions (LBCs) need to be updated.  Note that this array
     # does not include the 0-th hour (initial time).
     #
@@ -630,9 +630,9 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Check to make sure that various computational parameters needed by the 
-    # forecast model are set to non-empty values.  At this point in the 
-    # experiment generation, all of these should be set to valid (non-empty) 
+    # Check to make sure that various computational parameters needed by the
+    # forecast model are set to non-empty values.  At this point in the
+    # experiment generation, all of these should be set to valid (non-empty)
     # values.
     #
     #-----------------------------------------------------------------------
@@ -644,28 +644,28 @@ def setup():
         Please set this to a valid numerical value in the user-specified experiment
         configuration file (EXPT_CONFIG_FP) and rerun:
           EXPT_CONFIG_FP = \"{EXPT_CONFIG_FP}\"''')
-    
+
     if not LAYOUT_X:
       print_err_msg_exit(f'''
-        The number of MPI processes to be used in the x direction (LAYOUT_X) by 
+        The number of MPI processes to be used in the x direction (LAYOUT_X) by
         the forecast job is set to a null string:
           LAYOUT_X = {LAYOUT_X}
         Please set this to a valid numerical value in the user-specified experiment
         configuration file (EXPT_CONFIG_FP) and rerun:
           EXPT_CONFIG_FP = \"{EXPT_CONFIG_FP}\"''')
-    
+
     if not LAYOUT_Y:
       print_err_msg_exit(f'''
-        The number of MPI processes to be used in the y direction (LAYOUT_Y) by 
+        The number of MPI processes to be used in the y direction (LAYOUT_Y) by
         the forecast job is set to a null string:
           LAYOUT_Y = {LAYOUT_Y}
         Please set this to a valid numerical value in the user-specified experiment
         configuration file (EXPT_CONFIG_FP) and rerun:
           EXPT_CONFIG_FP = \"{EXPT_CONFIG_FP}\"''')
-    
+
     if not BLOCKSIZE:
       print_err_msg_exit(f'''
-        The cache size to use for each MPI task of the forecast (BLOCKSIZE) is 
+        The cache size to use for each MPI task of the forecast (BLOCKSIZE) is
         set to a null string:
           BLOCKSIZE = {BLOCKSIZE}
         Please set this to a valid numerical value in the user-specified experiment
@@ -688,57 +688,57 @@ def setup():
     #
       if DT_SUBHOURLY_POST_MNTS < 0 or DT_SUBHOURLY_POST_MNTS > 59:
         print_err_msg_exit(f'''
-            When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
-            DT_SUBHOURLY_POST_MNTS must be set to an integer between 0 and 59, 
+            When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"),
+            DT_SUBHOURLY_POST_MNTS must be set to an integer between 0 and 59,
             inclusive but in this case is not:
               SUB_HOURLY_POST = \"{SUB_HOURLY_POST}\"
               DT_SUBHOURLY_POST_MNTS = \"{DT_SUBHOURLY_POST_MNTS}\"''')
     #
-    # Check that DT_SUBHOURLY_POST_MNTS (after converting to seconds) is 
+    # Check that DT_SUBHOURLY_POST_MNTS (after converting to seconds) is
     # evenly divisible by the forecast model's main time step DT_ATMOS.
     #
       rem=( DT_SUBHOURLY_POST_MNTS*60 % DT_ATMOS )
       if rem != 0:
         print_err_msg_exit(f'''
-            When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
-            the time interval specified by DT_SUBHOURLY_POST_MNTS (after converting 
-            to seconds) must be evenly divisible by the time step DT_ATMOS used in 
-            the forecast model, i.e. the remainder (rem) must be zero.  In this case, 
+            When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"),
+            the time interval specified by DT_SUBHOURLY_POST_MNTS (after converting
+            to seconds) must be evenly divisible by the time step DT_ATMOS used in
+            the forecast model, i.e. the remainder (rem) must be zero.  In this case,
             it is not:
               SUB_HOURLY_POST = \"{SUB_HOURLY_POST}\"
               DT_SUBHOURLY_POST_MNTS = \"{DT_SUBHOURLY_POST_MNTS}\"
               DT_ATMOS = \"{DT_ATMOS}\"
               rem = (DT_SUBHOURLY_POST_MNTS*60) %% DT_ATMOS = {rem}
-            Please reset DT_SUBHOURLY_POST_MNTS and/or DT_ATMOS so that this remainder 
+            Please reset DT_SUBHOURLY_POST_MNTS and/or DT_ATMOS so that this remainder
             is zero.''')
     #
-    # If DT_SUBHOURLY_POST_MNTS is set to 0 (with SUB_HOURLY_POST set to 
+    # If DT_SUBHOURLY_POST_MNTS is set to 0 (with SUB_HOURLY_POST set to
     # True), then we're not really performing subhourly post-processing.
-    # In this case, reset SUB_HOURLY_POST to False and print out an 
+    # In this case, reset SUB_HOURLY_POST to False and print out an
     # informational message that such a change was made.
     #
       if DT_SUBHOURLY_POST_MNTS == 0:
         print_info_msg(f'''
-            When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"), 
+            When performing sub-hourly post (i.e. SUB_HOURLY_POST set to \"TRUE\"),
             DT_SUBHOURLY_POST_MNTS must be set to a value greater than 0; otherwise,
             sub-hourly output is not really being performed:
               SUB_HOURLY_POST = \"{SUB_HOURLY_POST}\"
               DT_SUBHOURLY_POST_MNTS = \"{DT_SUBHOURLY_POST_MNTS}\"
-            Resetting SUB_HOURLY_POST to \"FALSE\".  If you do not want this, you 
+            Resetting SUB_HOURLY_POST to \"FALSE\".  If you do not want this, you
             must set DT_SUBHOURLY_POST_MNTS to something other than zero.''')
         SUB_HOURLY_POST=False
     #
     #-----------------------------------------------------------------------
     #
-    # If the base directory (EXPT_BASEDIR) in which the experiment subdirectory 
-    # (EXPT_SUBDIR) will be located does not start with a "/", then it is 
-    # either set to a null string or contains a relative directory.  In both 
-    # cases, prepend to it the absolute path of the default directory under 
-    # which the experiment directories are placed.  If EXPT_BASEDIR was set 
-    # to a null string, it will get reset to this default experiment directory, 
-    # and if it was set to a relative directory, it will get reset to an 
-    # absolute directory that points to the relative directory under the 
-    # default experiment directory.  Then create EXPT_BASEDIR if it doesn't 
+    # If the base directory (EXPT_BASEDIR) in which the experiment subdirectory
+    # (EXPT_SUBDIR) will be located does not start with a "/", then it is
+    # either set to a null string or contains a relative directory.  In both
+    # cases, prepend to it the absolute path of the default directory under
+    # which the experiment directories are placed.  If EXPT_BASEDIR was set
+    # to a null string, it will get reset to this default experiment directory,
+    # and if it was set to a relative directory, it will get reset to an
+    # absolute directory that points to the relative directory under the
+    # default experiment directory.  Then create EXPT_BASEDIR if it doesn't
     # already exist.
     #
     #-----------------------------------------------------------------------
@@ -753,7 +753,7 @@ def setup():
     except:
       pass
     EXPT_BASEDIR = os.path.abspath(EXPT_BASEDIR)
-    
+
     mkdir_vrfy(f' -p "{EXPT_BASEDIR}"')
     #
     #-----------------------------------------------------------------------
@@ -782,7 +782,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     # Set other directories, some of which may depend on EXPTDIR (depending
-    # on whether we're running in NCO or community mode, i.e. whether RUN_ENVIR 
+    # on whether we're running in NCO or community mode, i.e. whether RUN_ENVIR
     # is set to "nco" or "community").  Definitions:
     #
     # LOGDIR:
@@ -794,7 +794,7 @@ def setup():
     # usually much coarser than the native FV3-LAM grid).
     #
     # FIXclim:
-    # This is the directory that will contain the MERRA2 aerosol climatology 
+    # This is the directory that will contain the MERRA2 aerosol climatology
     # data file and lookup tables for optics properties
     #
     # FIXLAM:
@@ -807,19 +807,19 @@ def setup():
     # be placed.
     #
     # COMROOT:
-    # In NCO mode, this is the full path to the "com" directory under which 
+    # In NCO mode, this is the full path to the "com" directory under which
     # output from the RUN_POST_TN task will be placed.  Note that this output
     # is not placed directly under COMROOT but several directories further
     # down.  More specifically, for a cycle starting at yyyymmddhh, it is at
     #
     #   $COMROOT/$NET/$envir/$RUN.$yyyymmdd/$hh
     #
-    # Below, we set COMROOT in terms of PTMP as COMROOT="$PTMP/com".  COMOROOT 
+    # Below, we set COMROOT in terms of PTMP as COMROOT="$PTMP/com".  COMOROOT
     # is not used by the workflow in community mode.
     #
     # COMOUT_BASEDIR:
-    # In NCO mode, this is the base directory directly under which the output 
-    # from the RUN_POST_TN task will be placed, i.e. it is the cycle-independent 
+    # In NCO mode, this is the base directory directly under which the output
+    # from the RUN_POST_TN task will be placed, i.e. it is the cycle-independent
     # portion of the RUN_POST_TN task's output directory.  It is given by
     #
     #   $COMROOT/$NET/$model_ver
@@ -835,38 +835,48 @@ def setup():
            COMROOT, COMOUT_BASEDIR, POST_OUTPUT_DOMAIN_NAME
 
     LOGDIR = os.path.join(EXPTDIR, "log")
-    
+
     FIXam = os.path.join(EXPTDIR, "fix_am")
     FIXclim = os.path.join(EXPTDIR, "fix_clim")
     FIXLAM = os.path.join(EXPTDIR, "fix_lam")
-    
+
     if RUN_ENVIR == "nco":
-    
+
       CYCLE_BASEDIR = os.path.join(STMP, "tmpnwprd", RUN)
       check_for_preexist_dir_file(CYCLE_BASEDIR,PREEXISTING_DIR_METHOD)
       COMROOT = os.path.join(PTMP, "com")
       COMOUT_BASEDIR = os.path.join(COMROOT, NET, model_ver)
       check_for_preexist_dir_file(COMOUT_BASEDIR,PREEXISTING_DIR_METHOD)
-    
+
     else:
-    
+
       CYCLE_BASEDIR=EXPTDIR
       COMROOT=""
       COMOUT_BASEDIR=""
 
+    #
+    #-----------------------------------------------------------------------
+    #
+    #
+    # If POST_OUTPUT_DOMAIN_NAME has not been specified by the user, set it
+    # to PREDEF_GRID_NAME (which won't be empty if using a predefined grid).
+    # Then change it to lowercase.  Finally, ensure that it does not end up
+    # getting set to an empty string.
+    #
+    #-----------------------------------------------------------------------
+    #
+    POST_OUTPUT_DOMAIN_NAME = POST_OUTPUT_DOMAIN_NAME or PREDEF_GRID_NAME
+    POST_OUTPUT_DOMAIN_NAME = lowercase(POST_OUTPUT_DOMAIN_NAME)
+
     if POST_OUTPUT_DOMAIN_NAME is None:
       if PREDEF_GRID_NAME is None:
         print_err_msg_exit(f'''
-            The domain name used in naming the run_post output files 
+            The domain name used in naming the run_post output files
             (POST_OUTPUT_DOMAIN_NAME) has not been set:
             POST_OUTPUT_DOMAIN_NAME = \"{POST_OUTPUT_DOMAIN_NAME}\"
-            If this experiment is not using a predefined grid (i.e. if 
-            PREDEF_GRID_NAME is set to a null string), POST_OUTPUT_DOMAIN_NAME 
+            If this experiment is not using a predefined grid (i.e. if
+            PREDEF_GRID_NAME is set to a null string), POST_OUTPUT_DOMAIN_NAME
             must be set in the configuration file (\"{EXPT_CONFIG_FN}\"). ''')
-
-      POST_OUTPUT_DOMAIN_NAME = PREDEF_GRID_NAME
-
-    POST_OUTPUT_DOMAIN_NAME = lowercase(POST_OUTPUT_DOMAIN_NAME)
     #
     #-----------------------------------------------------------------------
     #
@@ -884,25 +894,25 @@ def setup():
     #
     #   (7) The CCPP physics suite definition file
     #
-    # The workflow contains templates for the first six of these files.  
+    # The workflow contains templates for the first six of these files.
     # Template files are versions of these files that contain placeholder
-    # (i.e. dummy) values for various parameters.  The experiment/workflow 
-    # generation scripts copy these templates to appropriate locations in 
+    # (i.e. dummy) values for various parameters.  The experiment/workflow
+    # generation scripts copy these templates to appropriate locations in
     # the experiment directory (either the top of the experiment directory
     # or one of the cycle subdirectories) and replace the placeholders in
-    # these copies by actual values specified in the experiment/workflow 
+    # these copies by actual values specified in the experiment/workflow
     # configuration file (or derived from such values).  The scripts then
     # use the resulting "actual" files as inputs to the forecast model.
     #
     # Note that the CCPP physics suite defintion file does not have a cor-
     # responding template file because it does not contain any values that
     # need to be replaced according to the experiment/workflow configura-
-    # tion.  If using CCPP, this file simply needs to be copied over from 
+    # tion.  If using CCPP, this file simply needs to be copied over from
     # its location in the forecast model's directory structure to the ex-
     # periment directory.
     #
     # Below, we first set the names of the templates for the first six files
-    # listed above.  We then set the full paths to these template files.  
+    # listed above.  We then set the full paths to these template files.
     # Note that some of these file names depend on the physics suite while
     # others do not.
     #
@@ -915,9 +925,9 @@ def setup():
     global FV3_NML_BASE_SUITE_FP, FV3_NML_YAML_CONFIG_FP,FV3_NML_BASE_ENS_FP
 
     dot_ccpp_phys_suite_or_null=f".{CCPP_PHYS_SUITE}"
-    
-    # Names of input files that the forecast model (ufs-weather-model) expects 
-    # to read in.  These should only be changed if the input file names in the 
+
+    # Names of input files that the forecast model (ufs-weather-model) expects
+    # to read in.  These should only be changed if the input file names in the
     # forecast model code are changed.
     #----------------------------------
     DATA_TABLE_FN = "data_table"
@@ -946,11 +956,11 @@ def setup():
     #
     # Set:
     #
-    # 1) the variable CCPP_PHYS_SUITE_FN to the name of the CCPP physics 
+    # 1) the variable CCPP_PHYS_SUITE_FN to the name of the CCPP physics
     #    suite definition file.
-    # 2) the variable CCPP_PHYS_SUITE_IN_CCPP_FP to the full path of this 
+    # 2) the variable CCPP_PHYS_SUITE_IN_CCPP_FP to the full path of this
     #    file in the forecast model's directory structure.
-    # 3) the variable CCPP_PHYS_SUITE_FP to the full path of this file in 
+    # 3) the variable CCPP_PHYS_SUITE_FP to the full path of this file in
     #    the experiment directory.
     #
     # Note that the experiment/workflow generation scripts will copy this
@@ -996,12 +1006,12 @@ def setup():
     #-----------------------------------------------------------------------
     #
     # Call the function that sets the ozone parameterization being used and
-    # modifies associated parameters accordingly. 
+    # modifies associated parameters accordingly.
     #
     #-----------------------------------------------------------------------
     #
-   
-    # export env vars before calling another module 
+
+    # export env vars before calling another module
     export_vars()
 
     OZONE_PARAM = set_ozone_param( \
@@ -1013,7 +1023,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     # Set the full paths to those forecast model input files that are cycle-
-    # independent, i.e. they don't include information about the cycle's 
+    # independent, i.e. they don't include information about the cycle's
     # starting day/time.  These are:
     #
     #   * The data table file [(1) in the list above)]
@@ -1025,8 +1035,8 @@ def setup():
     # scripts will place them in the main experiment directory (EXPTDIR).
     # The script that runs each cycle will then create links to these files
     # in the run directories of the individual cycles (which are subdirecto-
-    # ries under EXPTDIR).  
-    # 
+    # ries under EXPTDIR).
+    #
     # The remaining two input files to the forecast model, i.e.
     #
     #   * The diagnostics table file [(2) in the list above)]
@@ -1036,7 +1046,7 @@ def setup():
     # versions of these two files must be generated for each cycle and then
     # placed directly in the run directories of the cycles (not EXPTDIR).
     # For this reason, the full paths to their locations vary by cycle and
-    # cannot be set here (i.e. they can only be set in the loop over the 
+    # cannot be set here (i.e. they can only be set in the loop over the
     # cycles in the rocoto workflow XML file).
     #
     #-----------------------------------------------------------------------
@@ -1051,7 +1061,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     # If USE_USER_STAGED_EXTRN_FILES is set to TRUE, make sure that the user-
-    # specified directories under which the external model files should be 
+    # specified directories under which the external model files should be
     # located actually exist.
     #
     #-----------------------------------------------------------------------
@@ -1064,17 +1074,17 @@ def setup():
 
       if not os.path.exists(EXTRN_MDL_SOURCE_BASEDIR_ICS[:idx]):
         print_err_msg_exit(f'''
-            The directory (EXTRN_MDL_SOURCE_BASEDIR_ICS) in which the user-staged 
+            The directory (EXTRN_MDL_SOURCE_BASEDIR_ICS) in which the user-staged
             external model files for generating ICs should be located does not exist:
               EXTRN_MDL_SOURCE_BASEDIR_ICS = \"{EXTRN_MDL_SOURCE_BASEDIR_ICS}\"''')
-    
+
       idx = EXTRN_MDL_SOURCE_BASEDIR_LBCS.find("$")
       if idx == -1:
         idx=len(EXTRN_MDL_SOURCE_BASEDIR_LBCS)
 
       if not os.path.exists(EXTRN_MDL_SOURCE_BASEDIR_LBCS[:idx]):
         print_err_msg_exit(f'''
-            The directory (EXTRN_MDL_SOURCE_BASEDIR_LBCS) in which the user-staged 
+            The directory (EXTRN_MDL_SOURCE_BASEDIR_LBCS) in which the user-staged
             external model files for generating LBCs should be located does not exist:
               EXTRN_MDL_SOURCE_BASEDIR_LBCS = \"{EXTRN_MDL_SOURCE_BASEDIR_LBCS}\"''')
     #
@@ -1109,7 +1119,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Set the full path to the script that can be used to (re)launch the 
+    # Set the full path to the script that can be used to (re)launch the
     # workflow.  Also, if USE_CRON_TO_RELAUNCH is set to TRUE, set the line
     # to add to the cron table to automatically relaunch the workflow every
     # CRON_RELAUNCH_INTVL_MNTS minutes.  Otherwise, set the variable con-
@@ -1142,18 +1152,18 @@ def setup():
     # processing, as follows:
     #
     # GRID_DIR:
-    # Directory in which the grid files will be placed (if RUN_TASK_MAKE_GRID 
-    # is set to True) or searched for (if RUN_TASK_MAKE_GRID is set to 
+    # Directory in which the grid files will be placed (if RUN_TASK_MAKE_GRID
+    # is set to True) or searched for (if RUN_TASK_MAKE_GRID is set to
     # False).
     #
     # OROG_DIR:
-    # Directory in which the orography files will be placed (if RUN_TASK_MAKE_OROG 
-    # is set to True) or searched for (if RUN_TASK_MAKE_OROG is set to 
+    # Directory in which the orography files will be placed (if RUN_TASK_MAKE_OROG
+    # is set to True) or searched for (if RUN_TASK_MAKE_OROG is set to
     # False).
     #
     # SFC_CLIMO_DIR:
     # Directory in which the surface climatology files will be placed (if
-    # RUN_TASK_MAKE_SFC_CLIMO is set to True) or searched for (if 
+    # RUN_TASK_MAKE_SFC_CLIMO is set to True) or searched for (if
     # RUN_TASK_MAKE_SFC_CLIMO is set to False).
     #
     #----------------------------------------------------------------------
@@ -1177,128 +1187,128 @@ def setup():
            RUN_TASK_VX_ENSPOINT = \"{RUN_TASK_VX_ENSPOINT}\"''')
 
     if RUN_ENVIR == "nco":
-    
+
       nco_fix_dir = os.path.join(DOMAIN_PREGEN_BASEDIR, PREDEF_GRID_NAME)
       if not os.path.exists(nco_fix_dir):
         print_err_msg_exit(f'''
             The directory (nco_fix_dir) that should contain the pregenerated grid,
             orography, and surface climatology files does not exist:
               nco_fix_dir = \"{nco_fix_dir}\"''')
-    
+
       if RUN_TASK_MAKE_GRID or \
          ( not RUN_TASK_MAKE_GRID and \
            GRID_DIR != nco_fix_dir ):
-    
+
         msg=f'''
             When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
-            grid files already exist in the directory 
-            
+            grid files already exist in the directory
+
               {DOMAIN_PREGEN_BASEDIR}/{PREDEF_GRID_NAME}
-            
+
             where
-            
+
               DOMAIN_PREGEN_BASEDIR = \"{DOMAIN_PREGEN_BASEDIR}\"
               PREDEF_GRID_NAME = \"{PREDEF_GRID_NAME}\"
-            
-            Thus, the MAKE_GRID_TN task must not be run (i.e. RUN_TASK_MAKE_GRID must 
-            be set to \"FALSE\"), and the directory in which to look for the grid 
-            files (i.e. GRID_DIR) must be set to the one above.  Current values for 
+
+            Thus, the MAKE_GRID_TN task must not be run (i.e. RUN_TASK_MAKE_GRID must
+            be set to \"FALSE\"), and the directory in which to look for the grid
+            files (i.e. GRID_DIR) must be set to the one above.  Current values for
             these quantities are:
-            
+
               RUN_TASK_MAKE_GRID = \"{RUN_TASK_MAKE_GRID}\"
               GRID_DIR = \"{GRID_DIR}\"
-            
+
             Resetting RUN_TASK_MAKE_GRID to \"FALSE\" and GRID_DIR to the one above.
             Reset values are:
         '''
-    
+
         RUN_TASK_MAKE_GRID=False
         GRID_DIR=nco_fix_dir
-    
+
         msg+=f'''
             RUN_TASK_MAKE_GRID = \"{RUN_TASK_MAKE_GRID}\"
             GRID_DIR = \"{GRID_DIR}\"
         '''
-    
+
         print_info_msg(msg)
-    
-    
+
+
       if RUN_TASK_MAKE_OROG or \
          ( not RUN_TASK_MAKE_OROG and \
            OROG_DIR != nco_fix_dir ):
-    
+
         msg=f'''
             When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
-            orography files already exist in the directory 
+            orography files already exist in the directory
               {DOMAIN_PREGEN_BASEDIR}/{PREDEF_GRID_NAME}
-            
+
             where
-            
+
               DOMAIN_PREGEN_BASEDIR = \"{DOMAIN_PREGEN_BASEDIR}\"
               PREDEF_GRID_NAME = \"{PREDEF_GRID_NAME}\"
-            
-            Thus, the MAKE_OROG_TN task must not be run (i.e. RUN_TASK_MAKE_OROG must 
-            be set to \"FALSE\"), and the directory in which to look for the orography 
-            files (i.e. OROG_DIR) must be set to the one above.  Current values for 
+
+            Thus, the MAKE_OROG_TN task must not be run (i.e. RUN_TASK_MAKE_OROG must
+            be set to \"FALSE\"), and the directory in which to look for the orography
+            files (i.e. OROG_DIR) must be set to the one above.  Current values for
             these quantities are:
-            
+
               RUN_TASK_MAKE_OROG = \"{RUN_TASK_MAKE_OROG}\"
               OROG_DIR = \"{OROG_DIR}\"
-            
+
             Resetting RUN_TASK_MAKE_OROG to \"FALSE\" and OROG_DIR to the one above.
             Reset values are:
         '''
-    
+
         RUN_TASK_MAKE_OROG=False
         OROG_DIR=nco_fix_dir
-    
+
         msg+=f'''
             RUN_TASK_MAKE_OROG = \"{RUN_TASK_MAKE_OROG}\"
             OROG_DIR = \"{OROG_DIR}\"
         '''
-    
+
         print_info_msg(msg)
-    
-    
+
+
       if RUN_TASK_MAKE_SFC_CLIMO or \
          ( not RUN_TASK_MAKE_SFC_CLIMO and \
            SFC_CLIMO_DIR != nco_fix_dir ):
-    
+
         msg=f'''
             When RUN_ENVIR is set to \"nco\", the workflow assumes that pregenerated
-            surface climatology files already exist in the directory 
-            
+            surface climatology files already exist in the directory
+
               {DOMAIN_PREGEN_BASEDIR}/{PREDEF_GRID_NAME}
-            
+
             where
-            
+
               DOMAIN_PREGEN_BASEDIR = \"{DOMAIN_PREGEN_BASEDIR}\"
               PREDEF_GRID_NAME = \"{PREDEF_GRID_NAME}\"
-            
-            Thus, the MAKE_SFC_CLIMO_TN task must not be run (i.e. RUN_TASK_MAKE_SFC_CLIMO 
-            must be set to \"FALSE\"), and the directory in which to look for the 
-            surface climatology files (i.e. SFC_CLIMO_DIR) must be set to the one 
+
+            Thus, the MAKE_SFC_CLIMO_TN task must not be run (i.e. RUN_TASK_MAKE_SFC_CLIMO
+            must be set to \"FALSE\"), and the directory in which to look for the
+            surface climatology files (i.e. SFC_CLIMO_DIR) must be set to the one
             above.  Current values for these quantities are:
-            
+
               RUN_TASK_MAKE_SFC_CLIMO = \"{RUN_TASK_MAKE_SFC_CLIMO}\"
               SFC_CLIMO_DIR = \"{SFC_CLIMO_DIR}\"
-            
-            Resetting RUN_TASK_MAKE_SFC_CLIMO to \"FALSE\" and SFC_CLIMO_DIR to the 
+
+            Resetting RUN_TASK_MAKE_SFC_CLIMO to \"FALSE\" and SFC_CLIMO_DIR to the
             one above.  Reset values are:
         '''
-    
+
         RUN_TASK_MAKE_SFC_CLIMO=False
         SFC_CLIMO_DIR=nco_fix_dir
-    
+
         msg+=f'''
             RUN_TASK_MAKE_SFC_CLIMO = \"{RUN_TASK_MAKE_SFC_CLIMO}\"
             SFC_CLIMO_DIR = \"{SFC_CLIMO_DIR}\"
         '''
-    
+
         print_info_msg(msg)
-    
+
       if RUN_TASK_VX_GRIDSTAT:
-    
+
         msg=f'''
             When RUN_ENVIR is set to \"nco\", it is assumed that the verification
             will not be run.
@@ -1311,11 +1321,11 @@ def setup():
         msg+=f'''
             RUN_TASK_VX_GRIDSTAT = \"{RUN_TASK_VX_GRIDSTAT}\"
         '''
-    
+
         print_info_msg(msg)
-    
+
       if RUN_TASK_VX_POINTSTAT:
-    
+
         msg=f'''
             When RUN_ENVIR is set to \"nco\", it is assumed that the verification
             will not be run.
@@ -1328,26 +1338,26 @@ def setup():
         msg=f'''
             RUN_TASK_VX_POINTSTAT = \"{RUN_TASK_VX_POINTSTAT}\"
         '''
-    
+
         print_info_msg(msg)
-    
+
       if RUN_TASK_VX_ENSGRID:
-    
+
         msg=f'''
             When RUN_ENVIR is set to \"nco\", it is assumed that the verification
             will not be run.
               RUN_TASK_VX_ENSGRID = \"{RUN_TASK_VX_ENSGRID}\"
-            Resetting RUN_TASK_VX_ENSGRID to \"FALSE\" 
+            Resetting RUN_TASK_VX_ENSGRID to \"FALSE\"
             Reset value is:'''
-    
+
         RUN_TASK_VX_ENSGRID=False
-    
+
         msg+=f'''
             RUN_TASK_VX_ENSGRID = \"{RUN_TASK_VX_ENSGRID}\"
         '''
-    
+
         print_info_msg(msg)
-    
+
     #
     #-----------------------------------------------------------------------
     #
@@ -1357,23 +1367,23 @@ def setup():
     #
     else:
       #
-      # If RUN_TASK_MAKE_GRID is set to False, the workflow will look for 
-      # the pregenerated grid files in GRID_DIR.  In this case, make sure that 
-      # GRID_DIR exists.  Otherwise, set it to a predefined location under the 
+      # If RUN_TASK_MAKE_GRID is set to False, the workflow will look for
+      # the pregenerated grid files in GRID_DIR.  In this case, make sure that
+      # GRID_DIR exists.  Otherwise, set it to a predefined location under the
       # experiment directory (EXPTDIR).
       #
       if not RUN_TASK_MAKE_GRID:
         if not os.path.exists(GRID_DIR):
           print_err_msg_exit(f'''
-            The directory (GRID_DIR) that should contain the pregenerated grid files 
+            The directory (GRID_DIR) that should contain the pregenerated grid files
             does not exist:
               GRID_DIR = \"{GRID_DIR}\"''')
       else:
         GRID_DIR=os.path.join(EXPTDIR,"grid")
       #
-      # If RUN_TASK_MAKE_OROG is set to False, the workflow will look for 
-      # the pregenerated orography files in OROG_DIR.  In this case, make sure 
-      # that OROG_DIR exists.  Otherwise, set it to a predefined location under 
+      # If RUN_TASK_MAKE_OROG is set to False, the workflow will look for
+      # the pregenerated orography files in OROG_DIR.  In this case, make sure
+      # that OROG_DIR exists.  Otherwise, set it to a predefined location under
       # the experiment directory (EXPTDIR).
       #
       if not RUN_TASK_MAKE_OROG:
@@ -1385,7 +1395,7 @@ def setup():
       else:
         OROG_DIR=os.path.join(EXPTDIR,"orog")
       #
-      # If RUN_TASK_MAKE_SFC_CLIMO is set to False, the workflow will look 
+      # If RUN_TASK_MAKE_SFC_CLIMO is set to False, the workflow will look
       # for the pregenerated surface climatology files in SFC_CLIMO_DIR.  In
       # this case, make sure that SFC_CLIMO_DIR exists.  Otherwise, set it to
       # a predefined location under the experiment directory (EXPTDIR).
@@ -1407,7 +1417,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
 
-    # export env vars before calling another module 
+    # export env vars before calling another module
     export_vars()
 
     set_extrn_mdl_params()
@@ -1417,8 +1427,8 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Set parameters according to the type of horizontal grid generation 
-    # method specified.  First consider GFDL's global-parent-grid based 
+    # Set parameters according to the type of horizontal grid generation
+    # method specified.  First consider GFDL's global-parent-grid based
     # method.
     #
     #-----------------------------------------------------------------------
@@ -1433,7 +1443,7 @@ def setup():
         NEG_NY_OF_DOM_WITH_WIDE_HALO
 
     if GRID_GEN_METHOD == "GFDLgrid":
-    
+
       (\
       LON_CTR,LAT_CTR,NX,NY,NHW,STRETCH_FAC,
       ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
@@ -1459,7 +1469,7 @@ def setup():
     #-----------------------------------------------------------------------
     #
     elif GRID_GEN_METHOD == "ESGgrid":
-    
+
       (\
       LON_CTR,LAT_CTR,NX,NY,PAZI,
       NHW,STRETCH_FAC,DEL_ANGLE_X_SG,DEL_ANGLE_Y_SG,
@@ -1479,7 +1489,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Create a new experiment directory.  Note that at this point we are 
+    # Create a new experiment directory.  Note that at this point we are
     # guaranteed that there is no preexisting experiment directory. For
     # platforms with no workflow manager, we need to create LOGDIR as well,
     # since it won't be created later at runtime.
@@ -1493,7 +1503,7 @@ def setup():
     #
     # If not running the MAKE_GRID_TN, MAKE_OROG_TN, and/or MAKE_SFC_CLIMO
     # tasks, create symlinks under the FIXLAM directory to pregenerated grid,
-    # orography, and surface climatology files.  In the process, also set 
+    # orography, and surface climatology files.  In the process, also set
     # RES_IN_FIXLAM_FILENAMES, which is the resolution of the grid (in units
     # of number of grid points on an equivalent global uniform cubed-sphere
     # grid) used in the names of the fixed files in the FIXLAM directory.
@@ -1518,7 +1528,7 @@ def setup():
     # link fix files
     res_in_grid_fns=""
     if not RUN_TASK_MAKE_GRID:
-    
+
       res_in_grid_fns = link_fix( \
         verbose=VERBOSE, \
         file_group="grid")
@@ -1535,7 +1545,7 @@ def setup():
     #
     res_in_orog_fns=""
     if not RUN_TASK_MAKE_OROG:
-    
+
       res_in_orog_fns = link_fix( \
         verbose=VERBOSE, \
         file_group="orog")
@@ -1562,7 +1572,7 @@ def setup():
     #
     res_in_sfc_climo_fns=""
     if not RUN_TASK_MAKE_SFC_CLIMO:
-    
+
       res_in_sfc_climo_fns = link_fix( \
         verbose=VERBOSE, \
         file_group="sfc_climo")
@@ -1580,8 +1590,8 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # The variable CRES is needed in constructing various file names.  If 
-    # not running the make_grid task, we can set it here.  Otherwise, it 
+    # The variable CRES is needed in constructing various file names.  If
+    # not running the make_grid task, we can set it here.  Otherwise, it
     # will get set to a valid value by that task.
     #
     #-----------------------------------------------------------------------
@@ -1601,7 +1611,7 @@ def setup():
     if WRITE_DOPOST:
       # Turn off run_post
       RUN_TASK_RUN_POST=False
-    
+
       # Check if SUB_HOURLY_POST is on
       if SUB_HOURLY_POST:
         print_err_msg_exit(f'''
@@ -1619,7 +1629,7 @@ def setup():
     PE_MEMBER01=LAYOUT_X*LAYOUT_Y
     if QUILTING:
       PE_MEMBER01 = PE_MEMBER01 + WRTCMP_write_groups*WRTCMP_write_tasks_per_group
-    
+
     print_info_msg(f'''
         The number of MPI tasks for the forecast (including those for the write
         component if it is being used) are:
@@ -1647,12 +1657,12 @@ def setup():
     #
     global NNODES_RUN_FCST
     NNODES_RUN_FCST= (PE_MEMBER01 + PPN_RUN_FCST - 1)//PPN_RUN_FCST
-    
+
     #
     #-----------------------------------------------------------------------
     #
     # Call the function that checks whether the RUC land surface model (LSM)
-    # is being called by the physics suite and sets the workflow variable 
+    # is being called by the physics suite and sets the workflow variable
     # SDF_USES_RUC_LSM to True or False accordingly.
     #
     #-----------------------------------------------------------------------
@@ -1664,9 +1674,9 @@ def setup():
     #-----------------------------------------------------------------------
     #
     # Set the name of the file containing aerosol climatology data that, if
-    # necessary, can be used to generate approximate versions of the aerosol 
-    # fields needed by Thompson microphysics.  This file will be used to 
-    # generate such approximate aerosol fields in the ICs and LBCs if Thompson 
+    # necessary, can be used to generate approximate versions of the aerosol
+    # fields needed by Thompson microphysics.  This file will be used to
+    # generate such approximate aerosol fields in the ICs and LBCs if Thompson
     # MP is included in the physics suite and if the exteranl model for ICs
     # or LBCs does not already provide these fields.  Also, set the full path
     # to this file.
@@ -1683,7 +1693,7 @@ def setup():
     # to ensure that fixed files needed by this parameterization are copied
     # to the FIXam directory and appropriate symlinks to them are created in
     # the run directories.  This function also sets the workflow variable
-    # SDF_USES_THOMPSON_MP that indicates whether Thompson MP is called by 
+    # SDF_USES_THOMPSON_MP that indicates whether Thompson MP is called by
     # the physics suite.
     #
     #-----------------------------------------------------------------------
@@ -1710,8 +1720,8 @@ def setup():
     #    ming it to the name specified by GLOBAL_VAR_DEFNS_FN.
     #
     # 2) Resetting the default variable values in this file to their current
-    #    values.  This is necessary because these variables may have been 
-    #    reset by the user-specified configuration file (if one exists in 
+    #    values.  This is necessary because these variables may have been
+    #    reset by the user-specified configuration file (if one exists in
     #    USHDIR) and/or by this setup script, e.g. because predef_domain is
     #    set to a valid non-empty value.
     #
@@ -1734,7 +1744,7 @@ def setup():
     update_dict(globals(), cfg_d)
 
     # constants section
-    cfg_d['constants'] = cfg_c 
+    cfg_d['constants'] = cfg_c
 
     #
     #-----------------------------------------------------------------------
@@ -1750,8 +1760,8 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # Full path to workflow (re)launch script, its log file, and the line 
-        # that gets added to the cron table to launch this script if the flag 
+        # Full path to workflow (re)launch script, its log file, and the line
+        # that gets added to the cron table to launch this script if the flag
         # USE_CRON_TO_RELAUNCH is set to \"TRUE\".
         #
         #-----------------------------------------------------------------------
@@ -1793,14 +1803,14 @@ def setup():
         'SFC_CLIMO_INPUT_DIR': SFC_CLIMO_INPUT_DIR,
         'TOPO_DIR': TOPO_DIR,
         'UPP_DIR': UPP_DIR,
-        
+
         'EXPTDIR': EXPTDIR,
         'LOGDIR': LOGDIR,
         'CYCLE_BASEDIR': CYCLE_BASEDIR,
         'GRID_DIR': GRID_DIR,
         'OROG_DIR': OROG_DIR,
         'SFC_CLIMO_DIR': SFC_CLIMO_DIR,
-        
+
         'NDIGITS_ENSMEM_NAMES': NDIGITS_ENSMEM_NAMES,
         'ENSMEM_NAMES': ENSMEM_NAMES,
         'FV3_NML_ENSMEM_FPS': FV3_NML_ENSMEM_FPS,
@@ -1812,7 +1822,7 @@ def setup():
         #-----------------------------------------------------------------------
         #
         'GLOBAL_VAR_DEFNS_FP': GLOBAL_VAR_DEFNS_FP,
-        
+
         'DATA_TABLE_FN': DATA_TABLE_FN,
         'DIAG_TABLE_FN': DIAG_TABLE_FN,
         'FIELD_TABLE_FN': FIELD_TABLE_FN,
@@ -1824,7 +1834,7 @@ def setup():
         'FIELD_TABLE_TMPL_FN': FIELD_TABLE_TMPL_FN,
         'MODEL_CONFIG_TMPL_FN': MODEL_CONFIG_TMPL_FN,
         'NEMS_CONFIG_TMPL_FN': NEMS_CONFIG_TMPL_FN,
-        
+
         'DATA_TABLE_TMPL_FP': DATA_TABLE_TMPL_FP,
         'DIAG_TABLE_TMPL_FP': DIAG_TABLE_TMPL_FP,
         'FIELD_TABLE_TMPL_FP': FIELD_TABLE_TMPL_FP,
@@ -1833,25 +1843,25 @@ def setup():
         'FV3_NML_BASE_ENS_FP': FV3_NML_BASE_ENS_FP,
         'MODEL_CONFIG_TMPL_FP': MODEL_CONFIG_TMPL_FP,
         'NEMS_CONFIG_TMPL_FP': NEMS_CONFIG_TMPL_FP,
-        
+
         'CCPP_PHYS_SUITE_FN': CCPP_PHYS_SUITE_FN,
         'CCPP_PHYS_SUITE_IN_CCPP_FP': CCPP_PHYS_SUITE_IN_CCPP_FP,
         'CCPP_PHYS_SUITE_FP': CCPP_PHYS_SUITE_FP,
-        
+
         'FIELD_DICT_FN': FIELD_DICT_FN,
         'FIELD_DICT_IN_UWM_FP': FIELD_DICT_IN_UWM_FP,
         'FIELD_DICT_FP': FIELD_DICT_FP,
-        
+
         'DATA_TABLE_FP': DATA_TABLE_FP,
         'FIELD_TABLE_FP': FIELD_TABLE_FP,
         'FV3_NML_FN': FV3_NML_FN,   # This may not be necessary...
         'FV3_NML_FP': FV3_NML_FP,
         'NEMS_CONFIG_FP': NEMS_CONFIG_FP,
-        
+
         'FV3_EXEC_FP': FV3_EXEC_FP,
-        
+
         'LOAD_MODULES_RUN_TASK_FP': LOAD_MODULES_RUN_TASK_FP,
-        
+
         'THOMPSON_MP_CLIMO_FN': THOMPSON_MP_CLIMO_FN,
         'THOMPSON_MP_CLIMO_FP': THOMPSON_MP_CLIMO_FP,
         #
@@ -1865,7 +1875,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # Parameters that indicate whether or not various parameterizations are 
+        # Parameters that indicate whether or not various parameterizations are
         # included in and called by the physics suite.
         #
         #-----------------------------------------------------------------------
@@ -1882,17 +1892,13 @@ def setup():
         #
         'GTYPE': GTYPE,
         'TILE_RGNL': TILE_RGNL,
-        'NH0': NH0,
-        'NH3': NH3,
-        'NH4': NH4,
-        
         'LON_CTR': LON_CTR,
         'LAT_CTR': LAT_CTR,
         'NX': NX,
         'NY': NY,
         'NHW': NHW,
         'STRETCH_FAC': STRETCH_FAC,
-        
+
         'RES_IN_FIXLAM_FILENAMES': RES_IN_FIXLAM_FILENAMES,
         #
         # If running the make_grid task, CRES will be set to a null string during
@@ -1914,9 +1920,9 @@ def setup():
         #-----------------------------------------------------------------------
         #
         # Grid configuration parameters for a regional grid generated from a
-        # global parent cubed-sphere grid.  This is the method originally 
-        # suggested by GFDL since it allows GFDL's nested grid generator to be 
-        # used to generate a regional grid.  However, for large regional domains, 
+        # global parent cubed-sphere grid.  This is the method originally
+        # suggested by GFDL since it allows GFDL's nested grid generator to be
+        # used to generate a regional grid.  However, for large regional domains,
         # it results in grids that have an unacceptably large range of cell sizes
         # (i.e. ratio of maximum to minimum cell size is not sufficiently close
         # to 1).
@@ -1933,9 +1939,9 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # Grid configuration parameters for a regional grid generated independently 
-        # of a global parent grid.  This method was developed by Jim Purser of 
-        # EMC and results in very uniform grids (i.e. ratio of maximum to minimum 
+        # Grid configuration parameters for a regional grid generated independently
+        # of a global parent grid.  This method was developed by Jim Purser of
+        # EMC and results in very uniform grids (i.e. ratio of maximum to minimum
         # cell size is very close to 1).
         #
         #-----------------------------------------------------------------------
@@ -1950,7 +1956,7 @@ def setup():
     #
     #-----------------------------------------------------------------------
     #
-    # Continue appending variable definitions to the variable definitions 
+    # Continue appending variable definitions to the variable definitions
     # file.
     #
     #-----------------------------------------------------------------------
@@ -1959,7 +1965,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # Flag in the \"{MODEL_CONFIG_FN}\" file for coupling the ocean model to 
+        # Flag in the \"{MODEL_CONFIG_FN}\" file for coupling the ocean model to
         # the weather model.
         #
         #-----------------------------------------------------------------------
@@ -1968,7 +1974,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # Name of the ozone parameterization.  The value this gets set to depends 
+        # Name of the ozone parameterization.  The value this gets set to depends
         # on the CCPP physics suite being used.
         #
         #-----------------------------------------------------------------------
@@ -1977,10 +1983,10 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # If USE_USER_STAGED_EXTRN_FILES is set to \"FALSE\", this is the system 
-        # directory in which the workflow scripts will look for the files generated 
-        # by the external model specified in EXTRN_MDL_NAME_ICS.  These files will 
-        # be used to generate the input initial condition and surface files for 
+        # If USE_USER_STAGED_EXTRN_FILES is set to \"FALSE\", this is the system
+        # directory in which the workflow scripts will look for the files generated
+        # by the external model specified in EXTRN_MDL_NAME_ICS.  These files will
+        # be used to generate the input initial condition and surface files for
         # the FV3-LAM.
         #
         #-----------------------------------------------------------------------
@@ -1989,10 +1995,10 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # If USE_USER_STAGED_EXTRN_FILES is set to \"FALSE\", this is the system 
-        # directory in which the workflow scripts will look for the files generated 
-        # by the external model specified in EXTRN_MDL_NAME_LBCS.  These files 
-        # will be used to generate the input lateral boundary condition files for 
+        # If USE_USER_STAGED_EXTRN_FILES is set to \"FALSE\", this is the system
+        # directory in which the workflow scripts will look for the files generated
+        # by the external model specified in EXTRN_MDL_NAME_LBCS.  These files
+        # will be used to generate the input lateral boundary condition files for
         # the FV3-LAM.
         #
         #-----------------------------------------------------------------------
@@ -2019,7 +2025,7 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # The number of cycles for which to make forecasts and the list of 
+        # The number of cycles for which to make forecasts and the list of
         # starting dates/hours of these cycles.
         #
         #-----------------------------------------------------------------------
@@ -2029,12 +2035,12 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # Parameters that determine whether FVCOM data will be used, and if so, 
+        # Parameters that determine whether FVCOM data will be used, and if so,
         # their location.
         #
         # If USE_FVCOM is set to \"TRUE\", then FVCOM data (in the file FVCOM_FILE
-        # located in the directory FVCOM_DIR) will be used to update the surface 
-        # boundary conditions during the initial conditions generation task 
+        # located in the directory FVCOM_DIR) will be used to update the surface
+        # boundary conditions during the initial conditions generation task
         # (MAKE_ICS_TN).
         #
         #-----------------------------------------------------------------------
@@ -2054,9 +2060,9 @@ def setup():
         #
         #-----------------------------------------------------------------------
         #
-        # IF DO_SPP is set to "TRUE", N_VAR_SPP specifies the number of physics 
+        # IF DO_SPP is set to "TRUE", N_VAR_SPP specifies the number of physics
         # parameterizations that are perturbed with SPP.  If DO_LSM_SPP is set to
-        # "TRUE", N_VAR_LNDP specifies the number of LSM parameters that are 
+        # "TRUE", N_VAR_LNDP specifies the number of LSM parameters that are
         # perturbed.  LNDP_TYPE determines the way LSM perturbations are employed
         # and FHCYC_LSM_SPP_OR_NOT sets FHCYC based on whether LSM perturbations
         # are turned on or not.
@@ -2066,10 +2072,7 @@ def setup():
         'N_VAR_SPP': N_VAR_SPP,
         'N_VAR_LNDP': N_VAR_LNDP,
         'LNDP_TYPE': LNDP_TYPE,
-<<<<<<< HEAD
         'LNDP_MODEL_TYPE': LNDP_MODEL_TYPE,
-=======
->>>>>>> Construct var_defns components from dictionary.
         'FHCYC_LSM_SPP_OR_NOT': FHCYC_LSM_SPP_OR_NOT
     })
 
@@ -2136,7 +2139,7 @@ def setup():
         ========================================================================
         Function setup() in \"{os.path.basename(__file__)}\" completed successfully!!!
         ========================================================================''')
-    
+
 #
 #-----------------------------------------------------------------------
 #

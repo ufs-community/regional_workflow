@@ -4,7 +4,6 @@ import os
 import sys
 import argparse
 import unittest
-from textwrap import dedent
 
 from python_utils import import_vars, set_env_var, print_input_args, \
                          print_info_msg, print_err_msg_exit, cfg_to_yaml_str, \
@@ -25,24 +24,24 @@ def create_diag_table_file(run_dir):
 
     #import all environment variables
     import_vars()
-    
+
     #create a diagnostic table file within the specified run directory
     print_info_msg(f'''
         Creating a diagnostics table file (\"{DIAG_TABLE_FN}\") in the specified
         run directory...
-        
+
           run_dir = \"{run_dir}\"''', verbose=VERBOSE)
 
     diag_table_fp = os.path.join(run_dir, DIAG_TABLE_FN)
 
     print_info_msg(f'''
-        
+
         Using the template diagnostics table file:
-        
+
             diag_table_tmpl_fp = {DIAG_TABLE_TMPL_FP}
-        
+
         to create:
-        
+
             diag_table_fp = \"{diag_table_fp}\"''', verbose=VERBOSE)
 
     settings = {
@@ -55,11 +54,11 @@ def create_diag_table_file(run_dir):
     try:
         fill_jinja_template(["-q", "-u", settings_str, "-t", DIAG_TABLE_TMPL_FP, "-o", diag_table_fp])
     except:
-        print_err_msg_exit(f'''
+        print_err_msg_exit('''
             !!!!!!!!!!!!!!!!!
-            
+
             fill_jinja_template.py failed!
-            
+
             !!!!!!!!!!!!!!!!!''')
         return False
     return True

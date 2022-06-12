@@ -19,10 +19,10 @@ def prime_factors(n):
     return factors
 
 def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_factor,
-                            refine_ratio_t6g_to_t7g, 
+                            refine_ratio_t6g_to_t7g,
                             istart_of_t7_on_t6g, iend_of_t7_on_t6g,
                             jstart_of_t7_on_t6g, jend_of_t7_on_t6g):
-    """ Sets the parameters for a grid that is to be generated using the "GFDLgrid" 
+    """ Sets the parameters for a grid that is to be generated using the "GFDLgrid"
     grid generation method (i.e. GRID_GEN_METHOD set to "ESGgrid").
 
     Args:
@@ -30,7 +30,7 @@ def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_fa
          lat_of_t6_ctr
          res_of_t6g
          stretch_factor
-         refine_ratio_t6g_to_t7g 
+         refine_ratio_t6g_to_t7g
          istart_of_t7_on_t6g
          iend_of_t7_on_t6g
          jstart_of_t7_on_t6g
@@ -48,18 +48,18 @@ def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_fa
     #
     #-----------------------------------------------------------------------
     #
-    # To simplify the grid setup, we require that tile 7 be centered on tile 
+    # To simplify the grid setup, we require that tile 7 be centered on tile
     # 6.  Note that this is not really a restriction because tile 6 can al-
-    # ways be moved so that it is centered on tile 7 [the location of tile 6 
-    # doesn't really matter because for a regional setup, the forecast model 
+    # ways be moved so that it is centered on tile 7 [the location of tile 6
+    # doesn't really matter because for a regional setup, the forecast model
     # will only run on tile 7 (not on tiles 1-6)].
     #
-    # We now check that tile 7 is centered on tile 6 by checking (1) that 
-    # the number of cells (on tile 6) between the left boundaries of these 
-    # two tiles is equal to that between their right boundaries and (2) that 
+    # We now check that tile 7 is centered on tile 6 by checking (1) that
+    # the number of cells (on tile 6) between the left boundaries of these
+    # two tiles is equal to that between their right boundaries and (2) that
     # the number of cells (on tile 6) between the bottom boundaries of these
-    # two tiles is equal to that between their top boundaries.  If not, we 
-    # print out an error message and exit.  If so, we set the longitude and 
+    # two tiles is equal to that between their top boundaries.  If not, we
+    # print out an error message and exit.  If so, we set the longitude and
     # latitude of the center of tile 7 to those of tile 6 and continue.
     #
     #-----------------------------------------------------------------------
@@ -78,10 +78,10 @@ def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_fa
             print_err_msg_exit(f'''
                 In order for tile 7 to be centered in the x direction on tile 6, the x-
                 direction tile 6 cell indices at which tile 7 starts and ends (given by
-                istart_of_t7_on_t6g and iend_of_t7_on_t6g, respectively) must be set 
-                such that the number of tile 6 cells in the margin between the left 
+                istart_of_t7_on_t6g and iend_of_t7_on_t6g, respectively) must be set
+                such that the number of tile 6 cells in the margin between the left
                 boundaries of tiles 6 and 7 (given by num_left_margin_cells_on_t6g) is
-                equal to that in the margin between their right boundaries (given by 
+                equal to that in the margin between their right boundaries (given by
                 num_right_margin_cells_on_t6g):
                   istart_of_t7_on_t6g = {istart_of_t7_on_t6g}
                   iend_of_t7_on_t6g = {iend_of_t7_on_t6g}
@@ -102,10 +102,10 @@ def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_fa
             print_err_msg_exit(f'''
                 In order for tile 7 to be centered in the y direction on tile 6, the y-
                 direction tile 6 cell indices at which tile 7 starts and ends (given by
-                jstart_of_t7_on_t6g and jend_of_t7_on_t6g, respectively) must be set 
-                such that the number of tile 6 cells in the margin between the left 
+                jstart_of_t7_on_t6g and jend_of_t7_on_t6g, respectively) must be set
+                such that the number of tile 6 cells in the margin between the left
                 boundaries of tiles 6 and 7 (given by num_left_margin_cells_on_t6g) is
-                equal to that in the margin between their right boundaries (given by 
+                equal to that in the margin between their right boundaries (given by
                 num_right_margin_cells_on_t6g):
                   jstart_of_t7_on_t6g = {jstart_of_t7_on_t6g}
                   jend_of_t7_on_t6g = {jend_of_t7_on_t6g}
@@ -277,13 +277,13 @@ def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_fa
     #
     if istart_of_t7_with_halo_on_t6sg % 2 == 0:
         istart_of_t7_with_halo_on_t6sg = istart_of_t7_with_halo_on_t6sg - 1
-    
+
     if iend_of_t7_with_halo_on_t6sg % 2 == 1:
         iend_of_t7_with_halo_on_t6sg = iend_of_t7_with_halo_on_t6sg + 1
-    
+
     if jstart_of_t7_with_halo_on_t6sg % 2 == 0:
         jstart_of_t7_with_halo_on_t6sg = jstart_of_t7_with_halo_on_t6sg - 1
-    
+
     if jend_of_t7_with_halo_on_t6sg % 2 == 1:
         jend_of_t7_with_halo_on_t6sg = jend_of_t7_with_halo_on_t6sg + 1
     #
@@ -303,17 +303,17 @@ def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_fa
     #-----------------------------------------------------------------------
     #
     print_info_msg(f'''
-        Original values of the halo width on the tile 6 supergrid and on the 
+        Original values of the halo width on the tile 6 supergrid and on the
         tile 7 grid are:
           halo_width_on_t6sg = {halo_width_on_t6sg}
           halo_width_on_t7g  = {halo_width_on_t7g}''', verbose=VERBOSE)
-    
+
     halo_width_on_t6sg = istart_of_t7_on_t6sg - istart_of_t7_with_halo_on_t6sg
     halo_width_on_t6g = halo_width_on_t6sg//2
     halo_width_on_t7g = int(halo_width_on_t6g*refine_ratio_t6g_to_t7g)
-    
+
     print_info_msg(f'''
-        Values of the halo width on the tile 6 supergrid and on the tile 7 grid 
+        Values of the halo width on the tile 6 supergrid and on the tile 7 grid
         AFTER adjustments are:
           halo_width_on_t6sg = {halo_width_on_t6sg}
           halo_width_on_t7g  = {halo_width_on_t7g}''', verbose=VERBOSE)
@@ -322,7 +322,7 @@ def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_fa
     #
     # Calculate the number of cells that the regional domain (without halo)
     # has in each of the two horizontal directions (say x and y).  We denote
-    # these by nx_of_t7_on_t7g and ny_of_t7_on_t7g, respectively.  These 
+    # these by nx_of_t7_on_t7g and ny_of_t7_on_t7g, respectively.  These
     # will be needed in the "shave" steps in the grid generation task of the
     # workflow.
     #
@@ -331,7 +331,7 @@ def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_fa
     nx_of_t7_on_t6sg = iend_of_t7_on_t6sg - istart_of_t7_on_t6sg + 1
     nx_of_t7_on_t6g = nx_of_t7_on_t6sg/2
     nx_of_t7_on_t7g = int(nx_of_t7_on_t6g*refine_ratio_t6g_to_t7g)
-    
+
     ny_of_t7_on_t6sg = jend_of_t7_on_t6sg - jstart_of_t7_on_t6sg + 1
     ny_of_t7_on_t6g = ny_of_t7_on_t6sg/2
     ny_of_t7_on_t7g = int(ny_of_t7_on_t6g*refine_ratio_t6g_to_t7g)
@@ -340,18 +340,18 @@ def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_fa
     #
     nx_of_t6_on_t6sg = 2*nx_of_t6_on_t6g
     ny_of_t6_on_t6sg = 2*ny_of_t6_on_t6g
-    
+
     prime_factors_nx_of_t7_on_t7g = prime_factors(nx_of_t7_on_t7g)
     prime_factors_ny_of_t7_on_t7g = prime_factors(ny_of_t7_on_t7g)
-    
+
     print_info_msg(f'''
-        The number of cells in the two horizontal directions (x and y) on the 
+        The number of cells in the two horizontal directions (x and y) on the
         parent tile's (tile 6) grid and supergrid are:
           nx_of_t6_on_t6g = {nx_of_t6_on_t6g}
           ny_of_t6_on_t6g = {ny_of_t6_on_t6g}
           nx_of_t6_on_t6sg = {nx_of_t6_on_t6sg}
           ny_of_t6_on_t6sg = {ny_of_t6_on_t6sg}
-        
+
         The number of cells in the two horizontal directions on the tile 6 grid
         and supergrid that the regional domain (tile 7) WITHOUT A HALO encompas-
         ses are:
@@ -359,30 +359,30 @@ def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_fa
           ny_of_t7_on_t6g = {ny_of_t7_on_t6g}
           nx_of_t7_on_t6sg = {nx_of_t7_on_t6sg}
           ny_of_t7_on_t6sg = {ny_of_t7_on_t6sg}
-        
+
         The starting and ending i and j indices on the tile 6 grid used to gene-
         rate this regional grid are:
           istart_of_t7_on_t6g = {istart_of_t7_on_t6g}
           iend_of_t7_on_t6g   = {iend_of_t7_on_t6g}
           jstart_of_t7_on_t6g = {jstart_of_t7_on_t6g}
           jend_of_t7_on_t6g   = {jend_of_t7_on_t6g}
-        
+
         The corresponding starting and ending i and j indices on the tile 6 su-
         pergrid are:
           istart_of_t7_on_t6sg = {istart_of_t7_on_t6sg}
           iend_of_t7_on_t6sg   = {iend_of_t7_on_t6sg}
           jstart_of_t7_on_t6sg = {jstart_of_t7_on_t6sg}
           jend_of_t7_on_t6sg   = {jend_of_t7_on_t6sg}
-        
+
         The refinement ratio (ratio of the number of cells in tile 7 that abut
         a single cell in tile 6) is:
           refine_ratio_t6g_to_t7g = {refine_ratio_t6g_to_t7g}
-        
+
         The number of cells in the two horizontal directions on the regional do-
         main's (i.e. tile 7's) grid WITHOUT A HALO are:
           nx_of_t7_on_t7g = {nx_of_t7_on_t7g}
           ny_of_t7_on_t7g = {ny_of_t7_on_t7g}
-        
+
         The prime factors of nx_of_t7_on_t7g and ny_of_t7_on_t7g are (useful for
         determining an MPI task layout):
           prime_factors_nx_of_t7_on_t7g: {prime_factors_nx_of_t7_on_t7g}
@@ -400,16 +400,16 @@ def set_gridparams_GFDLgrid(lon_of_t6_ctr, lat_of_t6_ctr, res_of_t6g, stretch_fa
     nx_of_t7_with_halo_on_t6sg = iend_of_t7_with_halo_on_t6sg - istart_of_t7_with_halo_on_t6sg + 1
     nx_of_t7_with_halo_on_t6g = nx_of_t7_with_halo_on_t6sg/2
     nx_of_t7_with_halo_on_t7g = nx_of_t7_with_halo_on_t6g*refine_ratio_t6g_to_t7g
-    
+
     ny_of_t7_with_halo_on_t6sg = jend_of_t7_with_halo_on_t6sg - jstart_of_t7_with_halo_on_t6sg + 1
     ny_of_t7_with_halo_on_t6g = ny_of_t7_with_halo_on_t6sg/2
     ny_of_t7_with_halo_on_t7g = ny_of_t7_with_halo_on_t6g*refine_ratio_t6g_to_t7g
-    
+
     print_info_msg(f'''
         nx_of_t7_with_halo_on_t7g = {nx_of_t7_with_halo_on_t7g}
         (istart_of_t7_with_halo_on_t6sg = {istart_of_t7_with_halo_on_t6sg},
         iend_of_t7_with_halo_on_t6sg = {iend_of_t7_with_halo_on_t6sg})''', verbose=VERBOSE)
-    
+
     print_info_msg(f'''
         ny_of_t7_with_halo_on_t7g = {ny_of_t7_with_halo_on_t7g}
         (jstart_of_t7_with_halo_on_t6sg = {jstart_of_t7_with_halo_on_t6sg},

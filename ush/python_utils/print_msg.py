@@ -22,7 +22,7 @@ def print_err_msg_exit(error_msg="",stack_trace=True):
     sys.exit(1)
 
 def print_info_msg(info_msg,verbose=True):
-    """ Function to print information message to stdout, when verbose 
+    """ Function to print information message to stdout, when verbose
     is set to True. It does proper "dedentation" that is needed for readability
     of python code.
 
@@ -32,8 +32,8 @@ def print_info_msg(info_msg,verbose=True):
     Returns:
         True: if message is successfully printed
     """
-  
-    if verbose == True:
+
+    if verbose:
         print(dedent(info_msg))
         return True
     return False

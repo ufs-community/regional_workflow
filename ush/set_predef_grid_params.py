@@ -8,7 +8,7 @@ from python_utils import process_args,import_vars,export_vars,set_env_var,get_en
                          cfg_to_yaml_str, flatten_dict
 
 def set_predef_grid_params():
-    """ Sets grid parameters for the specified predfined grid 
+    """ Sets grid parameters for the specified predfined grid
 
     Args:
         None
@@ -37,7 +37,7 @@ def set_predef_grid_params():
 
     # export variables to environment
     export_vars(source_dict=params_dict)
-   
+
     return params_dict
 
 if __name__ == "__main__":
