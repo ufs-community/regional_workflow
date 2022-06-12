@@ -22,8 +22,8 @@ class Testing(unittest.TestCase):
         self.assertEqual( uppercase('upper'), 'UPPER' )
         self.assertEqual( lowercase('LOWER'), 'lower' )
         # regex in file
-        pattern = f'^[ ]*<scheme>(lsm_ruc)<\/scheme>[ ]*$'
-        FILE=f"{self.PATH}/../test_data/suite_FV3_GSD_SAR.xml" 
+        pattern = '^[ ]*<scheme>(lsm_ruc)<\/scheme>[ ]*$'
+        FILE=f"{self.PATH}/../test_data/suite_FV3_GSD_SAR.xml"
         match = find_pattern_in_file(pattern, FILE)
         self.assertEqual( ("lsm_ruc",), match)
         # regex in string
@@ -32,7 +32,7 @@ class Testing(unittest.TestCase):
             find_pattern_in_str(pattern, content)
             self.assertEqual( ("lsm_ruc",), match)
     def test_xml_parser(self):
-        FILE=f"{self.PATH}/../test_data/suite_FV3_GSD_SAR.xml" 
+        FILE=f"{self.PATH}/../test_data/suite_FV3_GSD_SAR.xml"
         tree = load_xml_file(FILE)
         self.assertTrue(has_tag_with_value(tree,"scheme","lsm_ruc"))
     def test_check_for_preexist_dir_file(self):
@@ -139,10 +139,11 @@ class Testing(unittest.TestCase):
         """ setUp is where we do preparation for running the unittests.
         If you need to download files for running test cases, prepare common stuff
         for all test cases etc, this is the best place to do it """
-        define_macos_utilities();
+
+        define_macos_utilities()
         set_env_var('DEBUG','FALSE')
         self.PATH = os.path.dirname(__file__)
-        
+
 if __name__ == '__main__':
     unittest.main()
 

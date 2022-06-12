@@ -24,7 +24,7 @@ def python_error_handler():
 
     print_err_msg_exit('''
         Errors found: check your python environment
-        
+
         Instructions for setting up python environments can be found on the web:
         https://github.com/ufs-community/ufs-srweather-app/wiki/Getting-Started
         ''', stack_trace=False)
@@ -51,20 +51,20 @@ def generate_FV3LAM_wflow():
     print(dedent('''
         ========================================================================
         ========================================================================
-        
+
         Starting experiment generation...
-        
+
         ========================================================================
         ========================================================================'''))
-   
-    #set ushdir 
+
+    #set ushdir
     ushdir = os.path.dirname(os.path.abspath(__file__))
 
     #check python version
     major,minor,patch = platform.python_version_tuple()
     if int(major) < 3 or int(minor) < 6:
         print_info_msg(f'''
-            
+
             Error: python version must be 3.6 or higher
             python version: {major}.{minor}''')
 
@@ -114,7 +114,7 @@ def generate_FV3LAM_wflow():
 
         template_xml_fp = os.path.join(TEMPLATE_DIR, WFLOW_XML_FN)
 
-        print_info_msg(f''' 
+        print_info_msg(f'''
             Creating rocoto workflow XML file (WFLOW_XML_FP) from jinja template XML
             file (template_xml_fp):
               template_xml_fp = \"{template_xml_fp}\"
@@ -405,7 +405,7 @@ def generate_FV3LAM_wflow():
             settings =\n''') + settings_str, verbose=VERBOSE)
 
         #
-        # Call the python script to generate the experiment's actual XML file 
+        # Call the python script to generate the experiment's actual XML file
         # from the jinja template file.
         #
         try:
@@ -463,10 +463,10 @@ def generate_FV3LAM_wflow():
     # First, consider NCO mode.
     #
     if RUN_ENVIR == "nco":
-    
+
       ln_vrfy(f'''-fsn "{FIXgsm}" "{FIXam}"''')
     #
-    # Resolve the target directory that the FIXam symlink points to and check 
+    # Resolve the target directory that the FIXam symlink points to and check
     # that it exists.
     #
       try:
@@ -488,17 +488,17 @@ def generate_FV3LAM_wflow():
     # Now consider community mode.
     #
     else:
-    
+
       print_info_msg(f'''
         Copying fixed files from system directory (FIXgsm) to a subdirectory
         (FIXam) in the experiment directory:
           FIXgsm = \"{FIXgsm}\"
           FIXam = \"{FIXam}\"''',verbose=VERBOSE)
-    
+
       check_for_preexist_dir_file(FIXam,"delete")
       mkdir_vrfy("-p",FIXam)
       mkdir_vrfy("-p",os.path.join(FIXam,"fix_co2_proj"))
-    
+
       num_files=len(FIXgsm_FILES_TO_COPY_TO_FIXam)
       for i in range(num_files):
         fn=f"{FIXgsm_FILES_TO_COPY_TO_FIXam[i]}"
@@ -517,10 +517,10 @@ def generate_FV3LAM_wflow():
               FIXaer = \"{FIXaer}\"
               FIXlut = \"{FIXlut}\"
               FIXclim = \"{FIXclim}\"''',verbose=VERBOSE)
-        
+
         check_for_preexist_dir_file(FIXclim,"delete")
         mkdir_vrfy("-p", FIXclim)
-        
+
         cp_vrfy(os.path.join(FIXaer,"merra2.aerclim*.nc"), FIXclim)
         cp_vrfy(os.path.join(FIXlut,"optics*.dat"), FIXclim)
     #
@@ -533,17 +533,17 @@ def generate_FV3LAM_wflow():
     print_info_msg(f'''
         Copying templates of various input files to the experiment directory...''',
         verbose=VERBOSE)
-    
+
     print_info_msg(f'''
         Copying the template data table file to the experiment directory...''',
         verbose=VERBOSE)
     cp_vrfy(DATA_TABLE_TMPL_FP,DATA_TABLE_FP)
-    
+
     print_info_msg(f'''
         Copying the template field table file to the experiment directory...''',
         verbose=VERBOSE)
     cp_vrfy(FIELD_TABLE_TMPL_FP,FIELD_TABLE_FP)
-    
+
     print_info_msg(f'''
         Copying the template NEMS configuration file to the experiment directory...''',
         verbose=VERBOSE)
@@ -598,13 +598,13 @@ def generate_FV3LAM_wflow():
     if SDF_USES_RUC_LSM:
       kice=9
     #
-    # Set lsoil, which is the number of input soil levels provided in the 
-    # chgres_cube output NetCDF file.  This is the same as the parameter 
-    # nsoill_out in the namelist file for chgres_cube.  [On the other hand, 
-    # the parameter lsoil_lsm (not set here but set in input.nml.FV3 and/or 
+    # Set lsoil, which is the number of input soil levels provided in the
+    # chgres_cube output NetCDF file.  This is the same as the parameter
+    # nsoill_out in the namelist file for chgres_cube.  [On the other hand,
+    # the parameter lsoil_lsm (not set here but set in input.nml.FV3 and/or
     # FV3.input.yml) is the number of soil levels that the LSM scheme in the
     # forecast model will run with.]  Here, we use the same approach to set
-    # lsoil as the one used to set nsoill_out in exregional_make_ics.sh.  
+    # lsoil as the one used to set nsoill_out in exregional_make_ics.sh.
     # See that script for details.
     #
     # NOTE:
@@ -626,9 +626,9 @@ def generate_FV3LAM_wflow():
     # IMPORTANT:
     # If we want a namelist variable to be removed from the namelist file,
     # in the "settings" variable below, we need to set its value to the
-    # string "null".  This is equivalent to setting its value to 
+    # string "null".  This is equivalent to setting its value to
     #    !!python/none
-    # in the base namelist file specified by FV3_NML_BASE_SUITE_FP or the 
+    # in the base namelist file specified by FV3_NML_BASE_SUITE_FP or the
     # suite-specific yaml settings file specified by FV3_NML_YAML_CONFIG_FP.
     #
     # It turns out that setting the variable to an empty string also works
@@ -682,17 +682,17 @@ def generate_FV3LAM_wflow():
     dummy_run_dir=os.path.join(EXPTDIR,"any_cyc")
     if DO_ENSEMBLE:
       dummy_run_dir=os.path.join(dummy_run_dir,"any_ensmem")
-    
+
     regex_search="^[ ]*([^| ]+)[ ]*[|][ ]*([^| ]+)[ ]*$"
     num_nml_vars=len(FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING)
     namsfc_dict = {}
     for i in range(num_nml_vars):
-    
+
       mapping=f"{FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[i]}"
       tup = find_pattern_in_str(regex_search, mapping)
       nml_var_name = tup[0]
       FIXam_fn = tup[1]
-    
+
       fp="\"\""
       if FIXam_fn:
         fp=os.path.join(FIXam,FIXam_fn)
@@ -722,8 +722,8 @@ def generate_FV3LAM_wflow():
        }
     #
     # Add the relevant tendency-based stochastic physics namelist variables to
-    # "settings" when running with SPPT, SHUM, or SKEB turned on. If running 
-    # with SPP or LSM SPP, set the "new_lscale" variable.  Otherwise only 
+    # "settings" when running with SPPT, SHUM, or SKEB turned on. If running
+    # with SPP or LSM SPP, set the "new_lscale" variable.  Otherwise only
     # include an empty "nam_stochy" stanza.
     #
     nam_stochy_dict = {}
@@ -739,7 +739,7 @@ def generate_FV3LAM_wflow():
           'spptint': SPPT_INT,
           'use_zmtnblck': USE_ZMTNBLCK
         })
-    
+
     if DO_SHUM:
         nam_stochy_dict.update({
           'iseed_shum': ISEED_SHUM,
@@ -749,7 +749,7 @@ def generate_FV3LAM_wflow():
           'shum_tau': SHUM_TSCALE,
           'shumint': SHUM_INT
         })
-    
+
     if DO_SKEB:
         nam_stochy_dict.update({
           'iseed_skeb': ISEED_SKEB,
@@ -761,7 +761,7 @@ def generate_FV3LAM_wflow():
           'skebint': SKEB_INT,
           'skeb_vdof': SKEB_VDOF
         })
-    
+
     if DO_SPP or DO_LSM_SPP:
         nam_stochy_dict.update({
            'new_lscale': NEW_LSCALE
@@ -769,7 +769,7 @@ def generate_FV3LAM_wflow():
 
     settings['nam_stochy'] = nam_stochy_dict
     #
-    # Add the relevant SPP namelist variables to "settings" when running with 
+    # Add the relevant SPP namelist variables to "settings" when running with
     # SPP turned on.  Otherwise only include an empty "nam_sppperts" stanza.
     #
     nam_sppperts_dict = {}
@@ -787,7 +787,7 @@ def generate_FV3LAM_wflow():
 
     settings['nam_sppperts'] = nam_sppperts_dict
     #
-    # Add the relevant LSM SPP namelist variables to "settings" when running with 
+    # Add the relevant LSM SPP namelist variables to "settings" when running with
     # LSM SPP turned on.
     #
     nam_sfcperts_dict = {}
@@ -805,11 +805,11 @@ def generate_FV3LAM_wflow():
     settings['nam_sfcperts'] = nam_sfcperts_dict
 
     settings_str = cfg_to_yaml_str(settings)
-    
+
     print_info_msg(dedent(f'''
-        The variable \"settings\" specifying values of the weather model's 
+        The variable \"settings\" specifying values of the weather model's
         namelist variables has been set as follows:
-        
+
         settings =\n''') + settings_str, verbose=VERBOSE)
     #
     #-----------------------------------------------------------------------
@@ -825,7 +825,7 @@ def generate_FV3LAM_wflow():
     #-----------------------------------------------------------------------
     #
     try:
-        set_namelist(["-q", "-n", FV3_NML_BASE_SUITE_FP, "-c", FV3_NML_YAML_CONFIG_FP, 
+        set_namelist(["-q", "-n", FV3_NML_BASE_SUITE_FP, "-c", FV3_NML_YAML_CONFIG_FP,
                             CCPP_PHYS_SUITE, "-u", settings_str, "-o", FV3_NML_FP])
     except:
         print_err_msg_exit(f'''
@@ -855,7 +855,7 @@ def generate_FV3LAM_wflow():
     # configurations is not known until the grid is created.
     #
     if not RUN_TASK_MAKE_GRID:
-    
+
       set_FV3nml_sfc_climo_filenames()
     #
     #-----------------------------------------------------------------------
@@ -881,15 +881,15 @@ def generate_FV3LAM_wflow():
       wflow_db_fn=f"{os.path.splitext(WFLOW_XML_FN)[0]}.db"
       rocotorun_cmd=f"rocotorun -w {WFLOW_XML_FN} -d {wflow_db_fn} -v 10"
       rocotostat_cmd=f"rocotostat -w {WFLOW_XML_FN} -d {wflow_db_fn} -v 10"
-    
+
     print_info_msg(f'''
         ========================================================================
         ========================================================================
-        
+
         Experiment generation completed.  The experiment directory is:
-        
+
           EXPTDIR=\"{EXPTDIR}\"
-        
+
         ========================================================================
         ========================================================================
         ''')
@@ -901,49 +901,49 @@ def generate_FV3LAM_wflow():
     #-----------------------------------------------------------------------
     #
     if WORKFLOW_MANAGER == "rocoto":
-    
+
       print_info_msg(f'''
         To launch the workflow, first ensure that you have a compatible version
         of rocoto available. For most pre-configured platforms, rocoto can be
         loaded via a module:
-        
+
           > module load rocoto
-        
+
         For more details on rocoto, see the User's Guide.
-        
+
         To launch the workflow, first ensure that you have a compatible version
         of rocoto loaded.  For example, to load version 1.3.1 of rocoto, use
-        
+
           > module load rocoto/1.3.1
-        
+
         (This version has been tested on hera; later versions may also work but
         have not been tested.)
-        
+
         To launch the workflow, change location to the experiment directory
         (EXPTDIR) and issue the rocotrun command, as follows:
-        
+
           > cd {EXPTDIR}
           > {rocotorun_cmd}
-        
+
         To check on the status of the workflow, issue the rocotostat command
         (also from the experiment directory):
-        
+
           > {rocotostat_cmd}
-        
+
         Note that:
-        
+
         1) The rocotorun command must be issued after the completion of each
            task in the workflow in order for the workflow to submit the next
            task(s) to the queue.
-        
+
         2) In order for the output of the rocotostat command to be up-to-date,
            the rocotorun command must be issued immediately before issuing the
            rocotostat command.
-        
+
         For automatic resubmission of the workflow (say every 3 minutes), the
         following line can be added to the user's crontab (use \"crontab -e\" to
         edit the cron table):
-        
+
         */3 * * * * cd {EXPTDIR} && ./launch_FV3LAM_wflow.sh called_from_cron=\"TRUE\"
         ''')
     #

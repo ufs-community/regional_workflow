@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 from textwrap import dedent
+
+from .print_msg import print_err_msg_exit
 from .check_var_valid_value import check_var_valid_value
 
 def process_args(valid_args, **kwargs):
@@ -13,11 +15,11 @@ def process_args(valid_args, **kwargs):
     Returns:
         A dictionary of all valid (arg,value) pairs
     """
-  
+
     if valid_args[0] == '__unset__':
         valid_arg_names = []
     else:
-        valid_arg_names = valid_args 
+        valid_arg_names = valid_args
     num_valid_args = len(valid_arg_names)
     num_arg_val_pairs = len(kwargs)
 
@@ -28,7 +30,7 @@ def process_args(valid_args, **kwargs):
             ments (num_valid_args) specified in the array valid_arg_names:
               num_arg_val_pairs = {num_arg_val_pairs}
               num_valid_args = {num_valid_args}
-              valid_arg_names = ( {valid_arg_names_str})''')
+              valid_arg_names = ( {valid_arg_names})''')
 
     if num_valid_args == 0:
         return None
@@ -38,14 +40,14 @@ def process_args(valid_args, **kwargs):
     for i,a in enumerate(valid_args):
         if a is None:
             print_err_msg_exit(f'''
-                The list of valid arguments (valid_arg_names) cannot contain empty elements, 
+                The list of valid arguments (valid_arg_names) cannot contain empty elements,
                 but the element with index i={i} is empty:
                   valid_arg_names = ( {valid_arg_names})
-                  valid_arg_names[{i}] = \"{valid_arg_names[i]}\"''')          
+                  valid_arg_names[{i}] = \"{valid_arg_names[i]}\"''')
 
     for arg_name,arg_value in kwargs.items():
         err_msg=dedent(f'''
-            The specified argument name (arg_name) in the current argument-value 
+            The specified argument name (arg_name) in the current argument-value
             pair (arg_val_pair) is not valid:
               arg_name = \"{arg_name}\"
               arg_val = \"{arg_value}\"\n''')
@@ -59,6 +61,6 @@ def process_args(valid_args, **kwargs):
                   key_value_pair = {kwargs}
                 Please assign values to arguments only once on the command line.''')
         values_args[idx] = arg_value
-        
+
     return dict(zip(valid_args,values_args))
 

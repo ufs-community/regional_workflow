@@ -61,7 +61,7 @@ def set_FV3nml_sfc_climo_filenames():
             fp = os.path.relpath(os.path.realpath(fp), start=dummy_run_dir)
 
         namsfc_dict[nml_var_name] = fp
-     
+
     settings['namsfc_dict'] = namsfc_dict
     settings_str = cfg_to_yaml_str(settings)
 
@@ -69,12 +69,12 @@ def set_FV3nml_sfc_climo_filenames():
     print_info_msg(f'''
         The variable \"settings\" specifying values of the namelist variables
         has been set as follows:
-        
+
         settings =
         {settings_str}''', verbose=DEBUG)
 
     # Rename the FV3 namelist and call set_namelist
-    fv3_nml_base_fp = f'{FV3_NML_FP}.base' 
+    fv3_nml_base_fp = f'{FV3_NML_FP}.base'
     mv_vrfy(f'{FV3_NML_FP} {fv3_nml_base_fp}')
 
     try:

@@ -61,7 +61,7 @@ def str_to_type(s, return_string = False):
     if not return_string:
         if s.lower() in ['true','yes','yeah']:
             return True
-        elif s.lower() in ['false','no','nope']:
+        if s.lower() in ['false','no','nope']:
             return False
         v = str_to_date(s)
         if v is not None:
@@ -77,7 +77,7 @@ def str_to_type(s, return_string = False):
 
 def type_to_str(v):
     """ Given a float/int/boolean/date or list of these types, gets a string
-    representing their values 
+    representing their values
 
     Args:
         v: a variable of the above types
@@ -85,8 +85,8 @@ def type_to_str(v):
         a string
     """
     if isinstance(v,bool):
-        return ("TRUE" if v else "FALSE")
-    elif isinstance(v,int) or isinstance(v,float):
+        return "TRUE" if v else "FALSE"
+    elif isinstance(v,(int,float)):
         pass
     elif isinstance(v,date):
         return date_to_str(v)
@@ -108,9 +108,9 @@ def list_to_str(v, oneline=False):
     if isinstance(v, list):
         v = [type_to_str(i) for i in v]
         if oneline or len(v) <= 4:
-            shell_str = f'( "' + '" "'.join(v) + '" )'
+            shell_str = '( "' + '" "'.join(v) + '" )'
         else:
-            shell_str = f'( \\\n"' + '" \\\n"'.join(v) + '" \\\n)'
+            shell_str = '( \\\n"' + '" \\\n"'.join(v) + '" \\\n)'
     else:
         shell_str = f'{type_to_str(v)}'
 
@@ -125,7 +125,7 @@ def str_to_list(v, return_string=False):
     Returns:
         a string, list of strings or null string('')
     """
-    
+
     if not isinstance(v,str):
         return v
     v = v.strip()
@@ -146,8 +146,7 @@ def str_to_list(v, return_string=False):
                 itm = itm[idx+1:]
             lst.append(str_to_type(itm, return_string))
         return lst
-    else:
-        return str_to_type(v, return_string)
+    return str_to_type(v, return_string)
 
 def set_env_var(param,value):
     """ Set an environment variable
@@ -172,20 +171,19 @@ def get_env_var(param):
 
     if not param in os.environ:
         return None
-    else:
-        value = os.environ[param]
-        return str_to_list(value)
+    value = os.environ[param]
+    return str_to_list(value)
 
 def import_vars(dictionary=None, target_dict=None, env_vars=None):
-    """ Import all (or select few) environment/dictionary variables as python global 
+    """ Import all (or select few) environment/dictionary variables as python global
     variables of the caller module. Call this function at the beginning of a function
     that uses environment variables.
 
-    Note that for read-only environmental variables, calling this function once at the 
-    beginning should be enough. However, if the variable is modified in the module it is 
+    Note that for read-only environmental variables, calling this function once at the
+    beginning should be enough. However, if the variable is modified in the module it is
     called from, the variable should be explicitly tagged as `global`, and then its value
     should be exported back to the environment with a call to export_vars()
-        
+
         import_vars() # import all environment variables
         global MY_VAR, MY_LIST_VAR
         MY_PATH = "/path/to/somewhere"
@@ -216,7 +214,7 @@ def import_vars(dictionary=None, target_dict=None, env_vars=None):
         env_vars = { k: dictionary[k] if k in dictionary else None for k in env_vars }
 
     for k,v in env_vars.items():
-        target_dict[k] = str_to_list(v) 
+        target_dict[k] = str_to_list(v)
 
 def export_vars(dictionary=None, source_dict=None, env_vars=None):
     """ Export all (or select few) global variables of the caller module's

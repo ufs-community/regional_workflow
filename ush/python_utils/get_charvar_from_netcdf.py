@@ -13,7 +13,7 @@ def get_charvar_from_netcdf(nc_file, nc_var_name):
     Returns:
         value of the variable
     """
-    
+
     SED = os.getenv('SED')
 
     cmd = f"ncdump -v {nc_var_name} {nc_file} | \

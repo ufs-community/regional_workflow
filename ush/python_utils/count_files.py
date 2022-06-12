@@ -11,6 +11,6 @@ def count_files(ext,dirct='.'):
         int: Number of files
     """
 
-    files = glob.glob(dirct + '/*.' + ext) 
+    files = glob.glob(dirct + '/*.' + ext)
     return len(files)
-    
+

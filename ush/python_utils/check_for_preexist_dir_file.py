@@ -31,9 +31,9 @@ def check_for_preexist_dir_file(path, method):
                     {path}
                 Moving (renaming) preexisting directory or file to:
                     {new_path}''')
-            mv_vrfy(path, new_path) 
+            mv_vrfy(path, new_path)
         else:
             print_err_msg_exit(f'''
                 Specified directory or file already exists
                     {path}''')
-    
+

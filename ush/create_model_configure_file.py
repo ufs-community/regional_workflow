@@ -31,7 +31,7 @@ def create_model_configure_file(cdate,run_dir,sub_hourly_post,dt_subhourly_post_
 
     #import all environment variables
     import_vars()
-    
+
     #
     #-----------------------------------------------------------------------
     #
@@ -61,7 +61,7 @@ def create_model_configure_file(cdate,run_dir,sub_hourly_post,dt_subhourly_post_
     #-----------------------------------------------------------------------
     #
     # Create a multiline variable that consists of a yaml-compliant string
-    # specifying the values that the jinja variables in the template 
+    # specifying the values that the jinja variables in the template
     # model_configure file should be set to.
     #
     #-----------------------------------------------------------------------
@@ -96,7 +96,7 @@ def create_model_configure_file(cdate,run_dir,sub_hourly_post,dt_subhourly_post_
           'lon1': WRTCMP_lon_lwr_left,
           'lat1': WRTCMP_lat_lwr_left
         })
-    
+
         if WRTCMP_output_grid == "lambert_conformal":
           settings.update({
             'stdlat1': WRTCMP_stdlat1,
@@ -125,32 +125,32 @@ def create_model_configure_file(cdate,run_dir,sub_hourly_post,dt_subhourly_post_
             'dy': ""
           })
     #
-    # If sub_hourly_post is set to "TRUE", then the forecast model must be 
-    # directed to generate output files on a sub-hourly interval.  Do this 
-    # by specifying the output interval in the model configuration file 
-    # (MODEL_CONFIG_FN) in units of number of forecat model time steps (nsout).  
-    # nsout is calculated using the user-specified output time interval 
-    # dt_subhourly_post_mnts (in units of minutes) and the forecast model's 
-    # main time step dt_atmos (in units of seconds).  Note that nsout is 
-    # guaranteed to be an integer because the experiment generation scripts 
-    # require that dt_subhourly_post_mnts (after conversion to seconds) be 
-    # evenly divisible by dt_atmos.  Also, in this case, the variable output_fh 
-    # [which specifies the output interval in hours; 
-    # see the jinja model_config template file] is set to 0, although this 
+    # If sub_hourly_post is set to "TRUE", then the forecast model must be
+    # directed to generate output files on a sub-hourly interval.  Do this
+    # by specifying the output interval in the model configuration file
+    # (MODEL_CONFIG_FN) in units of number of forecat model time steps (nsout).
+    # nsout is calculated using the user-specified output time interval
+    # dt_subhourly_post_mnts (in units of minutes) and the forecast model's
+    # main time step dt_atmos (in units of seconds).  Note that nsout is
+    # guaranteed to be an integer because the experiment generation scripts
+    # require that dt_subhourly_post_mnts (after conversion to seconds) be
+    # evenly divisible by dt_atmos.  Also, in this case, the variable output_fh
+    # [which specifies the output interval in hours;
+    # see the jinja model_config template file] is set to 0, although this
     # doesn't matter because any positive of nsout will override output_fh.
     #
-    # If sub_hourly_post is set to "FALSE", then the workflow is hard-coded 
-    # (in the jinja model_config template file) to direct the forecast model 
-    # to output files every hour.  This is done by setting (1) output_fh to 1 
+    # If sub_hourly_post is set to "FALSE", then the workflow is hard-coded
+    # (in the jinja model_config template file) to direct the forecast model
+    # to output files every hour.  This is done by setting (1) output_fh to 1
     # here, and (2) nsout to -1 here which turns off output by time step interval.
     #
     # Note that the approach used here of separating how hourly and subhourly
-    # output is handled should be changed/generalized/simplified such that 
+    # output is handled should be changed/generalized/simplified such that
     # the user should only need to specify the output time interval (there
-    # should be no need to specify a flag like sub_hourly_post); the workflow 
-    # should then be able to direct the model to output files with that time 
-    # interval and to direct the post-processor to process those files 
-    # regardless of whether that output time interval is larger than, equal 
+    # should be no need to specify a flag like sub_hourly_post); the workflow
+    # should then be able to direct the model to output files with that time
+    # interval and to direct the post-processor to process those files
+    # regardless of whether that output time interval is larger than, equal
     # to, or smaller than one hour.
     #
     if sub_hourly_post:
@@ -166,7 +166,7 @@ def create_model_configure_file(cdate,run_dir,sub_hourly_post,dt_subhourly_post_
     })
 
     settings_str = cfg_to_yaml_str(settings)
-    
+
     print_info_msg(dedent(f'''
         The variable \"settings\" specifying values to be used in the \"{MODEL_CONFIG_FN}\"
         file has been set as follows:

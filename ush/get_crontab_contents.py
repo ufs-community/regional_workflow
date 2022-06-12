@@ -13,9 +13,9 @@ def get_crontab_contents(called_from_cron):
     """
     #-----------------------------------------------------------------------
     #
-    # This function returns the contents of the user's 
+    # This function returns the contents of the user's
     # cron table as well as the command to use to manipulate the cron table
-    # (i.e. the "crontab" command, but on some platforms the version or 
+    # (i.e. the "crontab" command, but on some platforms the version or
     # location of this may change depending on other circumstances, e.g. on
     # Cheyenne, this depends on whether a script that wants to call "crontab"
     # is itself being called from a cron job).  Arguments are as follows:
@@ -30,35 +30,35 @@ def get_crontab_contents(called_from_cron):
     # the system "crontab" command.
     #
     # outvarname_crontab_contents:
-    # Name of the output variable that will contain the contents of the 
+    # Name of the output variable that will contain the contents of the
     # user's cron table.
-    # 
+    #
     #-----------------------------------------------------------------------
     """
-  
+
     print_input_args(locals())
 
     #import selected env vars
     IMPORTS = ["MACHINE", "USER"]
     import_vars(env_vars=IMPORTS)
-  
+
     if MACHINE == "WCOSS_DELL_P3":
       __crontab_cmd__=""
       (_,__crontab_contents__,_)=run_command(f'''cat "/u/{USER}/cron/mycrontab"''')
     else:
       __crontab_cmd__="crontab"
       #
-      # On Cheyenne, simply typing "crontab" will launch the crontab command 
-      # at "/glade/u/apps/ch/opt/usr/bin/crontab".  This is a containerized 
-      # version of crontab that will work if called from scripts that are 
-      # themselves being called as cron jobs.  In that case, we must instead 
+      # On Cheyenne, simply typing "crontab" will launch the crontab command
+      # at "/glade/u/apps/ch/opt/usr/bin/crontab".  This is a containerized
+      # version of crontab that will work if called from scripts that are
+      # themselves being called as cron jobs.  In that case, we must instead
       # call the system version of crontab at /usr/bin/crontab.
       #
       if MACHINE == "CHEYENNE":
         if called_from_cron:
           __crontab_cmd__="/usr/bin/crontab"
       (_,__crontab_contents__,_)=run_command(f'''{__crontab_cmd__} -l''')
-  
+
     return __crontab_cmd__, __crontab_contents__
 
 def add_crontab_line():
@@ -86,17 +86,17 @@ def add_crontab_line():
 
     # Create backup
     run_command(f'''printf "%s" '{crontab_contents}' > "{crontab_backup_fp}"''')
-    
+
     # Add crontab line
     if CRONTAB_LINE in crontab_contents:
-    
+
       print_info_msg(f'''
           The following line already exists in the cron table and thus will not be
           added:
             CRONTAB_LINE = \"{CRONTAB_LINE}\"''')
-    
+
     else:
-    
+
       print_info_msg(f'''
           Adding the following line to the user's cron table in order to automatically
           resubmit SRW workflow:
@@ -104,9 +104,9 @@ def add_crontab_line():
 
       #add new line to crontab contents if it doesn't have one
       NEWLINE_CHAR=""
-      if crontab_contents and crontab_contents[-1] != "\n": 
+      if crontab_contents and crontab_contents[-1] != "\n":
         NEWLINE_CHAR="\n"
-    
+
       #add the crontab line
       if MACHINE == "WCOSS_DELL_P3":
         run_command(f'''printf "%b%s\n" '{NEWLINE_CHAR}' '{CRONTAB_LINE}' >> "/u/{USER}/cron/mycrontab"''')
@@ -118,17 +118,17 @@ def delete_crontab_line(called_from_cron):
     but not IN PROGRESS status"""
 
     print_input_args(locals())
-  
+
     #import selected env vars
     IMPORTS = ["MACHINE", "USER", "CRONTAB_LINE"]
     import_vars(env_vars=IMPORTS)
 
     #
-    # Get the full contents of the user's cron table.  
+    # Get the full contents of the user's cron table.
     #
     (crontab_cmd,crontab_contents) = get_crontab_contents(called_from_cron)
     #
-    # Remove the line in the contents of the cron table corresponding to the 
+    # Remove the line in the contents of the cron table corresponding to the
     # current forecast experiment (if that line is part of the contents).
     # Then record the results back into the user's cron table.
     #
@@ -165,8 +165,8 @@ def parse_args(argv):
 if __name__ == '__main__':
     args = parse_args(sys.argv[1:])
     if args.delete:
-        delete_crontab_line(args.called_from_cron)	
-    
+        delete_crontab_line(args.called_from_cron)
+
 class Testing(unittest.TestCase):
     def test_get_crontab_contents(self):
         crontab_cmd,crontab_contents = get_crontab_contents(called_from_cron=True)

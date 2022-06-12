@@ -17,15 +17,15 @@ from set_namelist import set_namelist
 
 def set_FV3nml_ens_stoch_seeds(cdate):
     """
-    This function, for an ensemble-enabled experiment 
-    (i.e. for an experiment for which the workflow configuration variable 
+    This function, for an ensemble-enabled experiment
+    (i.e. for an experiment for which the workflow configuration variable
     DO_ENSEMBLE has been set to "TRUE"), creates new namelist files with
-    unique stochastic "seed" parameters, using a base namelist file in the 
-    ${EXPTDIR} directory as a template. These new namelist files are stored 
-    within each member directory housed within each cycle directory. Files 
-    of any two ensemble members differ only in their stochastic "seed" 
+    unique stochastic "seed" parameters, using a base namelist file in the
+    ${EXPTDIR} directory as a template. These new namelist files are stored
+    within each member directory housed within each cycle directory. Files
+    of any two ensemble members differ only in their stochastic "seed"
     parameter values.  These namelist files are generated when this file is
-    called as part of the RUN_FCST_TN task.  
+    called as part of the RUN_FCST_TN task.
 
     Args:
         cdate
@@ -47,12 +47,12 @@ def set_FV3nml_ens_stoch_seeds(cdate):
     #-----------------------------------------------------------------------
     #
     ensmem_name=f"mem{ENSMEM_INDX}"
-    
+
     fv3_nml_ensmem_fp=os.path.join(CYCLE_BASEDIR, f"{date_to_str(cdate,True)}{os.sep}{ensmem_name}{os.sep}{FV3_NML_FN}")
-    
+
     ensmem_num=ENSMEM_INDX
-    
-    cdate_i = int(cdate.strftime('%Y%m%d')) 
+
+    cdate_i = int(cdate.strftime('%Y%m%d'))
 
     settings = {}
     nam_stochy_dict = {}
@@ -77,7 +77,7 @@ def set_FV3nml_ens_stoch_seeds(cdate):
 
     settings['nam_stochy'] = nam_stochy_dict
 
-    if DO_SPP: 
+    if DO_SPP:
        num_iseed_spp=len(ISEED_SPP)
        iseed_spp = [None]*num_iseed_spp
        for i in range(num_iseed_spp):
@@ -146,7 +146,7 @@ class Testing(unittest.TestCase):
                 os.path.join(EXPTDIR,'input.nml'))
         for i in range(2):
             mkdir_vrfy("-p", os.path.join(EXPTDIR,f"{date_to_str(self.cdate,True)}{os.sep}mem{i+1}"))
-        
+
         set_env_var("USHDIR",USHDIR)
         set_env_var("CYCLE_BASEDIR",EXPTDIR)
         set_env_var("ENSMEM_INDX",2)

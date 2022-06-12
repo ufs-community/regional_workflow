@@ -12,7 +12,7 @@ def set_thompson_mp_fix_files(ccpp_phys_suite_fp, thompson_mp_climo_fn):
     """ Function that first checks whether the Thompson
     microphysics parameterization is being called by the selected physics
     suite.  If not, it sets the output variable whose name is specified by
-    output_varname_sdf_uses_thompson_mp to "FALSE" and exits.  If so, it 
+    output_varname_sdf_uses_thompson_mp to "FALSE" and exits.  If so, it
     sets this variable to "TRUE" and modifies the workflow arrays
     FIXgsm_FILES_TO_COPY_TO_FIXam and CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING
     to ensure that fixed files needed by the Thompson microphysics
@@ -53,9 +53,9 @@ def set_thompson_mp_fix_files(ccpp_phys_suite_fp, thompson_mp_climo_fn):
     #-----------------------------------------------------------------------
     #
     # Append the names of the fixed files needed by the Thompson microphysics
-    # parameterization to the workflow array FIXgsm_FILES_TO_COPY_TO_FIXam, 
-    # and append to the workflow array CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING 
-    # the mappings between these files and the names of the corresponding 
+    # parameterization to the workflow array FIXgsm_FILES_TO_COPY_TO_FIXam,
+    # and append to the workflow array CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING
+    # the mappings between these files and the names of the corresponding
     # symlinks that need to be created in the run directories.
     #
     #-----------------------------------------------------------------------
@@ -68,30 +68,30 @@ def set_thompson_mp_fix_files(ccpp_phys_suite_fp, thompson_mp_climo_fn):
           "qr_acr_qgV2.dat",
           "qr_acr_qsV2.dat"
         ]
-    
+
         if (EXTRN_MDL_NAME_ICS  != "HRRR" and EXTRN_MDL_NAME_ICS  != "RAP") or \
            (EXTRN_MDL_NAME_LBCS != "HRRR" and EXTRN_MDL_NAME_LBCS != "RAP"):
           thompson_mp_fix_files.append(thompson_mp_climo_fn)
-    
+
         FIXgsm_FILES_TO_COPY_TO_FIXam.extend(thompson_mp_fix_files)
-    
+
         for fix_file in thompson_mp_fix_files:
           mapping=f"{fix_file} | {fix_file}"
           CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING.append(mapping)
-    
+
         msg=dedent(f'''
-            Since the Thompson microphysics parameterization is being used by this 
+            Since the Thompson microphysics parameterization is being used by this
             physics suite (CCPP_PHYS_SUITE), the names of the fixed files needed by
-            this scheme have been appended to the array FIXgsm_FILES_TO_COPY_TO_FIXam, 
-            and the mappings between these files and the symlinks that need to be 
+            this scheme have been appended to the array FIXgsm_FILES_TO_COPY_TO_FIXam,
+            and the mappings between these files and the symlinks that need to be
             created in the cycle directories have been appended to the array
-            CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING.  After these modifications, the 
+            CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING.  After these modifications, the
             values of these parameters are as follows:
-            
+
             ''')
         msg+=dedent(f'''
                 CCPP_PHYS_SUITE = \"{CCPP_PHYS_SUITE}\"
-            
+
                 FIXgsm_FILES_TO_COPY_TO_FIXam = {list_to_str(FIXgsm_FILES_TO_COPY_TO_FIXam)}
             ''')
         msg+=dedent(f'''
