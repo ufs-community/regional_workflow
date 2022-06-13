@@ -9,8 +9,8 @@
 #
 #   GFDLgrid_USE_NUM_CELLS_IN_FILENAMES 
 #
-# to "FALSE"; see the UFS SRW User's Guide for a description of this 
-# variable. 
+# to "FALSE"; see the UFS SRW App's User's Guide for a description of 
+# this variable. 
 #
 
 RUN_ENVIR="community"
