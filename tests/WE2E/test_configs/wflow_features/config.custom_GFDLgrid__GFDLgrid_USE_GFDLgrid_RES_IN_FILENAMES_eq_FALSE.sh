@@ -7,7 +7,7 @@
 # workflow) of GFDLgrid type.  Note that this test sets the workflow 
 # variable 
 #
-#   GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES 
+#   GFDLgrid_USE_NUM_CELLS_IN_FILENAMES 
 #
 # to "FALSE"; see the UFS SRW User's Guide for a description of this 
 # variable. 
@@ -37,7 +37,7 @@ GRID_GEN_METHOD="GFDLgrid"
 GFDLgrid_LON_T6_CTR="-97.5"
 GFDLgrid_LAT_T6_CTR="38.5"
 GFDLgrid_STRETCH_FAC="1.5"
-GFDLgrid_RES="96"
+GFDLgrid_NUM_CELLS="96"
 GFDLgrid_REFINE_RATIO="2"
   
 #num_margin_cells_T6_left="9"
@@ -45,7 +45,7 @@ GFDLgrid_REFINE_RATIO="2"
 GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G="10"
 
 #num_margin_cells_T6_right="9"
-#GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_right ))
+#GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_NUM_CELLS - num_margin_cells_T6_right ))
 GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G="87"
 
 #num_margin_cells_T6_bottom="9"
@@ -53,10 +53,10 @@ GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G="87"
 GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G="10"
 
 #num_margin_cells_T6_top="9"
-#GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_RES - num_margin_cells_T6_top ))
+#GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=$(( GFDLgrid_NUM_CELLS - num_margin_cells_T6_top ))
 GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G="87"
 
-GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES="FALSE"
+GFDLgrid_USE_NUM_CELLS_IN_FILENAMES="FALSE"
 
 DT_ATMOS="100"
 
