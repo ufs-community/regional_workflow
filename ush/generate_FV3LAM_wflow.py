@@ -737,7 +737,6 @@ def generate_FV3LAM_wflow():
         'n_var_spp': N_VAR_SPP,
         'n_var_lndp': N_VAR_LNDP,
         'lndp_type': LNDP_TYPE,
-        'lndp_each_step': LSM_SPP_EACH_STEP,
         'fhcyc': FHCYC_LSM_SPP_OR_NOT
     }
     #
