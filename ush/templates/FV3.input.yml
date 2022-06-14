@@ -65,6 +65,7 @@ FV3_HRRR:
     iovr: 3
     lsm: 3
     lsoil_lsm: 9
+    sfclay_compute_flux: True
 
 FV3_GFS_2017_gfdlmp:
   atmos_model_nml:
