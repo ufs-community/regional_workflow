@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 import unittest
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 from python_utils import import_vars, set_env_var, print_input_args
 
-def set_gridparams_ESGgrid(lon_ctr,lat_ctr,nx,ny,halo_width,delx,dely,pazi):
-    """ Sets the parameters for a grid that is to be generated using the "ESGgrid"
+
+def set_gridparams_ESGgrid(lon_ctr, lat_ctr, nx, ny, halo_width, delx, dely, pazi):
+    """Sets the parameters for a grid that is to be generated using the "ESGgrid"
     grid generation method (i.e. GRID_GEN_METHOD set to "ESGgrid").
 
     Args:
@@ -25,10 +26,10 @@ def set_gridparams_ESGgrid(lon_ctr,lat_ctr,nx,ny,halo_width,delx,dely,pazi):
     print_input_args(locals())
 
     # get needed environment variables
-    IMPORTS = ['RADIUS_EARTH', 'DEGS_PER_RADIAN']
+    IMPORTS = ["RADIUS_EARTH", "DEGS_PER_RADIAN"]
     import_vars(env_vars=IMPORTS)
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # For a ESGgrid-type grid, the orography filtering is performed by pass-
     # ing to the orography filtering the parameters for an "equivalent" glo-
@@ -49,42 +50,59 @@ def set_gridparams_ESGgrid(lon_ctr,lat_ctr,nx,ny,halo_width,delx,dely,pazi):
     # It turns out that the program will work if we set stretch_factor to a
     # value that is not exactly 1.  This is what we do below.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
-    stretch_factor=0.999   # Check whether the orography program has been fixed so that we can set this to 1...
+    stretch_factor = 0.999  # Check whether the orography program has been fixed so that we can set this to 1...
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # Set parameters needed as inputs to the regional_grid grid generation
     # code.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     del_angle_x_sg = (delx / (2.0 * RADIUS_EARTH)) * DEGS_PER_RADIAN
     del_angle_y_sg = (dely / (2.0 * RADIUS_EARTH)) * DEGS_PER_RADIAN
     neg_nx_of_dom_with_wide_halo = -(nx + 2 * halo_width)
     neg_ny_of_dom_with_wide_halo = -(ny + 2 * halo_width)
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # return output variables.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
-    return (lon_ctr,lat_ctr,nx,ny,pazi,halo_width,stretch_factor,
-            del_angle_x_sg,
-            del_angle_y_sg,
-            int(neg_nx_of_dom_with_wide_halo),
-            int(neg_ny_of_dom_with_wide_halo))
+    return (
+        lon_ctr,
+        lat_ctr,
+        nx,
+        ny,
+        pazi,
+        halo_width,
+        stretch_factor,
+        del_angle_x_sg,
+        del_angle_y_sg,
+        int(neg_nx_of_dom_with_wide_halo),
+        int(neg_ny_of_dom_with_wide_halo),
+    )
+
 
 class Testing(unittest.TestCase):
     def test_set_gridparams_ESGgrid(self):
 
-        (LON_CTR,LAT_CTR,NX,NY,PAZI,NHW,STRETCH_FAC,
-         DEL_ANGLE_X_SG,
-         DEL_ANGLE_Y_SG,
-         NEG_NX_OF_DOM_WITH_WIDE_HALO,
-         NEG_NY_OF_DOM_WITH_WIDE_HALO) = set_gridparams_ESGgrid( \
+        (
+            LON_CTR,
+            LAT_CTR,
+            NX,
+            NY,
+            PAZI,
+            NHW,
+            STRETCH_FAC,
+            DEL_ANGLE_X_SG,
+            DEL_ANGLE_Y_SG,
+            NEG_NX_OF_DOM_WITH_WIDE_HALO,
+            NEG_NY_OF_DOM_WITH_WIDE_HALO,
+        ) = set_gridparams_ESGgrid(
             lon_ctr=-97.5,
             lat_ctr=38.5,
             nx=1748,
@@ -92,22 +110,38 @@ class Testing(unittest.TestCase):
             pazi=0.0,
             halo_width=6,
             delx=3000.0,
-            dely=3000.0)
+            dely=3000.0,
+        )
 
-        self.assertEqual(\
-         (LON_CTR,LAT_CTR,NX,NY,PAZI,NHW,STRETCH_FAC,
-          round(DEL_ANGLE_X_SG,10),
-          round(DEL_ANGLE_Y_SG,10),
-          NEG_NX_OF_DOM_WITH_WIDE_HALO,
-          NEG_NY_OF_DOM_WITH_WIDE_HALO),
-         (-97.5, 38.5, 1748, 1038, 0.0, 6,0.999,
-          0.0134894006,
-          0.0134894006,
-          -1760,
-          -1050)
+        self.assertEqual(
+            (
+                LON_CTR,
+                LAT_CTR,
+                NX,
+                NY,
+                PAZI,
+                NHW,
+                STRETCH_FAC,
+                round(DEL_ANGLE_X_SG, 10),
+                round(DEL_ANGLE_Y_SG, 10),
+                NEG_NX_OF_DOM_WITH_WIDE_HALO,
+                NEG_NY_OF_DOM_WITH_WIDE_HALO,
+            ),
+            (
+                -97.5,
+                38.5,
+                1748,
+                1038,
+                0.0,
+                6,
+                0.999,
+                0.0134894006,
+                0.0134894006,
+                -1760,
+                -1050,
+            ),
         )
 
     def setUp(self):
-        set_env_var('RADIUS_EARTH',6371200.0)
-        set_env_var('DEGS_PER_RADIAN',57.2957795131)
-
+        set_env_var("RADIUS_EARTH", 6371200.0)
+        set_env_var("DEGS_PER_RADIAN", 57.2957795131)

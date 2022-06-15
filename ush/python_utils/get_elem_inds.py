@@ -3,8 +3,9 @@
 from .misc import lowercase
 from .check_var_valid_value import check_var_valid_value
 
+
 def get_elem_inds(arr, match, ret_type):
-    """ Function that returns indices of elements of array
+    """Function that returns indices of elements of array
     that match a given string
 
     Args:
@@ -15,14 +16,13 @@ def get_elem_inds(arr, match, ret_type):
         A list of indices
     """
     ret_type = lowercase(ret_type)
-    check_var_valid_value(ret_type, ['first', 'last', 'all'])
+    check_var_valid_value(ret_type, ["first", "last", "all"])
 
-    if ret_type == 'first':
+    if ret_type == "first":
         return arr.index(match)
-    if ret_type == 'last':
-        for i in range(len(arr)-1, -1, -1):
+    if ret_type == "last":
+        for i in range(len(arr) - 1, -1, -1):
             if arr[i] == match:
                 return i
         return None
-    return [i for i,e in enumerate(arr) if e == match]
-
+    return [i for i, e in enumerate(arr) if e == match]

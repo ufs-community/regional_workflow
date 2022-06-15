@@ -2,8 +2,9 @@
 
 import re
 
+
 def uppercase(s):
-    """ Function to convert a given string to uppercase
+    """Function to convert a given string to uppercase
 
     Args:
         s: the string
@@ -15,7 +16,7 @@ def uppercase(s):
 
 
 def lowercase(s):
-    """ Function to convert a given string to lowercase
+    """Function to convert a given string to lowercase
 
     Args:
         s: the string
@@ -25,8 +26,9 @@ def lowercase(s):
 
     return s.lower()
 
+
 def find_pattern_in_str(pattern, source):
-    """ Find regex pattern in a string
+    """Find regex pattern in a string
 
     Args:
         pattern: regex expression
@@ -35,12 +37,13 @@ def find_pattern_in_str(pattern, source):
         A tuple of matched groups or None
     """
     pattern = re.compile(pattern)
-    for match in re.finditer(pattern,source):
+    for match in re.finditer(pattern, source):
         return match.groups()
     return None
 
+
 def find_pattern_in_file(pattern, file_name):
-    """ Find regex pattern in a file
+    """Find regex pattern in a file
 
     Args:
         pattern: regex expression
@@ -51,7 +54,6 @@ def find_pattern_in_file(pattern, file_name):
     pattern = re.compile(pattern)
     with open(file_name) as f:
         for line in f:
-            for match in re.finditer(pattern,line):
+            for match in re.finditer(pattern, line):
                 return match.groups()
     return None
-

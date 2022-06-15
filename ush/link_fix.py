@@ -6,13 +6,25 @@ import sys
 import argparse
 import glob
 
-from python_utils import import_vars, set_env_var, print_input_args, \
-                         print_info_msg, print_err_msg_exit, create_symlink_to_file, \
-                         define_macos_utilities, check_var_valid_value, flatten_dict, \
-                         cd_vrfy, mkdir_vrfy, find_pattern_in_str, load_shell_config
+from python_utils import (
+    import_vars,
+    set_env_var,
+    print_input_args,
+    print_info_msg,
+    print_err_msg_exit,
+    create_symlink_to_file,
+    define_macos_utilities,
+    check_var_valid_value,
+    flatten_dict,
+    cd_vrfy,
+    mkdir_vrfy,
+    find_pattern_in_str,
+    load_shell_config,
+)
+
 
 def link_fix(verbose, file_group):
-    """ This file defines a function that ...
+    """This file defines a function that ...
     Args:
         verbose: True or False
         file_group: could be on of ["grid", "orog", "sfc_climo"]
@@ -22,14 +34,14 @@ def link_fix(verbose, file_group):
 
     print_input_args(locals())
 
-    valid_vals_file_group=["grid", "orog", "sfc_climo"]
+    valid_vals_file_group = ["grid", "orog", "sfc_climo"]
     check_var_valid_value(file_group, valid_vals_file_group)
 
-    #import all environement variables
+    # import all environement variables
     import_vars()
 
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # Create symlinks in the FIXLAM directory pointing to the grid files.
     # These symlinks are needed by the make_orog, make_sfc_climo, make_ic,
@@ -40,12 +52,13 @@ def link_fix(verbose, file_group):
     # links to non-existent targets without returning with a nonzero exit
     # code.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
-    print_info_msg(f'Creating links in the FIXLAM directory to the grid files...',
-        verbose=verbose)
+    print_info_msg(
+        f"Creating links in the FIXLAM directory to the grid files...", verbose=verbose
+    )
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # Create globbing patterns for grid, orography, and surface climatology
     # files.
@@ -148,120 +161,124 @@ def link_fix(verbose, file_group):
     # 3)
     #
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     #
     if file_group == "grid":
-        fns=[
-        f"C*{DOT_OR_USCORE}mosaic.halo{NHW}.nc",
-        f"C*{DOT_OR_USCORE}mosaic.halo{NH4}.nc",
-        f"C*{DOT_OR_USCORE}mosaic.halo{NH3}.nc",
-        f"C*{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NHW}.nc",
-        f"C*{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NH3}.nc",
-        f"C*{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NH4}.nc"
-            ]
-        fps=[ os.path.join(GRID_DIR,itm) for itm in fns]
-        run_task=f"{RUN_TASK_MAKE_GRID}"
+        fns = [
+            f"C*{DOT_OR_USCORE}mosaic.halo{NHW}.nc",
+            f"C*{DOT_OR_USCORE}mosaic.halo{NH4}.nc",
+            f"C*{DOT_OR_USCORE}mosaic.halo{NH3}.nc",
+            f"C*{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NHW}.nc",
+            f"C*{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NH3}.nc",
+            f"C*{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NH4}.nc",
+        ]
+        fps = [os.path.join(GRID_DIR, itm) for itm in fns]
+        run_task = f"{RUN_TASK_MAKE_GRID}"
     #
     elif file_group == "orog":
-        fns=[
-        f"C*{DOT_OR_USCORE}oro_data.tile{TILE_RGNL}.halo{NH0}.nc",
-        f"C*{DOT_OR_USCORE}oro_data.tile{TILE_RGNL}.halo{NH4}.nc"
-            ]
+        fns = [
+            f"C*{DOT_OR_USCORE}oro_data.tile{TILE_RGNL}.halo{NH0}.nc",
+            f"C*{DOT_OR_USCORE}oro_data.tile{TILE_RGNL}.halo{NH4}.nc",
+        ]
         if CCPP_PHYS_SUITE == "FV3_HRRR":
-          fns+=[
-          f"C*{DOT_OR_USCORE}oro_data_ss.tile{TILE_RGNL}.halo{NH0}.nc",
-          f"C*{DOT_OR_USCORE}oro_data_ls.tile{TILE_RGNL}.halo{NH0}.nc",
-               ]
-        fps=[ os.path.join(OROG_DIR,itm) for itm in fns]
-        run_task=f"{RUN_TASK_MAKE_OROG}"
+            fns += [
+                f"C*{DOT_OR_USCORE}oro_data_ss.tile{TILE_RGNL}.halo{NH0}.nc",
+                f"C*{DOT_OR_USCORE}oro_data_ls.tile{TILE_RGNL}.halo{NH0}.nc",
+            ]
+        fps = [os.path.join(OROG_DIR, itm) for itm in fns]
+        run_task = f"{RUN_TASK_MAKE_OROG}"
     #
     # The following list of symlinks (which have the same names as their
     # target files) need to be created made in order for the make_ics and
     # make_lbcs tasks (i.e. tasks involving chgres_cube) to work.
     #
     elif file_group == "sfc_climo":
-        num_fields=len(SFC_CLIMO_FIELDS)
-        fns=[None] * (2 * num_fields)
+        num_fields = len(SFC_CLIMO_FIELDS)
+        fns = [None] * (2 * num_fields)
         for i in range(num_fields):
-          ii=2*i
-          fns[ii]=f"C*.{SFC_CLIMO_FIELDS[i]}.tile{TILE_RGNL}.halo{NH0}.nc"
-          fns[ii+1]=f"C*.{SFC_CLIMO_FIELDS[i]}.tile{TILE_RGNL}.halo{NH4}.nc"
-        fps=[ os.path.join(SFC_CLIMO_DIR,itm) for itm in fns]
-        run_task=f"{RUN_TASK_MAKE_SFC_CLIMO}"
+            ii = 2 * i
+            fns[ii] = f"C*.{SFC_CLIMO_FIELDS[i]}.tile{TILE_RGNL}.halo{NH0}.nc"
+            fns[ii + 1] = f"C*.{SFC_CLIMO_FIELDS[i]}.tile{TILE_RGNL}.halo{NH4}.nc"
+        fps = [os.path.join(SFC_CLIMO_DIR, itm) for itm in fns]
+        run_task = f"{RUN_TASK_MAKE_SFC_CLIMO}"
     #
 
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # Find all files matching the globbing patterns and make sure that they
     # all have the same resolution (an integer) in their names.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
-    i=0
-    res_prev=""
-    res=""
-    fp_prev=""
+    i = 0
+    res_prev = ""
+    res = ""
+    fp_prev = ""
 
     for pattern in fps:
-      files = glob.glob(pattern)
-      for fp in files:
+        files = glob.glob(pattern)
+        for fp in files:
 
-        fn = os.path.basename(fp)
+            fn = os.path.basename(fp)
 
-        regex_search = "^C([0-9]*).*"
-        res = find_pattern_in_str(regex_search, fn)
-        if res is None:
-          print_err_msg_exit(f'''
+            regex_search = "^C([0-9]*).*"
+            res = find_pattern_in_str(regex_search, fn)
+            if res is None:
+                print_err_msg_exit(
+                    f"""
                 The resolution could not be extracted from the current file's name.  The
                 full path to the file (fp) is:
                   fp = \"{fp}\"
                 This may be because fp contains the * globbing character, which would
                 imply that no files were found that match the globbing pattern specified
-                in fp.''')
-        else:
-          res = res[0]
+                in fp."""
+                )
+            else:
+                res = res[0]
 
-        if ( i > 0 ) and ( res != res_prev ):
-          print_err_msg_exit(f'''
+            if (i > 0) and (res != res_prev):
+                print_err_msg_exit(
+                    f"""
                 The resolutions (as obtained from the file names) of the previous and
                 current file (fp_prev and fp, respectively) are different:
                   fp_prev = \"{fp_prev}\"
                   fp      = \"{fp}\"
-                Please ensure that all files have the same resolution.''')
+                Please ensure that all files have the same resolution."""
+                )
 
-        i=i+1
-        fp_prev=f"{fp}"
-        res_prev=res
+            i = i + 1
+            fp_prev = f"{fp}"
+            res_prev = res
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # Replace the * globbing character in the set of globbing patterns with
     # the resolution.  This will result in a set of (full paths to) specific
     # files.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
-    fps=[ itm.replace('*',res) for itm in fps]
+    fps = [itm.replace("*", res) for itm in fps]
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # In creating the various symlinks below, it is convenient to work in
     # the FIXLAM directory.  We will change directory back to the original
     # later below.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
-    SAVE_DIR=os.getcwd()
+    SAVE_DIR = os.getcwd()
     cd_vrfy(FIXLAM)
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # Use the set of full file paths generated above as the link targets to
     # create symlinks to these files in the FIXLAM directory.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # If the task in consideration (which will be one of the pre-processing
     # tasks MAKE_GRID_TN, MAKE_OROG_TN, and MAKE_SFC_CLIMO_TN) was run, then
@@ -275,126 +292,140 @@ def link_fix(verbose, file_group):
     # relative symlinks, so we use symlinks with absolute paths.
     #
     if run_task:
-      relative_link_flag=True
+        relative_link_flag = True
     else:
-      relative_link_flag=False
+        relative_link_flag = False
 
     for fp in fps:
-      fn=os.path.basename(fp)
-      create_symlink_to_file(fp,fn,relative_link_flag)
+        fn = os.path.basename(fp)
+        create_symlink_to_file(fp, fn, relative_link_flag)
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # Set the C-resolution based on the resolution appearing in the file
     # names.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
-    cres=f"C{res}"
+    cres = f"C{res}"
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # If considering grid files, create a symlink to the halo4 grid file
     # that does not contain the halo size in its name.  This is needed by
     # the tasks that generate the initial and lateral boundary condition
     # files.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     if file_group == "grid":
-        target=f"{cres}{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NH4}.nc"
-        symlink=f"{cres}{DOT_OR_USCORE}grid.tile{TILE_RGNL}.nc"
-        create_symlink_to_file(target,symlink,True)
+        target = f"{cres}{DOT_OR_USCORE}grid.tile{TILE_RGNL}.halo{NH4}.nc"
+        symlink = f"{cres}{DOT_OR_USCORE}grid.tile{TILE_RGNL}.nc"
+        create_symlink_to_file(target, symlink, True)
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # If considering surface climatology files, create symlinks to the surface
     # climatology files that do not contain the halo size in their names.
     # These are needed by the task that generates the initial condition files.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     if file_group == "sfc_climo":
 
-        tmp=[ f"{cres}.{itm}" for itm in SFC_CLIMO_FIELDS]
-        fns_sfc_climo_with_halo_in_fn=[ f"{itm}.tile{TILE_RGNL}.halo{NH4}.nc" for itm in tmp]
-        fns_sfc_climo_no_halo_in_fn=[ f"{itm}.tile{TILE_RGNL}.nc" for itm in tmp]
+        tmp = [f"{cres}.{itm}" for itm in SFC_CLIMO_FIELDS]
+        fns_sfc_climo_with_halo_in_fn = [
+            f"{itm}.tile{TILE_RGNL}.halo{NH4}.nc" for itm in tmp
+        ]
+        fns_sfc_climo_no_halo_in_fn = [f"{itm}.tile{TILE_RGNL}.nc" for itm in tmp]
 
         for i in range(num_fields):
-          target=f"{fns_sfc_climo_with_halo_in_fn[i]}"
-          symlink=f"{fns_sfc_climo_no_halo_in_fn[i]}"
-          create_symlink_to_file(target, symlink, True)
-    #
-    # In order to be able to specify the surface climatology file names in
-    # the forecast model's namelist file, in the FIXLAM directory a symlink
-    # must be created for each surface climatology field that has "tile1" in
-    # its name (and no "halo") and which points to the corresponding "tile7.halo0"
-    # file.
-    #
-        tmp=[ f"{cres}.{itm}" for itm in SFC_CLIMO_FIELDS ]
-        fns_sfc_climo_tile7_halo0_in_fn=[ f"{itm}.tile{TILE_RGNL}.halo{NH0}.nc" for itm in tmp ]
-        fns_sfc_climo_tile1_no_halo_in_fn=[ f"{itm}.tile1.nc" for itm in tmp ]
+            target = f"{fns_sfc_climo_with_halo_in_fn[i]}"
+            symlink = f"{fns_sfc_climo_no_halo_in_fn[i]}"
+            create_symlink_to_file(target, symlink, True)
+        #
+        # In order to be able to specify the surface climatology file names in
+        # the forecast model's namelist file, in the FIXLAM directory a symlink
+        # must be created for each surface climatology field that has "tile1" in
+        # its name (and no "halo") and which points to the corresponding "tile7.halo0"
+        # file.
+        #
+        tmp = [f"{cres}.{itm}" for itm in SFC_CLIMO_FIELDS]
+        fns_sfc_climo_tile7_halo0_in_fn = [
+            f"{itm}.tile{TILE_RGNL}.halo{NH0}.nc" for itm in tmp
+        ]
+        fns_sfc_climo_tile1_no_halo_in_fn = [f"{itm}.tile1.nc" for itm in tmp]
 
         for i in range(num_fields):
-          target=f"{fns_sfc_climo_tile7_halo0_in_fn[i]}"
-          symlink=f"{fns_sfc_climo_tile1_no_halo_in_fn[i]}"
-          create_symlink_to_file(target,symlink,True)
+            target = f"{fns_sfc_climo_tile7_halo0_in_fn[i]}"
+            symlink = f"{fns_sfc_climo_tile1_no_halo_in_fn[i]}"
+            create_symlink_to_file(target, symlink, True)
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     # Change directory back to original one.
     #
-    #-----------------------------------------------------------------------
+    # -----------------------------------------------------------------------
     #
     cd_vrfy(SAVE_DIR)
 
     return res
 
+
 def parse_args(argv):
-    """ Parse command line arguments"""
+    """Parse command line arguments"""
     parser = argparse.ArgumentParser(
-        description='Creates symbolic links to FIX directories.'
+        description="Creates symbolic links to FIX directories."
     )
 
-    parser.add_argument('-f', '--file-group',
-                        dest='file_group',
-                        required=True,
-                        help='File group, could be one of ["grid", "orog", "sfc_climo"].')
+    parser.add_argument(
+        "-f",
+        "--file-group",
+        dest="file_group",
+        required=True,
+        help='File group, could be one of ["grid", "orog", "sfc_climo"].',
+    )
 
-    parser.add_argument('-p', '--path-to-defns',
-                        dest='path_to_defns',
-                        required=True,
-                        help='Path to var_defns file.')
+    parser.add_argument(
+        "-p",
+        "--path-to-defns",
+        dest="path_to_defns",
+        required=True,
+        help="Path to var_defns file.",
+    )
 
     return parser.parse_args(argv)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     args = parse_args(sys.argv[1:])
     cfg = load_shell_config(args.path_to_defns)
     cfg = flatten_dict(cfg)
     import_vars(dictionary=cfg)
     link_fix(VERBOSE, args.file_group)
 
+
 class Testing(unittest.TestCase):
     def test_link_fix(self):
         res = link_fix(verbose=True, file_group="grid")
-        self.assertTrue( res == "3357")
+        self.assertTrue(res == "3357")
+
     def setUp(self):
         define_macos_utilities()
-        TEST_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_data");
+        TEST_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_data")
         FIXLAM = os.path.join(TEST_DIR, "expt", "fix_lam")
-        mkdir_vrfy("-p",FIXLAM)
-        set_env_var("FIXLAM",FIXLAM)
-        set_env_var("DOT_OR_USCORE","_")
-        set_env_var("TILE_RGNL",7)
-        set_env_var("NH0",0)
-        set_env_var("NHW",6)
-        set_env_var("NH4",4)
-        set_env_var("NH3",3)
-        set_env_var("GRID_DIR",TEST_DIR + os.sep + "RRFS_CONUS_3km")
-        set_env_var("RUN_TASK_MAKE_GRID","FALSE")
-        set_env_var("OROG_DIR",TEST_DIR + os.sep + "RRFS_CONUS_3km")
-        set_env_var("RUN_TASK_MAKE_OROG","FALSE")
-        set_env_var("SFC_CLIMO_DIR",TEST_DIR + os.sep + "RRFS_CONUS_3km")
-        set_env_var("RUN_TASK_MAKE_SFC_CLIMO","FALSE")
-        set_env_var("CCPP_PHYS_SUITE","FV3_GSD_SAR")
+        mkdir_vrfy("-p", FIXLAM)
+        set_env_var("FIXLAM", FIXLAM)
+        set_env_var("DOT_OR_USCORE", "_")
+        set_env_var("TILE_RGNL", 7)
+        set_env_var("NH0", 0)
+        set_env_var("NHW", 6)
+        set_env_var("NH4", 4)
+        set_env_var("NH3", 3)
+        set_env_var("GRID_DIR", TEST_DIR + os.sep + "RRFS_CONUS_3km")
+        set_env_var("RUN_TASK_MAKE_GRID", "FALSE")
+        set_env_var("OROG_DIR", TEST_DIR + os.sep + "RRFS_CONUS_3km")
+        set_env_var("RUN_TASK_MAKE_OROG", "FALSE")
+        set_env_var("SFC_CLIMO_DIR", TEST_DIR + os.sep + "RRFS_CONUS_3km")
+        set_env_var("RUN_TASK_MAKE_SFC_CLIMO", "FALSE")
+        set_env_var("CCPP_PHYS_SUITE", "FV3_GSD_SAR")
