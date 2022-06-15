@@ -46,7 +46,7 @@ QUEUE_HPSS=${QUEUE_HPSS:-"regular"}
 QUEUE_FCST=${QUEUE_FCST:-"regular"}
 
 # UFS SRW App specific paths
-staged_data_dir="/glade/p/ral/jntp/UFS_SRW_App/develop"
+staged_data_dir="/glade/p/ral/jntp/UFS_SRW_App/v2p0"
 FIXgsm=${FIXgsm:-"${staged_data_dir}/fix/fix_am"}
 FIXaer=${FIXaer:-"${staged_data_dir}/fix/fix_aer"}
 FIXlut=${FIXlut:-"${staged_data_dir}/fix/fix_lut"}

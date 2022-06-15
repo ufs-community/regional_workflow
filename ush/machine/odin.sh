@@ -9,7 +9,7 @@ function file_location() {
   external_model=${1}
   external_file_fmt=${2}
 
-  staged_data_dir="/scratch/ywang/UFS_SRW_App/develop"
+  staged_data_dir="/scratch/ywang/UFS_SRW_App/v2p0"
 
   location=""
   case ${external_model} in
