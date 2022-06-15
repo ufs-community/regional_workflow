@@ -97,7 +97,7 @@ def set_FV3nml_sfc_climo_filenames():
 def parse_args(argv):
     """ Parse command line arguments"""
     parser = argparse.ArgumentParser(
-        description='Creates symbolic links to FIX directories.'
+        description='Set surface climatology fields.'
     )
 
     parser.add_argument('-p', '--path-to-defns',

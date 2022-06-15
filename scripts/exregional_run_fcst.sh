@@ -436,8 +436,8 @@ fi
 
 if [ "${DO_ENSEMBLE}" = TRUE ] && ([ "${DO_SPP}" = TRUE ] || [ "${DO_SPPT}" = TRUE ] || [ "${DO_SHUM}" = TRUE ] \
    [ "${DO_SKEB}" = TRUE ] || [ "${DO_LSM_SPP}" =  TRUE ]); then
-  python3 $USHDIR/set_FV3nml_ens_stoch_seeds \
-      --path-to-defns $EXPTDIR/var_defns.sh \
+  python3 $USHDIR/set_FV3nml_ens_stoch_seeds.py \
+      --path-to-defns ${GLOBAL_VAR_DEFNS_FP} \
       --cdate "$cdate" || print_err_msg_exit "\
 Call to function to create the ensemble-based namelist for the current
 cycle's (cdate) run directory (run_dir) failed:

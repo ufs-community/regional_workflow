@@ -930,19 +930,12 @@ def setup():
     NEMS_CONFIG_FN = "nems.configure"
     #----------------------------------
 
-    if DATA_TABLE_TMPL_FN is None:
-       DATA_TABLE_TMPL_FN = DATA_TABLE_FN
-    if DIAG_TABLE_TMPL_FN is None:
-       DIAG_TABLE_TMPL_FN = DIAG_TABLE_FN
-    DIAG_TABLE_TMPL_FN = f"{DIAG_TABLE_TMPL_FN}{dot_ccpp_phys_suite_or_null}"
-    if FIELD_TABLE_TMPL_FN is None:
-       FIELD_TABLE_TMPL_FN = FIELD_TABLE_FN
-    FIELD_TABLE_TMPL_FN = f"{FIELD_TABLE_TMPL_FN}{dot_ccpp_phys_suite_or_null}"
-    if MODEL_CONFIG_TMPL_FN is None:
-       MODEL_CONFIG_TMPL_FN = MODEL_CONFIG_FN
-    if NEMS_CONFIG_TMPL_FN is None:
-       NEMS_CONFIG_TMPL_FN = NEMS_CONFIG_FN
-    
+    DATA_TABLE_TMPL_FN = DATA_TABLE_TMPL_FN or DATA_TABLE_FN
+    DIAG_TABLE_TMPL_FN = f"{DIAG_TABLE_TMPL_FN or DIAG_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
+    FIELD_TABLE_TMPL_FN = f"{FIELD_TABLE_TMPL_FN or FIELD_TABLE_FN}{dot_ccpp_phys_suite_or_null}"
+    MODEL_CONFIG_TMPL_FN = MODEL_CONFIG_TMPL_FN or MODEL_CONFIG_FN
+    NEMS_CONFIG_TMPL_FN = NEMS_CONFIG_TMPL_FN or NEMS_CONFIG_FN
+
     DATA_TABLE_TMPL_FP = os.path.join(TEMPLATE_DIR,DATA_TABLE_TMPL_FN)
     DIAG_TABLE_TMPL_FP = os.path.join(TEMPLATE_DIR,DIAG_TABLE_TMPL_FN)
     FIELD_TABLE_TMPL_FP = os.path.join(TEMPLATE_DIR,FIELD_TABLE_TMPL_FN)

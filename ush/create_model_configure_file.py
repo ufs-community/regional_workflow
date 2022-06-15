@@ -213,22 +213,22 @@ def parse_args(argv):
     parser.add_argument('-c', '--cdate',
                         dest='cdate',
                         required=True,
-                        help='Date string.')
+                        help='Date string in YYYYMMDD format.')
 
     parser.add_argument('-s', '--sub-hourly-post',
                         dest='sub_hourly_post',
                         required=True,
-                        help='Sub hourly post.')
+                        help='Set sub hourly post to either TRUE/FALSE by passing corresponding string.')
 
     parser.add_argument('-d', '--dt-subhourly-post-mnts',
                         dest='dt_subhourly_post_mnts',
                         required=True,
-                        help='dt subhourly post mnts.')
+                        help='Subhourly post minitues.')
 
     parser.add_argument('-t', '--dt-atmos',
                         dest='dt_atmos',
                         required=True,
-                        help='dt_atmos.')
+                        help='Forecast model\'s main time step.')
 
     parser.add_argument('-p', '--path-to-defns',
                         dest='path_to_defns',
