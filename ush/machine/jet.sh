@@ -80,6 +80,16 @@ RUN_CMD_SERIAL="time"
 RUN_CMD_UTILS="srun"
 RUN_CMD_FCST="srun"
 RUN_CMD_POST="srun"
+# MET/METplus-Related Paths
+MET_INSTALL_DIR=${MET_INSTALL_DIR:-"/contrib/met/10.1.1"}
+METPLUS_PATH=${METPLUS_PATH:-"/contrib/met/METplus/METplus-4.1.1"}
+#CCPA_OBS_DIR=${CCPA_OBS_DIR:-"${staged_data_dir}/obs_data/ccpa/proc"}
+#MRMS_OBS_DIR=${MRMS_OBS_DIR:-"${staged_data_dir}/obs_data/mrms/proc"}
+#NDAS_OBS_DIR=${NDAS_OBS_DIR:-"${staged_data_dir}/obs_data/ndas/proc"}
+CCPA_OBS_DIR=${CCPA_OBS_DIR:-"/mnt/lfs4/HFIP/hfv3gfs/Edward.Snyder/obs_data/ccpa/proc"}
+MRMS_OBS_DIR=${MRMS_OBS_DIR:-"/mnt/lfs4/HFIP/hfv3gfs/Edward.Snyder/obs_data/mrms/proc"}
+NDAS_OBS_DIR=${NDAS_OBS_DIR:-"/mnt/lfs4/HFIP/hfv3gfs/Edward.Snyder/obs_data/ndas/proc"}
+MET_BIN_EXEC=${MET_BIN_EXEC:-"bin"}
 
 # Test Data Locations
 TEST_COMIN="${staged_data_dir}/COMGFS"
