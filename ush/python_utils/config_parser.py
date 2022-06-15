@@ -15,6 +15,7 @@ returnded by load_config to make queries.
 """
 
 import argparse
+
 try:
     import yaml
 except:
@@ -35,28 +36,31 @@ from .run_command import run_command
 # YAML
 ##########
 def load_yaml_config(config_file):
-    """ Safe load a yaml file """
+    """Safe load a yaml file"""
 
     try:
-        with open(config_file,'r') as f:
+        with open(config_file, "r") as f:
             cfg = yaml.safe_load(f)
     except yaml.YAMLError as e:
         print_err_msg_exit(e)
 
     return cfg
 
+
 def cfg_to_yaml_str(cfg):
-    """ Get contents of config file as a yaml string """
+    """Get contents of config file as a yaml string"""
 
     return yaml.dump(cfg, sort_keys=False, default_flow_style=False)
 
+
 def join_str(loader, node):
-    """ Custom tag hangler to join strings """
+    """Custom tag hangler to join strings"""
     seq = loader.construct_sequence(node)
-    return ''.join([str(i) for i in seq])
+    return "".join([str(i) for i in seq])
+
 
 try:
-    yaml.add_constructor('!join_str', join_str, Loader=yaml.SafeLoader)
+    yaml.add_constructor("!join_str", join_str, Loader=yaml.SafeLoader)
 except:
     pass
 
@@ -64,36 +68,38 @@ except:
 # JSON
 ##########
 def load_json_config(config_file):
-    """ Load json config file """
+    """Load json config file"""
 
     try:
-        with open(config_file,'r') as f:
+        with open(config_file, "r") as f:
             cfg = json.load(f)
     except json.JSONDecodeError as e:
         print_err_msg_exit(e)
 
     return cfg
 
-def cfg_to_json_str(cfg):
-    """ Get contents of config file as a json string """
 
-    return json.dumps(cfg,  sort_keys=False, indent=4) + "\n"
+def cfg_to_json_str(cfg):
+    """Get contents of config file as a json string"""
+
+    return json.dumps(cfg, sort_keys=False, indent=4) + "\n"
+
 
 ##########
 # SHELL
 ##########
 def load_shell_as_ini_config(file_name, return_string=True):
-    """ Load shell config file with embedded structure in comments """
+    """Load shell config file with embedded structure in comments"""
 
     # read contents and replace comments as sections
-    with open(file_name,"r") as file:
+    with open(file_name, "r") as file:
         cfg = file.read()
-        cfg = cfg.replace("# [","[")
-        cfg = cfg.replace("\\\n"," ")
+        cfg = cfg.replace("# [", "[")
+        cfg = cfg.replace("\\\n", " ")
 
     # write content to temp file and load it as ini
     temp_file = os.path.join(os.getcwd(), "_temp." + str(os.getpid()) + ".ini")
-    with open(temp_file,"w") as file:
+    with open(temp_file, "w") as file:
         file.write(cfg)
 
     # load it as a structured ini file
@@ -104,8 +110,9 @@ def load_shell_as_ini_config(file_name, return_string=True):
 
     return cfg
 
+
 def load_shell_config(config_file, return_string=False):
-    """ Loads old style shell config files.
+    """Loads old style shell config files.
     We source the config script in a subshell and gets the variables it sets
 
     Args:
@@ -125,7 +132,8 @@ def load_shell_config(config_file, return_string=False):
     # do a diff to get variables specifically defined/updated in the script
     # Method sounds brittle but seems to work ok so far
     pid = os.getpid()
-    code = dedent(f'''      #!/bin/bash
+    code = dedent(
+        f"""      #!/bin/bash
       t1="./t1.{pid}"
       t2="./t2.{pid}"
       (set -o posix; set) > $t1
@@ -133,104 +141,114 @@ def load_shell_config(config_file, return_string=False):
       (set -o posix; set) > $t2
       diff $t1 $t2 | grep "> " | cut -c 3-
       rm -rf $t1 $t2
-    ''')
-    (_,config_str,_) = run_command(code)
+    """
+    )
+    (_, config_str, _) = run_command(code)
     lines = config_str.splitlines()
 
-    #build the dictionary
+    # build the dictionary
     cfg = {}
     for l in lines:
         idx = l.find("=")
         k = l[:idx]
-        v = str_to_list(l[idx+1:],return_string)
+        v = str_to_list(l[idx + 1 :], return_string)
         cfg[k] = v
     return cfg
 
-def cfg_to_shell_str(cfg, kname=None):
-    """ Get contents of config file as shell script string"""
 
-    shell_str = ''
-    for k,v in cfg.items():
-        if isinstance(v,dict):
+def cfg_to_shell_str(cfg, kname=None):
+    """Get contents of config file as shell script string"""
+
+    shell_str = ""
+    for k, v in cfg.items():
+        if isinstance(v, dict):
             if kname:
                 n_kname = f"{kname}.{k}"
             else:
                 n_kname = f"{k}"
             shell_str += f"# [{n_kname}]\n"
-            shell_str += cfg_to_shell_str(v,n_kname)
+            shell_str += cfg_to_shell_str(v, n_kname)
             shell_str += "\n"
             continue
         # others
         v1 = list_to_str(v)
-        if isinstance(v,list):
-            shell_str += f'{k}={v1}\n'
+        if isinstance(v, list):
+            shell_str += f"{k}={v1}\n"
         else:
-            #replace some problematic chars
-            v1 = v1.replace("'",'"')
-            v1 = v1.replace("\n",' ')
-            #end problematic
+            # replace some problematic chars
+            v1 = v1.replace("'", '"')
+            v1 = v1.replace("\n", " ")
+            # end problematic
             shell_str += f"{k}='{v1}'\n"
     return shell_str
+
 
 ##########
 # INI
 ##########
 def load_ini_config(config_file, return_string=False):
-    """ Load a config file with a format similar to Microsoft's INI files"""
+    """Load a config file with a format similar to Microsoft's INI files"""
 
     if not os.path.exists(config_file):
-        print_err_msg_exit(f'''
+        print_err_msg_exit(
+            f'''
             The specified configuration file does not exist:
-                  \"{config_file}\"''')
+                  \"{config_file}\"'''
+        )
 
     config = configparser.RawConfigParser()
     config.optionxform = str
     config.read(config_file)
-    config_dict = {s:dict(config.items(s)) for s in config.sections()}
-    for _,vs in config_dict.items():
-        for k,v in vs.items():
+    config_dict = {s: dict(config.items(s)) for s in config.sections()}
+    for _, vs in config_dict.items():
+        for k, v in vs.items():
             vs[k] = str_to_list(v, return_string)
     return config_dict
 
+
 def get_ini_value(config, section, key):
-    """ Finds the value of a property in a given section"""
+    """Finds the value of a property in a given section"""
 
     if not section in config:
-        print_err_msg_exit(f'''
+        print_err_msg_exit(
+            f'''
             Section not found:
               section = \"{section}\"
-              valid sections = \"{config.keys()}\"''')
+              valid sections = \"{config.keys()}\"'''
+        )
     else:
         return config[section][key]
 
     return None
 
-def cfg_to_ini_str(cfg, kname=None):
-    """ Get contents of config file as ini string"""
 
-    ini_str = ''
-    for k,v in cfg.items():
-        if isinstance(v,dict):
+def cfg_to_ini_str(cfg, kname=None):
+    """Get contents of config file as ini string"""
+
+    ini_str = ""
+    for k, v in cfg.items():
+        if isinstance(v, dict):
             if kname:
                 n_kname = f"{kname}.{k}"
             else:
                 n_kname = f"{k}"
             ini_str += f"[{n_kname}]\n"
-            ini_str += cfg_to_ini_str(v,n_kname)
+            ini_str += cfg_to_ini_str(v, n_kname)
             ini_str += "\n"
             continue
-        v1 = list_to_str(v,True)
-        if isinstance(v,list):
-            ini_str += f'{k}={v1}\n'
+        v1 = list_to_str(v, True)
+        if isinstance(v, list):
+            ini_str += f"{k}={v1}\n"
         else:
             ini_str += f"{k}='{v1}'\n"
     return ini_str
 
+
 ##########
 # XML
 ##########
-def xml_to_dict(root,return_string):
-    """ Convert an xml tree to dictionary """
+def xml_to_dict(root, return_string):
+    """Convert an xml tree to dictionary"""
 
     cfg = {}
     for child in root:
@@ -238,48 +256,53 @@ def xml_to_dict(root,return_string):
             r = xml_to_dict(child, return_string)
             cfg[child.tag] = r
         else:
-            cfg[child.tag] = str_to_list(child.text,return_string)
+            cfg[child.tag] = str_to_list(child.text, return_string)
     return cfg
 
+
 def dict_to_xml(d, tag):
-    """ Convert dictionary to an xml tree """
+    """Convert dictionary to an xml tree"""
 
     elem = ET.Element(tag)
-    for k,v in d.items():
-        if isinstance(v,dict):
+    for k, v in d.items():
+        if isinstance(v, dict):
             r = dict_to_xml(v, k)
             elem.append(r)
         else:
             child = ET.Element(k)
-            child.text = list_to_str(v,True)
+            child.text = list_to_str(v, True)
             elem.append(child)
 
     return elem
 
+
 def load_xml_config(config_file, return_string=False):
-    """ Load xml config file """
+    """Load xml config file"""
 
     tree = ET.parse(config_file)
     root = tree.getroot()
     cfg = xml_to_dict(root, return_string)
     return cfg
 
-def cfg_to_xml_str(cfg):
-    """ Get contents of config file as a xml string """
 
-    root = dict_to_xml(cfg, 'root')
-    r = ET.tostring(root, encoding='unicode')
+def cfg_to_xml_str(cfg):
+    """Get contents of config file as a xml string"""
+
+    root = dict_to_xml(cfg, "root")
+    r = ET.tostring(root, encoding="unicode")
     r = minidom.parseString(r)
     r = r.toprettyxml(indent="  ")
-    r = r.replace("&quot;",'"')
+    r = r.replace("&quot;", '"')
     return r
+
 
 ##################
 # CONFIG utils
 ##################
 
-def flatten_dict(dictionary,keys=None):
-    """ Flatten a recursive dictionary (e.g.yaml/json) to be one level deep
+
+def flatten_dict(dictionary, keys=None):
+    """Flatten a recursive dictionary (e.g.yaml/json) to be one level deep
 
     Args:
         dictionary: the source dictionary
@@ -288,17 +311,18 @@ def flatten_dict(dictionary,keys=None):
         A one-level deep dictionary for the selected set of keys
     """
     flat_dict = {}
-    for k,v in dictionary.items():
+    for k, v in dictionary.items():
         if not keys or k in keys:
-            if isinstance(v,dict):
+            if isinstance(v, dict):
                 r = flatten_dict(v)
                 flat_dict.update(r)
             else:
                 flat_dict[k] = v
     return flat_dict
 
+
 def structure_dict(dict_o, dict_t):
-    """ Structure a dictionary based on a template dictionary
+    """Structure a dictionary based on a template dictionary
 
     Args:
         dict_o: dictionary to structure (flat one level structure)
@@ -307,8 +331,8 @@ def structure_dict(dict_o, dict_t):
         A dictionary with contents of dict_o following structure of dict_t
     """
     struct_dict = {}
-    for k,v in dict_t.items():
-        if isinstance(v,dict):
+    for k, v in dict_t.items():
+        if isinstance(v, dict):
             r = structure_dict(dict_o, v)
             if r:
                 struct_dict[k] = r
@@ -316,8 +340,9 @@ def structure_dict(dict_o, dict_t):
             struct_dict[k] = dict_o[k]
     return struct_dict
 
+
 def update_dict(dict_o, dict_t):
-    """ Update a dictionary with another
+    """Update a dictionary with another
 
     Args:
         dict_o: flat dictionary used as source
@@ -325,14 +350,15 @@ def update_dict(dict_o, dict_t):
     Returns:
         None
     """
-    for k,v in dict_t.items():
-        if isinstance(v,dict):
+    for k, v in dict_t.items():
+        if isinstance(v, dict):
             update_dict(dict_o, v)
         elif k in dict_o.keys():
             dict_t[k] = dict_o[k]
 
+
 def check_structure_dict(dict_o, dict_t):
-    """ Check if a dictinary's structure follows a template.
+    """Check if a dictinary's structure follows a template.
     The invalid entries are printed to the screen.
 
     Args:
@@ -341,23 +367,24 @@ def check_structure_dict(dict_o, dict_t):
     Returns:
         Boolean
     """
-    for k,v in dict_o.items():
+    for k, v in dict_o.items():
         if k in dict_t.keys():
             v1 = dict_t[k]
-            if isinstance(v,dict) and isinstance(v1,dict):
+            if isinstance(v, dict) and isinstance(v1, dict):
                 r = check_structure_dict(v, v1)
                 if not r:
                     return False
         else:
-            print(f'INVALID ENTRY: {k}={v}')
+            print(f"INVALID ENTRY: {k}={v}")
             return False
     return True
+
 
 ##################
 # CONFIG loader
 ##################
-def load_config_file(file_name,return_string=False):
-    """ Load config file based on file name extension """
+def load_config_file(file_name, return_string=False):
+    """Load config file based on file name extension"""
 
     ext = os.path.splitext(file_name)[1][1:]
     if ext == "sh":
@@ -366,33 +393,63 @@ def load_config_file(file_name,return_string=False):
         return load_ini_config(file_name, return_string)
     if ext == "json":
         return load_json_config(file_name)
-    if ext in [ "yaml", "yml" ]:
+    if ext in ["yaml", "yml"]:
         return load_yaml_config(file_name)
-    if ext == 'xml':
+    if ext == "xml":
         return load_xml_config(file_name, return_string)
     return None
+
 
 ##################
 # CONFIG main
 ##################
 def cfg_main():
-    """ Main function for converting and formatting between different config file formats """
+    """Main function for converting and formatting between different config file formats"""
 
-    parser = argparse.ArgumentParser(description=\
-                        'Utility for managing different config formats.')
-    parser.add_argument('--cfg','-c',dest='cfg',required=True,
-                        help='Config file to parse')
-    parser.add_argument('--output-type','-o',dest='out_type',required=False,
-                        help='Output format: can be any of ["shell", "yaml", "ini", "json", "xml"]')
-    parser.add_argument('--flatten','-f',dest='flatten',action='store_true',required=False,
-                        help='Flatten resulting dictionary')
-    parser.add_argument('--template-cfg','-t',dest='template',required=False,
-                        help='Template config file used to structure a given config file')
-    parser.add_argument('--keys','-k',dest='keys',nargs='+',required=False,
-                        help='Include only these keys of dictionary for processing.\
-                              Keys can be python regex expression.')
-    parser.add_argument('--validate-cfg','-v',dest='validate',required=False,
-                        help='Validation config file used to validate a given config file')
+    parser = argparse.ArgumentParser(
+        description="Utility for managing different config formats."
+    )
+    parser.add_argument(
+        "--cfg", "-c", dest="cfg", required=True, help="Config file to parse"
+    )
+    parser.add_argument(
+        "--output-type",
+        "-o",
+        dest="out_type",
+        required=False,
+        help='Output format: can be any of ["shell", "yaml", "ini", "json", "xml"]',
+    )
+    parser.add_argument(
+        "--flatten",
+        "-f",
+        dest="flatten",
+        action="store_true",
+        required=False,
+        help="Flatten resulting dictionary",
+    )
+    parser.add_argument(
+        "--template-cfg",
+        "-t",
+        dest="template",
+        required=False,
+        help="Template config file used to structure a given config file",
+    )
+    parser.add_argument(
+        "--keys",
+        "-k",
+        dest="keys",
+        nargs="+",
+        required=False,
+        help="Include only these keys of dictionary for processing.\
+                              Keys can be python regex expression.",
+    )
+    parser.add_argument(
+        "--validate-cfg",
+        "-v",
+        dest="validate",
+        required=False,
+        help="Validation config file used to validate a given config file",
+    )
 
     args = parser.parse_args()
     cfg = load_config_file(args.cfg, True)
@@ -401,9 +458,9 @@ def cfg_main():
         cfg_t = load_config_file(args.validate, True)
         r = check_structure_dict(cfg, cfg_t)
         if r:
-            print('SUCCESS')
+            print("SUCCESS")
         else:
-            print('FAILURE')
+            print("FAILURE")
     else:
         if args.template:
             cfg = flatten_dict(cfg)
@@ -415,23 +472,22 @@ def cfg_main():
             for k in args.keys:
                 r = re.compile(k)
                 keys += list(filter(r.match, cfg.keys()))
-            cfg = { k: cfg[k] for k in keys }
+            cfg = {k: cfg[k] for k in keys}
 
         if args.flatten:
             cfg = flatten_dict(cfg)
 
         # convert to string and print
-        if args.out_type in ['shell', 'sh']:
-            print( cfg_to_shell_str(cfg), end='' )
-        elif args.out_type == 'ini':
-            print( cfg_to_ini_str(cfg), end='' )
-        elif args.out_type == 'json':
-            print( cfg_to_json_str(cfg), end='' )
-        elif args.out_type in ['yaml', 'yml']:
-            print( cfg_to_yaml_str(cfg), end='' )
-        elif args.out_type == 'xml':
-            print( cfg_to_xml_str(cfg), end='' )
+        if args.out_type in ["shell", "sh"]:
+            print(cfg_to_shell_str(cfg), end="")
+        elif args.out_type == "ini":
+            print(cfg_to_ini_str(cfg), end="")
+        elif args.out_type == "json":
+            print(cfg_to_json_str(cfg), end="")
+        elif args.out_type in ["yaml", "yml"]:
+            print(cfg_to_yaml_str(cfg), end="")
+        elif args.out_type == "xml":
+            print(cfg_to_xml_str(cfg), end="")
         else:
             parser.print_help()
             parser.exit()
-

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
+
 def interpol_to_arbit_CRES(RES, RES_array, prop_array):
-    """ Function to interpolate (or extrapolate) a grid cell size-dependent property
+    """Function to interpolate (or extrapolate) a grid cell size-dependent property
     to an arbitrary cubed-sphere resolution using arrays that specify a set of property
     values for a corresponding set of resolutions
 
@@ -29,15 +30,14 @@ def interpol_to_arbit_CRES(RES, RES_array, prop_array):
     elif RES > RES_array[i_max]:
         prop = prop_array[i_max]
     else:
-        for i in range(0,num_valid_RESes-1):
-            if RES_array[i] < RES <= RES_array[i+1]:
+        for i in range(0, num_valid_RESes - 1):
+            if RES_array[i] < RES <= RES_array[i + 1]:
                 RES1 = RES_array[i]
-                RES2 = RES_array[i+1]
+                RES2 = RES_array[i + 1]
                 prop1 = prop_array[i]
-                prop2 = prop_array[i+1]
+                prop2 = prop_array[i + 1]
                 m_slope = (prop2 - prop1) / (RES2 - RES1)
                 y_intcpt = (RES2 * prop1 - RES1 * prop2) / (RES2 - RES1)
                 prop = m_slope * RES + y_intcpt
 
     return prop
-

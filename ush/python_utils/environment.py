@@ -6,8 +6,9 @@ import shlex
 from datetime import datetime, date
 from types import ModuleType
 
+
 def str_to_date(s):
-    """ Get python datetime object from string.
+    """Get python datetime object from string.
 
     Args:
         s: a string
@@ -29,8 +30,9 @@ def str_to_date(s):
         v = None
     return v
 
-def date_to_str(d,short=False):
-    """ Get string from python datetime object.
+
+def date_to_str(d, short=False):
+    """Get string from python datetime object.
     By default it converts to YYYYMMDDHHMM format unless
     told otherwise with `short` or HHMM=0
 
@@ -45,8 +47,9 @@ def date_to_str(d,short=False):
         v = d.strftime("%Y%m%d%H%M")
     return v
 
-def str_to_type(s, return_string = False):
-    """ Check if the string contains a float, int, boolean, or just regular string.
+
+def str_to_type(s, return_string=False):
+    """Check if the string contains a float, int, boolean, or just regular string.
     This will be used to automatically convert environment variables to data types
     that are more convenient to work with. If you don't want this functionality,
     pass return_string = True
@@ -57,11 +60,11 @@ def str_to_type(s, return_string = False):
     Returns:
         a float, int, boolean, date, or the string itself when all else fails
     """
-    s = s.strip('"\'')
+    s = s.strip("\"'")
     if not return_string:
-        if s.lower() in ['true','yes','yeah']:
+        if s.lower() in ["true", "yes", "yeah"]:
             return True
-        if s.lower() in ['false','no','nope']:
+        if s.lower() in ["false", "no", "nope"]:
             return False
         v = str_to_date(s)
         if v is not None:
@@ -75,8 +78,9 @@ def str_to_type(s, return_string = False):
             pass
     return s
 
+
 def type_to_str(v):
-    """ Given a float/int/boolean/date or list of these types, gets a string
+    """Given a float/int/boolean/date or list of these types, gets a string
     representing their values
 
     Args:
@@ -84,18 +88,19 @@ def type_to_str(v):
     Returns:
         a string
     """
-    if isinstance(v,bool):
+    if isinstance(v, bool):
         return "TRUE" if v else "FALSE"
-    elif isinstance(v,(int,float)):
+    elif isinstance(v, (int, float)):
         pass
-    elif isinstance(v,date):
+    elif isinstance(v, date):
         return date_to_str(v)
     elif v is None:
-        return ''
+        return ""
     return str(v)
 
+
 def list_to_str(v, oneline=False):
-    """ Given a string or list of string, construct a string
+    """Given a string or list of string, construct a string
     to be used on right hand side of shell environement variables
 
     Args:
@@ -103,7 +108,7 @@ def list_to_str(v, oneline=False):
     Returns:
         A string
     """
-    if isinstance(v,str):
+    if isinstance(v, str):
         return v
     if isinstance(v, list):
         v = [type_to_str(i) for i in v]
@@ -112,12 +117,13 @@ def list_to_str(v, oneline=False):
         else:
             shell_str = '( \\\n"' + '" \\\n"'.join(v) + '" \\\n)'
     else:
-        shell_str = f'{type_to_str(v)}'
+        shell_str = f"{type_to_str(v)}"
 
     return shell_str
 
+
 def str_to_list(v, return_string=False):
-    """ Given a string, construct a string or list of strings.
+    """Given a string, construct a string or list of strings.
     Basically does the reverse operation of `list_to_string`.
 
     Args:
@@ -126,30 +132,31 @@ def str_to_list(v, return_string=False):
         a string, list of strings or null string('')
     """
 
-    if not isinstance(v,str):
+    if not isinstance(v, str):
         return v
     v = v.strip()
     if not v:
         return None
-    if ( v[0] == '(' and v[-1] == ')' ) or ( v[0] == '[' and v[-1] == ']' ):
+    if (v[0] == "(" and v[-1] == ")") or (v[0] == "[" and v[-1] == "]"):
         v = v[1:-1]
-        v = v.replace(","," ")
+        v = v.replace(",", " ")
         tokens = shlex.split(v)
         lst = []
         for itm in tokens:
             itm = itm.strip()
-            if itm == '':
+            if itm == "":
                 continue
             # bash arrays could be stored with indices ([0]=hello ...)
             if "=" in itm:
                 idx = itm.find("=")
-                itm = itm[idx+1:]
+                itm = itm[idx + 1 :]
             lst.append(str_to_type(itm, return_string))
         return lst
     return str_to_type(v, return_string)
 
-def set_env_var(param,value):
-    """ Set an environment variable
+
+def set_env_var(param, value):
+    """Set an environment variable
 
     Args:
         param: the variable to set
@@ -160,8 +167,9 @@ def set_env_var(param,value):
 
     os.environ[param] = list_to_str(value)
 
+
 def get_env_var(param):
-    """ Get the value of an environement variable
+    """Get the value of an environement variable
 
     Args:
         param: the environement variable
@@ -174,8 +182,9 @@ def get_env_var(param):
     value = os.environ[param]
     return str_to_list(value)
 
+
 def import_vars(dictionary=None, target_dict=None, env_vars=None):
-    """ Import all (or select few) environment/dictionary variables as python global
+    """Import all (or select few) environment/dictionary variables as python global
     variables of the caller module. Call this function at the beginning of a function
     that uses environment variables.
 
@@ -211,13 +220,14 @@ def import_vars(dictionary=None, target_dict=None, env_vars=None):
     if env_vars is None:
         env_vars = dictionary
     else:
-        env_vars = { k: dictionary[k] if k in dictionary else None for k in env_vars }
+        env_vars = {k: dictionary[k] if k in dictionary else None for k in env_vars}
 
-    for k,v in env_vars.items():
+    for k, v in env_vars.items():
         target_dict[k] = str_to_list(v)
 
+
 def export_vars(dictionary=None, source_dict=None, env_vars=None):
-    """ Export all (or select few) global variables of the caller module's
+    """Export all (or select few) global variables of the caller module's
     to either the environement/dictionary. Call this function at the end of
     a function that updates environment variables.
 
@@ -238,15 +248,14 @@ def export_vars(dictionary=None, source_dict=None, env_vars=None):
     if env_vars is None:
         env_vars = source_dict
     else:
-        env_vars = { k: source_dict[k] if k in source_dict else None for k in env_vars }
+        env_vars = {k: source_dict[k] if k in source_dict else None for k in env_vars}
 
-    for k,v in env_vars.items():
+    for k, v in env_vars.items():
         # skip functions and other unlikely variable names
         if callable(v):
             continue
-        if isinstance(v,ModuleType):
+        if isinstance(v, ModuleType):
             continue
-        if not k or k[0] == '_':
+        if not k or k[0] == "_":
             continue
         dictionary[k] = list_to_str(v)
-
