@@ -47,10 +47,24 @@ def load_yaml_config(config_file):
     return cfg
 
 
+try:
+
+    class custom_dumper(yaml.Dumper):
+        """Custom yaml dumper to correct list indentation"""
+
+        def increase_indent(self, flow=False, indentless=False):
+            return super(custom_dumper, self).increase_indent(flow, False)
+
+except:
+    pass
+
+
 def cfg_to_yaml_str(cfg):
     """Get contents of config file as a yaml string"""
 
-    return yaml.dump(cfg, sort_keys=False, default_flow_style=False)
+    return yaml.dump(
+        cfg, Dumper=custom_dumper, sort_keys=False, default_flow_style=False
+    )
 
 
 def join_str(loader, node):
