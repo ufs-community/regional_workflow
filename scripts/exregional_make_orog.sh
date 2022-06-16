@@ -573,7 +573,7 @@ cd_vrfy -
 #
 #-----------------------------------------------------------------------
 #
-python3 -S $USHDIR/link_fix.py \
+python3  $USHDIR/link_fix.py \
   --path-to-defns $EXPTDIR/var_defns.sh \
   --file-group "orog" || \
 print_err_msg_exit "\
