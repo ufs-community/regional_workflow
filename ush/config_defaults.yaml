@@ -798,7 +798,7 @@ task_run_fcst:
   RUN_FCST_TN: "run_fcst"
   NNODES_RUN_FCST: ""  # This is calculated in the workflow generation scripts, so no need to set here.
   PPN_RUN_FCST: ""    # will be calculated from NCORES_PER_NODE and OMP_NUM_THREADS in setup.sh
-  WTIME_RUN_FCST: "04:30:00"
+  WTIME_RUN_FCST: 04:30:00
   MAXTRIES_RUN_FCST: 1
   #
   #-----------------------------------------------------------------------
@@ -1205,7 +1205,7 @@ task_get_extrn_ics:
   GET_EXTRN_ICS_TN: "get_extrn_ics"
   NNODES_GET_EXTRN_ICS: 1
   PPN_GET_EXTRN_ICS: 1
-  WTIME_GET_EXTRN_ICS: "00:45:00"
+  WTIME_GET_EXTRN_ICS: 00:45:00
   MAXTRIES_GET_EXTRN_ICS: 1
   #
   #-----------------------------------------------------------------------
@@ -1321,7 +1321,7 @@ task_get_extrn_lbcs:
   GET_EXTRN_LBCS_TN: "get_extrn_lbcs"
   NNODES_GET_EXTRN_LBCS: 1
   PPN_GET_EXTRN_LBCS: 1
-  WTIME_GET_EXTRN_LBCS: "00:45:00"
+  WTIME_GET_EXTRN_LBCS: 00:45:00
   MAXTRIES_GET_EXTRN_LBCS: 1
   #
   #-----------------------------------------------------------------------
@@ -1414,7 +1414,7 @@ task_make_grid:
   MAKE_GRID_TN: "make_grid"
   NNODES_MAKE_GRID: 1
   PPN_MAKE_GRID: 24
-  WTIME_MAKE_GRID: "00:20:00"
+  WTIME_MAKE_GRID: 00:20:00
   MAXTRIES_MAKE_GRID: 2
   #
   #-----------------------------------------------------------------------
@@ -1701,7 +1701,7 @@ task_make_orog:
   MAKE_OROG_TN: "make_orog"
   NNODES_MAKE_OROG: 1
   PPN_MAKE_OROG: 24
-  WTIME_MAKE_OROG: "01:00:00"
+  WTIME_MAKE_OROG: 01:00:00
   MAXTRIES_MAKE_OROG: 2
   KMP_AFFINITY_MAKE_OROG: "disabled"
   OMP_NUM_THREADS_MAKE_OROG: 6
@@ -1715,7 +1715,7 @@ task_make_sfc_climo:
   MAKE_SFC_CLIMO_TN: "make_sfc_climo"
   NNODES_MAKE_SFC_CLIMO: 2
   PPN_MAKE_SFC_CLIMO: 24
-  WTIME_MAKE_SFC_CLIMO: "00:20:00"
+  WTIME_MAKE_SFC_CLIMO: 00:20:00
   MAXTRIES_MAKE_SFC_CLIMO: 2
   KMP_AFFINITY_MAKE_SFC_CLIMO: "scatter"
   OMP_NUM_THREADS_MAKE_SFC_CLIMO: 1
@@ -1729,7 +1729,7 @@ task_make_ics:
   MAKE_ICS_TN: "make_ics"
   NNODES_MAKE_ICS: 4
   PPN_MAKE_ICS: 12
-  WTIME_MAKE_ICS: "00:30:00"
+  WTIME_MAKE_ICS: 00:30:00
   MAXTRIES_MAKE_ICS: 1
   KMP_AFFINITY_MAKE_ICS: "scatter"
   OMP_NUM_THREADS_MAKE_ICS: 1
@@ -1774,7 +1774,7 @@ task_make_lbcs:
   MAKE_LBCS_TN: "make_lbcs"
   NNODES_MAKE_LBCS: 4
   PPN_MAKE_LBCS: 12
-  WTIME_MAKE_LBCS: "00:30:00"
+  WTIME_MAKE_LBCS: 00:30:00
   MAXTRIES_MAKE_LBCS: 1
   KMP_AFFINITY_MAKE_LBCS: "scatter"
   OMP_NUM_THREADS_MAKE_LBCS: 1
@@ -1787,7 +1787,7 @@ task_run_post:
   RUN_POST_TN: "run_post"
   NNODES_RUN_POST: 2
   PPN_RUN_POST: 24
-  WTIME_RUN_POST: "00:15:00"
+  WTIME_RUN_POST: 00:15:00
   MAXTRIES_RUN_POST: 2
   KMP_AFFINITY_RUN_POST: "scatter"
   OMP_NUM_THREADS_RUN_POST: 1
@@ -1862,7 +1862,7 @@ task_get_obs_ccpa:
   GET_OBS_CCPA_TN: "get_obs_ccpa"
   NNODES_GET_OBS_CCPA: 1
   PPN_GET_OBS_CCPA: 1
-  WTIME_GET_OBS_CCPA: "00:45:00"
+  WTIME_GET_OBS_CCPA: 00:45:00
   MAXTRIES_GET_OBS_CCPA: 1
 
 #----------------------------
@@ -1872,7 +1872,7 @@ task_get_obs_mrms:
   GET_OBS_MRMS_TN: "get_obs_mrms"
   NNODES_GET_OBS_MRMS: 1
   PPN_GET_OBS_MRMS: 1
-  WTIME_GET_OBS_MRMS: "00:45:00"
+  WTIME_GET_OBS_MRMS: 00:45:00
   MAXTRIES_GET_OBS_MRMS: 1
 
 #----------------------------
@@ -1882,7 +1882,7 @@ task_get_obs_ndas:
   GET_OBS_NDAS_TN: "get_obs_ndas"
   NNODES_GET_OBS_NDAS: 1
   PPN_GET_OBS_NDAS: 1
-  WTIME_GET_OBS_NDAS: "02:00:00"
+  WTIME_GET_OBS_NDAS: 02:00:00
   MAXTRIES_GET_OBS_NDAS: 1
 
 #----------------------------
@@ -1892,7 +1892,7 @@ task_run_vx_gridstat:
   VX_GRIDSTAT_TN: "run_gridstatvx"
   NNODES_VX_GRIDSTAT: 1
   PPN_VX_GRIDSTAT: 1
-  WTIME_VX_GRIDSTAT: "02:00:00"
+  WTIME_VX_GRIDSTAT: 02:00:00
   MAXTRIES_VX_GRIDSTAT: 1
 
 #----------------------------
@@ -1902,7 +1902,7 @@ task_run_vx_gridstat_refc:
   VX_GRIDSTAT_REFC_TN: "run_gridstatvx_refc"
   NNODES_VX_GRIDSTAT: 1
   PPN_VX_GRIDSTAT: 1
-  WTIME_VX_GRIDSTAT: "02:00:00"
+  WTIME_VX_GRIDSTAT: 02:00:00
   MAXTRIES_VX_GRIDSTAT_REFC: 1
 
 #----------------------------
@@ -1912,7 +1912,7 @@ task_run_vx_gridstat_retop:
   VX_GRIDSTAT_RETOP_TN: "run_gridstatvx_retop"
   NNODES_VX_GRIDSTAT: 1
   PPN_VX_GRIDSTAT: 1
-  WTIME_VX_GRIDSTAT: "02:00:00"
+  WTIME_VX_GRIDSTAT: 02:00:00
   MAXTRIES_VX_GRIDSTAT_RETOP: 1
 
 #----------------------------
@@ -1922,7 +1922,7 @@ task_run_vx_gridstat_03h:
   VX_GRIDSTAT_03h_TN: "run_gridstatvx_03h"
   NNODES_VX_GRIDSTAT: 1
   PPN_VX_GRIDSTAT: 1
-  WTIME_VX_GRIDSTAT: "02:00:00"
+  WTIME_VX_GRIDSTAT: 02:00:00
   MAXTRIES_VX_GRIDSTAT_03h: 1
 
 #----------------------------
@@ -1932,7 +1932,7 @@ task_run_vx_gridstat_06h:
   VX_GRIDSTAT_06h_TN: "run_gridstatvx_06h"
   NNODES_VX_GRIDSTAT: 1
   PPN_VX_GRIDSTAT: 1
-  WTIME_VX_GRIDSTAT: "02:00:00"
+  WTIME_VX_GRIDSTAT: 02:00:00
   MAXTRIES_VX_GRIDSTAT_06h: 1
 
 #----------------------------
@@ -1942,7 +1942,7 @@ task_run_vx_gridstat_24h:
   VX_GRIDSTAT_24h_TN: "run_gridstatvx_24h"
   NNODES_VX_GRIDSTAT: 1
   PPN_VX_GRIDSTAT: 1
-  WTIME_VX_GRIDSTAT: "02:00:00"
+  WTIME_VX_GRIDSTAT: 02:00:00
   MAXTRIES_VX_GRIDSTAT_24h: 1
 
 #----------------------------
@@ -1952,7 +1952,7 @@ task_run_vx_pointstat:
   VX_POINTSTAT_TN: "run_pointstatvx"
   NNODES_VX_POINTSTAT: 1
   PPN_VX_POINTSTAT: 1
-  WTIME_VX_POINTSTAT: "01:00:00"
+  WTIME_VX_POINTSTAT: 01:00:00
   MAXTRIES_VX_POINTSTAT: 1
 
 #----------------------------
@@ -1971,7 +1971,7 @@ task_run_vx_ensgrid:
   MAXTRIES_VX_ENSGRID_PROB_RETOP: 1
   NNODES_VX_ENSGRID: 1
   PPN_VX_ENSGRID: 1
-  WTIME_VX_ENSGRID: "01:00:00"
+  WTIME_VX_ENSGRID: 01:00:00
   MAXTRIES_VX_ENSGRID: 1
 
 
@@ -1982,7 +1982,7 @@ task_run_vx_ensgrid_refc:
   VX_ENSGRID_REFC_TN: "run_ensgridvx_refc"
   NNODES_VX_ENSGRID: 1
   PPN_VX_ENSGRID: 1
-  WTIME_VX_ENSGRID: "01:00:00"
+  WTIME_VX_ENSGRID: 01:00:00
   MAXTRIES_VX_ENSGRID_REFC: 1
 
 #----------------------------
@@ -1992,7 +1992,7 @@ task_run_vx_ensgrid_mean:
   VX_ENSGRID_MEAN_TN: "run_ensgridvx_mean"
   NNODES_VX_ENSGRID_MEAN: 1
   PPN_VX_ENSGRID_MEAN: 1
-  WTIME_VX_ENSGRID_MEAN: "01:00:00"
+  WTIME_VX_ENSGRID_MEAN: 01:00:00
   MAXTRIES_VX_ENSGRID_MEAN: 1
 
 #----------------------------
@@ -2002,7 +2002,7 @@ task_run_vx_ensgrid_mean_03h:
   VX_ENSGRID_MEAN_03h_TN: "run_ensgridvx_mean_03h"
   NNODES_VX_ENSGRID_MEAN: 1
   PPN_VX_ENSGRID_MEAN: 1
-  WTIME_VX_ENSGRID_MEAN: "01:00:00"
+  WTIME_VX_ENSGRID_MEAN: 01:00:00
   MAXTRIES_VX_ENSGRID_MEAN_03h: 1
 
 #----------------------------
@@ -2012,7 +2012,7 @@ task_run_vx_ensgrid_mean_06h:
   VX_ENSGRID_MEAN_06h_TN: "run_ensgridvx_mean_06h"
   NNODES_VX_ENSGRID_MEAN: 1
   PPN_VX_ENSGRID_MEAN: 1
-  WTIME_VX_ENSGRID_MEAN: "01:00:00"
+  WTIME_VX_ENSGRID_MEAN: 01:00:00
   MAXTRIES_VX_ENSGRID_MEAN_06h: 1
 
 #----------------------------
@@ -2022,7 +2022,7 @@ task_run_vx_ensgrid_mean_24h:
   VX_ENSGRID_MEAN_24h_TN: "run_ensgridvx_mean_24h"
   NNODES_VX_ENSGRID_MEAN: 1
   PPN_VX_ENSGRID_MEAN: 1
-  WTIME_VX_ENSGRID_MEAN: "01:00:00"
+  WTIME_VX_ENSGRID_MEAN: 01:00:00
   MAXTRIES_VX_ENSGRID_MEAN_24h: 1
 
 #----------------------------
@@ -2032,7 +2032,7 @@ task_run_vx_ensgrid_prob:
   VX_ENSGRID_PROB_TN: "run_ensgridvx_prob"
   NNODES_VX_ENSGRID_PROB: 1
   PPN_VX_ENSGRID_PROB: 1
-  WTIME_VX_ENSGRID_PROB: "01:00:00"
+  WTIME_VX_ENSGRID_PROB: 01:00:00
   MAXTRIES_VX_ENSGRID_PROB: 1
 
 #----------------------------
@@ -2042,7 +2042,7 @@ task_run_vx_ensgrid_prob_03h:
   VX_ENSGRID_PROB_03h_TN: "run_ensgridvx_prob_03h"
   NNODES_VX_ENSGRID_PROB: 1
   PPN_VX_ENSGRID_PROB: 1
-  WTIME_VX_ENSGRID_PROB: "01:00:00"
+  WTIME_VX_ENSGRID_PROB: 01:00:00
   MAXTRIES_VX_ENSGRID_PROB_03h: 1
 
 #----------------------------
@@ -2052,7 +2052,7 @@ task_run_vx_ensgrid_prob_06h:
   VX_ENSGRID_PROB_06h_TN: "run_ensgridvx_prob_06h"
   NNODES_VX_ENSGRID_PROB: 1
   PPN_VX_ENSGRID_PROB: 1
-  WTIME_VX_ENSGRID_PROB: "01:00:00"
+  WTIME_VX_ENSGRID_PROB: 01:00:00
   MAXTRIES_VX_ENSGRID_PROB_06h: 1
 
 #----------------------------
@@ -2062,7 +2062,7 @@ task_run_vx_ensgrid_prob_24h:
   VX_ENSGRID_PROB_24h_TN: "run_ensgridvx_prob_24h"
   NNODES_VX_ENSGRID_PROB: 1
   PPN_VX_ENSGRID_PROB: 1
-  WTIME_VX_ENSGRID_PROB: "01:00:00"
+  WTIME_VX_ENSGRID_PROB: 01:00:00
   MAXTRIES_VX_ENSGRID_PROB_24h: 1
 
 #----------------------------
@@ -2072,7 +2072,7 @@ task_run_vx_enspoint:
   VX_ENSPOINT_TN: "run_enspointvx"
   NNODES_VX_ENSPOINT: 1
   PPN_VX_ENSPOINT: 1
-  WTIME_VX_ENSPOINT: "01:00:00"
+  WTIME_VX_ENSPOINT: 01:00:00
   MAXTRIES_VX_ENSPOINT: 1
 
 #----------------------------
@@ -2082,7 +2082,7 @@ task_run_vx_enspoint_mean:
   VX_ENSPOINT_MEAN_TN: "run_enspointvx_mean"
   NNODES_VX_ENSPOINT_MEAN: 1
   PPN_VX_ENSPOINT_MEAN: 1
-  WTIME_VX_ENSPOINT_MEAN: "01:00:00"
+  WTIME_VX_ENSPOINT_MEAN: 01:00:00
   MAXTRIES_VX_ENSPOINT_MEAN: 1
 
 #----------------------------
@@ -2092,7 +2092,7 @@ task_run_vx_enspoint_prob:
   VX_ENSPOINT_PROB_TN: "run_enspointvx_prob"
   NNODES_VX_ENSPOINT_PROB: 1
   PPN_VX_ENSPOINT_PROB: 1
-  WTIME_VX_ENSPOINT_PROB: "01:00:00"
+  WTIME_VX_ENSPOINT_PROB: 01:00:00
   MAXTRIES_VX_ENSPOINT_PROB: 1
 
 
