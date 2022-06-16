@@ -38,17 +38,6 @@ def set_extrn_mdl_params():
     export_vars(env_vars=env_vars)
 
 
-#
-# -----------------------------------------------------------------------
-#
-# Call the function defined above.
-#
-# -----------------------------------------------------------------------
-#
-if __name__ == "__main__":
-    set_extrn_mdl_params()
-
-
 class Testing(unittest.TestCase):
     def test_extrn_mdl_params(self):
         set_extrn_mdl_params()

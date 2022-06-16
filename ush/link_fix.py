@@ -228,12 +228,12 @@ def link_fix(verbose, file_group):
             if res is None:
                 print_err_msg_exit(
                     f"""
-                The resolution could not be extracted from the current file's name.  The
-                full path to the file (fp) is:
-                  fp = \"{fp}\"
-                This may be because fp contains the * globbing character, which would
-                imply that no files were found that match the globbing pattern specified
-                in fp."""
+                    The resolution could not be extracted from the current file's name.  The
+                    full path to the file (fp) is:
+                      fp = \"{fp}\"
+                    This may be because fp contains the * globbing character, which would
+                    imply that no files were found that match the globbing pattern specified
+                    in fp."""
                 )
             else:
                 res = res[0]
@@ -241,11 +241,11 @@ def link_fix(verbose, file_group):
             if (i > 0) and (res != res_prev):
                 print_err_msg_exit(
                     f"""
-                The resolutions (as obtained from the file names) of the previous and
-                current file (fp_prev and fp, respectively) are different:
-                  fp_prev = \"{fp_prev}\"
-                  fp      = \"{fp}\"
-                Please ensure that all files have the same resolution."""
+                    The resolutions (as obtained from the file names) of the previous and
+                    current file (fp_prev and fp, respectively) are different:
+                      fp_prev = \"{fp_prev}\"
+                      fp      = \"{fp}\"
+                    Please ensure that all files have the same resolution."""
                 )
 
             i = i + 1
