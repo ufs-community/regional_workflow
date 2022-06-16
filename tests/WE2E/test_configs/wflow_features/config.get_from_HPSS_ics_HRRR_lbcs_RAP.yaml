@@ -12,8 +12,8 @@ workflow:
   DATE_FIRST_CYCL: '20200801'
   DATE_LAST_CYCL: '20200801'
   CYCL_HRS:
-  - '00'
-  FCST_LEN_HRS: '6'
+  - 0
+  FCST_LEN_HRS: 6
   PREEXISTING_DIR_METHOD: rename
 task_run_fcst:
   PREDEF_GRID_NAME: RRFS_CONUScompact_25km
@@ -23,6 +23,6 @@ task_get_extrn_ics:
   - '{yy}{jjj}{hh}00{fcst_hr:02d}00'
 task_get_extrn_lbcs:
   EXTRN_MDL_NAME_LBCS: RAP
-  LBC_SPEC_INTVL_HRS: '3'
+  LBC_SPEC_INTVL_HRS: 3
   EXTRN_MDL_FILES_LBCS:
   - '{yy}{jjj}{hh}00{fcst_hr:02d}00'
