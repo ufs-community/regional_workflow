@@ -109,16 +109,16 @@ def set_FV3nml_ens_stoch_seeds(cdate):
         print_err_msg_exit(
             dedent(
                 f"""
-            Call to python script set_namelist.py to set the variables in the FV3
-            namelist file that specify the paths to the surface climatology files
-            failed.  Parameters passed to this script are:
-              Full path to base namelist file:
-                FV3_NML_FP = \"{FV3_NML_FP}\"
-              Full path to output namelist file:
-                fv3_nml_ensmem_fp = \"{fv3_nml_ensmem_fp}\"
-              Namelist settings specified on command line (these have highest precedence):
-                settings =
-            {settings_str}"""
+                Call to python script set_namelist.py to set the variables in the FV3
+                namelist file that specify the paths to the surface climatology files
+                failed.  Parameters passed to this script are:
+                  Full path to base namelist file:
+                    FV3_NML_FP = \"{FV3_NML_FP}\"
+                  Full path to output namelist file:
+                    fv3_nml_ensmem_fp = \"{fv3_nml_ensmem_fp}\"
+                  Namelist settings specified on command line (these have highest precedence):
+                    settings =
+                {settings_str}"""
             )
         )
 

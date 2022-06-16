@@ -190,10 +190,10 @@ def create_model_configure_file(
     print_info_msg(
         dedent(
             f"""
-        The variable \"settings\" specifying values to be used in the \"{MODEL_CONFIG_FN}\"
-        file has been set as follows:
-        #-----------------------------------------------------------------------
-        settings =\n"""
+            The variable \"settings\" specifying values to be used in the \"{MODEL_CONFIG_FN}\"
+            file has been set as follows:
+            #-----------------------------------------------------------------------
+            settings =\n"""
         )
         + settings_str,
         verbose=VERBOSE,

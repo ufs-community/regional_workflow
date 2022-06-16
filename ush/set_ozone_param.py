@@ -94,10 +94,10 @@ def set_ozone_param(ccpp_phys_suite_fp):
     else:
         print_err_msg_exit(
             f'''
-        Unknown or no ozone parameterization
-        specified in the CCPP physics suite file (ccpp_phys_suite_fp):
-          ccpp_phys_suite_fp = \"{ccpp_phys_suite_fp}\"
-          ozone_param = \"{ozone_param}\"'''
+            Unknown or no ozone parameterization
+            specified in the CCPP physics suite file (ccpp_phys_suite_fp):
+              ccpp_phys_suite_fp = \"{ccpp_phys_suite_fp}\"
+              ozone_param = \"{ozone_param}\"'''
         )
     #
     # -----------------------------------------------------------------------
@@ -154,18 +154,18 @@ def set_ozone_param(ccpp_phys_suite_fp):
 
         msg = dedent(
             f"""
-        After setting the file name of the ozone production/loss file in the
-        FIXgsm directory (based on the ozone parameterization specified in the
-        CCPP suite definition file), the array specifying the mapping between
-        the symlinks that need to be created in the cycle directories and the
-        files in the FIXam directory is:
+            After setting the file name of the ozone production/loss file in the
+            FIXgsm directory (based on the ozone parameterization specified in the
+            CCPP suite definition file), the array specifying the mapping between
+            the symlinks that need to be created in the cycle directories and the
+            files in the FIXam directory is:
 
-        """
+            """
         )
         msg += dedent(
             f"""
-          CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING = {list_to_str(CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING)}
-        """
+              CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING = {list_to_str(CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING)}
+            """
         )
         print_info_msg(msg, verbose=VERBOSE)
 
@@ -173,10 +173,10 @@ def set_ozone_param(ccpp_phys_suite_fp):
 
         print_err_msg_exit(
             f'''
-        Unable to set name of the ozone production/loss file in the FIXgsm directory
-        in the array that specifies the mapping between the symlinks that need to
-        be created in the cycle directories and the files in the FIXgsm directory:
-          fixgsm_ozone_fn_is_set = \"{fixgsm_ozone_fn_is_set}\"'''
+            Unable to set name of the ozone production/loss file in the FIXgsm directory
+            in the array that specifies the mapping between the symlinks that need to
+            be created in the cycle directories and the files in the FIXgsm directory:
+              fixgsm_ozone_fn_is_set = \"{fixgsm_ozone_fn_is_set}\"'''
         )
 
     EXPORTS = ["CYCLEDIR_LINKS_TO_FIXam_FILES_MAPPING", "FIXgsm_FILES_TO_COPY_TO_FIXam"]

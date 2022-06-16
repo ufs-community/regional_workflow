@@ -85,8 +85,8 @@ def add_crontab_line():
     crontab_backup_fp = os.path.join(EXPTDIR, f"crontab.bak.{time_stamp}")
     print_info_msg(
         f'''
-      Copying contents of user cron table to backup file:
-        crontab_backup_fp = \"{crontab_backup_fp}\"''',
+        Copying contents of user cron table to backup file:
+          crontab_backup_fp = \"{crontab_backup_fp}\"''',
         verbose=VERBOSE,
     )
 
@@ -109,18 +109,18 @@ def add_crontab_line():
 
         print_info_msg(
             f'''
-          The following line already exists in the cron table and thus will not be
-          added:
-            CRONTAB_LINE = \"{CRONTAB_LINE}\"'''
+            The following line already exists in the cron table and thus will not be
+            added:
+              CRONTAB_LINE = \"{CRONTAB_LINE}\"'''
         )
 
     else:
 
         print_info_msg(
             f'''
-          Adding the following line to the user's cron table in order to automatically
-          resubmit SRW workflow:
-            CRONTAB_LINE = \"{CRONTAB_LINE}\"''',
+            Adding the following line to the user's cron table in order to automatically
+            resubmit SRW workflow:
+              CRONTAB_LINE = \"{CRONTAB_LINE}\"''',
             verbose=VERBOSE,
         )
 
