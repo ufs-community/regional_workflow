@@ -88,7 +88,7 @@ def cfg_to_json_str(cfg):
 ##########
 # SHELL
 ##########
-def load_shell_as_ini_config(file_name, return_string=True):
+def load_shell_as_ini_config(file_name, return_string=1):
     """Load shell config file with embedded structure in comments"""
 
     # read contents and replace comments as sections
@@ -111,7 +111,7 @@ def load_shell_as_ini_config(file_name, return_string=True):
     return cfg
 
 
-def load_shell_config(config_file, return_string=False):
+def load_shell_config(config_file, return_string=0):
     """Loads old style shell config files.
     We source the config script in a subshell and gets the variables it sets
 
@@ -186,7 +186,7 @@ def cfg_to_shell_str(cfg, kname=None):
 ##########
 # INI
 ##########
-def load_ini_config(config_file, return_string=False):
+def load_ini_config(config_file, return_string=0):
     """Load a config file with a format similar to Microsoft's INI files"""
 
     if not os.path.exists(config_file):
@@ -276,7 +276,7 @@ def dict_to_xml(d, tag):
     return elem
 
 
-def load_xml_config(config_file, return_string=False):
+def load_xml_config(config_file, return_string=0):
     """Load xml config file"""
 
     tree = ET.parse(config_file)
@@ -383,7 +383,7 @@ def check_structure_dict(dict_o, dict_t):
 ##################
 # CONFIG loader
 ##################
-def load_config_file(file_name, return_string=False):
+def load_config_file(file_name, return_string=0):
     """Load config file based on file name extension"""
 
     ext = os.path.splitext(file_name)[1][1:]
@@ -452,10 +452,10 @@ def cfg_main():
     )
 
     args = parser.parse_args()
-    cfg = load_config_file(args.cfg, True)
+    cfg = load_config_file(args.cfg, 2)
 
     if args.validate:
-        cfg_t = load_config_file(args.validate, True)
+        cfg_t = load_config_file(args.validate, 1)
         r = check_structure_dict(cfg, cfg_t)
         if r:
             print("SUCCESS")
@@ -464,7 +464,7 @@ def cfg_main():
     else:
         if args.template:
             cfg = flatten_dict(cfg)
-            cfg_t = load_config_file(args.template, True)
+            cfg_t = load_config_file(args.template, 1)
             cfg = structure_dict(cfg, cfg_t)
 
         if args.keys:

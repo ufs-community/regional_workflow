@@ -48,26 +48,29 @@ def date_to_str(d, short=False):
     return v
 
 
-def str_to_type(s, return_string=False):
-    """Check if the string contains a float, int, boolean, or just regular string.
+def str_to_type(s, return_string=0):
+    """Check if the string contains a float, int, boolean, datetime, or just regular string.
     This will be used to automatically convert environment variables to data types
     that are more convenient to work with. If you don't want this functionality,
-    pass return_string = True
+    pass return_string = 1
 
     Args:
         s: a string
-        return_string: Set to True to return the string itself
+        return_string: Set to 1 to return the string itself
+                       Set to 2 to return the string itself only for a datetime object
     Returns:
-        a float, int, boolean, date, or the string itself when all else fails
+        a float, int, boolean, datetime, or the string itself when all else fails
     """
     s = s.strip("\"'")
-    if not return_string:
+    if return_string != 1:
         if s.lower() in ["true", "yes", "yeah"]:
             return True
         if s.lower() in ["false", "no", "nope"]:
             return False
         v = str_to_date(s)
         if v is not None:
+            if return_string == 2:
+                return s
             return v
         if s.isnumeric():
             return int(s)
@@ -122,7 +125,7 @@ def list_to_str(v, oneline=False):
     return shell_str
 
 
-def str_to_list(v, return_string=False):
+def str_to_list(v, return_string=0):
     """Given a string, construct a string or list of strings.
     Basically does the reverse operation of `list_to_string`.
 
