@@ -13,7 +13,7 @@ workflow:
   DATE_FIRST_CYCL: '20191018'
   DATE_LAST_CYCL: '20191018'
   CYCL_HRS:
-  - 18
+    - 18
   FCST_LEN_HRS: 6
   PREEXISTING_DIR_METHOD: rename
 task_run_fcst:
