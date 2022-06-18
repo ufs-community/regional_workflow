@@ -1590,6 +1590,14 @@ LOAD_MODULES_RUN_TASK_FP="$USHDIR/load_modules_run_task.sh"
 #
 #----------------------------------------------------------------------
 #
+# Initialize flags that specify whether symlinks to the grid, orography,
+# and surface climatology files should be created (that are needed by 
+# other workflow tasks that will be run).
+#
+create_symlinks_to_grid_files="FALSE"
+create_symlinks_to_orog_files="FALSE"
+create_symlinks_to_sfc_climo_files="FALSE"
+
 if [ "${RUN_ENVIR}" = "nco" ]; then
 
   nco_fix_dir="${DOMAIN_PREGEN_BASEDIR}/${PREDEF_GRID_NAME}"
@@ -1780,12 +1788,40 @@ Reset value is:"
 #
 else
 #
-# If RUN_TASK_MAKE_GRID is set to "FALSE", the workflow will look for 
-# the pregenerated grid files in GRID_DIR.  In this case, make sure that 
-# GRID_DIR exists.  Otherwise, set it to a predefined location under the 
-# experiment directory (EXPTDIR).
+# Set flags that specify whether or not symlinks to the grid, orography,
+# and surface climatology files should be created.  Such links will be
+# created only if tasks that need these files are going to be run in
+# the workflow.
 #
-  if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
+  if [ "${RUN_TASK_MAKE_OROG}" = "TRUE" ] || \
+     [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] || \
+     [ "${RUN_TASK_MAKE_ICS}" = "TRUE" ] || \
+     [ "${RUN_TASK_MAKE_LBCS}" = "TRUE" ] || \
+     [ "${RUN_TASK_RUN_FCST}" = "TRUE" ]; then
+    create_symlinks_to_grid_files="TRUE"
+  fi
+
+  if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "TRUE" ] || \
+     [ "${RUN_TASK_MAKE_ICS}" = "TRUE" ] || \
+     [ "${RUN_TASK_MAKE_LBCS}" = "TRUE" ] || \
+     [ "${RUN_TASK_RUN_FCST}" = "TRUE" ]; then
+    create_symlinks_to_orog_files="TRUE"
+  fi
+
+  if [ "${RUN_TASK_MAKE_ICS}" = "TRUE" ] || \
+     [ "${RUN_TASK_MAKE_LBCS}" = "TRUE" ]; then
+    create_symlinks_to_sfc_climo_files="TRUE"
+  fi
+#
+# If RUN_TASK_MAKE_GRID is set to "FALSE" and symlinks to pregenerated
+# grid files need to be created (because there is at least one worklow
+# task to be run that needs these files as input), the workflow will 
+# look for these pregenerated grid files in GRID_DIR.  In this case, 
+# make sure that GRID_DIR exists.  Otherwise, set it to a default location 
+# under the experiment directory (EXPTDIR).
+#
+  if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ] && \
+     [ "${create_symlinks_to_grid_files}" = "TRUE" ]; then
     if [ ! -d "${GRID_DIR}" ]; then
       print_err_msg_exit "\
 The directory (GRID_DIR) that should contain the pregenerated grid files 
@@ -1796,12 +1832,10 @@ does not exist:
     GRID_DIR="$EXPTDIR/grid"
   fi
 #
-# If RUN_TASK_MAKE_OROG is set to "FALSE", the workflow will look for 
-# the pregenerated orography files in OROG_DIR.  In this case, make sure 
-# that OROG_DIR exists.  Otherwise, set it to a predefined location under 
-# the experiment directory (EXPTDIR).
+# Same as above but for orography files.
 #
-  if [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ]; then
+  if [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ] && \
+     [ "${create_symlinks_to_orog_files}" = "TRUE" ]; then
     if [ ! -d "${OROG_DIR}" ]; then
       print_err_msg_exit "\
 The directory (OROG_DIR) that should contain the pregenerated orography
@@ -1812,12 +1846,10 @@ files does not exist:
     OROG_DIR="$EXPTDIR/orog"
   fi
 #
-# If RUN_TASK_MAKE_SFC_CLIMO is set to "FALSE", the workflow will look 
-# for the pregenerated surface climatology files in SFC_CLIMO_DIR.  In
-# this case, make sure that SFC_CLIMO_DIR exists.  Otherwise, set it to
-# a predefined location under the experiment directory (EXPTDIR).
+# Same as above but for surface climatology files.
 #
-  if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ]; then
+  if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ] && \
+     [ "${create_symlinks_to_sfc_climo_files}" = "TRUE" ]; then
     if [ ! -d "${SFC_CLIMO_DIR}" ]; then
       print_err_msg_exit "\
 The directory (SFC_CLIMO_DIR) that should contain the pregenerated surface
@@ -1986,14 +2018,16 @@ RES_IN_FIXLAM_FILENAMES=""
 #
 #-----------------------------------------------------------------------
 #
-# If the grid file generation task in the workflow is going to be skipped
-# (because pregenerated files are available), create links in the FIXLAM
-# directory to the pregenerated grid files.
+# If the grid file generation task in the workflow is not going to be
+# run (because pregenerated versions of these files are available) and
+# these files are needed by other workflow tasks, create links in the 
+# FIXLAM directory to the pregenerated files.
 #
 #-----------------------------------------------------------------------
 #
 res_in_grid_fns=""
-if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
+if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ] && \
+   [ "${create_symlinks_to_grid_files}" = "TRUE" ]; then
 
   link_fix \
     verbose="$VERBOSE" \
@@ -2008,14 +2042,16 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If the orography file generation task in the workflow is going to be
-# skipped (because pregenerated files are available), create links in
-# the FIXLAM directory to the pregenerated orography files.
+# If the orography file generation task in the workflow is not going to 
+# be run (because pregenerated versions of these files are available) 
+# and these files are needed by other workflow tasks, create links in
+# the FIXLAM directory to the pregenerated files.
 #
 #-----------------------------------------------------------------------
 #
 res_in_orog_fns=""
-if [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ]; then
+if [ "${RUN_TASK_MAKE_OROG}" = "FALSE" ] && \
+   [ "${create_symlinks_to_orog_files}" = "TRUE" ]; then
 
   link_fix \
     verbose="$VERBOSE" \
@@ -2040,15 +2076,16 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# If the surface climatology file generation task in the workflow is
-# going to be skipped (because pregenerated files are available), create
-# links in the FIXLAM directory to the pregenerated surface climatology
-# files.
+# If the surface climatology file generation task in the workflow is not
+# going to be run (because pregenerated versions of these files are 
+# available) and these files are needed by other workflow tasks, create
+# links in the FIXLAM directory to the pregenerated files.
 #
 #-----------------------------------------------------------------------
 #
 res_in_sfc_climo_fns=""
-if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ]; then
+if [ "${RUN_TASK_MAKE_SFC_CLIMO}" = "FALSE" ] && \
+   [ "${create_symlinks_to_sfc_climo_files}" = "TRUE" ]; then
 
   link_fix \
     verbose="$VERBOSE" \
