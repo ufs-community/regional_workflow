@@ -295,26 +295,26 @@ file (template_xml_fp):
 #
 # Maximum wallclock time for each task.
 #
-  'wtime_make_grid': ${WTIME_MAKE_GRID}
-  'wtime_make_orog': ${WTIME_MAKE_OROG}
-  'wtime_make_sfc_climo': ${WTIME_MAKE_SFC_CLIMO}
-  'wtime_get_extrn_ics': ${WTIME_GET_EXTRN_ICS}
-  'wtime_get_extrn_lbcs': ${WTIME_GET_EXTRN_LBCS}
-  'wtime_make_ics': ${WTIME_MAKE_ICS}
-  'wtime_make_lbcs': ${WTIME_MAKE_LBCS}
-  'wtime_run_fcst': ${WTIME_RUN_FCST}
-  'wtime_run_post': ${WTIME_RUN_POST}
-  'wtime_get_obs_ccpa': ${WTIME_GET_OBS_CCPA}
-  'wtime_get_obs_mrms': ${WTIME_GET_OBS_MRMS}
-  'wtime_get_obs_ndas': ${WTIME_GET_OBS_NDAS}
-  'wtime_vx_gridstat': ${WTIME_VX_GRIDSTAT}
-  'wtime_vx_pointstat': ${WTIME_VX_POINTSTAT}
-  'wtime_vx_ensgrid': ${WTIME_VX_ENSGRID}
-  'wtime_vx_ensgrid_mean': ${WTIME_VX_ENSGRID_MEAN}
-  'wtime_vx_ensgrid_prob': ${WTIME_VX_ENSGRID_PROB}
-  'wtime_vx_enspoint': ${WTIME_VX_ENSPOINT}
-  'wtime_vx_enspoint_mean': ${WTIME_VX_ENSPOINT_MEAN}
-  'wtime_vx_enspoint_prob': ${WTIME_VX_ENSPOINT_PROB}
+  'wtime_make_grid': '${WTIME_MAKE_GRID}'
+  'wtime_make_orog': '${WTIME_MAKE_OROG}'
+  'wtime_make_sfc_climo': '${WTIME_MAKE_SFC_CLIMO}'
+  'wtime_get_extrn_ics': '${WTIME_GET_EXTRN_ICS}'
+  'wtime_get_extrn_lbcs': '${WTIME_GET_EXTRN_LBCS}'
+  'wtime_make_ics': '${WTIME_MAKE_ICS}'
+  'wtime_make_lbcs': '${WTIME_MAKE_LBCS}'
+  'wtime_run_fcst': '${WTIME_RUN_FCST}'
+  'wtime_run_post': '${WTIME_RUN_POST}'
+  'wtime_get_obs_ccpa': '${WTIME_GET_OBS_CCPA}'
+  'wtime_get_obs_mrms': '${WTIME_GET_OBS_MRMS}'
+  'wtime_get_obs_ndas': '${WTIME_GET_OBS_NDAS}'
+  'wtime_vx_gridstat': '${WTIME_VX_GRIDSTAT}'
+  'wtime_vx_pointstat': '${WTIME_VX_POINTSTAT}'
+  'wtime_vx_ensgrid': '${WTIME_VX_ENSGRID}'
+  'wtime_vx_ensgrid_mean': '${WTIME_VX_ENSGRID_MEAN}'
+  'wtime_vx_ensgrid_prob': '${WTIME_VX_ENSGRID_PROB}'
+  'wtime_vx_enspoint': '${WTIME_VX_ENSPOINT}'
+  'wtime_vx_enspoint_mean': '${WTIME_VX_ENSPOINT_MEAN}'
+  'wtime_vx_enspoint_prob': '${WTIME_VX_ENSPOINT_PROB}'
 #
 # Maximum number of tries for each task.
 #
