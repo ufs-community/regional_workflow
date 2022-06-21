@@ -99,10 +99,10 @@ run directory (run_dir):
 #
 # Set parameters in the model configure file.
 #
-  dot_quilting_dot="."$(echo_lowercase $QUILTING)"."
-  dot_print_esmf_dot="."$(echo_lowercase $PRINT_ESMF)"."
-  dot_cpl_dot="."$(echo_lowercase $CPL)"."
-  dot_write_dopost="."$(echo_lowercase $WRITE_DOPOST)"."
+  dot_quilting_dot="."$(echo_lowercase "$QUILTING")"."
+  dot_print_esmf_dot="."$(echo_lowercase "${PRINT_ESMF}")"."
+  dot_cpl_dot="."$(echo_lowercase "$CPL")"."
+  dot_write_dopost="."$(echo_lowercase "${WRITE_DOPOST}")"."
 #
 #-----------------------------------------------------------------------
 #

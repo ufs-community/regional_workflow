@@ -48,7 +48,7 @@ where:
 "
   fi
 
-  uc_input=$(echo_uppercase $input)
+  uc_input=$(echo_uppercase "$input")
   if [ "$uc_input" = "TRUE" ] || \
        [ "$uc_input" = "YES" ]; then
     echo "TRUE"

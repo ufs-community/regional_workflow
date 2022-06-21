@@ -90,7 +90,7 @@ jjob_fp="$2"
 #
 #-----------------------------------------------------------------------
 #
-machine=$(echo_lowercase $MACHINE)
+machine=$(echo_lowercase "$MACHINE")
 
 source "${SR_WX_APP_TOP_DIR}/etc/lmod-setup.sh"
 module use "${SR_WX_APP_TOP_DIR}/modulefiles"

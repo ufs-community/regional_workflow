@@ -358,7 +358,7 @@ check_var_valid_value "USE_FVCOM" "valid_vals_BOOLEAN"
 USE_FVCOM=$(boolify "${USE_FVCOM}")
 
 check_var_valid_value "FVCOM_WCSTART" "valid_vals_FVCOM_WCSTART"
-FVCOM_WCSTART=$(echo_lowercase $FVCOM_WCSTART)
+FVCOM_WCSTART=$(echo_lowercase "${FVCOM_WCSTART}")
 #
 #-----------------------------------------------------------------------
 #
@@ -520,7 +520,7 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #-----------------------------------------------------------------------
 #
 RELATIVE_LINK_FLAG="--relative"
-MACHINE_FILE=${MACHINE_FILE:-${USHDIR}/machine/$(echo_lowercase $MACHINE).sh}
+MACHINE_FILE=${MACHINE_FILE:-${USHDIR}/machine/$(echo_lowercase "$MACHINE").sh}
 source $USHDIR/source_machine_file.sh
 
 if [ -z "${NCORES_PER_NODE:-}" ]; then
@@ -548,7 +548,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-COMPILER=$(echo_lowercase $COMPILER)
+COMPILER=$(echo_lowercase "$COMPILER")
 check_var_valid_value "COMPILER" "valid_vals_COMPILER"
 #
 #-----------------------------------------------------------------------
@@ -560,7 +560,7 @@ check_var_valid_value "COMPILER" "valid_vals_COMPILER"
 #
 #-----------------------------------------------------------------------
 #
-machine=$(echo_lowercase ${MACHINE})
+machine=$(echo_lowercase "${MACHINE}")
 WFLOW_MOD_FN=${WFLOW_MOD_FN:-"wflow_${machine}"}
 BUILD_MOD_FN=${BUILD_MOD_FN:-"build_${machine}_${COMPILER}"}
 #
@@ -581,7 +581,7 @@ PPN_RUN_FCST=${PPN_RUN_FCST:-${ppn_run_fcst_default}}
 #
 #-----------------------------------------------------------------------
 #
-SCHED=$(echo_lowercase $SCHED)
+SCHED=$(echo_lowercase "$SCHED")
 check_var_valid_value "SCHED" "valid_vals_SCHED"
 #
 #-----------------------------------------------------------------------
@@ -1274,7 +1274,7 @@ fi
 #-----------------------------------------------------------------------
 #
 POST_OUTPUT_DOMAIN_NAME="${POST_OUTPUT_DOMAIN_NAME:-${PREDEF_GRID_NAME}}"
-POST_OUTPUT_DOMAIN_NAME=$(echo_lowercase ${POST_OUTPUT_DOMAIN_NAME})
+POST_OUTPUT_DOMAIN_NAME=$(echo_lowercase "${POST_OUTPUT_DOMAIN_NAME}")
 
 if [ -z "${POST_OUTPUT_DOMAIN_NAME}" ]; then
   print_err_msg_exit "\

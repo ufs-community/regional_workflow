@@ -544,7 +544,7 @@ if [ ${WRITE_DOPOST} = "TRUE" ]; then
     symlink_suffix="_${basetime}f${fhr}${post_mn}"
     fids=( "prslev" "natlev" )
     for fid in "${fids[@]}"; do
-      FID=$(echo_uppercase $fid)
+      FID=$(echo_uppercase "$fid")
       post_orig_fn="${FID}.${post_fn_suffix}"
       post_renamed_fn="${NET}.t${cyc}z.${fid}.${post_renamed_fn_suffix}"
       mv_vrfy ${run_dir}/${post_orig_fn} ${post_renamed_fn}
