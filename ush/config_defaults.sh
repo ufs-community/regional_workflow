@@ -880,12 +880,7 @@ GRID_GEN_METHOD=""
 #
 # GFDLgrid_NUM_CELLS:
 # Number of grid cells in each of the two horizontal directions (x and 
-# y) on each tile of the parent global grid.  Note that the name of this 
-# parameter is really a misnomer because although it has the stirng "RES" 
-# (for "resolution") in its name, it specifies number of grid cells, not 
-# grid size (in say meters or kilometers).  However, we keep this name 
-# in order to remain consistent with the usage of the word "resolution" 
-# in the global forecast model and other auxiliary codes.
+# y) on each tile of the parent global grid.
 #
 # GFDLgrid_STRETCH_FAC:
 # Stretching factor used in the Schmidt transformation applied to the
