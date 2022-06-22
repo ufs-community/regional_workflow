@@ -695,21 +695,24 @@ cp_vrfy "${FIELD_DICT_IN_UWM_FP}" "${FIELD_DICT_FP}"
 #
 #-----------------------------------------------------------------------
 #
-# Set parameters in the FV3-LAM namelist file.
+# If running the RUN_FCST_TN task, create the namelist file that the 
+# weather model will read in.
 #
 #-----------------------------------------------------------------------
 #
-print_info_msg "
+if [ "${RUN_TASK_RUN_FCST}" = "TRUE" ]; then
+
+  print_info_msg "
 Setting parameters in weather model's namelist file (FV3_NML_FP):
   FV3_NML_FP = \"${FV3_NML_FP}\""
 #
 # Set npx and npy, which are just NX plus 1 and NY plus 1, respectively.
-# These need to be set in the FV3-LAM Fortran namelist file.  They represent
-# the number of cell vertices in the x and y directions on the regional
-# grid.
+# These need to be set in the FV3-LAM Fortran namelist file.  They 
+# represent the number of cell vertices in the x and y directions on the 
+# regional grid.
 #
-npx=$((NX+1))
-npy=$((NY+1))
+  npx=$((NX+1))
+  npy=$((NY+1))
 #
 # For the physics suites that use RUC LSM, set the parameter kice to 9,
 # Otherwise, leave it unspecified (which means it gets set to the default
@@ -718,10 +721,10 @@ npy=$((NY+1))
 # NOTE:
 # May want to remove kice from FV3.input.yml (and maybe input.nml.FV3).
 #
-kice=""
-if [ "${SDF_USES_RUC_LSM}" = "TRUE" ]; then
-  kice="9"
-fi
+  kice=""
+  if [ "${SDF_USES_RUC_LSM}" = "TRUE" ]; then
+    kice="9"
+  fi
 #
 # Set lsoil, which is the number of input soil levels provided in the 
 # chgres_cube output NetCDF file.  This is the same as the parameter 
@@ -736,12 +739,12 @@ fi
 # May want to remove lsoil from FV3.input.yml (and maybe input.nml.FV3).
 # Also, may want to set lsm here as well depending on SDF_USES_RUC_LSM.
 #
-lsoil="4"
-if [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" -o \
-     "${EXTRN_MDL_NAME_ICS}" = "RAP" ] && \
-   [ "${SDF_USES_RUC_LSM}" = "TRUE" ]; then
-  lsoil="9"
-fi
+  lsoil="4"
+  if [ "${EXTRN_MDL_NAME_ICS}" = "HRRR" -o \
+       "${EXTRN_MDL_NAME_ICS}" = "RAP" ] && \
+     [ "${SDF_USES_RUC_LSM}" = "TRUE" ]; then
+    lsoil="9"
+  fi
 #
 # Create a multiline variable that consists of a yaml-compliant string
 # specifying the values that the namelist variables that are physics-
@@ -760,7 +763,7 @@ fi
 # It turns out that setting the variable to an empty string also works
 # to remove it from the namelist!  Which is better to use??
 #
-settings="\
+  settings="\
 'atmos_model_nml': {
     'blocksize': $BLOCKSIZE,
     'ccpp_suite': ${CCPP_PHYS_SUITE},
@@ -806,68 +809,69 @@ settings="\
 # in the FIXam directory.  Here, we loop through this array and process
 # each element to construct each line of "settings".
 #
-settings="$settings
+  settings="$settings
 'namsfc': {"
 
-dummy_run_dir="$EXPTDIR/any_cyc"
-if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
-  dummy_run_dir="${dummy_run_dir}/any_ensmem"
-fi
+  dummy_run_dir="$EXPTDIR/any_cyc"
+  if [ "${DO_ENSEMBLE}" = "TRUE" ]; then
+    dummy_run_dir="${dummy_run_dir}/any_ensmem"
+  fi
 
-regex_search="^[ ]*([^| ]+)[ ]*[|][ ]*([^| ]+)[ ]*$"
-num_nml_vars=${#FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[@]}
-for (( i=0; i<${num_nml_vars}; i++ )); do
+  regex_search="^[ ]*([^| ]+)[ ]*[|][ ]*([^| ]+)[ ]*$"
+  num_nml_vars=${#FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[@]}
+  for (( i=0; i<${num_nml_vars}; i++ )); do
 
-  mapping="${FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[$i]}"
-  nml_var_name=$( printf "%s\n" "$mapping" | \
-                  $SED -n -r -e "s/${regex_search}/\1/p" )
-  FIXam_fn=$( printf "%s\n" "$mapping" |
-              $SED -n -r -e "s/${regex_search}/\2/p" )
+    mapping="${FV3_NML_VARNAME_TO_FIXam_FILES_MAPPING[$i]}"
+    nml_var_name=$( printf "%s\n" "$mapping" | \
+                    $SED -n -r -e "s/${regex_search}/\1/p" )
+    FIXam_fn=$( printf "%s\n" "$mapping" |
+                $SED -n -r -e "s/${regex_search}/\2/p" )
 
-  fp="\"\""
-  if [ ! -z "${FIXam_fn}" ]; then
-    fp="$FIXam/${FIXam_fn}"
+    fp="\"\""
+    if [ ! -z "${FIXam_fn}" ]; then
+      fp="$FIXam/${FIXam_fn}"
 #
 # If not in NCO mode, for portability and brevity, change fp so that it
 # is a relative path (relative to any cycle directory immediately under
 # the experiment directory).
 #
-    if [ "${RUN_ENVIR}" != "nco" ]; then
-      fp=$( realpath --canonicalize-missing --relative-to="${dummy_run_dir}" "$fp" )
+      if [ "${RUN_ENVIR}" != "nco" ]; then
+        fp=$( realpath --canonicalize-missing --relative-to="${dummy_run_dir}" "$fp" )
+      fi
     fi
-  fi
 #
 # Add a line to the variable "settings" that specifies (in a yaml-compliant
 # format) the name of the current namelist variable and the value it should
 # be set to.
 #
-  settings="$settings
-    '${nml_var_name}': $fp,"
+    settings="$settings
+      '${nml_var_name}': $fp,"
 
-done
+  done
 #
 # Add the closing curly bracket to "settings".
 #
-settings="$settings
+  settings="$settings
   }"
 #
 # Use netCDF4 when running the North American 3-km domain due to file size.
 #
-if [ "${PREDEF_GRID_NAME}" = "RRFS_NA_3km" ]; then
-settings="$settings
+  if [ "${PREDEF_GRID_NAME}" = "RRFS_NA_3km" ]; then
+    settings="$settings
 'fms2_io_nml': {
     'netcdf_default_format': netcdf4,
   }"
-fi
+  fi
 #
-# Add the relevant tendency-based stochastic physics namelist variables to
-# "settings" when running with SPPT, SHUM, or SKEB turned on. If running 
-# with SPP or LSM SPP, set the "new_lscale" variable.  Otherwise only 
-# include an empty "nam_stochy" stanza.
+# Add the relevant tendency-based stochastic physics namelist variables
+# to "settings" when running with SPPT, SHUM, or SKEB turned on. If 
+# running with SPP or LSM SPP, set the "new_lscale" variable.  Otherwise 
+# only include an empty "nam_stochy" stanza.
 #
-settings="$settings
+  settings="$settings
 'nam_stochy': {"
-if [ "${DO_SPPT}" = "TRUE" ]; then
+
+  if [ "${DO_SPPT}" = "TRUE" ]; then
     settings="$settings
     'iseed_sppt': ${ISEED_SPPT},
     'new_lscale': ${NEW_LSCALE},
@@ -878,9 +882,9 @@ if [ "${DO_SPPT}" = "TRUE" ]; then
     'sppt_tau': ${SPPT_TSCALE},
     'spptint': ${SPPT_INT},
     'use_zmtnblck': ${USE_ZMTNBLCK},"
-fi
+  fi
 
-if [ "${DO_SHUM}" = "TRUE" ]; then
+  if [ "${DO_SHUM}" = "TRUE" ]; then
     settings="$settings
     'iseed_shum': ${ISEED_SHUM},
     'new_lscale': ${NEW_LSCALE},
@@ -888,9 +892,9 @@ if [ "${DO_SHUM}" = "TRUE" ]; then
     'shum_lscale': ${SHUM_LSCALE},
     'shum_tau': ${SHUM_TSCALE},
     'shumint': ${SHUM_INT},"
-fi
+  fi
 
-if [ "${DO_SKEB}" = "TRUE" ]; then
+  if [ "${DO_SKEB}" = "TRUE" ]; then
     settings="$settings
     'iseed_skeb': ${ISEED_SKEB},
     'new_lscale': ${NEW_LSCALE},
@@ -900,21 +904,23 @@ if [ "${DO_SKEB}" = "TRUE" ]; then
     'skeb_tau': ${SKEB_TSCALE},
     'skebint': ${SKEB_INT},
     'skeb_vdof': ${SKEB_VDOF},"
-fi
+  fi
 
-if [ "${DO_SPP}" = "TRUE" ] || [ "${DO_LSM_SPP}" = "TRUE" ]; then
+  if [ "${DO_SPP}" = "TRUE" ] || [ "${DO_LSM_SPP}" = "TRUE" ]; then
     settings="$settings
     'new_lscale': ${NEW_LSCALE},"
-fi
-settings="$settings
+  fi
+
+  settings="$settings
   }"
 #
 # Add the relevant SPP namelist variables to "settings" when running with 
 # SPP turned on.  Otherwise only include an empty "nam_sppperts" stanza.
 #
-settings="$settings
+  settings="$settings
 'nam_sppperts': {"
-if [ "${DO_SPP}" = "TRUE" ]; then 
+
+  if [ "${DO_SPP}" = "TRUE" ]; then 
     settings="$settings
     'iseed_spp': [ $( printf "%s, " "${ISEED_SPP[@]}" ) ],
     'spp_lscale': [ $( printf "%s, " "${SPP_LSCALE[@]}" ) ],
@@ -924,16 +930,18 @@ if [ "${DO_SPP}" = "TRUE" ]; then
     'spp_stddev_cutoff': [ $( printf "%s, " "${SPP_STDDEV_CUTOFF[@]}" ) ],
     'spp_tau': [ $( printf "%s, " "${SPP_TSCALE[@]}" ) ],
     'spp_var_list': [ $( printf "%s, " "${SPP_VAR_LIST[@]}" ) ],"
-fi
-settings="$settings
+  fi
+
+  settings="$settings
   }"
 #
-# Add the relevant LSM SPP namelist variables to "settings" when running with 
-# LSM SPP turned on.
+# Add the relevant LSM SPP namelist variables to "settings" when running
+# with LSM SPP turned on.
 #
-settings="$settings
+  settings="$settings
 'nam_sfcperts': {"
-if [ "${DO_LSM_SPP}" = "TRUE" ]; then 
+
+  if [ "${DO_LSM_SPP}" = "TRUE" ]; then 
     settings="$settings
     'lndp_type': ${LNDP_TYPE},
     'lndp_tau': [ $( printf "%s, " "${LSM_SPP_TSCALE[@]}" ) ],
@@ -941,34 +949,33 @@ if [ "${DO_LSM_SPP}" = "TRUE" ]; then
     'iseed_lndp': [ $( printf "%s, " "${ISEED_LSM_SPP[@]}" ) ],
     'lndp_var_list': [ $( printf "%s, " "${LSM_SPP_VAR_LIST[@]}" ) ],
     'lndp_prt_list': [ $( printf "%s, " "${LSM_SPP_MAG_LIST[@]}" ) ],"
-fi
-settings="$settings
+  fi
+
+  settings="$settings
   }"
-print_info_msg $VERBOSE "
+
+  print_info_msg $VERBOSE "
 The variable \"settings\" specifying values of the weather model's 
 namelist variables has been set as follows:
 
 settings =
 $settings"
 #
-#-----------------------------------------------------------------------
+# Call the set_namelist.py script to create the namelist file that the
+# weather model will read in (full path to namelist file specified by 
+# FV3_NML_FP).  To create the namelist file, this script first makes 
+# physics-suite-dependent modifications to (a copy of) a base namelist 
+# file (FV3_NML_BASE_SUITE_FP) using a yaml configuration file 
+# (FV3_NML_YAML_CONFIG_FP) and then makes further physics-suite-
+# independent modificaitons as specified in the yaml-formatted variable 
+# "settings" set above.
 #
-# Call the set_namelist.py script to create a new FV3 namelist file (full
-# path specified by FV3_NML_FP) using the file FV3_NML_BASE_SUITE_FP as
-# the base (i.e. starting) namelist file, with physics-suite-dependent
-# modifications to the base file specified in the yaml configuration file
-# FV3_NML_YAML_CONFIG_FP (for the physics suite specified by CCPP_PHYS_SUITE),
-# and with additional physics-suite-independent modificaitons specified
-# in the variable "settings" set above.
-#
-#-----------------------------------------------------------------------
-#
-$USHDIR/set_namelist.py -q \
-                        -n ${FV3_NML_BASE_SUITE_FP} \
-                        -c ${FV3_NML_YAML_CONFIG_FP} ${CCPP_PHYS_SUITE} \
-                        -u "$settings" \
-                        -o ${FV3_NML_FP} || \
-  print_err_msg_exit "\
+  $USHDIR/set_namelist.py -q \
+                          -n ${FV3_NML_BASE_SUITE_FP} \
+                          -c ${FV3_NML_YAML_CONFIG_FP} ${CCPP_PHYS_SUITE} \
+                          -u "$settings" \
+                          -o ${FV3_NML_FP} || \
+    print_err_msg_exit "\
 Call to python script set_namelist.py to generate an FV3 namelist file
 failed.  Parameters passed to this script are:
   Full path to base namelist file:
@@ -994,11 +1001,11 @@ $settings"
 # the C-resolution of the grid), and this parameter is in most workflow
 # configurations is not known until the grid is created.
 #
-if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
-
-  set_FV3nml_sfc_climo_filenames || print_err_msg_exit "\
+  if [ "${RUN_TASK_MAKE_GRID}" = "FALSE" ]; then
+    set_FV3nml_sfc_climo_filenames || print_err_msg_exit "\
 Call to function to set surface climatology file names in the FV3 namelist
 file failed."
+  fi
 
 fi
 #
