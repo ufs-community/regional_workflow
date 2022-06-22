@@ -519,8 +519,9 @@ check_var_valid_value "MACHINE" "valid_vals_MACHINE"
 #
 #-----------------------------------------------------------------------
 #
+machine=$(echo_lowercase "${MACHINE}")
 RELATIVE_LINK_FLAG="--relative"
-MACHINE_FILE=${MACHINE_FILE:-${USHDIR}/machine/$(echo_lowercase "$MACHINE").sh}
+MACHINE_FILE=${MACHINE_FILE:-${USHDIR}/machine/${machine}.sh}
 source $USHDIR/source_machine_file.sh
 
 if [ -z "${NCORES_PER_NODE:-}" ]; then
@@ -560,7 +561,6 @@ check_var_valid_value "COMPILER" "valid_vals_COMPILER"
 #
 #-----------------------------------------------------------------------
 #
-machine=$(echo_lowercase "${MACHINE}")
 WFLOW_MOD_FN=${WFLOW_MOD_FN:-"wflow_${machine}"}
 BUILD_MOD_FN=${BUILD_MOD_FN:-"build_${machine}_${COMPILER}"}
 #
@@ -701,7 +701,7 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-if ! [[ "${RESTART_INTERVAL}" =~ ^[0-9]+$ ]]; then
+if [[ ! "${RESTART_INTERVAL}" =~ ^[0-9]+$ ]]; then
   print_err_msg_exit "\
 RESTART_INTERVAL must be set to an integer number of hours.
   RESTART_INTERVAL = \"${RESTART_INTERVAL}\""
@@ -982,16 +982,23 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-# Make sure GRID_GEN_METHOD is set to a valid value.
+# Make sure GRID_GEN_METHOD is set to a valid value.  Note that we 
+# perform this check only if running the MAKE_GRID_TN or MAKE_OROG_TN 
+# tasks because these are the only tasks that need this variable to be
+# defined (and we want to allow GRID_GEN_METHOD to remain undefined if
+# these tasks are not being run).
 #
 #-----------------------------------------------------------------------
 #
-err_msg="\
+if [ "${RUN_TASK_MAKE_GRID}" = "TRUE" ] || \
+   [ "${RUN_TASK_MAKE_OROG}" = "TRUE" ]; then 
+  err_msg="\
 The horizontal grid generation method specified in GRID_GEN_METHOD is 
 not supported:
   GRID_GEN_METHOD = \"${GRID_GEN_METHOD}\""
-check_var_valid_value \
-  "GRID_GEN_METHOD" "valid_vals_GRID_GEN_METHOD" "${err_msg}"
+  check_var_valid_value \
+    "GRID_GEN_METHOD" "valid_vals_GRID_GEN_METHOD" "${err_msg}"
+fi
 #
 #-----------------------------------------------------------------------
 #
@@ -1011,49 +1018,55 @@ fi
 #-----------------------------------------------------------------------
 #
 # Check to make sure that various computational parameters needed by the 
-# forecast model are set to non-empty values.  At this point in the 
-# experiment generation, all of these should be set to valid (non-empty) 
-# values.
+# forecast model are set to valid values.  If running the RUN_FCST_TN
+# task, at this point in the experiment generation, all of these should 
+# have gotten set to valid values.  Also, if running the RUN_POST_TN task, 
+# DT_ATMOS must at this point be set to a valid value.
 #
 #-----------------------------------------------------------------------
 #
-if [ -z "${DT_ATMOS}" ]; then
-  print_err_msg_exit "\
+err_msg_suffix="\
+Please set this to a valid numerical value in the user-specified experiment
+configuration file EXPT_CONFIG_FN in the USHDIR directory and rerun:
+  EXPT_CONFIG_FN = \"${EXPT_CONFIG_FN}\"
+  USHDIR = \"$USHDIR\""
+
+if [ "${RUN_TASK_RUN_FCST}" = "TRUE" ] || \
+   [ "${RUN_TASK_RUN_POST}" = "TRUE" ]; then
+  if [ -z "${DT_ATMOS}" ]; then
+    print_err_msg_exit "\
 The forecast model main time step (DT_ATMOS) is set to a null string:
   DT_ATMOS = ${DT_ATMOS}
-Please set this to a valid numerical value in the user-specified experiment
-configuration file (EXPT_CONFIG_FP) and rerun:
-  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
+${err_msg_suffix}"
+  fi
 fi
 
-if [ -z "${LAYOUT_X}" ]; then
-  print_err_msg_exit "\
+if [ "${RUN_TASK_RUN_FCST}" = "TRUE" ]; then
+
+  if [[ ! "${LAYOUT_X}" =~ ^[0-9]+$ ]]; then
+    print_err_msg_exit "\
 The number of MPI processes to be used in the x direction (LAYOUT_X) by 
-the forecast job is set to a null string:
-  LAYOUT_X = ${LAYOUT_X}
-Please set this to a valid numerical value in the user-specified experiment
-configuration file (EXPT_CONFIG_FP) and rerun:
-  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
-fi
+the forecast job is not set to an integer:
+  LAYOUT_X = \"${LAYOUT_X}\"
+${err_msg_suffix}"
+  fi
 
-if [ -z "${LAYOUT_Y}" ]; then
-  print_err_msg_exit "\
+  if [[ ! "${LAYOUT_Y}" =~ ^[0-9]+$ ]]; then
+    print_err_msg_exit "\
 The number of MPI processes to be used in the y direction (LAYOUT_Y) by 
-the forecast job is set to a null string:
-  LAYOUT_Y = ${LAYOUT_Y}
-Please set this to a valid numerical value in the user-specified experiment
-configuration file (EXPT_CONFIG_FP) and rerun:
-  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
-fi
+the forecast job is not set to an integer:
+  LAYOUT_Y = \"${LAYOUT_Y}\"
+${err_msg_suffix}"
+  fi
 
-if [ -z "${BLOCKSIZE}" ]; then
-  print_err_msg_exit "\
+  if [[ ! "${BLOCKSIZE}" =~ ^[0-9]+$ ]]; then
+    print_err_msg_exit "\
 The cache size to use for each MPI task of the forecast (BLOCKSIZE) is 
-set to a null string:
-  BLOCKSIZE = ${BLOCKSIZE}
-Please set this to a valid numerical value in the user-specified experiment
-configuration file (EXPT_CONFIG_FP) and rerun:
-  EXPT_CONFIG_FP = \"${EXPT_CONFIG_FP}\""
+not set to an integer:
+  BLOCKSIZE = \"${BLOCKSIZE}\"
+${err_msg_suffix}"
+  fi
+
 fi
 #
 #-----------------------------------------------------------------------
@@ -1265,27 +1278,35 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-#
 # If POST_OUTPUT_DOMAIN_NAME has not been specified by the user, set it
 # to PREDEF_GRID_NAME (which won't be empty if using a predefined grid).
-# Then change it to lowercase.  Finally, ensure that it does not end up 
-# getting set to an empty string.
+# Then change it to lowercase.  Finally, if running one or more of the 
+# tasks that require a non-empty value for POST_OUTPUT_DOMAIN_NAME, 
+# ensure that it does not end up getting set to an empty string.
 #
 #-----------------------------------------------------------------------
 #
 POST_OUTPUT_DOMAIN_NAME="${POST_OUTPUT_DOMAIN_NAME:-${PREDEF_GRID_NAME}}"
 POST_OUTPUT_DOMAIN_NAME=$(echo_lowercase "${POST_OUTPUT_DOMAIN_NAME}")
 
-if [ -z "${POST_OUTPUT_DOMAIN_NAME}" ]; then
-  print_err_msg_exit "\
+if [ "${RUN_TASK_RUN_FCST}" ] || \
+   [ "${RUN_TASK_RUN_POST}" ] || \
+   [ "${RUN_TASK_VX_GRIDSTAT}" ] || \
+   [ "${RUN_TASK_VX_POINTSTAT}" ] || \
+   [ "${RUN_TASK_VX_ENSGRID}" ] || \
+   [ "${RUN_TASK_VX_ENSPOINT}" ]; then
+
+  if [ -z "${POST_OUTPUT_DOMAIN_NAME}" ]; then
+    print_err_msg_exit "\
 The domain name used in naming the run_post output files (POST_OUTPUT_DOMAIN_NAME)
 has not been set:
   POST_OUTPUT_DOMAIN_NAME = \"${POST_OUTPUT_DOMAIN_NAME}\"
 If this experiment is not using a predefined grid (i.e. if PREDEF_GRID_NAME 
 is set to a null string), POST_OUTPUT_DOMAIN_NAME must be set in the SRW 
 App's configuration file (\"${EXPT_CONFIG_FN}\")."
-fi
+  fi
 
+fi
 #
 #-----------------------------------------------------------------------
 #
