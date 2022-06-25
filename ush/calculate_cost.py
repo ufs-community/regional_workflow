@@ -105,7 +105,7 @@ if __name__ == "__main__":
         "-c",
         dest="cfg",
         required=True,
-        help="config file containing grip params",
+        help="config file containing grid params",
     )
     args = parser.parse_args()
 
