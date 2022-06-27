@@ -4,9 +4,9 @@ metadata:
     specify a new grid (as opposed to one of the predefined ones in the
     workflow) of GFDLgrid type.  Note that this test sets the workflow
     variable
-      GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES
-    to "FALSE"; see the UFS SRW User's Guide for a description of this
-    variable.
+      GFDLgrid_USE_NUM_CELLS_IN_FILENAMES
+    to "TRUE" (which is its default value); see the UFS SRW User's Guide
+    for a description of this variable.
 user:
   RUN_ENVIR: community
 workflow:
@@ -45,13 +45,13 @@ task_get_extrn_lbcs:
 task_make_grid:
   GFDLgrid_LON_T6_CTR: -97.5
   GFDLgrid_LAT_T6_CTR: 38.5
-  GFDLgrid_RES: 96
+  GFDLgrid_NUM_CELLS: 96
   GFDLgrid_STRETCH_FAC: 1.5
   GFDLgrid_REFINE_RATIO: 2
   GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G: 10
   GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G: 87
   GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G: 10
   GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G: 87
-  GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES: false
+  GFDLgrid_USE_NUM_CELLS_IN_FILENAMES: true
 task_run_post:
   POST_OUTPUT_DOMAIN_NAME: custom_GFDLgrid
