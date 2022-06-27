@@ -1447,7 +1447,7 @@ def setup():
         set_gridparams_GFDLgrid( \
         lon_of_t6_ctr=GFDLgrid_LON_T6_CTR, \
         lat_of_t6_ctr=GFDLgrid_LAT_T6_CTR, \
-        res_of_t6g=GFDLgrid_RES, \
+        res_of_t6g=GFDLgrid_NUM_CELLS, \
         stretch_factor=GFDLgrid_STRETCH_FAC, \
         refine_ratio_t6g_to_t7g=GFDLgrid_REFINE_RATIO, \
         istart_of_t7_on_t6g=GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G, \
