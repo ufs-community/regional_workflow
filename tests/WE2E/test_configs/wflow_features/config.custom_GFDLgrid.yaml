@@ -4,11 +4,11 @@ metadata:
     specify a new grid (as opposed to one of the predefined ones in the
     workflow) of GFDLgrid type.  Note that this test sets the workflow
     variable
-      GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES
+      GFDLgrid_USE_NUM_CELLS_IN_FILENAMES
     to "TRUE" (which is its default value); see the UFS SRW User's Guide
     for a description of this variable.
     The difference between this test and the one named
-      new_GFDLgrid__GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES_eq_TRUE
+      custom_GFDLgrid__GFDLgrid_USE_NUM_CELLS_IN_FILENAMES_eq_TRUE
     is that this one uses almost no stretching by setting the workflow
     variable GFDLgrid_STRETCH_FAC very close to 1.  Setting it exactly to
     1 used to cause the workflow to fail because it caused the GFDL grid
@@ -53,13 +53,13 @@ task_get_extrn_lbcs:
 task_make_grid:
   GFDLgrid_LON_T6_CTR: -97.5
   GFDLgrid_LAT_T6_CTR: 38.5
-  GFDLgrid_RES: 96
+  GFDLgrid_NUM_CELLS: 96
   GFDLgrid_STRETCH_FAC: 1.0001
   GFDLgrid_REFINE_RATIO: 2
   GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G: 10
   GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G: 87
   GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G: 19
   GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G: 78
-  GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES: true
+  GFDLgrid_USE_NUM_CELLS_IN_FILENAMES: true
 task_run_post:
   POST_OUTPUT_DOMAIN_NAME: custom_GFDLgrid
