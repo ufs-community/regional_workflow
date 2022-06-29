@@ -37,7 +37,7 @@ from textwrap import dedent
 
 import yaml
 
-def clean_up_output_dir(expected_subdir, local_archive, output_path, source_paths, members=-1):
+def clean_up_output_dir(expected_subdir, local_archive, output_path, source_paths):
 
     ''' Remove expected sub-directories and existing_archive files on
     disk once all files have been extracted and put into the specified
@@ -154,8 +154,7 @@ def arg_list_to_range(args):
 
     return args
 
-def fill_template(template_str, cycle_date, fcst_hr=0, mem=-1, ens_group=None,
-        templates_only=False):
+def fill_template(template_str, cycle_date, templates_only=False, **kwargs):
 
     ''' Fill in the provided template string with date time information,
     and return the resulting string.
@@ -164,15 +163,25 @@ def fill_template(template_str, cycle_date, fcst_hr=0, mem=-1, ens_group=None,
       template_str    a string containing Python templates
       cycle_date      a datetime object that will be used to fill in
                       date and time information
-      fcst_hr         an integer forecast hour. string formatting should
-                      be included in the template_str
-      mem             a single ensemble member. should be a positive integer value
       templates_only  boolean value. When True, this function will only
                       return the templates available.
 
-    Rerturn:
+    Keyword Args:
+      ens_group       a number associated with a bin where ensemble
+                      members are stored in archive files
+      fcst_hr         an integer forecast hour. string formatting should
+                      be included in the template_str
+      mem             a single ensemble member. should be a positive integer value
+
+    Return:
       filled template string
     '''
+
+    # Parse keyword args
+    ens_group = kwargs.get('ens_group')
+    fcst_hr = kwargs.get('fcst_hr', 0)
+    mem = kwargs.get('mem', '')
+    # -----
 
     cycle_hour = cycle_date.strftime('%H')
     # One strategy for binning data files at NCEP is to put them into 6
@@ -207,19 +216,14 @@ def fill_template(template_str, cycle_date, fcst_hr=0, mem=-1, ens_group=None,
         return f'{",".join((format_values.keys()))}'
     return template_str.format(**format_values)
 
-def create_target_path(target_path, mem=-1):
-    '''  
+def create_target_path(target_path):
+
+    '''
     Append target path and create directory for ensemble members
     '''
-   
-    member = str(mem)      
-    
-    target_path = os.path.join(target_path, member.zfill(3))
-    
     if not os.path.exists(target_path):
         os.makedirs(target_path)
-
-    return target_path 
+    return target_path
 
 def find_archive_files(paths, file_names, cycle_date, ens_group):
 
@@ -250,7 +254,10 @@ def find_archive_files(paths, file_names, cycle_date, ens_group):
 
     return '', 0
 
-def get_requested_files(cla, file_templates, input_loc, method='disk', members=-1):
+def get_requested_files(cla, file_templates, input_locs, method='disk',
+        **kwargs):
+
+    # pylint: disable=too-many-locals
 
     ''' This function copies files from disk locations
     or downloads files from a url, depending on the option specified for
@@ -263,78 +270,71 @@ def get_requested_files(cla, file_templates, input_loc, method='disk', members=-
 
     cla            Namespace object containing command line arguments
     file_templates a list of file templates
-    input_loc      A string containing a single data location, either a url
-                   or disk path.
+    input_locs      A string containing a single data location, either a url
+                   or disk path, or a list of paths/urls.
     method         Choice of disk or download to indicate protocol for
                    retrieval
 
-    Returns
-    unavailable  a dict whose keys are "method" and whose values are a
-                 list of files unretrievable
-    '''
-    
-    members = [-1] if members == -1 else members   
+    Keyword args:
+    members        a list integers corresponding to the ensemble members
+    check_all      boolean flag that indicates all urls should be
+                   checked for all files
 
-    unavailable = {}
+    Returns:
+    unavailable  a list of locations/files that were unretrievable
+    '''
+
+    members = kwargs.get('members', '')
+    members = members if isinstance(members, list) else [members]
+
+    check_all = kwargs.get('check_all', False)
 
     logging.info(f'Getting files named like {file_templates}')
 
+    # Make sure we're dealing with lists for input locations and file
+    # templates. Makes it easier to loop and zip.
     file_templates = file_templates if isinstance(file_templates, list) else \
-            [file_templates]
-       
+        [file_templates]
+
+    input_locs = input_locs if not isinstance(input_locs, list) else \
+        [input_locs]
 
     orig_path = os.getcwd()
-    unavailable = {}
-    for i, mem in enumerate(members): 
+    unavailable = []
+
+    locs_files = pair_locs_with_files(input_locs, file_templates, check_all)
+    for mem in members:
         target_path = fill_template(cla.output_path,
-                                    cla.cycle_date)
-        os.chdir(orig_path)
+                                    cla.cycle_date,
+                                    mem=mem)
+        target_path = create_target_path(target_path)
 
-        if mem != -1:
-            os.chdir(target_path)
-            target_path = create_target_path(target_path, mem)
-            logging.info(f'Retrieved files will be placed here: \n {target_path}')
+        logging.info(f'Retrieved files will be placed here: \n {target_path}')
         os.chdir(target_path)
-        
+
         for fcst_hr in cla.fcst_hrs:
-            for file_template in file_templates:
-                 # Here we are accounting for the case of multiple urls
-                 if isinstance(input_loc, list):
-                     for (urls, file_names) in zip(input_loc, file_templates):
-                         for (each_url, each_file_name) in zip(urls, file_names): 
-                             loc = os.path.join(each_url, each_file_name)   
-                             logging.debug(f'Full file path: {loc}')
-                             loc = fill_template(loc, cla.cycle_date, fcst_hr, mem=mem)
-                     
-                             if method == 'disk':
-                                 retrieved = copy_file(loc, target_path)
+            for loc, templates in locs_files:
 
-                             if method == 'download':
-                                 retrieved = download_file(loc) 
-                 else:
-                     print("file template", file_template, "input_loc", input_loc)
-                     loc = os.path.join(input_loc, file_template)
-                
-                 logging.debug(f'Full file path: {loc}')
-                 loc = fill_template(loc, cla.cycle_date, fcst_hr, mem=mem)
+                templates = templates if isinstance(templates, list) \
+                    else [templates]
 
-                 if method == 'disk':
-                     retrieved = copy_file(loc, target_path)
+                for template in templates:
+                    input_loc = os.path.join(loc, template)
+                    input_loc = fill_template(input_loc, cla.cycle_date, fcst_hr, mem=mem)
+                    logging.debug(f'Full file path: {input_loc}')
 
-                 if method == 'download':
-                     retrieved = download_file(loc)
+                    if method == 'disk':
+                        retrieved = copy_file(input_loc, target_path)
 
-                 if (i == len(members) -1) and not retrieved:
+                    if method == 'download':
+                        retrieved = download_file(input_loc)
 
-                     if unavailable.get(method) is None:
-                         unavailable[method] = []
-                     unavailable[method].append(target_path)
-                     os.chdir(orig_path)
-                     # Returning here assumes that if the first file
-                     # isn't found, none of the others will be. Don't
-                     # waste time timing out on every requested file.
-                     return unavailable
-   
+                    if not retrieved:
+                        unavailable.append(input_loc)
+                        # Go on to the next location if the first file
+                        # isn't found here.
+                        break
+
     os.chdir(orig_path)
     return unavailable
 
@@ -366,10 +366,12 @@ def hsi_single_file(file_path, mode='ls'):
 def hpss_requested_files(cla, file_names, store_specs, members=-1,
         ens_group=-1):
 
-    ''' This function interacts with the "hpss" protocol in a
-    provided data store specs file to download a set of files requested
-    by the user. Depending on the type of archive file (zip or tar), it
-    will either pull the entire file and unzip it, or attempt to pull
+    # pylint: disable=too-many-locals
+
+    ''' This function interacts with the "hpss" protocol in a provided
+    data store specs file to download a set of files requested by the
+    user. Depending on the type of archive file (zip or tar), it will
+    either pull the entire file and unzip it, or attempt to pull
     individual files from a tar file.
 
     It cleans up local disk after files are deemed available to remove
@@ -424,24 +426,24 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
     for archive_internal_dir_tmpl in archive_internal_dirs:
         archive_internal_dir = fill_template(archive_internal_dir_tmpl,
                                              cla.cycle_date)
-                                              
+
         for mem in members:
             output_path = fill_template(cla.output_path, cla.cycle_date)
             logging.info(f'Will place files in {os.path.abspath(output_path)}')
             orig_path = os.getcwd()
             logging.debug(f'CWD: {os.getcwd()}')
             os.chdir(orig_path)
-        
+
             if mem != -1:
                 archive_internal_dir = fill_template(archive_internal_dir_tmpl,
                                                      cla.cycle_date,
                                                      mem=mem,
                                                      )
-                output_path = create_target_path(output_path, mem)     
+                output_path = create_target_path(output_path)
                 logging.info(f'Will place files in {os.path.abspath(output_path)}')
-            
+
             os.chdir(output_path)
-             
+
             source_paths = []
             for fcst_hr in cla.fcst_hrs:
                 for file_name in file_names:
@@ -452,7 +454,7 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
                         mem=mem,
                         ens_group=ens_group,
                         ))
-       
+
             if store_specs.get('archive_format', 'tar') == 'zip':
                 # Get the entire file from HPSS
                 existing_archive = hsi_single_file(existing_archive, mode='get')
@@ -476,7 +478,7 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
                    output_path=output_path,
                    source_paths=source_paths,
                    )
- 
+
         if not unavailable:
             return unavailable
 
@@ -492,8 +494,8 @@ def load_str(arg):
 def config_exists(arg):
 
     '''
-    Check to ensure that the provided config file exists. If it does, load it
-    with YAML's safe loader and return the resulting dict.
+    Check to ensure that the provided config file exists. If it does,
+    load it with YAML's safe loader and return the resulting dict.
     '''
 
     # Check for existence of file
@@ -505,6 +507,50 @@ def config_exists(arg):
         cfg = yaml.load(config_path, Loader=yaml.SafeLoader)
     return cfg
 
+def pair_locs_with_files(input_locs, file_templates, check_all):
+
+    '''
+    Given a list of input locations and files, return an iterable that
+    contains the multiple locations and file templates for files that
+    should be searched in those locations.
+
+    check_all indicates that all locations should be paired with all
+    avaiable file templates.
+
+    The different possibilities:
+    1. Get one or more files from a single path/url
+    2. Get multiple files from multiple corresponding
+       paths/urls
+    3. Check all paths for all file templates until files are
+       found
+
+    The default will be to handle #1 and #2. #3 will be
+    indicated by a flag in the yaml: "check_all: True"
+
+    '''
+
+    if not check_all:
+
+        # Make sure the length of both input_locs and
+        # file_templates is consistent
+
+        # Case 2 above
+        if len(file_templates) == len(input_locs):
+            locs_files = zip(input_locs, file_templates)
+
+        # Case 1 above
+        elif len(file_templates) > len(input_locs) and \
+            len(input_locs) == 1:
+
+            locs_files = zip(input_locs, [file_templates])
+        else:
+            msg = "Please check your input locations and templates."
+            raise KeyError(msg)
+    else:
+        # Case 3 above
+        locs_files = [(loc, file_templates) for loc in input_locs]
+
+    return locs_files
 def path_exists(arg):
 
     ''' Check whether the supplied path exists and is writeable '''
@@ -536,9 +582,9 @@ def setup_logging(debug=False):
 
 def write_summary_file(cla, data_store, file_templates):
 
-    ''' Given the command line arguments and the data store from which the data
-    was retrieved, write a bash summary file that is needed by the workflow
-    elements downstream. '''
+    ''' Given the command line arguments and the data store from which
+    the data was retrieved, write a bash summary file that is needed by
+    the workflow elements downstream. '''
 
     files = []
     for tmpl in file_templates:
@@ -561,7 +607,6 @@ def write_summary_file(cla, data_store, file_templates):
 def to_datetime(arg):
     ''' Return a datetime object give a string like YYYYMMDDHH.
     '''
-
     return dt.datetime.strptime(arg, '%Y%m%d%H')
 
 def to_lower(arg):
@@ -602,8 +647,10 @@ def main(cla):
                         either on the command line or on in a config file.')
                 raise argparse.ArgumentTypeError(msg)
             unavailable = get_requested_files(cla,
+                                              check_all=known_data_info.get('check_all',
+                                                  False),
                                               file_templates=file_templates,
-                                              input_loc=cla.input_file_path,
+                                              input_locs=cla.input_file_path,
                                               method='disk',
                                               )
 
@@ -624,32 +671,26 @@ def main(cla):
                 raise argparse.ArgumentTypeError(msg)
 
             if store_specs.get('protocol') == 'download':
-                if cla.members:
-                    ens_groups = get_ens_groups(cla.members)
-                    for ens_group, members in ens_groups.items():
-                        unavailable = get_requested_files(cla,
-                                                          file_templates=file_templates,
-                                                          input_loc=store_specs['url'],
-                                                          method='download',
-                                                          members=members,
-                                                          ) 
-                else:
-                     unavailable = get_requested_files(cla,
-                                                       file_templates=file_templates,
-                                                       input_loc=store_specs['url'],
-                                                       method='download',
-                                                       )
+                unavailable = get_requested_files(cla,
+                                                  check_all=known_data_info.get('check_all',
+                                                      False),
+                                                  file_templates=file_templates,
+                                                  input_locs=store_specs['url'],
+                                                  method='download',
+                                                  members=cla.members,
+                                                  )
 
             if store_specs.get('protocol') == 'htar':
                 if cla.members:
-                  ens_groups = get_ens_groups(cla.members)
-                  for ens_group, members in ens_groups.items():
-                      unavailable = hpss_requested_files(cla,
-                             				 file_templates,
-                            				 store_specs,
-                             				 members=members,
-                             				 ens_group=ens_group,
-                              				 )
+                    ens_groups = get_ens_groups(cla.members)
+                    for ens_group, members in ens_groups.items():
+                        unavailable = hpss_requested_files(
+                            cla,
+                            file_templates,
+                            store_specs,
+                            members=members,
+                            ens_group=ens_group,
+                            )
                 else:
                     unavailable = hpss_requested_files(cla, file_templates, store_specs)
 
@@ -805,7 +846,7 @@ if __name__ == '__main__':
         CLA.members = arg_list_to_range(CLA.members)
 
     setup_logging(CLA.debug)
-    print(f"Running script retrieve_data.py with args:\n",
+    print("Running script retrieve_data.py with args:\n",
           f"{('-' * 80)}\n{('-' * 80)}")
     for name, val in CLA.__dict__.items():
         if name not in ['config']:
@@ -830,7 +871,5 @@ if __name__ == '__main__':
             logging.error('You requested the hpss data store, but ' \
                     'the HPSS module isn\'t loaded. This data store ' \
                     'is only available on NOAA compute platforms.')
-
-
 
     main(CLA)
