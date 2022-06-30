@@ -24,9 +24,9 @@
 #   for that type of file. Both are required for external models ICS and
 #   LBCS. Each file name may (and likely should) include templates.
 #
-#   If the SRW App accepts different file formats,
-#   as it does for FV3GFS, an intermediary level indicating the value
-#   associate with a FV3GFS_FILE_FMT_* variable.
+#   If the SRW App accepts different file formats, as it does for
+#   FV3GFS, an intermediary level indicating the value associate with a
+#   FV3GFS_FILE_FMT_* variable.
 #
 # 3rd level optional:
 #
@@ -115,7 +115,6 @@ GDAS:
       - /NCEPPROD/5year/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
       - /NCEPPROD/5year/hpssprod/runhistory/rh{yyyy}/{yyyymm}/{yyyymmdd}
     archive_internal_dir:
-      - ./enkfgdas.{yyyymmdd}/{hh}
       - ./enkfgdas.{yyyymmdd}/{hh}/atmos/mem{mem:03d}
     archive_file_names:
       nemsio:
@@ -141,8 +140,9 @@ GDAS:
       netcdf:
         anl:
           - gdas.t{hh}z.atmf{fcst_hr:03d}.nc
-        fcst:
           - gdas.t{hh}z.sfcf{fcst_hr:03d}.nc
+        fcst:
+          - gdas.t{hh}z.atmf{fcst_hr:03d}.nc
   nomads:
     protocol: download
     url: https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/enkfgdas.{yyyymmdd}/{hh}/atmos/mem{mem:03d}
@@ -155,20 +155,20 @@ GDAS:
     url: https://noaa-gfs-bdp-pds.s3.amazonaws.com/enkfgdas.{yyyymmdd}/{hh}/atmos/mem{mem:03d}
     file_names:
       netcdf:
-        fcst:
+        anl:
           - gdas.t{hh}z.sfcf{fcst_hr:03d}.nc
 
 GEFS:
   aws:
     protocol: download
     url:
-      - ['https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}', 'https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}']
       - ['https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}/atmos/pgrb2ap5', 'https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}/atmos/pgrb2bp5']
       - ['https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}/pgrb2a', 'https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}/pgrb2b']
+      - ['https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}', 'https://noaa-gefs-pds.s3.amazonaws.com/gefs.{yyyymmdd}/{hh}']
     file_names:
-      - ['gep{mem:02d}.t{hh}z.pgrb2af{fcst_hr:03d}', 'gep{mem:02d}.t{hh}z.pgrb2bf{fcst_hr:03d}' ]
       - ['gep{mem:02d}.t{hh}z.pgrb2a.0p50.f{fcst_hr:03d}', 'gep{mem:02d}.t{hh}z.pgrb2b.0p50.f{fcst_hr:03d}']
       - ['gep{mem:02d}.t{hh}z.pgrb2af{fcst_hr:02d}', 'gep{mem:02d}.t{hh}z.pgrb2bf{fcst_hr:02d}']
+      - ['gep{mem:02d}.t{hh}z.pgrb2af{fcst_hr:03d}', 'gep{mem:02d}.t{hh}z.pgrb2bf{fcst_hr:03d}' ]
 
 GSMGFS:
   hpss:
