@@ -72,8 +72,8 @@ RUN_CMD_FCST='mpirun -l -np ${PE_MEMBER01}'
 RUN_CMD_POST="mpirun"
 
 # MET/METplus-Related Paths
-MET_INSTALL_DIR=${MET_INSTALL_DIR:-"/gpfs/dell2/emc/verification/noscrub/emc.metplus/met/10.0.0"}
-METPLUS_PATH=${METPLUS_PATH:-"/gpfs/dell2/emc/verification/noscrub/emc.metplus/METplus/METplus-4.0.0"}
+MET_INSTALL_DIR=${MET_INSTALL_DIR:-"/gpfs/dell2/emc/verification/noscrub/emc.metplus/met/10.1.1"}
+METPLUS_PATH=${METPLUS_PATH:-"/gpfs/dell2/emc/verification/noscrub/emc.metplus/METplus/METplus-4.1.1"}
 CCPA_OBS_DIR=${CCPA_OBS_DIR:-"${staged_data_dir}/obs_data/ccpa/proc"}
 MRMS_OBS_DIR=${MRMS_OBS_DIR:-"${staged_data_dir}/obs_data/mrms/proc"}
 NDAS_OBS_DIR=${NDAS_OBS_DIR:-"${staged_data_dir}/obs_data/ndas/proc"}
@@ -83,3 +83,7 @@ MET_BIN_EXEC=${MET_BIN_EXEC:-"exec"}
 TEST_PREGEN_BASEDIR="${staged_data_dir}/FV3LAM_pregen"
 TEST_COMIN="${staged_data_dir}/COMGFS"
 TEST_EXTRN_MDL_SOURCE_BASEDIR="${staged_data_dir}/input_model_data"
+
+# Computational resources
+WTIME_MAKE_OROG="01:00:00"
+

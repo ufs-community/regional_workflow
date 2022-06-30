@@ -419,18 +419,6 @@ WFLOW_LAUNCH_LOG_FN="log.launch_FV3LAM_wflow"
 #
 #-----------------------------------------------------------------------
 #
-# Set output file name. Definitions:
-#
-# POST_OUTPUT_DOMAIN_NAME:
-# Domain name used in naming the output files of run_post by UPP or inline post.
-# Output file name: $NET.tHHz.[var_name].f###.$POST_OUTPUT_DOMAIN_NAME.grib2
-#
-#-----------------------------------------------------------------------
-#
-POST_OUTPUT_DOMAIN_NAME=""
-#
-#-----------------------------------------------------------------------
-#
 # Set forecast parameters.  Definitions:
 #
 # DATE_FIRST_CYCL:
@@ -484,8 +472,11 @@ FCST_LEN_HRS="24"
 # with the prefix "YYYYMMDD.HHmmSS." in the RESTART directory
 #
 # WRITE_DOPOST:
-# Flag that determines whether or not to use the INLINE POST option
-# When TRUE, force to turn off run_post (RUN_TASK_RUN_POST=FALSE) in setup.sh
+# Flag that determines whether or not to use the inline post feature 
+# [i.e. calling the Unified Post Processor (UPP) from within the weather 
+# model].  If this is set to "TRUE", the RUN_POST_TN task is deactivated 
+# (i.e. RUN_TASK_RUN_POST is set to "FALSE") to avoid unnecessary 
+# computations.
 #
 #-----------------------------------------------------------------------
 #
@@ -816,20 +807,20 @@ GRID_GEN_METHOD=""
 #   though the model equations are not integrated on (they are integrated
 #   only on the regional grid).
 #
-# * GFDLgrid_RES is the number of grid cells in either one of the two 
-#   horizontal directions x and y on any one of the 6 tiles of the parent
-#   global cubed-sphere grid.  The mapping from GFDLgrid_RES to a nominal
-#   resolution (grid cell size) for a uniform global grid (i.e. Schmidt
-#   stretch factor GFDLgrid_STRETCH_FAC set to 1) for several values of
-#   GFDLgrid_RES is as follows:
+# * GFDLgrid_NUM_CELLS is the number of grid cells in either one of the 
+#   two horizontal directions x and y on any one of the 6 tiles of the 
+#   parent global cubed-sphere grid.  The mapping from GFDLgrid_NUM_CELLS 
+#   to a nominal resolution (grid cell size) for a uniform global grid 
+#   (i.e. Schmidt stretch factor GFDLgrid_STRETCH_FAC set to 1) for 
+#   several values of GFDLgrid_NUM_CELLS is as follows:
 #
-#     GFDLgrid_RES      typical cell size
-#     ------------      -----------------
-#              192                  50 km
-#              384                  25 km
-#              768                  13 km
-#             1152                 8.5 km
-#             3072                 3.2 km
+#     GFDLgrid_NUM_CELLS      typical cell size
+#     ------------------      -----------------
+#                    192                  50 km
+#                    384                  25 km
+#                    768                  13 km
+#                   1152                 8.5 km
+#                   3072                 3.2 km
 #
 #   Note that these are only typical cell sizes.  The actual cell size on
 #   the global grid tiles varies somewhat as we move across a tile.
@@ -844,10 +835,10 @@ GRID_GEN_METHOD=""
 #   1 (but still greater than 0) expands it.  The remaining 5 tiles change
 #   shape as necessary to maintain global coverage of the grid.
 #
-# * The cell size on a given global tile depends on both GFDLgrid_RES and
-#   GFDLgrid_STRETCH_FAC (since changing GFDLgrid_RES changes the number
-#   of cells in the tile, and changing GFDLgrid_STRETCH_FAC modifies the
-#   shape and size of the tile).
+# * The cell size on a given global tile depends on both GFDLgrid_NUM_CELLS 
+#   and GFDLgrid_STRETCH_FAC (since changing GFDLgrid_NUM_CELLS changes 
+#   the number of cells in the tile, and changing GFDLgrid_STRETCH_FAC 
+#   modifies the shape and size of the tile).
 #
 # * The regional grid is embedded within tile 6 (i.e. it doesn't extend
 #   beyond the boundary of tile 6).  Its exact location within tile 6 is
@@ -870,13 +861,13 @@ GRID_GEN_METHOD=""
 #
 # * GFDLgrid_REFINE_RATIO is the refinement ratio of the regional grid 
 #   (tile 7) with respect to the grid on its parent tile (tile 6), i.e.
-#   it is the number of grid cells along the boundary of the regional grid
-#   that abut one cell on tile 6.  Thus, the cell size on the regional 
-#   grid depends not only on GFDLgrid_RES and GFDLgrid_STRETCH_FAC (because
-#   the cell size on tile 6 depends on these two parameters) but also on 
-#   GFDLgrid_REFINE_RATIO.  Note that as on the tiles of the global grid, 
-#   the cell size on the regional grid is not uniform but varies as we 
-#   move across the grid.
+#   it is the number of grid cells along the boundary of the regional 
+#   grid that abut one cell on tile 6.  Thus, the cell size on the regional 
+#   grid depends not only on GFDLgrid_NUM_CELLS and GFDLgrid_STRETCH_FAC 
+#   (because the cell size on tile 6 depends on these two parameters) 
+#   but also on GFDLgrid_REFINE_RATIO.  Note that as on the tiles of the 
+#   global grid, the cell size on the regional grid is not uniform but 
+#   varies as we move across the grid.
 #
 # Definitions of parameters that need to be specified when GRID_GEN_METHOD
 # is set to "GFDLgrid":
@@ -887,14 +878,9 @@ GRID_GEN_METHOD=""
 # GFDLgrid_LAT_T6_CTR:
 # Latitude of the center of tile 6 (in degrees).
 #
-# GFDLgrid_RES:
-# Number of points in each of the two horizontal directions (x and y) on
-# each tile of the parent global grid.  Note that the name of this parameter
-# is really a misnomer because although it has the stirng "RES" (for 
-# "resolution") in its name, it specifies number of grid cells, not grid
-# size (in say meters or kilometers).  However, we keep this name in order
-# to remain consistent with the usage of the word "resolution" in the 
-# global forecast model and other auxiliary codes.
+# GFDLgrid_NUM_CELLS:
+# Number of grid cells in each of the two horizontal directions (x and 
+# y) on each tile of the parent global grid.
 #
 # GFDLgrid_STRETCH_FAC:
 # Stretching factor used in the Schmidt transformation applied to the
@@ -917,29 +903,30 @@ GRID_GEN_METHOD=""
 # GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G:
 # j-index on tile 6 at which the regional grid (tile 7) ends.
 #
-# GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES:
-# Flag that determines the file naming convention to use for grid, orography,
-# and surface climatology files (or, if using pregenerated files, the
-# naming convention that was used to name these files).  These files 
-# usually start with the string "C${RES}_", where RES is an integer.
-# In the global forecast model, RES is the number of points in each of
-# the two horizontal directions (x and y) on each tile of the global grid
-# (defined here as GFDLgrid_RES).  If this flag is set to "TRUE", RES will
-# be set to GFDLgrid_RES just as in the global forecast model.  If it is
-# set to "FALSE", we calculate (in the grid generation task) an "equivalent
-# global uniform cubed-sphere resolution" -- call it RES_EQUIV -- and 
-# then set RES equal to it.  RES_EQUIV is the number of grid points in 
-# each of the x and y directions on each tile that a global UNIFORM (i.e. 
-# stretch factor of 1) cubed-sphere grid would have to have in order to
-# have the same average grid size as the regional grid.  This is a more
-# useful indicator of the grid size because it takes into account the 
-# effects of GFDLgrid_RES, GFDLgrid_STRETCH_FAC, and GFDLgrid_REFINE_RATIO
-# in determining the regional grid's typical grid size, whereas simply
-# setting RES to GFDLgrid_RES doesn't take into account the effects of
+# GFDLgrid_USE_NUM_CELLS_IN_FILENAMES:
+# Flag that determines the file naming convention to use for grid, 
+# orography, and surface climatology files (or, if using pregenerated 
+# files, the naming convention that was used to name these files).  
+# These files usually start with the string "C${RES}_", where RES is an 
+# integer.  In the global forecast model, RES is the number of grid 
+# cells in each of the two horizontal directions (x and y) on each tile 
+# of the global grid (defined here as GFDLgrid_NUM_CELLS).  If this flag 
+# is set to "TRUE", RES will be set to GFDLgrid_NUM_CELLS just as in the 
+# global forecast model.  If it is set to "FALSE", we calculate (in the 
+# grid generation task) an "equivalent global uniform cubed-sphere 
+# resolution" -- call it RES_EQUIV -- and then set RES equal to it.  
+# RES_EQUIV is the number of grid points in each of the x and y directions 
+# on each tile that a global UNIFORM (i.e. stretch factor of 1) cubed-
+# sphere grid would have to have in order to have the same average grid 
+# size as the regional grid.  This is a more useful indicator of the grid 
+# size because it takes into account the effects of GFDLgrid_NUM_CELLS, 
+# GFDLgrid_STRETCH_FAC, and GFDLgrid_REFINE_RATIO in determining the 
+# regional grid's typical grid size, whereas simply setting RES to 
+# GFDLgrid_NUM_CELLS doesn't take into account the effects of 
 # GFDLgrid_STRETCH_FAC and GFDLgrid_REFINE_RATIO on the regional grid's
-# resolution.  Nevertheless, some users still prefer to use GFDLgrid_RES
-# in the file names, so we allow for that here by setting this flag to
-# "TRUE".
+# resolution.  Nevertheless, some users still prefer to use 
+# GFDLgrid_NUM_CELLS in the file names, so we allow for that here by 
+# setting this flag to "TRUE".
 #
 # Note that:
 #
@@ -973,14 +960,14 @@ GRID_GEN_METHOD=""
 #
 GFDLgrid_LON_T6_CTR=""
 GFDLgrid_LAT_T6_CTR=""
-GFDLgrid_RES=""
+GFDLgrid_NUM_CELLS=""
 GFDLgrid_STRETCH_FAC=""
 GFDLgrid_REFINE_RATIO=""
 GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G=""
 GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G=""
 GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G=""
 GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G=""
-GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES=""
+GFDLgrid_USE_NUM_CELLS_IN_FILENAMES=""
 #
 #-----------------------------------------------------------------------
 #
@@ -1660,7 +1647,7 @@ PPN_VX_ENSPOINT_PROB="1"
 # Walltimes.
 #
 WTIME_MAKE_GRID="00:20:00"
-WTIME_MAKE_OROG="01:00:00"
+WTIME_MAKE_OROG="00:20:00"
 WTIME_MAKE_SFC_CLIMO="00:20:00"
 WTIME_GET_EXTRN_ICS="00:45:00"
 WTIME_GET_EXTRN_LBCS="00:45:00"
@@ -1757,8 +1744,7 @@ DT_SUBHOURLY_POST_MNTS="00"
 #
 #-----------------------------------------------------------------------
 #
-# Set parameters associated with defining a customized post configuration 
-# file.
+# Set parameters for customizing the post-processor (UPP).  Definitions:
 #
 # USE_CUSTOM_POST_CONFIG_FILE:
 # Flag that determines whether a user-provided custom configuration file
@@ -1773,10 +1759,24 @@ DT_SUBHOURLY_POST_MNTS="00"
 # used for post-processing. This is only used if CUSTOM_POST_CONFIG_FILE
 # is set to "TRUE".
 #
+# POST_OUTPUT_DOMAIN_NAME:
+# Domain name (in lowercase) used in constructing the names of the output 
+# files generated by UPP [which is called either by running the RUN_POST_TN 
+# task or by activating the inline post feature (WRITE_DOPOST set to "TRUE")].  
+# The post output files are named as follows:
+#
+#   $NET.tHHz.[var_name].f###.${POST_OUTPUT_DOMAIN_NAME}.grib2
+#
+# If using a custom grid, POST_OUTPUT_DOMAIN_NAME must be specified by 
+# the user.  If using a predefined grid, POST_OUTPUT_DOMAIN_NAME defaults
+# to PREDEF_GRID_NAME.  Note that this variable is first changed to lower
+# case before being used to construct the file names.
+#
 #-----------------------------------------------------------------------
 #
 USE_CUSTOM_POST_CONFIG_FILE="FALSE"
 CUSTOM_POST_CONFIG_FP=""
+POST_OUTPUT_DOMAIN_NAME=""
 #
 #-----------------------------------------------------------------------
 #
@@ -1897,10 +1897,6 @@ ISEED_SPP=( "4" "5" "6" "7" "8" )
 # SPP in LSM schemes is handled in the &nam_sfcperts namelist block 
 # instead of in &nam_sppperts, where all other SPP is implemented.
 #
-# The default perturbation frequency is determined by the fhcyc namelist 
-# entry.  Since that parameter is set to zero in the SRW App, use 
-# LSM_SPP_EACH_STEP to perturb every time step. 
-#
 # Perturbations to soil moisture content (SMC) are only applied at the 
 # first time step.
 #
@@ -1912,13 +1908,12 @@ ISEED_SPP=( "4" "5" "6" "7" "8" )
 # are shown below.  In addition, only one unique iseed value is allowed 
 # at the moment, and is used for each pattern.
 #
-DO_LSM_SPP="false" #If true, sets lndp_type=2
+DO_LSM_SPP="false" #If true, sets lndp_type=2, lndp_model_type=2
 LSM_SPP_TSCALE=( "21600" "21600" "21600" "21600" "21600" "21600" "21600" )
 LSM_SPP_LSCALE=( "150000" "150000" "150000" "150000" "150000" "150000" "150000" )
 ISEED_LSM_SPP=( "9" )
 LSM_SPP_VAR_LIST=( "smc" "vgf" "alb" "sal" "emi" "zol" "stc" )
-LSM_SPP_MAG_LIST=( "0.2" "0.001" "0.001" "0.001" "0.001" "0.001" "0.2" )
-LSM_SPP_EACH_STEP="true" #Sets lndp_each_step=.true.
+LSM_SPP_MAG_LIST=( "0.017" "0.001" "0.001" "0.001" "0.001" "0.001" "0.2" )
 #
 #-----------------------------------------------------------------------
 # 

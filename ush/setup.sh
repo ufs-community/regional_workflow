@@ -286,10 +286,12 @@ fi
 #
 N_VAR_LNDP=0
 LNDP_TYPE=0
+LNDP_MODEL_TYPE=0
 FHCYC_LSM_SPP_OR_NOT=0
 if [ "${DO_LSM_SPP}" = "TRUE" ]; then
   N_VAR_LNDP=${#LSM_SPP_VAR_LIST[@]}
   LNDP_TYPE=2
+  LNDP_MODEL_TYPE=2
   FHCYC_LSM_SPP_OR_NOT=999
 fi
 #
@@ -949,13 +951,13 @@ if [ ! -z "${PREDEF_GRID_NAME}" ]; then
     outvarname_gfdlgrid_lon_t6_ctr="GFDLgrid_LON_T6_CTR" \
     outvarname_gfdlgrid_lat_t6_ctr="GFDLgrid_LAT_T6_CTR" \
     outvarname_gfdlgrid_stretch_fac="GFDLgrid_STRETCH_FAC" \
-    outvarname_gfdlgrid_res="GFDLgrid_RES" \
+    outvarname_gfdlgrid_num_cells="GFDLgrid_NUM_CELLS" \
     outvarname_gfdlgrid_refine_ratio="GFDLgrid_REFINE_RATIO" \
     outvarname_gfdlgrid_istart_of_rgnl_dom_on_t6g="GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G" \
     outvarname_gfdlgrid_iend_of_rgnl_dom_on_t6g="GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G" \
     outvarname_gfdlgrid_jstart_of_rgnl_dom_on_t6g="GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G" \
     outvarname_gfdlgrid_jend_of_rgnl_dom_on_t6g="GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G" \
-    outvarname_gfdlgrid_use_gfdlgrid_res_in_filenames="GFDLgrid_USE_GFDLgrid_RES_IN_FILENAMES" \
+    outvarname_gfdlgrid_use_num_cells_in_filenames="GFDLgrid_USE_NUM_CELLS_IN_FILENAMES" \
     outvarname_dt_atmos="DT_ATMOS" \
     outvarname_layout_x="LAYOUT_X" \
     outvarname_layout_y="LAYOUT_Y" \
@@ -995,17 +997,17 @@ check_var_valid_value \
 #
 #-----------------------------------------------------------------------
 #
-# For a "GFDLgrid" type of grid, make sure GFDLgrid_RES is set to a valid
-# value.
+# For a "GFDLgrid" type of grid, make sure GFDLgrid_NUM_CELLS is set to 
+# a valid value.
 #
 #-----------------------------------------------------------------------
 #
 if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
   err_msg="\
 The number of grid cells per tile in each horizontal direction specified
-in GFDLgrid_RES is not supported:
-  GFDLgrid_RES = \"${GFDLgrid_RES}\""
-  check_var_valid_value "GFDLgrid_RES" "valid_vals_GFDLgrid_RES" "${err_msg}"
+in GFDLgrid_NUM_CELLS is not supported:
+  GFDLgrid_NUM_CELLS = \"${GFDLgrid_NUM_CELLS}\""
+  check_var_valid_value "GFDLgrid_NUM_CELLS" "valid_vals_GFDLgrid_NUM_CELLS" "${err_msg}"
 fi
 #
 #-----------------------------------------------------------------------
@@ -1240,9 +1242,6 @@ check_for_preexist_dir_file "$EXPTDIR" "${PREEXISTING_DIR_METHOD}"
 #
 # COMOUT_BASEDIR is not used by the workflow in community mode.
 #
-# POST_OUTPUT_DOMAIN_NAME:
-# The PREDEF_GRID_NAME is set by default.
-#
 #-----------------------------------------------------------------------
 #
 LOGDIR="${EXPTDIR}/log"
@@ -1262,8 +1261,20 @@ else
   COMROOT=""
   COMOUT_BASEDIR=""
 fi
-
+#
+#-----------------------------------------------------------------------
+#
+#
+# If POST_OUTPUT_DOMAIN_NAME has not been specified by the user, set it
+# to PREDEF_GRID_NAME (which won't be empty if using a predefined grid).
+# Then change it to lowercase.  Finally, ensure that it does not end up 
+# getting set to an empty string.
+#
+#-----------------------------------------------------------------------
+#
 POST_OUTPUT_DOMAIN_NAME="${POST_OUTPUT_DOMAIN_NAME:-${PREDEF_GRID_NAME}}"
+POST_OUTPUT_DOMAIN_NAME=$(echo_lowercase ${POST_OUTPUT_DOMAIN_NAME})
+
 if [ -z "${POST_OUTPUT_DOMAIN_NAME}" ]; then
   print_err_msg_exit "\
 The domain name used in naming the run_post output files (POST_OUTPUT_DOMAIN_NAME)
@@ -1273,7 +1284,6 @@ If this experiment is not using a predefined grid (i.e. if PREDEF_GRID_NAME
 is set to a null string), POST_OUTPUT_DOMAIN_NAME must be set in the SRW 
 App's configuration file (\"${EXPT_CONFIG_FN}\")."
 fi
-POST_OUTPUT_DOMAIN_NAME=$(echo_lowercase ${POST_OUTPUT_DOMAIN_NAME})
 #
 #-----------------------------------------------------------------------
 #
@@ -1893,7 +1903,7 @@ if [ "${GRID_GEN_METHOD}" = "GFDLgrid" ]; then
   set_gridparams_GFDLgrid \
     lon_of_t6_ctr="${GFDLgrid_LON_T6_CTR}" \
     lat_of_t6_ctr="${GFDLgrid_LAT_T6_CTR}" \
-    res_of_t6g="${GFDLgrid_RES}" \
+    res_of_t6g="${GFDLgrid_NUM_CELLS}" \
     stretch_factor="${GFDLgrid_STRETCH_FAC}" \
     refine_ratio_t6g_to_t7g="${GFDLgrid_REFINE_RATIO}" \
     istart_of_t7_on_t6g="${GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G}" \
@@ -2800,6 +2810,7 @@ PE_MEMBER01='${PE_MEMBER01}'
 N_VAR_SPP='${N_VAR_SPP}'
 N_VAR_LNDP='${N_VAR_LNDP}'
 LNDP_TYPE='${LNDP_TYPE}'
+LNDP_MODEL_TYPE='${LNDP_MODEL_TYPE}'
 FHCYC_LSM_SPP_OR_NOT='${FHCYC_LSM_SPP_OR_NOT}'
 "
 #
