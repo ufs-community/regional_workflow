@@ -34,8 +34,8 @@ EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
   ${EXTRN_MDL_NAME_LBCS} \
   ${FV3GFS_FILE_FMT_ICS})}
 
- System scripts to source to initialize various commands within workflow
- scripts (e.g. "module").
+# System scripts to source to initialize various commands within workflow
+# scripts (e.g. "module").
 if [ -z ${ENV_INIT_SCRIPTS_FPS:-""} ]; then
   ENV_INIT_SCRIPTS_FPS=( "/etc/profile" )
 fi
