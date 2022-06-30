@@ -681,6 +681,7 @@ def to_lower(arg):
 
 
 def main(argv):
+    # pylint: disable=too-many-branches, too-many-statements
     '''
     Uses known location information to try the known locations and file
     paths in priority order.
@@ -710,10 +711,10 @@ def main(argv):
     if 'hpss' in cla.data_stores:
         # Make sure hpss module is loaded
         try:
-            output = subprocess.run('which hsi',
-                                    check=True,
-                                    shell=True,
-                                    )
+            subprocess.run('which hsi',
+                           check=True,
+                           shell=True,
+                           )
         except subprocess.CalledProcessError:
             logging.error('You requested the hpss data store, but ' \
                     'the HPSS module isn\'t loaded. This data store ' \

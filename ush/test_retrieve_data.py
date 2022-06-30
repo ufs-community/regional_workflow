@@ -1,3 +1,20 @@
+'''
+Functional test suite for gathering data using retreve_data.py.
+
+The tests reflect some use cases of gathering various model input data
+from HPSS and AWS. Obviously, HPSS tests will only be runnable on
+machines with access to NOAA's HPSS system. AWS tests will be runnable
+on any platform with an internet connection.
+
+To run the full test suite:
+
+    python -m unittest -b test_retrieve_data.py
+
+
+To run a single test:
+
+    python -m unittest -b test_retrieve_data.FunctionalTesting.test_rap_lbcs_from_aws
+'''
 import glob
 import os
 import tempfile
@@ -5,12 +22,13 @@ import unittest
 
 import retrieve_data
 
-class Testing(unittest.TestCase):
+class FunctionalTesting(unittest.TestCase):
 
+    ''' Test class for retrieve data '''
 
     def setUp(self):
-        self.PATH = os.path.dirname(__file__)
-        self.config = f'{self.PATH}/templates/data_locations.yml'
+        self.path = os.path.dirname(__file__)
+        self.config = f'{self.path}/templates/data_locations.yml'
 
     def test_fv3gfs_lbcs_from_hpss(self):
 
@@ -75,7 +93,7 @@ class Testing(unittest.TestCase):
 
 
     # GEFS Tests
-    def test_gefs_grib2_ICS_from_aws(self):
+    def test_gefs_grib2_ics_from_aws(self):
 
         ''' Get GEFS grib2 a & b files for ICS offset by 6 hours.
 
@@ -109,7 +127,7 @@ class Testing(unittest.TestCase):
 
 
     # HRRR Tests
-    def test_hrrr_ICS_from_hpss(self):
+    def test_hrrr_ics_from_hpss(self):
 
         ''' Get HRRR ICS from hpss '''
 
@@ -135,7 +153,7 @@ class Testing(unittest.TestCase):
             files_on_disk = glob.glob(path)
             self.assertEqual(len(files_on_disk), 1)
 
-    def test_hrrr_LBCS_from_hpss(self):
+    def test_hrrr_lbcs_from_hpss(self):
 
         ''' Get HRRR LBCS from hpss for 3 hour boundary conditions '''
 
@@ -161,7 +179,7 @@ class Testing(unittest.TestCase):
             files_on_disk = glob.glob(path)
             self.assertEqual(len(files_on_disk), 8)
 
-    def test_hrrr_ICS_from_aws(self):
+    def test_hrrr_ics_from_aws(self):
 
         ''' Get HRRR ICS from aws '''
 
@@ -187,7 +205,7 @@ class Testing(unittest.TestCase):
             files_on_disk = glob.glob(path)
             self.assertEqual(len(files_on_disk), 1)
 
-    def test_hrrr_LBCS_from_aws(self):
+    def test_hrrr_lbcs_from_aws(self):
 
         ''' Get HRRR LBCS from aws for 3 hour boundary conditions '''
 
@@ -214,7 +232,7 @@ class Testing(unittest.TestCase):
             self.assertEqual(len(files_on_disk), 8)
 
     # RAP tests
-    def test_rap_ICS_from_aws(self):
+    def test_rap_ics_from_aws(self):
 
         ''' Get RAP ICS from aws offset by 3 hours '''
 
@@ -240,7 +258,7 @@ class Testing(unittest.TestCase):
             files_on_disk = glob.glob(path)
             self.assertEqual(len(files_on_disk), 1)
 
-    def test_rap_LBCS_from_aws(self):
+    def test_rap_lbcs_from_aws(self):
 
         ''' Get RAP LBCS from aws for 6 hour boundary conditions offset
         by 3 hours. Use 09Z start time for longer LBCS.'''
@@ -266,4 +284,3 @@ class Testing(unittest.TestCase):
             path = os.path.join(tmp_dir, '*')
             files_on_disk = glob.glob(path)
             self.assertEqual(len(files_on_disk), 5)
-
