@@ -15,8 +15,7 @@
 FV3_RRFS_v1alpha:
   gfs_physics_nml: &RRFS_v1alpha_phys
     do_deep: False
-    do_mynnedmf: False
-    do_mynnsfclay: False
+    do_mynnsfclay: True
     imfdeepcnv: -1
     imfshalcnv: -1
     iopt_alb: 2
@@ -38,7 +37,6 @@ FV3_RRFS_v1alpha:
 FV3_RRFS_v1beta:
   gfs_physics_nml:
     <<: *RRFS_v1alpha_phys
-    do_mynnedmf: True
     do_mynnsfclay: True
 
 FV3_HRRR:
@@ -56,7 +54,6 @@ FV3_HRRR:
   gfs_physics_nml:
     <<: *RRFS_v1alpha_phys
     cdmbgwd: [3.5, 1.0]
-    do_mynnedmf: True
     do_mynnsfclay: True
     do_sfcperts: !!python/none
     gwd_opt: 3
@@ -296,7 +293,6 @@ FV3_GFS_v15_thompson_mynn_lam3km:
     avg_max_length: 3600.0
     cdmbgwd: [0.88, 0.04]
     do_deep: False
-    do_mynnedmf: False
     do_mynnsfclay: True
     do_ugwp: False
     fhswr: 900.0
