@@ -12,8 +12,8 @@
 # and provide this file and the desired section via the -c option.
 
 
-FV3_RRFS_v1alpha:
-  gfs_physics_nml: &RRFS_v1alpha_phys
+FV3_RRFS_v1beta:
+  gfs_physics_nml: &RRFS_v1beta_phys
     do_deep: False
     do_mynnsfclay: True
     imfdeepcnv: -1
@@ -34,11 +34,6 @@ FV3_RRFS_v1alpha:
     lsm: 2
     lsoil_lsm: 4
 
-FV3_RRFS_v1beta:
-  gfs_physics_nml:
-    <<: *RRFS_v1alpha_phys
-    do_mynnsfclay: True
-
 FV3_HRRR:
   fv_core_nml:
     hord_dp: -5
@@ -52,7 +47,7 @@ FV3_HRRR:
     nord_tr: 2
     nrows_blend: 10
   gfs_physics_nml:
-    <<: *RRFS_v1alpha_phys
+    <<: *RRFS_v1beta_phys
     cdmbgwd: [3.5, 1.0]
     do_mynnsfclay: True
     do_sfcperts: !!python/none
