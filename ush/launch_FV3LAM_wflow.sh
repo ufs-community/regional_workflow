@@ -417,13 +417,7 @@ script for this experiment:
 # crontab_line_esc_astr without any leading or trailing characters.
 #
     crontab_contents=$( echo "${crontab_contents}" | grep -v "^${crontab_line_esc_astr}$" )
-
-    if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
-      echo "${crontab_contents}" > "/u/$USER/cron/mycrontab"
-    else
-      echo "${crontab_contents}" | ${crontab_cmd} 
-    fi
-
+    echo "${crontab_contents}" | ${crontab_cmd} 
   fi
 #
 # Print the workflow completion message to the launch log file.

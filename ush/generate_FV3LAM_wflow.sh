@@ -537,11 +537,7 @@ Copying contents of user cron table to backup file:
   # case it does something more than the command portion of the string in 
   # crontab_line_esc_astr does).
   #
-  if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
-    grep_output=$( grep "^${crontab_line_esc_astr}$" "/u/$USER/cron/mycrontab" )
-  else
-    grep_output=$( printf "%s" "${crontab_contents}" | grep "^${crontab_line_esc_astr}$" )
-  fi
+  grep_output=$( printf "%s" "${crontab_contents}" | grep "^${crontab_line_esc_astr}$" )
   exit_status=$?
 
   if [ "${exit_status}" -eq 0 ]; then
@@ -557,19 +553,14 @@ added:
 Adding the following line to the user's cron table in order to automatically
 resubmit SRW workflow:
   CRONTAB_LINE = \"${CRONTAB_LINE}\""
-
-    if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
-      printf "%s\n" "${CRONTAB_LINE}" >> "/u/$USER/cron/mycrontab"      
-    else
-      # Add a newline to the end of crontab_contents only if it is not empty.
-      # This is needed so that when CRONTAB_LINE is printed out, it appears on
-      # a separate line.
-      crontab_contents=${crontab_contents:+"${crontab_contents}"$'\n'}
-      # When printing CRONTAB_LINE, add a newline at the end.  This is necessary
-      # on certain machines (e.g. Cheyenne) while on others, it doesn't make
-      # a difference.
-      ( printf "%s" "${crontab_contents}"; printf "%s\n" "${CRONTAB_LINE}" ) | ${crontab_cmd}
-    fi
+    # Add a newline to the end of crontab_contents only if it is not empty.
+    # This is needed so that when CRONTAB_LINE is printed out, it appears on
+    # a separate line.
+    crontab_contents=${crontab_contents:+"${crontab_contents}"$'\n'}
+    # When printing CRONTAB_LINE, add a newline at the end.  This is necessary
+    # on certain machines (e.g. Cheyenne) while on others, it doesn't make
+    # a difference.
+    ( printf "%s" "${crontab_contents}"; printf "%s\n" "${CRONTAB_LINE}" ) | ${crontab_cmd}
 
   fi
 

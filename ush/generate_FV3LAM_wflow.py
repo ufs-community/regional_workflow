@@ -492,10 +492,7 @@ def generate_FV3LAM_wflow():
       # case it does something more than the command portion of the string in 
       # crontab_line_esc_astr does).
       #
-      if MACHINE == "WCOSS_DELL_P3":
-        (exit_status,grep_output,_)=run_command(f'''grep '^{crontab_line_esc_astr}$' "/u/{USER}/cron/mycrontab"''')
-      else:
-        (exit_status,grep_output,_)=run_command(f'''printf "%s" '{crontab_contents}' | grep "^{crontab_line_esc_astr}$"''')
+      (exit_status,grep_output,_)=run_command(f'''printf "%s" '{crontab_contents}' | grep "^{crontab_line_esc_astr}$"''')
     
       if exit_status == 0:
     
@@ -510,16 +507,12 @@ def generate_FV3LAM_wflow():
             Adding the following line to the user's cron table in order to automatically
             resubmit SRW workflow:
               CRONTAB_LINE = \"{CRONTAB_LINE}\"''',verbose=VERBOSE)
-    
-        if MACHINE == "WCOSS_DELL_P3":
-          run_command(f'''printf "%s\n" '{CRONTAB_LINE}' >> "/u/{USER}/cron/mycrontab"''')
-        else:
-          # Add a newline to the end of crontab_contents only if it is not empty.
-          # This is needed so that when CRONTAB_LINE is printed out, it appears on
-          # a separate line.
-          if crontab_contents:
-            crontab_contents += "\n"
-          run_command(f'''( printf "%s" '{crontab_contents}'; printf "%s\n" '{CRONTAB_LINE}' ) | {crontab_cmd}''')
+        # Add a newline to the end of crontab_contents only if it is not empty.
+        # This is needed so that when CRONTAB_LINE is printed out, it appears on
+        # a separate line.
+        if crontab_contents:
+          crontab_contents += "\n"
+        run_command(f'''( printf "%s" '{crontab_contents}'; printf "%s\n" '{CRONTAB_LINE}' ) | {crontab_cmd}''')
     #
     #-----------------------------------------------------------------------
     #

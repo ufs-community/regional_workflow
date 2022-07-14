@@ -6,7 +6,7 @@
 # Define valid values for various global experiment/workflow variables.
 #
 valid_vals_RUN_ENVIR=("nco" "community")
-valid_vals_MACHINE=("WCOSS_DELL_P3" "HERA" "ORION" "JET" "ODIN" "CHEYENNE" "STAMPEDE" "LINUX" "MACOS" "NOAACLOUD" "SINGULARITY" "GAEA")
+valid_vals_MACHINE=("HERA" "ORION" "JET" "ODIN" "CHEYENNE" "STAMPEDE" "LINUX" "MACOS" "NOAACLOUD" "SINGULARITY" "GAEA")
 valid_vals_SCHED=("slurm" "pbspro" "lsf" "lsfcray" "none")
 valid_vals_FCST_MODEL=("ufs-weather-model" "fv3gfs_aqm")
 valid_vals_WORKFLOW_MANAGER=("rocoto" "none")

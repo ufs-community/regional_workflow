@@ -43,26 +43,20 @@ function get_crontab_contents() {
   source $USHDIR/constants.sh
   check_var_valid_value "called_from_cron" "valid_vals_BOOLEAN"
   called_from_cron=$(boolify "${called_from_cron}")
-
-  if [ "$MACHINE" = "WCOSS_DELL_P3" ]; then
-    __crontab_cmd__=""
-    __crontab_contents__=$( cat "/u/$USER/cron/mycrontab" )
-  else
-    __crontab_cmd__="crontab"
-    #
-    # On Cheyenne, simply typing "crontab" will launch the crontab command 
-    # at "/glade/u/apps/ch/opt/usr/bin/crontab".  This is a containerized 
-    # version of crontab that will work if called from scripts that are 
-    # themselves being called as cron jobs.  In that case, we must instead 
-    # call the system version of crontab at /usr/bin/crontab.
-    #
-    if [ "$MACHINE" = "CHEYENNE" ]; then
-      if [ -n "${called_from_cron}" ] && [ "${called_from_cron}" = "TRUE" ]; then
-        __crontab_cmd__="/usr/bin/crontab"
-      fi
+  __crontab_cmd__="crontab"
+  #
+  # On Cheyenne, simply typing "crontab" will launch the crontab command 
+  # at "/glade/u/apps/ch/opt/usr/bin/crontab".  This is a containerized 
+  # version of crontab that will work if called from scripts that are 
+  # themselves being called as cron jobs.  In that case, we must instead 
+  # call the system version of crontab at /usr/bin/crontab.
+  #
+  if [ "$MACHINE" = "CHEYENNE" ]; then
+    if [ -n "${called_from_cron}" ] && [ "${called_from_cron}" = "TRUE" ]; then
+      __crontab_cmd__="/usr/bin/crontab"
     fi
-    __crontab_contents__=$( ${__crontab_cmd__} -l )
   fi
+  __crontab_contents__=$( ${__crontab_cmd__} -l )
   #
   # Set output variables.
   #

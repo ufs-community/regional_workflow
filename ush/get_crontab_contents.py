@@ -45,23 +45,18 @@ def get_crontab_contents(called_from_cron):
     # Make sure called_from_cron is set to a valid value.
     #
     check_var_valid_value(called_from_cron, valid_vals_BOOLEAN)
-  
-    if MACHINE == "WCOSS_DELL_P3":
-      __crontab_cmd__=""
-      (_,__crontab_contents__,_)=run_command(f'''cat "/u/{USER}/cron/mycrontab"''')
-    else:
-      __crontab_cmd__="crontab"
-      #
-      # On Cheyenne, simply typing "crontab" will launch the crontab command 
-      # at "/glade/u/apps/ch/opt/usr/bin/crontab".  This is a containerized 
-      # version of crontab that will work if called from scripts that are 
-      # themselves being called as cron jobs.  In that case, we must instead 
-      # call the system version of crontab at /usr/bin/crontab.
-      #
-      if MACHINE == "CHEYENNE":
-        if called_from_cron:
-          __crontab_cmd__="/usr/bin/crontab"
-      (_,__crontab_contents__,_)=run_command(f'''{__crontab_cmd__} -l''')
+    __crontab_cmd__="crontab"
+    #
+    # On Cheyenne, simply typing "crontab" will launch the crontab command 
+    # at "/glade/u/apps/ch/opt/usr/bin/crontab".  This is a containerized 
+    # version of crontab that will work if called from scripts that are 
+    # themselves being called as cron jobs.  In that case, we must instead 
+    # call the system version of crontab at /usr/bin/crontab.
+    #
+    if MACHINE == "CHEYENNE":
+      if called_from_cron:
+        __crontab_cmd__="/usr/bin/crontab"
+    (_,__crontab_contents__,_)=run_command(f'''{__crontab_cmd__} -l''')
     #
     # On Cheyenne, the output of the "crontab -l" command contains a 3-line
     # header (comments) at the top that is not actually part of the user's
