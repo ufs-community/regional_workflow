@@ -1,9 +1,5 @@
 #%Module
-if [module-info mode load] {
-  system "conda activate /glade/p/ral/jntp/UFS_SRW_app/conda/regional_workflow"
-}
-
-if [module-info mode remove] {
-  system "conda deactivate"
-}
+module unload python
+module load conda
+setenv SRW_ENV /glade/p/ral/jntp/UFS_SRW_app/conda/regional_workflow
 
