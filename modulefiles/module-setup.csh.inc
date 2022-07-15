@@ -13,12 +13,6 @@ else if ( { test -d /scratch3 } ) then
         source /apps/lmod/lmod/init/$__ms_shell
     endif
     module purge
-else if ( { test -d /dcom -a -d /hwrf } ) then
-    # We are on NOAA Tide or Gyre
-    if ( ! { module help >& /dev/null } ) then
-        source /usrx/local/Modules/default/init/$__ms_shell
-    endif
-    module purge
 else if ( { test -d /glade } ) then
     # We are on NCAR Yellowstone
     if ( ! { module help >& /dev/null } ) then

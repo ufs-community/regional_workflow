@@ -28,12 +28,6 @@ elif [[ -d /scratch3 ]] ; then
         source /apps/lmod/lmod/init/$__ms_shell
     fi
     module purge
-elif [[ -d /dcom && -d /hwrf ]] ; then
-    # We are on NOAA Tide or Gyre
-    if ( ! eval module help > /dev/null 2>&1 ) ; then
-        source /usrx/local/Modules/default/init/$__ms_shell
-    fi
-    module purge
 elif [[ -d /lustre && -d /ncrc ]] ; then
     # We are on GAEA. 
     if ( ! eval module help > /dev/null 2>&1 ) ; then
