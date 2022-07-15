@@ -1,4 +1,4 @@
 #%Module
 
-module load pylib_regional_workflow
+module load conda_regional_workflow
 
