@@ -574,7 +574,7 @@ cd_vrfy -
 #-----------------------------------------------------------------------
 #
 python3  $USHDIR/link_fix.py \
-  --path-to-defns $EXPTDIR/var_defns.sh \
+  --path-to-defns ${GLOBAL_VAR_DEFNS_FP} \
   --file-group "orog" || \
 print_err_msg_exit "\
 Call to function to create links to orography files failed."

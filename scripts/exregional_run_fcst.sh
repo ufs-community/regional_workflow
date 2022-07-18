@@ -457,7 +457,7 @@ fi
 #-----------------------------------------------------------------------
 #
 python3 $USHDIR/create_model_configure_file.py \
-  --path-to-defns $EXPTDIR/var_defns.sh \
+  --path-to-defns ${GLOBAL_VAR_DEFNS_FP} \
   --cdate "$cdate" \
   --run-dir "${run_dir}" \
   --sub-hourly-post "${SUB_HOURLY_POST}" \
@@ -476,7 +476,7 @@ cycle's (cdate) run directory (run_dir) failed:
 #-----------------------------------------------------------------------
 #
 python3 $USHDIR/create_diag_table_file.py \
-  --path-to-defns $EXPTDIR/var_defns.sh \
+  --path-to-defns ${GLOBAL_VAR_DEFNS_FP} \
   --run-dir "${run_dir}" || print_err_msg_exit "\
 Call to function to create a diag table file for the current cycle's 
 (cdate) run directory (run_dir) failed:
