@@ -52,7 +52,7 @@ from .config_parser import (
     load_config_file,
 )
 
-#yaml may not be available
+# yaml may not be available
 try:
     from .config_parser import (
         load_yaml_config,
