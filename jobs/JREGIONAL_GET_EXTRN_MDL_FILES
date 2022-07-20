@@ -68,7 +68,7 @@ model files from disk, HPSS, or URL, and stages them for downstream use
 to generate initial or lateral boundary conditions for the FV3 model.
 ========================================================================"
 
-
+set -x
 #
 #-----------------------------------------------------------------------
 #
