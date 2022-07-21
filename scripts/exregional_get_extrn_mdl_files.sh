@@ -47,7 +47,6 @@ input data from disk, HPSS, or a URL, and stages them to the
 workflow-specified location so that they may be used to generate initial
 or lateral boundary conditions for the FV3.
 ========================================================================"
-set -x
 #
 #-----------------------------------------------------------------------
 #
@@ -154,7 +153,6 @@ fi
 #
 #-----------------------------------------------------------------------
 #
-which python3
 cmd="
 python3 -u ${USHDIR}/retrieve_data.py \
   --debug \
