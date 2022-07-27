@@ -432,6 +432,7 @@ def hpss_requested_files(cla, file_names, store_specs):
             shell=True,
         )
 
+
         if len(existing_archive)>1:
             cmd = f'htar -xvf {existing_archive[1]} {" ".join(source_paths)}'
             logging.info(f'Running command \n {cmd}')
