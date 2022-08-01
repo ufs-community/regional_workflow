@@ -234,22 +234,24 @@ def find_archive_files(paths, file_names, cycle_date, ens_group):
 
     zipped_archive_file_paths = zip(paths, file_names)
 
-    existing_archives = {}
 
     # Narrow down which HPSS files are available for this date
     for list_item, (archive_path, archive_file_names) in \
         enumerate(zipped_archive_file_paths):
 
+        existing_archives = {}
         if not isinstance(archive_file_names, list):
             archive_file_names = [archive_file_names]
 
         for n_fp, archive_file_name in enumerate(archive_file_names):
         # Only test the first item in the list, it will tell us if this
         # set exists at this date.
-            file_path = os.path.join(archive_path, archive_file_names[0])
+            file_path = os.path.join(archive_path, archive_file_name)
             file_path = fill_template(file_path, cycle_date, ens_group=ens_group)
+            file_path = hsi_single_file(file_path)
 
-            existing_archives[n_fp] = hsi_single_file(file_path)
+            if file_path:
+                existing_archives[n_fp] = file_path
 
         if existing_archives:
             for existing_archive in existing_archives.values():
@@ -457,7 +459,7 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
         archive_file_names = archive_file_names[cla.anl_or_fcst]
 
     unavailable = {}
-    existing_archives = None
+    existing_archives = {}
 
     logging.debug(f'Will try to look for: '\
             f' {list(zip(archive_paths, archive_file_names))}')
@@ -467,6 +469,8 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
                                            cla.cycle_date,
                                            ens_group=ens_group,
                                            )
+
+    logging.debug(f'Found existing archives: {existing_archives}')
 
     if not existing_archives:
         logging.warning('No archive files were found!')
@@ -521,9 +525,11 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
                         ens_group=ens_group,
                         ))
 
-            unavailable = []
+            expected = set(source_paths)
+            unavailable = {}
             for existing_archive in existing_archives.values():
                 if store_specs.get('archive_format', 'tar') == 'zip':
+
                     # Get the entire file from HPSS
                     existing_archive = hsi_single_file(existing_archive, mode='get')
 
@@ -540,19 +546,31 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
                                )
 
                 # Check that files exist and Remove any data transfer artifacts.
-                unavailable.append(clean_up_output_dir(
+                # Returns {'hpss': []}, turn that into a new dict of
+                # sets.
+                unavailable[existing_archive] = set(clean_up_output_dir(
                        expected_subdir=archive_internal_dir,
                        local_archive=os.path.basename(existing_archive),
                        output_path=output_path,
                        source_paths=source_paths,
-                       ))
+                       ).get('hpss'))
 
-        if not unavailable:
-            return unavailable
+            # Once we go through all the archives, the union of all
+            # "unavailable" files should equal the "expected" list of
+            # files since clean_up_output_dir only reports on those that
+            # are missing from one of the files attempted. If any
+            # additional files are reported as unavailable, then
+            # something has gone wrong.
+            unavailable = set.union(*unavailable.values())
+
+
+        # Report only the files that are truly unavailable
+        if not expected == unavailable:
+            return unavailable - expected
 
     os.chdir(orig_path)
 
-    return unavailable
+    return {}
 
 def load_str(arg):
 
@@ -800,6 +818,7 @@ def main(argv):
                 write_summary_file(cla, data_store, file_templates)
             break
 
+        logging.debug(f'Some unavailable files: {unavailable}')
         logging.warning(f'Requested files are unavailable from {data_store}')
 
     if unavailable:

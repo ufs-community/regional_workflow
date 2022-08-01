@@ -31,7 +31,7 @@ class FunctionalTesting(unittest.TestCase):
         self.config = f'{self.path}/templates/data_locations.yml'
 
     @unittest.skipIf(os.environ.get('CI') == "true", "Skipping HPSS tests")
-    def test_fv3gfs_lbcs_from_hpss(self):
+    def test_fv3gfs_grib2_lbcs_from_hpss(self):
 
         ''' Get FV3GFS grib2 files from HPSS for LBCS, offset by 6 hours
 
@@ -59,6 +59,36 @@ class FunctionalTesting(unittest.TestCase):
             path = os.path.join(tmp_dir, '*')
             files_on_disk = glob.glob(path)
             self.assertEqual(len(files_on_disk), 3)
+
+    @unittest.skipIf(os.environ.get('CI') == "true", "Skipping HPSS tests")
+    def test_fv3gfs_netcdf_lbcs_from_hpss(self):
+
+        ''' Get FV3GFS netcdf files from HPSS for LBCS. Tests fcst lead
+        times > 40 hours, since they come from a different archive file.
+        '''
+
+        with tempfile.TemporaryDirectory(dir='.') as tmp_dir:
+
+            args = [
+                '--anl_or_fcst', 'fcst',
+                '--config', self.config,
+                '--cycle_date', '2022060112',
+                '--data_stores', 'hpss',
+                '--external_model', 'FV3GFS',
+                '--fcst_hrs', '24', '48', '24',
+                '--output_path', tmp_dir,
+                '--debug',
+                '--file_type', 'netcdf',
+            ]
+
+            retrieve_data.main(args)
+
+            # Verify files exist in temp dir
+
+            os.chdir(os.path.dirname(__file__))
+            path = os.path.join(tmp_dir, '*')
+            files_on_disk = glob.glob(path)
+            self.assertEqual(len(files_on_disk), 2)
 
     # GDAS Tests
     def test_gdas_ics_from_aws(self):
