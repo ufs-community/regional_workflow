@@ -30,6 +30,7 @@ class FunctionalTesting(unittest.TestCase):
         self.path = os.path.dirname(__file__)
         self.config = f'{self.path}/templates/data_locations.yml'
 
+    @unittest.skipIf(os.environ.get('CI') == "true", "Skipping HPSS tests")
     def test_fv3gfs_lbcs_from_hpss(self):
 
         ''' Get FV3GFS grib2 files from HPSS for LBCS, offset by 6 hours
@@ -127,6 +128,7 @@ class FunctionalTesting(unittest.TestCase):
 
 
     # HRRR Tests
+    @unittest.skipIf(os.environ.get('CI') == "true", "Skipping HPSS tests")
     def test_hrrr_ics_from_hpss(self):
 
         ''' Get HRRR ICS from hpss '''
@@ -153,6 +155,7 @@ class FunctionalTesting(unittest.TestCase):
             files_on_disk = glob.glob(path)
             self.assertEqual(len(files_on_disk), 1)
 
+    @unittest.skipIf(os.environ.get('CI') == "true", "Skipping HPSS tests")
     def test_hrrr_lbcs_from_hpss(self):
 
         ''' Get HRRR LBCS from hpss for 3 hour boundary conditions '''

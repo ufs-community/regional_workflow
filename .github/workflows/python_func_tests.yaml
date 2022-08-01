@@ -6,20 +6,13 @@ on: [push, pull_request]
       - ush/templates/data_locations.yml
   pull_request:
 
+env:
+  CI: true
+
 jobs:
   python_functests:
     name: Python Functional Tests
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        test:
-          - test_gdas_ics_from_aws
-          - test_gefs_grib2_ics_from_aws
-          - test_hrrr_ics_from_aws
-          - test_hrrr_lbcs_from_aws
-          - test_rap_ics_from_aws
-          - test_rap_lbcs_from_aws
 
     steps:
       - name: Checkout repository
@@ -37,4 +30,4 @@ jobs:
       - name: Run python unittests
         run: |
           cd ush
-          python3 -m unittest -b test_retrieve_data.FunctionalTesting.${{test}}
+          python3 -m unittest -b test_retrieve_data.FunctionalTesting
