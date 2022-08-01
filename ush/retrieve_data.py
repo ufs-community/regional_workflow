@@ -653,7 +653,7 @@ def write_summary_file(cla, data_store, file_templates):
 
     files = []
     for tmpl in file_templates:
-        files.extend([fill_template(tmpl, cla.cycle_date, fh) for fh in cla.fcst_hrs])
+        files.extend([fill_template(tmpl, cla.cycle_date, fcst_hr=fh) for fh in cla.fcst_hrs])
 
     summary_fp = os.path.join(cla.output_path, cla.summary_file)
     logging.info(f'Writing a summary file to {summary_fp}')
