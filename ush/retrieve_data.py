@@ -229,10 +229,12 @@ def find_archive_files(paths, file_names, cycle_date, ens_group):
 
     ''' Given an equal-length set of archive paths and archive file
     names, and a cycle date, check HPSS via hsi to make sure at least
-    one set exists. Return the path of the existing archive, along with
+    one set exists. Return a dict of the paths of the existing archive, along with
     the item in set of paths that was found.'''
 
     zipped_archive_file_paths = zip(paths, file_names)
+
+    existing_archives = {}
 
     # Narrow down which HPSS files are available for this date
     for list_item, (archive_path, archive_file_names) in \
@@ -241,16 +243,18 @@ def find_archive_files(paths, file_names, cycle_date, ens_group):
         if not isinstance(archive_file_names, list):
             archive_file_names = [archive_file_names]
 
+        for n_fp, archive_file_name in enumerate(archive_file_names):
         # Only test the first item in the list, it will tell us if this
         # set exists at this date.
-        file_path = os.path.join(archive_path, archive_file_names[0])
-        file_path = fill_template(file_path, cycle_date, ens_group=ens_group)
+            file_path = os.path.join(archive_path, archive_file_names[0])
+            file_path = fill_template(file_path, cycle_date, ens_group=ens_group)
 
-        existing_archive = hsi_single_file(file_path)
+            existing_archives[n_fp] = hsi_single_file(file_path)
 
-        if existing_archive:
-            logging.info(f'Found HPSS file: {file_path}')
-            return existing_archive, list_item
+        if existing_archives:
+            for existing_archive in existing_archives.values():
+                logging.info(f'Found HPSS file: {existing_archive}')
+            return existing_archives, list_item
 
     return '', 0
 
@@ -453,18 +457,18 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
         archive_file_names = archive_file_names[cla.anl_or_fcst]
 
     unavailable = {}
-    existing_archive = None
+    existing_archives = None
 
     logging.debug(f'Will try to look for: '\
             f' {list(zip(archive_paths, archive_file_names))}')
 
-    existing_archive, which_archive = find_archive_files(archive_paths,
+    existing_archives, which_archive = find_archive_files(archive_paths,
                                            archive_file_names,
                                            cla.cycle_date,
                                            ens_group=ens_group,
                                            )
 
-    if not existing_archive:
+    if not existing_archives:
         logging.warning('No archive files were found!')
         unavailable['archive'] = list(zip(archive_paths, archive_file_names))
         return unavailable
@@ -517,29 +521,31 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
                         ens_group=ens_group,
                         ))
 
-            if store_specs.get('archive_format', 'tar') == 'zip':
-                # Get the entire file from HPSS
-                existing_archive = hsi_single_file(existing_archive, mode='get')
+            unavailable = []
+            for existing_archive in existing_archives.values():
+                if store_specs.get('archive_format', 'tar') == 'zip':
+                    # Get the entire file from HPSS
+                    existing_archive = hsi_single_file(existing_archive, mode='get')
 
-                # Grab only the necessary files from the archive
-                cmd = f'unzip -o {os.path.basename(existing_archive)} {" ".join(source_paths)}'
+                    # Grab only the necessary files from the archive
+                    cmd = f'unzip -o {os.path.basename(existing_archive)} {" ".join(source_paths)}'
 
-            else:
-                cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
+                else:
+                    cmd = f'htar -xvf {existing_archive} {" ".join(source_paths)}'
 
-            logging.info(f'Running command \n {cmd}')
-            subprocess.run(cmd,
-                           check=True,
-                           shell=True,
-                           )
+                logging.info(f'Running command \n {cmd}')
+                subprocess.run(cmd,
+                               check=True,
+                               shell=True,
+                               )
 
-            # Check that files exist and Remove any data transfer artifacts.
-            unavailable = clean_up_output_dir(
-                   expected_subdir=archive_internal_dir,
-                   local_archive=os.path.basename(existing_archive),
-                   output_path=output_path,
-                   source_paths=source_paths,
-                   )
+                # Check that files exist and Remove any data transfer artifacts.
+                unavailable.append(clean_up_output_dir(
+                       expected_subdir=archive_internal_dir,
+                       local_archive=os.path.basename(existing_archive),
+                       output_path=output_path,
+                       source_paths=source_paths,
+                       ))
 
         if not unavailable:
             return unavailable
