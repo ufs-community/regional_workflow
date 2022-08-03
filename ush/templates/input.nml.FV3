@@ -150,7 +150,7 @@
     fhcyc = 0.0
     fhlwr = 1200.0
     fhswr = 1200.0
-    fhzero = 1.0
+    fhzero = 0.25
     h2o_phys = .true.
     hybedmf = .false.
     iaer = 111
@@ -177,7 +177,7 @@
     lsoil_lsm = 9
     ltaerosol = .true.
     lwhtr = .true.
-    nsradar_reset = 3600
+    nsradar_reset = 900
     oz_phys = .false.
     oz_phys_2015 = .true.
     pdfcld = .false.
