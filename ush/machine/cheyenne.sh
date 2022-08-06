@@ -13,7 +13,7 @@ function file_location() {
   case ${external_model} in
 
     "FV3GFS")
-      location='/glade/p/ral/jntp/UFS_CAM/COMGFS/gfs.${yyyymmdd}/${hh}'
+      location='/glade/p/ral/jntp/UFS_SRW_App/develop/input_model_data/FV3GFS/grib2/${yyyymmdd}${hh}'
       ;;
 
   esac
