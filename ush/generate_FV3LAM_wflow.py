@@ -353,8 +353,8 @@ def generate_FV3LAM_wflow():
             #
             # Parameters that determine the set of cycles to run.
             #
-              'date_first_cycl': date_to_str(DATE_FIRST_CYCL,True),
-              'date_last_cycl': date_to_str(DATE_LAST_CYCL,True),
+              'date_first_cycl': date_to_str(DATE_FIRST_CYCL,format="%Y%m%d"),
+              'date_last_cycl': date_to_str(DATE_LAST_CYCL,format="%Y%m%d"),
               'cdate_first_cycl': cdate_first_cycl,
               'cycl_hrs': cycl_hrs_str,
               'cycl_freq': f"{INCR_CYCL_FREQ:02d}:00:00",
@@ -954,7 +954,7 @@ def generate_FV3LAM_wflow():
       print(f"NOMADS_file_type= {NOMADS_file_type}")
       cd_vrfy(EXPTDIR)
       NOMADS_script = os.path.join(USHDIR, "NOMADS_get_extrn_mdl_files.h")
-      run_command(f'''{NOMADS_script} {date_to_str(DATE_FIRST_CYCL,True)} \
+      run_command(f'''{NOMADS_script} {date_to_str(DATE_FIRST_CYCL,format="%Y%m%d")} \
                       {CYCL_HRS} {NOMADS_file_type} {FCST_LEN_HRS} {LBC_SPEC_INTVL_HRS}''')
 
 

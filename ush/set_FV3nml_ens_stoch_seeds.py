@@ -48,11 +48,11 @@ def set_FV3nml_ens_stoch_seeds(cdate):
     #
     ensmem_name=f"mem{ENSMEM_INDX}"
     
-    fv3_nml_ensmem_fp=os.path.join(CYCLE_BASEDIR, f"{date_to_str(cdate,True)}{os.sep}{ensmem_name}{os.sep}{FV3_NML_FN}")
+    fv3_nml_ensmem_fp=os.path.join(CYCLE_BASEDIR, f'{date_to_str(cdate,format="%Y%m%d%H")}{os.sep}{ensmem_name}{os.sep}{FV3_NML_FN}')
     
     ensmem_num=ENSMEM_INDX
     
-    cdate_i = int(cdate.strftime('%Y%m%d')) 
+    cdate_i = int(cdate.strftime('%Y%m%d%H')) 
 
     settings = {}
     nam_stochy_dict = {}
@@ -149,7 +149,7 @@ class Testing(unittest.TestCase):
         cp_vrfy(os.path.join(USHDIR,f'templates{os.sep}input.nml.FV3'), \
                 os.path.join(EXPTDIR,'input.nml'))
         for i in range(2):
-            mkdir_vrfy("-p", os.path.join(EXPTDIR,f"{date_to_str(self.cdate,True)}{os.sep}mem{i+1}"))
+            mkdir_vrfy("-p", os.path.join(EXPTDIR,f'{date_to_str(self.cdate,format="%Y%m%d%H")}{os.sep}mem{i+1}'))
         
         set_env_var("USHDIR",USHDIR)
         set_env_var("CYCLE_BASEDIR",EXPTDIR)
