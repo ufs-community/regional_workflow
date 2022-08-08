@@ -123,6 +123,11 @@ def parse_args(argv):
                         required=True,
                         help='Date.')
 
+    parser.add_argument('-p', '--path-to-defns',
+                        dest='path_to_defns',
+                        required=True,
+                        help='Path to var_defns file.')
+
     return parser.parse_args(argv)
 
 if __name__ == '__main__':
