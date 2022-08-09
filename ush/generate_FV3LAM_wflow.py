@@ -381,8 +381,8 @@ def generate_FV3LAM_wflow():
             #
             # Parameters that determine the set of cycles to run.
             #
-            "date_first_cycl": date_to_str(DATE_FIRST_CYCL, True),
-            "date_last_cycl": date_to_str(DATE_LAST_CYCL, True),
+            "date_first_cycl": date_to_str(DATE_FIRST_CYCL, format="%Y%m%d"),
+            "date_last_cycl": date_to_str(DATE_LAST_CYCL, format="%Y%m%d"),
             "cdate_first_cycl": cdate_first_cycl,
             "cycl_hrs": cycl_hrs_str,
             "cycl_freq": f"{INCR_CYCL_FREQ:02d}:00:00",
@@ -432,7 +432,7 @@ def generate_FV3LAM_wflow():
                 The variable \"settings\" specifying values of the rococo XML variables
                 has been set as follows:
                 #-----------------------------------------------------------------------
-                settings =\n"""
+                settings =\n\n"""
             )
             + settings_str,
             verbose=VERBOSE,
@@ -447,8 +447,7 @@ def generate_FV3LAM_wflow():
                 ["-q", "-u", settings_str, "-t", template_xml_fp, "-o", WFLOW_XML_FP]
             )
         except:
-            print_err_msg_exit(
-                f"""
+            print_err_msg_exit(dedent(f'''
                 Call to python script fill_jinja_template.py to create a rocoto workflow
                 XML file from a template file failed.  Parameters passed to this script
                 are:
@@ -456,10 +455,8 @@ def generate_FV3LAM_wflow():
                     template_xml_fp = \"{template_xml_fp}\"
                   Full path to output rocoto XML file:
                     WFLOW_XML_FP = \"{WFLOW_XML_FP}\"
-                  Namelist settings specified on command line:
-                    settings =
-                {settings_str}"""
-            )
+                  Namelist settings specified on command line:\n
+                    settings =\n\n''') + settings_str)
     #
     # -----------------------------------------------------------------------
     #
@@ -877,7 +874,7 @@ def generate_FV3LAM_wflow():
             The variable \"settings\" specifying values of the weather model's
             namelist variables has been set as follows:
 
-            settings =\n"""
+            settings =\n\n"""
         )
         + settings_str,
         verbose=VERBOSE,
@@ -911,8 +908,7 @@ def generate_FV3LAM_wflow():
             ]
         )
     except:
-        print_err_msg_exit(
-            f"""
+        print_err_msg_exit(dedent(f'''
             Call to python script set_namelist.py to generate an FV3 namelist file
             failed.  Parameters passed to this script are:
               Full path to base namelist file:
@@ -923,10 +919,8 @@ def generate_FV3LAM_wflow():
                 CCPP_PHYS_SUITE = \"{CCPP_PHYS_SUITE}\"
               Full path to output namelist file:
                 FV3_NML_FP = \"{FV3_NML_FP}\"
-              Namelist settings specified on command line:
-                settings =
-            {settings_str}"""
-        )
+              Namelist settings specified on command line:\n
+                settings =\n\n''') + settings_str)
     #
     # If not running the MAKE_GRID_TN task (which implies the workflow will
     # use pregenerated grid files), set the namelist variables specifying
@@ -1044,7 +1038,7 @@ def generate_FV3LAM_wflow():
         cd_vrfy(EXPTDIR)
         NOMADS_script = os.path.join(USHDIR, "NOMADS_get_extrn_mdl_files.h")
         run_command(
-            f"""{NOMADS_script} {date_to_str(DATE_FIRST_CYCL,True)} \
+            f"""{NOMADS_script} {date_to_str(DATE_FIRST_CYCL,format="%Y%m%d")} \
                       {CYCL_HRS} {NOMADS_file_type} {FCST_LEN_HRS} {LBC_SPEC_INTVL_HRS}"""
         )
 

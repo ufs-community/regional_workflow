@@ -61,17 +61,17 @@ def set_FV3nml_ens_stoch_seeds(cdate):
 
     fv3_nml_ensmem_fp = os.path.join(
         CYCLE_BASEDIR,
-        f"{date_to_str(cdate,True)}{os.sep}{ensmem_name}{os.sep}{FV3_NML_FN}",
+        f'{date_to_str(cdate,format="%Y%m%d%H")}{os.sep}{ensmem_name}{os.sep}{FV3_NML_FN}'
     )
 
     ensmem_num = ENSMEM_INDX
 
-    cdate_i = int(cdate.strftime("%Y%m%d"))
+    cdate_i = int(cdate.strftime("%Y%m%d%H"))
 
     settings = {}
     nam_stochy_dict = {}
 
-    if DO_SPP:
+    if DO_SPPT:
         iseed_sppt = cdate_i * 1000 + ensmem_num * 10 + 1
         nam_stochy_dict.update({"iseed_sppt": iseed_sppt})
 
@@ -91,9 +91,9 @@ def set_FV3nml_ens_stoch_seeds(cdate):
         for i in range(num_iseed_spp):
             iseed_spp[i] = cdate_i * 1000 + ensmem_num * 10 + ISEED_SPP[i]
 
-        settings["nam_spperts"] = {"iseed_spp": iseed_spp}
+        settings["nam_sppperts"] = {"iseed_spp": iseed_spp}
     else:
-        settings["nam_spperts"] = {}
+        settings["nam_sppperts"] = {}
 
     if DO_LSM_SPP:
         iseed_lsm_spp = cdate_i * 1000 + ensmem_num * 10 + 9
@@ -101,27 +101,28 @@ def set_FV3nml_ens_stoch_seeds(cdate):
         settings["nam_sppperts"] = {"iseed_lndp": [iseed_lsm_spp]}
 
     settings_str = cfg_to_yaml_str(settings)
+
+    print_info_msg(dedent(f'''
+        The variable \"settings\" specifying seeds in \"{FV3_NML_FP}\"
+        has been set as follows:
+
+        settings =\n\n''') + settings_str,verbose=VERBOSE)
+
     try:
         set_namelist(
             ["-q", "-n", FV3_NML_FP, "-u", settings_str, "-o", fv3_nml_ensmem_fp]
         )
     except:
-        print_err_msg_exit(
-            dedent(
-                f"""
-                Call to python script set_namelist.py to set the variables in the FV3
-                namelist file that specify the paths to the surface climatology files
-                failed.  Parameters passed to this script are:
-                  Full path to base namelist file:
-                    FV3_NML_FP = \"{FV3_NML_FP}\"
-                  Full path to output namelist file:
-                    fv3_nml_ensmem_fp = \"{fv3_nml_ensmem_fp}\"
-                  Namelist settings specified on command line (these have highest precedence):
-                    settings =
-                {settings_str}"""
-            )
-        )
-
+        print_err_msg_exit(dedent(f'''
+            Call to python script set_namelist.py to set the variables in the FV3
+            namelist file that specify the paths to the surface climatology files
+            failed.  Parameters passed to this script are:
+              Full path to base namelist file:
+                FV3_NML_FP = \"{FV3_NML_FP}\"
+              Full path to output namelist file:
+                fv3_nml_ensmem_fp = \"{fv3_nml_ensmem_fp}\"
+              Namelist settings specified on command line (these have highest precedence):\n
+                settings =\n\n''') + settings_str)
 
 def parse_args(argv):
     """Parse command line arguments"""
@@ -130,6 +131,11 @@ def parse_args(argv):
     )
 
     parser.add_argument("-c", "--cdate", dest="cdate", required=True, help="Date.")
+
+    parser.add_argument('-p', '--path-to-defns',
+                        dest='path_to_defns',
+                        required=True,
+                        help='Path to var_defns file.')
 
     return parser.parse_args(argv)
 
@@ -161,7 +167,7 @@ class Testing(unittest.TestCase):
             mkdir_vrfy(
                 "-p",
                 os.path.join(
-                    EXPTDIR, f"{date_to_str(self.cdate,True)}{os.sep}mem{i+1}"
+                    EXPTDIR, f'{date_to_str(self.cdate,format="%Y%m%d%H")}{os.sep}mem{i+1}'
                 ),
             )
 
@@ -170,9 +176,10 @@ class Testing(unittest.TestCase):
         set_env_var("ENSMEM_INDX", 2)
         set_env_var("FV3_NML_FN", "input.nml")
         set_env_var("FV3_NML_FP", os.path.join(EXPTDIR, "input.nml"))
-        set_env_var("DO_SPP", True)
         set_env_var("DO_SHUM", True)
         set_env_var("DO_SKEB", True)
+        set_env_var("DO_SPPT", True)
+        set_env_var("DO_SPP", True)
         set_env_var("DO_LSM_SPP", True)
         ISEED_SPP = [4, 5, 6, 7, 8]
         set_env_var("ISEED_SPP", ISEED_SPP)
