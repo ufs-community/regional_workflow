@@ -83,11 +83,11 @@ def set_FV3nml_ens_stoch_seeds(cdate):
        for i in range(num_iseed_spp):
          iseed_spp[i]=cdate_i*1000 + ensmem_num*10 + ISEED_SPP[i]
 
-       settings['nam_spperts'] = {
+       settings['nam_sppperts'] = {
           'iseed_spp': iseed_spp
        }
     else:
-       settings['nam_spperts'] = {}
+       settings['nam_sppperts'] = {}
 
     if DO_LSM_SPP:
         iseed_lsm_spp=cdate_i*1000 + ensmem_num*10 + 9
