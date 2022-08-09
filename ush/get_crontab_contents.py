@@ -48,20 +48,20 @@ def get_crontab_contents(called_from_cron):
     # import selected env vars
     IMPORTS = ["MACHINE", "USER"]
     import_vars(env_vars=IMPORTS)
-  
-    __crontab_cmd__="crontab"
+
+    __crontab_cmd__ = "crontab"
     #
-    # On Cheyenne, simply typing "crontab" will launch the crontab command 
-    # at "/glade/u/apps/ch/opt/usr/bin/crontab".  This is a containerized 
-    # version of crontab that will work if called from scripts that are 
-    # themselves being called as cron jobs.  In that case, we must instead 
+    # On Cheyenne, simply typing "crontab" will launch the crontab command
+    # at "/glade/u/apps/ch/opt/usr/bin/crontab".  This is a containerized
+    # version of crontab that will work if called from scripts that are
+    # themselves being called as cron jobs.  In that case, we must instead
     # call the system version of crontab at /usr/bin/crontab.
     #
     if MACHINE == "CHEYENNE":
-      if called_from_cron:
-        __crontab_cmd__="/usr/bin/crontab"
-    (_,__crontab_contents__,_)=run_command(f'''{__crontab_cmd__} -l''')
-  
+        if called_from_cron:
+            __crontab_cmd__ = "/usr/bin/crontab"
+    (_, __crontab_contents__, _) = run_command(f"""{__crontab_cmd__} -l""")
+
     # replace single quotes (hopefully in comments) with double quotes
     __crontab_contents__ = __crontab_contents__.replace("'", '"')
 

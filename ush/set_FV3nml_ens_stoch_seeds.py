@@ -61,7 +61,7 @@ def set_FV3nml_ens_stoch_seeds(cdate):
 
     fv3_nml_ensmem_fp = os.path.join(
         CYCLE_BASEDIR,
-        f'{date_to_str(cdate,format="%Y%m%d%H")}{os.sep}{ensmem_name}{os.sep}{FV3_NML_FN}'
+        f'{date_to_str(cdate,format="%Y%m%d%H")}{os.sep}{ensmem_name}{os.sep}{FV3_NML_FN}',
     )
 
     ensmem_num = ENSMEM_INDX
@@ -102,18 +102,26 @@ def set_FV3nml_ens_stoch_seeds(cdate):
 
     settings_str = cfg_to_yaml_str(settings)
 
-    print_info_msg(dedent(f'''
+    print_info_msg(
+        dedent(
+            f"""
         The variable \"settings\" specifying seeds in \"{FV3_NML_FP}\"
         has been set as follows:
 
-        settings =\n\n''') + settings_str,verbose=VERBOSE)
+        settings =\n\n"""
+        )
+        + settings_str,
+        verbose=VERBOSE,
+    )
 
     try:
         set_namelist(
             ["-q", "-n", FV3_NML_FP, "-u", settings_str, "-o", fv3_nml_ensmem_fp]
         )
     except:
-        print_err_msg_exit(dedent(f'''
+        print_err_msg_exit(
+            dedent(
+                f"""
             Call to python script set_namelist.py to set the variables in the FV3
             namelist file that specify the paths to the surface climatology files
             failed.  Parameters passed to this script are:
@@ -122,7 +130,11 @@ def set_FV3nml_ens_stoch_seeds(cdate):
               Full path to output namelist file:
                 fv3_nml_ensmem_fp = \"{fv3_nml_ensmem_fp}\"
               Namelist settings specified on command line (these have highest precedence):\n
-                settings =\n\n''') + settings_str)
+                settings =\n\n"""
+            )
+            + settings_str
+        )
+
 
 def parse_args(argv):
     """Parse command line arguments"""
@@ -132,10 +144,13 @@ def parse_args(argv):
 
     parser.add_argument("-c", "--cdate", dest="cdate", required=True, help="Date.")
 
-    parser.add_argument('-p', '--path-to-defns',
-                        dest='path_to_defns',
-                        required=True,
-                        help='Path to var_defns file.')
+    parser.add_argument(
+        "-p",
+        "--path-to-defns",
+        dest="path_to_defns",
+        required=True,
+        help="Path to var_defns file.",
+    )
 
     return parser.parse_args(argv)
 
@@ -167,7 +182,8 @@ class Testing(unittest.TestCase):
             mkdir_vrfy(
                 "-p",
                 os.path.join(
-                    EXPTDIR, f'{date_to_str(self.cdate,format="%Y%m%d%H")}{os.sep}mem{i+1}'
+                    EXPTDIR,
+                    f'{date_to_str(self.cdate,format="%Y%m%d%H")}{os.sep}mem{i+1}',
                 ),
             )
 

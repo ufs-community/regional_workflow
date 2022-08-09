@@ -30,6 +30,7 @@ def str_to_date(s):
         v = None
     return v
 
+
 def date_to_str(d, format="%Y%m%d%H%M"):
     """Get string from python datetime object.
     By default it converts to YYYYMMDDHHMM format unless

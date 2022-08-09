@@ -220,7 +220,9 @@ def create_model_configure_file(
             ]
         )
     except:
-        print_err_msg_exit(dedent(f'''
+        print_err_msg_exit(
+            dedent(
+                f"""
             Call to python script fill_jinja_template.py to create a \"{MODEL_CONFIG_FN}\"
             file from a jinja2 template failed.  Parameters passed to this script are:
               Full path to template model config file:
@@ -228,7 +230,10 @@ def create_model_configure_file(
               Full path to output model config file:
                 model_config_fp = \"{model_config_fp}\"
               Namelist settings specified on command line:\n
-                settings =\n\n''') + settings_str)
+                settings =\n\n"""
+            )
+            + settings_str
+        )
         return False
 
     return True

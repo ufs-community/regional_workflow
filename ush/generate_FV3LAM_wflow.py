@@ -447,7 +447,9 @@ def generate_FV3LAM_wflow():
                 ["-q", "-u", settings_str, "-t", template_xml_fp, "-o", WFLOW_XML_FP]
             )
         except:
-            print_err_msg_exit(dedent(f'''
+            print_err_msg_exit(
+                dedent(
+                    f"""
                 Call to python script fill_jinja_template.py to create a rocoto workflow
                 XML file from a template file failed.  Parameters passed to this script
                 are:
@@ -456,7 +458,10 @@ def generate_FV3LAM_wflow():
                   Full path to output rocoto XML file:
                     WFLOW_XML_FP = \"{WFLOW_XML_FP}\"
                   Namelist settings specified on command line:\n
-                    settings =\n\n''') + settings_str)
+                    settings =\n\n"""
+                )
+                + settings_str
+            )
     #
     # -----------------------------------------------------------------------
     #
@@ -908,7 +913,9 @@ def generate_FV3LAM_wflow():
             ]
         )
     except:
-        print_err_msg_exit(dedent(f'''
+        print_err_msg_exit(
+            dedent(
+                f"""
             Call to python script set_namelist.py to generate an FV3 namelist file
             failed.  Parameters passed to this script are:
               Full path to base namelist file:
@@ -920,7 +927,10 @@ def generate_FV3LAM_wflow():
               Full path to output namelist file:
                 FV3_NML_FP = \"{FV3_NML_FP}\"
               Namelist settings specified on command line:\n
-                settings =\n\n''') + settings_str)
+                settings =\n\n"""
+            )
+            + settings_str
+        )
     #
     # If not running the MAKE_GRID_TN task (which implies the workflow will
     # use pregenerated grid files), set the namelist variables specifying
