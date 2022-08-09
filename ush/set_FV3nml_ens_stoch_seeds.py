@@ -108,9 +108,8 @@ def set_FV3nml_ens_stoch_seeds(cdate):
                 FV3_NML_FP = \"{FV3_NML_FP}\"
               Full path to output namelist file:
                 fv3_nml_ensmem_fp = \"{fv3_nml_ensmem_fp}\"
-              Namelist settings specified on command line (these have highest precedence):
-                settings =
-            {settings_str}'''))
+              Namelist settings specified on command line (these have highest precedence):\n
+                settings =\n\n''') + settings_str)
 
 def parse_args(argv):
     """ Parse command line arguments"""
