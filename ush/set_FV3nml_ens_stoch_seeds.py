@@ -57,7 +57,7 @@ def set_FV3nml_ens_stoch_seeds(cdate):
     settings = {}
     nam_stochy_dict = {}
 
-    if DO_SPP:
+    if DO_SPPT:
        iseed_sppt=cdate_i*1000 + ensmem_num*10 + 1
        nam_stochy_dict.update({
          'iseed_sppt': iseed_sppt
@@ -156,9 +156,10 @@ class Testing(unittest.TestCase):
         set_env_var("ENSMEM_INDX",2)
         set_env_var("FV3_NML_FN","input.nml")
         set_env_var("FV3_NML_FP",os.path.join(EXPTDIR,"input.nml"))
-        set_env_var("DO_SPP",True)
+        set_env_var("DO_SPPT",True)
         set_env_var("DO_SHUM",True)
         set_env_var("DO_SKEB",True)
+        set_env_var("DO_SPP",True)
         set_env_var("DO_LSM_SPP",True)
         ISEED_SPP = [ 4, 5, 6, 7, 8]
         set_env_var("ISEED_SPP",ISEED_SPP)
