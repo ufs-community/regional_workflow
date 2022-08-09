@@ -97,6 +97,11 @@ def set_FV3nml_ens_stoch_seeds(cdate):
         }
 
     settings_str = cfg_to_yaml_str(settings)
+
+    print_info_msg(dedent(f'''
+        The variable \"settings\" specifying seeds in \"{FV3_NML_FP}\"
+        settings =\n\n''') + settings_str,verbose=VERBOSE)
+
     try:
         set_namelist(["-q", "-n", FV3_NML_FP, "-u", settings_str, "-o", fv3_nml_ensmem_fp])
     except:
