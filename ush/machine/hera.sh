@@ -3,7 +3,6 @@
 function file_location() {
 
   # Return the default location of external model files on disk
-  # Hera does not currently have any files staged on disk.
 
   local external_file_fmt external_model location
 
@@ -11,6 +10,13 @@ function file_location() {
   external_file_fmt=${2}
 
   location=""
+  case ${external_model} in
+
+    "FV3GFS")
+      location='/scratch2/BMC/det/UFS_SRW_App/develop/input_model_data/FV3GFS/grib2/${yyyymmdd}${hh}'
+      ;;
+
+  esac
   echo ${location:-}
 
 }
