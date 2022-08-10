@@ -11,6 +11,17 @@ function file_location() {
   external_file_fmt=${2}
 
   location=""
+  case ${external_model} in
+
+    "FV3GFS")
+      case $external_file_fmt in
+        "grib2")
+          location='/work/noaa/fv3-cam/UFS_SRW_App/develop/input_model_data/FV3GFS/grib2/${yyyymmdd}${hh}'
+          ;;
+      esac
+      ;;
+
+  esac
   echo ${location:-}
 
 }
