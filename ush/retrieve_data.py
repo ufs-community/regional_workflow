@@ -553,7 +553,7 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1,
                        local_archive=os.path.basename(existing_archive),
                        output_path=output_path,
                        source_paths=source_paths,
-                       ).get('hpss'))
+                       ).get('hpss', []))
 
             # Once we go through all the archives, the union of all
             # "unavailable" files should equal the "expected" list of
