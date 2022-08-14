@@ -190,6 +190,7 @@ def fill_template(template_str, cycle_date, templates_only=False, **kwargs):
     # -----
 
     cycle_hour = cycle_date.strftime("%H")
+
     # One strategy for binning data files at NCEP is to put them into 6
     # cycle bins. The archive file names include the low and high end of the
     # range. Set the range as would be indicated in the archive file
@@ -218,6 +219,7 @@ def fill_template(template_str, cycle_date, templates_only=False, **kwargs):
         yyyymmdd=cycle_date.strftime("%Y%m%d"),
         yyyymmddhh=cycle_date.strftime("%Y%m%d%H"),
     )
+
     if templates_only:
         return f'{",".join((format_values.keys()))}'
     return template_str.format(**format_values)
@@ -490,6 +492,7 @@ def hpss_requested_files(cla, file_names, store_specs, members=-1, ens_group=-1)
     archive_internal_dirs = store_specs.get("archive_internal_dir", [""])
     if isinstance(archive_internal_dirs, dict):
         archive_internal_dirs = archive_internal_dirs.get(cla.anl_or_fcst, [""])
+
 
     # which_archive matters for choosing the correct file names within,
     # but we can safely just try all options for the
