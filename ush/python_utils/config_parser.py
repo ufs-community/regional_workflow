@@ -16,10 +16,17 @@ returnded by load_config to make queries.
 
 import argparse
 
+#
+# Note: Yaml maynot be available in which case we suppress
+# the exception, so that we can have other functionality
+# provided by this module.
+#
 try:
     import yaml
 except ModuleNotFoundError:
     pass
+# The rest of the formats: JSON/SHELL/INI/XML do not need
+# external pakcages
 import json
 import os
 import re
