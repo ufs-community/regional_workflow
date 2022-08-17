@@ -50,13 +50,6 @@ from .config_parser import (
     update_dict,
     cfg_main,
     load_config_file,
+    load_yaml_config,
+    cfg_to_yaml_str,
 )
-
-# yaml may not be available
-try:
-    from .config_parser import (
-        load_yaml_config,
-        cfg_to_yaml_str,
-    )
-except:
-    pass

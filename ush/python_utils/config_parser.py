@@ -18,7 +18,7 @@ import argparse
 
 try:
     import yaml
-except:
+except ModuleNotFoundError:
     pass
 import json
 import os
@@ -42,7 +42,7 @@ def load_yaml_config(config_file):
         with open(config_file, "r") as f:
             cfg = yaml.safe_load(f)
     except yaml.YAMLError as e:
-        print_err_msg_exit(e)
+        print_err_msg_exit(str(e))
 
     return cfg
 
@@ -55,7 +55,7 @@ try:
         def increase_indent(self, flow=False, indentless=False):
             return super(custom_dumper, self).increase_indent(flow, False)
 
-except:
+except NameError:
     pass
 
 
@@ -75,7 +75,7 @@ def join_str(loader, node):
 
 try:
     yaml.add_constructor("!join_str", join_str, Loader=yaml.SafeLoader)
-except:
+except NameError:
     pass
 
 ##########
@@ -88,7 +88,7 @@ def load_json_config(config_file):
         with open(config_file, "r") as f:
             cfg = json.load(f)
     except json.JSONDecodeError as e:
-        print_err_msg_exit(e)
+        print_err_msg_exit(str(e))
 
     return cfg
 
