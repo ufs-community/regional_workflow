@@ -72,37 +72,25 @@ def set_gridparams_ESGgrid(lon_ctr, lat_ctr, nx, ny, halo_width, delx, dely, paz
     #
     # -----------------------------------------------------------------------
     #
-    return (
-        lon_ctr,
-        lat_ctr,
-        nx,
-        ny,
-        pazi,
-        halo_width,
-        stretch_factor,
-        del_angle_x_sg,
-        del_angle_y_sg,
-        int(neg_nx_of_dom_with_wide_halo),
-        int(neg_ny_of_dom_with_wide_halo),
-    )
+    return {
+        "LON_CTR": lon_ctr,
+        "LAT_CTR": lat_ctr,
+        "NX": nx,
+        "NY": ny,
+        "PAZI": pazi,
+        "NHW": halo_width,
+        "STRETCH_FAC": stretch_factor,
+        "DEL_ANGLE_X_SG": round(del_angle_x_sg, 10),
+        "DEL_ANGLE_Y_SG": round(del_angle_y_sg, 10),
+        "NEG_NX_OF_DOM_WITH_WIDE_HALO": int(neg_nx_of_dom_with_wide_halo),
+        "NEG_NY_OF_DOM_WITH_WIDE_HALO": int(neg_ny_of_dom_with_wide_halo),
+    }
 
 
 class Testing(unittest.TestCase):
     def test_set_gridparams_ESGgrid(self):
 
-        (
-            LON_CTR,
-            LAT_CTR,
-            NX,
-            NY,
-            PAZI,
-            NHW,
-            STRETCH_FAC,
-            DEL_ANGLE_X_SG,
-            DEL_ANGLE_Y_SG,
-            NEG_NX_OF_DOM_WITH_WIDE_HALO,
-            NEG_NY_OF_DOM_WITH_WIDE_HALO,
-        ) = set_gridparams_ESGgrid(
+        grid_parms = set_gridparams_ESGgrid(
             lon_ctr=-97.5,
             lat_ctr=38.5,
             nx=1748,
@@ -114,20 +102,8 @@ class Testing(unittest.TestCase):
         )
 
         self.assertEqual(
-            (
-                LON_CTR,
-                LAT_CTR,
-                NX,
-                NY,
-                PAZI,
-                NHW,
-                STRETCH_FAC,
-                round(DEL_ANGLE_X_SG, 10),
-                round(DEL_ANGLE_Y_SG, 10),
-                NEG_NX_OF_DOM_WITH_WIDE_HALO,
-                NEG_NY_OF_DOM_WITH_WIDE_HALO,
-            ),
-            (
+            list(grid_parms.values()),
+            [
                 -97.5,
                 38.5,
                 1748,
@@ -139,7 +115,7 @@ class Testing(unittest.TestCase):
                 0.0134894006,
                 -1760,
                 -1050,
-            ),
+            ],
         )
 
     def setUp(self):

@@ -35,18 +35,7 @@ def calculate_cost(config_fn):
 
     # number of gridpoints (nx*ny) depends on grid generation method
     if GRID_GEN_METHOD == "GFDLgrid":
-        (
-            LON_CTR,
-            LAT_CTR,
-            NX,
-            NY,
-            NHW,
-            STRETCH_FAC,
-            ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-            IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-            JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-            JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-        ) = set_gridparams_GFDLgrid(
+        grid_params = set_gridparams_GFDLgrid(
             lon_of_t6_ctr=GFDLgrid_LON_T6_CTR,
             lat_of_t6_ctr=GFDLgrid_LAT_T6_CTR,
             res_of_t6g=GFDLgrid_NUM_CELLS,
@@ -59,19 +48,7 @@ def calculate_cost(config_fn):
         )
 
     elif GRID_GEN_METHOD == "ESGgrid":
-        (
-            LON_CTR,
-            LAT_CTR,
-            NX,
-            NY,
-            PAZI,
-            NHW,
-            STRETCH_FAC,
-            DEL_ANGLE_X_SG,
-            DEL_ANGLE_Y_SG,
-            NEG_NX_OF_DOM_WITH_WIDE_HALO,
-            NEG_NY_OF_DOM_WITH_WIDE_HALO,
-        ) = set_gridparams_ESGgrid(
+        grid_params = set_gridparams_ESGgrid(
             lon_ctr=ESGgrid_LON_CTR,
             lat_ctr=ESGgrid_LAT_CTR,
             nx=ESGgrid_NX,
@@ -82,6 +59,8 @@ def calculate_cost(config_fn):
             dely=ESGgrid_DELY,
         )
 
+    NX = grid_params["NX"]
+    NY = grid_params["NY"]
     cost = [DT_ATMOS, NX * NY]
 
     # reference grid (6-hour forecast on RRFS_CONUS_25km)

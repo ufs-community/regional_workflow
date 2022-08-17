@@ -1553,24 +1553,9 @@ def setup():
     # -----------------------------------------------------------------------
     #
     global LON_CTR, LAT_CTR, NX, NY, NHW, STRETCH_FAC
-    global ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG, IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG
-    global JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG, JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG
-    global PAZI, DEL_ANGLE_X_SG, DEL_ANGLE_Y_SG
-    global NEG_NX_OF_DOM_WITH_WIDE_HALO, NEG_NY_OF_DOM_WITH_WIDE_HALO
 
     if GRID_GEN_METHOD == "GFDLgrid":
-        (
-            LON_CTR,
-            LAT_CTR,
-            NX,
-            NY,
-            NHW,
-            STRETCH_FAC,
-            ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-            IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-            JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-            JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-        ) = set_gridparams_GFDLgrid(
+        grid_params = set_gridparams_GFDLgrid(
             lon_of_t6_ctr=GFDLgrid_LON_T6_CTR,
             lat_of_t6_ctr=GFDLgrid_LAT_T6_CTR,
             res_of_t6g=GFDLgrid_NUM_CELLS,
@@ -1589,19 +1574,7 @@ def setup():
     # -----------------------------------------------------------------------
     #
     elif GRID_GEN_METHOD == "ESGgrid":
-        (
-            LON_CTR,
-            LAT_CTR,
-            NX,
-            NY,
-            PAZI,
-            NHW,
-            STRETCH_FAC,
-            DEL_ANGLE_X_SG,
-            DEL_ANGLE_Y_SG,
-            NEG_NX_OF_DOM_WITH_WIDE_HALO,
-            NEG_NY_OF_DOM_WITH_WIDE_HALO,
-        ) = set_gridparams_ESGgrid(
+        grid_params = set_gridparams_ESGgrid(
             lon_ctr=ESGgrid_LON_CTR,
             lat_ctr=ESGgrid_LAT_CTR,
             nx=ESGgrid_NX,
@@ -1611,6 +1584,28 @@ def setup():
             delx=ESGgrid_DELX,
             dely=ESGgrid_DELY,
         )
+    #
+    # -----------------------------------------------------------------------
+    #
+    # Otherwise
+    #
+    # -----------------------------------------------------------------------
+    #
+    else:
+        grid_params = {
+            "LON_CTR": LON_CTR,
+            "LAT_CTR": LAT_CTR,
+            "NX": NX,
+            "NY": NY,
+            "NHW": NHW,
+            "STRETCH_FAC": STRETCH_FAC,
+        }
+
+
+    # Extract the basic grid params from the dictionary
+    (LON_CTR, LAT_CTR, NX, NY, NHW, STRETCH_FAC) = (
+        grid_params[k] for k in ["LON_CTR", "LAT_CTR", "NX", "NY", "NHW", "STRETCH_FAC"]
+    )
 
     #
     # -----------------------------------------------------------------------
@@ -1873,6 +1868,9 @@ def setup():
     # constants section
     cfg_d["constants"] = cfg_c
 
+    # grid params
+    cfg_d["grid_params"] = grid_params
+
     #
     # -----------------------------------------------------------------------
     #
@@ -2008,12 +2006,6 @@ def setup():
         #
         "GTYPE": GTYPE,
         "TILE_RGNL": TILE_RGNL,
-        "LON_CTR": LON_CTR,
-        "LAT_CTR": LAT_CTR,
-        "NX": NX,
-        "NY": NY,
-        "NHW": NHW,
-        "STRETCH_FAC": STRETCH_FAC,
         "RES_IN_FIXLAM_FILENAMES": RES_IN_FIXLAM_FILENAMES,
         #
         # If running the make_grid task, CRES will be set to a null string during
@@ -2022,56 +2014,6 @@ def setup():
         #
         "CRES": CRES,
     }
-    #
-    # -----------------------------------------------------------------------
-    #
-    # Append to the variable definitions file the defintions of grid parame-
-    # ters that are specific to the grid generation method used.
-    #
-    # -----------------------------------------------------------------------
-    #
-    if GRID_GEN_METHOD == "GFDLgrid":
-        #
-        # -----------------------------------------------------------------------
-        #
-        # Grid configuration parameters for a regional grid generated from a
-        # global parent cubed-sphere grid.  This is the method originally
-        # suggested by GFDL since it allows GFDL's nested grid generator to be
-        # used to generate a regional grid.  However, for large regional domains,
-        # it results in grids that have an unacceptably large range of cell sizes
-        # (i.e. ratio of maximum to minimum cell size is not sufficiently close
-        # to 1).
-        #
-        # -----------------------------------------------------------------------
-        #
-        settings.update(
-            {
-                "ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG": ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-                "IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG": IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-                "JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG": JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-                "JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG": JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-            }
-        )
-    elif GRID_GEN_METHOD == "ESGgrid":
-        #
-        # -----------------------------------------------------------------------
-        #
-        # Grid configuration parameters for a regional grid generated independently
-        # of a global parent grid.  This method was developed by Jim Purser of
-        # EMC and results in very uniform grids (i.e. ratio of maximum to minimum
-        # cell size is very close to 1).
-        #
-        # -----------------------------------------------------------------------
-        #
-        settings.update(
-            {
-                "DEL_ANGLE_X_SG": DEL_ANGLE_X_SG,
-                "DEL_ANGLE_Y_SG": DEL_ANGLE_Y_SG,
-                "NEG_NX_OF_DOM_WITH_WIDE_HALO": NEG_NX_OF_DOM_WITH_WIDE_HALO,
-                "NEG_NY_OF_DOM_WITH_WIDE_HALO": NEG_NY_OF_DOM_WITH_WIDE_HALO,
-                "PAZI": PAZI or "",
-            }
-        )
     #
     # -----------------------------------------------------------------------
     #

@@ -460,34 +460,23 @@ def set_gridparams_GFDLgrid(
     #
     # -----------------------------------------------------------------------
     #
-    return (
-        lon_of_t7_ctr,
-        lat_of_t7_ctr,
-        nx_of_t7_on_t7g,
-        ny_of_t7_on_t7g,
-        halo_width_on_t7g,
-        stretch_factor,
-        istart_of_t7_with_halo_on_t6sg,
-        iend_of_t7_with_halo_on_t6sg,
-        jstart_of_t7_with_halo_on_t6sg,
-        jend_of_t7_with_halo_on_t6sg,
-    )
+    return {
+        "LON_CTR": lon_of_t7_ctr,
+        "LAT_CTR": lat_of_t7_ctr,
+        "NX": nx_of_t7_on_t7g,
+        "NY": ny_of_t7_on_t7g,
+        "NHW": halo_width_on_t7g,
+        "STRETCH_FAC": stretch_factor,
+        "ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG": istart_of_t7_with_halo_on_t6sg,
+        "IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG": iend_of_t7_with_halo_on_t6sg,
+        "JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG": jstart_of_t7_with_halo_on_t6sg,
+        "JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG": jend_of_t7_with_halo_on_t6sg,
+    }
 
 
 class Testing(unittest.TestCase):
     def test_set_gridparams_GFDLgrid(self):
-        (
-            LON_CTR,
-            LAT_CTR,
-            NX,
-            NY,
-            NHW,
-            STRETCH_FAC,
-            ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-            IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-            JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-            JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-        ) = set_gridparams_GFDLgrid(
+        grid_params = set_gridparams_GFDLgrid(
             lon_of_t6_ctr=-97.5,
             lat_of_t6_ctr=38.5,
             res_of_t6g=96,
@@ -500,19 +489,8 @@ class Testing(unittest.TestCase):
         )
 
         self.assertEqual(
-            (
-                LON_CTR,
-                LAT_CTR,
-                NX,
-                NY,
-                NHW,
-                STRETCH_FAC,
-                ISTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-                IEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-                JSTART_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-                JEND_OF_RGNL_DOM_WITH_WIDE_HALO_ON_T6SG,
-            ),
-            (-97.5, 38.5, 216, 192, 6, 1.4, 21, 172, 29, 164),
+            list(grid_params.values()),
+            [-97.5, 38.5, 216, 192, 6, 1.4, 21, 172, 29, 164],
         )
 
     def setUp(self):
