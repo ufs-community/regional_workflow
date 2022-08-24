@@ -121,6 +121,33 @@ fi
 #
 #-----------------------------------------------------------------------
 #
+# Create the directory(ies) in which MET/METplus will place its output
+# from this script.  We do this here because (as of 20220811), when 
+# multiple workflow tasks are launched that all require METplus to create
+# the same directory, some of the METplus tasks can fail.  This is a 
+# known bug and should be fixed by 20221000.  See https://github.com/dtcenter/METplus/issues/1657.
+# If/when it is fixed, the following directory creation step can be 
+# removed from this script.
+#
+#-----------------------------------------------------------------------
+#
+mkdir_vrfy -p "${OUTPUT_BASE}/metprd/grid_stat"
+#
+# If the variable is accumulated precipitation for a time interval 
+# (bucket) other than 1 hour, the MET/METplus tools called below will
+# include pcp_combine.  In that case, create (if necessary) directories
+# needed by pcp_combine.
+#
+if [ "${VAR}" = "APCP" ] && [ "${ACCUM: -1}" != "1" ]; then
+  mkdir_vrfy -p "${EXPTDIR}/metprd/pcp_combine"      # For observations
+  mkdir_vrfy -p "${OUTPUT_BASE}/metprd/pcp_combine"  # For forecast
+fi
+
+#
+
+#
+#-----------------------------------------------------------------------
+#
 # Check for existence of top-level OBS_DIR 
 #
 #-----------------------------------------------------------------------
