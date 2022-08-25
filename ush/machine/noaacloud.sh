@@ -20,9 +20,9 @@ function file_location() {
   esac
   echo ${location:-}
 }
-export PROJ_LIB=/contrib/GST/miniconda/envs/regional_workflow/share/proj
+export PROJ_LIB=/contrib/GST/miniconda3/4.10.3/envs/regional_workflow/share/proj
 export OPT=/contrib/EPIC/hpc-modules
-export PATH=${PATH}:/contrib/GST/miniconda/envs/regional_workflow/bin
+export PATH=${PATH}:/contrib/GST/miniconda3/4.10.3/envs/regional_workflow/bin
 
 EXTRN_MDL_SYSBASEDIR_ICS=${EXTRN_MDL_SYSBASEDIR_ICS:-$(file_location \
   ${EXTRN_MDL_NAME_ICS} \
@@ -71,4 +71,4 @@ BUILD_MOD_FN="wflow_noaacloud"
 
 # MET Installation Locations
 # MET Plus is not yet supported on noaacloud
-. /contrib/EPIC/.bash_conda
+#. /contrib/EPIC/.bash_conda 
