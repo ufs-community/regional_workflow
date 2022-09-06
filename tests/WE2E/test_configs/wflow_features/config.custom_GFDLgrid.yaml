@@ -8,7 +8,7 @@ metadata:
     to "TRUE" (which is its default value); see the UFS SRW App's User's
     Guide for a description of this variable.
     The difference between this test and the one named
-      custom_GFDLgrid__GFDLgrid_USE_NUM_CELLS_IN_FILENAMES_eq_TRUE
+      new_GFDLgrid__GFDLgrid_USE_NUM_CELLS_IN_FILENAMES_eq_TRUE
     is that this one uses almost no stretching by setting the workflow
     variable GFDLgrid_STRETCH_FAC very close to 1.  Setting it exactly to
     1 used to cause the workflow to fail because it caused the GFDL grid
@@ -26,6 +26,24 @@ workflow:
     - 0
   FCST_LEN_HRS: 6
   PREEXISTING_DIR_METHOD: rename
+task_make_grid:
+  GFDLgrid_LON_T6_CTR: -97.5
+  GFDLgrid_LAT_T6_CTR: 38.5
+  GFDLgrid_NUM_CELLS: 96
+  GFDLgrid_STRETCH_FAC: 1.0001
+  GFDLgrid_REFINE_RATIO: 2
+  GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G: 10
+  GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G: 87
+  GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G: 19
+  GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G: 78
+  GFDLgrid_USE_NUM_CELLS_IN_FILENAMES: true
+task_get_extrn_ics:
+  EXTRN_MDL_NAME_ICS: FV3GFS
+  USE_USER_STAGED_EXTRN_FILES: true
+task_get_extrn_lbcs:
+  EXTRN_MDL_NAME_LBCS: FV3GFS
+  LBC_SPEC_INTVL_HRS: 3
+  USE_USER_STAGED_EXTRN_FILES: true
 task_run_fcst:
   DT_ATMOS: 100
   LAYOUT_X: 6
@@ -43,23 +61,5 @@ task_run_fcst:
   WRTCMP_lat_upr_rght: 15.0
   WRTCMP_dlon: 0.24
   WRTCMP_dlat: 0.24
-task_get_extrn_ics:
-  EXTRN_MDL_NAME_ICS: FV3GFS
-  USE_USER_STAGED_EXTRN_FILES: true
-task_get_extrn_lbcs:
-  EXTRN_MDL_NAME_LBCS: FV3GFS
-  LBC_SPEC_INTVL_HRS: 3
-  USE_USER_STAGED_EXTRN_FILES: true
-task_make_grid:
-  GFDLgrid_LON_T6_CTR: -97.5
-  GFDLgrid_LAT_T6_CTR: 38.5
-  GFDLgrid_NUM_CELLS: 96
-  GFDLgrid_STRETCH_FAC: 1.0001
-  GFDLgrid_REFINE_RATIO: 2
-  GFDLgrid_ISTART_OF_RGNL_DOM_ON_T6G: 10
-  GFDLgrid_IEND_OF_RGNL_DOM_ON_T6G: 87
-  GFDLgrid_JSTART_OF_RGNL_DOM_ON_T6G: 19
-  GFDLgrid_JEND_OF_RGNL_DOM_ON_T6G: 78
-  GFDLgrid_USE_NUM_CELLS_IN_FILENAMES: true
 task_run_post:
   POST_OUTPUT_DOMAIN_NAME: custom_GFDLgrid

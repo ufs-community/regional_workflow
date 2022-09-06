@@ -13,8 +13,6 @@ workflow:
     - 0
   FCST_LEN_HRS: 6
   PREEXISTING_DIR_METHOD: rename
-task_run_fcst:
-  PREDEF_GRID_NAME: RRFS_CONUS_25km
 task_get_extrn_ics:
   EXTRN_MDL_NAME_ICS: FV3GFS
   FV3GFS_FILE_FMT_ICS: netcdf
@@ -22,3 +20,5 @@ task_get_extrn_lbcs:
   EXTRN_MDL_NAME_LBCS: FV3GFS
   LBC_SPEC_INTVL_HRS: 3
   FV3GFS_FILE_FMT_LBCS: netcdf
+task_run_fcst:
+  PREDEF_GRID_NAME: RRFS_CONUS_25km

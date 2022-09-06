@@ -24,8 +24,6 @@ workflow:
     - 0
   FCST_LEN_HRS: 6
   PREEXISTING_DIR_METHOD: rename
-task_run_fcst:
-  PREDEF_GRID_NAME: RRFS_CONUS_25km
 task_get_extrn_ics:
   EXTRN_MDL_NAME_ICS: GSMGFS
   USE_USER_STAGED_EXTRN_FILES: true
@@ -33,3 +31,5 @@ task_get_extrn_lbcs:
   EXTRN_MDL_NAME_LBCS: GSMGFS
   LBC_SPEC_INTVL_HRS: 6
   USE_USER_STAGED_EXTRN_FILES: true
+task_run_fcst:
+  PREDEF_GRID_NAME: RRFS_CONUS_25km
