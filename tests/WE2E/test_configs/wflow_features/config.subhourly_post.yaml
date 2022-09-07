@@ -1,5 +1,5 @@
 metadata:
-  description: >-
+  description: |-
     This test checks the capability of the workflow to have the model write
     output files and perform post-processing on a sub-hourly time interval.
 user:

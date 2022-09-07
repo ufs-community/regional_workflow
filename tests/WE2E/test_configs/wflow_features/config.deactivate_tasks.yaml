@@ -1,5 +1,5 @@
 metadata:
-  description: >-
+  description: |-
     This test has two purposes:
     1) It checks that the various workflow tasks can be deactivated, i.e.
        removed from the Rocoto XML.

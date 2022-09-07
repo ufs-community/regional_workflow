@@ -1,5 +1,5 @@
 metadata:
-  description: >-
+  description: |-
     This test checks the capability of the workflow to use the inline
     post option (WRITE_DOPOST) in model_configure.
 user:

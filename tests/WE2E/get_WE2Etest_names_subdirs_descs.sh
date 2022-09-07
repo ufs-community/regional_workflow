@@ -981,8 +981,8 @@ configuration files of the primary WE2E tests...
 #
       config_fn="config.${test_name}.yaml"
       config_fp="${test_configs_basedir}/$subdir/$config_fn"
-      test_desc="$(config_to_shell_str $config_fp -k "metadata")"
-      test_desc="${test_desc:26}"
+      test_desc="$(config_to_yaml_str $config_fp -k "metadata")"
+      test_desc="${test_desc:27}"
       test_desc="${test_desc::${#test_desc}-1}"
 #
 # Finally, save the description of the current test as the next element

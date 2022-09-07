@@ -1,5 +1,5 @@
 metadata:
-  description: >-
+  description: |-
     This test checks the capability of the workflow to run ensemble forecasts
     (i.e. DO_ENSEMBLE set to "TRUE") in community mode (i.e. RUN_ENVIR set
     to "community") with the number of ensemble members (NUM_ENS_MEMBERS)

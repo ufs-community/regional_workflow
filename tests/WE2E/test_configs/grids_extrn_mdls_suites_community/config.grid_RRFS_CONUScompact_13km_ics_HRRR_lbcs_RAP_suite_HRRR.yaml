@@ -1,5 +1,5 @@
 metadata:
-  description: >-
+  description: |-
     This test is to ensure that the workflow running in community mode
     completes successfully on the RRFS_CONUScompact_13km grid using the HRRR
     physics suite with ICs derived from the HRRR and LBCs derived from the

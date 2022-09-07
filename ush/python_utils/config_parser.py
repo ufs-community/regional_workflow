@@ -62,6 +62,13 @@ try:
         def increase_indent(self, flow=False, indentless=False):
             return super(custom_dumper, self).increase_indent(flow, False)
 
+    def str_presenter(dumper, data):
+        if len(data.splitlines()) > 1:
+          return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+        return dumper.represent_scalar('tag:yaml.org,2002:str', data)
+
+    yaml.add_representer(str, str_presenter)
+
 except NameError:
     pass
 

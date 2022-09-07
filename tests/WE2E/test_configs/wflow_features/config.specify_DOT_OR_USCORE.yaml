@@ -1,5 +1,5 @@
 metadata:
-  description: >-
+  description: |-
     This test checks the capability of the workflow to have the character
     (DOT_OR_USCORE) in the names of the input grid and orography files
     that comes after the C-resolution be set to a user-specified value.
