@@ -7,14 +7,9 @@ assignees: ''
 
 ---
 
-## Description
-Provide a clear and concise description of the problem to be solved.
+THIS REPOSITORY IS NOW DEPRECATED; NEW ISSUES WILL BE CLOSED
 
-## Solution
-Add a clear and concise description of the proposed solution.
+For information about transitioning your changes from the regional_workflow repository to the merged UFS SRW App repository, see documentation in the UFS SRW Wiki:
 
-## Alternatives (optional)
-If applicable, add a description of any alternative solutions or features you've considered.
+https://github.com/ufs-community/ufs-srweather-app/wiki
 
-## Related to (optional)
-Directly reference any issues or PRs in this or other repositories that this is related to, and describe how they are related.
