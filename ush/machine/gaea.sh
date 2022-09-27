@@ -68,5 +68,10 @@ RUN_CMD_FCST='srun --mpi=pmi2 -n ${PE_MEMBER01}'
 RUN_CMD_POST='srun --mpi=pmi2 -n $nprocs'
 
 # MET Installation Locations
-# MET Plus is not yet supported on gaea
+MET_INSTALL_DIR=${MET_INSTALL_DIR:-"/usw/met/10.1.2"}
+METPLUS_PATH=${METPLUS_PATH:-"/usw/met/METplus/METplus-4.1.3"}
+CCPA_OBS_DIR=${CCPA_OBS_DIR:-"${staged_data_dir}/obs_data/ccpa/proc"}
+MRMS_OBS_DIR=${MRMS_OBS_DIR:-"${staged_data_dir}/obs_data/mrms/proc"}
+NDAS_OBS_DIR=${NDAS_OBS_DIR:-"${staged_data_dir}/obs_data/ndas/proc"}
+MET_BIN_EXEC=${MET_BIN_EXEC:-"bin"}
 # Test Data Locations
