@@ -1,6 +1,8 @@
 #%Module
+  
+module use /lustre/f2/dev/wpo/role.epic/contrib/modulefiles
+module load rocoto
+module load miniconda3
 
-module load intel/19.0.5.281
-module use /usw/met/METplus/modulefiles
-module load metplus/4.1.3
-module load python/3.9
+prepend-path LD_LIBRARY_PATH /ncrc/sw/gaea-cle7/python/3.9/anaconda-base/envs/noaa_py3.9/lib
+setenv SRW_ENV regional_workflow
