@@ -4,5 +4,4 @@ module use /lustre/f2/dev/wpo/role.epic/contrib/modulefiles
 module load rocoto
 module load miniconda3
 
-prepend-path LD_LIBRARY_PATH /ncrc/sw/gaea-cle7/python/3.9/anaconda-base/envs/noaa_py3.9/lib
 setenv SRW_ENV regional_workflow

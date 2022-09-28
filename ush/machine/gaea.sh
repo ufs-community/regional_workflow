@@ -19,6 +19,8 @@ function file_location() {
   echo ${location:-}
 }
 
+export PROJ_LIB=/lustre/f2/dev/role.epic/contrib/miniconda3/4.12.0/envs/regional_workflow/share/proj
+export PATH=${PATH}:/lustre/f2/deve/role.epic/contrib/miniconda3/4.12.0/envs/regional_workflow/bin
 
 EXTRN_MDL_SYSBASEDIR_ICS=${EXTRN_MDL_SYSBASEDIR_ICS:-$(file_location \
   ${EXTRN_MDL_NAME_ICS} \
@@ -30,7 +32,7 @@ EXTRN_MDL_SYSBASEDIR_LBCS=${EXTRN_MDL_SYSBASEDIR_LBCS:-$(file_location \
 # System scripts to source to initialize various commands within workflow
 # scripts (e.g. "module").
 if [ -z ${ENV_INIT_SCRIPTS_FPS:-""} ]; then
-  ENV_INIT_SCRIPTS_FPS=( "/etc/profile" )
+  ENV_INIT_SCRIPTS_FPS=( "/etc/profile"  "/lustre/f2/dev/role.epic/contrib/Lmod_init.sh" )
 fi
 
 
@@ -66,5 +68,10 @@ RUN_CMD_FCST='srun --mpi=pmi2 -n ${PE_MEMBER01}'
 RUN_CMD_POST='srun --mpi=pmi2 -n $nprocs'
 
 # MET Installation Locations
-# MET Plus is not yet supported on gaea
+MET_INSTALL_DIR=${MET_INSTALL_DIR:-"/usw/met/10.1.2"}
+METPLUS_PATH=${METPLUS_PATH:-"/usw/met/METplus/METplus-4.1.3"}
+CCPA_OBS_DIR=${CCPA_OBS_DIR:-"${staged_data_dir}/obs_data/ccpa/proc"}
+MRMS_OBS_DIR=${MRMS_OBS_DIR:-"${staged_data_dir}/obs_data/mrms/proc"}
+NDAS_OBS_DIR=${NDAS_OBS_DIR:-"${staged_data_dir}/obs_data/ndas/proc"}
+MET_BIN_EXEC=${MET_BIN_EXEC:-"bin"}
 # Test Data Locations
