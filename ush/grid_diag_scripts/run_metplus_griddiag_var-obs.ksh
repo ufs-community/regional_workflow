@@ -62,9 +62,10 @@ export NET
 
 export SEASON=summer
 
+export VAR=REFC
 echo "Go to OUTPUT_BASE:${OUTPUT_BASE}"
 cd ${OUTPUT_BASE}
 
 ${METPLUS_PATH}/ush/master_metplus.py \
   -c ${METPLUS_CONF}/common.conf \
-  -c ${METPLUS_CONF}/GridDiag_REFC.conf
+  -c ${METPLUS_CONF}/GridDiag_${VAR}.conf
