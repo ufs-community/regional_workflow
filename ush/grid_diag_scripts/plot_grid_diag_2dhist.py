@@ -51,10 +51,10 @@ var2_lev    = args.var2_lev
 
 if output_base is None or model is None:
    print("Output base and/or model have not been specified; falling back to METplus default path and filename")
-   grid_diag_out = '/scratch2/BMC/fv3lam/RRFS_baseline/expt_dirs/RRFS_baseline_summer/GridDiag/grid_diag_out_FV3_RRFS_v1alpha_3km_summer_' + start_date + '-' + end_date + '_f' + start_fhr + '-' + end_fhr + '.nc'
+   grid_diag_out = f'/scratch2/BMC/fv3lam/RRFS_baseline/expt_dirs/RRFS_baseline_summer/GridDiag/grid_diag_out_FV3_RRFS_v1alpha_3km_summer_{start_date}_{end_date}_f{start_fhr}-{end_fhr}.nc'
 
 else:
-   grid_diag_out = output_base + '/grid_diag_out_' + model + '_' + var1 + '_' + var1_lev + '-' + var2 + '_' + var2_lev + '_' + start_date + '-' + end_date + '_f' + start_fhr + '-' + end_fhr + '.nc'
+   grid_diag_out = f'{output_base}/grid_diag_out_{model}_{var1}_{var1_lev}-{var2}_{var2_lev}_{start_date}-{end_date}_f{start_fhr}-{end_fhr}.nc'
 
 #From here on, if we need "APCP" it should be read as "APCP_00"
 if var1 == "APCP":
@@ -66,9 +66,9 @@ if var2 == "APCP":
 print('Reading GridDiag out file ' + grid_diag_out)
 
 file_id = Dataset(grid_diag_out, 'r')
-hist_str = 'hist_' + var1 + '_' + var1_lev + '_' + var2 + '_' + var2_lev
-var1_ctr_str = var1 + '_' + var1_lev + '_mid'
-var2_ctr_str = var2 + '_' + var2_lev + '_mid'
+hist_str = f'hist_{var1}_{var1_lev}_{var2}_{var2_lev}'
+var1_ctr_str = f'{var1}_{var1_lev}_mid'
+var2_ctr_str = f'{var2}_{var2_lev}_mid'
 
 hist_var1_var2 = file_id.variables[hist_str][:]
 var1_ctr = file_id.variables[var1_ctr_str][:]
